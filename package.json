@@ -4,13 +4,25 @@
   "type": "module",
   "scripts": {
     "build": "react-router build",
+    "db:docs": "npx prisma-docs-generator serve",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:serve": "prisma db pull && prisma db push && run-p db:studio db:docs dev",
+    "db:studio": "npx prisma studio",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@conform-to/react": "^1.4.0",
+    "@conform-to/zod": "^1.4.0",
+    "@gsap/react": "^2.1.2",
+    "@prisma/client": "^6.6.0",
     "@react-router/node": "^7.5.1",
     "@react-router/serve": "^7.5.1",
+    "bcryptjs": "^3.0.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "isbot": "^5.1.17",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -22,10 +34,18 @@
     "@types/node": "^20",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
+    "prisma": "^6.6.0",
+    "prisma-docs-generator": "^0.8.0",
+    "prisma-generator-typescript-interfaces": "^2.1.0",
     "react-router-devtools": "^1.1.0",
-    "tailwindcss": "^4.0.0",
+    "tailwind-merge": "^3.2.0",
+    "tailwindcss": "^4.1.4",
+    "tsx": "^4.19.3",
     "typescript": "^5.7.2",
     "vite": "^5.4.11",
     "vite-tsconfig-paths": "^5.1.4"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }
