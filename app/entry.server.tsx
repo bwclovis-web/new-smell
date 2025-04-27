@@ -11,14 +11,13 @@ import { ServerRouter } from 'react-router'
 import i18n from '~/modules/i18n/i18n.server'
 export const streamTimeout = 5_000
 
+// eslint-disable-next-line max-params
 export default function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   routerContext: EntryContext,
   loadContext: AppLoadContext
-  // If you have middleware enabled:
-  // loadContext: unstable_RouterContextProvider
 ) {
   return new Promise((resolve, reject) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
