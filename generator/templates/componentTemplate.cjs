@@ -2,8 +2,8 @@
 function generateComponentTemplate(componentName) {
   const lowerComponentName = componentName.toLocaleLowerCase()
 
-return `import { VariantProps } from "class-variance-authority"
-import { FC, HTMLProps } from "react"
+  return `import { type VariantProps } from "class-variance-authority"
+import { type FC, type HTMLProps } from "react"
 
 import { styleMerge } from "~/utils/styleUtils"
 

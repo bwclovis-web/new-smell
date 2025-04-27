@@ -1,7 +1,7 @@
 function generateVariantTemplate(componentName) {
   const lowerComponentName = componentName.toLocaleLowerCase()
-      
-return `import { VariantProps, cva } from "class-variance-authority"
+
+  return `import { cva, type VariantProps } from 'class-variance-authority'
 
 export type ${componentName}Variants = VariantProps<typeof ${lowerComponentName}Variants>
 export const ${lowerComponentName}Variants = cva([""], {

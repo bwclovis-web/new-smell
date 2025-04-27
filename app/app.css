@@ -3,11 +3,48 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+    --color-btn-primary: theme('colors.blue.500');
+    --color-btn-primary-hover: theme('colors.blue.600');
+    --color-btn-primary-focus: theme('colors.blue.700');
+    --color-btn-primary-active: theme('colors.blue.800');
+    --color-btn-primary-disabled: theme('colors.blue.300');
+    --color-btn-secondary: theme('colors.gray.500');
+    --color-btn-secondary-hover: theme('colors.gray.600');
+    --color-btn-secondary-focus: theme('colors.gray.700');
+    --color-btn-secondary-active: theme('colors.gray.800');
+    --color-btn-secondary-disabled: theme('colors.gray.300');
+    --color-btn-accent: theme('colors.purple.500');
+    --color-btn-accent-hover: theme('colors.purple.600');
+    --color-btn-accent-focus: theme('colors.purple.700');
+    --color-btn-accent-active: theme('colors.purple.800');
+    --color-btn-accent-disabled: theme('colors.purple.300');
+    --color-btn-danger: theme('colors.red.500');
+    --color-btn-danger-hover: theme('colors.red.600');
+    --color-btn-danger-focus: theme('colors.red.700');
+    --color-btn-danger-active: theme('colors.red.800');
+    --color-btn-danger-disabled: theme('colors.red.300');
+    --color-btn-success: theme('colors.green.500');
+    --color-btn-success-hover: theme('colors.green.600');
+    --color-btn-success-focus: theme('colors.green.700');
+    --color-btn-success-active: theme('colors.green.800');
+    --color-btn-success-disabled: theme('colors.green.300');
+    --color-btn-warning: theme('colors.yellow.500');
+    --color-btn-warning-hover: theme('colors.yellow.600');
+    --color-btn-warning-focus: theme('colors.yellow.700');
+    --color-btn-warning-active: theme('colors.yellow.800');
+    --color-btn-warning-disabled: theme('colors.yellow.300');
+    --color-btn-info: theme('colors.cyan.500');
+    --color-btn-info-hover: theme('colors.cyan.600');
+    --color-btn-info-focus: theme('colors.cyan.700');
+    --color-btn-info-active: theme('colors.cyan.800');
+    --color-btn-info-disabled: theme('colors.cyan.300');
+    --color-btn-light: theme('colors.gray.100');
 }
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950 ;
+  @apply bg-white dark:bg-gray-950 h-full;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;

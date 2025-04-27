@@ -1,6 +1,5 @@
 function generateStoryTemplate(componentName, componentType) {
-  
-return `import type { Meta, StoryObj } from '@storybook/react'
+  return `import type { Meta, StoryObj } from '@storybook/react'
 import { fn } from '@storybook/test'
 
 import ${componentName} from '~/components/${componentType}/${componentName}/${componentName}'

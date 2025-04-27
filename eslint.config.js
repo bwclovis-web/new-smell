@@ -9,15 +9,15 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default defineConfig([
-  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'], plugins: { js, 'simple-import-sort': simpleImportSort, "@typescript-eslint": tseslint.plugin }, extends: ['js/recommended'],
+  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'], plugins: { js, 'simple-import-sort': simpleImportSort, '@typescript-eslint': tseslint.plugin }, extends: ['js/recommended'],
     rules: {
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       'import/order': 'off',
       'import/prefer-default-export': 0,
-      'import/no-unresolved': 0,
+      'import/no-unresolved': 0
     } },
-  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'], languageOptions: { globals: { ...globals.browser, ...globals.node } } },
+  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'], languageOptions: { parser: tseslint.parser, globals: { ...globals.browser, ...globals.node } } },
   tseslint.config({
     rules: {
       '@typescript-eslint/no-require-imports': ['error', { allowAsImport: true }],
@@ -104,7 +104,7 @@ export default defineConfig([
     'keyword-spacing': ['error', { after: true, before: true }],
     'lines-around-comment': ['error', { beforeBlockComment: true }],
     'lines-between-class-members': ['error', 'always'],
-    'max-len': ['error', { code: 80, ignoreUrls: true, ignoreStrings: true, ignoreTemplateLiterals: true }],
+    'max-len': ['error', { code: 85, ignoreUrls: true, ignoreStrings: true, ignoreTemplateLiterals: true }],
     'template-tag-spacing': ['error', 'always']
   } }
 ])
