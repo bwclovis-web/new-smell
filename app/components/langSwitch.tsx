@@ -11,8 +11,8 @@ const LanguageSwitcher = () => {
 
   return (
     <div className="flex gap-4 justify-center items-center">
-      <Button className="cursor-pointer" onClick={() => handleLanguageChange('en')}>English</Button>
-      <Button className="cursor-pointer" onClick={() => handleLanguageChange('es')}>Español</Button>
+      <Button style="secondary" size="sm" onClick={() => handleLanguageChange('en')}>English</Button>
+      <Button style="secondary" size="sm" onClick={() => handleLanguageChange('es')}>Español</Button>
     </div>
   )
 }

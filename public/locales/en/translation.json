@@ -1,23 +1,10 @@
 {
-    "app": {
-        "title": "My Application",
-        "description": "This is a sample application."
-    },
-    "user": {
-        "welcome": "Welcome, {{name}}!",
-        "logout": "Logout"
-    },
-    "error": {
-        "not_found": "Page not found",
-        "server_error": "Internal server error"
-    },
-    "button": {
-        "submit": "Submit",
-        "cancel": "Cancel"
-    },
-    "form": {
-        "username": "Username",
-        "password": "Password",
-        "email": "Email"
-    }
+  "navigation": {
+    "logo": "Voodoo stack"
+  },
+  "home": {
+    "heading": "Voodoo stack",
+    "subheading": "A simple and powerful stack for building web applications",
+    "description": "A simple stack to build your next web application with Vite, React, TypeScript, Tailwind CSS and Vitest."
+  }
 }

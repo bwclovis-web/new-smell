@@ -23,7 +23,7 @@ i18n
       caches: false
     },
     react: {
-      useSuspense: false,
+      useSuspense: true,
       bindI18n: 'languageChanged'
     }
   })

@@ -2,7 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 export type ButtonVariants = VariantProps<typeof buttonVariants>
 
-export const buttonVariants = cva(['rounded-sm'], {
+export const buttonVariants = cva(['rounded-sm cursor-pointer'], {
   compoundVariants: [{}],
   defaultVariants: {
     size: 'lg',
