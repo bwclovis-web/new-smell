@@ -1,0 +1,24 @@
+{
+    "app": {
+      "title": "Mi Aplicación",
+      "description": "Esta es una aplicación de ejemplo."
+    },
+    "user": {
+      "welcome": "¡Bienvenido, {{name}}!",
+      "logout": "Cerrar sesión"
+    },
+    "error": {
+      "not_found": "Página no encontrada",
+      "server_error": "Error interno del servidor"
+    },
+    "button": {
+      "submit": "Enviar",
+      "cancel": "Cancelar"
+    },
+    "form": {
+      "username": "Nombre de usuario",
+      "password": "Contraseña",
+      "email": "Correo electrónico"
+    }
+  }
+  
