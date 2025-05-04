@@ -4,7 +4,6 @@ const schema = z.object({
   NODE_ENV: z.enum(['production', 'development', 'test'] as const)
 })
 
-
 export function initEnvs() {
   const parsed = schema.safeParse(process.env)
 

@@ -1,4 +1,4 @@
-import { createCookie } from 'react-router';
+import { createCookie } from 'react-router'
 import { CSRF, CSRFError } from 'remix-utils/csrf/server'
 
 export const CSRF_COOKIE_KEY = '_csrf'
@@ -18,7 +18,8 @@ export const csrf = new CSRF({
 export async function validateCSRF(formData: FormData, headers: Headers) {
   try {
     await csrf.validate(formData, headers)
-  } catch (err: unknown) {
+  }
+  catch (err: unknown) {
     if (err instanceof CSRFError) {
       throw new Response('Invalid CSRF token', { status: 403 })
     }

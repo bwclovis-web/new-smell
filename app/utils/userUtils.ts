@@ -1,7 +1,6 @@
-/* eslint-disable complexity */
-import { User } from "@prisma/client"
-import { useMatches } from "react-router";
-import { useMemo } from "react"
+
+import { useMemo } from 'react'
+import { useMatches } from 'react-router'
 
 export function useMatchesData(routeId: string):
   Record<string, unknown> | undefined {
@@ -14,14 +13,14 @@ export function useMatchesData(routeId: string):
 }
 
 const isUser = (user: unknown) => (
-  user !== null &&
-  typeof user === "object" &&
-  "email" in user &&
-  typeof user.email === "string"
+  user !== null
+  && typeof user === 'object'
+  && 'email' in user
+  && typeof user.email === 'string'
 )
 
 export const useOptionalUser = (): User | undefined => {
-  const data = useMatchesData("root")
+  const data = useMatchesData('root')
   if (!data || !isUser(data.user)) {
     return undefined
   }

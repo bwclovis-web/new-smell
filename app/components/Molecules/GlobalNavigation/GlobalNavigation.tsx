@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
 
 import LanguageSwitcher from '~/components/langSwitch'
+import { mainNavigation } from '~/data/navigation'
 import { styleMerge } from '~/utils/styleUtils'
 
 import { globalNavigationVariants } from './globalNavigation-variants'
@@ -22,7 +23,21 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className }) => {
           {t('navigation.logo')}
         </NavLink>
       </div>
-      <LanguageSwitcher />
+      <ul className="flex gap-4">
+        {mainNavigation.map(item => (
+          <li key={item.id}>
+            <NavLink
+              to={item.path}
+              className={({ isActive }) => styleMerge(
+                'text-white hover:text-gray-300',
+                isActive ? 'text-gray-300' : ''
+              )}
+            >
+              {t(item.label)}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
     </nav>
   )
 }
