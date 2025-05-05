@@ -20,6 +20,7 @@ const AdminNavigation: FC<AdminNavigationProps> = ({ className }) => (
       {adminNavigation.map(item => (
         <li key={item.id}>
           <NavLink
+            viewTransition
             to={item.path}
             className={({ isActive }) => styleMerge(
               'text-white hover:text-gray-300',
