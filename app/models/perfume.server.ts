@@ -10,7 +10,7 @@ export const getAllPerfumes = async () => {
 }
 
 export const searchPerfumeByName = async (name: string) => {
-  const perfume = await prisma.perfumeHouses.findMany({
+  const perfume = await prisma.perfume.findMany({
     where: {
       name: {
         contains: name,

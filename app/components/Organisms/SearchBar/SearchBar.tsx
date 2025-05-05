@@ -15,7 +15,7 @@ const SearchBar: FC<SearchBarProps> = ({ className }) => {
 
   const handleKeyUp = async (evt: KeyboardEvent<HTMLInputElement>) => {
     const query = (evt.target as HTMLInputElement).value
-    const url = searchType === 'houses' ? '/api/perfume-houses' : '/api/perfumes'
+    const url = searchType === 'houses' ? '/api/perfume-houses' : '/api/perfume'
     const res = await fetch(`${url}?name=${encodeURIComponent(query)}`)
     const data = await res.json()
     setResults(data)
