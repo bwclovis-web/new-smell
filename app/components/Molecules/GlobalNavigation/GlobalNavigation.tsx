@@ -27,6 +27,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className }) => {
         {mainNavigation.map(item => (
           <li key={item.id}>
             <NavLink
+              viewTransition
               to={item.path}
               className={({ isActive }) => styleMerge(
                 'text-white hover:text-gray-300',
