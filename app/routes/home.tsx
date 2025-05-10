@@ -7,7 +7,7 @@ import { type MetaFunction } from 'react-router'
 import SearchBar from '~/components/Organisms/SearchBar/SearchBar'
 import { getAllFeatures } from '~/models/feature.server'
 
-import banner from '../images/voodoo.webp'
+import banner from '../images/scent.webp'
 
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
@@ -34,19 +34,17 @@ export default function Home() {
         duration: 0.5, ease: 'power2.inOut', opacity: 1, y: 100
       })
       gsap.to('.features', {
-        duration: 0.4, ease: 'power1.inOut', opacity: 1, startAt: { y: 500 }, y: 100
+        duration: 0.4, ease: 'power1.inOut', opacity: 1, startAt: { y: 500 }, y: 280
       })
     },
     { scope: container }
   )
   return (
-    <div className="flex flex-col gap-8 items-center h-full bg-purple-900 px-4 relative" ref={container}>
-      <img src={banner} alt="" className="absolute object-cover w-full h-full opacity-60 z-10" />
-      <section className="features translate-y-full opacity-0 text-pink-900  min-h-max relative z-40 w-full md:w-3/4 xl:w-2/4 mx-auto border border-pink-600 py-5 px-3 rounded-md bg-pink-200/60 backdrop-blur ">
-        <h2 className="text-center text-5xl font-black">{t('home.heading')}</h2>
-        <p className="text-center text-xl mb-4 pb-2 border-b border-purple-800/60">{t('home.subheading')}</p>
-        <p>{t('home.description')}</p>
-        <SearchBar className="mb-4" />
+    <div className="flex flex-col gap-8 items-center h-full  px-4 relative" ref={container}>
+      <img src={banner} alt="" className="absolute object-cover w-full h-1/2 z-10 rounded-md border-10 border-amber-50 shadow-sm" />
+      <section className="features translate-y-full opacity-0 text-noir-dark  min-h-max relative z-40 w-full md:w-3/4 xl:w-3/4 mx-auto border border-noir-gold py-5 px-3 rounded-md bg-noir-light/60 backdrop-blur shadow-md">
+        <h2 className="text-center text-7xl font-black">{t('home.heading')}</h2>
+        <SearchBar className="mt-8" />
       </section>
     </div>
   )
