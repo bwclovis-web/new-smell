@@ -1,7 +1,7 @@
-import { getFormProps, useForm } from '@conform-to/react'
+import { getFormProps, type SubmissionResult, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useRef } from 'react'
-import { type ActionFunctionArgs, Form } from 'react-router'
+import { type ActionFunctionArgs, Form, useActionData } from 'react-router'
 
 import { Button } from '~/components/Atoms/Button/Button'
 import Input from '~/components/Atoms/Input/Input'
@@ -13,16 +13,23 @@ export const ROUTE_PATH = '/admin/create-perfume-house' as const
 export const action = async ({ request }: ActionFunctionArgs) => {
   const clonedRequest = request.clone()
   const formData = await clonedRequest.formData()
-  createPerfumeHouse(formData)
+  const test = parseWithZod(formData, { schema: CreatePerfumeHouseSchema })
+  if (test.status !== 'success') {
+    return (test.reply())
+  }
+  const res = await createPerfumeHouse(formData)
+  return res
 }
 
 const CreatePerfumeHousePage = () => {
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const lastResult = useActionData<SubmissionResult<string[]> | null>()
 
   const [
     createHouseForm,
     { name, description, image, website, country, founded }
   ] = useForm({
+    lastResult: lastResult ?? null,
     constraint: getZodConstraint(CreatePerfumeHouseSchema),
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: CreatePerfumeHouseSchema })
