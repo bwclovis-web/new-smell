@@ -31,8 +31,8 @@ const CreatePerfumeHousePage = () => {
 
   return (
     <div>
-      <h1>Create Perfume House</h1>
-      <Form method="POST" {...getFormProps(createHouseForm)} autoComplete="off">
+      <h1 className="mb-6">Create Perfume House</h1>
+      <Form method="POST" {...getFormProps(createHouseForm)} autoComplete="off" className="bg-noir-gold/10 p-4 rounded-md noir-outline flex flex-col gap-3">
         <Input
           inputType="text"
           inputRef={inputRef}
@@ -69,7 +69,7 @@ const CreatePerfumeHousePage = () => {
           action={founded}
           inputId="founded"
         />
-        <Button type="submit" className="mt-4">
+        <Button type="submit" className="mt-4 max-w-max">
           Create Perfume House
         </Button>
       </Form>

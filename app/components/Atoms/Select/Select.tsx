@@ -8,7 +8,7 @@ import { selectVariants } from './select-variants'
 
 interface SelectProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
   VariantProps<typeof selectVariants> {
-  action: FieldMetadata<unknown>
+  action?: FieldMetadata<unknown>
   selectId: string
   selectData: Array<{
     id: string | number
