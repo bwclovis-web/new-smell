@@ -27,7 +27,7 @@ const AllPerfumesPage = () => {
               {perfume.name}
               {' '}
               by
-              {perfume.perfumeHouse.name}
+              {perfume?.perfumeHouse?.name}
             </NavLink>
           </li>
         ))}
