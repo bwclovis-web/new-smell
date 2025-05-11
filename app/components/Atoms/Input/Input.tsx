@@ -56,7 +56,7 @@ const Input: FC<InputProps> = ({
         {...inputProps}
       />
       {action.errors && (
-        <span className="mb-2 text-sm text-destructive dark:text-destructive-foreground text-red-600 uppercase font-medium" id={`${inputId}-error`}>
+        <span className="text-sm text-destructive dark:text-destructive-foreground text-red-600 uppercase font-medium" id={`${inputId}-error`}>
           {action.errors.join(' ')}
         </span>
       )}
