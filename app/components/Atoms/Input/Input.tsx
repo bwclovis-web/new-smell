@@ -39,7 +39,8 @@ const Input: FC<InputProps> = ({
     >
       <label
         htmlFor={inputId}
-        className="block text-sm font-medium text-gray-100"
+
+        className="block text-sm font-medium text-noir-dark dark:text-white"
       >
         {action.name}
       </label>

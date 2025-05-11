@@ -17,7 +17,7 @@ const HouseDetailPage = () => {
 
   return (
     <div>
-      <h1>{perfumeHouse.name}</h1>
+      <h1 className="details-title">{perfumeHouse.name}</h1>
       <p>{perfumeHouse.description}</p>
     </div>
   )

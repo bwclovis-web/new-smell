@@ -7,16 +7,19 @@ import { ROUTE_PATH as ALL_PERFUMES } from '~/routes/all-perfumes'
 export const mainNavigation = [
   {
     id: '1',
+    key: 'houses',
     label: 'Perfume Houses',
     path: ALL_HOUSES
   },
   {
     id: '2',
+    key: 'perfumes',
     label: 'Perfumes',
     path: ALL_PERFUMES
   },
   {
     id: '3',
+    key: 'admin',
     label: 'Admin',
     path: ADMIN_PATH
   }
