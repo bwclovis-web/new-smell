@@ -35,15 +35,16 @@ const SearchBar: FC<SearchBarProps> = ({ className }) => {
         <RadioSelect
           handleRadioChange={evt => handleSelectType(evt)}
           data={[
-            { id: '1', name: 'type', type: 'radio', label: 'Perfume Houses', value: 'perfume-house', defaultChecked: true },
+            { id: '1', name: 'type', type: 'radio', label: 'Houses', value: 'perfume-house', defaultChecked: true },
             { id: '2', name: 'type', type: 'radio', label: 'Perfumes', value: 'perfume' }
           ]}
         />
-        <div className="flex gap-2 w-full">
+        <form className="flex gap-2 w-full">
           <label htmlFor="search" className="sr-only">Search</label>
           <input
             type="text"
             id="search"
+            autoComplete="off"
             onChange={evt => setSearchValue(evt.target.value)}
             value={searchValue}
             placeholder="Search..."
@@ -52,13 +53,17 @@ const SearchBar: FC<SearchBarProps> = ({ className }) => {
             }}
             className={styleMerge(searchbarVariants({ className }))}
           />
-        </div>
+        </form>
         {results.length > 0 && (
           <ul className="bg-white rounded-b-md absolute w-full -bottom-10">
             {results.map((item: any) => (
               <li key={item.id} className="p-2 hover:bg-noir-gray hover:text-noir-light cursor-pointer last-of-type:rounded-b-md">
-                <NavLink to={`${searchType}/${item.name}`} className="block w-full h-full">
-                  {item.name}
+                <NavLink viewTransition to={`${searchType}/${item.name}`} className="block w-full h-full">
+                  {({ isTransitioning }) => (
+                    <span className={`contain-layout ${isTransitioning ? 'image-title' : 'none'}`}>
+                      {item.name}
+                    </span>
+                  )}
                 </NavLink>
               </li>
             ))}

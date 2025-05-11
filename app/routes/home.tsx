@@ -43,7 +43,8 @@ export default function Home() {
     <div className="flex flex-col gap-8 items-center h-full  px-4 relative" ref={container}>
       <img src={banner} alt="" className="absolute object-cover w-full h-1/2 z-10 rounded-md border-10 border-amber-50 shadow-sm" />
       <section className="features translate-y-full opacity-0 text-noir-dark  min-h-max relative z-40 w-full md:w-3/4 xl:w-3/4 mx-auto border border-noir-gold py-5 px-3 rounded-md bg-noir-light/60 backdrop-blur shadow-md">
-        <h2 className="text-center text-7xl font-black">{t('home.heading')}</h2>
+        <h2 className="text-center text-7xl mb-4 font-black">{t('home.heading')}</h2>
+        <p className="text-center text-xl pb-2">{t('home.subheading')}</p>
         <SearchBar className="mt-8" />
       </section>
     </div>

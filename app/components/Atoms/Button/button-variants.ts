@@ -2,11 +2,11 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 export type ButtonVariants = VariantProps<typeof buttonVariants>
 
-export const buttonVariants = cva(['rounded-sm cursor-pointer'], {
+export const buttonVariants = cva(['rounded-sm cursor-pointer '], {
   compoundVariants: [{}],
   defaultVariants: {
-    size: 'lg',
-    style: 'danger'
+    size: 'md',
+    style: 'primary'
   },
   variants: {
     size: {
@@ -15,7 +15,7 @@ export const buttonVariants = cva(['rounded-sm cursor-pointer'], {
       lg: 'text-lg px-3 py-3.5'
     },
     style: {
-      primary: 'bg-btn-primary hover:bg-btn-primary-hover focus:bg-btn-primary-focus disabled:bg-btn-primary-disabled text-white',
+      primary: 'bg-noir-gold border-2 border-noir-gray text-noir-light',
       secondary: 'bg-btn-secondary hover:bg-btn-secondary-hover focus:bg-btn-secondary-focus disabled:bg-btn-secondary-disabled text-white',
       danger: 'bg-btn-danger hover:bg-btn-danger-hover focus:bg-btn-danger-focus disabled:bg-btn-danger-disabled text-white'
     }

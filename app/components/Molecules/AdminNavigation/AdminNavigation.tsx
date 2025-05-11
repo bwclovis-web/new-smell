@@ -18,13 +18,13 @@ const AdminNavigation: FC<AdminNavigationProps> = ({ className }) => (
       data-cy="AdminNavigation"
     >
       {adminNavigation.map(item => (
-        <li key={item.id}>
+        <li key={item.id} className="py-2">
           <NavLink
             viewTransition
             to={item.path}
             className={({ isActive }) => styleMerge(
-              'text-white hover:text-gray-300',
-              isActive ? 'text-gray-300' : ''
+              'text-noir-light hover:text-noir-dark transition-colors duration-200 hover:bg-noir-light p-1 rounded-sm',
+              isActive ? 'text-noir-light  bg-noir-gold/80 border-2 border-noir-gold' : ''
             )}
           >
             {item.label}

@@ -63,8 +63,8 @@ const CreatePerfumeHousePage = () => {
           inputRef={inputRef}
           action={founded}
         />
-        <Button type="submit">
-          Submit
+        <Button type="submit" className="mt-4">
+          Create Perfume House
         </Button>
       </Form>
     </div>

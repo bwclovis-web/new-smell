@@ -19,3 +19,10 @@ body {
   }
 }
 
+
+.details-title {
+   font-size: 2rem;
+  font-weight: 600;
+  width: fit-content;
+  view-transition-name: image-title;
+}

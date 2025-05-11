@@ -2,7 +2,11 @@
   "navigation": {
     "logo": " Good Scents"
   },
+  "houses": "Perfume Houses",
+  "perfumes": "Perfumes",
+  "admin": "Admin",
   "home": {
-    "heading": "Good Scents"
+    "heading": "Good Scents",
+    "subheading": "Search by:"
   }
 }

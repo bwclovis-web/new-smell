@@ -4,7 +4,6 @@ import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
 
-import LanguageSwitcher from '~/components/langSwitch'
 import { mainNavigation } from '~/data/navigation'
 import { styleMerge } from '~/utils/styleUtils'
 
@@ -34,7 +33,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className }) => {
                 isActive ? 'text-gray-300' : ''
               )}
             >
-              {t(item.label)}
+              {t(item.key)}
             </NavLink>
           </li>
         ))}
