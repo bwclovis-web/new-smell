@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @theme {
+  --font-headline: "Limelight", ui-serif, Georgia, "Times New Roman", Times, serif;
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --color-noir-dark: oklch(0.28 0.1158 29.23);
@@ -19,6 +20,15 @@ body {
   }
 }
 
+h1,h2,h3 {
+ @apply font-headline;
+}
+
+h1 {
+  font-size: clamp(2rem, 3vw + 1rem, 20rem);
+  font-weight: 900;
+  line-height: 1;
+}
 
 .details-title {
    font-size: 2rem;

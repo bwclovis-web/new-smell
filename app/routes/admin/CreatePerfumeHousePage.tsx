@@ -32,36 +32,42 @@ const CreatePerfumeHousePage = () => {
   return (
     <div>
       <h1>Create Perfume House</h1>
-      <Form method="POST" {...getFormProps(createHouseForm)}>
+      <Form method="POST" {...getFormProps(createHouseForm)} autoComplete="off">
         <Input
           inputType="text"
           inputRef={inputRef}
           action={name}
+          inputId="name"
         />
         <Input
           inputType="text"
           inputRef={inputRef}
           action={description}
+          inputId="description"
         />
         <Input
           inputType="text"
           inputRef={inputRef}
           action={image}
+          inputId="image"
         />
         <Input
           inputType="text"
           inputRef={inputRef}
           action={website}
+          inputId="website"
         />
         <Input
           inputType="text"
           inputRef={inputRef}
           action={country}
+          inputId="country"
         />
         <Input
           inputType="text"
           inputRef={inputRef}
           action={founded}
+          inputId="founded"
         />
         <Button type="submit" className="mt-4">
           Create Perfume House
