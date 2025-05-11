@@ -1,7 +1,6 @@
 import { type FieldMetadata, getInputProps } from '@conform-to/react'
 import { type VariantProps } from 'class-variance-authority'
 import { type FC, type HTMLProps, type RefObject } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { styleMerge } from '~/utils/styleUtils'
 
@@ -9,7 +8,7 @@ import { inputVariants } from './input-variants'
 
 interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
   VariantProps<typeof inputVariants> {
-  inputType: 'email' | 'password' | 'text'
+  inputType: 'email' | 'password' | 'text' | string
   inputId?: string
   inputRef: RefObject<HTMLInputElement | null>
   action: FieldMetadata<unknown>
@@ -48,7 +47,6 @@ const Input: FC<InputProps> = ({
       </label>
       <input
         ref={inputRef}
-        required
         defaultValue={defaultValue ? defaultValue : ''}
         aria-invalid={actionData?.errors?.action ? true : undefined}
         aria-describedby={`${inputId}-error`}
