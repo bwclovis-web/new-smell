@@ -27,7 +27,7 @@ const CreatePerfumeHousePage = () => {
 
   const [
     createHouseForm,
-    { name, description, image, website, country, founded }
+    { name, description, image, website, country, email, phone, address, founded }
   ] = useForm({
     lastResult: lastResult ?? null,
     constraint: getZodConstraint(CreatePerfumeHouseSchema),
@@ -43,7 +43,7 @@ const CreatePerfumeHousePage = () => {
         method="POST"
         {...getFormProps(createHouseForm)}
         autoComplete="off"
-        className="bg-noir-gold/10 p-4 rounded-md noir-outline flex flex-col gap-3"
+        className=" p-4 rounded-md noir-outline flex flex-col gap-3"
       >
         <Input
           inputType="text"
@@ -62,6 +62,24 @@ const CreatePerfumeHousePage = () => {
           inputRef={inputRef}
           action={image}
           inputId="image"
+        />
+        <Input
+          inputType="text"
+          inputRef={inputRef}
+          action={address}
+          inputId="address"
+        />
+        <Input
+          inputType="text"
+          inputRef={inputRef}
+          action={phone}
+          inputId="phone"
+        />
+        <Input
+          inputType="text"
+          inputRef={inputRef}
+          action={email}
+          inputId="email"
         />
         <Input
           inputType="text"
