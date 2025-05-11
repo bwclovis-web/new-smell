@@ -1,11 +1,11 @@
 import { prisma } from '~/db.server'
 
 export const getAllHouses = async () => (
-  prisma.perfumeHouses.findMany()
+  prisma.perfumeHouse.findMany()
 )
 
 export const getPerfumeHouseByName = async (name: string) => {
-  const house = await prisma.perfumeHouses.findUnique({
+  const house = await prisma.perfumeHouse.findUnique({
     where: {
       name
     }
@@ -14,7 +14,7 @@ export const getPerfumeHouseByName = async (name: string) => {
 }
 
 export const searchPerfumeHouseByName = async (name: string) => {
-  const house = await prisma.perfumeHouses.findMany({
+  const house = await prisma.perfumeHouse.findMany({
     where: {
       name: {
         contains: name,
@@ -27,7 +27,7 @@ export const searchPerfumeHouseByName = async (name: string) => {
 }
 
 export const deletePerfumeHouse = async (id: string) => {
-  const deletedHouse = await prisma.perfumeHouses.delete({
+  const deletedHouse = await prisma.perfumeHouse.delete({
     where: {
       id
     }
@@ -36,7 +36,7 @@ export const deletePerfumeHouse = async (id: string) => {
 }
 
 export const createPerfumeHouse = async (data) => {
-  const newHouse = await prisma.perfumeHouses.create({
+  const newHouse = await prisma.perfumeHouse.create({
     data: {
       name: data.get('name') as string,
       description: data.get('description') as string,

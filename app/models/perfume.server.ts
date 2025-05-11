@@ -26,6 +26,17 @@ export const createPerfume = async data => {
   const newPerfume = await prisma.perfume.create({
     data: {
       name: data.get('name') as string,
+      description: data.get('description') as string,
+      image: data.get('image') as string,
+      perfumeNotesOpen: {
+        connect: (data.getAll('notesOpen') as string[]).map(id => ({ id }))
+      },
+      perfumeNotesHeart: {
+        connect: (data.getAll('notesHeart') as string[]).map(id => ({ id }))
+      },
+      perfumeNotesClose: {
+        connect: (data.getAll('notesClose') as string[]).map(id => ({ id }))
+      },
       perfumeHouse: {
         connect: {
           id: data.get('house') as string

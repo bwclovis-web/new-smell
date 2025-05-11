@@ -12,7 +12,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model PerfumeHouses {
+model User {
+  id                    String                  @id @default(cuid())
+  email                 String                  @unique
+  password              String
+  name                  String?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  UserPerfume           UserPerfume[]
+  UserPerfumeRating     UserPerfumeRating[]
+  UserPerfumeReview     UserPerfumeReview[]
+  UserPerfumeWishlist   UserPerfumeWishlist[]
+  UserPerfumeCollection UserPerfumeCollection[]
+}
+
+model PerfumeHouse {
   id          String    @id @default(cuid())
   name        String    @unique
   description String?
@@ -27,24 +41,82 @@ model PerfumeHouses {
 }
 
 model Perfume {
-  id             String         @id @default(cuid())
-  name           String
-  description    String?
-  image          String?
-  perfumeHouse   PerfumeHouses? @relation(fields: [perfumeHouseId], references: [id])
-  perfumeHouseId String?
-  notes          String[]
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  id                    String                  @id @default(cuid())
+  name                  String
+  description           String?
+  image                 String?
+  perfumeHouse          PerfumeHouse?           @relation(fields: [perfumeHouseId], references: [id])
+  perfumeHouseId        String?
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  userPerfume           UserPerfume[]
+  userPerfumeRating     UserPerfumeRating[]
+  userPerfumeReview     UserPerfumeReview[]
+  userPerfumeWishlist   UserPerfumeWishlist[]
+  userPerfumeCollection UserPerfumeCollection[]
+  perfumeNotesOpen      PerfumeNotes[]          @relation("PerfumeNotesOpen")
+  perfumeNotesHeart     PerfumeNotes[]          @relation("PerfumeNotesHeart")
+  perfumeNotesClose     PerfumeNotes[]          @relation("PerfumeNotesBase")
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  name      String?
+model UserPerfume {
+  id        String   @id @default(cuid())
+  userId    String
+  perfumeId String
+  user      User     @relation(fields: [userId], references: [id])
+  perfume   Perfume  @relation(fields: [perfumeId], references: [id])
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+}
+
+model UserPerfumeRating {
+  id        String   @id @default(cuid())
+  userId    String
+  perfumeId String
+  rating    Int
+  user      User     @relation(fields: [userId], references: [id])
+  perfume   Perfume  @relation(fields: [perfumeId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model UserPerfumeReview {
+  id        String   @id @default(cuid())
+  userId    String
+  perfumeId String
+  review    String
+  user      User     @relation(fields: [userId], references: [id])
+  perfume   Perfume  @relation(fields: [perfumeId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model UserPerfumeWishlist {
+  id        String   @id @default(cuid())
+  userId    String
+  perfumeId String
+  user      User     @relation(fields: [userId], references: [id])
+  perfume   Perfume  @relation(fields: [perfumeId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model UserPerfumeCollection {
+  id        String   @id @default(cuid())
+  userId    String
+  perfumeId String
+  user      User     @relation(fields: [userId], references: [id])
+  perfume   Perfume  @relation(fields: [perfumeId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model PerfumeNotes {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  createdAt      DateTime @default(now())
+  perfumeOpenId  String?
+  perfumeHeartId String?
+  perfumeCloseId String?
+
+  perfumeOpen  Perfume? @relation("PerfumeNotesOpen", fields: [perfumeOpenId], references: [id])
+  perfumeHeart Perfume? @relation("PerfumeNotesHeart", fields: [perfumeHeartId], references: [id])
+  perfumeClose Perfume? @relation("PerfumeNotesBase", fields: [perfumeCloseId], references: [id])
 }
 
 enum HouseType {

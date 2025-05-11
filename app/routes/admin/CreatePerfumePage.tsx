@@ -8,6 +8,7 @@ import Input from '~/components/Atoms/Input/Input'
 import Select from '~/components/Atoms/Select/Select'
 import { getAllHouses } from '~/models/house.server'
 import { createPerfume } from '~/models/perfume.server'
+import { getAllTags } from '~/models/tags.server'
 import { CreatePerfumeSchema } from '~/utils/formValidationSchemas'
 
 export const ROUTE_PATH = '/admin/create-perfume' as const
@@ -20,14 +21,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export const loader = async () => {
   const allHouses = await getAllHouses()
-  return { allHouses }
+  const allNotes = await getAllTags()
+  return { allHouses, allNotes }
 }
 
 const CreatePerfumePage = () => {
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const { allHouses } = useLoaderData<typeof loader>()
+  const { allHouses, allNotes } = useLoaderData<typeof loader>()
 
-  const [createPerfumeForm, { name }] = useForm({
+  const [createPerfumeForm, { name, description, image }] = useForm({
     constraint: getZodConstraint(CreatePerfumeSchema),
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: CreatePerfumeSchema })
@@ -43,9 +45,24 @@ const CreatePerfumePage = () => {
           inputRef={inputRef}
           action={name}
         />
+        <Input
+          inputType="text"
+          inputRef={inputRef}
+          action={description}
+          inputId="description"
+        />
+        <Input
+          inputType="text"
+          inputRef={inputRef}
+          action={image}
+          inputId="image"
+        />
         <Select selectData={allHouses} selectId="house" />
-        <Button type="submit">
-          Submit
+        <Select selectData={allNotes} selectId="notesOpen" />
+        <Select selectData={allNotes} selectId="notesHeart" />
+        <Select selectData={allNotes} selectId="notesClose" />
+        <Button type="submit" className="max-w-max">
+          Create Perfume
         </Button>
       </Form>
     </div>

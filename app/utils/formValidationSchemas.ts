@@ -11,5 +11,7 @@ export const CreatePerfumeHouseSchema = z.object({
 
 export const CreatePerfumeSchema = z.object({
   name: z.string().min(2, { message: 'Name is required' }),
-  house: z.string().min(2, { message: 'House is required' })
+  description: z.string().min(2, { message: 'Description is required' }),
+  house: z.string().min(2, { message: 'House is required' }),
+  image: z.string().url({ message: 'Image URL is required' })
 })
