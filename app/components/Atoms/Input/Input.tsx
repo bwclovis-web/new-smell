@@ -28,7 +28,10 @@ const Input: FC<InputProps> = ({
   action,
   ...props
 }) => {
-  const { t } = useTranslation()
+  const inputProps = {
+    ...getInputProps(action, { ariaAttributes: true, type: inputType }),
+    id: inputId
+  }
   return (
     <div
       className={
@@ -39,27 +42,24 @@ const Input: FC<InputProps> = ({
     >
       <label
         htmlFor={inputId}
-
-        className="block text-sm font-medium text-noir-dark dark:text-white"
+        className="block text-sm font-medium text-noir-dark dark:text-white capitalize"
       >
         {action.name}
       </label>
-      <div className="mt-1">
-        <input
-          ref={inputRef}
-          required
-          defaultValue={defaultValue ? defaultValue : ''}
-          aria-invalid={actionData?.errors?.action ? true : undefined}
-          aria-describedby={`${inputId}-error`}
-          className="w-full rounded-sm border border-gray-500 px-2 py-1 text-lg"
-          {...getInputProps(action, { ariaAttributes: true, type: inputType })}
-        />
-        {action.errors && (
-          <span className="mb-2 text-sm text-destructive dark:text-destructive-foreground text-red-600 uppercase font-medium" id={`${inputId}-error`}>
-            {action.errors.join(' ')}
-          </span>
-        )}
-      </div>
+      <input
+        ref={inputRef}
+        required
+        defaultValue={defaultValue ? defaultValue : ''}
+        aria-invalid={actionData?.errors?.action ? true : undefined}
+        aria-describedby={`${inputId}-error`}
+        className="w-full rounded-sm border border-gray-500 px-2 py-1 text-lg mt-1"
+        {...inputProps}
+      />
+      {action.errors && (
+        <span className="mb-2 text-sm text-destructive dark:text-destructive-foreground text-red-600 uppercase font-medium" id={`${inputId}-error`}>
+          {action.errors.join(' ')}
+        </span>
+      )}
     </div>
   )
 }
