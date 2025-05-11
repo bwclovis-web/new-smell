@@ -34,6 +34,9 @@ model PerfumeHouse {
   website     String?
   country     String?
   founded     String?
+  email       String?   @unique
+  phone       String?
+  address     String?
   type        HouseType @default(indie)
   perfumes    Perfume[]
   createdAt   DateTime  @default(now())

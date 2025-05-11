@@ -6,8 +6,9 @@ export const getAllHouses = async () => (
 
 export const getPerfumeHouseByName = async (name: string) => {
   const house = await prisma.perfumeHouse.findUnique({
-    where: {
-      name
+    where: { name },
+    include: {
+      perfumes: true
     }
   })
   return house
@@ -43,7 +44,10 @@ export const createPerfumeHouse = async (data) => {
       image: data.get('image') as string,
       website: data.get('website') as string,
       country: data.get('country') as string,
-      founded: data.get('founded') as string
+      founded: data.get('founded') as string,
+      email: data.get('email') as string,
+      phone: data.get('phone') as string,
+      address: data.get('address') as string
     }
   })
   return newHouse

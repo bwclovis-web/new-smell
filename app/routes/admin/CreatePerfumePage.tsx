@@ -1,7 +1,7 @@
-import { getFormProps, useForm } from '@conform-to/react'
+import { getFormProps, type SubmissionResult, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useRef } from 'react'
-import { type ActionFunctionArgs, Form, useLoaderData } from 'react-router'
+import { type ActionFunctionArgs, Form, useActionData, useLoaderData } from 'react-router'
 
 import { Button } from '~/components/Atoms/Button/Button'
 import Input from '~/components/Atoms/Input/Input'
@@ -16,7 +16,12 @@ export const ROUTE_PATH = '/admin/create-perfume' as const
 export const action = async ({ request }: ActionFunctionArgs) => {
   const clonedRequest = request.clone()
   const formData = await clonedRequest.formData()
-  createPerfume(formData)
+  const test = parseWithZod(formData, { schema: CreatePerfumeSchema })
+  if (test.status !== 'success') {
+    return (test.reply())
+  }
+  const res = createPerfume(formData)
+  return res
 }
 
 export const loader = async () => {
@@ -28,8 +33,10 @@ export const loader = async () => {
 const CreatePerfumePage = () => {
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { allHouses, allNotes } = useLoaderData<typeof loader>()
+  const lastResult = useActionData<SubmissionResult<string[]> | null>()
 
   const [createPerfumeForm, { name, description, image }] = useForm({
+    lastResult: lastResult ?? null,
     constraint: getZodConstraint(CreatePerfumeSchema),
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: CreatePerfumeSchema })
@@ -39,7 +46,7 @@ const CreatePerfumePage = () => {
   return (
     <div>
       <h1 className="mb-6">Create Perfume</h1>
-      <Form method="POST" {...getFormProps(createPerfumeForm)} className="bg-noir-gold/10 p-4 rounded-md noir-outline flex flex-col gap-3">
+      <Form method="POST" {...getFormProps(createPerfumeForm)} className="p-4 rounded-md noir-outline flex flex-col gap-3">
         <Input
           inputType="text"
           inputRef={inputRef}

@@ -1,4 +1,4 @@
-import { type LoaderFunctionArgs, useLoaderData, useNavigate } from 'react-router'
+import { type LoaderFunctionArgs, NavLink, useLoaderData, useNavigate } from 'react-router'
 
 import { getPerfumeHouseByName } from '~/models/house.server'
 
@@ -28,14 +28,88 @@ const HouseDetailPage = () => {
     }
   }
 
+  console.log('perfumeHouse', perfumeHouse)
+
   return (
-    <header>
-      <div>
-        <h1 className="details-title">{perfumeHouse.name}</h1>
-        <button onClick={() => handleDelete()}>G'BYE</button>
-      </div>
-      <p>{perfumeHouse.description}</p>
-    </header>
+    <>
+      <header>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1>{perfumeHouse.name}</h1>
+            <p className="text-lg">
+              <span>Founded:</span>
+              {' '}
+              {perfumeHouse.founded}
+            </p>
+          </div>
+          <button onClick={() => handleDelete()}>G'BYE</button>
+        </div>
+      </header>
+      <section className="flex gap-20">
+        <div className="w-1/2 noir-outline rounded-b-lg">
+          <img
+            src={perfumeHouse.image}
+            alt={perfumeHouse.name}
+            className="w-full h-58 object-cover mb-2 rounded-t-lg"
+          />
+          <div className="px-6">
+            <p>{perfumeHouse.description}</p>
+            <address className="flex items-center gap-4 border py-2 rounded-md bg-noir-dark text-noir-light px-2 my-6">
+              <div className="w-1/2">
+                <p className="text-sm">
+                  <span className="font-medium text-lg">Address:</span>
+                  {' '}
+                  {perfumeHouse.address}
+                </p>
+                <p className="text-sm">
+                  <span className="font-medium text-lg">Country:</span>
+                  {' '}
+                  {perfumeHouse.country}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm">
+                  <span className="font-medium text-lg">Email:</span>
+                  {' '}
+                  {perfumeHouse.email}
+                </p>
+                <p className="text-sm">
+                  <span className="font-medium text-lg">Phone:</span>
+                  {' '}
+                  {perfumeHouse.phone}
+                </p>
+                <p className="text-sm">
+                  <span className="font-medium text-lg">Website:</span>
+                  {' '}
+                  <a href={perfumeHouse.website} target="_blank" rel="noopener noreferrer">
+                    {perfumeHouse.website}
+                  </a>
+                </p>
+              </div>
+            </address>
+          </div>
+        </div>
+        {perfumeHouse.perfumes.length > 0 && (
+          <div className="w-1/2 rounded-b-lg">
+            <h2 className="text-2xl font-bold mb-4">Perfumes</h2>
+            <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-2">
+              {perfumeHouse.perfumes.map(perfume => (
+                <li key={perfume.id}>
+                  <NavLink to={`/perfume/${perfume.name}`} className="block p-2 noir-outline hover:bg-gray-100 hover:-rotate-2 hover:scale-110 hover:drop-shadow-lg  transition-all duration-300 ease-in-out">
+                    <img
+                      src={perfume.image}
+                      alt={perfume.name}
+                      className="w-48 h-48 object-cover rounded-full mb-2"
+                    />
+                    <span className="text-center block text-lg tracking-wide font-semibold text-noir-light bg-noir-gray rounded-md">{perfume.name}</span>
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
+    </>
   )
 }
 
