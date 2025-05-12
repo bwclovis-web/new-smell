@@ -1,5 +1,6 @@
 import { type LoaderFunctionArgs, NavLink, useLoaderData, useNavigate } from 'react-router'
 
+import PerfumeHouseAddressBlock from '~/components/Containers/PerfumeHouse/AddressBlock/PerfumeHouseAddressBlock'
 import { getPerfumeHouseByName } from '~/models/house.server'
 
 import { ROUTE_PATH as ALL_HOUSES } from './all-houses'
@@ -14,7 +15,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   return { perfumeHouse }
 }
 
-export const ROUTE_PATH = '/house-details/:houseId'
+export const ROUTE_PATH = '/perfume-house'
 const HouseDetailPage = () => {
   const { perfumeHouse } = useLoaderData<typeof loader>()
   const navigate = useNavigate()
@@ -28,10 +29,8 @@ const HouseDetailPage = () => {
     }
   }
 
-  console.log('perfumeHouse', perfumeHouse)
-
   return (
-    <>
+    <section>
       <header>
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -45,7 +44,7 @@ const HouseDetailPage = () => {
           <button onClick={() => handleDelete()}>G'BYE</button>
         </div>
       </header>
-      <section className="flex gap-20">
+      <div className="flex gap-20">
         <div className="w-1/2 noir-outline rounded-b-lg">
           <img
             src={perfumeHouse.image}
@@ -54,39 +53,7 @@ const HouseDetailPage = () => {
           />
           <div className="px-6">
             <p>{perfumeHouse.description}</p>
-            <address className="flex items-center gap-4 border py-2 rounded-md bg-noir-dark text-noir-light px-2 my-6">
-              <div className="w-1/2">
-                <p className="text-sm">
-                  <span className="font-medium text-lg">Address:</span>
-                  {' '}
-                  {perfumeHouse.address}
-                </p>
-                <p className="text-sm">
-                  <span className="font-medium text-lg">Country:</span>
-                  {' '}
-                  {perfumeHouse.country}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm">
-                  <span className="font-medium text-lg">Email:</span>
-                  {' '}
-                  {perfumeHouse.email}
-                </p>
-                <p className="text-sm">
-                  <span className="font-medium text-lg">Phone:</span>
-                  {' '}
-                  {perfumeHouse.phone}
-                </p>
-                <p className="text-sm">
-                  <span className="font-medium text-lg">Website:</span>
-                  {' '}
-                  <a href={perfumeHouse.website} target="_blank" rel="noopener noreferrer">
-                    {perfumeHouse.website}
-                  </a>
-                </p>
-              </div>
-            </address>
+            <PerfumeHouseAddressBlock perfumeHouse={perfumeHouse} />
           </div>
         </div>
         {perfumeHouse.perfumes.length > 0 && (
@@ -95,7 +62,11 @@ const HouseDetailPage = () => {
             <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-2">
               {perfumeHouse.perfumes.map(perfume => (
                 <li key={perfume.id}>
-                  <NavLink to={`/perfume/${perfume.name}`} className="block p-2 noir-outline hover:bg-gray-100 hover:-rotate-2 hover:scale-110 hover:drop-shadow-lg  transition-all duration-300 ease-in-out">
+                  <NavLink
+                    viewTransition
+                    to={`/perfume/${perfume.id}`}
+                    className="block p-2 noir-outline hover:bg-gray-100 hover:-rotate-2 hover:scale-110 hover:drop-shadow-lg  transition-all duration-300 ease-in-out"
+                  >
                     <img
                       src={perfume.image}
                       alt={perfume.name}
@@ -108,8 +79,8 @@ const HouseDetailPage = () => {
             </ul>
           </div>
         )}
-      </section>
-    </>
+      </div>
+    </section>
   )
 }
 
