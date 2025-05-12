@@ -64,7 +64,7 @@ const HouseDetailPage = () => {
                 <li key={perfume.id}>
                   <NavLink
                     viewTransition
-                    to={`/perfume/${perfume.id}`}
+                    to={`/perfume/${perfume.name}`}
                     className="block p-2 noir-outline hover:bg-gray-100 hover:-rotate-2 hover:scale-110 hover:drop-shadow-lg  transition-all duration-300 ease-in-out"
                   >
                     <img

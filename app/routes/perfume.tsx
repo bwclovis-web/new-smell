@@ -3,7 +3,7 @@ import { type LoaderFunctionArgs, NavLink, useLoaderData } from 'react-router'
 import { getPerfumeByName } from '~/models/perfume.server'
 
 import { ROUTE_PATH as HOUSE_PATH } from './perfume-house'
-export const ROUTE_PATH = '/perfume/:perfumeId'
+export const ROUTE_PATH = '/perfume'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!params.id) {
