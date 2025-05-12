@@ -60,45 +60,52 @@ const CreatePerfumeHousePage = () => {
         <Input
           inputType="text"
           inputRef={inputRef}
-          action={image}
-          inputId="image"
-        />
-        <Input
-          inputType="text"
-          inputRef={inputRef}
-          action={address}
-          inputId="address"
-        />
-        <Input
-          inputType="text"
-          inputRef={inputRef}
-          action={phone}
-          inputId="phone"
-        />
-        <Input
-          inputType="text"
-          inputRef={inputRef}
-          action={email}
-          inputId="email"
-        />
-        <Input
-          inputType="text"
-          inputRef={inputRef}
-          action={website}
-          inputId="website"
-        />
-        <Input
-          inputType="text"
-          inputRef={inputRef}
-          action={country}
-          inputId="country"
-        />
-        <Input
-          inputType="text"
-          inputRef={inputRef}
           action={founded}
           inputId="founded"
         />
+        <Input
+          inputType="text"
+          inputRef={inputRef}
+          action={image}
+          inputId="image"
+        />
+        <fieldset className="flex  gap-2">
+          <legend className="text-2xl text-noir-gray font-bold mb-2">Address</legend>
+          <Input
+            inputType="text"
+            inputRef={inputRef}
+            action={address}
+            inputId="address"
+          />
+          <Input
+            inputType="text"
+            inputRef={inputRef}
+            action={country}
+            inputId="country"
+          />
+        </fieldset>
+        <fieldset className="flex  gap-2">
+          <legend className="text-2xl text-noir-gray font-bold mb-2">Contact</legend>
+          <Input
+            inputType="text"
+            inputRef={inputRef}
+            action={phone}
+            inputId="phone"
+          />
+          <Input
+            inputType="text"
+            inputRef={inputRef}
+            action={email}
+            inputId="email"
+          />
+          <Input
+            inputType="text"
+            inputRef={inputRef}
+            action={website}
+            inputId="website"
+          />
+        </fieldset>
+
         <Button type="submit" className="mt-4 max-w-max">
           Create Perfume House
         </Button>
