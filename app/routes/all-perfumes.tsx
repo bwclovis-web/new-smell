@@ -13,18 +13,19 @@ export const loader = async () => {
 const AllPerfumesPage = () => {
   const { allPerfumes } = useLoaderData<typeof loader>()
   return (
-    <div>
-      <h1>All Perfumes</h1>
-      <p>This is the All Perfumes page.</p>
+    <section>
+      <header className="mb-4">
+        <h1>All Perfumes</h1>
+        <p>This is the All Perfumes page.</p>
+      </header>
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {allPerfumes?.map(perfume => (
           <li key={perfume.id}>
             <LinkCard data={perfume} type="perfume" />
           </li>
         ))}
-
       </ul>
-    </div>
+    </section>
   )
 }
 
