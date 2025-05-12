@@ -22,7 +22,7 @@ const Select: FC<SelectProps> = ({
     className={styleMerge(selectVariants({ className }))}
     data-cy="Select"
   >
-    <label htmlFor={selectId}>{label}</label>
+    <label htmlFor={selectId} className="block text-sm font-medium text-noir-dark dark:text-white capitalize mb-1">{label}</label>
     <select id={selectId} name={selectId} className="w-full rounded-sm border border-gray-500 px-2 py-1 text-lg">
       {selectData.map(item => (
         <option key={item.id} value={item.id}>
