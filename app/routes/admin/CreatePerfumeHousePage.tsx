@@ -5,6 +5,8 @@ import { type ActionFunctionArgs, Form, useActionData } from 'react-router'
 
 import { Button } from '~/components/Atoms/Button/Button'
 import Input from '~/components/Atoms/Input/Input'
+import Select from '~/components/Atoms/Select/Select'
+import countryData from '~/data/countryList.json'
 import { createPerfumeHouse } from '~/models/house.server'
 import { CreatePerfumeHouseSchema } from '~/utils/formValidationSchemas'
 
@@ -71,18 +73,15 @@ const CreatePerfumeHousePage = () => {
         />
         <fieldset className="flex  gap-2">
           <legend className="text-2xl text-noir-gray font-bold mb-2">Address</legend>
-          <Input
-            inputType="text"
-            inputRef={inputRef}
-            action={address}
-            inputId="address"
-          />
-          <Input
-            inputType="text"
-            inputRef={inputRef}
-            action={country}
-            inputId="country"
-          />
+          <div className="flex gap-2 w-full">
+            <Input
+              inputType="text"
+              inputRef={inputRef}
+              action={address}
+              inputId="address"
+            />
+            <Select selectData={countryData} selectId="country" label="country" />
+          </div>
         </fieldset>
         <fieldset className="flex  gap-2">
           <legend className="text-2xl text-noir-gray font-bold mb-2">Contact</legend>
