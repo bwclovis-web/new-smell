@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export type InputVariants = VariantProps<typeof inputVariants>
-export const inputVariants = cva(['w-full'], {
+export const inputVariants = cva(['w-full '], {
   compoundVariants: [
     {
       // Compound variants are used to create a new variant by combining
