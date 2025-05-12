@@ -25,9 +25,9 @@ const RadioSelect: FC<RadioSelectProps>
             onChange={handleRadioChange}
             name={item.name}
             id={item.id}
-            className="h-4 w-4 cursor-pointer rounded-full border-gray-300 text-blue-600 focus:ring-blue-500"
+            className="hidden peer"
           />
-          <label className="cursor-pointer text-sm font-medium text-gray-900" htmlFor={item.id}>
+          <label className="inline-flex items-center justify-between w-full py-1 px-3 text-noir-dark bg-noir-gray/80 border-2 border-noir-dark/80 rounded-md cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-noir-gold peer-checked:bg-noir-dark dark:peer-checked:border-blue-600 peer-checked:text-noir-gold hover:text-gray-600 hover:bg-noir-gold/60 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700" htmlFor={item.id}>
             {item.label}
           </label>
         </div>
