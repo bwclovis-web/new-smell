@@ -9,9 +9,9 @@ export const getAllPerfumes = async () => {
   return perfumes
 }
 
-export const getPerfumeByName = async (id: string) => {
+export const getPerfumeByName = async (name: string) => {
   const house = await prisma.perfume.findUnique({
-    where: { id },
+    where: { name },
     include: {
       perfumeHouse: true,
       perfumeNotesOpen: true,
