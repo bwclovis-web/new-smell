@@ -1,5 +1,6 @@
-import { NavLink, useLoaderData } from 'react-router'
+import { useLoaderData } from 'react-router'
 
+import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
 import { getAllPerfumes } from '~/models/perfume.server'
 
 export const ROUTE_PATH = '/all-perfumes'
@@ -18,17 +19,7 @@ const AllPerfumesPage = () => {
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {allPerfumes?.map(perfume => (
           <li key={perfume.id}>
-            <NavLink className="block p-4 border rounded-lg hover:bg-gray-100" to={`/perfume/${perfume.id}`}>
-              <img
-                src={perfume.image}
-                alt={perfume.name}
-                className="w-48 h-48 object-cover rounded-full mb-2"
-              />
-              {perfume.name}
-              {' '}
-              by
-              {perfume?.perfumeHouse?.name}
-            </NavLink>
+            <LinkCard data={perfume} type="perfume" />
           </li>
         ))}
 
