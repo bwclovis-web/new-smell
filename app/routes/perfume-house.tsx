@@ -1,4 +1,6 @@
-import { type LoaderFunctionArgs, NavLink, useLoaderData, useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import { MdDeleteForever } from 'react-icons/md'
+import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, useNavigate } from 'react-router'
 
 import PerfumeHouseAddressBlock from '~/components/Containers/PerfumeHouse/AddressBlock/PerfumeHouseAddressBlock'
 import { getPerfumeHouseByName } from '~/models/house.server'
@@ -13,6 +15,14 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     throw new Response('House not found', { status: 404 })
   }
   return { perfumeHouse }
+}
+
+export const meta: MetaFunction = () => {
+  const { t } = useTranslation()
+  return [
+    { title: t('singleHouse.title') },
+    { name: 'description', content: t('allPerfumes.description') }
+  ]
 }
 
 export const ROUTE_PATH = '/perfume-house'
@@ -41,7 +51,9 @@ const HouseDetailPage = () => {
               {perfumeHouse.founded}
             </p>
           </div>
-          <button onClick={() => handleDelete()}>G'BYE</button>
+          <button onClick={() => handleDelete()} aria-label="delete" className="bg-red-600/60 hover:bg-red-600/90 rounded-full p-2 cursor-pointer border-2 border-red-600/60 hover:border-red-600/90 transition-all duration-300 ease-in-out">
+            <MdDeleteForever size={40} fill="white" />
+          </button>
         </div>
       </header>
       <div className="flex gap-20">

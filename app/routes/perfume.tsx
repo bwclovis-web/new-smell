@@ -1,4 +1,5 @@
-import { type LoaderFunctionArgs, NavLink, useLoaderData } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData } from 'react-router'
 
 import { getPerfumeByName } from '~/models/perfume.server'
 
@@ -14,6 +15,14 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     throw new Response('House not found', { status: 404 })
   }
   return { perfume }
+}
+
+export const meta: MetaFunction = () => {
+  const { t } = useTranslation()
+  return [
+    { title: t('singlePerfume.title') },
+    { name: 'description', content: t('singlePerfume.description') }
+  ]
 }
 
 const PerfumePage = () => {
