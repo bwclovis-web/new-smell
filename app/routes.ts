@@ -11,6 +11,8 @@ export default [
     route('api/perfume-houses', 'routes/api/houseLoader.ts'),
     route('api/perfume', 'routes/api/perfumeLoader.ts'),
     route('api/deleteHouse', 'routes/api/deleteHouse.ts'),
+    route('api/getTag', 'routes/api/tagLoader.ts'),
+    route('api/houseSortLoader', 'routes/api/houseSortLoader.ts'),
 
     layout('routes/admin/AdminLayout.tsx', [
       route('admin/', 'routes/admin/adminIndex.tsx'),

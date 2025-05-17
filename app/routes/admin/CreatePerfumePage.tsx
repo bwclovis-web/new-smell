@@ -6,6 +6,7 @@ import { type ActionFunctionArgs, Form, useActionData, useLoaderData } from 'rea
 import { Button } from '~/components/Atoms/Button/Button'
 import Input from '~/components/Atoms/Input/Input'
 import Select from '~/components/Atoms/Select/Select'
+import TagSearch from '~/components/Organisms/TagSearch/TagSearch'
 import { getAllHouses } from '~/models/house.server'
 import { createPerfume } from '~/models/perfume.server'
 import { getAllTags } from '~/models/tags.server'
@@ -64,7 +65,8 @@ const CreatePerfumePage = () => {
           action={image}
           inputId="image"
         />
-        <Select selectData={allHouses} selectId="house" />
+        <Select selectData={allHouses} selectId="house" label="Perfume House" />
+        <TagSearch />
         <Select selectData={allNotes} selectId="notesOpen" />
         <Select selectData={allNotes} selectId="notesHeart" />
         <Select selectData={allNotes} selectId="notesClose" />

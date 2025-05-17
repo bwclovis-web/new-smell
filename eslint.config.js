@@ -51,7 +51,7 @@ export default defineConfig([
     'id-denylist': ['error', 'callback'],
     'id-length': [
       'error', { min: 3, max: 40, properties: 'never', exceptions: [
-        '_', '__', 'i', 'j', 'fs', 't', 'to'
+        '_', '__', 'i', 'j', 'fs', 't', 'to', 'id'
       ] }
     ],
     'max-depth': ['error', 2],
