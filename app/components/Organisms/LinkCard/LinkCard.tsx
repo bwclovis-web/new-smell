@@ -9,7 +9,7 @@ const LinkCard = ({ data, type }) => {
     <NavLink
       viewTransition
       to={`${url}/${data.name}`}
-      className=" p-4 flex justify-between items-center gap-4 noir-outline"
+      className=" p-4 flex justify-between items-center gap-4 noir-outline relative"
     >
       <img
         src={data.image}
@@ -19,6 +19,12 @@ const LinkCard = ({ data, type }) => {
       <div className="w-1/2">
         <h2 className="text-2xl font-semibold">{data.name}</h2>
         <p className="text-sm text-gray-500 max-w-[175ch] text-ellipsis overflow-hidden  line-clamp-4">{data.description}</p>
+        {data.type && (
+          <p className="text-sm absolute bottom-2 right-2 bg-noir-gold/80 border-2 border-noir-gold rounded-lg text-noir-dark px-2 py-1 capitalize font-semibold">
+            {' '}
+            {data.type}
+          </p>
+        )}
       </div>
     </NavLink>
   )

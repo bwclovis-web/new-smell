@@ -20,7 +20,6 @@ const AllHousesPage = () => {
       const res = await fetch(`/api/houseSortLoader?sortByType=${sortByType}`)
       const data = await res.json()
       setSortedHouses(data)
-      console.log(data)
     }
     fetchData()
   }, [sortByType])

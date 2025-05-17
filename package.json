@@ -15,7 +15,8 @@
     "open:localhost": "start http://localhost:2112",
     "start": "react-router-serve ./build/server/index.js",
     "start:server": "node ./server.mjs",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@conform-to/react": "^1.4.0",
