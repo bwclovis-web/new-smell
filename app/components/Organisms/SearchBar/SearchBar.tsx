@@ -70,9 +70,7 @@ const SearchBar: FC<SearchBarProps> = ({ className }) => {
           </ul>
         )}
       </div>
-
     </>
-
   )
 }
 export default SearchBar
