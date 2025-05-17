@@ -1,13 +1,23 @@
 export const ROUTE_PATH = '/all-houses'
 import { useEffect, useState } from 'react'
-import { useLoaderData } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import { type MetaFunction, useLoaderData } from 'react-router'
 
+import { Button } from '~/components/Atoms/Button/Button'
 import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
 import { getAllHouses } from '~/models/house.server'
 
 export const loader = async () => {
   const allHouses = await getAllHouses()
   return { allHouses }
+}
+
+export const meta: MetaFunction = () => {
+  const { t } = useTranslation()
+  return [
+    { title: t('allHouses.title') },
+    { name: 'description', content: t('allHouses.description') }
+  ]
 }
 
 const AllHousesPage = () => {
@@ -26,15 +36,19 @@ const AllHousesPage = () => {
 
   return (
     <section>
-      <header className="mb-4">
-        <h1>All Houses</h1>
-        <p>List of all houses will be displayed here.</p>
-        <button
+      <header className="mb-4 flex justify-between items-center">
+        <div>
+          <h1>All Houses</h1>
+          <p>List of all houses will be displayed here.</p>
+        </div>
+        <Button
+          size="sm"
+          style="secondary"
           onClick={() => setSortByType(prev => !prev)}
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
         >
-          {sortByType ? 'Unsort' : 'Sort by Type'}
-        </button>
+          {sortByType ? 'Sort by Created' : 'Sort by Type'}
+        </Button>
       </header>
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 py-4">
         {sortedHouses.map(house => (

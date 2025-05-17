@@ -1,4 +1,5 @@
-import { useLoaderData } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import { type MetaFunction, useLoaderData } from 'react-router'
 
 import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
 import { getAllPerfumes } from '~/models/perfume.server'
@@ -8,6 +9,13 @@ export const ROUTE_PATH = '/all-perfumes'
 export const loader = async () => {
   const allPerfumes = await getAllPerfumes()
   return { allPerfumes }
+}
+export const meta: MetaFunction = () => {
+  const { t } = useTranslation()
+  return [
+    { title: t('allPerfumes.title') },
+    { name: 'description', content: t('allPerfumes.description') }
+  ]
 }
 
 const AllPerfumesPage = () => {

@@ -8,5 +8,21 @@
   "home": {
     "heading": "Good Scents",
     "subheading": "Search by:"
+  },
+  "allHouses": {
+    "title": "All Perfume Houses",
+    "description": "Explore all the perfume houses available in our database."
+  },
+  "allPerfumes": {
+    "title": "All Perfumes",
+    "description": "Discover all the perfumes available in our database."
+  },
+  "singleHouse": {
+    "title": "Perfume House",
+    "description": "Explore the details of a specific perfume house."
+  },
+  "singlePerfume": {
+    "title": "Perfume",
+    "description": "Discover the details of a specific perfume."
   }
 }
