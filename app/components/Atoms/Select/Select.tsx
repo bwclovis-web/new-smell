@@ -10,6 +10,7 @@ interface SelectProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
   VariantProps<typeof selectVariants> {
   action?: FieldMetadata<unknown>
   selectId: string
+  defaultId?: string | number
   selectData: Array<{
     id: string | number
     name: string
@@ -17,7 +18,7 @@ interface SelectProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
 }
 
 const Select: FC<SelectProps> = ({
-  className, label, selectId, selectData }) => (
+  className, label, selectId, selectData, defaultId }) => (
   <div
     className={styleMerge(selectVariants({ className }))}
     data-cy="Select"
@@ -25,7 +26,7 @@ const Select: FC<SelectProps> = ({
     <label htmlFor={selectId} className="block text-sm font-medium text-noir-dark dark:text-white capitalize mb-1">{label}</label>
     <select id={selectId} name={selectId} className="w-full rounded-sm border border-gray-500 px-2 py-1 text-lg">
       {selectData.map(item => (
-        <option key={item.id} value={item.id}>
+        <option key={item.id} value={item.id} selected={item.id === defaultId}>
           {item.name}
         </option>
       ))}
