@@ -1,6 +1,7 @@
+/* eslint-disable max-statements */
 import { getFormProps, type SubmissionResult, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { type ActionFunctionArgs, Form, useActionData, useLoaderData } from 'react-router'
 
 import { Button } from '~/components/Atoms/Button/Button'
@@ -33,8 +34,11 @@ export const loader = async () => {
 
 const CreatePerfumePage = () => {
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const { allHouses, allNotes } = useLoaderData<typeof loader>()
+  const { allHouses } = useLoaderData<typeof loader>()
   const lastResult = useActionData<SubmissionResult<string[]> | null>()
+  const [topNotes, setTopNotes] = useState<any[]>([])
+  const [heartNotes, setHeartNotes] = useState<any[]>([])
+  const [baseNotes, setBaseNotes] = useState<any[]>([])
 
   const [createPerfumeForm, { name, description, image }] = useForm({
     lastResult: lastResult ?? null,
@@ -69,10 +73,34 @@ const CreatePerfumePage = () => {
           inputId="image"
         />
         <Select selectData={allHouses} selectId="house" label="Perfume House" />
-        <TagSearch />
-        <Select selectData={allNotes} selectId="notesOpen" />
-        <Select selectData={allNotes} selectId="notesHeart" />
-        <Select selectData={allNotes} selectId="notesClose" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <TagSearch
+            name="notesTop"
+            label="Top Notes"
+            onChange={setTopNotes}
+          />
+
+          <TagSearch
+            name="notesHeart"
+            label="Heart Notes"
+            onChange={setHeartNotes}
+          />
+
+          <TagSearch
+            name="notesBase"
+            label="Base Notes"
+            onChange={setBaseNotes}
+          />
+        </div>
+        {topNotes.map(tag => (
+          <input key={tag.id} type="hidden" name="notesTop" value={tag.id} />
+        ))}
+        {heartNotes.map(tag => (
+          <input key={tag.id} type="hidden" name="notesHeart" value={tag.id} />
+        ))}
+        {baseNotes.map(tag => (
+          <input key={tag.id} type="hidden" name="notesBase" value={tag.id} />
+        ))}
         <Button type="submit" className="max-w-max">
           Create Perfume
         </Button>

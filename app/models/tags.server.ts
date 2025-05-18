@@ -17,3 +17,12 @@ export const getTagsByName = async (name: string) => {
   })
   return tags
 }
+
+export const createTag = async (name: string) => {
+  const tag = await prisma.perfumeNotes.create({
+    data: {
+      name
+    }
+  })
+  return tag
+}
