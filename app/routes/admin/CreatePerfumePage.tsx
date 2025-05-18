@@ -45,8 +45,11 @@ const CreatePerfumePage = () => {
   })
 
   return (
-    <div>
-      <h1 className="mb-6">Create Perfume</h1>
+    <section>
+      <header>
+        <h1 className="text-3xl font-bold">Create Perfume</h1>
+        <p className="text-lg font-semibold">Create a new perfume</p>
+      </header>
       <Form method="POST" {...getFormProps(createPerfumeForm)} className="p-4 rounded-md noir-outline flex flex-col gap-3">
         <Input
           inputType="text"
@@ -74,7 +77,7 @@ const CreatePerfumePage = () => {
           Create Perfume
         </Button>
       </Form>
-    </div>
+    </section>
   )
 }
 

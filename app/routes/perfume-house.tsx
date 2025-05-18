@@ -54,6 +54,13 @@ const HouseDetailPage = () => {
           <button onClick={() => handleDelete()} aria-label="delete" className="bg-red-600/60 hover:bg-red-600/90 rounded-full p-2 cursor-pointer border-2 border-red-600/60 hover:border-red-600/90 transition-all duration-300 ease-in-out">
             <MdDeleteForever size={40} fill="white" />
           </button>
+          <NavLink
+            viewTransition
+            to={`/admin/perfume-house/${perfumeHouse.name}/edit`}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Edit
+          </NavLink>
         </div>
       </header>
       <div className="flex gap-20">
