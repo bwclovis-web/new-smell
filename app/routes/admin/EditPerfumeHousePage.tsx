@@ -1,10 +1,17 @@
 import { type SubmissionResult } from '@conform-to/react'
+import { useEffect } from 'react'
 import { type ActionFunctionArgs, type LoaderFunctionArgs, useActionData, useLoaderData } from 'react-router'
+import { useNavigate } from 'react-router'
 
 import PerfumeHouseForm from '~/components/Containers/Forms/PerfumeHouseForm'
 import { getPerfumeHouseByName, updatePerfumeHouse } from '~/models/house.server'
 import { FORM_TYPES } from '~/utils/constants'
-
+interface CustomSubmit extends SubmissionResult<string[]> {
+  success: boolean
+  data: {
+    name: string
+  }
+}
 export const action = async ({ request }: ActionFunctionArgs) => {
   const clonedRequest = request.clone()
   const formData = await clonedRequest.formData()
@@ -13,6 +20,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     throw new Error('Form ID is required and must be a string')
   }
   const res = updatePerfumeHouse(formIdEntry, formData)
+
   return res
 }
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -27,7 +35,17 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 }
 const EditHousePage = () => {
   const { perfumeHouse } = useLoaderData<typeof loader>()
-  const lastResult = useActionData<SubmissionResult<string[]> | null>()
+  const lastResult = useActionData<CustomSubmit>()
+  const navigate = useNavigate()
+
+  useEffect(
+    () => {
+      if (lastResult?.success && lastResult.data) {
+        navigate(`/perfume-house/${lastResult.data.name}`)
+      }
+    },
+    [lastResult]
+  )
 
   return (
     <section>
