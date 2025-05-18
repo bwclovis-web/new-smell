@@ -34,6 +34,10 @@ h1 {
   @apply bg-noir-gold/10 rounded-md border-10 border-amber-50 shadow-sm
 }
 
+.tag {
+  @apply text-sm bottom-2 right-2 bg-noir-gold/80 border-2 border-noir-gold rounded-lg text-noir-dark px-2 py-1 capitalize font-semibold
+}
+
 .details-title {
    font-size: 2rem;
   font-weight: 600;

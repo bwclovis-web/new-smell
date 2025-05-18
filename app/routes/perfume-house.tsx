@@ -46,11 +46,15 @@ const HouseDetailPage = () => {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1>{perfumeHouse.name}</h1>
-            <p className="text-lg">
-              <span>Founded:</span>
-              {' '}
-              {perfumeHouse.founded}
-            </p>
+            <div className="flex gap-2 items-center justify-between">
+              <p className="text-lg">
+                <span>Founded:</span>
+                {' '}
+                {perfumeHouse.founded}
+              </p>
+              <span className="tag">{perfumeHouse.type}</span>
+            </div>
+
           </div>
           <div className="flex gap-4 items-center">
             <button onClick={() => handleDelete()} aria-label={`delete ${perfumeHouse.name}`} className="bg-red-600/60 hover:bg-red-600/90 rounded-full p-2 cursor-pointer border-2 border-red-600/60 hover:border-red-600/90 transition-all duration-300 ease-in-out">
