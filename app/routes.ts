@@ -14,6 +14,7 @@ export default [
     route('api/deleteHouse', 'routes/api/deleteHouse.ts'),
     route('api/getTag', 'routes/api/tagLoader.ts'),
     route('api/houseSortLoader', 'routes/api/houseSortLoader.ts'),
+    route('api/createTag', 'routes/api/createTag.ts'),
 
     layout('routes/admin/AdminLayout.tsx', [
       route('admin/', 'routes/admin/adminIndex.tsx'),

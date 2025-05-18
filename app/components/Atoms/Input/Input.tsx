@@ -11,7 +11,7 @@ interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
   inputType: 'email' | 'password' | 'text' | string
   inputId?: string
   inputRef: RefObject<HTMLInputElement | null>
-  action: FieldMetadata<unknown>
+  action?: FieldMetadata<unknown>
   actionData?: {
     errors?: { [key: string]: string }
   }
