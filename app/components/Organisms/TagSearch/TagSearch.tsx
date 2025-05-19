@@ -17,7 +17,7 @@ const TagSearch: FC<TagSearchProps> = ({ className, onChange, label }) => {
   const [openDropdown, setOpenDropdown] = useState(!!results.length)
   const [selectedTags, setSelectedTags] = useState<any[]>([])
 
-  const handleKeyUp = async evt => {
+  const handleKeyUp = async (evt) => {
     const query = (evt.target as HTMLInputElement).value
     setInputValue(query)
     const url = '/api/getTag'
@@ -51,6 +51,11 @@ const TagSearch: FC<TagSearchProps> = ({ className, onChange, label }) => {
           onChange={evt => setInputValue(evt.target.value)}
           onFocusCapture={() => {
             setOpenDropdown(true)
+          }}
+          onBlur={() => {
+            setTimeout(() => {
+              setOpenDropdown(false)
+            }, 200)
           }}
         />
         {openDropdown && (

@@ -16,7 +16,7 @@ interface ContactFieldsetProps {
   }
 }
 const ContactFieldset: FC<ContactFieldsetProps> = ({ inputRef, data, actions }) => (
-  <fieldset className="flex  gap-2">
+  <fieldset className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 ">
     <legend className="text-2xl text-noir-gray font-bold mb-2">Contact</legend>
     <Input
       inputType="text"

@@ -44,7 +44,7 @@ const HouseDetailPage = () => {
     <section>
       <header>
         <div className="flex items-center justify-between mb-4">
-          <div>
+          <div className="flex flex-col gap-4">
             <h1>{perfumeHouse.name}</h1>
             <div className="flex gap-2 items-center justify-between">
               <p className="text-lg">
@@ -52,7 +52,6 @@ const HouseDetailPage = () => {
                 {' '}
                 {perfumeHouse.founded}
               </p>
-              <span className="tag">{perfumeHouse.type}</span>
             </div>
 
           </div>
@@ -72,8 +71,8 @@ const HouseDetailPage = () => {
         </div
         >
       </header>
-      <div className="flex gap-20">
-        <div className="w-1/2 noir-outline rounded-b-lg">
+      <div className="flex gap-20 ">
+        <div className="w-1/2 noir-outline rounded-b-lg relative">
           <img
             src={perfumeHouse.image}
             alt={perfumeHouse.name}
@@ -82,6 +81,7 @@ const HouseDetailPage = () => {
           <div className="px-6">
             <p>{perfumeHouse.description}</p>
             <PerfumeHouseAddressBlock perfumeHouse={perfumeHouse} />
+            <span className="tag absolute">{perfumeHouse.type}</span>
           </div>
         </div>
         {perfumeHouse.perfumes.length > 0 && (

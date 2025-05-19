@@ -20,6 +20,7 @@ const CreateTagButton = ({ action, setOpenDropdown }) => {
         onClick={() => {
           setShowInput(true)
         }}
+
       >
         Create new tag
       </Button>
@@ -36,6 +37,7 @@ const CreateTagButton = ({ action, setOpenDropdown }) => {
             onFocusCapture={() => {
               setShowInput(true)
             }}
+
           />
           <Button
             className="block w-full h-full max-w-max mt-2"

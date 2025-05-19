@@ -1,5 +1,5 @@
 const PerfumeHouseAddressBlock = ({ perfumeHouse }) => (
-  <address className="flex items-center gap-4 border py-2 rounded-md bg-noir-dark text-noir-light px-2 my-6">
+  <address className="flex items-center gap-4 border mb-16 py-2 rounded-md bg-noir-dark text-noir-light px-2 my-6">
     <div className="w-1/2">
       <p className="text-sm">
         <span className="font-medium text-lg">Address:</span>
