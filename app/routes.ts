@@ -12,6 +12,7 @@ export default [
     route('api/perfume-houses', 'routes/api/houseLoader.ts'),
     route('api/perfume', 'routes/api/perfumeLoader.ts'),
     route('api/deleteHouse', 'routes/api/deleteHouse.ts'),
+    route('api/deletePerfume', 'routes/api/deletePerfume.ts'),
     route('api/getTag', 'routes/api/tagLoader.ts'),
     route('api/houseSortLoader', 'routes/api/houseSortLoader.ts'),
     route('api/createTag', 'routes/api/createTag.ts'),
