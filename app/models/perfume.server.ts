@@ -22,6 +22,15 @@ export const getPerfumeByName = async (name: string) => {
   return house
 }
 
+export const deletePerfume = async (id: string) => {
+  const deletedHouse = await prisma.perfume.delete({
+    where: {
+      id
+    }
+  })
+  return deletedHouse
+}
+
 export const searchPerfumeByName = async (name: string) => {
   const perfume = await prisma.perfume.findMany({
     where: {
