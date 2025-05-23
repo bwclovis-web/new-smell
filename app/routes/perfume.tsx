@@ -66,7 +66,7 @@ const PerfumePage = () => {
           <NavLink
             aria-label={`edit ${perfume.name}`}
             viewTransition
-            to={`/admin/perfume-house/${perfume.name}/edit`}
+            to={`/admin/perfume/${perfume.name}/edit`}
             className="bg-blue-600/60 p-3 hover:bg-blue-600/90 text-white rounded-full  flex items-center justify-center border-2 border-blue-600/60 hover:border-blue-600 transition-all duration-300 ease-in-out"
           >
             <GrEdit size={32} fill="white" />
@@ -110,7 +110,7 @@ const PerfumePage = () => {
               <div className="flex items-center gap-2">
                 <span>End Notes:</span>
                 <ul className="font-semibold capitalize">
-                  {perfume.perfumeNotesClose.map(note => (
+                  {perfume.perfumeNotesClose.map((note, idx) => (
                     <li key={note.id}>
                       {note.name}
                       {idx + 1 < perfume.perfumeNotesHeart.length && <span>,</span>}

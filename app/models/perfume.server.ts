@@ -1,5 +1,6 @@
-import { prisma } from '~/db.server'
+import { Prisma } from '@prisma-app/client'
 
+import { prisma } from '~/db.server'
 export const getAllPerfumes = async () => {
   const perfumes = await prisma.perfume.findMany({
     include: {
@@ -44,7 +45,43 @@ export const searchPerfumeByName = async (name: string) => {
   return perfume
 }
 
-export const createPerfume = async (data) => {
+export const updatePerfume = async (id: string, data: FormData) => {
+  try {
+    const updatedPerfume = await prisma.perfume.update({
+      where: { id },
+      data: {
+        name: data.get('name') as string,
+        description: data.get('description') as string,
+        image: data.get('image') as string,
+        perfumeNotesOpen: {
+          connect: (data.getAll('notesTop') as string[]).map(id => ({ id }))
+        },
+        perfumeNotesHeart: {
+          connect: (data.getAll('notesHeart') as string[]).map(id => ({ id }))
+        },
+        perfumeNotesClose: {
+          connect: (data.getAll('notesBase') as string[]).map(id => ({ id }))
+        },
+        perfumeHouse: {
+          connect: {
+            id: data.get('house') as string
+          }
+        }
+      }
+    })
+    return { success: true, data: updatedPerfume }
+  } catch (err) {
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError
+      && err.code === 'P2002'
+    ) {
+      return { success: false, error: 'Perfume already exists' }
+    }
+    throw err
+  }
+}
+
+export const createPerfume = async data => {
   const newPerfume = await prisma.perfume.create({
     data: {
       name: data.get('name') as string,

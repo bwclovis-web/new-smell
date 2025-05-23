@@ -1,17 +1,13 @@
-import { type SubmissionResult } from '@conform-to/react'
 import { useEffect } from 'react'
-import { type ActionFunctionArgs, type LoaderFunctionArgs, useActionData, useLoaderData } from 'react-router'
-import { useNavigate } from 'react-router'
+import { type ActionFunctionArgs, type LoaderFunctionArgs, useActionData, useLoaderData, useNavigate } from 'react-router'
 
-import PerfumeHouseForm from '~/components/Containers/Forms/PerfumeHouseForm'
-import { getPerfumeHouseByName, updatePerfumeHouse } from '~/models/house.server'
+import PerfumeForm from '~/components/Containers/Forms/PerfumeForm'
+import { getAllHouses } from '~/models/house.server'
+import { getPerfumeByName, updatePerfume } from '~/models/perfume.server'
 import { FORM_TYPES } from '~/utils/constants'
-export interface CustomSubmit extends SubmissionResult<string[]> {
-  success: boolean
-  data: {
-    name: string
-  }
-}
+
+import type { CustomSubmit } from './EditPerfumeHousePage'
+
 export const action = async ({ request }: ActionFunctionArgs) => {
   const clonedRequest = request.clone()
   const formData = await clonedRequest.formData()
@@ -19,34 +15,35 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (typeof formIdEntry !== 'string') {
     throw new Error('Form ID is required and must be a string')
   }
-  const res = updatePerfumeHouse(formIdEntry, formData)
+  const res = updatePerfume(formIdEntry, formData)
 
   return res
 }
+
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  if (!params.houseId) {
-    throw new Error('Note ID is required')
+  if (!params.id) {
+    throw new Error('Perfume ID is required')
   }
-  const perfumeHouse = await getPerfumeHouseByName(params.houseId)
-  if (!perfumeHouse) {
+  const perfume = await getPerfumeByName(params.id)
+  const allHouses = await getAllHouses()
+  if (!perfume) {
     throw new Response('House not found', { status: 404 })
   }
-  return { perfumeHouse }
+  return { perfume, allHouses }
 }
-const EditHousePage = () => {
-  const { perfumeHouse } = useLoaderData<typeof loader>()
+
+const EditPerfumePage = () => {
+  const { perfume, allHouses } = useLoaderData<typeof loader>()
   const lastResult = useActionData<CustomSubmit>()
   const navigate = useNavigate()
-
   useEffect(
     () => {
       if (lastResult?.success && lastResult.data) {
-        navigate(`/perfume-house/${lastResult.data.name}`)
+        navigate(`/perfume/${lastResult.data.name}`)
       }
     },
     [lastResult]
   )
-
   return (
     <section>
       <header className="mb-6">
@@ -54,17 +51,18 @@ const EditHousePage = () => {
           {' '}
           Editing
           {' '}
-          {perfumeHouse.name}
+          {perfume.name}
         </h1>
         <p className="text-lg">Edit</p>
       </header>
-      <PerfumeHouseForm
-        formType={FORM_TYPES.EDIT_HOUSE_FORM}
+      <PerfumeForm
+        formType={FORM_TYPES.EDIT_PERFUME_FORM}
         lastResult={lastResult}
-        data={perfumeHouse}
+        data={perfume}
+        allHouses={allHouses}
       />
     </section>
   )
 }
 
-export default EditHousePage
+export default EditPerfumePage

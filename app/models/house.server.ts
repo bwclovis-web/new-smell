@@ -66,7 +66,6 @@ export const updatePerfumeHouse = async (id: string, data: FormData) => {
         error: `A perfume house with that ${err.meta?.target?.[0] || 'value'} already exists.`
       }
     }
-    // Other errors (optional)
     return {
       success: false,
       error: 'An unexpected error occurred.'
