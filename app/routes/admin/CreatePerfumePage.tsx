@@ -5,7 +5,6 @@ import { type ActionFunctionArgs, useActionData, useLoaderData } from 'react-rou
 import PerfumeForm from '~/components/Containers/Forms/PerfumeForm'
 import { getAllHouses } from '~/models/house.server'
 import { createPerfume } from '~/models/perfume.server'
-import { getAllTags } from '~/models/tags.server'
 import { FORM_TYPES } from '~/utils/constants'
 import { CreatePerfumeSchema } from '~/utils/formValidationSchemas'
 
@@ -24,8 +23,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export const loader = async () => {
   const allHouses = await getAllHouses()
-  const allNotes = await getAllTags()
-  return { allHouses, allNotes }
+  return { allHouses }
 }
 
 const CreatePerfumePage = () => {

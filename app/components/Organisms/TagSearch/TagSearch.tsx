@@ -11,11 +11,12 @@ import { tagSearchVariants } from './tagsearch-variants'
 interface TagSearchProps extends HTMLProps<HTMLDivElement>,
   VariantProps<typeof tagSearchVariants> { }
 
-const TagSearch: FC<TagSearchProps> = ({ className, onChange, label }) => {
+const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => {
   const [inputValue, setInputValue] = useState('')
   const [results, setResults] = useState([])
   const [openDropdown, setOpenDropdown] = useState(!!results.length)
-  const [selectedTags, setSelectedTags] = useState<any[]>([])
+  const [selectedTags, setSelectedTags]
+    = useState<any[]>(Array.isArray(data) ? data : [])
 
   const handleKeyUp = async (evt) => {
     const query = (evt.target as HTMLInputElement).value
