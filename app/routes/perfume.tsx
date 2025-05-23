@@ -86,25 +86,35 @@ const PerfumePage = () => {
             <div className="border py-2 rounded-md bg-noir-dark text-noir-light px-2 my-6">
               <div className="flex items-center gap-2">
                 <span>Opening Notes:</span>
-                <ul>
-                  {perfume.perfumeNotesOpen.map(note => (
-                    <li key={note.id}>{note.name}</li>
+                <ul className="flex gap-2">
+                  {perfume.perfumeNotesOpen.map((note, idx) => (
+                    <li className="font-semibold capitalize" key={note.id}>
+                      {note.name}
+                      {idx + 1 < perfume.perfumeNotesOpen.length && <span>,</span>}
+                    </li>
+
                   ))}
                 </ul>
               </div>
               <div className="flex items-center gap-2">
                 <span>Mid Notes:</span>
-                <ul>
-                  {perfume.perfumeNotesHeart.map(note => (
-                    <li key={note.id}>{note.name}</li>
+                <ul className="flex gap-2">
+                  {perfume.perfumeNotesHeart.map((note, idx) => (
+                    <li className="font-semibold capitalize" key={note.id}>
+                      {note.name}
+                      {idx + 1 < perfume.perfumeNotesHeart.length && <span>,</span>}
+                    </li>
                   ))}
                 </ul>
               </div>
               <div className="flex items-center gap-2">
                 <span>End Notes:</span>
-                <ul>
+                <ul className="font-semibold capitalize">
                   {perfume.perfumeNotesClose.map(note => (
-                    <li key={note.id}>{note.name}</li>
+                    <li key={note.id}>
+                      {note.name}
+                      {idx + 1 < perfume.perfumeNotesHeart.length && <span>,</span>}
+                    </li>
                   ))}
                 </ul>
               </div>
