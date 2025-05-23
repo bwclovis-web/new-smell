@@ -49,14 +49,6 @@ const TagSearch: FC<TagSearchProps> = ({ className, onChange, label }) => {
           onKeyUp={handleKeyUp}
           value={inputValue}
           onChange={evt => setInputValue(evt.target.value)}
-          onFocusCapture={() => {
-            setOpenDropdown(true)
-          }}
-          onBlur={() => {
-            setTimeout(() => {
-              setOpenDropdown(false)
-            }, 200)
-          }}
         />
         {openDropdown && (
           <ul className="bg-white rounded-b-md w-full relative z-10">

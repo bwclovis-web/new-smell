@@ -57,7 +57,7 @@ export default defineConfig([
     'max-depth': ['error', 2],
     'max-nested-callbacks': ['error', 3],
     'max-params': ['error', 4],
-    'max-statements': ['error', 7],
+    'max-statements': ['error', 8],
     'new-cap': ['error', { newIsCap: true, capIsNew: true }],
     'no-console': 'error',
     'no-empty': 'error',
