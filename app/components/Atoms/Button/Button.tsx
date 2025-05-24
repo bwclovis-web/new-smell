@@ -14,10 +14,7 @@ interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'sty
 interface LinkProps extends Omit<LinkHTMLAttributes<HTMLAnchorElement>, 'style'>,
   VariantProps<typeof buttonVariants> {
   style?: 'primary' | 'secondary' | 'danger' | null
-  url: {
-    pathname: string
-    search?: string
-  }
+  url: string
 }
 
 const Button: FC<ButtonProps> = ({ className, size, style, children, ...props }) => (

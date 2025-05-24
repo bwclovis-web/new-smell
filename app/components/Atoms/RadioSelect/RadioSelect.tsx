@@ -1,13 +1,14 @@
 import { type VariantProps } from 'class-variance-authority'
-import { type ChangeEvent, type FC, type HTMLProps } from 'react'
+import { type ChangeEvent, type FC } from 'react'
 
 import { styleMerge } from '~/utils/styleUtils'
 
 import { radioSelectVariants } from './radioSelect-variants'
 
-interface RadioSelectProps extends HTMLProps<HTMLDivElement>,
-  VariantProps<typeof radioSelectVariants> {
+interface RadioSelectProps extends VariantProps<typeof radioSelectVariants> {
   handleRadioChange: (evt: ChangeEvent<HTMLInputElement>) => void
+  data: any[]
+  className?: string
 }
 
 const RadioSelect: FC<RadioSelectProps>

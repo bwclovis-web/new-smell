@@ -11,8 +11,7 @@ import { CreatePerfumeSchema } from '~/utils/formValidationSchemas'
 export const ROUTE_PATH = '/admin/create-perfume' as const
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const clonedRequest = request.clone()
-  const formData = await clonedRequest.formData()
+  const formData = await request.formData()
   const test = parseWithZod(formData, { schema: CreatePerfumeSchema })
   if (test.status !== 'success') {
     return (test.reply())
@@ -21,7 +20,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return res
 }
 
-export const loader = async () => {
+export const loader = async ({ context }) => {
+  console.log('Loading all houses for Create Perfume Page', context)
   const allHouses = await getAllHouses()
   return { allHouses }
 }

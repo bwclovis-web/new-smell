@@ -27,10 +27,12 @@ const Input: FC<InputProps> = ({
   action,
   ...props
 }) => {
-  const inputProps = {
-    ...getInputProps(action, { ariaAttributes: true, type: inputType }),
-    id: inputId
-  }
+  const inputProps = action
+    ? {
+      ...getInputProps(action, { ariaAttributes: true, type: inputType }),
+      id: inputId
+    }
+    : { id: inputId, type: inputType }
   return (
     <div
       className={

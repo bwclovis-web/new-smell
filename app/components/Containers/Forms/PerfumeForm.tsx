@@ -60,27 +60,27 @@ const PerfumeForm
           inputId="image"
           defaultValue={data?.image}
         />
-        <Select selectData={allHouses} selectId="house" label="Perfume House" defaultId={data.perfumeHouseId} />
+        <Select selectData={allHouses} selectId="house" label="Perfume House" defaultId={data?.perfumeHouseId} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <TagSearch
             name="notesTop"
             label="Top Notes"
             onChange={setTopNotes as any}
-            data={data.perfumeNotesOpen}
+            data={data?.perfumeNotesOpen}
           />
 
           <TagSearch
             name="notesHeart"
             label="Heart Notes"
             onChange={setHeartNotes as any}
-            data={data.perfumeNotesHeart}
+            data={data?.perfumeNotesHeart}
           />
 
           <TagSearch
             name="notesBase"
             label="Base Notes"
             onChange={setBaseNotes as any}
-            data={data.perfumeNotesClose}
+            data={data?.perfumeNotesClose}
           />
         </div>
         {topNotes.map(tag => (
