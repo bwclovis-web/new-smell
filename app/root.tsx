@@ -12,6 +12,7 @@ import {
 } from 'react-router'
 
 import type { Route } from './+types/root'
+import FourOFourPage from './components/Containers/404Page/404Page'
 import i18n from './modules/i18n/i18n.client'
 
 export const links: Route.LinksFunction = () => [
@@ -68,7 +69,9 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     details = error.message
     stack = error.stack
   }
-
+  if (error.status === 404) {
+    return <FourOFourPage />
+  }
   return (
     <main className="pt-16 p-4 container mx-auto">
       <h1>{message}</h1>

@@ -9,8 +9,7 @@ import { FORM_TYPES } from '~/utils/constants'
 import type { CustomSubmit } from './EditPerfumeHousePage'
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const clonedRequest = request.clone()
-  const formData = await clonedRequest.formData()
+  const formData = await request.formData()
   const formIdEntry = formData.get('houseId')?.toString()
   if (typeof formIdEntry !== 'string') {
     throw new Error('Form ID is required and must be a string')
