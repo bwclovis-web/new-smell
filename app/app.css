@@ -21,7 +21,7 @@ body {
 }
 
 h1,h2,h3 {
- @apply font-headline text-noir-dark dark:text-noir-light;
+ @apply font-headline text-inherit;
 }
 
 h1 {
