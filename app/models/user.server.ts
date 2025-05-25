@@ -19,7 +19,13 @@ export const createUser = async (data: FormData) => {
 
 export const getUserByName = async (email: string) => {
   const user = await prisma.user.findUnique({
-    where: { email }
+    where: { email },
+    select: {
+      id: true,
+      email: true,
+      password: true,
+      role: true
+    }
   })
   return user
 }

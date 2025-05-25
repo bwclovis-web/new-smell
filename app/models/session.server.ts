@@ -36,3 +36,14 @@ export async function logout({ context }: { context: { req: any } }) {
   await context.req.session.destroy()
   return redirect(LOGIN_PATH)
 }
+
+export async function requireRoles(
+  context: { userSession: any },
+  roles: string[]
+) {
+  const user = await getUser(context)
+  if (!user || !roles.includes(user.role)) {
+    throw redirect('/login') // or custom unauthorized route
+  }
+  return user
+}

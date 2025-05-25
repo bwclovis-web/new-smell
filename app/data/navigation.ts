@@ -1,4 +1,3 @@
-import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/adminIndex'
 import { ROUTE_PATH as CREATE_HOUSE } from '~/routes/admin/CreatePerfumeHousePage'
 import { ROUTE_PATH as CREATE_PERFUME } from '~/routes/admin/CreatePerfumePage'
 import { ROUTE_PATH as ALL_HOUSES } from '~/routes/all-houses'
@@ -16,12 +15,6 @@ export const mainNavigation = [
     key: 'perfumes',
     label: 'Perfumes',
     path: ALL_PERFUMES
-  },
-  {
-    id: '3',
-    key: 'admin',
-    label: 'Admin',
-    path: ADMIN_PATH
   }
 ]
 
