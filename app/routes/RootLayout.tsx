@@ -4,7 +4,7 @@ import GlobalNavigation from '~/components/Molecules/GlobalNavigation/GlobalNavi
 import { getUserById } from '~/models/user.server'
 
 export const loader = async ({ context }: LoaderFunctionArgs) => {
-  const user = context.userSession?.userId
+  const user = context?.userSession?.userId
     ? await getUserById(context.userSession.userId)
     : null
 
