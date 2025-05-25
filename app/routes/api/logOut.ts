@@ -1,5 +1,5 @@
 // app/routes/logout.tsx
-import { type ActionFunctionArgs, redirect } from 'react-router'
+import { type ActionFunctionArgs } from 'react-router'
 
 import { logout } from '~/models/session.server'
 
