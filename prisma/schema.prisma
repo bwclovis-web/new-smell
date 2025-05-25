@@ -24,6 +24,12 @@ model User {
   UserPerfumeReview     UserPerfumeReview[]
   UserPerfumeWishlist   UserPerfumeWishlist[]
   UserPerfumeCollection UserPerfumeCollection[]
+  role                  UserRole                @default(user)
+}
+
+enum UserRole {
+  user
+  admin
 }
 
 model PerfumeHouse {
