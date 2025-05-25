@@ -8,7 +8,9 @@ import { login } from '~/models/session.server'
 import { signInCustomer } from '~/models/user.server'
 import { UserLogInSchema } from '~/utils/formValidationSchemas'
 export const ROUTE_PATH = '/sign-in'
-export const action = async ({ request, context }) => {
+import type { ActionFunctionArgs } from 'react-router-dom'
+
+export const action = async ({ request, context }: ActionFunctionArgs) => {
   const formData = await request.formData()
 
   const existingUser = await signInCustomer(formData)
@@ -28,6 +30,7 @@ const LogInPage = () => {
       return parseWithZod(formData, { schema: UserLogInSchema })
     }
   })
+
   return (
     <section className="flex flex-col items-center bg-noir-light/20 backdrop-blur-sm rounded-md shadow-md p-4 w-full max-w-md mx-auto">
       <Form {...getFormProps(signInForm)} method="POST" className="max-w-md mx-auto p-4 rounded w-full">

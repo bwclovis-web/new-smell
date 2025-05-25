@@ -54,6 +54,7 @@ export default function App() {
   )
 }
 
+// TODO: Refactor per error
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = 'Oops!'
   let details = 'An unexpected error occurred.'

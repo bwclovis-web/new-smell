@@ -10,7 +10,9 @@ import { UserFormSchema } from '~/utils/formValidationSchemas'
 
 export const ROUTE_PATH = '/sign-up'
 
-export const action = async ({ request, context }) => {
+import type { ActionFunctionArgs } from 'react-router-dom'
+
+export const action = async ({ request, context }: ActionFunctionArgs) => {
   const formData = await request.formData()
 
   const existingUser = await getUserByName(formData.get('email') as string)
