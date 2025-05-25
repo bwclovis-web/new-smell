@@ -27,8 +27,8 @@ export default [
     ]),
 
     layout('routes/login/LoginLayout.tsx', [
-      route('sign-up', 'routes/login/SignUpPage.tsx'),
-      route('sign-in', '/routes/login/SignInPage.tsx')
+      route('sign-up', 'routes/login/SignUpPage.tsx')
+      // route('sign-in', '/routes/login/SignInPage.tsx')
     ])
   ])
 ] satisfies RouteConfig
