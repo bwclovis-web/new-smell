@@ -64,7 +64,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
                   isActive ? 'text-gray-300' : ''
                 )}
               >
-                hello
+                Sign In
               </NavLink>
             )
             : <LogoutButton />}

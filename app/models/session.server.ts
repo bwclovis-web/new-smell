@@ -1,7 +1,8 @@
 // app/models/session.server.ts
 import { redirect } from 'react-router-dom'
 
-// import { ROUTE_PATH as LOGIN_PATH } from '~/routes/login/SignInPage'
+import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
+
 import { getUserById } from './user.server'
 export async function getUser(context: { userSession: any }) {
   const userId = context.userSession?.userId
@@ -14,7 +15,7 @@ export async function getUser(context: { userSession: any }) {
 export async function requireUser(context: { userSession: any }) {
   const user = await getUser(context)
   if (!user) {
-    throw redirect('/')
+    throw redirect(SIGN_IN)
   }
   return user
 }
@@ -33,7 +34,7 @@ export async function login({
 
 export async function logout({ context }: { context: { req: any } }) {
   await context.req.session.destroy()
-  return redirect('/')
+  return redirect(SIGN_IN)
 }
 
 export async function requireRoles(
@@ -42,7 +43,7 @@ export async function requireRoles(
 ) {
   const user = await getUser(context)
   if (!user || !roles.includes(user.role)) {
-    throw redirect('/login') // or custom unauthorized route
+    throw redirect(SIGN_IN) // or custom unauthorized route
   }
   return user
 }
