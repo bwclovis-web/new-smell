@@ -5,40 +5,47 @@ import { Form, useActionData } from 'react-router'
 
 import Input from '~/components/Atoms/Input/Input'
 import { login } from '~/models/session.server'
-import { signInCustomer } from '~/models/user.server'
-import { UserLogInSchema } from '~/utils/formValidationSchemas'
+import { createUser, getUserByName } from '~/models/user.server'
+import { UserFormSchema } from '~/utils/formValidationSchemas'
+
+export const ROUTE_PATH = '/sign-up'
 
 export const action = async ({ request, context }) => {
   const formData = await request.formData()
 
-  const existingUser = await signInCustomer(formData)
-  if (!existingUser) {
-    return { error: 'User Not found' }
+  const existingUser = await getUserByName(formData.get('email') as string)
+  if (existingUser) {
+    return { error: 'Username already taken' }
   }
+  const user = await createUser(formData)
 
-  await login({ context, userId: existingUser.id })
+  await login({ context, userId: user.id })
 }
-const LogInPage = () => {
+
+const RegisterPage = () => {
   const actionData = useActionData()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
-  const [signInForm, { email, password }] = useForm({
-    constraint: getZodConstraint(UserLogInSchema),
+  const [signupForm, { email, password, confirmPassword }] = useForm({
+    constraint: getZodConstraint(UserFormSchema),
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema: UserLogInSchema })
+      return parseWithZod(formData, { schema: UserFormSchema })
     }
   })
+
   return (
     <section className="flex flex-col items-center bg-noir-light/20 backdrop-blur-sm rounded-md shadow-md p-4 w-full max-w-md mx-auto">
-      <Form {...getFormProps(signInForm)} method="POST" className="max-w-md mx-auto p-4 rounded w-full">
+      <Form {...getFormProps(signupForm)} method="POST" className="max-w-md mx-auto p-4 rounded w-full">
         <Input inputId="email" inputType="email" action={email} inputRef={inputRef} />
         <Input inputId="password" inputType="password" action={password} inputRef={inputRef} />
+        <Input inputId="passwordMatch" inputType="password" action={confirmPassword} inputRef={inputRef} />
         {actionData?.error && (
           <p className="text-red-600 mb-2">{actionData.error}</p>
         )}
-        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded mt-8">Log In</button>
+        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded mt-8">Register</button>
       </Form>
     </section>
   )
 }
-export default LogInPage
+
+export default RegisterPage

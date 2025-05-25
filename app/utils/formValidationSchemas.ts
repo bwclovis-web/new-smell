@@ -18,3 +18,16 @@ export const CreatePerfumeSchema = z.object({
   house: z.string().min(2, { message: 'House is required' }),
   image: z.string().url({ message: 'Image URL is required' })
 })
+
+export const UserFormSchema = z.object({
+  email: z.string().email({ message: 'Email is required' }),
+  password: z.string().min(6, { message: 'Password is required' }),
+  confirmPassword: z.string().min(6, { message: 'Confirm Password is required' })
+}).refine(data => data.password === data.confirmPassword, {
+  message: 'Passwords do not match'
+})
+
+export const UserLogInSchema = z.object({
+  email: z.string().email({ message: 'Email is required' }),
+  password: z.string().min(6, { message: 'Password is required' })
+})

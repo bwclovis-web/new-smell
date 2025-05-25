@@ -16,6 +16,7 @@ export default [
     route('api/getTag', 'routes/api/tagLoader.ts'),
     route('api/houseSortLoader', 'routes/api/houseSortLoader.ts'),
     route('api/createTag', 'routes/api/createTag.ts'),
+    route('api/log-out', 'routes/api/logOut.ts'),
 
     layout('routes/admin/AdminLayout.tsx', [
       route('admin/', 'routes/admin/adminIndex.tsx'),
@@ -25,6 +26,9 @@ export default [
       route('admin/perfume-house/:houseId/edit', 'routes/admin/EditPerfumeHousePage.tsx')
     ]),
 
-    layout('routes/login/LoginLayout.tsx', [route('sign-up', 'routes/login/LoginPage.tsx')])
+    layout('routes/login/LoginLayout.tsx', [
+      route('sign-up', 'routes/login/SignUpPage.tsx'),
+      route('sign-in', 'routes/login/LogInPage.tsx')
+    ])
   ])
 ] satisfies RouteConfig
