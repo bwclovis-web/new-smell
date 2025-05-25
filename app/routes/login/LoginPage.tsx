@@ -7,7 +7,7 @@ import Input from '~/components/Atoms/Input/Input'
 import { login } from '~/models/session.server'
 import { signInCustomer } from '~/models/user.server'
 import { UserLogInSchema } from '~/utils/formValidationSchemas'
-
+export const ROUTE_PATH = '/sign-in'
 export const action = async ({ request, context }) => {
   const formData = await request.formData()
 

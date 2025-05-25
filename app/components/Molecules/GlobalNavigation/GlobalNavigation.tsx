@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
 
 import { mainNavigation } from '~/data/navigation'
-import { ROUTE_PATH as LOGIN_PATH } from '~/routes/login/SignUpPage'
+import { ROUTE_PATH as LOGIN_PATH } from '~/routes/login/LoginPage'
 import { styleMerge } from '~/utils/styleUtils'
 
 import LogoutButton from '../LogoutButton/LogoutButton'
