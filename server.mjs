@@ -46,6 +46,17 @@ const generalRateLimit = rateLimit(defaultRateLimit)
 const app = express()
 const metricsApp = express()
 
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'replace_with_secure_secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    httpOnly: true,
+    secure: NODE_ENV === 'production', // only send cookie over HTTPS in prod
+    maxAge: 1000 * 60 * 60 * 24 // 1 day
+  }
+}))
+
 if (viteDevServer) {
   app.use('/assets', express.static('public/assets'))
   app.use(viteDevServer.middlewares)
@@ -85,17 +96,6 @@ app.use((req, res, next) => {
   }
 })
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'replace_with_secure_secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: NODE_ENV === 'production', // only send cookie over HTTPS in prod
-    maxAge: 1000 * 60 * 60 * 24 // 1 day
-  }
-}))
-
 app.use((req, res, next) => {
   const STRONG_PATHS = ['/auth/login']
   if (req.method !== 'GET' && req.method !== 'HEAD') {
@@ -113,20 +113,19 @@ const build = viteDevServer
 
 app.all(
   '*',
-  (req, res, next) => {
-    const userId = req.session.userId
-    const user = userId ? { id: userId } : null
+  createRequestHandler({
+    build,
+    mode: NODE_ENV,
+    getLoadContext: async (req, res) => ({
+      userSession: req.session ?? {},
+      req,
+      res
+    })
 
-    createRequestHandler({
-      build,
-      mode: NODE_ENV,
-      loadContext: { user, req, res }
-    })(req, res, next)
-  }
+  })
 )
 
 app.use((err, req, res, next) => {
-  console.error(err.stack)
   if (res.headersSent) {
     return next(err)
   }

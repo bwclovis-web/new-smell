@@ -113,7 +113,7 @@ const PerfumePage = () => {
                   {perfume.perfumeNotesClose.map((note, idx) => (
                     <li key={note.id}>
                       {note.name}
-                      {idx + 1 < perfume.perfumeNotesHeart.length && <span>,</span>}
+                      {idx + 1 < perfume.perfumeNotesClose.length && <span>,</span>}
                     </li>
                   ))}
                 </ul>

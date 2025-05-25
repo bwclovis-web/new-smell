@@ -20,8 +20,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return res
 }
 
-export const loader = async ({ context }) => {
-  console.log('Loading all houses for Create Perfume Page', context)
+export const loader = async () => {
   const allHouses = await getAllHouses()
   return { allHouses }
 }

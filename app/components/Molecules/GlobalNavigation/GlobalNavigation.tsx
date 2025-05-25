@@ -5,16 +5,17 @@ import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
 
 import { mainNavigation } from '~/data/navigation'
+import { ROUTE_PATH as LOGIN_PATH } from '~/routes/login/SignUpPage'
 import { styleMerge } from '~/utils/styleUtils'
 
+import LogoutButton from '../LogoutButton/LogoutButton'
 import { globalNavigationVariants } from './globalNavigation-variants'
 
 interface GlobalNavigationProps extends HTMLProps<HTMLDivElement>,
   VariantProps<typeof globalNavigationVariants> { }
 
-const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className }) => {
+const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user }) => {
   const { t } = useTranslation()
-
   return (
     <nav className={styleMerge(globalNavigationVariants({ className }))} data-cy="GlobalNavigation">
       <div>
@@ -37,6 +38,22 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className }) => {
             </NavLink>
           </li>
         ))}
+        <li>
+          {!user
+            ? (
+              <NavLink
+                viewTransition
+                to={LOGIN_PATH}
+                className={({ isActive }) => styleMerge(
+                  'text-white hover:text-gray-300',
+                  isActive ? 'text-gray-300' : ''
+                )}
+              >
+                hello
+              </NavLink>
+            )
+            : <LogoutButton />}
+        </li>
       </ul>
     </nav>
   )
