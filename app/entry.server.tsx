@@ -20,7 +20,6 @@ export default function handleRequest(
   loadContext: AppLoadContext
 ) {
   return new Promise((resolve, reject) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const language = (loadContext as any).i18n?.language ?? 'en'
     let shellRendered = false
     const userAgent = request.headers.get('user-agent')
