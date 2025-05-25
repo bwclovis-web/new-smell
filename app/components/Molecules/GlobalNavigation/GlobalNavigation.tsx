@@ -6,6 +6,7 @@ import { NavLink } from 'react-router'
 
 import { mainNavigation } from '~/data/navigation'
 import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/adminIndex'
+import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 import { styleMerge } from '~/utils/styleUtils'
 
 import LogoutButton from '../LogoutButton/LogoutButton'
@@ -57,7 +58,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
             ? (
               <NavLink
                 viewTransition
-                to="/"
+                to={SIGN_IN}
                 className={({ isActive }) => styleMerge(
                   'text-white hover:text-gray-300',
                   isActive ? 'text-gray-300' : ''
