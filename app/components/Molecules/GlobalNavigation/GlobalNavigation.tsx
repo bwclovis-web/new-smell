@@ -6,7 +6,7 @@ import { NavLink } from 'react-router'
 
 import { mainNavigation } from '~/data/navigation'
 import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/adminIndex'
-import { ROUTE_PATH as LOGIN_PATH } from '~/routes/login/LogInPage'
+import { ROUTE_PATH as LOGIN_PATH } from '~/routes/login/SignInPage'
 import { styleMerge } from '~/utils/styleUtils'
 
 import LogoutButton from '../LogoutButton/LogoutButton'

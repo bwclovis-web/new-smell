@@ -1,7 +1,7 @@
 // app/models/session.server.ts
 import { redirect } from 'react-router-dom'
 
-import { ROUTE_PATH as LOGIN_PATH } from '~/routes/login/LoginPage'
+import { ROUTE_PATH as LOGIN_PATH } from '~/routes/login/SignInPage'
 
 import { getUserById } from './user.server'
 export async function getUser(context: { userSession: any }) {
