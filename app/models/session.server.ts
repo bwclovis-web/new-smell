@@ -5,7 +5,7 @@ import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 
 import { getUserById } from './user.server'
 export async function getUser(context: { userSession: any }) {
-  const userId = context.userSession?.userId
+  const userId = context?.userSession?.userId
   if (!userId) {
     return null
   }
