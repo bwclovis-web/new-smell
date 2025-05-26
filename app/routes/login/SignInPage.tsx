@@ -19,7 +19,11 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   }
   console.log('Existing user:', existingUser)
   const test = await login({ context, userId: existingUser.id })
-  console.log('User logged in:', test)
+  console.log('User logged in:', login({ context, userId: existingUser.id }))
+  if (!test) {
+    console.error('Login failed for user:', existingUser.id)
+    return { error: 'Login failed' }
+  }
   return test
 }
 const LogInPage = () => {
