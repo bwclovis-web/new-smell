@@ -27,24 +27,9 @@ export async function login({
   context: { userSession: any, req: any }
   userId: string
 }) {
-  try {
-    const user = await getUserById(userId)
-    if (!user) {
-      throw new Error('User not found')
-    }
-
-    // Set user session
-    context.req.session.userId = user.id
-    context.req.session.role = user.role
-
-    // Save session
-    await context.req.session.save()
-
-    return redirect('/') // Redirect to home or dashboard after login
-  } catch (error) {
-    console.error('Error during login:', error)
-    throw new Error('Login failed')
-  }
+  context.userSession.userId = userId
+  await context.req.session.save()
+  return redirect('/')
 }
 
 export async function logout({ context }: { context: { req: any } }) {
