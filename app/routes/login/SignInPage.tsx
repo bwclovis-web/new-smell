@@ -17,14 +17,8 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   if (!existingUser) {
     return { error: 'User Not found' }
   }
-  console.log('Existing user:', existingUser)
-  const test = await login({ context, userId: existingUser.id })
-  console.log('User logged in:', login({ context, userId: existingUser.id }))
-  if (!test) {
-    console.error('Login failed for user:', existingUser.id)
-    return { error: 'Login failed' }
-  }
-  return test
+
+  await login({ context, userId: existingUser.id })
 }
 const LogInPage = () => {
   const actionData = useActionData()
