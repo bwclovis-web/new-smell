@@ -57,6 +57,14 @@ app.use(session({
   }
 }))
 
+app.use((req, res, next) => {
+  req.context = {
+    req,
+    userSession: req.session // <-- alias
+  }
+  next()
+})
+
 if (viteDevServer) {
   app.use('/assets', express.static('public/assets'))
   app.use(viteDevServer.middlewares)
