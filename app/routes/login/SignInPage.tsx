@@ -18,6 +18,8 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     return { error: 'User Not found' }
   }
 
+  console.log('User found:', existingUser)
+
   await login({ context, userId: existingUser.id })
 }
 const LogInPage = () => {
