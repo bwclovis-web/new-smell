@@ -19,6 +19,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   }
 
   const test = await login({ context, userId: existingUser.id })
+  console.log('User logged in:', test)
   return test
 }
 const LogInPage = () => {
