@@ -8,6 +8,7 @@ import express from 'express'
 import { rateLimit } from 'express-rate-limit'
 import i18nextMiddleware from 'i18next-http-middleware'
 import morgan from 'morgan'
+import serverless from 'serverless-http'
 
 import i18n from '../app/modules/i18n/i18n.server.js'
 import { parseCookies, verifyJwt } from './utils.js'
@@ -49,8 +50,7 @@ const metricsApp = express()
 if (viteDevServer) {
   app.use('/assets', express.static('public/assets'))
   app.use(viteDevServer.middlewares)
-}
- else {
+} else {
   app.use(
     '/assets',
     express.static('build/client/assets', {
@@ -81,8 +81,7 @@ app.use((req, res, next) => {
     const query = req.url.slice(req.path.length)
     const safePath = req.path.slice(0, -1).replace(/\/+/g, '/')
     res.redirect(301, safePath + query)
-  }
- else {
+  } else {
     next()
   }
 })
@@ -109,7 +108,8 @@ const build = viteDevServer
 app.get('/test-session', (req, res) => {
   if (!req.session.views) {
     req.session.views = 1
-  } else {
+  }
+ else {
     req.session.views++
   }
   res.send(`Session works! You've visited ${req.session.views} times.`)
@@ -151,6 +151,6 @@ app.use((err, req, res, next) => {
     ? `<pre>${err.stack}</pre>`
     : 'Internal Server Error')
 })
-
-app.listen(PORT, () => console.log(`🤘 server running: http://localhost:${PORT}`))
-metricsApp.listen(METRICS_PORT, () => console.log(`✅ metrics ready: http://localhost:${METRICS_PORT}/metrics`))
+export const handler = serverless(app)
+// app.listen(PORT, () => console.log(`🤘 server running: http://localhost:${PORT}`))
+// metricsApp.listen(METRICS_PORT, () => console.log(`✅ metrics ready: http://localhost:${METRICS_PORT}/metrics`))
