@@ -110,20 +110,17 @@ app.use((req, res, next) => {
 })
 app.use(i18nextMiddleware.handle(i18n))
 const build = viteDevServer
-  ? () => viteDevServer.ssrLoadModule('virtual:react-router/server-build')
+  ? await viteDevServer.ssrLoadModule('virtual:react-router/server-build')
   : await import('./build/server/index.js')
 
+console.log('Using build:', typeof build)
 app.all(
   '*',
   createRequestHandler({
     build,
     mode: NODE_ENV,
     getLoadContext: async (req, res) => {
-      console.log('✅ Load context:', {
-        hasSession: !!req.session,
-        sessionKeys: req.session ? Object.keys(req.session) : [],
-        cookieHeader: req.headers.cookie
-      })
+      console.log('getLoadContext called with req:', req.url)
 
       return {
         userSession: req.session ?? {},

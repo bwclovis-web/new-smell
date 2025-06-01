@@ -13,7 +13,7 @@
     "lint": "eslint --fix --ignore-pattern .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "dev": "run-p start:server open:localhost",
     "open:localhost": "start http://localhost:2112",
-    "start": "react-router-serve ./build/server/index.js",
+    "start": "run-p start:server",
     "start:server": "node ./server.mjs",
     "typecheck": "react-router typegen && tsc",
     "postinstall": "prisma generate"
