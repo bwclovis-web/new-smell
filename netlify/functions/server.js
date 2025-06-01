@@ -50,8 +50,7 @@ const metricsApp = express()
 if (viteDevServer) {
   app.use('/assets', express.static('public/assets'))
   app.use(viteDevServer.middlewares)
-}
- else {
+} else {
   app.use(
     '/assets',
     express.static('build/client/assets', {
@@ -82,8 +81,7 @@ app.use((req, res, next) => {
     const query = req.url.slice(req.path.length)
     const safePath = req.path.slice(0, -1).replace(/\/+/g, '/')
     res.redirect(301, safePath + query)
-  }
- else {
+  } else {
     next()
   }
 })
@@ -110,7 +108,8 @@ const build = viteDevServer
 app.get('/test-session', (req, res) => {
   if (!req.session.views) {
     req.session.views = 1
-  } else {
+  }
+ else {
     req.session.views++
   }
   res.send(`Session works! You've visited ${req.session.views} times.`)
