@@ -4,7 +4,7 @@ import { useRef } from 'react'
 import { Form, useActionData } from 'react-router'
 
 import Input from '~/components/Atoms/Input/Input'
-import { login } from '~/models/session.server'
+// import { login } from '~/models/session.server'
 import { signInCustomer } from '~/models/user.server'
 import { UserLogInSchema } from '~/utils/formValidationSchemas'
 export const ROUTE_PATH = '/sign-in'
@@ -18,7 +18,10 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     return { error: 'User Not found' }
   }
 
-  await login({ context, userId: existingUser.id })
+  console.log('User found:', context.request)
+  console.log('User found:', request)
+
+  // await login({ context, userId: existingUser.id })
 }
 const LogInPage = () => {
   const actionData = useActionData()

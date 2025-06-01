@@ -52,23 +52,16 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: NODE_ENV === 'production', // only send cookie over HTTPS in prod
+    // secure: NODE_ENV === 'production', // only send cookie over HTTPS in prod
     maxAge: 1000 * 60 * 60 * 24 // 1 day
   }
 }))
 
-app.use((req, res, next) => {
-  req.context = {
-    req,
-    userSession: req.session // <-- alias
-  }
-  next()
-})
-
 if (viteDevServer) {
   app.use('/assets', express.static('public/assets'))
   app.use(viteDevServer.middlewares)
-} else {
+}
+ else {
   app.use(
     '/assets',
     express.static('build/client/assets', {
@@ -99,7 +92,8 @@ app.use((req, res, next) => {
     const query = req.url.slice(req.path.length)
     const safePath = req.path.slice(0, -1).replace(/\/+/g, '/')
     res.redirect(301, safePath + query)
-  } else {
+  }
+ else {
     next()
   }
 })
@@ -124,11 +118,19 @@ app.all(
   createRequestHandler({
     build,
     mode: NODE_ENV,
-    getLoadContext: async (req, res) => ({
-      userSession: req.session ?? {},
-      req,
-      res
-    })
+    getLoadContext: async (req, res) => {
+      console.log('✅ Load context:', {
+        hasSession: !!req.session,
+        sessionKeys: req.session ? Object.keys(req.session) : [],
+        cookieHeader: req.headers.cookie
+      })
+
+      return {
+        userSession: req.session ?? {},
+        req,
+        res
+      }
+    }
 
   })
 )
