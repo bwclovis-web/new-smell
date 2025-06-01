@@ -14,7 +14,7 @@
     "dev": "run-p start:server open:localhost",
     "open:localhost": "start http://localhost:2112",
     "start": "run-p start:server",
-    "start:server": "node ./server.mjs",
+    "start:server": "node ./api/server.mjs",
     "typecheck": "react-router typegen && tsc",
     "postinstall": "prisma generate"
   },
