@@ -1,2 +1,2 @@
-import app from '../../../server.mjs' // Adjust path as needed
+import app from '../../../api/server.mjs' // Adjust path as needed
 export default app
