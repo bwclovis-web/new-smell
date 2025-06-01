@@ -27,6 +27,7 @@ export async function login({
   context: { userSession: any, req: any }
   userId: string
 }) {
+  console.log('Logging in user with ID:', context)
   context.userSession.userId = userId
   await context.req.session.save()
   return redirect('/')
