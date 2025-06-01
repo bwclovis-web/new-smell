@@ -15,8 +15,6 @@ import type { ActionFunctionArgs } from 'react-router-dom'
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const formData = await request.formData()
 
-  console.log('Form context:', context)
-
   const existingUser = await getUserByName(formData.get('email') as string)
   if (existingUser) {
     return { error: 'Username already taken' }

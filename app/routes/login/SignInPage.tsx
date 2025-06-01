@@ -10,6 +10,8 @@ import { UserLogInSchema } from '~/utils/formValidationSchemas'
 export const ROUTE_PATH = '/sign-in'
 import type { ActionFunctionArgs } from 'react-router-dom'
 
+import { login } from '~/models/session.server'
+
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const formData = await request.formData()
 
@@ -18,10 +20,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     return { error: 'User Not found' }
   }
 
-  console.log('User found:', context.request)
-  console.log('User found:', request)
-
-  // await login({ context, userId: existingUser.id })
+  await login({ context, userId: existingUser.id })
 }
 const LogInPage = () => {
   const actionData = useActionData()
