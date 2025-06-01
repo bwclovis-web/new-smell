@@ -4,8 +4,9 @@ import GlobalNavigation from '~/components/Molecules/GlobalNavigation/GlobalNavi
 import { getUserById } from '~/models/user.server'
 
 export const loader = async ({ context }: LoaderFunctionArgs) => {
-  const user = context?.userSession?.userId
-    ? await getUserById(context.userSession.userId)
+  console.log('RootLayout loader called ==============================>', context)
+  const user = context?.user?.id
+    ? await getUserById(context?.user?.id)
     : null
 
   return { user }

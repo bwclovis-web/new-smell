@@ -6,11 +6,11 @@ import compression from 'compression'
 import crypto from 'crypto'
 import express from 'express'
 import { rateLimit } from 'express-rate-limit'
-import session from 'express-session'
 import i18nextMiddleware from 'i18next-http-middleware'
 import morgan from 'morgan'
 
 import i18n from '../app/modules/i18n/i18n.server.js'
+import { parseCookies, verifyJwt } from './utils.js'
 const METRICS_PORT = process.env.METRICS_PORT || 3030
 const PORT = process.env.APP_PORT || 2112
 const NODE_ENV = process.env.NODE_ENV ?? 'development'
@@ -45,17 +45,6 @@ const generalRateLimit = rateLimit(defaultRateLimit)
 
 const app = express()
 const metricsApp = express()
-
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'replace_with_secure_secret',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    // secure: NODE_ENV === 'production', // only send cookie over HTTPS in prod
-    maxAge: 1000 * 60 * 60 * 24 // 1 day
-  }
-}))
 
 if (viteDevServer) {
   app.use('/assets', express.static('public/assets'))
@@ -109,6 +98,10 @@ app.use((req, res, next) => {
   return generalRateLimit(req, res, next)
 })
 app.use(i18nextMiddleware.handle(i18n))
+app.use((req, res, next) => {
+  req.context = { req, res, session: req.session }
+  next()
+})
 const build = viteDevServer
   ? await viteDevServer.ssrLoadModule('virtual:react-router/server-build')
   : await import('../build/server/index.js')
@@ -121,21 +114,31 @@ app.get('/test-session', (req, res) => {
   }
   res.send(`Session works! You've visited ${req.session.views} times.`)
 })
+
 app.all(
   '*',
   createRequestHandler({
     build,
     mode: NODE_ENV,
     getLoadContext: async (req, res) => {
-      console.log('getLoadContext called with req:', req.url)
+      const cookies = parseCookies(req)
+      const token = cookies.token
+      let user = null
+
+      if (token) {
+        const payload = verifyJwt(token)
+        if (payload && payload.userId) {
+          // You can fetch full user here or just pass userId
+          user = { id: payload.userId }
+        }
+      }
 
       return {
-        userSession: req.session ?? {},
+        user,
         req,
         res
       }
     }
-
   })
 )
 

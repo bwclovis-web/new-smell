@@ -1,5 +1,9 @@
 // app/models/session.server.ts
+import cookie from 'cookie'
+import jwt from 'jsonwebtoken'
 import { redirect } from 'react-router-dom'
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key'
 
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 
@@ -24,17 +28,31 @@ export async function login({
   context,
   userId
 }: {
-  context: { userSession: any, req: any }
+  context: { req: any, res: any }
   userId: string
+  redirectTo?: string
 }) {
-  console.log('Logging in user with ID:', context)
-  context.userSession.userId = userId
-  await context.req.session.save()
-  return redirect('/')
+  const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '1d' })
+
+  // Set Set-Cookie header on the response (HttpOnly cookie)
+  context.res.setHeader('Set-Cookie', cookie.serialize('token', token, {
+    httpOnly: true,
+    path: '/',
+    maxAge: 60 * 60 * 24, // 1 day
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production'
+  }))
+  throw redirect(SIGN_IN)
 }
 
-export async function logout({ context }: { context: { req: any } }) {
-  await context.req.session.destroy()
+export async function logout({ context }: { context: { res: any } }) {
+  context.res.setHeader('Set-Cookie', cookie.serialize('token', '', {
+    httpOnly: true,
+    path: '/',
+    maxAge: 60 * 60 * 24, // 1 day
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production'
+  }))
   return redirect(SIGN_IN)
 }
 
