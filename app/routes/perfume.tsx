@@ -46,7 +46,7 @@ const PerfumePage = () => {
   }
 
   return (
-    <section>
+    <section className="relative z-10">
       <header className="flex items-center justify-between mb-4">
         <div>
           <h1>{perfume.name}</h1>
@@ -79,8 +79,8 @@ const PerfumePage = () => {
         )}
       </header>
 
-      <div className="flex gap-20">
-        <div className="w-1/3 noir-outline rounded-b-lg">
+      <div className="flex flex-col md:flex-row gap-20">
+        <div className="md:w-1/3 noir-outline rounded-b-lg">
           <img
             src={perfume.image}
             alt={perfume.name}

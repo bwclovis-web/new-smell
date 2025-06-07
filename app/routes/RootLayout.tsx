@@ -29,7 +29,7 @@ const RootLayout = () => {
         <img
           src={background}
           alt=""
-          className="absolute object-cover w-full min-h-screen top-0 left-0 z-10 opacity-5"
+          className="absolute object-cover w-full min-h-screen top-0 left-0 z-0 opacity-5"
         />
         <GlobalNavigation user={user} />
         <main className="w-full md:w-3/4 min-h-screen">
