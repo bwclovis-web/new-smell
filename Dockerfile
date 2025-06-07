@@ -2,9 +2,9 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
+COPY ./prisma ./prisma
 RUN npm ci
 COPY . .
-COPY ./prisma ./prisma
 RUN npm run build
 
 # Production image
@@ -16,8 +16,10 @@ RUN npm ci --omit=dev
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/app ./app
-COPY --from=builder /app/netlify ./netlify
 COPY --from=builder /app/.env ./.env
+COPY --from=builder /app/node_modules/.prisma /app/node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma /app/node_modules/@prisma
+COPY --from=builder /app/api ./api
 EXPOSE 3000
 ENV NODE_ENV=production
 CMD ["npm", "run", "start"]
