@@ -7,13 +7,19 @@ import { NavLink } from 'react-router'
 import { mainNavigation } from '~/data/navigation'
 import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/adminIndex'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
+import { type SafeUser } from '~/types'
 import { styleMerge } from '~/utils/styleUtils'
 
 import LogoutButton from '../LogoutButton/LogoutButton'
 import { globalNavigationVariants } from './globalNavigation-variants'
 
 interface GlobalNavigationProps extends HTMLProps<HTMLDivElement>,
-  VariantProps<typeof globalNavigationVariants> { }
+  VariantProps<typeof globalNavigationVariants> {
+  user?: {
+    id?: string
+    role?: string
+  } | null
+}
 
 const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user }) => {
   const { t } = useTranslation()
