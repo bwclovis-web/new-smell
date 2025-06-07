@@ -9,12 +9,17 @@ if (!i18n.isInitialized) {
     .use(initReactI18next)
     .init({
       fallbackLng: 'en',
+      supportedLngs: ['en', 'es'],
+      load: 'languageOnly',
       debug: process.env.NODE_ENV === 'development',
+      interpolation: {
+        escapeValue: false // React already does escaping
+      },
       backend: {
         loadPath: path.resolve(__dirname, '../../public/locales/{{lng}}/{{ns}}.json'),
       },
       react: {
-        useSuspense: false, // Disable Suspense for SSR
+        useSuspense: false, // Disable Suspense for SSR to prevent hydration issues
       },
     });
 }

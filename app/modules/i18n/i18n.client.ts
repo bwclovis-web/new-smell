@@ -10,14 +10,22 @@ if (!i18n.isInitialized) {
     .use(initReactI18next)
     .init({
       fallbackLng: 'en',
+      supportedLngs: ['en', 'es'],
       debug: import.meta.env.DEV,
       load: 'languageOnly',
+      interpolation: {
+        escapeValue: false // React already does escaping
+      },
       backend: {
         loadPath: '/locales/{{lng}}/{{ns}}.json'
       },
       react: {
-        useSuspense: true,
+        useSuspense: false, // Match server configuration to prevent hydration issues
         bindI18n: 'languageChanged'
+      },
+      detection: {
+        order: ['cookie', 'localStorage', 'navigator', 'htmlTag'],
+        caches: ['localStorage', 'cookie']
       }
     })
 }

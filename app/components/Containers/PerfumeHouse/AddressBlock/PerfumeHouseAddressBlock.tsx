@@ -1,6 +1,6 @@
 const PerfumeHouseAddressBlock = ({ perfumeHouse }) => (
-  <address className="flex items-center gap-4 border mb-16 py-2 rounded-md bg-noir-dark text-noir-light px-2 my-6">
-    <div className="w-1/2">
+  <address className="flex flex-col  md:flex-row items-center gap-4 border mb-16 py-2 rounded-md bg-noir-dark text-noir-light px-2 my-6">
+    <div className="md:w-1/2 w-full">
       <p className="text-sm">
         <span className="font-medium text-lg">Address:</span>
         {' '}
@@ -12,7 +12,7 @@ const PerfumeHouseAddressBlock = ({ perfumeHouse }) => (
         {perfumeHouse.country}
       </p>
     </div>
-    <div>
+    <div className="md:w-1/2 w-full">
       <p className="text-sm">
         <span className="font-medium text-lg">Email:</span>
         {' '}
