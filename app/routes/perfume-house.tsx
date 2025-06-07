@@ -28,9 +28,16 @@ export const meta: MetaFunction = () => {
 }
 
 export const ROUTE_PATH = '/perfume-house'
+type OutletContextType = {
+  user?: {
+    role?: string
+    // add other user properties if needed
+  }
+}
+
 const HouseDetailPage = () => {
   const { perfumeHouse } = useLoaderData<typeof loader>()
-  const context = useOutletContext()
+  const context = useOutletContext<OutletContextType>()
   const navigate = useNavigate()
 
   const handleDelete = async () => {
@@ -47,13 +54,13 @@ const HouseDetailPage = () => {
   return (
     <section>
       <header className="flex items-center justify-between mb-4">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col">
           <h1>{perfumeHouse.name}</h1>
           <div className="flex gap-2 items-center justify-between">
-            <p className="text-lg">
+            <p className="text-xl text-shadow-noir-gold/20 text-shadow-sm font-black tracking-wide">
               <span>Founded:</span>
               {' '}
-              {perfumeHouse.founded}
+              <span className='italic'>{perfumeHouse.founded}</span>
             </p>
           </div>
         </div>
