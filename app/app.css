@@ -31,7 +31,7 @@ h1 {
 }
 
 .noir-outline {
-  @apply bg-noir-gold/10 rounded-md border-10 border-amber-50 shadow-sm
+  @apply bg-noir-gold/20 rounded-md border-10 border-amber-50 shadow-sm backdrop-blur-xs
 }
 
 .tag {

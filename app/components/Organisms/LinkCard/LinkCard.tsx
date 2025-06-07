@@ -9,7 +9,7 @@ const LinkCard = ({ data, type }) => {
     <NavLink
       viewTransition
       to={`${url}/${data.name}`}
-      className=" p-4 flex justify-between items-center gap-4 noir-outline relative"
+      className=" p-4 flex justify-between items-center gap-4 noir-outline relative z-40"
     >
       <img
         src={data.image}
