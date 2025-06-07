@@ -30,9 +30,6 @@ export default function Home() {
 
   useGSAP(
     () => {
-      gsap.to('.content', {
-        duration: 0.5, ease: 'power2.inOut', opacity: 1, y: 100
-      })
       gsap.to('.features', {
         duration: 0.4, ease: 'power1.inOut', opacity: 1, startAt: { y: 500 }, y: 280
       })

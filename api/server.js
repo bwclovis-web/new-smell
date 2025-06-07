@@ -144,12 +144,11 @@ app.all(
           // You can fetch full user here or just pass userId
           user = { id: payload.userId }
         }
-      }
-
-      return {
+      }      return {
         user,
         req,
-        res
+        res,
+        cspNonce: res.locals.cspNonce
       }
     }
   })

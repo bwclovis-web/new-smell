@@ -8,6 +8,7 @@ import { I18nextProvider } from 'react-i18next'
 import type { AppLoadContext, EntryContext } from 'react-router'
 import { ServerRouter } from 'react-router'
 
+import { NonceProvider } from '~/hooks/use-nonce'
 import i18n from '~/modules/i18n/i18n.server'
 export const streamTimeout = 5_000
 
@@ -21,6 +22,7 @@ export default function handleRequest(
 ) {
   return new Promise((resolve, reject) => {
     const language = (loadContext as any).i18n?.language ?? 'en'
+    const cspNonce = (loadContext as any).cspNonce
     let shellRendered = false
     const userAgent = request.headers.get('user-agent')
     const readyOption: keyof RenderToPipeableStreamOptions
@@ -29,10 +31,13 @@ export default function handleRequest(
         : 'onShellReady'
 
     const { pipe, abort } = renderToPipeableStream(
-      <I18nextProvider i18n={i18n.cloneInstance({ lng: language })}>
-        <ServerRouter context={routerContext} url={request.url} />
-      </I18nextProvider>,
+      <NonceProvider value={cspNonce}>
+        <I18nextProvider i18n={i18n.cloneInstance({ lng: language })}>
+          <ServerRouter context={routerContext} url={request.url} />
+        </I18nextProvider>
+      </NonceProvider>,
       {
+        nonce: cspNonce,
         [readyOption]() {
           shellRendered = true
           const body = new PassThrough()

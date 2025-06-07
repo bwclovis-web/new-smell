@@ -13,6 +13,7 @@ import {
 
 import type { Route } from './+types/root'
 import FourOFourPage from './components/Containers/404Page/404Page'
+import { NonceProvider, useNonce } from './hooks/use-nonce'
 import i18n from './modules/i18n/i18n.client'
 
 export const links: Route.LinksFunction = () => [
@@ -28,7 +29,8 @@ export const links: Route.LinksFunction = () => [
   }
 ]
 
-export function Layout({ children }: { children: ReactNode, cspNonce: string }) {
+export function Layout({ children }: { children: ReactNode }) {
+  const nonce = useNonce()
   return (
     <html lang="en">
       <head>
@@ -39,18 +41,22 @@ export function Layout({ children }: { children: ReactNode, cspNonce: string }) 
       </head>
       <body>
         {children}
-        <ScrollRestoration />
-        <Scripts />
+        <ScrollRestoration nonce={nonce} />
+        <Scripts nonce={nonce} />
       </body>
     </html>
   )
 }
 
 export default function App() {
+  // On the client side, nonce is typically not needed for CSP as scripts are already loaded
+  // But we provide an empty context for consistency
   return (
-    <I18nextProvider i18n={i18n}>
-      <Outlet />
-    </I18nextProvider>
+    <NonceProvider value={undefined}>
+      <I18nextProvider i18n={i18n}>
+        <Outlet />
+      </I18nextProvider>
+    </NonceProvider>
   )
 }
 
@@ -66,13 +72,14 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       = error.status === 404
         ? 'The requested page could not be found.'
         : error.statusText || details
+    if (error.status === 404) {
+      return <FourOFourPage />
+    }
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message
     stack = error.stack
   }
-  if (error.status === 404) {
-    return <FourOFourPage />
-  }
+
   return (
     <main className="pt-16 p-4 container mx-auto">
       <h1>{message}</h1>
