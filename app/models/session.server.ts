@@ -26,34 +26,41 @@ export async function requireUser(context: { userSession: any }) {
 
 export async function login({
   context,
-  userId
+  userId,
+  redirectTo = SIGN_IN
 }: {
-  context: { req: any, res: any }
+  context: { req: any, res?: any }
   userId: string
   redirectTo?: string
 }) {
   const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '1d' })
-
-  // Set Set-Cookie header on the response (HttpOnly cookie)
-  context.res.setHeader('Set-Cookie', cookie.serialize('token', token, {
+  const setCookie = cookie.serialize('token', token, {
     httpOnly: true,
     path: '/',
     maxAge: 60 * 60 * 24, // 1 day
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production'
-  }))
-  throw redirect(SIGN_IN)
+  })
+  throw redirect(redirectTo, {
+    headers: {
+      'Set-Cookie': setCookie
+    }
+  })
 }
 
-export async function logout({ context }: { context: { res: any } }) {
-  context.res.setHeader('Set-Cookie', cookie.serialize('token', '', {
+export async function logout({ context }: { context: { res?: any } }) {
+  const setCookie = cookie.serialize('token', '', {
     httpOnly: true,
     path: '/',
-    maxAge: 60 * 60 * 24, // 1 day
+    maxAge: 0, // Expire immediately
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production'
-  }))
-  return redirect(SIGN_IN)
+  })
+  throw redirect(SIGN_IN, {
+    headers: {
+      'Set-Cookie': setCookie
+    }
+  })
 }
 
 export async function requireRoles(
