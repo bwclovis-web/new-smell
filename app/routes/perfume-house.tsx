@@ -52,7 +52,7 @@ const HouseDetailPage = () => {
   }
 
   return (
-    <section>
+    <section className='relative z-10'>
       <header className="flex items-center justify-between mb-4">
         <div className="flex flex-col">
           <h1>{perfumeHouse.name}</h1>
