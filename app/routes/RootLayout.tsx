@@ -22,7 +22,7 @@ const RootLayout = () => {
   const { user } = useLoaderData<typeof loader>()
   return (
     <div className="flex flex-col gap-8 items-center min-h-full bg-noir-light  px-4 relative h-full">
-      <GlobalNavigation />
+      <GlobalNavigation user={user} />
       <main className="w-full md:w-3/4 h-full">
         <Outlet
           context={{ user }}
