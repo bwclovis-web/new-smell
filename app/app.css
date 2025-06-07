@@ -13,7 +13,7 @@
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950 min-h-screen overflow-hidden;
+  @apply bg-white dark:bg-gray-950 min-h-screen lg:overflow-hidden;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
@@ -31,7 +31,7 @@ h1 {
 }
 
 .noir-outline {
-  @apply bg-noir-gold/20 rounded-md border-12 lg:border-16 border-amber-50 shadow-sm backdrop-blur-xs
+  @apply bg-noir-gold/20 rounded-md border-12 lg:border-14 border-amber-50 shadow-sm backdrop-blur-xs
 }
 
 .tag {

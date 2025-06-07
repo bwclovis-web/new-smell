@@ -18,9 +18,9 @@ const RootLayout = () => {
     { scope: container }
   )
   return (
-    <div className="position-relative flex flex-col gap-8 items-center h-full px-4 relative" ref={container}>
-      <img src={banner} alt="" className="absolute object-cover w-full h-1/2 lg:h-3/4 z-10 rounded-md border-10 border-amber-50 shadow-sm" />
-      <div className="relative z-40 w-full flex items-start">
+    <div className="position-relative flex flex-col gap-8 items-center h-full px-4 relative min-h-screen" ref={container}>
+      <img src={banner} alt="" className="absolute object-cover w-full h-1/2 lg:h-3/4 rounded-md border-10 border-amber-50 shadow-sm" />
+      <div className="relative w-full flex items-start">
         <div className="mx-auto border border-noir-gold py-5 px-3 rounded-md bg-noir-dark/50 backdrop-blur-xs shadow-md text-gray-100 content opacity-0 translate-y-20">
           <h1 className="text-xl font-bold text-shadow-lg text-shadow-black">Create Account</h1>
           <p className="text-lg">Register to access your account</p>

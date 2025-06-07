@@ -75,7 +75,7 @@ const HouseDetailPage = () => {
 
       </header>
       <div className="flex gap-20 flex-col md:flex-row items-start justify-between">
-        <div className="md:w-1/2 noir-outline rounded-b-lg relative z-20">
+        <div className="md:w-1/2 noir-outline rounded-b-lg relative">
           <img
             src={perfumeHouse.image}
             alt=""
@@ -88,15 +88,15 @@ const HouseDetailPage = () => {
           </div>
         </div>
         {perfumeHouse.perfumes.length > 0 && (
-          <div className="w-1/2 rounded-b-lg">
+          <div className="md:w-1/2 rounded-b-lg">
             <h2 className="text-2xl font-bold mb-4">Perfumes</h2>
-            <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-2">
+            <ul className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 p-2">
               {perfumeHouse.perfumes.map(perfume => (
                 <li key={perfume.id}>
                   <NavLink
                     viewTransition
                     to={`/perfume/${perfume.name}`}
-                    className="block p-2 noir-outline hover:bg-gray-100 hover:-rotate-2 hover:scale-110 hover:drop-shadow-lg  transition-all duration-300 ease-in-out"
+                    className="block p-2 noir-outline hover:bg-gray-100 w-full hover:-rotate-2 hover:scale-110 hover:drop-shadow-lg transition-all duration-300 ease-in-out"
                   >
                     <img
                       src={perfume.image}
