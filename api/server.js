@@ -9,9 +9,11 @@ import { rateLimit } from 'express-rate-limit'
 import i18nextMiddleware from 'i18next-http-middleware'
 import morgan from 'morgan'
 import serverless from 'serverless-http'
+import fs from 'fs'
+import path from 'path'
 
-import { parseCookies, verifyJwt } from '../../api/utils.js'
-import i18n from '../../app/modules/i18n/i18n.server.js'
+import i18n from '../app/modules/i18n/i18n.server.js'
+import { parseCookies, verifyJwt } from './utils.js'
 const METRICS_PORT = process.env.METRICS_PORT || 3030
 const PORT = process.env.APP_PORT || 2112
 const NODE_ENV = process.env.NODE_ENV ?? 'development'
@@ -50,7 +52,8 @@ const metricsApp = express()
 if (viteDevServer) {
   app.use('/assets', express.static('public/assets'))
   app.use(viteDevServer.middlewares)
-} else {
+}
+ else {
   app.use(
     '/assets',
     express.static('build/client/assets', {
@@ -81,7 +84,8 @@ app.use((req, res, next) => {
     const query = req.url.slice(req.path.length)
     const safePath = req.path.slice(0, -1).replace(/\/+/g, '/')
     res.redirect(301, safePath + query)
-  } else {
+  }
+ else {
     next()
   }
 })
@@ -101,15 +105,24 @@ app.use((req, res, next) => {
   req.context = { req, res, session: req.session }
   next()
 })
+const findServerBuild = () => {
+  const serverDir = path.join(process.cwd(), 'build', 'server')
+  const subdirs = fs.readdirSync(serverDir, { withFileTypes: true })
+    .filter(dirent => dirent.isDirectory())
+  if (subdirs.length !== 1) {
+    throw new Error('Could not uniquely identify server build directory')
+  }
+  return path.join(serverDir, subdirs[0].name, 'index.js')
+}
+
 const build = viteDevServer
   ? await viteDevServer.ssrLoadModule('virtual:react-router/server-build')
-  : await import('../build/server/index.js')
+  : await import(findServerBuild())
 
 app.get('/test-session', (req, res) => {
   if (!req.session.views) {
     req.session.views = 1
-  }
- else {
+  } else {
     req.session.views++
   }
   res.send(`Session works! You've visited ${req.session.views} times.`)
