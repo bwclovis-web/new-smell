@@ -165,5 +165,8 @@ app.use((err, req, res, next) => {
     : 'Internal Server Error')
 })
 export const handler = serverless(app)
-// app.listen(PORT, () => console.log(`🤘 server running: http://localhost:${PORT}`))
-// metricsApp.listen(METRICS_PORT, () => console.log(`✅ metrics ready: http://localhost:${METRICS_PORT}/metrics`))
+
+if (NODE_ENV !== 'production') {
+  app.listen(PORT, () => console.log(`🤘 server running: http://localhost:${PORT}`))
+  metricsApp.listen(METRICS_PORT, () => console.log(`✅ metrics ready: http://localhost:${METRICS_PORT}/metrics`))
+}
