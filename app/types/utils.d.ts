@@ -1,8 +1,7 @@
 /**
  * Type declarations for api/utils.js
  */
-
-declare module '../../api/utils' {
+declare module '@api/utils' {
   /**
    * Parse cookies from request
    */
@@ -11,7 +10,7 @@ declare module '../../api/utils' {
   /**
    * Verify JWT token
    */
-  export function verifyJwt(token: string): { userId: string } | null;
+  export function verifyJwt(token: string): { userId?: string } | null;
 
   /**
    * Sign JWT token
