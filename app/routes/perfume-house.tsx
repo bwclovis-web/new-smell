@@ -74,11 +74,11 @@ const HouseDetailPage = () => {
         )}
 
       </header>
-      <div className="flex gap-20 ">
-        <div className="w-1/2 noir-outline rounded-b-lg relative">
+      <div className="flex gap-20 flex-col md:flex-row items-start justify-between">
+        <div className="md:w-1/2 noir-outline rounded-b-lg relative z-20">
           <img
             src={perfumeHouse.image}
-            alt={perfumeHouse.name}
+            alt=""
             className="w-full h-58 object-cover mb-2 rounded-t-lg"
           />
           <div className="px-6">

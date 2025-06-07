@@ -1,5 +1,5 @@
 import { type VariantProps } from 'class-variance-authority'
-import { type FC, type HTMLProps } from 'react'
+import { type FC, type HTMLProps, useEffect, useState } from 'react'
 import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
@@ -22,14 +22,20 @@ interface GlobalNavigationProps extends HTMLProps<HTMLDivElement>,
 }
 
 const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user }) => {
-  const { t } = useTranslation()
+  const { t, ready } = useTranslation()
+  const [isClientReady, setIsClientReady] = useState(false)
+
+  // Ensure client-side hydration consistency
+  useEffect(() => {
+    setIsClientReady(true)
+  }, [])
+  const logoText = ready && isClientReady ? t('navigation.logo') : ' Good Scents'
+
   return (
     <nav className={styleMerge(globalNavigationVariants({ className }))} data-cy="GlobalNavigation">
-      <div>
-        <NavLink to="/" className="text-white text-2xl font-bold">
-          {t('navigation.logo')}
-        </NavLink>
-      </div>
+      <NavLink to="/" className="text-white text-2xl font-bold text-center max-w-max ">
+        {logoText}
+      </NavLink>
       <ul className="flex gap-4">
         {mainNavigation.map(item => (
           <li key={item.id}>
@@ -38,10 +44,10 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
               to={item.path}
               className={({ isActive }) => styleMerge(
                 'text-white hover:text-gray-300',
-                isActive ? 'text-gray-300' : ''
+                isActive && isClientReady ? 'text-gray-300' : ''
               )}
             >
-              {t(item.key)}
+              {ready && isClientReady ? t(item.key) : item.label}
             </NavLink>
           </li>
         ))}
@@ -52,10 +58,10 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
               to={ADMIN_PATH}
               className={({ isActive }) => styleMerge(
                 'text-white hover:text-gray-300',
-                isActive ? 'text-gray-300' : ''
+                isActive && isClientReady ? 'text-gray-300' : ''
               )}
             >
-              {t('navigation.admin')}
+              {ready && isClientReady ? t('navigation.admin') : 'Admin'}
             </NavLink>
           </li>
         )}
@@ -67,7 +73,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
                 to={SIGN_IN}
                 className={({ isActive }) => styleMerge(
                   'text-white hover:text-gray-300',
-                  isActive ? 'text-gray-300' : ''
+                  isActive && isClientReady ? 'text-gray-300' : ''
                 )}
               >
                 Sign In
