@@ -1,30 +1,13 @@
 import { redirect, useLoaderData } from 'react-router'
 import { useTranslation } from 'react-i18next'
-
-import { getUserById } from '~/models/user.server'
-import { createSafeUser } from '~/types'
-import { parseCookies, verifyJwt } from '@api/utils'
+import { sharedLoader } from '~/utils/sharedLoader'
 
 export const loader = async ({ request }: { request: Request }) => {
-  const cookieHeader = request.headers.get('cookie') || ''
-  const cookies = parseCookies({ headers: { cookie: cookieHeader } })
+  const user = await sharedLoader(request)
 
-  if (!cookies.token) {
-    throw redirect('/sign-in')
+  if (user.role !== 'admin') {
+    throw redirect(`/admin/${user.id}`)
   }
-
-  const payload = verifyJwt(cookies.token)
-  if (!payload || !payload.userId) {
-    throw redirect('/sign-in')
-  }
-
-  const fullUser = await getUserById(payload.userId)
-  const user = createSafeUser(fullUser)
-
-  if (user?.role !== 'admin') {
-    throw redirect(`/admin/${user?.id}`)
-  }
-
   return { user }
 }
 

@@ -1,27 +1,12 @@
 import { redirect, Outlet, useLoaderData } from 'react-router';
-import { parseCookies, verifyJwt } from '@api/utils';
-import { getUserById } from '~/models/user.server';
-import { createSafeUser } from '~/types';
+import { sharedLoader } from '~/utils/sharedLoader';
 import AdminNavigation from '~/components/Molecules/AdminNavigation/AdminNavigation';
 
 export const loader = async ({ request }: { request: Request }) => {
-  const cookieHeader = request.headers.get('cookie') || '';
-  const cookies = parseCookies({ headers: { cookie: cookieHeader } });
+  const user = await sharedLoader(request);
 
-  if (!cookies.token) {
-    throw redirect('/sign-in');
-  }
-
-  const payload = verifyJwt(cookies.token);
-  if (!payload || !payload.userId) {
-    throw redirect('/sign-in');
-  }
-
-  const fullUser = await getUserById(payload.userId);
-  const user = createSafeUser(fullUser);
-
-  if (user?.role !== 'admin') {
-    throw redirect(`/admin/${user?.id}`);
+  if (user.role !== 'admin') {
+    throw redirect(`/admin/${user.id}`);
   }
 
   return { user };
