@@ -19,7 +19,7 @@
     "postinstall": "prisma generate --no-engine"
   },
   "dependencies": {
-    "@conform-to/react": "^1.4.0",
+    "@conform-to/react": "^1.6.1",
     "@conform-to/zod": "^1.4.0",
     "@gsap/react": "^2.1.2",
     "@isaacs/express-prometheus-middleware": "^1.2.1",
