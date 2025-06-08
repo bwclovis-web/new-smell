@@ -20,7 +20,6 @@ export default [
 
     layout('routes/admin/AdminLayout.tsx', [
       route('admin/', 'routes/admin/adminIndex.tsx'),
-      route('admin/:id', 'routes/admin/profilePage.tsx'),
       route('admin/create-perfume-house', 'routes/admin/CreatePerfumeHousePage.tsx'),
       route('admin/create-perfume', 'routes/admin/CreatePerfumePage.tsx'),
       route('admin/perfume/:id/edit', 'routes/admin/EditPerfumePage.tsx'),
