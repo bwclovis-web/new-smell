@@ -27,7 +27,7 @@ export async function requireUser(context: { userSession: any }) {
 export async function login({
   context,
   userId,
-  redirectTo = SIGN_IN
+  redirectTo = '/custom-landing'
 }: {
   context: { req: any, res?: any }
   userId: string
