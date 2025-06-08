@@ -20,7 +20,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     return { error: 'Invalid email or password' }
   }
 
-  await login({ context, userId: existingUser.id, redirectTo: '/custom-landing' })
+  await login({ context, userId: existingUser.id, redirectTo: '/admin/custom-landing' })
   return { success: true }
 }
 const LogInPage = () => {
