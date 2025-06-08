@@ -1,10 +1,31 @@
 {
   "navigation": {
-    "logo": "Voodoo stack"
+    "logo": "Voodoo stack",
+    "login": "Iniciar Sesión",
+    "loggingIn": "Iniciando sesión..."
   },
+  "houses": "Casas de Perfume",
+  "perfumes": "Perfumes",
+  "admin": "Administrador",
   "home": {
     "heading": "Voodoo stack",
     "subheading": "Una pila simple y poderosa para construir aplicaciones web",
     "description": "Una pila simple para construir tu próxima aplicación web con Vite, React, TypeScript, Tailwind CSS y Vitest."
+  },
+  "profile": {
+    "title": "Perfil de Usuario",
+    "userInfo": "Información del Usuario",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "Introduce tu correo electrónico",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Introduce tu contraseña",
+    "role": "Rol",
+    "name": "Nombre",
+    "notFound": "Perfil de usuario no encontrado"
+  },
+  "404": {
+    "heading": "Parece que estás perdido",
+    "subheading": "La página que estás buscando no existe.",
+    "homeLink": "Volver al inicio"
   }
 }

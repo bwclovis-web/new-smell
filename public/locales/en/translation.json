@@ -1,6 +1,8 @@
 {
   "navigation": {
-    "logo": " Good Scents"
+    "logo": " Good Scents",
+    "login": "Log In",
+    "loggingIn": "Logging in..."
   },
   "houses": "Perfume Houses",
   "perfumes": "Perfumes",
@@ -25,6 +27,17 @@
   "singlePerfume": {
     "title": "Perfume",
     "description": "Discover the details of a specific perfume."
+  },
+  "profile": {
+    "title": "User Profile",
+    "userInfo": "User Information",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "role": "Role",
+    "name": "Name",
+    "notFound": "User profile not found"
   },
   "404": {
     "heading": "Looking a bit lost",

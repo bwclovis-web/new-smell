@@ -11,6 +11,7 @@ interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
   inputType: 'email' | 'password' | 'text' | string
   inputId?: string
   label?: string
+  placeholder?: string
   inputRef: RefObject<HTMLInputElement | null>
   action?: FieldMetadata<unknown>
   actionData?: {
@@ -27,14 +28,16 @@ const Input: FC<InputProps> = ({
   actionData,
   action,
   label,
+  placeholder,
   ...props
 }) => {
   const inputProps = action
     ? {
       ...getInputProps(action, { ariaAttributes: true, type: inputType }),
-      id: inputId
+      id: inputId,
+      placeholder
     }
-    : { id: inputId, type: inputType }
+    : { id: inputId, type: inputType, placeholder }
   return (
     <div
       className={
