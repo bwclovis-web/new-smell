@@ -17,10 +17,11 @@ interface LinkProps extends Omit<LinkHTMLAttributes<HTMLAnchorElement>, 'style'>
   url: string
 }
 
-const Button: FC<ButtonProps> = ({ className, size, style, children, ...props }) => (
+const Button: FC<ButtonProps> = ({ className, size, style, children, type = "button", ...props }) => (
   <button
     className={styleMerge(buttonVariants({ className, size, style }))}
     data-cy="button"
+    type={type}
     {...props}
   >
     {children}

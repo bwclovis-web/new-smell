@@ -10,6 +10,7 @@ interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
   VariantProps<typeof inputVariants> {
   inputType: 'email' | 'password' | 'text' | string
   inputId?: string
+  label?: string
   inputRef: RefObject<HTMLInputElement | null>
   action?: FieldMetadata<unknown>
   actionData?: {
@@ -25,6 +26,7 @@ const Input: FC<InputProps> = ({
   defaultValue,
   actionData,
   action,
+  label,
   ...props
 }) => {
   const inputProps = action
@@ -45,7 +47,7 @@ const Input: FC<InputProps> = ({
         htmlFor={inputId}
         className="block text-xl font-medium text-noir-dark dark:text-white capitalize bg-noir-gold max-w-max p-2"
       >
-        {action?.name}
+        {label ? label : action?.name}
       </label>
       <input
         ref={inputRef}
