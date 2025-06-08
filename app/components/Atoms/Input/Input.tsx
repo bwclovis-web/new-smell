@@ -43,9 +43,9 @@ const Input: FC<InputProps> = ({
     >
       <label
         htmlFor={inputId}
-        className="block text-sm font-medium text-noir-dark dark:text-white capitalize"
+        className="block text-xl font-medium text-noir-dark dark:text-white capitalize bg-noir-gold max-w-max p-2"
       >
-        {action.name}
+        {action?.name}
       </label>
       <input
         ref={inputRef}
@@ -55,9 +55,9 @@ const Input: FC<InputProps> = ({
         className="w-full rounded-sm border border-gray-500 px-2 py-1 text-lg mt-1 transition-all focus:bg-white/20 focus:outline-none focus:ring-2 focus:ring-noir-gold focus:border-transparent focus:ring-offset-2 dark:bg-noir-gray dark:text-white dark:focus:bg-noir-gray/20 dark:focus:ring-offset-noir-gray"
         {...inputProps}
       />
-      {action.errors && (
+      {action?.errors && (
         <span className="text-sm text-destructive dark:text-destructive-foreground text-red-600 uppercase font-medium" id={`${inputId}-error`}>
-          {action.errors.join(' ')}
+          {action?.errors.join(' ')}
         </span>
       )}
     </div>

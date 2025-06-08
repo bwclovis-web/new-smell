@@ -34,8 +34,8 @@ const LogInPage = () => {
   })
 
   return (
-    <section className="flex flex-col items-center bg-noir-light/20 backdrop-blur-sm rounded-md shadow-md p-4 w-full max-w-md mx-auto">
-      <Form {...getFormProps(signInForm)} method="POST" className="max-w-md mx-auto p-4 rounded w-full">
+    <section className="flex flex-col items-center bg-noir-light/40 backdrop-blur-sm rounded-md shadow-md p-4 w-full max-w-md mx-auto border border-noir-dark shadow-noir-dark">
+      <Form {...getFormProps(signInForm)} method="POST" className="max-w-md mx-auto p-4 rounded w-full flex flex-col gap-4">
         <Input inputId="email" inputType="email" action={email} inputRef={inputRef} />
         <Input inputId="password" inputType="password" action={password} inputRef={inputRef} />
         {actionData?.error && (
