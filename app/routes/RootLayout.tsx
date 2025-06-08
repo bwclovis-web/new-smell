@@ -2,10 +2,22 @@ import { type LoaderFunctionArgs, Outlet, useLoaderData } from 'react-router'
 import { Suspense } from 'react'
 
 import GlobalNavigation from '~/components/Molecules/GlobalNavigation/GlobalNavigation'
-import { sharedLoader } from '~/utils/sharedLoader'
+import { getUserById } from '~/models/user.server'
+import { createSafeUser, type SafeUser } from '~/types'
+import { parseCookies, verifyJwt } from '@api/utils'
 import background from '../images/bg-scent.webp'
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await sharedLoader(request)
+  // Get cookies from the request
+  const cookieHeader = request.headers.get('cookie') || ''
+  const cookies = parseCookies({ headers: { cookie: cookieHeader } })
+  let user = null
+  if (cookies.token) {
+    const payload = verifyJwt(cookies.token)
+    if (payload && payload.userId) {
+      const fullUser = await getUserById(payload.userId)
+      user = createSafeUser(fullUser)
+    }
+  }
   return { user }
 }
 
