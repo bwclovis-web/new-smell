@@ -1,4 +1,4 @@
-import { useLoaderData } from 'react-router'
+import { redirect, useLoaderData } from 'react-router'
 import { useTranslation } from 'react-i18next'
 
 import { getUserById } from '~/models/user.server'
@@ -10,16 +10,22 @@ export const loader = async ({ request }: { request: Request }) => {
   const cookies = parseCookies({ headers: { cookie: cookieHeader } })
 
   if (!cookies.token) {
-    return { user: null }
+    throw redirect('/sign-in')
   }
 
   const payload = verifyJwt(cookies.token)
   if (!payload || !payload.userId) {
-    return { user: null }
+    throw redirect('/sign-in')
   }
 
   const fullUser = await getUserById(payload.userId)
-  return { user: createSafeUser(fullUser) }
+  const user = createSafeUser(fullUser)
+
+  if (user?.role !== 'admin') {
+    throw redirect(`/admin/${user?.id}`)
+  }
+
+  return { user }
 }
 
 const CustomLandingPage = () => {
