@@ -13,7 +13,7 @@ interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'sty
 
 interface LinkProps extends Omit<LinkHTMLAttributes<HTMLAnchorElement>, 'style'>,
   VariantProps<typeof buttonVariants> {
-  style?: 'primary' | 'secondary' | 'danger' | null
+  style?: 'primary' | 'secondary' | 'danger' | 'link' | null
   url: string
 }
 

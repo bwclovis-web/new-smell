@@ -14,13 +14,11 @@ import type { ActionFunctionArgs } from 'react-router-dom'
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const formData = await request.formData()
-
   const existingUser = await getUserByName(formData.get('email') as string)
   if (existingUser) {
     return { error: 'Username already taken' }
   }
   const user = await createUser(formData)
-
   await login({ context, userId: user.id })
 }
 
@@ -36,8 +34,8 @@ const RegisterPage = () => {
   })
 
   return (
-    <section className="flex flex-col items-center bg-noir-light/20 backdrop-blur-sm rounded-md shadow-md p-4 w-full max-w-md mx-auto">
-      <Form {...getFormProps(signupForm)} method="POST" className="max-w-md mx-auto p-4 rounded w-full">
+    <section className="flex flex-col items-center bg-noir-light/40 backdrop-blur-sm rounded-md shadow-md p-4 w-full max-w-md mx-auto border border-noir-dark shadow-noir-dark">
+      <Form {...getFormProps(signupForm)} method="POST" className="max-w-md mx-auto p-4 rounded w-full flex flex-col gap-6 ">
         <Input inputId="email" inputType="email" action={email} inputRef={inputRef} />
         <Input inputId="password" inputType="password" action={password} inputRef={inputRef} />
         <Input inputId="passwordMatch" inputType="password" action={confirmPassword} inputRef={inputRef} />
