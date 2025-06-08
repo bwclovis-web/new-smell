@@ -24,12 +24,13 @@ export default [
       route('admin/create-perfume-house', 'routes/admin/CreatePerfumeHousePage.tsx'),
       route('admin/create-perfume', 'routes/admin/CreatePerfumePage.tsx'),
       route('admin/perfume/:id/edit', 'routes/admin/EditPerfumePage.tsx'),
-      route('admin/perfume-house/:houseId/edit', 'routes/admin/EditPerfumeHousePage.tsx')
+      route('admin/perfume-house/:houseId/edit', 'routes/admin/EditPerfumeHousePage.tsx'),
+      route('custom-landing', 'routes/customLanding.tsx')
     ]),
 
     layout('routes/login/LoginLayout.tsx', [
       route('sign-up', 'routes/login/SignUpPage.tsx'),
-      route('sign-in', 'routes/login/SignInPage.tsx')
+      route('sign-in', 'routes/login/SignInPage.tsx'),
     ])
   ])
 ] satisfies RouteConfig

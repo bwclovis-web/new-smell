@@ -17,10 +17,11 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
 
   const existingUser = await signInCustomer(formData)
   if (!existingUser) {
-    return { error: 'User Not found' }
+    return { error: 'Invalid email or password' }
   }
 
-  await login({ context, userId: existingUser.id })
+  await login({ context, userId: existingUser.id, redirectTo: '/custom-landing' })
+  return { success: true }
 }
 const LogInPage = () => {
   const actionData = useActionData()
