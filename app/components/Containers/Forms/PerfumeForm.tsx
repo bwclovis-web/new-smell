@@ -98,6 +98,7 @@ const PerfumeForm
             {serverError}
           </div>
         )}
+        <input type="hidden" name="perfumeId" value={data?.id} />
         <Button type="submit" className="max-w-max">
           Create Perfume
         </Button>

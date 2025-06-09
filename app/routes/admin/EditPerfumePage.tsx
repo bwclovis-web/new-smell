@@ -10,7 +10,7 @@ import type { CustomSubmit } from './EditPerfumeHousePage'
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
-  const formIdEntry = formData.get('houseId')?.toString()
+  const formIdEntry = formData.get('perfumeId')?.toString()
   if (typeof formIdEntry !== 'string') {
     throw new Error('Form ID is required and must be a string')
   }
