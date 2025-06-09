@@ -5,9 +5,8 @@ import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
 
 import { mainNavigation } from '~/data/navigation'
-import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/adminIndex'
+import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/ProfilePage'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
-import { type SafeUser } from '~/types'
 import { styleMerge } from '~/utils/styleUtils'
 
 import LogoutButton from '../LogoutButton/LogoutButton'
@@ -51,7 +50,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
             </NavLink>
           </li>
         ))}
-        {user?.role === 'admin' && (
+        {user && (
           <li>
             <NavLink
               viewTransition
