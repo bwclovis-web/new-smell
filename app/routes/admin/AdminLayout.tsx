@@ -1,19 +1,16 @@
-import { redirect, Outlet, useLoaderData } from 'react-router';
-import { sharedLoader } from '~/utils/sharedLoader';
-import AdminNavigation from '~/components/Molecules/AdminNavigation/AdminNavigation';
+import { Outlet, useLoaderData } from 'react-router'
+
+import AdminNavigation from '~/components/Molecules/AdminNavigation/AdminNavigation'
+import { sharedLoader } from '~/utils/sharedLoader'
 
 export const loader = async ({ request }: { request: Request }) => {
-  const user = await sharedLoader(request);
+  const user = await sharedLoader(request)
 
-  if (user.role !== 'admin') {
-    throw redirect(`/admin/${user.id}`);
-  }
-
-  return { user };
-};
+  return { user }
+}
 
 const AdminLayout = () => {
-  const { user } = useLoaderData<typeof loader>();
+  const { user } = useLoaderData<typeof loader>()
 
   return (
     <div className="flex flex-col md:flex-row w-full gap-4 md:gap-10 items-start relative z-10">
@@ -27,7 +24,7 @@ const AdminLayout = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default AdminLayout;
+export default AdminLayout
