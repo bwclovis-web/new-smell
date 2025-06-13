@@ -5,12 +5,17 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   plugins: [tailwindcss(), tsconfigPaths(), reactRouter()],
+  server: {
+    hmr: {
+      port: 24678
+    }
+  },
   build: {
-    target: 'es2022', // Ensure target supports top-level await
+    target: 'es2022'
   },
   optimizeDeps: {
     esbuildOptions: {
-      target: 'es2022', // Specify ESBuild target to support top-level await
+      target: 'es2022'
     }
   }
 })

@@ -6,11 +6,11 @@ import compression from 'compression'
 import crypto from 'crypto'
 import express from 'express'
 import { rateLimit } from 'express-rate-limit'
+import fs from 'fs'
 import i18nextMiddleware from 'i18next-http-middleware'
 import morgan from 'morgan'
-import serverless from 'serverless-http'
-import fs from 'fs'
 import path from 'path'
+import serverless from 'serverless-http'
 
 import i18n from '../app/modules/i18n/i18n.server.js'
 import { parseCookies, verifyJwt } from './utils.js'
@@ -23,8 +23,8 @@ const viteDevServer
   = process.env.NODE_ENV === 'production'
     ? undefined
     : await import('vite').then(vite => vite.createServer({
-      server: { middlewareMode: true }
-    }))
+        server: { middlewareMode: true }
+      }))
 
 const defaultRateLimit = {
   legacyHeaders: false,
@@ -49,8 +49,8 @@ const generalRateLimit = rateLimit(defaultRateLimit)
 const app = express()
 const metricsApp = express()
 
+// Place Vite dev server middleware first to ensure HMR works properly
 if (viteDevServer) {
-  app.use('/assets', express.static('public/assets'))
   app.use(viteDevServer.middlewares)
 }
  else {
@@ -61,8 +61,9 @@ if (viteDevServer) {
       maxAge: '1y'
     })
   )
+  app.use(express.static('build/client', { maxAge: '1h' }))
 }
-app.use(express.static('build/client', { maxAge: '1h' }))
+
 app.disable('x-powered-by')
 app.use(compression())
 app.use(morgan('tiny'))
@@ -84,8 +85,7 @@ app.use((req, res, next) => {
     const query = req.url.slice(req.path.length)
     const safePath = req.path.slice(0, -1).replace(/\/+/g, '/')
     res.redirect(301, safePath + query)
-  }
- else {
+  } else {
     next()
   }
 })
@@ -122,7 +122,8 @@ const build = viteDevServer
 app.get('/test-session', (req, res) => {
   if (!req.session.views) {
     req.session.views = 1
-  } else {
+  }
+ else {
     req.session.views++
   }
   res.send(`Session works! You've visited ${req.session.views} times.`)
@@ -145,7 +146,7 @@ app.all(
           user = { id: payload.userId }
         }
       }
-      
+
       return {
         user,
         req,
