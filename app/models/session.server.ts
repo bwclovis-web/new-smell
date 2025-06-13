@@ -5,6 +5,7 @@ import { redirect } from 'react-router-dom'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key'
 
+import { ROUTE_PATH as ADMIN_PROFILE } from '~/routes/admin/ProfilePage'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 
 import { getUserById } from './user.server'
@@ -27,7 +28,7 @@ export async function requireUser(context: { userSession: any }) {
 export async function login({
   context,
   userId,
-  redirectTo = '/admin/custom-landing'
+  redirectTo = ADMIN_PROFILE
 }: {
   context: { req: any, res?: any }
   userId: string
