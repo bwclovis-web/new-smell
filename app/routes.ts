@@ -24,7 +24,7 @@ export default [
       route('admin/create-perfume', 'routes/admin/CreatePerfumePage.tsx'),
       route('admin/perfume/:id/edit', 'routes/admin/EditPerfumePage.tsx'),
       route('admin/perfume-house/:houseId/edit', 'routes/admin/EditPerfumeHousePage.tsx'),
-      route('admin/profile', 'admin/ProfilePage.tsx')
+      route('admin/profile', 'routes/admin/ProfilePage.tsx')
 
     ]),
 

@@ -11,7 +11,7 @@ export const ROUTE_PATH = '/sign-in'
 import type { ActionFunctionArgs } from 'react-router-dom'
 
 import { login } from '~/models/session.server'
-
+import { ROUTE_PATH as ADMIN_PROFILE } from '~/routes/admin/ProfilePage'
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const formData = await request.formData()
 
@@ -20,7 +20,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     return { error: 'Invalid email or password' }
   }
 
-  await login({ context, userId: existingUser.id, redirectTo: '/admin/custom-landing' })
+  await login({ context, userId: existingUser.id, redirectTo: ADMIN_PROFILE })
   return { success: true }
 }
 const LogInPage = () => {
