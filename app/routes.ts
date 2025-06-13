@@ -16,8 +16,8 @@ export default [
     route('api/getTag', 'routes/api/tagLoader.ts'),
     route('api/houseSortLoader', 'routes/api/houseSortLoader.ts'),
     route('api/createTag', 'routes/api/createTag.ts'),
+    route('api/wishlist', 'routes/api/wishlist.tsx'),
     route('api/log-out', 'routes/api/logOut.ts'),
-
     layout('routes/admin/AdminLayout.tsx', [
       route('admin/', 'routes/admin/adminIndex.tsx'),
       route('admin/create-perfume-house', 'routes/admin/CreatePerfumeHousePage.tsx'),
