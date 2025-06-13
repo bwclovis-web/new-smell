@@ -1,15 +1,17 @@
+import { parseCookies, verifyJwt } from '@api/utils'
 import { useTranslation } from 'react-i18next'
 import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, useNavigate } from 'react-router'
 import { useOutletContext } from 'react-router-dom'
 
 import PerfumeIcons from '~/components/Containers/Perfume/PerfumeIcons/PerfumeIcons'
 import { getPerfumeByName } from '~/models/perfume.server'
+import { isInWishlist } from '~/models/wishlist.server'
 
 import { ROUTE_PATH as ALL_PERFUMES } from './all-perfumes'
 import { ROUTE_PATH as HOUSE_PATH } from './perfume-house'
 export const ROUTE_PATH = '/perfume'
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   if (!params.id) {
     throw new Error('Note ID is required')
   }
@@ -17,7 +19,24 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!perfume) {
     throw new Response('House not found', { status: 404 })
   }
-  return { perfume }
+
+  // Check if user is logged in and if perfume is in their wishlist
+  let isInUserWishlist = false
+  try {
+    const cookieHeader = request.headers.get('cookie') || ''
+    const cookies = parseCookies({ headers: { cookie: cookieHeader } })
+
+    if (cookies.token) {
+      const payload = verifyJwt(cookies.token)
+      if (payload && payload.userId) {
+        isInUserWishlist = await isInWishlist(payload.userId, perfume.id)
+      }
+    }
+  } catch {
+    // User not authenticated, just continue
+  }
+
+  return { perfume, isInUserWishlist }
 }
 
 export const meta: MetaFunction = () => {
@@ -29,9 +48,9 @@ export const meta: MetaFunction = () => {
 }
 
 const PerfumePage = () => {
-  const { perfume } = useLoaderData<typeof loader>()
+  const { perfume, isInUserWishlist } = useLoaderData<typeof loader>()
   // Define the expected context type
-  type OutletContextType = { user: { role: string } | null }
+  type OutletContextType = { user: { role: string, id: string } | null }
   const { user } = useOutletContext<OutletContextType>()
   const navigate = useNavigate()
 
@@ -62,19 +81,22 @@ const PerfumePage = () => {
             </NavLink>
           </p>
         </div>
+        {' '}
         {user && (
           <PerfumeIcons
             perfume={perfume}
             handleDelete={handleDelete}
             userRole={user.role}
+            isInWishlist={isInUserWishlist}
           />
         )}
       </header>
 
       <div className="flex flex-col md:flex-row gap-20">
         <div className="md:w-1/3 noir-outline rounded-b-lg">
+          {' '}
           <img
-            src={perfume.image}
+            src={perfume.image || ''}
             alt={perfume.name}
             className="w-full h-68 object-cover mb-2 rounded-t-lg"
           />
