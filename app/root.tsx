@@ -32,25 +32,24 @@ export const links: Route.LinksFunction = () => [
 export function Layout({ children }: { children: ReactNode }) {
   const nonce = useNonce()
   return (
-    <html lang="en" >
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body className=' bg-noir-light text-noir-dark dark:bg-noir-dark dark:text-noir-light'>
+      <body className=" bg-noir-light text-noir-dark dark:bg-noir-dark dark:text-noir-light">
         {children}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
+        <div id="modal-portal" />
       </body>
     </html>
   )
 }
 
 export default function App() {
-  // On the client side, nonce is typically not needed for CSP as scripts are already loaded
-  // But we provide an empty context for consistency
   return (
     <NonceProvider value={undefined}>
       <I18nextProvider i18n={i18n}>
