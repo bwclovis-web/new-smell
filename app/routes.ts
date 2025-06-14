@@ -18,14 +18,16 @@ export default [
     route('api/createTag', 'routes/api/createTag.ts'),
     route('api/wishlist', 'routes/api/wishlist.tsx'),
     route('api/log-out', 'routes/api/logOut.ts'),
+
     layout('routes/admin/AdminLayout.tsx', [
       route('admin/', 'routes/admin/adminIndex.tsx'),
       route('admin/create-perfume-house', 'routes/admin/CreatePerfumeHousePage.tsx'),
       route('admin/create-perfume', 'routes/admin/CreatePerfumePage.tsx'),
       route('admin/perfume/:id/edit', 'routes/admin/EditPerfumePage.tsx'),
       route('admin/perfume-house/:houseId/edit', 'routes/admin/EditPerfumeHousePage.tsx'),
-      route('admin/profile', 'routes/admin/ProfilePage.tsx')
-
+      route('admin/profile', 'routes/admin/ProfilePage.tsx'),
+      route('admin/wishlist', 'routes/admin/Wishlist.tsx'),
+      route('admin/my-scents', 'routes/admin/MyScents.tsx')
     ]),
 
     layout('routes/login/LoginLayout.tsx', [

@@ -7,7 +7,11 @@ export default defineConfig({
   plugins: [tailwindcss(), tsconfigPaths(), reactRouter()],
   server: {
     hmr: {
-      port: 24678
+      port: 24680,
+      overlay: true
+    },
+    watch: {
+      usePolling: false
     }
   },
   build: {
