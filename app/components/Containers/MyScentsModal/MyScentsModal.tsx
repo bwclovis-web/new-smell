@@ -1,6 +1,7 @@
 import { useRef, useState } from "react"
 import { Form, useSubmit } from "react-router"
 
+import { Button } from "~/components/Atoms/Button/Button"
 import Input from "~/components/Atoms/Input/Input"
 import SearchBar from "~/components/Organisms/SearchBar/SearchBar"
 
@@ -48,12 +49,13 @@ const MyScentsModal = () => {
             inputType="text"
             inputRef={inputRef}
             inputId="amount"
+            label="Amount"
             value={perfumeAmount}
             onChange={event => (
               setPerfumeAmount((event.target as HTMLInputElement).value)
             )}
           />
-          <button type="submit">Add to My Collection</button>
+          <Button type="submit" className="mt-6">Add to My Collection</Button>
         </Form>
       )}
     </div>
