@@ -18,6 +18,15 @@ const MyScentsModal = () => {
     constraint: getZodConstraint(UpdateUserPerfumeSchema),
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: UpdateUserPerfumeSchema })
+    },
+    onSubmit({ formData }) {
+      const amountValue = formData.get('amount') as string
+      if (amountValue && !isNaN(Number(amountValue))) {
+        formData.set('amount', String(Number(amountValue)))
+      } else {
+        formData.set('amount', '0')
+      }
+      return formData
     }
   })
 
@@ -29,7 +38,7 @@ const MyScentsModal = () => {
     const formData = new FormData()
     formData.append('perfumeId', selectedPerfume.id)
     formData.append('action', 'add')
-
+    console.log('amount', formData)
     submit(formData, { method: 'post' })
     setSelectedPerfume('')
   }
@@ -49,7 +58,7 @@ const MyScentsModal = () => {
             inputId="amount"
             defaultValue={selectedPerfume.amount || ""}
           />
-          <button > HELLO</button>
+          <button onClick={() => handleAddPerfume()}> HELLO</button>
         </Form>
       )}
     </div>

@@ -63,25 +63,44 @@ export const getUserPerfumes = async (userId: string) => {
   return userPerfumes
 }
 
-export const addUserPerfume = async (userId: string, perfumeId: string) => {
-  try {
-    // Check if the perfume is already in the user's collection
-    const existingPerfume = await prisma.userPerfume.findFirst({
-      where: {
-        userId,
-        perfumeId
-      }
+// Helper function to find a user perfume
+const findUserPerfume = async (userId: string, perfumeId: string) => prisma.userPerfume.findFirst({
+  where: { userId, perfumeId }
+})
+
+// Helper function to handle existing perfume update
+const handleExistingPerfume = async (existingPerfume: any, amount?: string) => {
+  // If the perfume exists and we're updating the amount
+  if (amount && existingPerfume.amount !== amount) {
+    const updatedPerfume = await prisma.userPerfume.update({
+      where: { id: existingPerfume.id },
+      data: { amount },
+      include: { perfume: true }
     })
+    return { success: true, userPerfume: updatedPerfume, updated: true }
+  }
+  return { success: false, error: 'Perfume already in your collection' }
+}
+
+export const addUserPerfume = async (
+  userId: string,
+  perfumeId: string,
+  amount?: string
+) => {
+  try {
+    // Check if the perfume exists in collection
+    const existingPerfume = await findUserPerfume(userId, perfumeId)
 
     if (existingPerfume) {
-      return { success: false, error: 'Perfume already in your collection' }
+      return handleExistingPerfume(existingPerfume, amount)
     }
 
     // Add the perfume to the user's collection
     const userPerfume = await prisma.userPerfume.create({
       data: {
         userId,
-        perfumeId
+        perfumeId,
+        amount: amount || 'full' // Use provided amount or default to 'full'
       },
       include: {
         perfume: true
@@ -90,6 +109,7 @@ export const addUserPerfume = async (userId: string, perfumeId: string) => {
 
     return { success: true, userPerfume }
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error adding perfume to user collection:', error)
     return { success: false, error: 'Failed to add perfume to collection' }
   }
@@ -118,6 +138,7 @@ export const removeUserPerfume = async (userId: string, perfumeId: string) => {
 
     return { success: true }
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error removing perfume from user collection:', error)
     return { success: false, error: 'Failed to remove perfume from collection' }
   }

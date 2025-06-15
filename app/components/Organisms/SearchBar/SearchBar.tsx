@@ -66,7 +66,7 @@ const SearchBar: FC<SearchBarProps> = ({ className, searchType, action }) => {
             {results.map((item: any) => (
               <li key={item.id} className="p-2 hover:bg-noir-gray hover:text-noir-light cursor-pointer last-of-type:rounded-b-md">
                 {action ?
-                  <button className='block -w-full' onClick={() => handleAction(item)}>{item.name}</button> :
+                  <button className='block min-w-full text-left' onClick={() => handleAction(item)}>{item.name}</button> :
                   <RenderLink item={item} />}
               </li>
             ))}
