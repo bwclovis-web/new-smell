@@ -1,6 +1,6 @@
 {
   "navigation": {
-    "logo": "Voodoo stack",
+    "logo": "Good Scents",
     "login": "Iniciar Sesión",
     "loggingIn": "Iniciando sesión..."
   },
@@ -8,9 +8,25 @@
   "perfumes": "Perfumes",
   "admin": "Administrador",
   "home": {
-    "heading": "Voodoo stack",
-    "subheading": "Una pila simple y poderosa para construir aplicaciones web",
-    "description": "Una pila simple para construir tu próxima aplicación web con Vite, React, TypeScript, Tailwind CSS y Vitest."
+    "heading": "Good Scents",
+    "description": "Una base de datos completa de perfumes y sus casas.",
+    "subheading": "Buscar por:"
+  },
+  "allHouses": {
+    "title": "Todas las Casas de Perfume",
+    "description": "Explora todas las casas de perfume disponibles en nuestra base de datos."
+  },
+  "allPerfumes": {
+    "title": "Todos los Perfumes",
+    "description": "Descubre todos los perfumes disponibles en nuestra base de datos."
+  },
+  "singleHouse": {
+    "title": "Casa de Perfume",
+    "description": "Explora los detalles de una casa de perfume específica."
+  },
+  "singlePerfume": {
+    "title": "Perfume",
+    "description": "Descubre los detalles de un perfume específico."
   },
   "profile": {
     "title": "Perfil de Usuario",

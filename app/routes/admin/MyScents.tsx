@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react'
+import { use, useContext, useRef } from 'react'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
 import { useLoaderData, useNavigation, useSubmit } from 'react-router-dom'
 
@@ -66,6 +66,7 @@ const MyScentsPage = () => {
     const formData = new FormData()
     formData.append('perfumeId', perfumeId)
     formData.append('action', 'remove')
+
     submit(formData, { method: 'post' })
   }
 
@@ -76,11 +77,11 @@ const MyScentsPage = () => {
         <Button
           className="z-50"
           onClick={() => {
-            toggleModal(modalTrigger, '')
+            toggleModal(modalTrigger, '', 'create')
           }}
           ref={modalTrigger}
         >
-          OH HAI
+          Add to Collection
         </Button>
       </header>
       <div className='bg-noir-light p-6 rounded-lg shadow-md'>
@@ -104,6 +105,14 @@ const MyScentsPage = () => {
                       <span className='text-lg'>Amount:</span>
                       <span className='text-xl'>{userPerfume.amount}</span>
                     </p>
+                    <button
+                      className="text-green-500 text-sm justify-self-end"
+                      onClick={() => toggleModal(modalTrigger, '', userPerfume)}
+                      disabled={isSubmitting}
+                      ref={modalTrigger}
+                    >
+                      EDIT
+                    </button>
                     <button
                       className="text-red-500 text-sm justify-self-end"
                       onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
