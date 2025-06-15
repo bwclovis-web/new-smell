@@ -72,7 +72,7 @@ model UserPerfume {
   id        String   @id @default(cuid())
   userId    String
   perfumeId String
-  amount    String
+  amount    String   @default("full") // Default amount is full
   user      User     @relation(fields: [userId], references: [id])
   perfume   Perfume  @relation(fields: [perfumeId], references: [id])
   createdAt DateTime @default(now())

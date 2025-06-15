@@ -1,13 +1,17 @@
-import { useState } from 'react'
+/* eslint-disable max-statements */
+import { useContext, useRef, useState } from 'react'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
 import { useLoaderData, useNavigation, useSubmit } from 'react-router-dom'
 
+import { Button } from '~/components/Atoms/Button/Button'
+import Modal from '~/components/Organisms/Modal/Modal'
 import { getAllPerfumes } from '~/models/perfume.server'
 import {
   addUserPerfume,
   getUserPerfumes,
   removeUserPerfume
 } from '~/models/user.server'
+import SessionContext from '~/providers/sessionProvider'
 import { sharedLoader } from '~/utils/sharedLoader'
 
 export const ROUTE_PATH = '/admin/my-scents'
@@ -77,7 +81,9 @@ const MyScentsPage = () => {
   const { userPerfumes, allPerfumes } = useLoaderData() as LoaderData
   const [selectedPerfume, setSelectedPerfume] = useState('')
   const submit = useSubmit()
+  const modalTrigger = useRef<HTMLButtonElement>(null)
   const navigation = useNavigation()
+  const { modalOpen, toggleModal } = useContext(SessionContext)
   const isSubmitting = navigation.state === 'submitting'
 
   const handleAddPerfume = () => {
@@ -100,38 +106,11 @@ const MyScentsPage = () => {
 
     submit(formData, { method: 'post' })
   }
-
+  console.log('userPerfumes', modalOpen)
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">My Scents</h1>
-
       {/* Add new perfume to collection */}
-      <div className="mb-6 p-4 border rounded bg-gray-50">
-        <h2 className="text-lg font-semibold mb-2">Add to My Collection</h2>
-        <div className="flex gap-2">
-          <select
-            className="flex-grow p-2 border rounded"
-            value={selectedPerfume}
-            onChange={event => setSelectedPerfume(event.target.value)}
-            disabled={isSubmitting}
-          >
-            <option value="">Select a perfume</option>
-            {allPerfumes.map(perfume => (
-              <option key={perfume.id} value={perfume.id}>
-                {perfume.name}
-                {perfume.perfumeHouse ? ` - ${perfume.perfumeHouse.name}` : ''}
-              </option>
-            ))}
-          </select>
-          <button
-            className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
-            onClick={handleAddPerfume}
-            disabled={!selectedPerfume || isSubmitting}
-          >
-            {isSubmitting ? 'Adding...' : 'Add'}
-          </button>
-        </div>
-      </div>
 
       {/* User's perfume collection */}
       <h2 className="text-lg font-semibold mb-2">My Collection</h2>
@@ -143,6 +122,16 @@ const MyScentsPage = () => {
         )
         : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Button
+              className="z-50"
+              onClick={() => {
+                toggleModal(modalTrigger, '')
+                console.log('modalOpen')
+              }}
+              ref={modalTrigger}
+            >
+              OH HAI
+            </Button>
             {userPerfumes.map(userPerfume => (
               <div key={userPerfume.id} className="border rounded p-4 flex flex-col">
                 <div className="flex justify-between items-start mb-2">
@@ -171,6 +160,34 @@ const MyScentsPage = () => {
             ))}
           </div>
         )}
+      {!modalOpen && (
+        <Modal>
+          <div className="flex gap-2">
+            <select
+              className="flex-grow p-2 border rounded"
+              value={selectedPerfume}
+              onChange={event => setSelectedPerfume(event.target.value)}
+              disabled={isSubmitting}
+            >
+              <option value="">Select a perfume</option>
+              {allPerfumes.map(perfume => (
+                <option key={perfume.id} value={perfume.id}>
+                  {perfume.name}
+                  {perfume.perfumeHouse ? ` - ${perfume.perfumeHouse.name}` : ''}
+                </option>
+              ))}
+            </select>
+            <button
+              className="bg-blue-500 text-white px-4 py-2 rounded disabled:bg-gray-300"
+              onClick={handleAddPerfume}
+              disabled={!selectedPerfume || isSubmitting}
+            >
+              {isSubmitting ? 'Adding...' : 'Add'}
+            </button>
+          </div>
+        </Modal>
+
+      )}
     </div>
   )
 }

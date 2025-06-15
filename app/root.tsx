@@ -15,6 +15,7 @@ import type { Route } from './+types/root'
 import FourOFourPage from './components/Containers/404Page/404Page'
 import { NonceProvider, useNonce } from './hooks/use-nonce'
 import i18n from './modules/i18n/i18n.client'
+import { SessionProvider } from './providers/sessionProvider'
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -53,7 +54,9 @@ export default function App() {
   return (
     <NonceProvider value={undefined}>
       <I18nextProvider i18n={i18n}>
-        <Outlet />
+        <SessionProvider>
+          <Outlet />
+        </SessionProvider>
       </I18nextProvider>
     </NonceProvider>
   )
@@ -74,7 +77,8 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     if (error.status === 404) {
       return <FourOFourPage />
     }
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
+  }
+  else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message
     stack = error.stack
   }
