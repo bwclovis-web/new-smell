@@ -1,9 +1,10 @@
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MetaFunction } from 'react-router'
 
+import RadioSelect from '~/components/Atoms/RadioSelect/RadioSelect'
 import SearchBar from '~/components/Organisms/SearchBar/SearchBar'
 import { getAllFeatures } from '~/models/feature.server'
 
@@ -25,6 +26,7 @@ export async function loader() {
 }
 gsap.registerPlugin(useGSAP)
 export default function Home() {
+  const [searchType, setSearchType] = useState<'perfume-house' | 'perfume'>('perfume-house')
   const container = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
 
@@ -36,13 +38,26 @@ export default function Home() {
     },
     { scope: container }
   )
+
+  const handleSelectType = evt => {
+    setSearchType(evt.target.value)
+  }
   return (
     <div className="flex flex-col gap-8 items-center min-h-screen px-4 relative" ref={container}>
       <img src={banner} alt="" className="absolute object-cover w-full h-1/2 lg:h-2/3 rounded-md border-10 border-amber-50 shadow-sm" />
       <section className="features translate-y-full opacity-0 text-noir-dark  min-h-max relative w-full md:w-3/4 xl:w-3/4 mx-auto border border-noir-gold py-5 px-6 rounded-md bg-noir-light/60 backdrop-blur shadow-md">
         <h1 className="text-center callout">{t('home.heading')}</h1>
         <p className="text-center text-xl mb-4 pb-2 ">{t('home.subheading')}</p>
-        <SearchBar className="mt-8" />
+        <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-4">
+          <RadioSelect
+            handleRadioChange={evt => handleSelectType(evt)}
+            data={[
+              { id: '1', name: 'type', type: 'radio', label: 'Houses', value: 'perfume-house', defaultChecked: true },
+              { id: '2', name: 'type', type: 'radio', label: 'Perfumes', value: 'perfume' }
+            ]}
+          />
+        </div>
+        <SearchBar searchType={searchType} className="mt-8" />
       </section>
     </div>
   )

@@ -27,12 +27,6 @@ export default defineConfig([
   jsxA11y.flatConfigs.recommended,
   pluginReact.configs.flat.recommended,
   stylistic.configs['disable-legacy'],
-  stylistic.configs.customize({
-    quotes: 'single',
-    semi: false,
-    commaDangle: 'never',
-    jsx: true
-  }),
   { files: ['**/*.css'], plugins: { css }, language: 'css/css', extends: ['css/recommended'] },
   { rules: {
     'arrow-body-style': ['error', 'as-needed'],
