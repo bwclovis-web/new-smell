@@ -1,13 +1,16 @@
-import { useRef, useState } from "react"
+import { useContext, useRef, useState } from "react"
 import { Form, useSubmit } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import Input from "~/components/Atoms/Input/Input"
 import SearchBar from "~/components/Organisms/SearchBar/SearchBar"
+import SessionContext from "~/providers/sessionProvider"
 
 const MyScentsModal = () => {
-  const [selectedPerfume, setSelectedPerfume] = useState<any | null>(null)
+  const { modalData } = useContext(SessionContext)
+  const [selectedPerfume, setSelectedPerfume] = useState<any | null>(modalData === "create" ? null : modalData.perfume)
   const [perfumeAmount, setPerfumeAmount] = useState<string>("")
+
   const inputRef = useRef<HTMLInputElement | null>(null)
   const submit = useSubmit()
 
@@ -29,11 +32,15 @@ const MyScentsModal = () => {
     setPerfumeAmount("")
   }
 
+
   return (
     <div>
       <h2>My Scents</h2>
       <p>This is where you can manage your favorite scents.</p>
-      <SearchBar searchType="perfume" className="mt-4" action={handleClick} />
+      {modalData === "create" && (
+        <SearchBar searchType="perfume" className="mt-4" action={handleClick} />
+      )}
+
       {selectedPerfume && (
         <Form
           method="POST"
