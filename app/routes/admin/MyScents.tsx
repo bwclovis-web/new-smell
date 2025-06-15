@@ -106,11 +106,20 @@ const MyScentsPage = () => {
 
     submit(formData, { method: 'post' })
   }
-  console.log('userPerfumes', modalOpen)
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">My Scents</h1>
       {/* Add new perfume to collection */}
+      <Button
+        className="z-50"
+        onClick={() => {
+          toggleModal(modalTrigger, '')
+        }}
+        ref={modalTrigger}
+      >
+        OH HAI
+      </Button>
 
       {/* User's perfume collection */}
       <h2 className="text-lg font-semibold mb-2">My Collection</h2>
@@ -122,16 +131,7 @@ const MyScentsPage = () => {
         )
         : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Button
-              className="z-50"
-              onClick={() => {
-                toggleModal(modalTrigger, '')
-                console.log('modalOpen')
-              }}
-              ref={modalTrigger}
-            >
-              OH HAI
-            </Button>
+
             {userPerfumes.map(userPerfume => (
               <div key={userPerfume.id} className="border rounded p-4 flex flex-col">
                 <div className="flex justify-between items-start mb-2">
@@ -160,7 +160,7 @@ const MyScentsPage = () => {
             ))}
           </div>
         )}
-      {!modalOpen && (
+      {modalOpen && (
         <Modal>
           <div className="flex gap-2">
             <select
