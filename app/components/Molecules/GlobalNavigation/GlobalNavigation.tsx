@@ -46,7 +46,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
                 isActive && isClientReady ? 'text-gray-300' : ''
               )}
             >
-              {ready && isClientReady ? t(item.key) : item.label}
+              {ready && isClientReady ? t('navigation.' + item.key) : item.label}
             </NavLink>
           </li>
         ))}

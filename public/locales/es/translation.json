@@ -2,11 +2,12 @@
   "navigation": {
     "logo": "Good Scents",
     "login": "Iniciar Sesión",
-    "loggingIn": "Iniciando sesión..."
+    "loggingIn": "Iniciando sesión...",
+    "houses": "Casas de Perfume",
+    "perfumes": "Perfumes",
+    "admin": "Administrador"
   },
-  "houses": "Casas de Perfume",
-  "perfumes": "Perfumes",
-  "admin": "Administrador",
+
   "home": {
     "heading": "Good Scents",
     "description": "Una base de datos completa de perfumes y sus casas.",
