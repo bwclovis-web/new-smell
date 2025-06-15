@@ -41,7 +41,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const perfumeId = formData.get('perfumeId') as string
   const actionType = formData.get('action') as string
   const amount = formData.get('amount') as string | undefined
-
   const user = await sharedLoader(request)
 
   if (actionType === 'add') {
@@ -67,55 +66,65 @@ const MyScentsPage = () => {
     const formData = new FormData()
     formData.append('perfumeId', perfumeId)
     formData.append('action', 'remove')
-
     submit(formData, { method: 'post' })
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">My Scents</h1>
-      <Button
-        className="z-50"
-        onClick={() => {
-          toggleModal(modalTrigger, '')
-        }}
-        ref={modalTrigger}
-      >
-        OH HAI
-      </Button>
+    <section className="p-4">
+      <header className='flex justify-between items-center mb-6'>
+        <h1 className="text-2xl font-bold mb-4">My Scents</h1>
+        <Button
+          className="z-50"
+          onClick={() => {
+            toggleModal(modalTrigger, '')
+          }}
+          ref={modalTrigger}
+        >
+          OH HAI
+        </Button>
+      </header>
+      <div className='bg-noir-light p-6 rounded-lg shadow-md'>
+        <h2 className="text-2xl font-semibold mb-2">My Collection</h2>
+        {userPerfumes.length === 0
+          ? (
+            <div className="italic text-gray-500">
+              Your collection is empty. Add some perfumes!
+            </div>
+          )
+          : (
+            <ul className="w-full">
+              {userPerfumes.map(userPerfume => (
+                <li key={userPerfume.id} className="border rounded p-4 flex flex-col w-full">
+                  <div className="flex justify-start items-center mb-2 gap-6">
+                    <h3 className="font-medium flex flex-col">
+                      <span className='text-xl'>Name:</span>
+                      <span className='text-2xl'>{userPerfume.perfume.name}</span>
+                    </h3>
+                    <p className='flex flex-col items-start justify-center'>
+                      <span className='text-lg'>Amount:</span>
+                      <span className='text-xl'>{userPerfume.amount}</span>
+                    </p>
+                    <button
+                      className="text-red-500 text-sm justify-self-end"
+                      onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? 'Removing...' : 'Remove'}
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+      </div>
 
-      <h2 className="text-lg font-semibold mb-2">My Collection</h2>
-      {userPerfumes.length === 0
-        ? (
-          <div className="italic text-gray-500">
-            Your collection is empty. Add some perfumes!
-          </div>
-        )
-        : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {userPerfumes.map(userPerfume => (
-              <div key={userPerfume.id} className="border rounded p-4 flex flex-col">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-medium">{userPerfume.perfume.name}</h3>
-                  <button
-                    className="text-red-500 text-sm"
-                    onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? 'Removing...' : 'Remove'}
-                  </button>
-                </div>
-                <p>{userPerfume.amount}</p>
-              </div>
-            ))}
-          </div>
-        )}
+
       {modalOpen && (
         <Modal>
           <MyScentsModal />
         </Modal>
       )}
-    </div>
+    </section>
   )
 }
 
