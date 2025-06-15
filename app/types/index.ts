@@ -32,7 +32,9 @@ export interface SafeUser {
  * Create a safe user object by omitting sensitive fields
  */
 export function createSafeUser(user: User | null): SafeUser | null {
-  if (!user) return null
+  if (!user) {
+    return null
+  }
 
   const { password, ...safeUser } = user
   return safeUser as SafeUser
@@ -40,4 +42,21 @@ export function createSafeUser(user: User | null): SafeUser | null {
 
 export type { UserRole }
 
-// Add more global types as needed
+interface PerfumeHouseI {
+  id: string
+  name: string
+}
+
+interface PerfumeI {
+  id: string
+  name: string
+  description?: string
+  perfumeHouse?: PerfumeHouseI
+}
+
+export interface UserPerfumeI {
+  id: string
+  userId: string
+  perfumeId: string
+  perfume: PerfumeI
+}
