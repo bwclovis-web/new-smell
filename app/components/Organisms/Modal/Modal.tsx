@@ -4,6 +4,7 @@ import {
   type FC,
   type HTMLProps,
   type ReactNode,
+  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -11,7 +12,7 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 
-import { useModalEffect, useModalStore } from '~/stores/ModalStore'
+import SessionContext from '~/providers/sessionProvider'
 import { styleMerge } from '~/utils/styleUtils'
 
 import { modalBackgroundVariant, modalContentVariant } from './modal-variants'
@@ -29,10 +30,7 @@ const Modal: FC<ModalProps>
     const [animate, setAnimate] = useState(false)
     const [windowPosition, setWindowPosition] = useState(0)
     const modalRef = useRef<HTMLDivElement>(null)
-    const { toggleModal, triggerId } = useModalStore()
-
-    useModalEffect(modalRef)
-
+    const { toggleModal, triggerId } = useContext(SessionContext)
     const handleClick = () => {
       setAnimate(false)
       setTimeout(() => {

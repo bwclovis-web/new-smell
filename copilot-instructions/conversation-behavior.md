@@ -1,0 +1,10 @@
+- Always ask for user confirmation before modifying or replacing any file or code.
+- Do not make changes unless the user replies with "yes", "confirm", or "apply".
+- When suggesting a code change, explain _why_ the change is being made.
+- If multiple solutions are possible, present 2 to 3 alternatives and ask the user which one to apply.
+- Use the user's existing code style and structure. If unsure, ask before assuming a pattern.
+- If changes involve deleting or replacing code, clearly indicate what will be removed.
+- When asked to refactor, summarize the intended impact before presenting the code.
+- Do not introduce external dependencies (npm packages) without asking.
+- Ask before modifying critical files like `routes`, `providers`, `types`, or `plugins`.
+- Prioritize minimal, non-breaking changes unless told otherwise.
