@@ -48,7 +48,7 @@ const Input: FC<InputProps> = ({
     >
       <label
         htmlFor={inputId}
-        className="block text-xl font-medium text-noir-dark dark:text-white capitalize bg-noir-gold max-w-max p-2"
+        className='block-label'
       >
         {label ? label : action?.name}
       </label>

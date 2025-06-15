@@ -30,6 +30,10 @@ h1 {
   line-height: 1;
 }
 
+.block-label {
+ @apply block text-xl font-medium text-noir-dark dark:text-white capitalize bg-noir-gold max-w-max p-2
+}
+
 .noir-outline {
   @apply bg-noir-gold/20 rounded-md border-12 lg:border-14 border-amber-50 shadow-sm backdrop-blur-xs
 }

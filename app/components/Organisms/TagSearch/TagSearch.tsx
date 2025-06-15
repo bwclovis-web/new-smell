@@ -18,7 +18,7 @@ const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => 
   const [selectedTags, setSelectedTags]
     = useState<any[]>(Array.isArray(data) ? data : [])
 
-  const handleKeyUp = async (evt) => {
+  const handleKeyUp = async evt => {
     const query = (evt.target as HTMLInputElement).value
     setInputValue(query)
     const url = '/api/getTag'
@@ -40,8 +40,8 @@ const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => 
       className={styleMerge(tagSearchVariants({ className }))}
       data-cy="TagSearch"
     >
-      <div className="flex flex-col gap-2">
-        <label htmlFor="tag-search">{`${label} search`}</label>
+      <div className="flex flex-col mb-6">
+        <label htmlFor="tag-search" className='block-label'>{`${label} search`}</label>
         <input
           type="text"
           autoComplete="off"

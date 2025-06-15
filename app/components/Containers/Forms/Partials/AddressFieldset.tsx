@@ -14,9 +14,9 @@ interface AddressFieldsetProps {
   }
 }
 const AddressFieldset: FC<AddressFieldsetProps> = ({ inputRef, address, data }) => (
-  <fieldset className="flex  gap-2">
+  <fieldset className="flex gap-2">
     <legend className="text-2xl text-noir-gray font-bold mb-2">Address</legend>
-    <div className="flex gap-2 w-full">
+    <div className="grid grid-cols-2 w-full gap-2">
       <Input
         inputType="text"
         inputRef={inputRef}
