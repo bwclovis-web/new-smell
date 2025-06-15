@@ -6,7 +6,6 @@ import { useLoaderData, useNavigation, useSubmit } from 'react-router-dom'
 import { Button } from '~/components/Atoms/Button/Button'
 import MyScentsModal from '~/components/Containers/MyScentsModal/MyScentsModal'
 import Modal from '~/components/Organisms/Modal/Modal'
-import { getAllPerfumes } from '~/models/perfume.server'
 import {
   addUserPerfume,
   getUserPerfumes,
@@ -39,17 +38,13 @@ interface UserPerfume {
 
 interface LoaderData {
   userPerfumes: UserPerfume[]
-  allPerfumes: Perfume[]
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await sharedLoader(request)
-
-  // Get user perfumes and all perfumes
   const userPerfumes = await getUserPerfumes(user.id)
-  const allPerfumes = await getAllPerfumes()
 
-  return { userPerfumes, allPerfumes }
+  return { userPerfumes }
 }
 
 const performAddAction = async (userId: string, perfumeId: string) => (
@@ -80,12 +75,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 const MyScentsPage = () => {
   const { userPerfumes } = useLoaderData() as LoaderData
-
+  const submit = useSubmit()
   const modalTrigger = useRef<HTMLButtonElement>(null)
   const navigation = useNavigation()
   const { modalOpen, toggleModal } = useContext(SessionContext)
   const isSubmitting = navigation.state === 'submitting'
-
 
   const handleRemovePerfume = (perfumeId: string) => {
     const formData = new FormData()
@@ -117,33 +111,24 @@ const MyScentsPage = () => {
         )
         : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-
-            {userPerfumes.map(userPerfume => (
-              <div key={userPerfume.id} className="border rounded p-4 flex flex-col">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-medium">{userPerfume.perfume.name}</h3>
-                  <button
-                    className="text-red-500 text-sm"
-                    onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? 'Removing...' : 'Remove'}
-                  </button>
+            {userPerfumes.map(userPerfume => {
+              console.log(userPerfume)
+              return (
+                <div key={userPerfume.id} className="border rounded p-4 flex flex-col">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="font-medium">{userPerfume.perfume.name}</h3>
+                    <button
+                      className="text-red-500 text-sm"
+                      onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? 'Removing...' : 'Remove'}
+                    </button>
+                  </div>
+                  <p>{userPerfume.amount}</p>
                 </div>
-                {userPerfume.perfume.perfumeHouse && (
-                  <p className="text-sm text-gray-600 mb-2">
-                    {userPerfume.perfume.perfumeHouse.name}
-                  </p>
-                )}
-                {userPerfume.perfume.description && (
-                  <p className="text-sm mt-auto">
-                    {userPerfume.perfume.description.length > 100
-                      ? `${userPerfume.perfume.description.substring(0, 100)}...`
-                      : userPerfume.perfume.description}
-                  </p>
-                )}
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       {modalOpen && (

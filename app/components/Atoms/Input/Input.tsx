@@ -53,6 +53,7 @@ const Input: FC<InputProps> = ({
         {label ? label : action?.name}
       </label>
       <input
+        name={action?.name}
         ref={inputRef}
         defaultValue={defaultValue ? defaultValue : ''}
         aria-invalid={actionData?.errors?.action ? true : undefined}
