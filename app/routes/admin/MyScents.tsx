@@ -1,5 +1,7 @@
-import { use, useContext, useRef } from 'react'
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
+/* eslint-disable max-statements */
+import { use, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from 'react-router'
 import { useLoaderData, useNavigation, useSubmit } from 'react-router-dom'
 
 import { Button } from '~/components/Atoms/Button/Button'
@@ -15,6 +17,14 @@ import type { UserPerfumeI } from '~/types'
 import { sharedLoader } from '~/utils/sharedLoader'
 
 export const ROUTE_PATH = '/admin/my-scents'
+
+export const meta: MetaFunction = () => {
+  const { t } = useTranslation()
+  return [
+    { title: t('myScents.meta.title') },
+    { name: 'description', content: t('myScents.meta.description') }
+  ]
+}
 interface LoaderData {
   userPerfumes: UserPerfumeI[]
 }
@@ -35,7 +45,7 @@ const performRemoveAction = async (userId: string, perfumeId: string) => (
   await removeUserPerfume(userId, perfumeId)
 )
 
-// eslint-disable-next-line max-statements
+
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const perfumeId = formData.get('perfumeId') as string
@@ -59,8 +69,9 @@ const MyScentsPage = () => {
   const submit = useSubmit()
   const modalTrigger = useRef<HTMLButtonElement>(null)
   const navigation = useNavigation()
-  const { modalOpen, toggleModal } = useContext(SessionContext)
+  const { modalOpen, toggleModal } = use(SessionContext)
   const isSubmitting = navigation.state === 'submitting'
+  const { t } = useTranslation()
 
   const handleRemovePerfume = (perfumeId: string) => {
     const formData = new FormData()
@@ -71,9 +82,12 @@ const MyScentsPage = () => {
   }
 
   return (
-    <section className="p-4">
+    <section>
       <header className='flex justify-between items-center mb-6'>
-        <h1 className="text-2xl font-bold mb-4">My Scents</h1>
+        <div className=' mb-4'>
+          <h1 className="text-2xl font-bold">{t('myScents.heading')}</h1>
+          <p>{t('myScents.subheading')}</p>
+        </div>
         <Button
           className="z-50"
           onClick={() => {
@@ -81,7 +95,7 @@ const MyScentsPage = () => {
           }}
           ref={modalTrigger}
         >
-          Add to Collection
+          {t('myScents.addButton')}
         </Button>
       </header>
       <div className='bg-noir-light p-6 rounded-lg shadow-md'>
@@ -89,7 +103,8 @@ const MyScentsPage = () => {
         {userPerfumes.length === 0
           ? (
             <div className="italic text-gray-500">
-              Your collection is empty. Add some perfumes!
+              <h3>{t('myScents.empty.heading')}</h3>
+              <p>{t('myScents.empty.subheading')}</p>
             </div>
           )
           : (

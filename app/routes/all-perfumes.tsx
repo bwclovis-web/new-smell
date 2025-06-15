@@ -13,18 +13,19 @@ export const loader = async () => {
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
   return [
-    { title: t('allPerfumes.title') },
-    { name: 'description', content: t('allPerfumes.description') }
+    { title: t('allPerfumes.meta.title') },
+    { name: 'description', content: t('allPerfumes.meta.description') }
   ]
 }
 
 const AllPerfumesPage = () => {
+  const { t } = useTranslation()
   const { allPerfumes } = useLoaderData<typeof loader>()
   return (
     <section>
       <header className="mb-4">
-        <h1>All Perfumes</h1>
-        <p>This is the All Perfumes page.</p>
+        <h1>{t('allPerfumes.heading')}</h1>
+        <p>{t('allPerfumes.subheading')}</p>
       </header>
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {allPerfumes?.map(perfume => (

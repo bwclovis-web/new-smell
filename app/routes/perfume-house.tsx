@@ -22,8 +22,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
   return [
-    { title: t('singleHouse.title') },
-    { name: 'description', content: t('allPerfumes.description') }
+    { title: t('singleHouse.meta.title') },
+    { name: 'description', content: t('singleHouse.meta.description') }
   ]
 }
 
@@ -45,8 +45,7 @@ const HouseDetailPage = () => {
     const res = await fetch(url)
     if (res.ok) {
       navigate(ALL_HOUSES)
-    }
-    else {
+    } else {
       console.error('Failed to delete the house')
     }
   }
