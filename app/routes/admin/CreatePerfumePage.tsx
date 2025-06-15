@@ -1,6 +1,7 @@
 import { type SubmissionResult } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
-import { type ActionFunctionArgs, useActionData, useLoaderData } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import { type ActionFunctionArgs, type MetaFunction, useActionData, useLoaderData } from 'react-router'
 
 import PerfumeForm from '~/components/Containers/Forms/PerfumeForm'
 import { getAllHouses } from '~/models/house.server'
@@ -9,7 +10,13 @@ import { FORM_TYPES } from '~/utils/constants'
 import { CreatePerfumeSchema } from '~/utils/formValidationSchemas'
 
 export const ROUTE_PATH = '/admin/create-perfume' as const
-
+export const meta: MetaFunction = () => {
+  const { t } = useTranslation()
+  return [
+    { title: t('createPerfume.meta.title') },
+    { name: 'description', content: t('createPerfume.meta.description') }
+  ]
+}
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const test = parseWithZod(formData, { schema: CreatePerfumeSchema })
@@ -28,12 +35,12 @@ export const loader = async () => {
 const CreatePerfumePage = () => {
   const { allHouses } = useLoaderData<typeof loader>()
   const lastResult = useActionData<SubmissionResult<string[]> | null>()
-
+  const { t } = useTranslation()
   return (
     <section>
       <header className="mb-6">
-        <h1 className="text-3xl font-bold">Create Perfume</h1>
-        <p className="text-lg">Create a new perfume</p>
+        <h1 className="text-3xl font-bold">{t('createPerfume.heading')}</h1>
+        <p className="text-lg">{t('createPerfume.subheading')}</p>
       </header>
       <PerfumeForm
         formType={FORM_TYPES.CREATE_PERFUME_FORM}

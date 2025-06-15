@@ -1,30 +1,38 @@
-import { type LoaderFunctionArgs, NavLink, useLoaderData } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData } from 'react-router'
 
 import { getUserWishlist } from '~/models/wishlist.server'
 import { sharedLoader } from '~/utils/sharedLoader'
 
 export const ROUTE_PATH = 'admin/wishlist'
+export const meta: MetaFunction = () => {
+  const { t } = useTranslation()
+  return [
+    { title: t('wishlist.meta.title') },
+    { name: 'description', content: t('wishlist.meta.description') }
+  ]
+}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await sharedLoader(request)
   const wishlist = await getUserWishlist(user.id)
-
   return { wishlist }
 }
 
 const WishlistPage = () => {
+  const { t } = useTranslation()
   const { wishlist } = useLoaderData<typeof loader>()
-
   return (
-    <div className="container mx-auto px-4 py-8">
+    <section>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-          My Wishlist
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          {t('wishlist.heading')}
         </h1>
+        <p className='mb-4'>{t('wishlist.subheading')}</p>
         <p className="text-gray-600 dark:text-gray-400">
           {wishlist.length}
           {' '}
-          items in your wishlist
+          {t('wishlist.itemsInWishlist')}
         </p>
       </div>
 
@@ -32,10 +40,10 @@ const WishlistPage = () => {
         ? (
           <div className="text-center py-12">
             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-              Your wishlist is empty
+              {t('wishlist.empty.heading')}
             </h3>
             <p className="text-gray-500 dark:text-gray-400 mb-4">
-              Start adding perfumes to your wishlist!
+              {t('wishlist.empty.subheading')}
             </p>
             <NavLink
               to="/all-perfumes"
@@ -86,7 +94,7 @@ const WishlistPage = () => {
             ))}
           </div>
         )}
-    </div>
+    </section>
   )
 }
 

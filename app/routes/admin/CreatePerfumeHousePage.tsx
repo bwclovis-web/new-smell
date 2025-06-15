@@ -1,6 +1,7 @@
 import { type SubmissionResult } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
-import { type ActionFunctionArgs, useActionData } from 'react-router'
+import { useTranslation } from 'react-i18next'
+import { type ActionFunctionArgs, type MetaFunction, useActionData } from 'react-router'
 
 import PerfumeHouseForm from '~/components/Containers/Forms/PerfumeHouseForm'
 import { createPerfumeHouse } from '~/models/house.server'
@@ -8,7 +9,13 @@ import { FORM_TYPES } from '~/utils/constants'
 import { CreatePerfumeHouseSchema } from '~/utils/formValidationSchemas'
 
 export const ROUTE_PATH = '/admin/create-perfume-house' as const
-
+export const meta: MetaFunction = () => {
+  const { t } = useTranslation()
+  return [
+    { title: t('createHouse.meta.title') },
+    { name: 'description', content: t('createHouse.meta.description') }
+  ]
+}
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const test = parseWithZod(formData, { schema: CreatePerfumeHouseSchema })
@@ -21,12 +28,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 const CreatePerfumeHousePage = () => {
   const lastResult = useActionData<SubmissionResult<string[]> | null>()
-
+  const { t } = useTranslation()
   return (
     <section>
       <header className="mb-6">
-        <h1 className="text-3xl font-bold">Create Perfume House</h1>
-        <p className="text-lg">Create a new perfume house</p>
+        <h1 className="text-3xl font-bold">{t('createHouse.heading')}</h1>
+        <p className="text-lg">{t('createHouse.subheading')}</p>
       </header>
       <PerfumeHouseForm
         formType={FORM_TYPES.CREATE_HOUSE_FORM}

@@ -21,20 +21,98 @@
     "subheading": "Search by:"
   },
   "allHouses": {
-    "title": "All Perfume Houses",
-    "description": "Explore all the perfume houses available in our database."
+    "meta": {
+      "title": "All Perfume Houses - Good Scents",
+      "description": "Explore all the perfume houses available in our database."
+    },
+    "heading": "All Perfume Houses",
+    "subheading": "Explore all the perfume houses available in our database.",
+    "button": {
+      "byType": "Sort by Type",
+      "byCreated": "Sort by Created Date"
+    }
   },
   "allPerfumes": {
-    "title": "All Perfumes",
-    "description": "Discover all the perfumes available in our database."
+    "meta": {
+      "title": "All Perfumes - Good Scents",
+      "description": "Discover all the perfumes available in our database."
+    },
+    "heading": "All Perfumes",
+    "subheading": "Discover all the perfumes available in our database."
   },
   "singleHouse": {
-    "title": "Perfume House",
-    "description": "Explore the details of a specific perfume house."
+    "meta": {
+      "title": "Perfume House Details - Good Scents",
+      "description": "Explore the details of a specific perfume house."
+    }
   },
   "singlePerfume": {
-    "title": "Perfume",
-    "description": "Discover the details of a specific perfume."
+    "meta": {
+      "title": "Perfume Details - Good Scents",
+      "description": "Discover the details of a specific perfume."
+    }
+  },
+  "createHouse": {
+    "meta": {
+      "title": "Create Perfume House - Good Scents",
+      "description": "Create a new perfume house in our database."
+    },
+    "heading": "Create Perfume House",
+    "subheading": "Fill in the details to create a new perfume house.",
+    "name": "Name",
+    "namePlaceholder": "Enter the name of the perfume house",
+    "type": "Type",
+    "typePlaceholder": "Select the type of perfume house",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter a brief description of the perfume house",
+    "submitButton": "Create House"
+  },
+  "createPerfume": {
+    "meta": {
+      "title": "Create Perfume - Good Scents",
+      "description": "Create a new perfume in our database."
+    },
+    "heading": "Create Perfume",
+    "subheading": "Fill in the details to create a new perfume.",
+    "name": "Name",
+    "namePlaceholder": "Enter the name of the perfume",
+    "house": "Perfume House",
+    "housePlaceholder": "Select the perfume house",
+    "notes": "Notes",
+    "notesPlaceholder": "Enter the notes of the perfume",
+    "submitButton": "Create Perfume"
+  },
+  "wishlist": {
+    "meta": {
+      "title": "Wishlist - Good Scents",
+      "description": "Manage your wishlist of perfumes."
+    },
+    "empty": {
+      "heading": "Your wishlist is empty.",
+      "subheading": "Start adding perfumes to your wishlist!"
+    },
+    "heading": "My Wishlist",
+    "subheading": "Manage your wishlist of perfumes.",
+    "itemsInWishlist": "items in Wishlist",
+
+    "addButton": "Add to Wishlist",
+    "removeButton": "Remove from Wishlist"
+  },
+  "myScents": {
+    "meta": {
+      "title": "My Scents - Good Scents",
+      "description": "Manage your personal collection of perfumes."
+    },
+    "empty": {
+      "heading": "Your collection is empty.",
+      "subheading": "Start adding perfumes to your collection!"
+    },
+    "heading": "My Scents",
+    "subheading": "Manage your personal collection of perfumes.",
+    "itemsInCollection": "items in Collection",
+
+    "addButton": "Add to Collection",
+    "removeButton": "Remove from Collection"
   },
   "profile": {
     "title": "User Profile",

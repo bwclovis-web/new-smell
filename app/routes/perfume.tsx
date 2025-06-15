@@ -42,14 +42,13 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
   return [
-    { title: t('singlePerfume.title') },
-    { name: 'description', content: t('singlePerfume.description') }
+    { title: t('singlePerfume.meta.title') },
+    { name: 'description', content: t('singlePerfume.meta.description') }
   ]
 }
 
 const PerfumePage = () => {
   const { perfume, isInUserWishlist } = useLoaderData<typeof loader>()
-  // Define the expected context type
   type OutletContextType = { user: { role: string, id: string } | null }
   const { user } = useOutletContext<OutletContextType>()
   const navigate = useNavigate()

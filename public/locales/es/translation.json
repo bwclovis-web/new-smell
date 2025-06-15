@@ -7,27 +7,110 @@
     "perfumes": "Perfumes",
     "admin": "Administrador"
   },
-
   "home": {
+    "meta": {
+      "title": "Good Scents - Base de Datos de Perfumes",
+      "description": "Explora una base de datos completa de perfumes y sus casas."
+    },
+    "radio": {
+      "houses": "Casas de Perfume",
+      "perfumes": "Perfumes"
+    },
     "heading": "Good Scents",
     "description": "Una base de datos completa de perfumes y sus casas.",
     "subheading": "Buscar por:"
   },
   "allHouses": {
-    "title": "Todas las Casas de Perfume",
-    "description": "Explora todas las casas de perfume disponibles en nuestra base de datos."
+    "meta": {
+      "title": "Todas las Casas de Perfume - Good Scents",
+      "description": "Explora todas las casas de perfume disponibles en nuestra base de datos."
+    },
+    "heading": "Todas las Casas de Perfume",
+    "subheading": "Explora todas las casas de perfume disponibles en nuestra base de datos.",
+    "button": {
+      "byType": "Ordenar por tipo",
+      "byCreated": "Ordenar por fecha de creación"
+    }
   },
   "allPerfumes": {
-    "title": "Todos los Perfumes",
-    "description": "Descubre todos los perfumes disponibles en nuestra base de datos."
+    "meta": {
+      "title": "Todos los Perfumes - Good Scents",
+      "description": "Descubre todos los perfumes disponibles en nuestra base de datos."
+    },
+    "heading": "Todos los Perfumes",
+    "subheading": "Descubre todos los perfumes disponibles en nuestra base de datos."
   },
   "singleHouse": {
-    "title": "Casa de Perfume",
-    "description": "Explora los detalles de una casa de perfume específica."
+    "meta": {
+      "title": "Detalles de la Casa de Perfume - Good Scents",
+      "description": "Explora los detalles de una casa de perfume específica."
+    }
   },
   "singlePerfume": {
-    "title": "Perfume",
-    "description": "Descubre los detalles de un perfume específico."
+    "meta": {
+      "title": "Detalles del Perfume - Good Scents",
+      "description": "Descubre los detalles de un perfume específico."
+    }
+  },
+  "createHouse": {
+    "meta": {
+      "title": "Crear Casa de Perfume - Good Scents",
+      "description": "Crea una nueva casa de perfume en nuestra base de datos."
+    },
+    "heading": "Crear Casa de Perfume",
+    "subheading": "Completa los detalles para crear una nueva casa de perfume.",
+    "name": "Nombre",
+    "namePlaceholder": "Introduce el nombre de la casa de perfume",
+    "type": "Tipo",
+    "typePlaceholder": "Selecciona el tipo de casa de perfume",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Introduce una breve descripción de la casa de perfume",
+    "submitButton": "Crear Casa"
+  },
+  "createPerfume": {
+    "meta": {
+      "title": "Crear Perfume - Good Scents",
+      "description": "Crea un nuevo perfume en nuestra base de datos."
+    },
+    "heading": "Crear Perfume",
+    "subheading": "Completa los detalles para crear un nuevo perfume.",
+    "name": "Nombre",
+    "namePlaceholder": "Introduce el nombre del perfume",
+    "house": "Casa de Perfume",
+    "housePlaceholder": "Selecciona la casa de perfume",
+    "notes": "Notas",
+    "notesPlaceholder": "Introduce las notas del perfume",
+    "submitButton": "Crear Perfume"
+  },
+  "wishlist": {
+    "meta": {
+      "title": "Lista de deseos - Good Scents",
+      "description": "Administra tu lista de deseos de perfumes."
+    },
+    "empty": {
+      "heading": "Tu lista de deseos está vacía.",
+      "subheading": "¡Comienza a agregar perfumes a tu lista de deseos!"
+    },
+    "heading": "Mi Lista de Deseos",
+    "subheading": "Administra tu lista de deseos de perfumes.",
+    "itemsInWishlist": "artículos en la Lista de Deseos",
+    "addButton": "Agregar a la Lista de Deseos",
+    "removeButton": "Quitar de la Lista de Deseos"
+  },
+  "myScents": {
+    "meta": {
+      "title": "Mis Fragancias - Good Scents",
+      "description": "Administra tu colección personal de perfumes."
+    },
+    "empty": {
+      "heading": "Tu colección está vacía.",
+      "subheading": "¡Comienza a agregar perfumes a tu colección!"
+    },
+    "heading": "Mis Fragancias",
+    "subheading": "Administra tu colección personal de perfumes.",
+    "itemsInCollection": "artículos en la Colección",
+    "addButton": "Agregar a la Colección",
+    "removeButton": "Quitar de la Colección"
   },
   "profile": {
     "title": "Perfil de Usuario",
