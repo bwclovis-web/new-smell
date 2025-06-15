@@ -1,5 +1,4 @@
-/* eslint-disable max-statements */
-import { useContext, useRef, useState } from 'react'
+import { useContext, useRef } from 'react'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
 import { useLoaderData, useNavigation, useSubmit } from 'react-router-dom'
 
@@ -12,32 +11,12 @@ import {
   removeUserPerfume
 } from '~/models/user.server'
 import SessionContext from '~/providers/sessionProvider'
+import type { UserPerfumeI } from '~/types'
 import { sharedLoader } from '~/utils/sharedLoader'
 
 export const ROUTE_PATH = '/admin/my-scents'
-
-// Define types for our data
-interface PerfumeHouse {
-  id: string
-  name: string
-}
-
-interface Perfume {
-  id: string
-  name: string
-  description?: string
-  perfumeHouse?: PerfumeHouse
-}
-
-interface UserPerfume {
-  id: string
-  userId: string
-  perfumeId: string
-  perfume: Perfume
-}
-
 interface LoaderData {
-  userPerfumes: UserPerfume[]
+  userPerfumes: UserPerfumeI[]
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -47,23 +26,26 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return { userPerfumes }
 }
 
-const performAddAction = async (userId: string, perfumeId: string) => (
-  await addUserPerfume(userId, perfumeId)
-)
+const performAddAction =
+  async (userId: string, perfumeId: string, amount?: string) => (
+    await addUserPerfume(userId, perfumeId, amount)
+  )
 
 const performRemoveAction = async (userId: string, perfumeId: string) => (
   await removeUserPerfume(userId, perfumeId)
 )
 
+// eslint-disable-next-line max-statements
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const perfumeId = formData.get('perfumeId') as string
   const actionType = formData.get('action') as string
+  const amount = formData.get('amount') as string | undefined
 
   const user = await sharedLoader(request)
 
   if (actionType === 'add') {
-    return performAddAction(user.id, perfumeId)
+    return performAddAction(user.id, perfumeId, amount)
   }
 
   if (actionType === 'remove') {
@@ -111,24 +93,21 @@ const MyScentsPage = () => {
         )
         : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {userPerfumes.map(userPerfume => {
-              console.log(userPerfume)
-              return (
-                <div key={userPerfume.id} className="border rounded p-4 flex flex-col">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-medium">{userPerfume.perfume.name}</h3>
-                    <button
-                      className="text-red-500 text-sm"
-                      onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? 'Removing...' : 'Remove'}
-                    </button>
-                  </div>
-                  <p>{userPerfume.amount}</p>
+            {userPerfumes.map(userPerfume => (
+              <div key={userPerfume.id} className="border rounded p-4 flex flex-col">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-medium">{userPerfume.perfume.name}</h3>
+                  <button
+                    className="text-red-500 text-sm"
+                    onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Removing...' : 'Remove'}
+                  </button>
                 </div>
-              )
-            })}
+                <p>{userPerfume.amount}</p>
+              </div>
+            ))}
           </div>
         )}
       {modalOpen && (
