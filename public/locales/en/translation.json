@@ -2,12 +2,20 @@
   "navigation": {
     "logo": " Good Scents",
     "login": "Log In",
-    "loggingIn": "Logging in..."
+    "loggingIn": "Logging in...",
+    "houses": "Perfume Houses",
+    "perfumes": "Perfumes",
+    "admin": "Admin"
   },
-  "houses": "Perfume Houses",
-  "perfumes": "Perfumes",
-  "admin": "Admin",
   "home": {
+    "meta": {
+      "title": "Good Scents - Perfume Database",
+      "description": "Explore a comprehensive database of perfumes and their houses."
+    },
+    "radio": {
+      "houses": "Perfume Houses",
+      "perfumes": "Perfumes"
+    },
     "heading": "Good Scents",
     "description": "A comprehensive database of perfumes and their houses.",
     "subheading": "Search by:"

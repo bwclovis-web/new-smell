@@ -1,6 +1,6 @@
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
-import { useRef, useState } from 'react'
+import { type ChangeEvent, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MetaFunction } from 'react-router'
 
@@ -13,8 +13,8 @@ import banner from '../images/scent.webp'
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
   return [
-    { title: t('home.heading') },
-    { name: 'description', content: t('home.description') }
+    { title: t('home.meta.title') },
+    { name: 'description', content: t('home.meta.description') }
   ]
 }
 
@@ -39,8 +39,8 @@ export default function Home() {
     { scope: container }
   )
 
-  const handleSelectType = evt => {
-    setSearchType(evt.target.value)
+  const handleSelectType = (evt: ChangeEvent<HTMLInputElement>) => {
+    setSearchType(evt.target.value as 'perfume-house' | 'perfume')
   }
   return (
     <div className="flex flex-col gap-8 items-center min-h-screen px-4 relative" ref={container}>
@@ -52,8 +52,8 @@ export default function Home() {
           <RadioSelect
             handleRadioChange={evt => handleSelectType(evt)}
             data={[
-              { id: '1', name: 'type', type: 'radio', label: 'Houses', value: 'perfume-house', defaultChecked: true },
-              { id: '2', name: 'type', type: 'radio', label: 'Perfumes', value: 'perfume' }
+              { id: '1', name: 'type', type: 'radio', label: t('home.radio.houses'), value: 'perfume-house', defaultChecked: true },
+              { id: '2', name: 'type', type: 'radio', label: t('home.radio.perfumes'), value: 'perfume' }
             ]}
           />
         </div>
