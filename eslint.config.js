@@ -28,7 +28,6 @@ export default defineConfig([
   pluginReact.configs.flat.recommended,
   stylistic.configs['disable-legacy'],
   stylistic.configs.customize({
-    indent: 2,
     quotes: 'single',
     semi: false,
     commaDangle: 'never',
