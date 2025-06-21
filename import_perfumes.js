@@ -14,34 +14,18 @@ console.log(`Importing from: ${csvFilePath}`)
 // Track notes that have been processed to avoid duplicates
 const processedNotes = new Set()
 
-async function findOrCreateHouse(houseName) {
+async function findHouse(houseName) {
   if (!houseName) {
     return null
   }
   
-  let house = await prisma.perfumeHouse.findUnique({ 
+  const house = await prisma.perfumeHouse.findUnique({ 
     where: { name: houseName } 
   })
   
   if (!house) {
-    // Set appropriate description based on house name
-    let description = 'Independent perfume house'
-    let type = 'indie'
-    
-    if (houseName.includes('4160 Tuesdays')) {
-      description = 'Adventurous perfumes handmade in London'
-    } else if (houseName.includes('Poesie')) {
-      description = 'Indie perfumes and teas inspired by literature and poetry'
-    }
-    
-    house = await prisma.perfumeHouse.create({ 
-      data: { 
-        name: houseName,
-        description: description,
-        type: type
-      } 
-    })
-    console.log(`Created perfume house: ${houseName}`)
+    console.warn(`Warning: Perfume house '${houseName}' not found. Please create it first.`)
+    return null
   }
   
   return house.id
@@ -102,8 +86,13 @@ async function connectNoteToPerfume(noteId, noteType, perfumeId) {
 // Process a single perfume
 async function processPerfume(perfume) {
   try {
-    // Find or create the perfume house
-    const houseId = await findOrCreateHouse(perfume.perfumeHouse)
+    // Find the perfume house (must already exist)
+    const houseId = await findHouse(perfume.perfumeHouse)
+    
+    if (!houseId) {
+      console.log(`Skipping ${perfume.name}: perfume house not found`)
+      return
+    }
     
     // Check if perfume already exists
     const existingPerfume = await prisma.perfume.findUnique({
