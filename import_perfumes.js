@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma-app/client'
 import csv from 'csv-parser'
 import fs from 'fs'
 import path from 'path'
