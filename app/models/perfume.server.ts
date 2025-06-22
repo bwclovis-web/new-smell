@@ -5,7 +5,8 @@ export const getAllPerfumes = async () => {
   const perfumes = await prisma.perfume.findMany({
     include: {
       perfumeHouse: true
-    }
+    },
+    take: 20
   })
   return perfumes
 }

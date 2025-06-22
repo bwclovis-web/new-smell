@@ -7,13 +7,24 @@ export const getAllHouses = async (sortByType = false) => (
   })
 )
 
-export const getPerfumeHouseByName = async (name: string) => {
+export const getPerfumeHouseByName = async (name: string, opts?: { skip?: number, take?: number }) => {
+  // Debug logging
+  console.log('getPerfumeHouseByName called with:', { name, opts })
+
   const house = await prisma.perfumeHouse.findUnique({
     where: { name },
     include: {
-      perfumes: true
+      perfumes: {
+        skip: opts?.skip ?? 0,
+        take: opts?.take ?? 9,
+        orderBy: { createdAt: 'desc' } // Add consistent ordering
+      }
     }
   })
+
+  console.log('House found:', house ? 'yes' : 'no')
+  console.log('Perfumes count:', house?.perfumes?.length || 0)
+
   return house
 }
 
@@ -63,7 +74,7 @@ export const updatePerfumeHouse = async (id: string, data: FormData) => {
     ) {
       return {
         success: false,
-        error: `A perfume house with that ${err.meta?.target?.[0] || 'value'} already exists.`
+        error: `A perfume house with that ${Array.isArray(err.meta?.target) ? err.meta.target[0] : 'value'} already exists.`
       }
     }
     return {
@@ -96,7 +107,7 @@ export const createPerfumeHouse = async (data: FormData) => {
     ) {
       return {
         success: false,
-        error: `A perfume house with that ${err.meta?.target?.[0] || 'value'} already exists.`
+        error: `A perfume house with that ${Array.isArray(err.meta?.target) ? err.meta.target[0] : 'value'} already exists.`
       }
     }
 
