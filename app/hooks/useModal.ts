@@ -23,7 +23,6 @@ const UseModal = () => {
     if (modalOpen) {
       root.style.overflow = 'hidden'
     } else {
-      root.style.overflow = 'auto'
       triggerId.current?.focus()
     }
   }, [modalOpen, triggerId])

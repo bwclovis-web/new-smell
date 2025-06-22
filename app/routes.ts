@@ -18,6 +18,7 @@ export default [
     route('api/createTag', 'routes/api/createTag.ts'),
     route('api/wishlist', 'routes/api/wishlist.tsx'),
     route('api/log-out', 'routes/api/logOut.ts'),
+    route('api/more-perfumes', 'routes/api/more-perfumes.ts'),
 
     layout('routes/admin/AdminLayout.tsx', [
       route('admin/', 'routes/admin/adminIndex.tsx'),

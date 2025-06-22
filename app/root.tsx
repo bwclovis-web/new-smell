@@ -33,7 +33,7 @@ export const links: Route.LinksFunction = () => [
 export function Layout({ children }: { children: ReactNode }) {
   const nonce = useNonce()
   return (
-    <html lang="en">
+    <html lang="en" className='lg:overflow-hidden'>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -77,8 +77,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     if (error.status === 404) {
       return <FourOFourPage />
     }
-  }
-  else if (import.meta.env.DEV && error && error instanceof Error) {
+  } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message
     stack = error.stack
   }
