@@ -25,5 +25,10 @@
   { "id": "Spain", "name": "Spain", "code": "ES" },
   { "id": "Sweden", "name": "Sweden", "code": "SE" },
   { "id": "Switzerland", "name": "Switzerland", "code": "CH" },
+  {
+    "id": "United Arab Emirates",
+    "name": "United Arab Emirates",
+    "code": "AE"
+  },
   { "id": "United Kingdom", "name": "United Kingdom", "code": "GB" }
 ]
