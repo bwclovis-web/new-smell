@@ -93,26 +93,35 @@ async function processPerfume(perfume) {
       console.log(`Skipping ${perfume.name}: perfume house not found`)
       return
     }
-    
-    // Check if perfume already exists
+      // Check if perfume already exists
     const existingPerfume = await prisma.perfume.findUnique({
       where: { name: perfume.name }
     })
     
+    let created
     if (existingPerfume) {
-      console.log(`Perfume exists: ${perfume.name}`)
-      return
+      // Update existing perfume with new data
+      created = await prisma.perfume.update({
+        where: { id: existingPerfume.id },
+        data: {
+          description: perfume.description,
+          image: perfume.image,
+          perfumeHouseId: houseId
+        }
+      })
+      console.log(`Updated: ${perfume.name}`)
+    } else {
+      // Create new perfume
+      created = await prisma.perfume.create({
+        data: {
+          name: perfume.name,
+          description: perfume.description,
+          image: perfume.image,
+          perfumeHouseId: houseId
+        }
+      })
+      console.log(`Created: ${perfume.name}`)
     }
-    
-    // Create the perfume
-    const created = await prisma.perfume.create({
-      data: {
-        name: perfume.name,
-        description: perfume.description,
-        image: perfume.image,
-        perfumeHouseId: houseId
-      }
-    })
       // Process notes - handle different CSV structures
     let allNotes = []
     
