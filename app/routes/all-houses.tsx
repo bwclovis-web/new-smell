@@ -38,7 +38,7 @@ const AllHousesPage = () => {
   return (
     <section>
       <header className="mb-4 flex justify-between items-center">
-        <div>
+        <div className="text-noir-light">
           <h1>{t('allHouses.heading')}</h1>
           <p>{t('allHouses.subheading')}</p>
         </div>

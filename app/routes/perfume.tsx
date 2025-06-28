@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import { parseCookies, verifyJwt } from '@api/utils'
 import { useTranslation } from 'react-i18next'
 import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, useNavigate } from 'react-router'
@@ -65,8 +66,16 @@ const PerfumePage = () => {
 
   return (
     <section className="relative z-10">
-      <header className="flex items-center justify-between mb-4">
-        <div>
+      <header className="flex items-center justify-start mb-4 relative py-40 ">
+        <img
+          src={perfume.image || ''}
+          alt={perfume.name}
+          loading="lazy"
+          width={300}
+          height={300}
+          className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0"
+        />
+        <div className='relative z-10 w-full max-w-max px-8 backdrop-blur-sm bg-noir-dark/20 rounded-lg py-4 text-noir-light text-shadow-md text-shadow-noir-dark'>
           <h1>{perfume.name}</h1>
           <p>
             By:
@@ -91,14 +100,8 @@ const PerfumePage = () => {
         )}
       </header>
 
-      <div className="flex flex-col md:flex-row gap-20">
+      <div className="flex flex-col md:flex-row gap-20 text-noir-light">
         <div className="md:w-1/3 noir-outline rounded-b-lg">
-          {' '}
-          <img
-            src={perfume.image || ''}
-            alt={perfume.name}
-            className="w-full h-68 object-cover mb-2 rounded-t-lg"
-          />
           <div className="px-6 py-2">
             <p>{perfume.description}</p>
             <div className="border py-2 rounded-md bg-noir-dark text-noir-light px-2 my-6">
