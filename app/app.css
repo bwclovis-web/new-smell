@@ -8,6 +8,7 @@
     --color-noir-light: oklch(0.93 0.0245 77.45);
     --color-noir-gray: oklch(0.54 0 0);
     --color-noir-gold: oklch(0.73 0.1306 86.65);
+    --color-noir-black: oklch(22.64% 0.000 0)
 }
 
 
@@ -21,7 +22,7 @@ body {
 }
 
 h1,h2,h3 {
- @apply font-headline text-inherit;
+ @apply font-headline;
 }
 
 h1 {
@@ -35,7 +36,7 @@ h1 {
 }
 
 .noir-outline {
-  @apply bg-noir-gold/20 rounded-md border-12 lg:border-14 border-amber-50 shadow-sm backdrop-blur-xs
+  @apply bg-noir-gold/20 rounded-md border-12 lg:border-10 border-amber-50/70 shadow-sm backdrop-blur-xs
 }
 
 .tag {
