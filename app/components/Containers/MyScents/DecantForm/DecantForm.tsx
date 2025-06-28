@@ -1,13 +1,17 @@
-import React, { useState, useRef } from "react"
+import React, { useRef, useState } from "react"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import Input from "~/components/Atoms/Input/Input"
 
 interface DecantFormProps {
   handleDecantConfirm: (amount: string) => void
+  handleDecantCancel?: () => void
 }
 
-const DecantForm = ({ handleDecantConfirm }: DecantFormProps) => {
+const DecantForm = ({
+  handleDecantConfirm,
+  handleDecantCancel
+}: DecantFormProps) => {
   const [decantAmount, setDecantAmount] = useState<string>("")
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -28,7 +32,7 @@ const DecantForm = ({ handleDecantConfirm }: DecantFormProps) => {
       <h3 className='text-lg font-semibold mb-2'>Decant Options</h3>
       <p className='text-sm text-gray-600'>Decanting allows you to share or transfer a portion of your fragrance to another bottle.</p>
       <p className='text-sm text-gray-600'>Enter the amount you want to make available for decanting.</p>
-      
+
       <form onSubmit={handleSubmit} className="mt-4">
         <Input
           inputType="text"
@@ -44,6 +48,15 @@ const DecantForm = ({ handleDecantConfirm }: DecantFormProps) => {
           <Button type="submit" disabled={!decantAmount.trim()}>
             Confirm Decant
           </Button>
+          {handleDecantCancel && (
+            <Button
+              type="button"
+              onClick={handleDecantCancel}
+              style="secondary"
+            >
+              Cancel
+            </Button>
+          )}
         </div>
       </form>
     </div>
