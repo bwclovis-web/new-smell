@@ -133,14 +133,17 @@ const HouseDetailPage = () => {
                   <NavLink
                     viewTransition
                     to={`/perfume/${perfume.name}`}
-                    className="block p-2 noir-outline hover:bg-gray-100 w-full hover:-rotate-2 hover:scale-110 hover:drop-shadow-lg transition-all duration-300 ease-in-out"
+                    className="block p-2 h-full noir-outline hover:bg-gray-100 w-full hover:-rotate-2 hover:scale-110 hover:drop-shadow-lg transition-all duration-300 ease-in-out"
                   >
                     <img
                       src={perfume.image ?? undefined}
                       alt={perfume.name}
                       className="w-48 h-48 object-cover rounded-full mb-2 mx-auto"
                     />
-                    <span className="text-center block text-lg tracking-wide font-semibold text-noir-light bg-noir-gray rounded-md">
+                    <span className="
+                      text-center block text-lg tracking-wide py-2
+                      font-semibold text-noir-light bg-noir-gray rounded-md leading-6"
+                    >
                       {perfume.name}
                     </span>
                   </NavLink>
