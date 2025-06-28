@@ -8,20 +8,20 @@ import { buttonVariants } from './button-variants'
 
 interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'style'>,
   VariantProps<typeof buttonVariants> {
-  style?: 'primary' | 'secondary' | 'danger' | null
+  variant?: 'primary' | 'secondary' | 'danger' | null
   ref?: Ref<HTMLButtonElement>
 }
 
 interface LinkProps extends Omit<LinkHTMLAttributes<HTMLAnchorElement>, 'style'>,
   VariantProps<typeof buttonVariants> {
-  style?: 'primary' | 'secondary' | 'danger' | 'link' | null
+  variant?: 'primary' | 'secondary' | 'danger' | 'link' | null
   url: string
   ref?: Ref<HTMLAnchorElement>
 }
 
-const Button: FC<ButtonProps> = ({ className, size, style, children, type = 'button', ref, ...props }) => (
+const Button: FC<ButtonProps> = ({ className, size, variant, children, type = 'button', ref, ...props }) => (
   <button
-    className={styleMerge(buttonVariants({ className, size, style }))}
+    className={styleMerge(buttonVariants({ className, size, variant }))}
     data-cy="button"
     type={type}
     ref={ref}
@@ -32,11 +32,11 @@ const Button: FC<ButtonProps> = ({ className, size, style, children, type = 'but
 )
 
 const VooDooLink: FC<LinkProps> = ({
-  className, size, style, children, url, ...props }) => (
+  className, size, variant, children, url, ...props }) => (
   <NavLink
     to={url}
     prefetch="intent"
-    className={styleMerge(buttonVariants({ className, size, style }))}
+    className={styleMerge(buttonVariants({ className, size, variant }))}
     {...props}
   >
     {children}
