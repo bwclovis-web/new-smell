@@ -66,14 +66,18 @@ const PerfumePage = () => {
 
   return (
     <section className="relative z-10">
-      <header className="flex items-center justify-start mb-4 relative py-40 ">
+      <header className="flex items-center justify-start mb-10 relative py-40 ">
         <img
           src={perfume.image || ''}
           alt={perfume.name}
           loading="lazy"
           width={300}
           height={300}
-          className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0"
+          className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 details-title"
+          style={{
+            viewTransitionName: `perfume-image-${perfume.id}`,
+            contain: 'layout style paint'
+          }}
         />
         <div className='relative z-10 w-full max-w-max px-8 backdrop-blur-sm bg-noir-dark/20 rounded-lg py-4 text-noir-light text-shadow-md text-shadow-noir-dark'>
           <h1>{perfume.name}</h1>
