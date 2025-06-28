@@ -64,9 +64,11 @@ export const getUserPerfumes = async (userId: string) => {
 }
 
 // Helper function to find a user perfume
-const findUserPerfume = async (userId: string, perfumeId: string) => prisma.userPerfume.findFirst({
-  where: { userId, perfumeId }
-})
+const findUserPerfume = async (userId: string, perfumeId: string) => (
+  prisma.userPerfume.findFirst({
+    where: { userId, perfumeId }
+  })
+)
 
 // Helper function to handle existing perfume update
 const handleExistingPerfume = async (existingPerfume: any, amount?: string) => {
@@ -141,5 +143,33 @@ export const removeUserPerfume = async (userId: string, perfumeId: string) => {
     // eslint-disable-next-line no-console
     console.error('Error removing perfume from user collection:', error)
     return { success: false, error: 'Failed to remove perfume from collection' }
+  }
+}
+
+export const updateAvailableAmount = async (
+  userId: string,
+  perfumeId: string,
+  availableAmount: string
+) => {
+  try {
+    // Check if the user owns this perfume
+    const existingPerfume = await findUserPerfume(userId, perfumeId)
+
+    if (!existingPerfume) {
+      return { success: false, error: 'Perfume not found in your collection' }
+    }
+
+    // Update the available amount
+    const updatedPerfume = await prisma.userPerfume.update({
+      where: { id: existingPerfume.id },
+      data: { available: availableAmount },
+      include: { perfume: true }
+    })
+
+    return { success: true, userPerfume: updatedPerfume }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error updating available amount:', error)
+    return { success: false, error: 'Failed to update available amount' }
   }
 }

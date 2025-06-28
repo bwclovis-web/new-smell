@@ -60,4 +60,5 @@ export interface UserPerfumeI {
   perfumeId: string
   perfume: PerfumeI
   amount: string
+  available: string
 }
