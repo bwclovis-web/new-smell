@@ -1,10 +1,10 @@
 /* eslint-disable max-statements */
-import { use, useRef, useState } from 'react'
+import { use, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GrEdit } from "react-icons/gr"
 import { RiDeleteBin2Fill, RiDeleteBin3Fill } from "react-icons/ri"
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from 'react-router'
-import { useLoaderData, useNavigation, useSubmit } from 'react-router-dom'
+import { useFetcher, useLoaderData, useNavigation } from 'react-router-dom'
 
 import { Button } from '~/components/Atoms/Button/Button'
 import CheckBox from '~/components/Atoms/CheckBox/CheckBox'
@@ -51,8 +51,8 @@ const performRemoveAction = async (userId: string, perfumeId: string) => (
 )
 
 const performDecantAction = async (
-  userId: string, 
-  perfumeId: string, 
+  userId: string,
+  perfumeId: string,
   availableAmount: string
 ) => (
   await updateAvailableAmount(userId, perfumeId, availableAmount)
@@ -76,7 +76,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   if (actionType === 'decant' && availableAmount) {
-    return performDecantAction(user.id, perfumeId, availableAmount)
+    const result = await performDecantAction(user.id, perfumeId, availableAmount)
+    return result
   }
 
   throw new Response('Invalid action', { status: 400 })
@@ -84,25 +85,43 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 const MyScentsPage = () => {
   const [decantOpenPerfumeId, setDecantOpenPerfumeId] = useState<string | null>(null)
-  const { userPerfumes } = useLoaderData() as LoaderData
-  const submit = useSubmit()
+  const { userPerfumes: initialUserPerfumes } = useLoaderData() as LoaderData
+  const [userPerfumes, setUserPerfumes] = useState(initialUserPerfumes)
+  const fetcher = useFetcher()
   const modalTrigger = useRef<HTMLButtonElement>(null)
   const navigation = useNavigation()
   const { modalOpen, toggleModal } = use(SessionContext)
   const isSubmitting = navigation.state === 'submitting'
   const { t } = useTranslation()
 
+  // Update local state when loader data changes
+  useEffect(() => {
+    setUserPerfumes(initialUserPerfumes)
+  }, [initialUserPerfumes])
+
   const handleDecantConfirm = (amount: string) => {
     if (!decantOpenPerfumeId) {
       return
     }
-    
+    const foundUserPerfume =
+      userPerfumes.find(item => item.id === decantOpenPerfumeId)
+    if (!foundUserPerfume) {
+      return
+    }
+    setUserPerfumes(prev => prev.map(perfume => perfume.id === decantOpenPerfumeId
+      ? { ...perfume, available: amount } :
+      perfume))
+
     const formData = new FormData()
-    formData.append('perfumeId', decantOpenPerfumeId)
+    formData.append('perfumeId', foundUserPerfume.perfume.id)
     formData.append('availableAmount', amount)
     formData.append('action', 'decant')
 
-    submit(formData, { method: 'post' })
+    fetcher.submit(formData, { method: 'post' })
+    setDecantOpenPerfumeId(null)
+  }
+
+  const handleDecantCancel = () => {
     setDecantOpenPerfumeId(null)
   }
 
@@ -111,7 +130,7 @@ const MyScentsPage = () => {
     formData.append('perfumeId', perfumeId)
     formData.append('action', 'remove')
 
-    submit(formData, { method: 'post' })
+    fetcher.submit(formData, { method: 'post' })
   }
 
   return (
@@ -144,7 +163,8 @@ const MyScentsPage = () => {
             <ul className="w-full">
               {userPerfumes.map(userPerfume => (
                 <li key={userPerfume.id} className="border rounded p-4 flex flex-col w-full">
-                  <div className="flex justify-between items-center mb-2 gap-6">                    <div className='flex gap-8 items-center'>
+                  <div className="flex justify-between items-center mb-2 gap-6">
+                    <div className='flex gap-8 items-center'>
                       <h3 className="font-medium flex flex-col">
                         <span className='text-xl'>Name:</span>
                         <span className='text-2xl'>{userPerfume.perfume.name}</span>
@@ -161,6 +181,7 @@ const MyScentsPage = () => {
                         inputType='wild'
                         label="Decant"
                         labelPosition='top'
+                        checked={decantOpenPerfumeId === userPerfume.id}
                         onChange={() => {
                           const isCurrentlyOpen =
                             decantOpenPerfumeId === userPerfume.id
@@ -194,7 +215,10 @@ const MyScentsPage = () => {
                     </div>
                   </div>
                   {decantOpenPerfumeId === userPerfume.id && (
-                    <DecantForm handleDecantConfirm={handleDecantConfirm} />
+                    <DecantForm
+                      handleDecantConfirm={handleDecantConfirm}
+                      handleDecantCancel={handleDecantCancel}
+                    />
                   )}
                 </li>
               ))}
