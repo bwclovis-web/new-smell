@@ -1,11 +1,15 @@
 /* eslint-disable max-statements */
-import { use, useRef } from 'react'
+import { use, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { GrEdit } from "react-icons/gr"
+import { RiDeleteBin2Fill, RiDeleteBin3Fill } from "react-icons/ri"
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from 'react-router'
 import { useLoaderData, useNavigation, useSubmit } from 'react-router-dom'
 
 import { Button } from '~/components/Atoms/Button/Button'
-import MyScentsModal from '~/components/Containers/MyScentsModal/MyScentsModal'
+import CheckBox from '~/components/Atoms/CheckBox/CheckBox'
+import DecantForm from '~/components/Containers/MyScents/DecantForm/DecantForm'
+import MyScentsModal from '~/components/Containers/MyScents/MyScentsModal/MyScentsModal'
 import Modal from '~/components/Organisms/Modal/Modal'
 import {
   addUserPerfume,
@@ -65,6 +69,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 }
 
 const MyScentsPage = () => {
+  const [decantOpenPerfumeId, setDecantOpenPerfumeId] = useState<string | null>(null)
   const { userPerfumes } = useLoaderData() as LoaderData
   const submit = useSubmit()
   const modalTrigger = useRef<HTMLButtonElement>(null)
@@ -72,6 +77,11 @@ const MyScentsPage = () => {
   const { modalOpen, toggleModal } = use(SessionContext)
   const isSubmitting = navigation.state === 'submitting'
   const { t } = useTranslation()
+
+  const handleDecantConfirm = () => {
+    // TODO: Implement decant logic
+    setDecantOpenPerfumeId(null)
+  }
 
   const handleRemovePerfume = (perfumeId: string) => {
     const formData = new FormData()
@@ -111,37 +121,60 @@ const MyScentsPage = () => {
             <ul className="w-full">
               {userPerfumes.map(userPerfume => (
                 <li key={userPerfume.id} className="border rounded p-4 flex flex-col w-full">
-                  <div className="flex justify-start items-center mb-2 gap-6">
-                    <h3 className="font-medium flex flex-col">
-                      <span className='text-xl'>Name:</span>
-                      <span className='text-2xl'>{userPerfume.perfume.name}</span>
-                    </h3>
-                    <p className='flex flex-col items-start justify-center'>
-                      <span className='text-lg'>Amount:</span>
-                      <span className='text-xl'>{userPerfume.amount}</span>
-                    </p>
-                    <button
-                      className="text-green-500 text-sm justify-self-end"
-                      onClick={() => toggleModal(modalTrigger, '', userPerfume)}
-                      disabled={isSubmitting}
-                      ref={modalTrigger}
-                    >
-                      EDIT
-                    </button>
-                    <button
-                      className="text-red-500 text-sm justify-self-end"
-                      onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? 'Removing...' : 'Remove'}
-                    </button>
+                  <div className="flex justify-between items-center mb-2 gap-6">
+                    <div className='flex gap-8 items-center'>
+                      <h3 className="font-medium flex flex-col">
+                        <span className='text-xl'>Name:</span>
+                        <span className='text-2xl'>{userPerfume.perfume.name}</span>
+                      </h3>
+                      <p className='flex flex-col items-start justify-center'>
+                        <span className='text-lg'>Amount:</span>
+                        <span className='text-xl'>{userPerfume.amount}</span>
+                      </p>
+                      <CheckBox
+                        inputType='wild'
+                        label="Decant"
+                        labelPosition='top'
+                        onChange={() => {
+                          const isCurrentlyOpen =
+                            decantOpenPerfumeId === userPerfume.id
+                          const newId = isCurrentlyOpen ? null : userPerfume.id
+                          setDecantOpenPerfumeId(newId)
+                        }}
+                      />
+                    </div>
+                    <div className='flex gap-4'>
+                      <Button
+                        className="bg-green-600 text-sm hover:bg-green-700 focus:bg-green-800 disabled:bg-green-400 border-2 border-green-700"
+                        onClick={() => toggleModal(modalTrigger, '', userPerfume)}
+                        disabled={isSubmitting}
+                        ref={modalTrigger}
+                        style={'icon'}
+                      >
+                        <GrEdit size={30} stroke='white' />
+                      </Button>
+                      <Button
+                        className="bg-red-500 text-sm border-2  hover:bg-red-600 focus:bg-red-700 disabled:bg-red-400 border-red-700"
+                        onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
+                        disabled={isSubmitting}
+                        style={'icon'}
+                      >
+                        {
+                          isSubmitting ?
+                            <RiDeleteBin3Fill size={30} fill='white' /> :
+                            <RiDeleteBin2Fill size={30} fill='white' />
+                        }
+                      </Button>
+                    </div>
                   </div>
+                  {decantOpenPerfumeId === userPerfume.id && (
+                    <DecantForm handleDecantConfirm={handleDecantConfirm} />
+                  )}
                 </li>
               ))}
             </ul>
           )}
       </div>
-
 
       {modalOpen && (
         <Modal>
