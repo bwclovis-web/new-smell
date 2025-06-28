@@ -44,7 +44,7 @@ const AllHousesPage = () => {
         </div>
         <Button
           size="sm"
-          style="secondary"
+          variant="secondary"
           onClick={() => setSortByType(prev => !prev)}
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded relative"
         >

@@ -6,7 +6,7 @@ export const buttonVariants = cva(['rounded-sm cursor-pointer '], {
   compoundVariants: [{}],
   defaultVariants: {
     size: 'md',
-    style: 'primary'
+    variant: 'primary'
   },
   variants: {
     size: {
@@ -14,7 +14,7 @@ export const buttonVariants = cva(['rounded-sm cursor-pointer '], {
       md: 'text-lg px-2 py-3',
       lg: 'text-lg px-3 py-3.5'
     },
-    style: {
+    variant: {
       primary: 'bg-noir-gold border-2 border-noir-gray text-amber-50',
       secondary: 'bg-btn-secondary hover:bg-btn-secondary-hover focus:bg-btn-secondary-focus disabled:bg-btn-secondary-disabled text-white',
       danger: 'bg-btn-danger hover:bg-btn-danger-hover focus:bg-btn-danger-focus disabled:bg-btn-danger-disabled text-white',

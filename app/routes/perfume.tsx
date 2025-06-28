@@ -53,7 +53,7 @@ const PerfumePage = () => {
   type OutletContextType = { user: { role: string, id: string } | null }
   const { user } = useOutletContext<OutletContextType>()
   const navigate = useNavigate()
-
+  const { t } = useTranslation()
   const handleDelete = async () => {
     const url = `/api/deletePerfume?id=${perfume.id}`
     const res = await fetch(url)
@@ -82,8 +82,7 @@ const PerfumePage = () => {
         <div className='relative z-10 w-full max-w-max px-8 backdrop-blur-sm bg-noir-dark/20 rounded-lg py-4 text-noir-light text-shadow-md text-shadow-noir-dark'>
           <h1>{perfume.name}</h1>
           <p className='text-lg tracking-wide mt-2'>
-            By:
-            {' '}
+            {t('singlePerfume.subheading')}
             <NavLink
               className="text-blue-200 hover:underline font-semibold underline"
               viewTransition
@@ -110,19 +109,18 @@ const PerfumePage = () => {
             <p className='mb-3'>{perfume.description}</p>
             <div className="border py-2 rounded-md bg-noir-dark text-noir-light px-2">
               <div className="flex items-center gap-2">
-                <span>Opening Notes:</span>
+                <span>{t('singlePerfume.notes.opening')}: </span>
                 <ul className="flex font-semibold capitalize flex-wrap">
                   {perfume.perfumeNotesOpen.map((note, idx) => (
                     <li key={note.id}>
                       {note.name}
                       {idx + 1 < perfume.perfumeNotesOpen.length && <span>,</span>}
                     </li>
-
                   ))}
                 </ul>
               </div>
               <div className="flex items-center gap-2">
-                <span>Mid Notes:</span>
+                <span>{t('singlePerfume.notes.mid')}: </span>
                 <ul className="flex gap-2 font-semibold capitalize flex-wrap">
                   {perfume.perfumeNotesHeart.map((note, idx) => (
                     <li key={note.id}>
@@ -133,7 +131,7 @@ const PerfumePage = () => {
                 </ul>
               </div>
               <div className="flex items-center gap-2">
-                <span>End Notes:</span>
+                <span>{t('singlePerfume.notes.end')}: </span>
                 <ul className="flex gap-2 font-semibold capitalize flex-wrap">
                   {perfume.perfumeNotesClose.map((note, idx) => (
                     <li key={note.id}>

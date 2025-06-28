@@ -1,10 +1,16 @@
 {
+  "auth": {
+    "heading": "Welcome Back",
+    "subheading": "Log in to your account here. If you do not have one,",
+    "createAccount": "Click here to create"
+  },
   "navigation": {
     "logo": " Good Scents",
     "login": "Log In",
     "loggingIn": "Logging in...",
     "houses": "Perfume Houses",
     "perfumes": "Perfumes",
+    "available": "Trading Post",
     "admin": "Admin"
   },
   "home": {
@@ -61,6 +67,12 @@
     "meta": {
       "title": "Perfume Details - Good Scents",
       "description": "Discover the details of a specific perfume."
+    },
+    "subheading": "By: ",
+    "notes": {
+      "opening": "Opening Notes",
+      "mid": "Mid Notes",
+      "end": "End Notes"
     }
   },
   "createHouse": {
@@ -93,22 +105,6 @@
     "notesPlaceholder": "Enter the notes of the perfume",
     "submitButton": "Create Perfume"
   },
-  "wishlist": {
-    "meta": {
-      "title": "Wishlist - Good Scents",
-      "description": "Manage your wishlist of perfumes."
-    },
-    "empty": {
-      "heading": "Your wishlist is empty.",
-      "subheading": "Start adding perfumes to your wishlist!"
-    },
-    "heading": "My Wishlist",
-    "subheading": "Manage your wishlist of perfumes.",
-    "itemsInWishlist": "items in Wishlist",
-
-    "addButton": "Add to Wishlist",
-    "removeButton": "Remove from Wishlist"
-  },
   "myScents": {
     "meta": {
       "title": "My Scents - Good Scents",
@@ -135,6 +131,32 @@
     "role": "Role",
     "name": "Name",
     "notFound": "User profile not found"
+  },
+  "forms": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "An error occurred. Please try again.",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password"
+  },
+  "wishlist": {
+    "meta": {
+      "title": "Wishlist - Good Scents",
+      "description": "Manage your wishlist of perfumes."
+    },
+    "empty": {
+      "heading": "Your wishlist is empty.",
+      "subheading": "Start adding perfumes to your wishlist!"
+    },
+    "heading": "My Wishlist",
+    "subheading": "Manage your wishlist of perfumes.",
+    "itemsInWishlist": "items in Wishlist",
+
+    "addButton": "Add to Wishlist",
+    "removeButton": "Remove from Wishlist"
   },
   "404": {
     "heading": "Looking a bit lost",

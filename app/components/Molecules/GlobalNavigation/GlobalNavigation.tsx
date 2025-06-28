@@ -2,6 +2,7 @@ import { type VariantProps } from 'class-variance-authority'
 import { type FC, type HTMLProps, useEffect, useState } from 'react'
 import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
+import { FaUser } from "react-icons/fa6"
 import { NavLink } from 'react-router'
 
 import { mainNavigation } from '~/data/navigation'
@@ -35,7 +36,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
       <NavLink to="/" className="text-noir-dark text-2xl font-bold text-center max-w-max">
         {logoText}
       </NavLink>
-      <ul className="flex gap-4">
+      <ul className="flex gap-4 items-center justify-center">
         {mainNavigation.map(item => (
           <li key={item.id}>
             <NavLink
@@ -71,11 +72,11 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
                 viewTransition
                 to={SIGN_IN}
                 className={({ isActive }) => styleMerge(
-                  'text-white hover:text-gray-300',
-                  isActive && isClientReady ? 'text-gray-300' : ''
+                  'bg-noir-light block p-2 hover:bg-noir-dark hover:text-noir-light rounded-full transition-colors duration-300 text-noir-black',
+                  isActive && isClientReady ? 'text-noir-light bg-noir-dark' : ''
                 )}
               >
-                Sign In
+                <FaUser size={24} title="Sign In" />
               </NavLink>
             )
             : <LogoutButton />}

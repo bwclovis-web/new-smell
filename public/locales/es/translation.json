@@ -1,10 +1,16 @@
 {
+  "auth": {
+    "heading": "Bienvenido de Vuelta",
+    "subheading": "Inicia sesión en tu cuenta aquí. Si no tienes una,",
+    "createAccount": "Haz clic aquí para crear"
+  },
   "navigation": {
-    "logo": "Good Scents",
+    "logo": " Good Scents",
     "login": "Iniciar Sesión",
     "loggingIn": "Iniciando sesión...",
     "houses": "Casas de Perfume",
     "perfumes": "Perfumes",
+    "available": "Puesto de Intercambio",
     "admin": "Administrador"
   },
   "home": {
@@ -45,7 +51,7 @@
       "title": "Perfumes Disponibles para Decantación - Good Scents",
       "description": "Explora perfumes disponibles para decantación de miembros de la comunidad."
     },
-    "heading": "Perfumes Disponibles para Decantación",
+    "heading": "Perfumes Disponibles",
     "subheading": "Estos perfumes están disponibles para decantación de miembros de la comunidad.",
     "count": "perfumes disponibles",
     "empty": "No hay perfumes disponibles para decantación en este momento.",
@@ -61,6 +67,12 @@
     "meta": {
       "title": "Detalles del Perfume - Good Scents",
       "description": "Descubre los detalles de un perfume específico."
+    },
+    "subheading": "Por: ",
+    "notes": {
+      "opening": "Notas de Apertura",
+      "mid": "Notas Medias",
+      "end": "Notas de Fondo"
     }
   },
   "createHouse": {
@@ -134,8 +146,18 @@
     "name": "Nombre",
     "notFound": "Perfil de usuario no encontrado"
   },
+  "forms": {
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "loading": "Cargando...",
+    "error": "Ocurrió un error. Por favor, inténtalo de nuevo.",
+    "email": "Correo electrónico",
+    "emailPlaceholder": "Introduce tu correo electrónico",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Introduce tu contraseña"
+  },
   "404": {
-    "heading": "Parece que estás perdido",
+    "heading": "Parece que estás un poco perdido",
     "subheading": "La página que estás buscando no existe.",
     "homeLink": "Volver al inicio"
   }
