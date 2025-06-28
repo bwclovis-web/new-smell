@@ -121,7 +121,8 @@ const HouseDetailPage = () => {
             <PerfumeHouseAddressBlock perfumeHouse={perfumeHouse} />
             <span className="tag absolute">{perfumeHouse.type}</span>
           </div>
-        </div>        {perfumes.length > 0 && (
+        </div>
+        {perfumes.length > 0 && (
           <div
             ref={scrollContainerRef}
             className="md:w-1/2 rounded-b-lg max-h-[800px] overflow-y-auto w-full relative overflow-x-hidden"
@@ -133,12 +134,16 @@ const HouseDetailPage = () => {
                   <NavLink
                     viewTransition
                     to={`/perfume/${perfume.name}`}
-                    className="block p-2 h-full noir-outline hover:bg-gray-100 w-full hover:-rotate-2 hover:scale-110 hover:drop-shadow-lg transition-all duration-300 ease-in-out"
+                    className="block p-2 h-full noir-outline hover:bg-gray-100 w-full transition-colors duration-300 ease-in-out"
                   >
                     <img
                       src={perfume.image ?? undefined}
                       alt={perfume.name}
-                      className="w-48 h-48 object-cover rounded-full mb-2 mx-auto"
+                      className="w-48 h-48 object-cover rounded-lg mb-2 mx-auto details-title"
+                      style={{
+                        viewTransitionName: `perfume-image-${perfume.id}`,
+                        contain: 'layout style paint'
+                      }}
                     />
                     <span className="
                       text-center block text-lg tracking-wide py-2

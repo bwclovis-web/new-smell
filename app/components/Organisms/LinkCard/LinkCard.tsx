@@ -14,7 +14,11 @@ const LinkCard = ({ data, type }) => {
       <img
         src={data.image}
         alt={data.name}
-        className="w-58 h-50 object-cover mb-2 min-w-1/2"
+        className="w-58 h-50 object-cover mb-2 min-w-1/2 rounded-lg"
+        style={{
+          viewTransitionName: `perfume-image-${data.id}`,
+          contain: 'layout style paint'
+        }}
       />
       <div className="w-1/2">
         <h2 className="text-2xl font-semibold text-wrap break-words text-noir-light">{data.name}</h2>
