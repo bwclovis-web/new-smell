@@ -82,7 +82,7 @@ export const updatePerfume = async (id: string, data: FormData) => {
   }
 }
 
-export const createPerfume = async data => {
+export const createPerfume = async (data: FormData) => {
   const newPerfume = await prisma.perfume.create({
     data: {
       name: data.get('name') as string,
@@ -108,4 +108,41 @@ export const createPerfume = async data => {
     }
   })
   return newPerfume
+}
+
+export const getAvailablePerfumesForDecanting = async () => {
+  const availablePerfumes = await prisma.perfume.findMany({
+    where: {
+      userPerfume: {
+        some: {
+          available: {
+            not: "0"
+          }
+        }
+      }
+    },
+    include: {
+      perfumeHouse: true,
+      userPerfume: {
+        where: {
+          available: {
+            not: "0"
+          }
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          }
+        }
+      }
+    },
+    orderBy: {
+      name: 'asc'
+    }
+  })
+  return availablePerfumes
 }

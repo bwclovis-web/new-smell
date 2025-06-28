@@ -40,6 +40,17 @@
     "heading": "Todos los Perfumes",
     "subheading": "Descubre todos los perfumes disponibles en nuestra base de datos."
   },
+  "availablePerfumes": {
+    "meta": {
+      "title": "Perfumes Disponibles para Decantación - Good Scents",
+      "description": "Explora perfumes disponibles para decantación de miembros de la comunidad."
+    },
+    "heading": "Perfumes Disponibles para Decantación",
+    "subheading": "Estos perfumes están disponibles para decantación de miembros de la comunidad.",
+    "count": "perfumes disponibles",
+    "empty": "No hay perfumes disponibles para decantación en este momento.",
+    "availableFrom": "Disponible de"
+  },
   "singleHouse": {
     "meta": {
       "title": "Detalles de la Casa de Perfume - Good Scents",

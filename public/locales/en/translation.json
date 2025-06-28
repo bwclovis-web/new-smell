@@ -40,6 +40,17 @@
     "heading": "All Perfumes",
     "subheading": "Discover all the perfumes available in our database."
   },
+  "availablePerfumes": {
+    "meta": {
+      "title": "Available Perfumes for Decanting - Good Scents",
+      "description": "Browse perfumes available for decanting from our community members."
+    },
+    "heading": "Available Perfumes for Decanting",
+    "subheading": "These perfumes are available for decanting from community members.",
+    "count": "perfumes available",
+    "empty": "No perfumes are currently available for decanting.",
+    "availableFrom": "Available from"
+  },
   "singleHouse": {
     "meta": {
       "title": "Perfume House Details - Good Scents",

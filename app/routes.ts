@@ -7,8 +7,10 @@ export default [
     route('perfume-house/:houseId', 'routes/perfume-house.tsx'),
 
     route('all-perfumes', 'routes/all-perfumes.tsx'),
+    route('available-perfumes', 'routes/available-perfumes.tsx'),
     route('perfume/:id', 'routes/perfume.tsx'),
     // API ROUTES
+    route('api/available-perfumes', 'routes/api/available-perfumes.ts'),
     route('api/perfume-houses', 'routes/api/houseLoader.ts'),
     route('api/perfume', 'routes/api/perfumeLoader.ts'),
     route('api/deleteHouse', 'routes/api/deleteHouse.ts'),
