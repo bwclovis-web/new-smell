@@ -81,11 +81,11 @@ const PerfumePage = () => {
         />
         <div className='relative z-10 w-full max-w-max px-8 backdrop-blur-sm bg-noir-dark/20 rounded-lg py-4 text-noir-light text-shadow-md text-shadow-noir-dark'>
           <h1>{perfume.name}</h1>
-          <p>
+          <p className='text-lg tracking-wide mt-2'>
             By:
             {' '}
             <NavLink
-              className="text-blue-800 hover:underline font-semibold"
+              className="text-blue-200 hover:underline font-semibold underline"
               viewTransition
               to={`${HOUSE_PATH}/${perfume?.perfumeHouse?.name}`}
             >
