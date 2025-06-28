@@ -21,8 +21,8 @@ const LinkCard = ({ data, type }) => {
         }}
       />
       <div className="w-1/2">
-        <h2 className="text-2xl font-semibold text-wrap break-words text-noir-light">{data.name}</h2>
-        <p className="text-sm text-noir-light/70 max-w-[175ch] text-ellipsis overflow-hidden line-clamp-4">{data.description}</p>
+        <h2 className="text-2xl font-semibold text-wrap break-words text-noir-dark">{data.name}</h2>
+        <p className="text-sm text-noir-black max-w-[175ch] text-ellipsis overflow-hidden line-clamp-4">{data.description}</p>
         {data.type && (
           <p className="text-sm absolute bottom-2 right-2 bg-noir-gold/80 border-2 border-noir-gold rounded-lg text-noir-dark px-2 py-1 capitalize font-semibold">
             {' '}

@@ -31,12 +31,19 @@ h1 {
   line-height: 1;
 }
 
+.style-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-noir-dark) transparent;
+  scrollbar-gutter: stable;
+  scroll-padding: 2rem;
+}
+
 .block-label {
  @apply block text-xl font-medium text-noir-dark dark:text-white capitalize bg-noir-gold max-w-max p-2
 }
 
 .noir-outline {
-  @apply bg-noir-gold/20 rounded-md border-12 lg:border-10 border-amber-50/70 shadow-sm backdrop-blur-xs
+  @apply bg-noir-gray/20 rounded-md border-12 lg:border-10 border-amber-50/70 shadow-sm backdrop-blur-xs hover:bg-noir-gray/30 transition-colors duration-300 ease-in-out;
 }
 
 .tag {
@@ -45,26 +52,4 @@ h1 {
 
 .details-title {
   view-transition-name: image-title;
-}
-
-/* View transition improvements */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 0.5s;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-[style*="viewTransitionName"] {
-  contain: layout style paint;
-}
-
-::view-transition-old(*),
-::view-transition-new(*) {
-  animation-duration: 0.4s;
-  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* Smooth morphing for images */
-::view-transition-group(*) {
-  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }

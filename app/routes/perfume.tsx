@@ -106,9 +106,9 @@ const PerfumePage = () => {
 
       <div className="flex flex-col md:flex-row gap-20 text-noir-light">
         <div className="md:w-1/3 noir-outline rounded-b-lg">
-          <div className="px-6 py-2">
-            <p>{perfume.description}</p>
-            <div className="border py-2 rounded-md bg-noir-dark text-noir-light px-2 my-6">
+          <div className="p-6">
+            <p className='mb-3'>{perfume.description}</p>
+            <div className="border py-2 rounded-md bg-noir-dark text-noir-light px-2">
               <div className="flex items-center gap-2">
                 <span>Opening Notes:</span>
                 <ul className="flex font-semibold capitalize flex-wrap">

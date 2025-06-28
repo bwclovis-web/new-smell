@@ -38,9 +38,9 @@ const AllHousesPage = () => {
   return (
     <section>
       <header className="mb-4 flex justify-between items-center">
-        <div className="text-noir-light">
+        <div className='bg-noir-light/10 py-4 pl-2 pr-6'>
           <h1>{t('allHouses.heading')}</h1>
-          <p>{t('allHouses.subheading')}</p>
+          <p className='text-xl'>{t('allHouses.subheading')}</p>
         </div>
         <Button
           size="sm"

@@ -23,9 +23,9 @@ const AllPerfumesPage = () => {
   const { allPerfumes } = useLoaderData<typeof loader>()
   return (
     <section>
-      <header className="mb-4">
+      <header className="mb-4 bg-noir-light/10 py-4 pl-2 pr-6'">
         <h1>{t('allPerfumes.heading')}</h1>
-        <p>{t('allPerfumes.subheading')}</p>
+        <p className='text-xl'>{t('allPerfumes.subheading')}</p>
       </header>
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {allPerfumes?.map(perfume => (

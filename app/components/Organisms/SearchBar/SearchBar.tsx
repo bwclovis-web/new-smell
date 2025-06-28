@@ -62,7 +62,7 @@ const SearchBar: FC<SearchBarProps> = ({ className, searchType, action }) => {
           />
         </form>
         {results.length > 0 && (
-          <ul className="bg-white rounded-b-md absolute w-full md:w-1/2 lg:w-3/4">
+          <ul className="bg-white rounded-b-md absolute w-full md:w-1/2 lg:w-3/4 mx-auto left-0 right-0">
             {results.map((item: any) => (
               <li key={item.id} className="p-2 hover:bg-noir-gray hover:text-noir-light cursor-pointer last-of-type:rounded-b-md">
                 {action ?
