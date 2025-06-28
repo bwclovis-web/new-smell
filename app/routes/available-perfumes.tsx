@@ -25,10 +25,10 @@ const AvailablePerfumesPage = () => {
 
   return (
     <section>
-      <header className="mb-4">
-        <h1 className='text-amber-100'>{t('availablePerfumes.heading')}</h1>
-        <p>{t('availablePerfumes.subheading')}</p>
-        <p className="text-sm text-gray-600 mt-2">
+      <header className="mb-4 bg-noir-light/10 py-4 pl-2 pr-6">
+        <h1>{t('availablePerfumes.heading')}</h1>
+        <p className='text-xl'>{t('availablePerfumes.subheading')}</p>
+        <p className="text-sm bg-noir-dark max-w-max font-semibold uppercase tracking-wide mt-2 text-noir-light p-2">
           {availablePerfumes.length} {t('availablePerfumes.count')}
         </p>
       </header>

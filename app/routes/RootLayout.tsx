@@ -26,14 +26,14 @@ const RootLayout = () => {
   const { user } = useLoaderData<typeof loader>()
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <div className="flex flex-col gap-8 items-center bg-noir-black px-4 relative min-h-svh">
+      <div className="flex bg-noir-gold dark:bg-noir-black flex-col gap-8 items-center px-4 relative min-h-svh">
         <img
           src={background}
           alt=""
-          className="absolute object-cover w-full min-h-screen top-0 left-0 z-0 invert-25 opacity-10"
+          className="absolute object-cover w-full min-h-screen top-0 left-0 z-0 dark:invert-25 opacity-10"
         />
         <GlobalNavigation user={user} />
-        <main className="w-full md:w-3/4 min-h-screen">
+        <main className="w-full md:w-3/4 min-h-screen relative z-10">
           <Outlet
             context={{ user }}
           />

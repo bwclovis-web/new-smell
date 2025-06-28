@@ -32,7 +32,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
 
   return (
     <nav className={styleMerge(globalNavigationVariants({ className }))} data-cy="GlobalNavigation">
-      <NavLink to="/" className="text-white text-2xl font-bold text-center max-w-max ">
+      <NavLink to="/" className="text-noir-dark text-2xl font-bold text-center max-w-max">
         {logoText}
       </NavLink>
       <ul className="flex gap-4">
@@ -42,7 +42,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
               viewTransition
               to={item.path}
               className={({ isActive }) => styleMerge(
-                'text-white hover:text-gray-300',
+                'text-noir-dark hover:text-gray-300 font-semibold text-lg',
                 isActive && isClientReady ? 'text-gray-300' : ''
               )}
             >
@@ -56,7 +56,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
               viewTransition
               to={ADMIN_PATH}
               className={({ isActive }) => styleMerge(
-                'text-white hover:text-gray-300',
+                'text-noir-dark hover:text-gray-300 font-semibold text-lg',
                 isActive && isClientReady ? 'text-gray-300' : ''
               )}
             >

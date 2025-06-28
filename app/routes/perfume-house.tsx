@@ -125,7 +125,7 @@ const HouseDetailPage = () => {
         {perfumes.length > 0 && (
           <div
             ref={scrollContainerRef}
-            className="md:w-1/2 rounded-b-lg max-h-[800px] overflow-y-auto w-full relative overflow-x-hidden"
+            className="md:w-1/2 rounded-b-lg max-h-[800px] overflow-y-auto w-full relative overflow-x-hidden style-scroll"
           >
             <h2 className="text-2xl font-bold mb-4">Perfumes</h2>
             <ul className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 p-2">

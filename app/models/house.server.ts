@@ -7,26 +7,21 @@ export const getAllHouses = async (sortByType = false) => (
   })
 )
 
-export const getPerfumeHouseByName = async (name: string, opts?: { skip?: number, take?: number }) => {
-  // Debug logging
-  console.log('getPerfumeHouseByName called with:', { name, opts })
-
-  const house = await prisma.perfumeHouse.findUnique({
-    where: { name },
-    include: {
-      perfumes: {
-        skip: opts?.skip ?? 0,
-        take: opts?.take ?? 9,
-        orderBy: { createdAt: 'desc' } // Add consistent ordering
+export const getPerfumeHouseByName =
+  async (name: string, opts?: { skip?: number, take?: number }) => {
+    const house = await prisma.perfumeHouse.findUnique({
+      where: { name },
+      include: {
+        perfumes: {
+          skip: opts?.skip ?? 0,
+          take: opts?.take ?? 9,
+          orderBy: { createdAt: 'desc' } // Add consistent ordering
+        }
       }
-    }
-  })
+    })
 
-  console.log('House found:', house ? 'yes' : 'no')
-  console.log('Perfumes count:', house?.perfumes?.length || 0)
-
-  return house
-}
+    return house
+  }
 
 export const searchPerfumeHouseByName = async (name: string) => {
   const house = await prisma.perfumeHouse.findMany({
