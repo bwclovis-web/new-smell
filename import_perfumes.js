@@ -67,11 +67,11 @@ async function connectNoteToPerfume(noteId, noteType, perfumeId) {
     const updateData = {}
     
     if (noteType === 'open') {
-      updateData.perfumeOpen = { connect: { id: perfumeId } }
+      updateData.perfumeOpenId = perfumeId
     } else if (noteType === 'heart') {
-      updateData.perfumeHeart = { connect: { id: perfumeId } }
+      updateData.perfumeHeartId = perfumeId
     } else if (noteType === 'base') {
-      updateData.perfumeClose = { connect: { id: perfumeId } }
+      updateData.perfumeCloseId = perfumeId
     }
     
     await prisma.perfumeNotes.update({

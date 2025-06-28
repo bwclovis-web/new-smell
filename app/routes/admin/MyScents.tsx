@@ -14,7 +14,8 @@ import Modal from '~/components/Organisms/Modal/Modal'
 import {
   addUserPerfume,
   getUserPerfumes,
-  removeUserPerfume
+  removeUserPerfume,
+  updateAvailableAmount
 } from '~/models/user.server'
 import SessionContext from '~/providers/sessionProvider'
 import type { UserPerfumeI } from '~/types'
@@ -49,12 +50,21 @@ const performRemoveAction = async (userId: string, perfumeId: string) => (
   await removeUserPerfume(userId, perfumeId)
 )
 
+const performDecantAction = async (
+  userId: string, 
+  perfumeId: string, 
+  availableAmount: string
+) => (
+  await updateAvailableAmount(userId, perfumeId, availableAmount)
+)
+
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const perfumeId = formData.get('perfumeId') as string
   const actionType = formData.get('action') as string
   const amount = formData.get('amount') as string | undefined
+  const availableAmount = formData.get('availableAmount') as string | undefined
   const user = await sharedLoader(request)
 
   if (actionType === 'add') {
@@ -63,6 +73,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (actionType === 'remove') {
     return performRemoveAction(user.id, perfumeId)
+  }
+
+  if (actionType === 'decant' && availableAmount) {
+    return performDecantAction(user.id, perfumeId, availableAmount)
   }
 
   throw new Response('Invalid action', { status: 400 })
@@ -78,8 +92,17 @@ const MyScentsPage = () => {
   const isSubmitting = navigation.state === 'submitting'
   const { t } = useTranslation()
 
-  const handleDecantConfirm = () => {
-    // TODO: Implement decant logic
+  const handleDecantConfirm = (amount: string) => {
+    if (!decantOpenPerfumeId) {
+      return
+    }
+    
+    const formData = new FormData()
+    formData.append('perfumeId', decantOpenPerfumeId)
+    formData.append('availableAmount', amount)
+    formData.append('action', 'decant')
+
+    submit(formData, { method: 'post' })
     setDecantOpenPerfumeId(null)
   }
 
@@ -121,8 +144,7 @@ const MyScentsPage = () => {
             <ul className="w-full">
               {userPerfumes.map(userPerfume => (
                 <li key={userPerfume.id} className="border rounded p-4 flex flex-col w-full">
-                  <div className="flex justify-between items-center mb-2 gap-6">
-                    <div className='flex gap-8 items-center'>
+                  <div className="flex justify-between items-center mb-2 gap-6">                    <div className='flex gap-8 items-center'>
                       <h3 className="font-medium flex flex-col">
                         <span className='text-xl'>Name:</span>
                         <span className='text-2xl'>{userPerfume.perfume.name}</span>
@@ -130,6 +152,10 @@ const MyScentsPage = () => {
                       <p className='flex flex-col items-start justify-center'>
                         <span className='text-lg'>Amount:</span>
                         <span className='text-xl'>{userPerfume.amount}</span>
+                      </p>
+                      <p className='flex flex-col items-start justify-center'>
+                        <span className='text-lg'>Available:</span>
+                        <span className='text-xl'>{userPerfume.available || '0'}</span>
                       </p>
                       <CheckBox
                         inputType='wild'

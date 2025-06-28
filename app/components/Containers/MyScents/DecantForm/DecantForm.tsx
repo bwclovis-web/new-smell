@@ -1,13 +1,51 @@
-import { Button } from "~/components/Atoms/Button/Button"
+import React, { useState, useRef } from "react"
 
-const DecantForm = ({ handleDecantConfirm }) => {
-  console.log("DecantForm component rendered")
+import { Button } from "~/components/Atoms/Button/Button"
+import Input from "~/components/Atoms/Input/Input"
+
+interface DecantFormProps {
+  handleDecantConfirm: (amount: string) => void
+}
+
+const DecantForm = ({ handleDecantConfirm }: DecantFormProps) => {
+  const [decantAmount, setDecantAmount] = useState<string>("")
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault()
+    if (decantAmount.trim()) {
+      handleDecantConfirm(decantAmount)
+      setDecantAmount("")
+    }
+  }
+
+  const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {
+    setDecantAmount((event.target as HTMLInputElement).value)
+  }
+
   return (
     <div className='mt-4'>
       <h3 className='text-lg font-semibold mb-2'>Decant Options</h3>
       <p className='text-sm text-gray-600'>Decanting allows you to share or transfer a portion of your fragrance to another bottle.</p>
-      <p className='text-sm text-gray-600'>Please note that decanting is irreversible and will permanently change the amount of fragrance in your collection.</p>
-      <Button onClick={handleDecantConfirm}>Confirm Decant</Button>
+      <p className='text-sm text-gray-600'>Enter the amount you want to make available for decanting.</p>
+      
+      <form onSubmit={handleSubmit} className="mt-4">
+        <Input
+          inputType="text"
+          inputRef={inputRef}
+          inputId="decantAmount"
+          label="Amount to make available"
+          placeholder="e.g., 5ml, 10ml, 1oz"
+          value={decantAmount}
+          onChange={handleInputChange}
+          className="mb-4"
+        />
+        <div className="flex gap-2">
+          <Button type="submit" disabled={!decantAmount.trim()}>
+            Confirm Decant
+          </Button>
+        </div>
+      </form>
     </div>
   )
 }

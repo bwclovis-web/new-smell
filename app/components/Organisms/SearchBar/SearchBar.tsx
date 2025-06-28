@@ -45,8 +45,8 @@ const SearchBar: FC<SearchBarProps> = ({ className, searchType, action }) => {
 
   return (
     <>
-      <div className="flex flex-col items-center relative">
-        <form className="flex gap-2 w-full md:w-1/2 lg:w-3/4 relative" onSubmit={evt => evt.preventDefault()}>
+      <div className="relative">
+        <form className="flex gap-2 w-full md:w-1/2 lg:w-3/4 mx-auto" onSubmit={evt => evt.preventDefault()}>
           <label htmlFor="search" className="sr-only">Search</label>
           <input
             type="text"
@@ -62,7 +62,7 @@ const SearchBar: FC<SearchBarProps> = ({ className, searchType, action }) => {
           />
         </form>
         {results.length > 0 && (
-          <ul className="bg-white rounded-b-md absolute w-full md:w-1/2 lg:w-3/4 -bottom-10">
+          <ul className="bg-white rounded-b-md absolute w-full md:w-1/2 lg:w-3/4">
             {results.map((item: any) => (
               <li key={item.id} className="p-2 hover:bg-noir-gray hover:text-noir-light cursor-pointer last-of-type:rounded-b-md">
                 {action ?
