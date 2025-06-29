@@ -116,7 +116,6 @@ const PerfumeNotes = ({
     perfumeNotesClose
   )
 
-  // If only one type has notes, show them as a single "notes" list
   if (noteTypesCount === 1) {
     const allNotes = [
       ...perfumeNotesOpen,
