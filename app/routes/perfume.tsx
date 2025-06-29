@@ -5,6 +5,7 @@ import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, use
 import { useOutletContext } from 'react-router-dom'
 
 import PerfumeIcons from '~/components/Containers/Perfume/PerfumeIcons/PerfumeIcons'
+import PerfumeNotes from '~/components/Containers/Perfume/PerfumeNotes'
 import { getPerfumeByName } from '~/models/perfume.server'
 import { isInWishlist } from '~/models/wishlist.server'
 
@@ -92,49 +93,17 @@ const PerfumePage = () => {
             </NavLink>
           </p>
         </div>
-        {' '}
-
       </header>
 
       <div className="flex flex-col md:flex-row gap-20">
         <div className="md:w-1/3 noir-outline rounded-b-lg">
           <div className="p-6">
             <p className='mb-3'>{perfume.description}</p>
-            <div className="border py-2 rounded-md bg-noir-dark text-noir-light px-2">
-              <div className="flex items-center gap-2">
-                <span>{t('singlePerfume.notes.opening')}: </span>
-                <ul className="flex font-semibold capitalize flex-wrap">
-                  {perfume.perfumeNotesOpen.map((note, idx) => (
-                    <li key={note.id}>
-                      {note.name}
-                      {idx + 1 < perfume.perfumeNotesOpen.length && <span>,</span>}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="flex items-center gap-2">
-                <span>{t('singlePerfume.notes.mid')}: </span>
-                <ul className="flex gap-2 font-semibold capitalize flex-wrap">
-                  {perfume.perfumeNotesHeart.map((note, idx) => (
-                    <li key={note.id}>
-                      {note.name}
-                      {idx + 1 < perfume.perfumeNotesHeart.length && <span>,</span>}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="flex items-center gap-2">
-                <span>{t('singlePerfume.notes.end')}: </span>
-                <ul className="flex gap-2 font-semibold capitalize flex-wrap">
-                  {perfume.perfumeNotesClose.map((note, idx) => (
-                    <li key={note.id}>
-                      {note.name}
-                      {idx + 1 < perfume.perfumeNotesClose.length && <span>,</span>}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            <PerfumeNotes
+              perfumeNotesOpen={perfume.perfumeNotesOpen}
+              perfumeNotesHeart={perfume.perfumeNotesHeart}
+              perfumeNotesClose={perfume.perfumeNotesClose}
+            />
             {user && (
               <PerfumeIcons
                 perfume={perfume}
