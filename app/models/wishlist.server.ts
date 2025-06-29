@@ -53,7 +53,23 @@ export const getUserWishlist = async (userId: string) => {
     include: {
       perfume: {
         include: {
-          perfumeHouse: true
+          perfumeHouse: true,
+          userPerfume: {
+            where: {
+              available: {
+                not: "0"
+              }
+            },
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true
+                }
+              }
+            }
+          }
         }
       }
     },
