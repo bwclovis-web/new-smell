@@ -13,13 +13,6 @@ type AuthResult = {
   user?: any;
 }
 
-type ActionResult = {
-  success: boolean;
-  error?: string;
-  userPerfume?: any;
-  updated?: boolean;
-}
-
 // Helper functions for authentication
 const getTokenFromRequest = (request: Request) => {
   const cookieHeader = request.headers.get('cookie') || ''
@@ -104,7 +97,6 @@ const handleAuthError = (result: AuthResult) => new Response(
   { status: result.status, headers: { 'Content-Type': 'application/json' } }
 )
 
-// Loader function to get user perfumes and all perfumes for dropdown
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   try {
     const authResult = await authenticateUser(request)

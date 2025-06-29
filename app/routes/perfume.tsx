@@ -96,7 +96,7 @@ const PerfumePage = () => {
 
       </header>
 
-      <div className="flex flex-col md:flex-row gap-20 text-noir-light">
+      <div className="flex flex-col md:flex-row gap-20">
         <div className="md:w-1/3 noir-outline rounded-b-lg">
           <div className="p-6">
             <p className='mb-3'>{perfume.description}</p>

@@ -38,7 +38,7 @@ const PerfumeIcons: FC<PerfumeIconsProps>
     }
 
     return (
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-4 items-center pt-4">
         <button
           onClick={handleWishlistToggle}
           aria-label={`${inWishlist ? 'remove' : 'add'} ${perfume.name} ${inWishlist ? 'from' : 'to'} wishlist`}

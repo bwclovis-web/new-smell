@@ -5,8 +5,10 @@ import { type MetaFunction, useLoaderData } from 'react-router'
 
 import { Button } from '~/components/Atoms/Button/Button'
 import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
+import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import { getAllHouses } from '~/models/house.server'
 
+import banner from '../images/house.webp'
 export const loader = async () => {
   const allHouses = await getAllHouses()
   return { allHouses }
@@ -37,20 +39,15 @@ const AllHousesPage = () => {
 
   return (
     <section>
-      <header className="mb-4 flex justify-between items-center">
-        <div className='bg-noir-light/10 py-4 pl-2 pr-6'>
-          <h1>{t('allHouses.heading')}</h1>
-          <p className='text-xl'>{t('allHouses.subheading')}</p>
-        </div>
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => setSortByType(prev => !prev)}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded relative"
-        >
-          {sortByType ? t('allHouses.button.byCreated') : t('allHouses.button.byType')}
-        </Button>
-      </header>
+      <TitleBanner image={banner} heading={t('allHouses.heading')} subheading={t('allHouses.subheading')} ></TitleBanner>
+      <Button
+        size="sm"
+        variant="secondary"
+        onClick={() => setSortByType(prev => !prev)}
+        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded relative"
+      >
+        {sortByType ? t('allHouses.button.byCreated') : t('allHouses.button.byType')}
+      </Button>
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 py-4">
         {sortedHouses.map(house => (
           <li key={house.id}>
