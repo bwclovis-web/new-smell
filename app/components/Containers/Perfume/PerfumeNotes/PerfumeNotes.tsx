@@ -15,11 +15,11 @@ const renderSingleNotesList = (notes: PerfumeNote[], t: any) => (
   <div className="border py-4 rounded-md bg-noir-dark text-noir-light px-2">
     <div className="flex flex-col items-start gap-2">
       <span className='block w-full font-bold tracking-wide border-b border-noir-light/60 pb-1'>{t('singlePerfume.notes.general')}: </span>
-      <ul className="flex font-semibold capitalize flex-wrap justify-center">
+      <ul className="flex font-semibold capitalize flex-wrap ">
         {notes.map((note, idx) => (
           <li key={note.id}>
             {note.name}
-            {idx + 1 < notes.length && <span className='pr-2 pl-0'>, </span>}
+            {idx + 1 < notes.length && <span className='pr-1 pl-0'>, </span>}
           </li>
         ))}
       </ul>
@@ -54,7 +54,7 @@ const renderCategorizedNotes = ({
           {perfumeNotesOpen.map((note, idx) => (
             <li key={note.id}>
               {note.name}
-              {idx + 1 < perfumeNotesOpen.length && <span>, </span>}
+              {idx + 1 < perfumeNotesOpen.length && <span className='pr-1'>,</span>}
             </li>
           ))}
         </ul>
@@ -67,7 +67,7 @@ const renderCategorizedNotes = ({
           {perfumeNotesHeart.map((note, idx) => (
             <li key={note.id}>
               {note.name}
-              {idx + 1 < perfumeNotesHeart.length && <span>, </span>}
+              {idx + 1 < perfumeNotesHeart.length && <span className='pr-1'>,</span>}
             </li>
           ))}
         </ul>
@@ -81,7 +81,7 @@ const renderCategorizedNotes = ({
             {perfumeNotesClose.map((note, idx) => (
               <li key={note.id}>
                 {note.name}
-                {idx + 1 < perfumeNotesClose.length && <span>, </span>}
+                {idx + 1 < perfumeNotesClose.length && <span className='pr-1'>,</span>}
               </li>
             ))}
           </ul>
