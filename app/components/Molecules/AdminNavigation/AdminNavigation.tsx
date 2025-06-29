@@ -11,13 +11,13 @@ import { adminNavigationVariants } from './adminNavigation-variants'
 interface AdminNavigationProps extends HTMLProps<HTMLUListElement>,
   VariantProps<typeof adminNavigationVariants> { }
 
-const AdminNavigation: FC<AdminNavigationProps> = ({ className }) => (
+const AdminNavigation: FC<AdminNavigationProps> = ({ className, user }) => (
   <>
     <ul
       className={styleMerge(adminNavigationVariants({ className }))}
       data-cy="AdminNavigation"
     >
-      {adminNavigation.map(item => (
+      {user.role === 'admin' && adminNavigation.map(item => (
         <li key={item.id} className="py-2">
           <NavLink
             viewTransition
