@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
-import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData } from 'react-router'
+import { type ActionFunctionArgs, Form, type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData } from 'react-router'
 
-import { getUserWishlist } from '~/models/wishlist.server'
+import { getUserWishlist, removeFromWishlist } from '~/models/wishlist.server'
 import { sharedLoader } from '~/utils/sharedLoader'
 
 export const ROUTE_PATH = 'admin/wishlist'
@@ -19,6 +19,19 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return { wishlist }
 }
 
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const user = await sharedLoader(request)
+  const formData = await request.formData()
+  const intent = formData.get('intent')
+
+  if (intent === 'remove') {
+    const perfumeId = formData.get('perfumeId') as string
+    await removeFromWishlist(user.id, perfumeId)
+  }
+
+  return null
+}
+
 interface WishlistItemCardProps {
   item: any
   isAvailable: boolean
@@ -31,11 +44,26 @@ const WishlistItemCard = ({
   availableAmount
 }: WishlistItemCardProps) => (
   <div
-    className={`rounded-lg shadow-md overflow-hidden border transition-all duration-300 ${isAvailable
-        ? 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-300 dark:border-green-600 ring-2 ring-green-200 dark:ring-green-700 shadow-green-100 dark:shadow-green-900/20'
-        : 'bg-white dark:bg-gray-800'
+    className={`rounded-lg shadow-md overflow-hidden border transition-all duration-300 relative ${isAvailable
+      ? 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-300 dark:border-green-600 ring-2 ring-green-200 dark:ring-green-700 shadow-green-100 dark:shadow-green-900/20'
+      : 'bg-white dark:bg-gray-800'
       }`}
   >
+    {/* Remove button */}
+    <Form method="post" className="absolute top-2 right-2 z-10">
+      <input type="hidden" name="intent" value="remove" />
+      <input type="hidden" name="perfumeId" value={item.perfume.id} />
+      <button
+        type="submit"
+        className="bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg transition-colors duration-200 group"
+        title="Remove from wishlist"
+      >
+        <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </Form>
+
     {isAvailable && (
       <div className="bg-green-600 text-white text-xs font-bold px-3 py-1 text-center animate-pulse">
         🎉 AVAILABLE IN TRADING POST! 🎉
@@ -69,18 +97,20 @@ const WishlistItemCard = ({
         />
       )}
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mt-4">
         <span className="text-xs text-gray-500">
           Added
           {' '}
           {new Date(item.createdAt).toLocaleDateString()}
         </span>
-        <NavLink
-          to={`/perfume/${item.perfume.name}`}
-          className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-        >
-          View Details
-        </NavLink>
+        <div className="flex items-center gap-2">
+          <NavLink
+            to={`/perfume/${item.perfume.name}`}
+            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+          >
+            View Details
+          </NavLink>
+        </div>
       </div>
     </div>
   </div>
