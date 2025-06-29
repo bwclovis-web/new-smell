@@ -16,8 +16,8 @@ export const loader = async () => {
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
   return [
-    { title: t('availablePerfumes.meta.title') },
-    { name: 'description', content: t('availablePerfumes.meta.description') }
+    { title: t('tradingPost.meta.title') },
+    { name: 'description', content: t('tradingPost.meta.description') }
   ]
 }
 
@@ -27,12 +27,13 @@ const TradingPostPage = () => {
 
   return (
     <section>
-      <TitleBanner image={banner} heading={t('availablePerfumes.heading')} subheading={t('availablePerfumes.subheading')}>
-        <span className='bg-noir-gold p-2 mt-4 block max-w-max rounded-md uppercase font-semibold'>{availablePerfumes.length} {t('availablePerfumes.count')}</span>
+      <TitleBanner image={banner} heading={t('tradingPost.heading')} subheading={t('tradingPost.subheading')}>
+        <span className='bg-noir-gold p-2 mt-4 block max-w-max rounded-md uppercase font-semibold'>{availablePerfumes.length} {t('tradingPost.count')}</span>
       </TitleBanner>
+
       {availablePerfumes.length === 0 ? (
-        <div className="text-center py-8">
-          <p className="text-gray-500">{t('availablePerfumes.empty')}</p>
+        <div className="text-center py-8 bg-noir-gray/80 rounded-md mt-8 border-2 border-noir-light">
+          <h2 className="text-noir-light font-black text-3xl text-shadow-md text-shadow-noir-dark">{t('tradingPost.empty')}</h2>
         </div>
       ) : (
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -42,7 +43,7 @@ const TradingPostPage = () => {
               {/* Show available amounts from users */}
               <div className="mt-2 p-2 bg-green-50 rounded-md">
                 <p className="text-sm font-medium text-green-800 mb-1">
-                  {t('availablePerfumes.availableFrom')}:
+                  {t('tradingPost.availableFrom')}:
                 </p>
                 {perfume.userPerfume.map(userPerfume => (
                   <div key={userPerfume.id} className="text-xs text-green-700">

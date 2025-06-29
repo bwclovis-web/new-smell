@@ -46,15 +46,15 @@
     "heading": "All Perfumes",
     "subheading": "Discover all the perfumes available in our database."
   },
-  "availablePerfumes": {
+  "tradingPost": {
     "meta": {
-      "title": "Available Perfumes for Decanting - Good Scents",
-      "description": "Browse perfumes available for decanting from our community members."
+      "title": "Available Perfumes for Trade - Good Scents",
+      "description": "Browse perfumes available for trade from our community members."
     },
-    "heading": "Available Perfumes",
-    "subheading": "These perfumes are available for decanting from community members.",
+    "heading": "Perfumes for trade",
+    "subheading": "These perfumes are available for trade from community members.",
     "count": "perfumes available",
-    "empty": "No perfumes are currently available for decanting.",
+    "empty": "No perfumes are currently available for trade.",
     "availableFrom": "Available from"
   },
   "singleHouse": {
