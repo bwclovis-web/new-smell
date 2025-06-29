@@ -33,6 +33,25 @@
     },
     "heading": "All Perfume Houses",
     "subheading": "Explore all the perfume houses available in our database.",
+    "filters": {
+      "houseType": "Filter by Type:",
+      "sortBy": "Sort by:"
+    },
+    "houseTypes": {
+      "all": "All",
+      "niche": "Niche",
+      "designer": "Designer", 
+      "indie": "Indie",
+      "celebrity": "Celebrity",
+      "drugstore": "Drugstore"
+    },
+    "sortOptions": {
+      "created-desc": "Newest First",
+      "created-asc": "Oldest First",
+      "name-asc": "Name A-Z",
+      "name-desc": "Name Z-A",
+      "type-asc": "Type"
+    },
     "button": {
       "byType": "Sort by Type",
       "byCreated": "Sort by Created Date"
