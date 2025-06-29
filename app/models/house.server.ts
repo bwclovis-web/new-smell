@@ -1,11 +1,46 @@
 import { HouseType, Prisma } from '@prisma-app/client'
 
 import { prisma } from '~/db.server'
-export const getAllHouses = async (sortByType = false) => (
-  prisma.perfumeHouse.findMany({
-    orderBy: sortByType ? { type: 'asc' } : { createdAt: 'desc' }
+const buildHouseOrderBy = (
+  sortBy?: string, 
+  sortByType?: boolean
+): Prisma.PerfumeHouseOrderByWithRelationInput => {
+  if (sortBy) {
+    switch (sortBy) {
+      case 'name-asc':
+        return { name: 'asc' }
+      case 'name-desc':
+        return { name: 'desc' }
+      case 'created-asc':
+        return { createdAt: 'asc' }
+      case 'type-asc':
+        return { type: 'asc' }
+      default:
+        return { createdAt: 'desc' }
+    }
+  }
+  return sortByType ? { type: 'asc' } : { createdAt: 'desc' }
+}
+
+export const getAllHouses = async (options?: {
+  sortByType?: boolean
+  houseType?: string
+  sortBy?: 'name-asc' | 'name-desc' | 'created-desc' | 'created-asc' | 'type-asc'
+}) => {
+  const { sortByType, houseType, sortBy } = options || {}
+  
+  const where: Prisma.PerfumeHouseWhereInput = {}
+  if (houseType && houseType !== 'all') {
+    where.type = houseType as HouseType
+  }
+
+  const orderBy = buildHouseOrderBy(sortBy, sortByType)
+
+  return prisma.perfumeHouse.findMany({
+    where,
+    orderBy
   })
-)
+}
 
 export const getPerfumeHouseByName =
   async (name: string, opts?: { skip?: number, take?: number }) => {
