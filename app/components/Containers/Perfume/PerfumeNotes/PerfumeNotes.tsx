@@ -12,14 +12,14 @@ interface PerfumeNotesProps {
 }
 
 const renderSingleNotesList = (notes: PerfumeNote[], t: any) => (
-  <div className="border py-2 rounded-md bg-noir-dark text-noir-light px-2">
-    <div className="flex flex-col items-center gap-2">
-      <span className='block w-full'>{t('singlePerfume.notes.general')}: </span>
-      <ul className="flex font-semibold capitalize flex-wrap">
+  <div className="border py-4 rounded-md bg-noir-dark text-noir-light px-2">
+    <div className="flex flex-col items-start gap-2">
+      <span className='block w-full font-bold tracking-wide border-b border-noir-light/60 pb-1'>{t('singlePerfume.notes.general')}: </span>
+      <ul className="flex font-semibold capitalize flex-wrap justify-center">
         {notes.map((note, idx) => (
           <li key={note.id}>
             {note.name}
-            {idx + 1 < notes.length && <span>, </span>}
+            {idx + 1 < notes.length && <span className='pr-2 pl-0'>, </span>}
           </li>
         ))}
       </ul>
@@ -46,7 +46,7 @@ const renderCategorizedNotes = ({
   hasClose,
   t
 }: CategorizedNotesProps) => (
-  <div className="border py-2 rounded-md bg-noir-dark text-noir-light px-2">
+  <div className="border py-4 rounded-md bg-noir-dark text-noir-light px-2">
     {hasOpen && (
       <div className="flex flex-col items-start gap-1">
         <span className='block w-full font-bold tracking-wide border-b border-noir-light/60 pb-1'>{t('singlePerfume.notes.opening')}: </span>
@@ -61,7 +61,7 @@ const renderCategorizedNotes = ({
       </div>
     )}
     {hasHeart && (
-      <div className="flex flex-col items-start  gap-2">
+      <div className="flex flex-col items-start gap-2">
         <span className='block w-full font-bold tracking-wide border-b border-noir-light/60 pb-1'>{t('singlePerfume.notes.mid')}: </span>
         <ul className="flex gap-2 font-semibold capitalize flex-wrap mb-4">
           {perfumeNotesHeart.map((note, idx) => (
