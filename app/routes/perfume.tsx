@@ -5,7 +5,7 @@ import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, use
 import { useOutletContext } from 'react-router-dom'
 
 import PerfumeIcons from '~/components/Containers/Perfume/PerfumeIcons/PerfumeIcons'
-import PerfumeNotes from '~/components/Containers/Perfume/PerfumeNotes'
+import PerfumeNotes from '~/components/Containers/Perfume/PerfumeNotes/PerfumeNotes'
 import { getPerfumeByName } from '~/models/perfume.server'
 import { isInWishlist } from '~/models/wishlist.server'
 
