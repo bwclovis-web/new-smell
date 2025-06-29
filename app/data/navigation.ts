@@ -4,7 +4,7 @@ import { ROUTE_PATH as MY_SCENTS } from '~/routes/admin/MyScents'
 import { ROUTE_PATH as WISHLIST } from '~/routes/admin/Wishlist'
 import { ROUTE_PATH as ALL_HOUSES } from '~/routes/all-houses'
 import { ROUTE_PATH as ALL_PERFUMES } from '~/routes/all-perfumes'
-import { ROUTE_PATH as AVAILABLE_PERFUMES } from '~/routes/available-perfumes'
+import { ROUTE_PATH as AVAILABLE_PERFUMES } from '~/routes/trading-post'
 
 export const mainNavigation = [
   {

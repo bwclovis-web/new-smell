@@ -2,9 +2,11 @@ import { useTranslation } from 'react-i18next'
 import { type MetaFunction, useLoaderData } from 'react-router'
 
 import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
+import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import { getAvailablePerfumesForDecanting } from '~/models/perfume.server'
 
-export const ROUTE_PATH = '/available-perfumes'
+import banner from '../images/trading.webp'
+export const ROUTE_PATH = '/trading-post'
 
 export const loader = async () => {
   const availablePerfumes = await getAvailablePerfumesForDecanting()
@@ -19,20 +21,15 @@ export const meta: MetaFunction = () => {
   ]
 }
 
-const AvailablePerfumesPage = () => {
+const TradingPostPage = () => {
   const { t } = useTranslation()
   const { availablePerfumes } = useLoaderData<typeof loader>()
 
   return (
     <section>
-      <header className="mb-4 bg-noir-light/10 py-4 pl-2 pr-6">
-        <h1>{t('availablePerfumes.heading')}</h1>
-        <p className='text-xl'>{t('availablePerfumes.subheading')}</p>
-        <p className="text-sm bg-noir-dark max-w-max font-semibold uppercase tracking-wide mt-2 text-noir-light p-2">
-          {availablePerfumes.length} {t('availablePerfumes.count')}
-        </p>
-      </header>
-
+      <TitleBanner image={banner} heading={t('availablePerfumes.heading')} subheading={t('availablePerfumes.subheading')}>
+        <span className='bg-noir-gold p-2 mt-4 block max-w-max rounded-md uppercase font-semibold'>{availablePerfumes.length} {t('availablePerfumes.count')}</span>
+      </TitleBanner>
       {availablePerfumes.length === 0 ? (
         <div className="text-center py-8">
           <p className="text-gray-500">{t('availablePerfumes.empty')}</p>
@@ -64,4 +61,4 @@ const AvailablePerfumesPage = () => {
   )
 }
 
-export default AvailablePerfumesPage
+export default TradingPostPage
