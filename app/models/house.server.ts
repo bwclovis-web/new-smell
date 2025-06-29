@@ -1,8 +1,8 @@
-import { HouseType, Prisma } from '@prisma-app/client'
+import { HouseType, Prisma } from '@prisma/client'
 
 import { prisma } from '~/db.server'
 const buildHouseOrderBy = (
-  sortBy?: string, 
+  sortBy?: string,
   sortByType?: boolean
 ): Prisma.PerfumeHouseOrderByWithRelationInput => {
   if (sortBy) {
@@ -22,13 +22,13 @@ const buildHouseOrderBy = (
   return sortByType ? { type: 'asc' } : { createdAt: 'desc' }
 }
 
-export const getAllHouses = async (options?: {
+export const getAllHousesWithOptions = async (options?: {
   sortByType?: boolean
   houseType?: string
   sortBy?: 'name-asc' | 'name-desc' | 'created-desc' | 'created-asc' | 'type-asc'
 }) => {
   const { sortByType, houseType, sortBy } = options || {}
-  
+
   const where: Prisma.PerfumeHouseWhereInput = {}
   if (houseType && houseType !== 'all') {
     where.type = houseType as HouseType
@@ -41,6 +41,11 @@ export const getAllHouses = async (options?: {
     orderBy
   })
 }
+
+// Simple getAllHouses for backward compatibility
+export const getAllHouses = async () => prisma.perfumeHouse.findMany({
+  orderBy: { createdAt: 'desc' }
+})
 
 export const getPerfumeHouseByName =
   async (name: string, opts?: { skip?: number, take?: number }) => {
@@ -79,6 +84,7 @@ export const deletePerfumeHouse = async (id: string) => {
   })
   return deletedHouse
 }
+//TODO: Add validation for FormData fields
 export const updatePerfumeHouse = async (id: string, data: FormData) => {
   try {
     const updatedHouse = await prisma.perfumeHouse.update({

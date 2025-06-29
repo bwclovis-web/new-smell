@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import { type FormEvent, useRef, useState } from "react"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import Input from "~/components/Atoms/Input/Input"
@@ -15,7 +15,7 @@ const DecantForm = ({
   const [decantAmount, setDecantAmount] = useState<string>("")
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
     if (decantAmount.trim()) {
       handleDecantConfirm(decantAmount)
@@ -23,7 +23,7 @@ const DecantForm = ({
     }
   }
 
-  const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: FormEvent<HTMLInputElement>) => {
     setDecantAmount((event.target as HTMLInputElement).value)
   }
 

@@ -1,12 +1,11 @@
 export const ROUTE_PATH = '/all-houses'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MetaFunction } from 'react-router'
 
 import RadioSelect from '~/components/Atoms/RadioSelect/RadioSelect'
 import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
-import { useHousesWithLocalCache } from '~/hooks/useHousesWithLocalCache'
 import { getAllHouses } from '~/models/house.server'
 
 import banner from '../images/house.webp'
@@ -46,74 +45,38 @@ const useHouseFilters = (t: ReturnType<typeof useTranslation>['t']) => {
 }
 
 const useHouseData = (selectedHouseType: string, selectedSort: string) => {
-  const { data: filteredHouses = [], isLoading, error } = useHousesWithLocalCache({
-    houseType: selectedHouseType,
-    sortBy: selectedSort
-  })
+  const [filteredHouses, setFilteredHouses] = useState<any[]>([])
 
-  return { filteredHouses, isLoading, error }
+  useEffect(() => {
+    const fetchFilteredData = async () => {
+      const params = new URLSearchParams({
+        houseType: selectedHouseType,
+        sortBy: selectedSort
+      })
+      const response = await fetch(`/api/houseSortLoader?${params}`)
+      const data = await response.json()
+      setFilteredHouses(data)
+    }
+    fetchFilteredData()
+  }, [selectedHouseType, selectedSort])
+
+  return filteredHouses
 }
-
-const useHouseHandlers = (
-  setSelectedHouseType: any,
-  setSelectedSort: any
-) => {
-  const handleHouseTypeChange = (evt: { target: { value: string } }) => {
-    setSelectedHouseType(evt.target.value)
-  }
-
-  const handleSortChange = (evt: { target: { value: string } }) => {
-    setSelectedSort(evt.target.value)
-  }
-
-  return { handleHouseTypeChange, handleSortChange }
-}
-
-const HouseFiltersSection = ({
-  t,
-  houseTypeOptions,
-  sortOptions,
-  onHouseTypeChange,
-  onSortChange
-}: {
-  t: ReturnType<typeof useTranslation>['t']
-  houseTypeOptions: any[]
-  sortOptions: any[]
-  onHouseTypeChange: any
-  onSortChange: any
-}) => (
-  <div className="space-y-4 mb-6">
-    <div>
-      <h3 className="text-lg font-medium mb-2">{t('allHouses.filters.houseType')}</h3>
-      <RadioSelect
-        data={houseTypeOptions}
-        handleRadioChange={onHouseTypeChange}
-        className="flex-wrap"
-      />
-    </div>
-
-    <div>
-      <h3 className="text-lg font-medium mb-2">{t('allHouses.filters.sortBy')}</h3>
-      <RadioSelect
-        data={sortOptions}
-        handleRadioChange={onSortChange}
-        className="flex-wrap"
-      />
-    </div>
-  </div>
-)
 
 const AllHousesPage = () => {
   const { t } = useTranslation()
   const [selectedHouseType, setSelectedHouseType] = useState('all')
   const [selectedSort, setSelectedSort] = useState('created-desc')
 
-  const filters = useHouseFilters(t)
-  const data = useHouseData(selectedHouseType, selectedSort)
-  const handlers = useHouseHandlers(setSelectedHouseType, setSelectedSort)
+  const { houseTypeOptions, sortOptions } = useHouseFilters(t)
+  const filteredHouses = useHouseData(selectedHouseType, selectedSort)
 
-  if (data.error) {
-    return <div>Error loading houses: {data.error.message}</div>
+  const handleHouseTypeChange = (evt: { target: { value: string } }) => {
+    setSelectedHouseType(evt.target.value)
+  }
+
+  const handleSortChange = (evt: { target: { value: string } }) => {
+    setSelectedSort(evt.target.value)
   }
 
   return (
@@ -124,24 +87,32 @@ const AllHousesPage = () => {
         subheading={t('allHouses.subheading')}
       />
 
-      <HouseFiltersSection
-        t={t}
-        houseTypeOptions={filters.houseTypeOptions}
-        sortOptions={filters.sortOptions}
-        onHouseTypeChange={handlers.handleHouseTypeChange}
-        onSortChange={handlers.handleSortChange}
-      />
+      <div className="space-y-4 mb-6">
+        <div>
+          <h3 className="text-lg font-medium mb-2">{t('allHouses.filters.houseType')}</h3>
+          <RadioSelect
+            data={houseTypeOptions}
+            handleRadioChange={handleHouseTypeChange}
+            className="flex-wrap"
+          />
+        </div>
+
+        <div>
+          <h3 className="text-lg font-medium mb-2">{t('allHouses.filters.sortBy')}</h3>
+          <RadioSelect
+            data={sortOptions}
+            handleRadioChange={handleSortChange}
+            className="flex-wrap"
+          />
+        </div>
+      </div>
 
       <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 py-4">
-        {data.isLoading ? (
-          <div>Loading houses...</div>
-        ) : (
-          data.filteredHouses.map((house: any) => (
-            <li key={house.id}>
-              <LinkCard data={house} type="house" />
-            </li>
-          ))
-        )}
+        {filteredHouses.map(house => (
+          <li key={house.id}>
+            <LinkCard data={house} type="house" />
+          </li>
+        ))}
       </ul>
     </section>
   )

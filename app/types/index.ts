@@ -1,4 +1,4 @@
-import type { User as PrismaUser, UserRole } from '@prisma-app/client'
+import type { User as PrismaUser, UserRole } from '@prisma/client'
 
 /**
  * Global type definitions for the application

@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma-app/client'
+import { Prisma } from '@prisma/client'
 
 import { prisma } from '~/db.server'
 export const getAllPerfumes = async () => {
