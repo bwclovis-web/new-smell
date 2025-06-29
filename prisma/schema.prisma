@@ -24,6 +24,7 @@ model User {
   UserPerfumeReview     UserPerfumeReview[]
   UserPerfumeWishlist   UserPerfumeWishlist[]
   UserPerfumeCollection UserPerfumeCollection[]
+  wishlistNotifications WishlistNotification[]
   role                  UserRole                @default(user)
 }
 
@@ -63,6 +64,7 @@ model Perfume {
   userPerfumeReview     UserPerfumeReview[]
   userPerfumeWishlist   UserPerfumeWishlist[]
   userPerfumeCollection UserPerfumeCollection[]
+  wishlistNotifications WishlistNotification[]
   perfumeNotesOpen      PerfumeNotes[]          @relation("PerfumeNotesOpen")
   perfumeNotesHeart     PerfumeNotes[]          @relation("PerfumeNotesHeart")
   perfumeNotesClose     PerfumeNotes[]          @relation("PerfumeNotesBase")
@@ -128,6 +130,17 @@ model PerfumeNotes {
   perfumeOpen  Perfume? @relation("PerfumeNotesOpen", fields: [perfumeOpenId], references: [id])
   perfumeHeart Perfume? @relation("PerfumeNotesHeart", fields: [perfumeHeartId], references: [id])
   perfumeClose Perfume? @relation("PerfumeNotesBase", fields: [perfumeCloseId], references: [id])
+}
+
+model WishlistNotification {
+  id         String   @id @default(cuid())
+  userId     String
+  perfumeId  String
+  notifiedAt DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+  perfume    Perfume  @relation(fields: [perfumeId], references: [id])
+
+  @@unique([userId, perfumeId])
 }
 
 enum HouseType {
