@@ -16,7 +16,7 @@ const FourOFourPage = () => {
         <div className="bg-white/40 text-center rounded-md shadow-lg backdrop-blur-md p-10">
           <h1 className="font-bold text-white">{t('404.heading')}</h1>
           <p className="mt-4 text-xl mb-4">{t('404.subheading')}</p>
-          <VooDooLink url="/" style="primary" size="md" className="mt-6 block">
+          <VooDooLink url="/" variant="primary" size="md" className="mt-6 block">
             {t('404.homeLink')}
           </VooDooLink>
         </div>

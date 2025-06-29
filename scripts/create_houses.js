@@ -49,6 +49,11 @@ const houses = [
     name: 'Sorce',
     description: 'Modern indie perfume house creating artistic fragrances',
     type: 'indie'
+  },
+  {
+    name: 'Scents of Wood',
+    description: 'Contemporary fragrance house specializing in wood-based perfumes',
+    type: 'niche'
   }
 ]
 

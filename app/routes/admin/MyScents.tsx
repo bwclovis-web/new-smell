@@ -196,7 +196,7 @@ const MyScentsPage = () => {
                         onClick={() => toggleModal(modalTrigger, '', userPerfume)}
                         disabled={isSubmitting}
                         ref={modalTrigger}
-                        style={'icon'}
+                        variant={'icon'}
                       >
                         <GrEdit size={30} stroke='white' />
                       </Button>
@@ -204,7 +204,7 @@ const MyScentsPage = () => {
                         className="bg-red-500 text-sm border-2  hover:bg-red-600 focus:bg-red-700 disabled:bg-red-400 border-red-700"
                         onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
                         disabled={isSubmitting}
-                        style={'icon'}
+                        variant={'icon'}
                       >
                         {
                           isSubmitting ?

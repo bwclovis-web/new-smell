@@ -52,7 +52,7 @@ const DecantForm = ({
             <Button
               type="button"
               onClick={handleDecantCancel}
-              style="secondary"
+              variant="secondary"
             >
               Cancel
             </Button>

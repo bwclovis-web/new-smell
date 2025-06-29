@@ -93,14 +93,7 @@ const PerfumePage = () => {
           </p>
         </div>
         {' '}
-        {user && (
-          <PerfumeIcons
-            perfume={perfume}
-            handleDelete={handleDelete}
-            userRole={user.role}
-            isInWishlist={isInUserWishlist}
-          />
-        )}
+
       </header>
 
       <div className="flex flex-col md:flex-row gap-20 text-noir-light">
@@ -142,6 +135,14 @@ const PerfumePage = () => {
                 </ul>
               </div>
             </div>
+            {user && (
+              <PerfumeIcons
+                perfume={perfume}
+                handleDelete={handleDelete}
+                userRole={user.role}
+                isInWishlist={isInUserWishlist}
+              />
+            )}
           </div>
         </div>
         <div className="w-1/2">
