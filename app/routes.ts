@@ -29,7 +29,7 @@ export default [
       route('admin/perfume/:id/edit', 'routes/admin/EditPerfumePage.tsx'),
       route('admin/perfume-house/:houseId/edit', 'routes/admin/EditPerfumeHousePage.tsx'),
       route('admin/profile', 'routes/admin/ProfilePage.tsx'),
-      route('admin/wishlist', 'routes/admin/Wishlist.tsx'),
+      route('admin/wishlist', 'routes/admin/WishlistPage.tsx'),
       route('admin/my-scents', 'routes/admin/MyScents.tsx')
     ]),
 
