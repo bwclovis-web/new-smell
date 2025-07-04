@@ -36,15 +36,15 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
       <NavLink to="/" className="text-noir-dark text-2xl font-bold text-center max-w-max">
         {logoText}
       </NavLink>
-      <ul className="flex gap-4 items-center justify-center">
+      <ul className="flex gap-4 items-center justify-center tracking-wide">
         {mainNavigation.map(item => (
           <li key={item.id}>
             <NavLink
               viewTransition
               to={item.path}
               className={({ isActive }) => styleMerge(
-                'text-noir-dark hover:text-gray-300 font-semibold text-lg',
-                isActive && isClientReady ? 'text-gray-300' : ''
+                'text-noir-dark hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400',
+                isActive && isClientReady && 'text-noir-light bg-noir-black/30 rounded-full border-noir-light/90',
               )}
             >
               {ready && isClientReady ? t('navigation.' + item.key) : item.label}
@@ -57,8 +57,8 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
               viewTransition
               to={ADMIN_PATH}
               className={({ isActive }) => styleMerge(
-                'text-noir-dark hover:text-gray-300 font-semibold text-lg',
-                isActive && isClientReady ? 'text-gray-300' : ''
+                'text-noir-dark hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400',
+                isActive && isClientReady && 'text-noir-light bg-noir-black/30 rounded-full border-noir-light/90',
               )}
             >
               {ready && isClientReady ? t('navigation.admin') : 'Admin'}
@@ -72,8 +72,8 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
                 viewTransition
                 to={SIGN_IN}
                 className={({ isActive }) => styleMerge(
-                  'bg-noir-light block p-2 hover:bg-noir-dark hover:text-noir-light rounded-full transition-colors duration-300 text-noir-black',
-                  isActive && isClientReady ? 'text-noir-light bg-noir-dark' : ''
+                  'text-noir-dark hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400',
+                  isActive && isClientReady && 'text-noir-light bg-noir-black/30 rounded-full border-noir-light/90',
                 )}
               >
                 <FaUser size={24} title="Sign In" />
