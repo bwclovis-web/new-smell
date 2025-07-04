@@ -4,7 +4,7 @@ import { type FC, type HTMLProps, type RefObject } from 'react'
 
 import { styleMerge } from '~/utils/styleUtils'
 
-import { inputVariants } from './input-variants'
+import { inputVariants, inputWrapperVariants } from './input-variants'
 
 interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
   VariantProps<typeof inputVariants> {
@@ -38,14 +38,9 @@ const Input: FC<InputProps> = ({
       placeholder
     }
     : { id: inputId, type: inputType, placeholder }
+
   return (
-    <div
-      className={
-        styleMerge(inputVariants({ className }))
-      }
-      data-cy="Input"
-      {...props}
-    >
+    <div className={styleMerge(inputWrapperVariants({ className }))} data-cy="Input" {...props}>
       <label
         htmlFor={inputId}
         className='block-label'
@@ -58,7 +53,7 @@ const Input: FC<InputProps> = ({
         defaultValue={defaultValue ? defaultValue : ''}
         aria-invalid={actionData?.errors?.action ? true : undefined}
         aria-describedby={`${inputId}-error`}
-        className="w-full rounded-sm border border-gray-500 px-2 py-1 text-lg mt-1 transition-all focus:bg-white/20 focus:outline-none focus:ring-2 focus:ring-noir-gold focus:border-transparent focus:ring-offset-2 dark:bg-noir-gray dark:text-white dark:focus:bg-noir-gray/20 dark:focus:ring-offset-noir-gray"
+        className={styleMerge(inputVariants({ className }))}
         {...inputProps}
       />
       {action?.errors && (
