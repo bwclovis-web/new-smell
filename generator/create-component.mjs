@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-const { select } = require('@inquirer/prompts')
-const pColor = require('picocolors')
+import { select } from '@inquirer/prompts'
+import pColor from 'picocolors'
 
-const { componentName } = require('./utils/componentName.cjs')
+import { componentName } from './utils/componentName.mjs'
 
 select({
   choices: [
@@ -31,6 +30,8 @@ select({
       highlight: text => `${pColor.green(text)}`
     }
   }
-}).then((type) => {
+}).then(type => {
   componentName(type)
-}).catch(console.error)
+}).catch(error => {
+  console.error(error)
+})

@@ -6,7 +6,7 @@ import { FaUser } from "react-icons/fa6"
 import { NavLink } from 'react-router'
 
 import { mainNavigation } from '~/data/navigation'
-import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/ProfilePage'
+import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/profilePage'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 import { styleMerge } from '~/utils/styleUtils'
 

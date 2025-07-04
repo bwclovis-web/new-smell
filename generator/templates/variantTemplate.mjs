@@ -11,4 +11,4 @@ export const ${lowerComponentName}Variants = cva([""], {
 })
 `
 }
-module.exports = generateVariantTemplate
+export default generateVariantTemplate

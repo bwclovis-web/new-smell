@@ -1,7 +1,8 @@
-const fs = require('fs')
-const path = require('path')
-const pColor = require('picocolors')
-const editLineEndings = (str) => str.replace(/\r|\n/gm, '\r\n')
+import fs from 'fs'
+import path from 'path'
+import pColor from 'picocolors'
+
+const editLineEndings = str => str.replace(/\r|\n/gm, '\r\n')
 
 const scaffoldFactory = (
   root,
@@ -19,4 +20,4 @@ const scaffoldFactory = (
   return outputFie
 }
 
-module.exports = scaffoldFactory
+export default scaffoldFactory
