@@ -61,7 +61,7 @@ const Modal: FC<ModalProps>
       <div
         ref={ref}
         id="modalContainer"
-        className="absolute h-full w-full z-20 flex justify-center items-center"
+        className="absolute h-full w-full z-50 flex justify-center items-center"
       >
         <div
           className={styleMerge(modalBackgroundVariant({

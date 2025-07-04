@@ -3,6 +3,7 @@ import { useGSAP } from '@gsap/react'
 import React, {
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
+  type TouchEvent as ReactTouchEvent,
   useCallback,
   useEffect,
   useRef,
@@ -41,7 +42,9 @@ interface UseRangeSliderReturn {
 
   // Event handlers
   handleMouseDown: (event: ReactMouseEvent) => void
+  handleTouchStart: (event: ReactTouchEvent) => void
   handleTrackClick: (event: ReactMouseEvent) => void
+  handleTrackTouch: (event: ReactTouchEvent) => void
   handleKeyDown: (event: ReactKeyboardEvent) => void
 }
 
@@ -118,11 +121,31 @@ export const useRangeSlider = ({
     startDragging(event.clientX)
   }, [disabled, startDragging])
 
+  const handleTouchStart = useCallback((event: ReactTouchEvent) => {
+    if (disabled || event.touches.length === 0) {
+      return
+    }
+    event.preventDefault() // Prevent scrolling when interacting with slider
+    setIsDragging(true)
+    startDragging(event.touches[0].clientX)
+  }, [disabled, startDragging])
+
   const handleTrackClick = useCallback((event: ReactMouseEvent) => {
     if (disabled || event.target === thumbRef.current) {
       return
     }
     const newValue = calculateValue(event.clientX)
+    updateValue(newValue)
+  }, [disabled, calculateValue, updateValue])
+
+  const handleTrackTouch = useCallback((event: ReactTouchEvent) => {
+    if (disabled ||
+      event.touches.length === 0 ||
+      event.target === thumbRef.current) {
+      return
+    }
+    event.preventDefault() // Prevent scrolling
+    const newValue = calculateValue(event.touches[0].clientX)
     updateValue(newValue)
   }, [disabled, calculateValue, updateValue])
 
@@ -159,7 +182,9 @@ export const useRangeSlider = ({
     internalValue,
     percentage,
     handleMouseDown,
+    handleTouchStart,
     handleTrackClick,
+    handleTrackTouch,
     handleKeyDown
   }
 }

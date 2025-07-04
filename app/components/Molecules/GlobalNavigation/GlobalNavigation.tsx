@@ -72,7 +72,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
                 viewTransition
                 to={SIGN_IN}
                 className={({ isActive }) => styleMerge(
-                  'text-noir-dark hover:text-noir-light dark:text-noir-light/70 dark:hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400',
+                  'text-noir-dark hover:text-noir-light dark:text-noir-light/70 dark:hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400 flex',
                   isActive && isClientReady && 'text-noir-light bg-noir-black/30 rounded-full border-noir-light/90',
                 )}
               >
