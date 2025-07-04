@@ -49,7 +49,7 @@ h2 {
 }
 
 .noir-outline {
-  @apply bg-noir-gray/20 rounded-md border-12 lg:border-10 border-amber-50/70 shadow-sm backdrop-blur-xs hover:bg-noir-gray/30 transition-colors duration-300 ease-in-out;
+  @apply bg-noir-gray/20 rounded-md border-6 lg:border-6 border-noir-light/90 shadow-sm backdrop-blur-xs hover:bg-noir-gray/30 transition-colors duration-300 ease-in-out;
 }
 
 .tag {
