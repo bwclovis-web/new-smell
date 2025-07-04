@@ -114,7 +114,7 @@ const HouseDetailPage = () => {
           <img
             src={perfumeHouse.image ?? undefined}
             alt=""
-            className="w-full h-58 object-cover mb-2 rounded-t-lg"
+            className="w-full h-58 object-cover mb-2 rounded-t-lg dark:brightness-90 details-title"
           />
           <div className="px-6">
             <p>{perfumeHouse.description}</p>
@@ -139,7 +139,7 @@ const HouseDetailPage = () => {
                     <img
                       src={perfume.image ?? undefined}
                       alt={perfume.name}
-                      className="w-48 h-48 object-cover rounded-lg mb-2 mx-auto details-title"
+                      className="w-48 h-48 object-cover rounded-lg mb-2 mx-auto details-title dark:brightness-90"
                       style={{
                         viewTransitionName: `perfume-image-${perfume.id}`,
                         contain: 'layout style paint'
@@ -175,6 +175,7 @@ const HouseDetailPage = () => {
           </div>
         )}
       </div>
+
     </section>
   )
 }

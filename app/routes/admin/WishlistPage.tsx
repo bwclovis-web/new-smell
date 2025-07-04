@@ -52,7 +52,7 @@ const WishlistPage = () => {
 
       {wishlist.length === 0
         ? (
-          <div className="text-center py-12 bg-noir-gold border-2 border-noir-light dark:border-noir-dark rounded-lg">
+          <div className="bg-noir-gold text-center p-6 rounded-md border-4 border-noir-light/90 dark:border-noir-dark shadow-lg">
             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
               {t('wishlist.empty.heading')}
             </h3>
