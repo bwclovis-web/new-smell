@@ -13,43 +13,45 @@ import Modal from "../Modal/Modal"
 interface AddToCollectionModalProps {
   type?: 'icon' | 'primary';
   perfume?: PerfumeI;
+  className?: string;
 }
 
-const AddToCollectionModal = ({ type, perfume }: AddToCollectionModalProps) => {
-  const { modalOpen, toggleModal } = use(SessionContext)
-  const modalTrigger = useRef<HTMLButtonElement>(null)
-  const { t } = useTranslation()
-  const ButtonClasses = cx({
-    'z-50': true,
-    'bg-amber-400/60 hover:bg-amber-400/90 border-amber-600 hover:border-amber-700/90': type === 'icon',
-  })
-  return (
-    <>
-      <div>
-        <Button
-          variant={type}
-          className={ButtonClasses}
-          onClick={() => {
-            toggleModal(modalTrigger, '', 'create')
-          }}
-          ref={modalTrigger}
-        >
-          {type === 'icon' ?
-            <div className="flex items-center gap-2">
-              <span className="text-green-900 font-bold text-sm">{t('myScents.addButton')}</span>
-              <MdLibraryAdd size={40} fill="green" />
-            </div> :
-            <p>{t('myScents.addButton')}</p>
-          }
-        </Button>
-      </div>
+const AddToCollectionModal =
+  ({ type, perfume, className }: AddToCollectionModalProps) => {
+    const { modalOpen, toggleModal } = use(SessionContext)
+    const modalTrigger = useRef<HTMLButtonElement>(null)
+    const { t } = useTranslation()
+    const ButtonClasses = cx({
+      [`z-50 ${className}`]: true,
+      'bg-amber-400/60 hover:bg-amber-400/90 border-amber-600 hover:border-amber-700/90': type === 'icon',
+    })
+    return (
+      <>
+        <div>
+          <Button
+            variant={type}
+            className={ButtonClasses}
+            onClick={() => {
+              toggleModal(modalTrigger, '', 'create')
+            }}
+            ref={modalTrigger}
+          >
+            {type === 'icon' ?
+              <div className="flex items-center gap-2">
+                <span className="text-green-900 font-bold text-sm">{t('myScents.addButton')}</span>
+                <MdLibraryAdd size={40} fill="green" />
+              </div> :
+              <p>{t('myScents.addButton')}</p>
+            }
+          </Button>
+        </div>
 
-      {modalOpen && (
-        <Modal>
-          <MyScentsModal perfume={perfume} />
-        </Modal>
-      )}
-    </>
-  )
-}
+        {modalOpen && (
+          <Modal>
+            <MyScentsModal perfume={perfume} />
+          </Modal>
+        )}
+      </>
+    )
+  }
 export default AddToCollectionModal

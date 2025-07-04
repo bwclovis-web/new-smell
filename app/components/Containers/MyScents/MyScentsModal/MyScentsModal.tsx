@@ -34,7 +34,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
     formData.append("perfumeId", selectedPerfume.id)
     formData.append("amount", perfumeAmount)
     formData.append("action", "add")
-    submit(formData, { method: "post" })
+    submit(formData, { method: "post", action: "/admin/my-scents" })
     setSelectedPerfume(null)
     setPerfumeAmount("")
   }
