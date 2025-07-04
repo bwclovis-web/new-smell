@@ -9,9 +9,8 @@ import { useFetcher, useLoaderData, useNavigation } from 'react-router-dom'
 import { Button } from '~/components/Atoms/Button/Button'
 import CheckBox from '~/components/Atoms/CheckBox/CheckBox'
 import DecantForm from '~/components/Containers/MyScents/DecantForm/DecantForm'
-import MyScentsModal from '~/components/Containers/MyScents/MyScentsModal/MyScentsModal'
 import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal/AddToCollectionModal'
-import Modal from '~/components/Organisms/Modal/Modal'
+import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import {
   addUserPerfume,
   getUserPerfumes,
@@ -21,6 +20,8 @@ import {
 import SessionContext from '~/providers/sessionProvider'
 import type { UserPerfumeI } from '~/types'
 import { sharedLoader } from '~/utils/sharedLoader'
+
+import banner from '../../images/myScents.webp'
 
 export const ROUTE_PATH = '/admin/my-scents'
 
@@ -95,6 +96,7 @@ const MyScentsPage = () => {
   const isSubmitting = navigation.state === 'submitting'
   const { t } = useTranslation()
 
+
   // Update local state when loader data changes
   useEffect(() => {
     setUserPerfumes(initialUserPerfumes)
@@ -136,18 +138,15 @@ const MyScentsPage = () => {
 
   return (
     <section>
-      <header className='flex justify-between items-center mb-6'>
-        <div className=' mb-4'>
-          <h1 className="text-2xl font-bold">{t('myScents.heading')}</h1>
-          <p>{t('myScents.subheading')}</p>
-        </div>
-        <AddToCollectionModal />
-      </header>
-      <div className='bg-noir-light p-6 rounded-lg shadow-md'>
+      <TitleBanner imagePos="object-bottom" image={banner} heading={t('myScents.heading')} subheading={t('myScents.subheading')} >
+        <AddToCollectionModal className="mt-4" />
+      </TitleBanner>
+
+      <div className='bg-noir-gold text-center p-6 rounded-md border-4 border-noir-light/90 dark:border-noir-dark shadow-lg'>
         <h2 className="text-2xl font-semibold mb-2">My Collection</h2>
         {userPerfumes.length === 0
           ? (
-            <div className="italic text-gray-500">
+            <div className="italic text-noir-light dark:text-noir-dark">
               <h3>{t('myScents.empty.heading')}</h3>
               <p>{t('myScents.empty.subheading')}</p>
             </div>
