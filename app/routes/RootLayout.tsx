@@ -30,7 +30,7 @@ const RootLayout = () => {
         <img
           src={background}
           alt=""
-          className="absolute object-cover w-full min-h-screen top-0 left-0 z-0 dark:invert-25 opacity-10"
+          className="absolute object-cover w-full min-h-screen top-0 left-0 z-0 dark:invert-25 opacity-10 mask-b-from-80% mask-b-to-100% mask-b-linear"
         />
         <GlobalNavigation user={user} />
         <main className="w-full md:w-3/4 min-h-screen relative z-10">
