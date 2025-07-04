@@ -8,7 +8,9 @@
     --color-noir-light: oklch(0.93 0.0245 77.45);
     --color-noir-gray: oklch(0.54 0 0);
     --color-noir-gold: oklch(0.73 0.1306 86.65);
-    --color-noir-black: oklch(22.64% 0.000 0)
+    --color-noir-black: oklch(22.64% 0.000 0);
+    --color-noir-white: oklch(0.95 0 0);
+    --color-noir-blue: oklch(0.45 0.15 240);
 }
 
 
@@ -49,7 +51,7 @@ h2 {
 }
 
 .noir-outline {
-  @apply bg-noir-gray/20 rounded-md border-6 lg:border-6 border-noir-light/90 shadow-sm backdrop-blur-xs hover:bg-noir-gray/30 transition-colors duration-300 ease-in-out;
+  @apply bg-noir-gray/20 rounded-md border-6 lg:border-6 border-noir-light/90 shadow-sm backdrop-blur-xs hover:bg-noir-gray/50 transition-colors duration-300 ease-in-out;
 }
 
 .tag {
