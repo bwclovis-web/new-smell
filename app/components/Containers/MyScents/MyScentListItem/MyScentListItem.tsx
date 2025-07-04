@@ -60,20 +60,20 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
   }
 
   return (
-    <li key={userPerfume.id} className="border rounded p-4 flex flex-col w-full">
+    <li key={userPerfume.id} className="border rounded p-4 flex flex-col w-full bg-noir-dark text-noir-light mb-4 last-of-type:mb-0">
       <div className="flex justify-between items-center mb-2 gap-6">
         <div className='flex gap-8'>
-          <h3 className="font-medium flex flex-col justify-start items-start">
+          <h3 className="font-medium flex flex-col justify-start items-start min-w-[30ch]">
             <span className='text-xl'>Name:</span>
             <span className='text-2xl'>{userPerfume.perfume.name}</span>
           </h3>
           <p className='flex flex-col items-start justify-start'>
-            <span className='text-lg'>Amount:</span>
+            <span className='text-lg'>Total Amount:</span>
             <span className='text-xl'>{userPerfume.amount} ml</span>
           </p>
           <p className='flex flex-col items-start justify-start'>
-            <span className='text-lg'>Available:</span>
-            <span className='text-xl'>{userPerfume.available || '0'}</span>
+            <span className='text-lg'>DeStashed:</span>
+            <span className='text-xl'>{userPerfume.available || '0'} ml</span>
           </p>
           <CheckBox
             inputType='wild'
@@ -117,6 +117,8 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
           <DecantForm
             handleDecantConfirm={handleDecantConfirm}
             handleDecantCancel={handleDecantCancel}
+            currentAmount={userPerfume.amount || ''}
+            userPerfume={userPerfume}
           />
         )
       }

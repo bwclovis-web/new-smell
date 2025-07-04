@@ -1,30 +1,29 @@
-import { type FormEvent, useRef, useState } from "react"
+import { type FormEvent, useState } from "react"
 
 import { Button } from "~/components/Atoms/Button/Button"
-import Input from "~/components/Atoms/Input/Input"
+import RangeSlider from "~/components/Atoms/RangeSlider/RangeSlider"
+import type { UserPerfumeI } from "~/types"
 
 interface DecantFormProps {
   handleDecantConfirm: (amount: string) => void
   handleDecantCancel?: () => void
+  userPerfume: UserPerfumeI
 }
 
 const DecantForm = ({
   handleDecantConfirm,
-  handleDecantCancel
+  handleDecantCancel,
+  userPerfume
 }: DecantFormProps) => {
-  const [decantAmount, setDecantAmount] = useState<string>("")
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [decantAmount, setDecantAmount] = useState<string>("0")
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    if (decantAmount.trim()) {
+    const amount = parseFloat(decantAmount)
+    if (amount > 0 && amount <= parseFloat(userPerfume.amount)) {
       handleDecantConfirm(decantAmount)
-      setDecantAmount("")
+      setDecantAmount("0")
     }
-  }
-
-  const handleInputChange = (event: FormEvent<HTMLInputElement>) => {
-    setDecantAmount((event.target as HTMLInputElement).value)
   }
 
   return (
@@ -34,18 +33,21 @@ const DecantForm = ({
       <p className='text-sm text-gray-600'>Enter the amount you want to make available for decanting.</p>
 
       <form onSubmit={handleSubmit} className="mt-4">
-        <Input
-          inputType="text"
-          inputRef={inputRef}
-          inputId="decantAmount"
-          label="Amount to make available"
-          placeholder="e.g., 5ml, 10ml, 1oz"
-          value={decantAmount}
-          onChange={handleInputChange}
-          className="mb-4"
+        <RangeSlider
+          min={0}
+          max={parseFloat(userPerfume.amount) * 10}
+          step={1}
+          value={(parseFloat(userPerfume.available) || 0) * 10}
+          onChange={
+            value => {
+              const actualValue = value / 10
+              setDecantAmount(actualValue.toFixed(1))
+            }
+          }
+          formatValue={value => (value / 10).toFixed(1)}
         />
         <div className="flex gap-2">
-          <Button type="submit" disabled={!decantAmount.trim()}>
+          <Button type="submit" disabled={!decantAmount || parseFloat(decantAmount) <= 0} variant="primary">
             Confirm Decant
           </Button>
           {handleDecantCancel && (
