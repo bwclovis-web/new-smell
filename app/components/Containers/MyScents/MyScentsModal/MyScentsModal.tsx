@@ -1,9 +1,10 @@
-import { useContext, useEffect, useRef, useState } from "react"
+
+import { useContext, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Form, useSubmit } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
-import Input from "~/components/Atoms/Input/Input"
+import RangeSlider from "~/components/Atoms/RangeSlider/RangeSlider"
 import SearchBar from "~/components/Organisms/SearchBar/SearchBar"
 import SessionContext from "~/providers/sessionProvider"
 import type { UserPerfumeI } from "~/types"
@@ -18,8 +19,6 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
   const [selectedPerfume, setSelectedPerfume] =
     useState<UserPerfumeI | null>(perfume || null)
   const [perfumeAmount, setPerfumeAmount] = useState<string>("")
-
-  const inputRef = useRef<HTMLInputElement | null>(null)
   const submit = useSubmit()
 
   const handleClick = (item: UserPerfumeI) => {
@@ -67,19 +66,24 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
             handleAddPerfume()
           }}
         >
-          <h3>Selected Perfume:</h3>
-          <p>{selectedPerfume.name}</p>
-          <Input
-            inputType="text"
-            inputRef={inputRef}
-            inputId="amount"
-            label={t('myScents.modal.amountLabel')}
-            placeholder={t('myScents.modal.amountPlaceholder')}
-            value={perfumeAmount}
-            onChange={event => (
-              setPerfumeAmount((event.target as HTMLInputElement).value)
-            )}
-          />
+          <fieldset>
+            <legend className="text-lg font-black tracking-wide">
+              {t('myScents.modal.selectedPerfume')}
+            </legend>
+            <p className="text-noir-dark dark:text-white mb-4 font-semibold">{selectedPerfume.name}</p>
+            <RangeSlider
+              min={0}
+              max={100}
+              step={1}
+              value={(parseFloat(perfumeAmount) || 0) * 10}
+              onChange={value => {
+                const actualValue = value / 10
+                setPerfumeAmount(actualValue.toFixed(1))
+              }}
+              formatValue={value => (value / 10).toFixed(1)}
+              label={t('myScents.modal.amountLabel')}
+            />
+          </fieldset>
           <Button type="submit" className="mt-6">{t('myScents.modal.submitButton')}</Button>
         </Form>
       )}
