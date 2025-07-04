@@ -137,6 +137,7 @@
     "removeButton": "Remove from Collection",
     "modal": {
       "title": "My Scents",
+      "selectedPerfume": "Selected Perfume",
       "description": "This is where you can manage your favorite scents.",
       "createButton": "Create New Perfume",
       "amountLabel": "Amount",

@@ -31,6 +31,12 @@ h1 {
   line-height: 1;
 }
 
+h2 {
+  font-size: clamp(1.5rem, 2vw + 1rem, 1.8rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
 .style-scroll {
   scrollbar-width: thin;
   scrollbar-color: var(--color-noir-dark) transparent;
