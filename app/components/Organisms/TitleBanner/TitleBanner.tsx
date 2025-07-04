@@ -17,7 +17,7 @@ const TitleBanner: FC<TitleBannerProps> =
         width={300}
         height={300}
         alt=""
-        className={`w-full h-full object-cover ${imagePos} mb-2 rounded-lg absolute top-0 left-0 right-0 z-0  opacity-70`} />
+        className={`w-full h-full object-cover ${imagePos} mb-2 rounded-lg absolute top-0 left-0 right-0 z-0  opacity-70 dark:opacity-60`} />
       <div className='relative z-10 w-full max-w-max px-8 backdrop-blur-sm bg-noir-dark/20 rounded-lg py-4 text-noir-light text-shadow-md text-shadow-noir-dark'>
         <h1>{heading}</h1>
         <p className='text-xl'>{subheading}</p>

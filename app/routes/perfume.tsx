@@ -74,7 +74,7 @@ const PerfumePage = () => {
           loading="lazy"
           width={300}
           height={300}
-          className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 details-title"
+          className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 details-title dark:brightness-90"
           style={{
             viewTransitionName: `perfume-image-${perfume.id}`,
             contain: 'layout style paint'
