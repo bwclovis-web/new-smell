@@ -8,11 +8,17 @@ export default defineConfig({
   server: {
     hmr: {
       port: 24680,
-      overlay: true
+      overlay: true,
+      clientPort: 24680
     },
     watch: {
-      usePolling: false
-    }
+      usePolling: true,
+      interval: 100
+    },
+    cors: true
+  },
+  css: {
+    devSourcemap: true
   },
   build: {
     target: 'es2022'

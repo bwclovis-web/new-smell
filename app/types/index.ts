@@ -47,7 +47,7 @@ interface PerfumeHouseI {
   name: string
 }
 
-interface PerfumeI {
+export interface PerfumeI {
   id: string
   name: string
   description?: string
@@ -56,6 +56,7 @@ interface PerfumeI {
 
 export interface UserPerfumeI {
   id: string
+  name: string
   userId: string
   perfumeId: string
   perfume: PerfumeI

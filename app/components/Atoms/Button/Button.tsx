@@ -6,15 +6,16 @@ import { styleMerge } from '~/utils/styleUtils'
 
 import { buttonVariants } from './button-variants'
 
+//TODO: MERGE THIS
 interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'style'>,
   VariantProps<typeof buttonVariants> {
-  variant?: 'primary' | 'secondary' | 'danger' | null
+  variant?: 'primary' | 'secondary' | 'danger' | 'icon' | null
   ref?: Ref<HTMLButtonElement>
 }
 
 interface LinkProps extends Omit<LinkHTMLAttributes<HTMLAnchorElement>, 'style'>,
   VariantProps<typeof buttonVariants> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'link' | null
+  variant?: 'primary' | 'secondary' | 'danger' | 'link' | 'icon' | null
   url: string
   ref?: Ref<HTMLAnchorElement>
 }
@@ -35,6 +36,7 @@ const VooDooLink: FC<LinkProps> = ({
   className, size, variant, children, url, ...props }) => (
   <NavLink
     to={url}
+    viewTransition
     prefetch="intent"
     className={styleMerge(buttonVariants({ className, size, variant }))}
     {...props}

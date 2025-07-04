@@ -10,6 +10,7 @@ import { Button } from '~/components/Atoms/Button/Button'
 import CheckBox from '~/components/Atoms/CheckBox/CheckBox'
 import DecantForm from '~/components/Containers/MyScents/DecantForm/DecantForm'
 import MyScentsModal from '~/components/Containers/MyScents/MyScentsModal/MyScentsModal'
+import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal/AddToCollectionModal'
 import Modal from '~/components/Organisms/Modal/Modal'
 import {
   addUserPerfume,
@@ -88,9 +89,9 @@ const MyScentsPage = () => {
   const { userPerfumes: initialUserPerfumes } = useLoaderData() as LoaderData
   const [userPerfumes, setUserPerfumes] = useState(initialUserPerfumes)
   const fetcher = useFetcher()
+  const { toggleModal } = use(SessionContext)
   const modalTrigger = useRef<HTMLButtonElement>(null)
   const navigation = useNavigation()
-  const { modalOpen, toggleModal } = use(SessionContext)
   const isSubmitting = navigation.state === 'submitting'
   const { t } = useTranslation()
 
@@ -140,15 +141,7 @@ const MyScentsPage = () => {
           <h1 className="text-2xl font-bold">{t('myScents.heading')}</h1>
           <p>{t('myScents.subheading')}</p>
         </div>
-        <Button
-          className="z-50"
-          onClick={() => {
-            toggleModal(modalTrigger, '', 'create')
-          }}
-          ref={modalTrigger}
-        >
-          {t('myScents.addButton')}
-        </Button>
+        <AddToCollectionModal />
       </header>
       <div className='bg-noir-light p-6 rounded-lg shadow-md'>
         <h2 className="text-2xl font-semibold mb-2">My Collection</h2>
@@ -225,12 +218,6 @@ const MyScentsPage = () => {
             </ul>
           )}
       </div>
-
-      {modalOpen && (
-        <Modal>
-          <MyScentsModal />
-        </Modal>
-      )}
     </section>
   )
 }

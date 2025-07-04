@@ -133,9 +133,16 @@
     "heading": "My Scents",
     "subheading": "Manage your personal collection of perfumes.",
     "itemsInCollection": "items in Collection",
-
     "addButton": "Add to Collection",
-    "removeButton": "Remove from Collection"
+    "removeButton": "Remove from Collection",
+    "modal": {
+      "title": "My Scents",
+      "description": "This is where you can manage your favorite scents.",
+      "createButton": "Create New Perfume",
+      "amountLabel": "Amount",
+      "amountPlaceholder": "Enter the amount of perfume",
+      "submitButton": "Add to Collection"
+    }
   },
   "profile": {
     "title": "User Profile",

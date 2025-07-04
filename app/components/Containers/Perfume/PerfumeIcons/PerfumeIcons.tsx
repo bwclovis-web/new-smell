@@ -3,7 +3,10 @@ import { useState } from 'react'
 import { BsHeartFill, BsHearts } from 'react-icons/bs'
 import { GrEdit } from 'react-icons/gr'
 import { MdDeleteForever } from 'react-icons/md'
-import { NavLink, useFetcher } from 'react-router'
+import { useFetcher } from 'react-router'
+
+import { Button, VooDooLink } from '~/components/Atoms/Button/Button'
+import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal/AddToCollectionModal'
 
 interface Perfume {
   id: string
@@ -32,40 +35,54 @@ const PerfumeIcons: FC<PerfumeIconsProps>
         method: 'POST',
         action: '/api/wishlist'
       })
-
-      // Optimistically update the UI
       setInWishlist(!inWishlist)
     }
 
     return (
-      <div className="flex gap-4 items-center pt-4">
-        <button
+      <div className="grid grid-cols-2 gap-4 items-center justify-items-center pt-4">
+        <Button
           onClick={handleWishlistToggle}
+          variant='icon'
           aria-label={`${inWishlist ? 'remove' : 'add'} ${perfume.name} ${inWishlist ? 'from' : 'to'} wishlist`}
-          className="bg-white/60 hover:bg-white/90 rounded-full p-2 cursor-pointer border-2 border-red-600/60 hover:border-red-600/90 transition-all duration-300 ease-in-out"
+          className="bg-white/60 hover:bg-white/90 focus:bg-white/90 border-red-600/60 hover:border-red-600/90"
         >
+
           {inWishlist
             ? (
-              <BsHeartFill size={40} fill="red" />
+              <div className="flex items-center gap-2">
+                <span className="text-red-700 font-bold text-sm">In your wishlist</span>
+                <BsHeartFill size={40} fill="red" />
+              </div>
             )
             : (
-              <BsHearts size={40} fill="red" />
+              <div className="flex items-center gap-2">
+                <span className="text-red-700 font-bold text-sm">Add to wishlist</span>
+                <BsHearts size={40} fill="red" />
+              </div>
             )}
-        </button>
+        </Button>
+        <AddToCollectionModal type="icon" perfume={perfume} />
         {userRole === 'admin'
           && (
             <>
-              <NavLink
+              <VooDooLink
                 aria-label={`edit ${perfume.name}`}
-                viewTransition
-                to={`/admin/perfume/${perfume.name}/edit`}
-                className="bg-blue-600/60 p-3 hover:bg-blue-600/90 text-white rounded-full  flex items-center justify-center border-2 border-blue-600/60 hover:border-blue-600 transition-all duration-300 ease-in-out"
+                variant="icon"
+                url={`/admin/perfume/${perfume.name}/edit`}
+                className="bg-blue-600/60 p-3 hover:bg-blue-600/90 text-white  border-blue-600/60 hover:border-blue-600 flex items-center justify-center gap-6"
               >
+                <span className="text-white/90 font-bold text-sm">Edit Perfume</span>
                 <GrEdit size={32} fill="white" />
-              </NavLink>
-              <button onClick={() => handleDelete()} aria-label={`delete ${perfume.name}`} className="bg-red-600/60 hover:bg-red-600/90 rounded-full p-2 cursor-pointer border-2 border-red-600/60 hover:border-red-600/90 transition-all duration-300 ease-in-out">
+              </VooDooLink>
+              <Button
+                onClick={() => handleDelete()}
+                aria-label={`delete ${perfume.name}`}
+                variant="icon"
+                className="bg-red-600/60 hover:bg-red-600/90 border-red-600/60 hover:border-red-600/90 flex items-center justify-center gap-5"
+              >
+                <span className="text-white/90 font-bold text-sm">Delete Perfume</span>
                 <MdDeleteForever size={40} fill="white" />
-              </button>
+              </Button>
             </>
           )}
       </div>
