@@ -35,16 +35,15 @@ const DecantForm = ({
       <form onSubmit={handleSubmit} className="mt-4">
         <RangeSlider
           min={0}
-          max={parseFloat(userPerfume.amount) * 10}
-          step={1}
-          value={(parseFloat(userPerfume.available) || 0) * 10}
+          max={parseFloat(userPerfume.amount)}
+          step={0.1}
+          value={parseFloat(userPerfume.available) || 0}
           onChange={
             value => {
-              const actualValue = value / 10
-              setDecantAmount(actualValue.toFixed(1))
+              setDecantAmount(value.toFixed(1))
             }
           }
-          formatValue={value => (value / 10).toFixed(1)}
+          formatValue={value => value.toFixed(1)}
         />
         <div className="flex gap-2">
           <Button type="submit" disabled={!decantAmount || parseFloat(decantAmount) <= 0} variant="primary">

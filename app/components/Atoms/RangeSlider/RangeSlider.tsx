@@ -42,7 +42,9 @@ const RangeSlider: FC<RangeSliderProps> = ({
     internalValue,
     percentage,
     handleMouseDown,
+    handleTouchStart,
     handleTrackClick,
+    handleTrackTouch,
     handleKeyDown
   } = useRangeSlider({
     min,
@@ -84,6 +86,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
             ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-300'}
           `}
           onClick={handleTrackClick}
+          onTouchStart={handleTrackTouch}
           onKeyDown={handleKeyDown}
         >
           <div
@@ -99,17 +102,23 @@ const RangeSlider: FC<RangeSliderProps> = ({
           tabIndex={disabled ? -1 : 0}
           aria-label={`Slider thumb, current value: ${internalValue}`}
           className={`
-            absolute top-1/2 w-5 h-5 -translate-y-1/2 -translate-x-1/2
-            bg-white border-2 border-blue-500 rounded-full shadow-md
+            absolute top-1/2 w-8 h-8 -translate-y-1/2 -translate-x-1/2
+            flex items-center justify-center
             cursor-pointer transition-colors z-10
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-            ${disabled ? 'opacity-50 cursor-not-allowed border-gray-400' : 'hover:border-blue-600'}
-            ${isDragging ? 'border-blue-600' : ''}
+            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
           `}
           onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
           onKeyDown={handleKeyDown}
           style={{ left: `${percentage}%` }}
-        />
+        >
+          <div className={`
+            w-5 h-5 bg-white border-2 border-blue-500 rounded-full shadow-md
+            ${disabled ? 'border-gray-400' : 'hover:border-blue-600'}
+            ${isDragging ? 'border-blue-600' : ''}
+          `}></div>
+        </div>
 
         <div
           className={`

@@ -37,7 +37,7 @@ export const modalBackgroundVariant = cva(
 )
 
 export const modalContentVariant = cva(
-  ['fixed max-h-full z-30 h-auto transition-all delay-200 pb-10 xl:p-8 pointer-none flex'],
+  ['fixed min-h-full lg:min-h-auto z-30 h-auto transition-all delay-200 pb-10 xl:p-8 pointer-none flex'],
   {
     compoundVariants: [
       {
@@ -87,7 +87,7 @@ export const modalContentVariant = cva(
         top: 'w-full lg:w-4/5 xl:w-3/5 duration-500 rounded'
       },
       innerType: {
-        default: 'bg-noir-light text-gray-900',
+        default: 'bg-noir-light text-gray-900 p-4',
         light: 'bg-white',
         slate: 'bg-slate-800 text-slate-100'
       }

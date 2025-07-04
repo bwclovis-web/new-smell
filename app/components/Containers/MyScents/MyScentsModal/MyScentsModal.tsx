@@ -73,14 +73,13 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
             <p className="text-noir-dark dark:text-white mb-4 font-semibold">{selectedPerfume.name}</p>
             <RangeSlider
               min={0}
-              max={100}
-              step={1}
-              value={(parseFloat(perfumeAmount) || 0) * 10}
+              max={10}
+              step={0.1}
+              value={parseFloat(perfumeAmount) || 0}
               onChange={value => {
-                const actualValue = value / 10
-                setPerfumeAmount(actualValue.toFixed(1))
+                setPerfumeAmount(value.toFixed(1))
               }}
-              formatValue={value => (value / 10).toFixed(1)}
+              formatValue={value => value.toFixed(1)}
               label={t('myScents.modal.amountLabel')}
             />
           </fieldset>
