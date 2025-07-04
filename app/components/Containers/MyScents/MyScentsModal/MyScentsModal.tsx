@@ -1,20 +1,28 @@
-import { useContext, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { Form, useSubmit } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import Input from "~/components/Atoms/Input/Input"
 import SearchBar from "~/components/Organisms/SearchBar/SearchBar"
 import SessionContext from "~/providers/sessionProvider"
+import type { UserPerfumeI } from "~/types"
 
-const MyScentsModal = () => {
+interface MyScentsModalProps {
+  perfume?: UserPerfumeI
+}
+
+const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
   const { modalData } = useContext(SessionContext)
-  const [selectedPerfume, setSelectedPerfume] = useState<any | null>(modalData === "create" ? null : modalData.perfume)
+  const { t } = useTranslation()
+  const [selectedPerfume, setSelectedPerfume] =
+    useState<UserPerfumeI | null>(perfume || null)
   const [perfumeAmount, setPerfumeAmount] = useState<string>("")
 
   const inputRef = useRef<HTMLInputElement | null>(null)
   const submit = useSubmit()
 
-  const handleClick = (item: any) => {
+  const handleClick = (item: UserPerfumeI) => {
     setSelectedPerfume(item)
     setPerfumeAmount(item.amount || "")
   }
@@ -32,13 +40,22 @@ const MyScentsModal = () => {
     setPerfumeAmount("")
   }
 
+  useEffect(() => {
+    if (perfume) {
+      setSelectedPerfume(perfume)
+    }
+  }, [perfume])
 
   return (
     <div>
-      <h2>My Scents</h2>
-      <p>This is where you can manage your favorite scents.</p>
-      {modalData === "create" && (
-        <SearchBar searchType="perfume" className="mt-4" action={handleClick} />
+      <h2> {t('myScents.modal.title')}</h2>
+      <p>{t('myScents.modal.description')}</p>
+      {modalData === "create" && !perfume && (
+        <SearchBar
+          searchType="perfume"
+          className="mt-4"
+          action={handleClick}
+        />
       )}
 
       {selectedPerfume && (
@@ -56,13 +73,14 @@ const MyScentsModal = () => {
             inputType="text"
             inputRef={inputRef}
             inputId="amount"
-            label="Amount"
+            label={t('myScents.modal.amountLabel')}
+            placeholder={t('myScents.modal.amountPlaceholder')}
             value={perfumeAmount}
             onChange={event => (
               setPerfumeAmount((event.target as HTMLInputElement).value)
             )}
           />
-          <Button type="submit" className="mt-6">Add to My Collection</Button>
+          <Button type="submit" className="mt-6">{t('myScents.modal.submitButton')}</Button>
         </Form>
       )}
     </div>

@@ -1,4 +1,4 @@
-/* eslint-disable max-statements */
+
 import { type VariantProps } from 'class-variance-authority'
 import {
   type FC,
@@ -11,6 +11,7 @@ import {
   useState
 } from 'react'
 import { createPortal } from 'react-dom'
+import { IoMdCloseCircle } from "react-icons/io"
 
 import SessionContext from '~/providers/sessionProvider'
 import { styleMerge } from '~/utils/styleUtils'
@@ -91,10 +92,11 @@ const Modal: FC<ModalProps>
         >
           <button
             type="button"
-            className="absolute top-5 right-5 max-w-max"
+            className="absolute top-5 right-5 max-w-max cursor-pointer"
             onClick={() => handleClick()}
+            aria-label='Close modal'
           >
-            Close
+            <IoMdCloseCircle size={34} color="currentColor" className='fill-noir-gold' />
           </button>
           {children}
         </div>

@@ -9,9 +9,10 @@ import { searchbarVariants } from './searchbar-variants'
 interface SearchBarProps extends HTMLProps<HTMLDivElement>,
   VariantProps<typeof searchbarVariants> {
   searchType: 'perfume-house' | 'perfume'
+  placeholder?: string
 }
 
-const SearchBar: FC<SearchBarProps> = ({ className, searchType, action }) => {
+const SearchBar: FC<SearchBarProps> = ({ className, searchType, action, placeholder }) => {
   const [results, setResults] = useState([])
   const [searchValue, setSearchValue] = useState('')
 
@@ -54,7 +55,7 @@ const SearchBar: FC<SearchBarProps> = ({ className, searchType, action }) => {
             autoComplete="off"
             onChange={evt => setSearchValue(evt.target.value)}
             value={searchValue}
-            placeholder="Search..."
+            placeholder={placeholder || `Search ${searchType}`}
             onKeyUp={evt => {
               handleKeyUp(evt)
             }}
