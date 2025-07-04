@@ -26,4 +26,4 @@ const ${componentName}:FC <${componentName}Props> = ({ className, ...props }) =>
 export default ${componentName}  
 `
 }
-module.exports = generateComponentTemplate
+export default generateComponentTemplate

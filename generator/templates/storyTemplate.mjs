@@ -21,4 +21,4 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {}
 `
 }
-module.exports = generateStoryTemplate
+export default generateStoryTemplate

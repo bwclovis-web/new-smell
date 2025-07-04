@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build && react-router build",
-    "create:component": "node generator/create-component.cjs",
+    "create:component": "node generator/create-component.mjs",
     "db:docs": "npx prisma-docs-generator serve",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",

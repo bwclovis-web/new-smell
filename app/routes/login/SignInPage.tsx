@@ -8,7 +8,7 @@ import Input from '~/components/Atoms/Input/Input'
 import { signInCustomer } from '~/models/user.server'
 import { UserLogInSchema } from '~/utils/formValidationSchemas'
 
-import { ROUTE_PATH as ADMIN_PATH } from '../admin/ProfilePage'
+import { ROUTE_PATH as ADMIN_PATH } from '../admin/profilePage'
 export const ROUTE_PATH = '/sign-in'
 import { useTranslation } from 'react-i18next'
 import type { ActionFunctionArgs } from 'react-router-dom'

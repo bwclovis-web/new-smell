@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-require-imports */
 /* eslint-disable max-statements */
-const path = require('path')
-const pColor = require('picocolors')
-const generateComponentTemplate = require('../templates/componentTemplate.cjs')
-const generateVariantTemplate = require('../templates/variantTemplate.cjs')
-const generateStoryTemplate = require('../templates/storyTemplate.cjs')
-const generateViteTestTemplate = require('../templates/viteTestTemplate.cjs')
-const scaffoldFactory = require('./scaffoldFactory.cjs')
+import path from 'path'
+import pColor from 'picocolors'
+
+import generateComponentTemplate from '../templates/componentTemplate.mjs'
+import generateStoryTemplate from '../templates/storyTemplate.mjs'
+import generateVariantTemplate from '../templates/variantTemplate.mjs'
+import generateViteTestTemplate from '../templates/viteTestTemplate.mjs'
+import scaffoldFactory from './scaffoldFactory.mjs'
 
 const generateTemplate = (name, type) => {
   const lowerComponentName = name.toLocaleLowerCase()
@@ -52,4 +52,4 @@ const generateTemplate = (name, type) => {
   return true
 }
 
-module.exports = generateTemplate
+export default generateTemplate

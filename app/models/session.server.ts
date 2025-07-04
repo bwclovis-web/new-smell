@@ -5,7 +5,7 @@ import { redirect } from 'react-router-dom'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key'
 
-import { ROUTE_PATH as ADMIN_PROFILE } from '~/routes/admin/ProfilePage'
+import { ROUTE_PATH as ADMIN_PROFILE } from '~/routes/admin/profilePage'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 
 import { getUserById } from './user.server'

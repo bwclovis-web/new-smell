@@ -14,4 +14,4 @@ describe('${componentName}', () => {
 })
 `
 }
-module.exports = generateViteTestTemplate
+export default generateViteTestTemplate
