@@ -29,9 +29,11 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
       console.error('User perfume not found for de-stashing')
       return
     }
+
+    // Use an approach that preserves the original array order
     setUserPerfumes(prev => prev.map(perfume => perfume.id === userPerfume.id
-      ? { ...perfume, available: amount } :
-      perfume))
+      ? { ...perfume, available: amount }
+      : perfume))
 
     const formData = new FormData()
     formData.append('perfumeId', foundUserPerfume.perfume.id)
@@ -47,8 +49,6 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
     formData.append('action', 'remove')
     fetcher.submit(formData, { method: 'post' })
   }
-
-  console.log('Rendering MyScentsListItem for:', userPerfume)
 
   return (
     <li key={userPerfume.id} className="border rounded p-4 flex flex-col w-full bg-noir-dark text-noir-light mb-4 last-of-type:mb-0">
@@ -91,7 +91,6 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
         <VooDooDetails summary="De-stash Perfume" className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded" name="inner-details">
           <DeStashForm
             handleDecantConfirm={handleDecantConfirm}
-            currentAmount={userPerfume.amount || ''}
             userPerfume={userPerfume}
           />
         </VooDooDetails>
