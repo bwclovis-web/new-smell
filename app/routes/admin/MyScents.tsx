@@ -1,14 +1,9 @@
 /* eslint-disable max-statements */
-import { use, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { GrEdit } from "react-icons/gr"
-import { RiDeleteBin2Fill, RiDeleteBin3Fill } from "react-icons/ri"
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from 'react-router'
-import { useFetcher, useLoaderData, useNavigation } from 'react-router-dom'
+import { useLoaderData } from 'react-router-dom'
 
-import { Button } from '~/components/Atoms/Button/Button'
-import CheckBox from '~/components/Atoms/CheckBox/CheckBox'
-import DecantForm from '~/components/Containers/MyScents/DecantForm/DecantForm'
 import MyScentsListItem from '~/components/Containers/MyScents/MyScentListItem/MyScentListItem'
 import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal/AddToCollectionModal'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
@@ -18,7 +13,6 @@ import {
   removeUserPerfume,
   updateAvailableAmount
 } from '~/models/user.server'
-import SessionContext from '~/providers/sessionProvider'
 import type { UserPerfumeI } from '~/types'
 import { sharedLoader } from '~/utils/sharedLoader'
 

@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { type FieldMetadata, getInputProps } from '@conform-to/react'
 import { type VariantProps } from 'class-variance-authority'
 import { type FC, type HTMLProps, type RefObject } from 'react'
