@@ -1,7 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { useLoaderData } from 'react-router'
 
+import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import { sharedLoader } from '~/utils/sharedLoader'
+
+import banner from '../../images/home.webp'
 export const ROUTE_PATH = '/admin/profile'
 export const loader = async ({ request }: { request: Request }) => {
   const user = await sharedLoader(request)
@@ -14,19 +17,14 @@ const ProfilePage = () => {
   const { user } = useLoaderData<typeof loader>()
 
   if (!user) {
-    return <div>{t('customLanding.guestMessage', 'Welcome, Guest!')}</div>
+    return <div>{t('profile.heading', 'Welcome, Guest!')}</div>
   }
 
   return (
     <div className="bg-noir-light/40 backdrop-blur-sm rounded-md shadow-md p-6 border border-noir-dark">
-      <h1 className="text-2xl font-bold mb-4">{t('customLanding.title', 'Welcome Back!')}</h1>
-      <p>
-        {t('customLanding.message', 'Hello')}
-        {' '}
-        {user.name || user.email}
-        !
-      </p>
-    </div>
+      <TitleBanner image={banner} heading={t('profile.heading')} subheading={`${user.name || user.email} ${t('profile.subheading')}`} />
+
+    </div >
   )
 }
 

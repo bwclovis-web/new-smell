@@ -18,7 +18,7 @@ interface AddToCollectionModalProps {
 
 const AddToCollectionModal =
   ({ type, perfume, className }: AddToCollectionModalProps) => {
-    const { modalOpen, toggleModal } = use(SessionContext)
+    const { modalOpen, toggleModal, modalId } = use(SessionContext)
     const modalTrigger = useRef<HTMLButtonElement>(null)
     const { t } = useTranslation()
     const ButtonClasses = cx({
@@ -32,7 +32,7 @@ const AddToCollectionModal =
             variant={type}
             className={ButtonClasses}
             onClick={() => {
-              toggleModal(modalTrigger, '', 'create')
+              toggleModal(modalTrigger, 'add-scent', 'create')
             }}
             ref={modalTrigger}
           >
@@ -46,7 +46,7 @@ const AddToCollectionModal =
           </Button>
         </div>
 
-        {modalOpen && (
+        {modalOpen && modalId === 'add-scent' && (
           <Modal>
             <MyScentsModal perfume={perfume} />
           </Modal>

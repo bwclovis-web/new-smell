@@ -16,7 +16,7 @@
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950 min-h-screen;
+  @apply bg-white dark:bg-gray-950 min-h-screen text-noir-black dark:text-noir-light font-sans text-base leading-7;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;

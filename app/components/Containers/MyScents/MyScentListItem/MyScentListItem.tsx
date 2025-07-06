@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction, useState } from "react"
+import { type Dispatch, type SetStateAction } from "react"
 import { RiDeleteBin2Fill, RiDeleteBin3Fill } from "react-icons/ri"
 import { useFetcher, useNavigation } from "react-router"
 
@@ -6,8 +6,9 @@ import { Button } from "~/components/Atoms/Button/Button"
 import VooDooDetails from "~/components/Atoms/VooDooDetails/VooDooDetails"
 import type { UserPerfumeI } from "~/types"
 
-import DecantForm from "../DecantForm/DecantForm"
+import DeStashForm from "../DeStashForm/DeStashForm"
 import GeneralDetails from "./bones/GeneralDetails"
+import PerfumeComments from "./bones/PerfumeComments"
 
 interface MySentListItemI {
   userPerfume: UserPerfumeI
@@ -25,7 +26,7 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
     const foundUserPerfume =
       userPerfumes.find(item => item.id === userPerfume.id)
     if (!foundUserPerfume) {
-      console.error('User perfume not found for decanting')
+      console.error('User perfume not found for de-stashing')
       return
     }
     setUserPerfumes(prev => prev.map(perfume => perfume.id === userPerfume.id
@@ -53,7 +54,7 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
     <li key={userPerfume.id} className="border rounded p-4 flex flex-col w-full bg-noir-dark text-noir-light mb-4 last-of-type:mb-0">
       <div className="flex justify-between items-center mb-2 gap-6">
         <div className='flex gap-8'>
-          <h3 className="font-medium flex flex-col justify-start items-start min-w-[30ch]">
+          <h3 className="font-medium flex flex-col justify-start items-start max-w-[40ch] min-w-[40ch] text-left">
             <span className='text-xl'>Name:</span>
             <span className='text-2xl'>{userPerfume.perfume.name}</span>
           </h3>
@@ -82,16 +83,18 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
         </div>
       </div>
 
-      <VooDooDetails summary="View / Edit Details" className="text-start py-3 mt-3 border-t-noir-gold border-t">
+      <VooDooDetails summary="View / Edit Details" className="text-start py-3 mt-3 border-t-noir-gold border-t" name="perfume-details">
         <GeneralDetails userPerfume={userPerfume} />
-        <VooDooDetails summary="De-stash Perfume" className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded">
-          <DecantForm
+        <VooDooDetails summary="Perfume Comments" className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded" name="inner-details">
+          <PerfumeComments userPerfume={userPerfume} />
+        </VooDooDetails>
+        <VooDooDetails summary="De-stash Perfume" className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded" name="inner-details">
+          <DeStashForm
             handleDecantConfirm={handleDecantConfirm}
             currentAmount={userPerfume.amount || ''}
             userPerfume={userPerfume}
           />
         </VooDooDetails>
-
       </VooDooDetails>
     </li>
   )

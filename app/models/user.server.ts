@@ -2,6 +2,8 @@ import bcrypt from 'bcryptjs'
 
 import { prisma } from '~/db.server'
 
+
+
 export const createUser = async (data: FormData) => {
   const password = data.get('password')
   if (typeof password !== 'string') {
@@ -56,6 +58,11 @@ export const getUserPerfumes = async (userId: string) => {
       perfume: {
         include: {
           perfumeHouse: true
+        }
+      },
+      comments: {
+        orderBy: {
+          createdAt: 'desc'
         }
       }
     }
@@ -219,5 +226,211 @@ export const updateAvailableAmount = async (
     // eslint-disable-next-line no-console
     console.error('Error updating available amount:', error)
     return { success: false, error: 'Failed to update available amount' }
+  }
+}
+
+interface AddCommentParams {
+  userId: string
+  perfumeId: string
+  comment: string
+  isPublic?: boolean
+}
+
+export const addPerfumeComment = async ({
+  userId,
+  perfumeId,
+  comment,
+  isPublic = false
+}: AddCommentParams) => {
+  try {
+    // Check if the user owns this perfume (only owners can comment)
+    const existingPerfume = await findUserPerfume(userId, perfumeId)
+
+    if (!existingPerfume) {
+      return { success: false, error: 'You can only comment on perfumes in your collection' }
+    }
+
+    // Create the comment
+    const userComment = await prisma.userPerfumeComment.create({
+      data: {
+        userId,
+        perfumeId,
+        userPerfumeId: existingPerfume.id, // Link to the UserPerfume
+        comment,
+        isPublic
+      },
+      include: {
+        perfume: true,
+        userPerfume: true
+      }
+    })
+
+    return { success: true, userComment }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error adding comment to perfume:', error)
+    return { success: false, error: 'Failed to add comment to perfume' }
+  }
+}
+
+interface UpdateCommentParams {
+  userId: string
+  commentId: string
+  comment?: string
+  isPublic?: boolean
+}
+
+// Helper function to find a user's comment
+const findUserComment = async (commentId: string) =>
+  // Note: After running npx prisma generate, this will be available
+  prisma.userPerfumeComment.findUnique({
+    where: { id: commentId }
+  })
+
+
+// Helper function to perform the comment update
+const performCommentUpdate = async (commentId: string, updateData: any) =>
+  // Note: After running npx prisma generate, this will be available
+  prisma.userPerfumeComment.update({
+    where: { id: commentId },
+    data: updateData,
+    include: {
+      perfume: true
+    }
+  })
+
+
+// Helper function to validate comment ownership
+const validateCommentOwnership = (comment: any, userId: string) => {
+  if (!comment) {
+    return { isValid: false, error: 'Comment not found' }
+  }
+
+  if (comment.userId !== userId) {
+    return { isValid: false, error: 'You can only update your own comments' }
+  }
+
+  return { isValid: true }
+}
+
+// Prepare update data for a comment
+const prepareCommentUpdateData = (comment?: string, isPublic?: boolean) => {
+  const updateData: any = {}
+
+  if (comment !== undefined) {
+    updateData.comment = comment
+  }
+
+  if (isPublic !== undefined) {
+    updateData.isPublic = isPublic
+  }
+
+  return updateData
+}
+
+export const updatePerfumeComment = async ({
+  userId,
+  commentId,
+  comment,
+  isPublic
+}: UpdateCommentParams) => {
+  try {
+    // Find and validate the comment
+    const existingComment = await findUserComment(commentId)
+    const validation = validateCommentOwnership(existingComment, userId)
+
+    if (!validation.isValid) {
+      return { success: false, error: validation.error }
+    }
+
+    // Prepare and perform the update
+    const updateData = prepareCommentUpdateData(comment, isPublic)
+    const updatedComment = await performCommentUpdate(commentId, updateData)
+
+    return { success: true, userComment: updatedComment }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error updating perfume comment:', error)
+    return { success: false, error: 'Failed to update perfume comment' }
+  }
+}
+
+export const deletePerfumeComment = async (userId: string, commentId: string) => {
+  try {
+    // Find the comment
+    const existingComment = await findUserComment(commentId)
+    const validation = validateCommentOwnership(existingComment, userId)
+
+    if (!validation.isValid) {
+      return { success: false, error: validation.error }
+    }
+
+    // Delete the comment
+    await prisma.userPerfumeComment.delete({
+      where: { id: commentId }
+    })
+
+    return { success: true }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error deleting perfume comment:', error)
+    return { success: false, error: 'Failed to delete perfume comment' }
+  }
+}
+
+export const getUserPerfumeComments = async (userId: string, perfumeId: string) => {
+  try {
+    // Find the user perfume first
+    const existingPerfume = await findUserPerfume(userId, perfumeId)
+
+    if (!existingPerfume) {
+      return { success: false, error: 'Perfume not found in your collection' }
+    }
+
+    // Get user's comments for a specific perfume
+    const comments = await prisma.userPerfumeComment.findMany({
+      where: {
+        userPerfumeId: existingPerfume.id
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+
+    return { success: true, comments }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching user perfume comments:', error)
+    return { success: false, error: 'Failed to fetch comments' }
+  }
+}
+
+export const getPublicPerfumeComments = async (perfumeId: string) => {
+  try {
+    // Get all public comments for a specific perfume
+    const comments = await prisma.userPerfumeComment.findMany({
+      where: {
+        perfumeId,
+        isPublic: true
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        userPerfume: true
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+
+    return { success: true, comments }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching public perfume comments:', error)
+    return { success: false, error: 'Failed to fetch public comments' }
   }
 }
