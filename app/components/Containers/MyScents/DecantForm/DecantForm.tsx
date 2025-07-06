@@ -12,7 +12,6 @@ interface DecantFormProps {
 
 const DecantForm = ({
   handleDecantConfirm,
-  handleDecantCancel,
   userPerfume
 }: DecantFormProps) => {
   const [decantAmount, setDecantAmount] = useState<string>("0")
@@ -49,15 +48,6 @@ const DecantForm = ({
           <Button type="submit" disabled={!decantAmount || parseFloat(decantAmount) <= 0} variant="primary">
             Confirm Decant
           </Button>
-          {handleDecantCancel && (
-            <Button
-              type="button"
-              onClick={handleDecantCancel}
-              variant="secondary"
-            >
-              Cancel
-            </Button>
-          )}
         </div>
       </form>
     </div>

@@ -7,6 +7,7 @@ import VooDooDetails from "~/components/Atoms/VooDooDetails/VooDooDetails"
 import type { UserPerfumeI } from "~/types"
 
 import DecantForm from "../DecantForm/DecantForm"
+import GeneralDetails from "./bones/GeneralDetails"
 
 interface MySentListItemI {
   userPerfume: UserPerfumeI
@@ -16,12 +17,9 @@ interface MySentListItemI {
 
 const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
   MySentListItemI) => {
-  const [decantOpenPerfumeId, setDecantOpenPerfumeId] =
-    useState<string | null>(userPerfume.id)
   const fetcher = useFetcher()
   const navigation = useNavigation()
   const isSubmitting = navigation.state === 'submitting'
-
 
   const handleDecantConfirm = (amount: string) => {
     const foundUserPerfume =
@@ -42,16 +40,14 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
     fetcher.submit(formData, { method: 'post' })
   }
 
-  const handleDecantCancel = () => {
-    setDecantOpenPerfumeId(null)
-  }
-
   const handleRemovePerfume = (perfumeId: string) => {
     const formData = new FormData()
     formData.append('perfumeId', perfumeId)
     formData.append('action', 'remove')
     fetcher.submit(formData, { method: 'post' })
   }
+
+  console.log('Rendering MyScentsListItem for:', userPerfume)
 
   return (
     <li key={userPerfume.id} className="border rounded p-4 flex flex-col w-full bg-noir-dark text-noir-light mb-4 last-of-type:mb-0">
@@ -87,10 +83,10 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
       </div>
 
       <VooDooDetails summary="View / Edit Details" className="text-start py-3 mt-3 border-t-noir-gold border-t">
-        <VooDooDetails summary="Decant Perfume" className="text-start py-3 mt-3 bg-noir-light">
+        <GeneralDetails userPerfume={userPerfume} />
+        <VooDooDetails summary="De-stash Perfume" className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded">
           <DecantForm
             handleDecantConfirm={handleDecantConfirm}
-            handleDecantCancel={handleDecantCancel}
             currentAmount={userPerfume.amount || ''}
             userPerfume={userPerfume}
           />

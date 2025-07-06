@@ -34,7 +34,7 @@ export async function getUserById(id: string) {
   return prisma.user.findUnique({ where: { id } })
 }
 
-// eslint-disable-next-line max-statements
+
 export const signInCustomer = async (data: FormData) => {
   const password = data.get('password') as string
   const email = data.get('email') as string
@@ -70,31 +70,77 @@ const findUserPerfume = async (userId: string, perfumeId: string) => (
   })
 )
 
+interface HandleExistingPerfumeParams {
+  existingPerfume: any
+  amount?: string
+  price?: string
+  placeOfPurchase?: string
+}
+
 // Helper function to handle existing perfume update
-const handleExistingPerfume = async (existingPerfume: any, amount?: string) => {
-  // If the perfume exists and we're updating the amount
+const handleExistingPerfume = async ({
+  existingPerfume,
+  amount,
+  price,
+  placeOfPurchase
+}: HandleExistingPerfumeParams) => {
+  // If the perfume exists and we need to update it
+  const updateData: any = {}
+  let shouldUpdate = false
+
   if (amount && existingPerfume.amount !== amount) {
+    updateData.amount = amount
+    shouldUpdate = true
+  }
+
+  if (price && existingPerfume.price !== price) {
+    updateData.price = price
+    shouldUpdate = true
+  }
+
+  if (placeOfPurchase && existingPerfume.placeOfPurchase !== placeOfPurchase) {
+    updateData.placeOfPurchase = placeOfPurchase
+    shouldUpdate = true
+  }
+
+  if (shouldUpdate) {
     const updatedPerfume = await prisma.userPerfume.update({
       where: { id: existingPerfume.id },
-      data: { amount },
+      data: updateData,
       include: { perfume: true }
     })
     return { success: true, userPerfume: updatedPerfume, updated: true }
   }
+
   return { success: false, error: 'Perfume already in your collection' }
 }
 
-export const addUserPerfume = async (
-  userId: string,
-  perfumeId: string,
+interface AddUserPerfumeParams {
+  userId: string
+  perfumeId: string
   amount?: string
-) => {
+  price?: string
+  placeOfPurchase?: string
+}
+
+export const addUserPerfume = async ({
+  userId,
+  perfumeId,
+  amount,
+  price,
+  placeOfPurchase
+}: AddUserPerfumeParams) => {
   try {
     // Check if the perfume exists in collection
     const existingPerfume = await findUserPerfume(userId, perfumeId)
 
     if (existingPerfume) {
-      return handleExistingPerfume(existingPerfume, amount)
+      return handleExistingPerfume({
+        existingPerfume,
+        amount,
+        price,
+        placeOfPurchase
+      })
     }
 
     // Add the perfume to the user's collection
@@ -102,7 +148,9 @@ export const addUserPerfume = async (
       data: {
         userId,
         perfumeId,
-        amount: amount || 'full' // Use provided amount or default to 'full'
+        amount: amount || 'full', // Use provided amount or default to 'full'
+        price,
+        placeOfPurchase
       },
       include: {
         perfume: true

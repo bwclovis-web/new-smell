@@ -27,3 +27,8 @@ export const createSafeStep = (decimalStep: number) => {
     fromInternal: (val: number) => roundToDecimal(val / factor, decimals)
   }
 }
+
+export const formatPrice = (amount: number, locale = 'en-US', currency = 'USD') => new Intl.NumberFormat(locale, {
+  style: 'currency',
+  currency
+}).format(amount)
