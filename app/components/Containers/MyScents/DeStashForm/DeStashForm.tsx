@@ -4,24 +4,24 @@ import { Button } from "~/components/Atoms/Button/Button"
 import RangeSlider from "~/components/Atoms/RangeSlider/RangeSlider"
 import type { UserPerfumeI } from "~/types"
 
-interface DecantFormProps {
+interface DeStashFormProps {
   handleDecantConfirm: (amount: string) => void
   handleDecantCancel?: () => void
   userPerfume: UserPerfumeI
 }
 
-const DecantForm = ({
+const DeStashForm = ({
   handleDecantConfirm,
   userPerfume
-}: DecantFormProps) => {
-  const [decantAmount, setDecantAmount] = useState<string>("0")
+}: DeStashFormProps) => {
+  const [deStashAmount, setDeStashAmount] = useState<string>("0")
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    const amount = parseFloat(decantAmount)
-    if (amount > 0 && amount <= parseFloat(userPerfume.amount)) {
-      handleDecantConfirm(decantAmount)
-      setDecantAmount("0")
+    const amount = parseFloat(deStashAmount)
+    if (amount >= 0 && amount <= parseFloat(userPerfume.amount)) {
+      handleDecantConfirm(deStashAmount)
+      setDeStashAmount("0")
     }
   }
 
@@ -30,27 +30,26 @@ const DecantForm = ({
       <h3 className='text-lg font-semibold mb-2'>Decant Options</h3>
       <p className='text-sm text-gray-600'>Decanting allows you to share or transfer a portion of your fragrance to another bottle.</p>
       <p className='text-sm text-gray-600'>Enter the amount you want to make available for decanting.</p>
-
       <form onSubmit={handleSubmit} className="mt-4">
         <RangeSlider
           min={0}
           max={parseFloat(userPerfume.amount)}
           step={0.1}
-          value={parseFloat(userPerfume.available) || 0}
+          value={parseFloat(deStashAmount) || 0}
           onChange={
             value => {
-              setDecantAmount(value.toFixed(1))
+              setDeStashAmount(value.toFixed(1))
             }
           }
           formatValue={value => value.toFixed(1)}
         />
         <div className="flex gap-2">
-          <Button type="submit" disabled={!decantAmount || parseFloat(decantAmount) <= 0} variant="primary">
-            Confirm Decant
+          <Button type="submit" disabled={parseFloat(deStashAmount) < 0} variant="primary">
+            {parseFloat(deStashAmount) === 0 ? "Remove from Trading Post" : "Confirm De-Stash"}
           </Button>
         </div>
       </form>
     </div>
   )
 }
-export default DecantForm
+export default DeStashForm

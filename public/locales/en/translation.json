@@ -150,7 +150,8 @@
     }
   },
   "profile": {
-    "title": "User Profile",
+    "heading": "Welcome Back!",
+    "subheading": "Manage your profile and settings.",
     "userInfo": "User Information",
     "email": "Email",
     "emailPlaceholder": "Enter your email",
