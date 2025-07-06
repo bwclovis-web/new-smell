@@ -32,7 +32,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
   const logoText = ready && isClientReady ? t('navigation.logo') : ' Good Scents'
 
   return (
-    <nav className={styleMerge(globalNavigationVariants({ className }))} data-cy="GlobalNavigation">
+    <nav className="flex sticky gap-3 bg-noir-gold/20 dark:bg-noir-dark/30 backdrop-blur-md z-50 top-0 w-full py-5 px-8 mt-6 rounded flex-col md:flex-row justify-items-center md:justify-items-start md:justify-between items-center" data-cy="GlobalNavigation">
       <NavLink to="/" className="text-noir-dark hover:text-noir-light dark:text-noir-light/70 dark:hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400">
         {logoText}
       </NavLink>

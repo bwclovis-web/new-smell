@@ -4,11 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { type ActionFunctionArgs, type MetaFunction, useActionData, useLoaderData } from 'react-router'
 
 import PerfumeForm from '~/components/Containers/Forms/PerfumeForm'
+import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import { getAllHouses } from '~/models/house.server'
 import { createPerfume } from '~/models/perfume.server'
 import { FORM_TYPES } from '~/utils/constants'
 import { CreatePerfumeSchema } from '~/utils/formValidationSchemas'
 
+import banner from '../../images/perfumeCreate.webp'
 export const ROUTE_PATH = '/admin/create-perfume' as const
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
@@ -38,10 +40,7 @@ const CreatePerfumePage = () => {
   const { t } = useTranslation()
   return (
     <section>
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold">{t('createPerfume.heading')}</h1>
-        <p className="text-lg">{t('createPerfume.subheading')}</p>
-      </header>
+      <TitleBanner imagePos="object-center" image={banner} heading={t('createPerfume.heading')} subheading={t('createPerfume.subheading')} />
       <PerfumeForm
         formType={FORM_TYPES.CREATE_PERFUME_FORM}
         lastResult={lastResult}

@@ -4,10 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { type ActionFunctionArgs, type MetaFunction, useActionData } from 'react-router'
 
 import PerfumeHouseForm from '~/components/Containers/Forms/PerfumeHouseForm'
+import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import { createPerfumeHouse } from '~/models/house.server'
 import { FORM_TYPES } from '~/utils/constants'
 import { CreatePerfumeHouseSchema } from '~/utils/formValidationSchemas'
 
+import banner from '../../images/createHouse.webp'
 export const ROUTE_PATH = '/admin/create-perfume-house' as const
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
@@ -31,10 +33,7 @@ const CreatePerfumeHousePage = () => {
   const { t } = useTranslation()
   return (
     <section>
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold">{t('createHouse.heading')}</h1>
-        <p className="text-lg">{t('createHouse.subheading')}</p>
-      </header>
+      <TitleBanner image={banner} heading={t('createHouse.heading')} subheading={t('createHouse.subheading')} />
       <PerfumeHouseForm
         formType={FORM_TYPES.CREATE_HOUSE_FORM}
         lastResult={lastResult}

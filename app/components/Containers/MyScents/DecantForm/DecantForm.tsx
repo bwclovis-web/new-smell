@@ -27,7 +27,7 @@ const DecantForm = ({
   }
 
   return (
-    <div className='mt-4'>
+    <div className='mt-4 bg-noir-light text-noir-dark p-4 shadow-lg border border-noir-dark/90 dark:border-noir-light/90 rounded-md'>
       <h3 className='text-lg font-semibold mb-2'>Decant Options</h3>
       <p className='text-sm text-gray-600'>Decanting allows you to share or transfer a portion of your fragrance to another bottle.</p>
       <p className='text-sm text-gray-600'>Enter the amount you want to make available for decanting.</p>
