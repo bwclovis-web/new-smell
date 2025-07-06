@@ -38,10 +38,29 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return { userPerfumes }
 }
 
-const performAddAction =
-  async (userId: string, perfumeId: string, amount?: string) => (
-    await addUserPerfume(userId, perfumeId, amount)
-  )
+interface AddParams {
+  userId: string
+  perfumeId: string
+  amount?: string
+  price?: string
+  placeOfPurchase?: string
+}
+
+const performAddAction = async ({
+  userId,
+  perfumeId,
+  amount,
+  price,
+  placeOfPurchase
+}: AddParams) => (
+  await addUserPerfume({
+    userId,
+    perfumeId,
+    amount,
+    price,
+    placeOfPurchase
+  })
+)
 
 const performRemoveAction = async (userId: string, perfumeId: string) => (
   await removeUserPerfume(userId, perfumeId)
@@ -60,11 +79,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const perfumeId = formData.get('perfumeId') as string
   const actionType = formData.get('action') as string
   const amount = formData.get('amount') as string | undefined
+  const price = formData.get('price') as string | undefined
+  const placeOfPurchase = formData.get('placeOfPurchase') as string | undefined
   const availableAmount = formData.get('availableAmount') as string | undefined
   const user = await sharedLoader(request)
 
   if (actionType === 'add') {
-    return performAddAction(user.id, perfumeId, amount)
+    return performAddAction({
+      userId: user.id,
+      perfumeId,
+      amount,
+      price,
+      placeOfPurchase
+    })
   }
 
   if (actionType === 'remove') {

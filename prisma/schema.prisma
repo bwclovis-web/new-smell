@@ -71,14 +71,16 @@ model Perfume {
 }
 
 model UserPerfume {
-  id        String   @id @default(cuid())
-  userId    String
-  perfumeId String
-  amount    String   @default("full") // Default amount is full
-  available String   @default("0") // Amount available for decanting
-  user      User     @relation(fields: [userId], references: [id])
-  perfume   Perfume  @relation(fields: [perfumeId], references: [id])
-  createdAt DateTime @default(now())
+  id              String   @id @default(cuid())
+  userId          String
+  perfumeId       String
+  amount          String   @default("full") // Default amount is full
+  available       String   @default("0") // Amount available for decanting
+  price           String? // Price of the perfume
+  placeOfPurchase String? // Where the perfume was purchased
+  user            User     @relation(fields: [userId], references: [id])
+  perfume         Perfume  @relation(fields: [perfumeId], references: [id])
+  createdAt       DateTime @default(now())
 }
 
 model UserPerfumeRating {
