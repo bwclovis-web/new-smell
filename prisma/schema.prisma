@@ -74,7 +74,7 @@ model UserPerfume {
   id              String   @id @default(cuid())
   userId          String
   perfumeId       String
-  amount          String   @default("full") // Default amount is full
+  amount          String   @default("0") // Default amount is 0
   available       String   @default("0") // Amount available for decanting
   price           String? // Price of the perfume
   placeOfPurchase String? // Where the perfume was purchased
