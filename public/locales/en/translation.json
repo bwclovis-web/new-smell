@@ -142,7 +142,11 @@
       "createButton": "Create New Perfume",
       "amountLabel": "Amount",
       "amountPlaceholder": "Enter the amount of perfume",
-      "submitButton": "Add to Collection"
+      "submitButton": "Add to Collection",
+      "placeOfPurchasePlaceholder": "Enter the place of purchase",
+      "placeOfPurchase": "Place of Purchase",
+      "priceLabel": "Purchase Price",
+      "pricePlaceholder": "Enter the price of the perfume"
     }
   },
   "profile": {

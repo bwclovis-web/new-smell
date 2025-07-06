@@ -168,6 +168,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
                 <Input
                   inputType="number"
                   name="price"
+                  label={t('myScents.modal.priceLabel')}
                   value={perfumeData.price}
                   inputRef={priceInputRef}
                   onChange={event => {
@@ -178,11 +179,12 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
                     })
                   }}
                   className="mt-4 w-full"
-                  placeholder={t('myScents.modal.pricePlaceholder') || "Price"}
+                  placeholder={t('myScents.modal.pricePlaceholder')}
                 />
                 <Input
                   inputType="text"
                   name="placeOfPurchase"
+                  label={t('myScents.modal.placeOfPurchase')}
                   value={perfumeData.placeOfPurchase}
                   inputRef={placeInputRef}
                   onChange={event => {
@@ -193,7 +195,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
                     })
                   }}
                   className="mt-4 w-full"
-                  placeholder={t('myScents.modal.purchasePlaceholder') || "Place of purchase"}
+                  placeholder={t('myScents.modal.placeOfPurchasePlaceholder')}
                 />
               </div>
             </div>
