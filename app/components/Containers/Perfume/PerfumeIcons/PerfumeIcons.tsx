@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { BsHeartFill, BsHearts } from 'react-icons/bs'
 import { GrEdit } from 'react-icons/gr'
 import { MdDeleteForever } from 'react-icons/md'
-import { useFetcher } from 'react-router'
 
 import { Button, VooDooLink } from '~/components/Atoms/Button/Button'
 import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal/AddToCollectionModal'
@@ -23,18 +22,35 @@ interface PerfumeIconsProps {
 const PerfumeIcons: FC<PerfumeIconsProps>
   = ({ perfume, handleDelete, userRole, isInWishlist }) => {
     const [inWishlist, setInWishlist] = useState(isInWishlist)
-    const fetcher = useFetcher()
+
+    const revertWishlistState = () => {
+      setInWishlist(!inWishlist)
+    }
+
+    const updateWishlistAPI = async (formData: FormData) => {
+      const response = await fetch('/api/wishlist', {
+        method: 'POST',
+        body: formData
+      })
+
+      if (!response.ok) {
+        revertWishlistState()
+      }
+    }
 
     const handleWishlistToggle = async () => {
       const formData = new FormData()
       formData.append('perfumeId', perfume.id)
       formData.append('action', inWishlist ? 'remove' : 'add')
 
-      fetcher.submit(formData, {
-        method: 'POST',
-        action: '/api/wishlist'
-      })
+      // Optimistically update the UI first
       setInWishlist(!inWishlist)
+
+      try {
+        await updateWishlistAPI(formData)
+      } catch {
+        revertWishlistState()
+      }
     }
 
     return (
