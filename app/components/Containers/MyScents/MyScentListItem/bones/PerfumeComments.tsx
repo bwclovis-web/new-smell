@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react"
+import { MdDeleteForever } from "react-icons/md"
 import { useFetcher } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
@@ -25,8 +26,6 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
       setComments(userPerfume.comments)
     }
   }, [userPerfume.comments])
-
-  // Handle toggling the public/private status of a comment
   const handleTogglePublic = (commentId: string, currentIsPublic: boolean) => {
     setComments(prevComments => prevComments.map(comment => comment.id === commentId
       ? { ...comment, isPublic: !currentIsPublic }
@@ -38,7 +37,6 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
       return
     }
 
-    // Send to server using the shared utility function
     const formData = createCommentFormData('toggle-comment-visibility', {
       commentId,
       perfumeId,
@@ -92,11 +90,14 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
                   label="Public"
                   onChange={() => handleTogglePublic(comment.id, comment.isPublic)}
                 />
-                <button
+                <Button
+                  variant="icon"
                   onClick={() => handleDeleteComment(comment.id)}
+                  background={'red'}
                 >
-                  delete
-                </button>
+                  <span className="text-white/90 font-bold text-sm">Delete comment</span>
+                  <MdDeleteForever size={20} fill="white" />
+                </Button>
               </div>
             </li>
           ))}

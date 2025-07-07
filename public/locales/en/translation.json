@@ -136,6 +136,7 @@
     "addButton": "Add to Collection",
     "removeButton": "Remove from Collection",
     "modal": {
+      "typeLabel": "Perfume Type",
       "title": "My Scents",
       "selectedPerfume": "Selected Perfume",
       "description": "This is where you can manage your favorite scents.",

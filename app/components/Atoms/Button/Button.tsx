@@ -20,9 +20,9 @@ interface LinkProps extends Omit<LinkHTMLAttributes<HTMLAnchorElement>, 'style'>
   ref?: Ref<HTMLAnchorElement>
 }
 
-const Button: FC<ButtonProps> = ({ className, size, variant, children, type = 'button', ref, ...props }) => (
+const Button: FC<ButtonProps> = ({ className, size, variant, children, background, type = 'button', ref, ...props }) => (
   <button
-    className={styleMerge(buttonVariants({ className, size, variant }))}
+    className={styleMerge(buttonVariants({ className, size, variant, background }))}
     data-cy="button"
     type={type}
     ref={ref}
