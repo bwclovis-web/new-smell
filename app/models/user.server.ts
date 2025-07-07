@@ -246,11 +246,21 @@ export const removeUserPerfume = async (userId: string, perfumeId: string) => {
       return { success: false, error: 'Perfume not found in your collection' }
     }
 
-    // Remove the perfume from the user's collection
-    await prisma.userPerfume.delete({
-      where: {
-        id: existingPerfume.id
-      }
+    // Use a transaction to ensure both operations succeed or fail together
+    await prisma.$transaction(async transaction => {
+      // First, delete all comments associated with this user perfume
+      await transaction.userPerfumeComment.deleteMany({
+        where: {
+          userPerfumeId: existingPerfume.id
+        }
+      })
+
+      // Then remove the perfume from the user's collection
+      await transaction.userPerfume.delete({
+        where: {
+          id: existingPerfume.id
+        }
+      })
     })
 
     return { success: true }
