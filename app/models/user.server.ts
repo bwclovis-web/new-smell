@@ -234,13 +234,15 @@ interface AddCommentParams {
   perfumeId: string
   comment: string
   isPublic?: boolean
+  userPerfumeId: string
 }
 
 export const addPerfumeComment = async ({
   userId,
   perfumeId,
   comment,
-  isPublic = false
+  isPublic = false,
+  userPerfumeId
 }: AddCommentParams) => {
   try {
     // Check if the user owns this perfume (only owners can comment)
@@ -255,7 +257,7 @@ export const addPerfumeComment = async ({
       data: {
         userId,
         perfumeId,
-        userPerfumeId: existingPerfume.id, // Link to the UserPerfume
+        userPerfumeId, // Use the provided userPerfumeId
         comment,
         isPublic
       },

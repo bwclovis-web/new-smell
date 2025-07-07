@@ -1,15 +1,28 @@
-import { use, useRef } from "react"
+import { useContext } from "react"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import Modal from "~/components/Organisms/Modal/Modal"
 import SessionContext from "~/providers/sessionProvider"
-import perfume from "~/routes/perfume"
+import type { UserPerfumeI } from "~/types"
 
-import MyScentsModal from "../../MyScentsModal/MyScentsModal"
+import CommentsModal from "../../CommentsModal/CommentsModal"
 
-const PerfumeComments = ({ userPerfume }) => {
-  const { modalOpen, toggleModal, modalId } = use(SessionContext)
-  const modalTrigger = useRef<HTMLButtonElement>(null)
+interface Comment {
+  id: string
+  content: string
+  createdAt: string
+}
+
+interface PerfumeWithComments extends UserPerfumeI {
+  comments?: Comment[]
+}
+
+interface PerfumeCommentsProps {
+  userPerfume: PerfumeWithComments
+}
+
+const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
+  const { modalOpen, toggleModal, modalId } = useContext(SessionContext)
   return (
     <div className="mt-4 bg-noir-light text-noir-dark p-4 shadow-lg border border-noir-dark/90 dark:border-noir-light/90 rounded-md">
       <h4 className="text-xl font-bold text-noir-dark">Comments</h4>
@@ -29,13 +42,15 @@ const PerfumeComments = ({ userPerfume }) => {
       )}
       <Button
         onClick={() => {
-          toggleModal(modalTrigger, 'add-scent', 'create')
+          // Create a button element to use as a trigger
+          const buttonRef = { current: document.createElement('button') }
+          toggleModal(buttonRef as any, 'add-scent', 'create')
         }}
         size={'sm'}> Create Comment</Button>
 
       {modalOpen && modalId === 'add-scent' && (
         <Modal>
-          <MyScentsModal perfume={perfume} />
+          <CommentsModal perfume={userPerfume} />
         </Modal>
       )}
     </div>
