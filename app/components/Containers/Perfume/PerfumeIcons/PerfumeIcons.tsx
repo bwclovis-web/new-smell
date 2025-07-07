@@ -11,7 +11,6 @@ import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal/Ad
 interface Perfume {
   id: string
   name: string
-  // add other properties as needed
 }
 
 interface PerfumeIconsProps {
@@ -69,7 +68,7 @@ const PerfumeIcons: FC<PerfumeIconsProps>
                 aria-label={`edit ${perfume.name}`}
                 variant="icon"
                 url={`/admin/perfume/${perfume.name}/edit`}
-                className="bg-blue-600/60 p-3 hover:bg-blue-600/90 text-white  border-blue-600/60 hover:border-blue-600 flex items-center justify-center gap-6"
+                className="bg-blue-600/60 p-3 hover:bg-blue-600/90 text-white  border-blue-600/60 hover:border-blue-600 gap-6"
               >
                 <span className="text-white/90 font-bold text-sm">Edit Perfume</span>
                 <GrEdit size={32} fill="white" />
@@ -78,7 +77,7 @@ const PerfumeIcons: FC<PerfumeIconsProps>
                 onClick={() => handleDelete()}
                 aria-label={`delete ${perfume.name}`}
                 variant="icon"
-                className="bg-red-600/60 hover:bg-red-600/90 border-red-600/60 hover:border-red-600/90 flex items-center justify-center gap-5"
+                background={'red'}
               >
                 <span className="text-white/90 font-bold text-sm">Delete Perfume</span>
                 <MdDeleteForever size={40} fill="white" />

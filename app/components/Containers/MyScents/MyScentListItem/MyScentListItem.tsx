@@ -1,4 +1,5 @@
 import { type Dispatch, type SetStateAction } from "react"
+import { MdDeleteForever } from "react-icons/md"
 import { RiDeleteBin2Fill, RiDeleteBin3Fill } from "react-icons/ri"
 import { useFetcher, useNavigation } from "react-router"
 
@@ -51,8 +52,6 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
     fetcher.submit(formData, { method: 'post' })
   }
 
-  console.log('Rendering MyScentsListItem for:', getPerfumeTypeLabel(userPerfume.type))
-
   return (
     <li key={userPerfume.id} className="border rounded p-4 flex flex-col w-full bg-noir-dark text-noir-light mb-4 last-of-type:mb-0">
       <div className="flex justify-between items-center mb-2 gap-6">
@@ -72,21 +71,25 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
         </div>
         <div className='flex gap-4'>
           <Button
-            className="bg-red-500 text-sm border-2  hover:bg-red-600 focus:bg-red-700 disabled:bg-red-400 border-red-700"
+            className="bg-red-500  hover:bg-red-600 focus:bg-red-700 disabled:bg-red-400 border-red-700 gap-2"
             onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
             disabled={isSubmitting}
             variant={'icon'}
+            size="sm"
           >
-            {
-              isSubmitting ?
-                <RiDeleteBin3Fill size={30} fill='white' /> :
-                <RiDeleteBin2Fill size={30} fill='white' />
-            }
+            <span className="text-white/90 font-bold text-sm">
+              {
+                isSubmitting ?
+                  "Removing..." :
+                  "Remove Perfume"
+              }
+            </span>
+            <MdDeleteForever size={40} fill="white" />
           </Button>
         </div>
       </div>
 
-      <VooDooDetails summary="View / Edit Details" className="text-start py-3 mt-3 border-t-noir-gold border-t" name="perfume-details">
+      <VooDooDetails summary="View / Edit Details" className="text-start pt-3 mt-3 border-t-noir-gold border-t" name="perfume-details">
         <GeneralDetails userPerfume={userPerfume} />
         <VooDooDetails summary="Perfume Comments" className="text-start text-noir-dark  py-3 mt-3 bg-noir-gold px-2 rounded" name="inner-details">
           <PerfumeComments userPerfume={userPerfume} />
