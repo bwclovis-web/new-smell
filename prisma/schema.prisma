@@ -82,6 +82,7 @@ model UserPerfume {
   perfume         Perfume              @relation(fields: [perfumeId], references: [id])
   comments        UserPerfumeComment[] // Relation to comments
   createdAt       DateTime             @default(now())
+  type            PerfumeType          @default(eauDeParfum) // Default type is Eau de Parfum
 }
 
 model UserPerfumeRating {
@@ -157,4 +158,16 @@ enum HouseType {
   indie
   celebrity
   drugstore
+}
+
+enum PerfumeType {
+  eauDeParfum
+  eauDeToilette
+  eauDeCologne
+  parfum
+  extraitDeParfum
+  extraitOil
+  oil
+  waterMist
+  ipmSpray
 }
