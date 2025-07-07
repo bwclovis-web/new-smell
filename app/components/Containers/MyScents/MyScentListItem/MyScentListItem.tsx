@@ -1,11 +1,9 @@
 import { type Dispatch, type SetStateAction } from "react"
 import { MdDeleteForever } from "react-icons/md"
-import { RiDeleteBin2Fill, RiDeleteBin3Fill } from "react-icons/ri"
 import { useFetcher, useNavigation } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import VooDooDetails from "~/components/Atoms/VooDooDetails/VooDooDetails"
-import { getPerfumeTypeLabel } from "~/data/SelectTypes"
 import type { UserPerfumeI } from "~/types"
 
 import DeStashForm from "../DeStashForm/DeStashForm"
@@ -28,6 +26,7 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
     const foundUserPerfume =
       userPerfumes.find(item => item.id === userPerfume.id)
     if (!foundUserPerfume) {
+      // eslint-disable-next-line no-console
       console.error('User perfume not found for de-stashing')
       return
     }
@@ -42,14 +41,17 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
     formData.append('availableAmount', amount)
     formData.append('action', 'decant')
 
-    fetcher.submit(formData, { method: 'post' })
+    fetcher.submit(formData, { method: 'post', action: '/admin/my-scents' })
   }
 
   const handleRemovePerfume = (perfumeId: string) => {
+    // Optimistically remove the perfume from the UI
+    setUserPerfumes(prev => prev.filter(perfume => perfume.perfume.id !== perfumeId))
+
     const formData = new FormData()
     formData.append('perfumeId', perfumeId)
     formData.append('action', 'remove')
-    fetcher.submit(formData, { method: 'post' })
+    fetcher.submit(formData, { method: 'post', action: '/admin/my-scents' })
   }
 
   return (
