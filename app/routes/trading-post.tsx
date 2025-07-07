@@ -3,6 +3,7 @@ import { type MetaFunction, NavLink, useLoaderData } from 'react-router'
 
 import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
+import { getPerfumeTypeLabel } from '~/data/SelectTypes'
 import { getAvailablePerfumesForDecanting } from '~/models/perfume.server'
 import { getUserDisplayName } from '~/utils/user'
 
@@ -41,20 +42,29 @@ const TradingPostPage = () => {
           {availablePerfumes?.map(perfume => (
             <li key={perfume.id} className="relative">
               <LinkCard data={perfume} type="perfume" />
-              {/* Show available amounts from users */}
-
               <div className="mt-2 p-2 bg-green-50 rounded-md">
                 <p className="text-sm font-medium text-green-800 mb-1">
                   {t('tradingPost.availableFrom')}:
                 </p>
-                {perfume.userPerfume.map(userPerfume => (
-                  <NavLink to={`/trader/${userPerfume.userId}`} key={userPerfume.id} className="text-xs text-green-700">
-                    {getUserDisplayName(userPerfume.user)}:
-                    {' '}
-                    {userPerfume.available}
-                    ml
-                  </NavLink>
-                ))}
+                <ul>
+                  {perfume.userPerfume.map(userPerfume => {
+                    console.log('userPerfume', userPerfume)
+                    return (
+                      <li key={userPerfume.id} className="mb-1">
+                        <NavLink to={`/trader/${userPerfume.userId}`} key={userPerfume.id} className="text-sm font-semibold text-noir-blue/80 hover:text-noir-blue underline">
+                          {getUserDisplayName(userPerfume.user)}:
+                        </NavLink>
+
+                        <span className="text-sm ml-2 text-noir-gray">
+                          {getPerfumeTypeLabel(userPerfume.type) || 'Unknown Type'}
+                          {' '}
+                          {userPerfume.available} ml
+                        </span>
+                      </li>
+                    )
+                  })}
+                </ul>
+
               </div>
 
             </li>

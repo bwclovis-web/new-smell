@@ -56,7 +56,6 @@ export interface PerfumeI {
 
 export interface UserPerfumeI {
   id: string
-  name: string
   userId: string
   perfumeId: string
   perfume: PerfumeI
@@ -67,8 +66,12 @@ export interface UserPerfumeI {
   placeOfPurchase?: string
   comments?: {
     id: string
+    userId: string
+    perfumeId: string
+    userPerfumeId: string
     comment: string
-    createdAt: string
     isPublic: boolean
+    createdAt: Date | string
+    updatedAt: Date | string
   }[]
 }
