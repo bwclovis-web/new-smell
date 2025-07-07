@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next'
-import { type MetaFunction, useLoaderData } from 'react-router'
+import { type MetaFunction, NavLink, useLoaderData } from 'react-router'
 
 import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import { getAvailablePerfumesForDecanting } from '~/models/perfume.server'
+import { getUserDisplayName } from '~/utils/user'
 
 import banner from '../images/trading.webp'
 export const ROUTE_PATH = '/trading-post'
@@ -41,24 +42,27 @@ const TradingPostPage = () => {
             <li key={perfume.id} className="relative">
               <LinkCard data={perfume} type="perfume" />
               {/* Show available amounts from users */}
+
               <div className="mt-2 p-2 bg-green-50 rounded-md">
                 <p className="text-sm font-medium text-green-800 mb-1">
                   {t('tradingPost.availableFrom')}:
                 </p>
                 {perfume.userPerfume.map(userPerfume => (
-                  <div key={userPerfume.id} className="text-xs text-green-700">
-                    {userPerfume.user.name || userPerfume.user.email}:
+                  <NavLink to={`/trader/${userPerfume.userId}`} key={userPerfume.id} className="text-xs text-green-700">
+                    {getUserDisplayName(userPerfume.user)}:
                     {' '}
                     {userPerfume.available}
                     ml
-                  </div>
+                  </NavLink>
                 ))}
               </div>
+
             </li>
           ))}
         </ul>
-      )}
-    </section>
+      )
+      }
+    </section >
   )
 }
 

@@ -1,3 +1,5 @@
+import { getUserDisplayName } from '~/utils/user'
+
 interface WishListAvailabilityInfoI {
   userPerfumes: any[]
   availableAmount: number
@@ -17,7 +19,7 @@ const WishListAvailabilityInfo = ({
       <div key={userPerfume.id} className="flex justify-between items-center text-sm mb-1">
         <div>
           <span className="font-medium text-green-700 dark:text-green-300">
-            {userPerfume.user.name || userPerfume.user.email}
+            {getUserDisplayName(userPerfume.user)}
           </span>
           <span className="text-green-600 dark:text-green-400 ml-2">
             ({userPerfume.available}ml available)

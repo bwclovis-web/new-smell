@@ -7,10 +7,6 @@ export interface Comment {
   isPublic: boolean
 }
 
-export interface PerfumeWithComments extends UserPerfumeI {
-  comments?: Comment[]
-}
-
 export interface CommentsModalProps {
   perfume: UserPerfumeI
 
