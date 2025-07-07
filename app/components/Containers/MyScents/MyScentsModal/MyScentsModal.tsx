@@ -88,8 +88,6 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
                   selectData={perfumeTypes}
                   name="type"
                   label={t('myScents.modal.typeLabel')}
-                  // value={perfumeData.type}
-
                   selectId={""} />
                 <Input
                   inputType="number"

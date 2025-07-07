@@ -4,6 +4,7 @@ import { useFetcher, useNavigation } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import VooDooDetails from "~/components/Atoms/VooDooDetails/VooDooDetails"
+import { getPerfumeTypeLabel } from "~/data/SelectTypes"
 import type { UserPerfumeI } from "~/types"
 
 import DeStashForm from "../DeStashForm/DeStashForm"
@@ -49,6 +50,8 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
     formData.append('action', 'remove')
     fetcher.submit(formData, { method: 'post' })
   }
+
+  console.log('Rendering MyScentsListItem for:', getPerfumeTypeLabel(userPerfume.type))
 
   return (
     <li key={userPerfume.id} className="border rounded p-4 flex flex-col w-full bg-noir-dark text-noir-light mb-4 last-of-type:mb-0">
