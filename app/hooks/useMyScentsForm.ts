@@ -1,3 +1,5 @@
+//TODO refactor this file to use a more structured approach for managing form state
+
 import React from "react"
 import { useCallback, useEffect, useState } from "react"
 import { useSubmit } from "react-router"
@@ -9,15 +11,16 @@ function getInitialPerfumeState(initialPerfume?: UserPerfumeI) {
   return initialPerfume || null
 }
 
+// eslint-disable-next-line complexity
 const getInitialPerfumeData = (initialPerfume?: UserPerfumeI) => ({
   amount: initialPerfume?.amount || "",
   price: initialPerfume?.price || "",
-  placeOfPurchase: initialPerfume?.placeOfPurchase || ""
+  placeOfPurchase: initialPerfume?.placeOfPurchase || "",
+  type: initialPerfume?.type || ""
 })
 
 // Custom hook to manage perfume form state
 export function useMyScentsForm(initialPerfume?: UserPerfumeI) {
-  // Always declare all hooks at the top level in the same order
   const submit = useSubmit()
 
   // Initialize state with helper functions
@@ -29,7 +32,7 @@ export function useMyScentsForm(initialPerfume?: UserPerfumeI) {
   // Define callbacks
   const resetForm = useCallback(() => {
     setSelectedPerfume(null)
-    setPerfumeData({ amount: "", price: "", placeOfPurchase: "" })
+    setPerfumeData({ amount: "", price: "", placeOfPurchase: "", type: "" })
   }, [])
 
   const handleClick = useCallback((item: UserPerfumeI) => {
@@ -37,7 +40,8 @@ export function useMyScentsForm(initialPerfume?: UserPerfumeI) {
     setPerfumeData({
       amount: item.amount || "",
       price: item.price || "",
-      placeOfPurchase: item.placeOfPurchase || ""
+      placeOfPurchase: item.placeOfPurchase || "",
+      type: item.type || ""
     })
   }, [])
 
@@ -77,7 +81,8 @@ export function useMyScentsForm(initialPerfume?: UserPerfumeI) {
       setPerfumeData({
         amount: initialPerfume.amount || "",
         price: initialPerfume.price || "",
-        placeOfPurchase: initialPerfume.placeOfPurchase || ""
+        placeOfPurchase: initialPerfume.placeOfPurchase || "",
+        type: initialPerfume.type || ""
       })
     }
   }, [initialPerfume])

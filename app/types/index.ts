@@ -63,5 +63,6 @@ export interface UserPerfumeI {
   amount: string
   available: string
   price?: string
+  type?: string
   placeOfPurchase?: string
 }
