@@ -19,6 +19,7 @@ export default [
     route('api/houseSortLoader', 'routes/api/houseSortLoader.ts'),
     route('api/createTag', 'routes/api/createTag.ts'),
     route('api/wishlist', 'routes/api/wishlist.tsx'),
+    route('api/user-perfumes', 'routes/api/user-perfumes.tsx'),
     route('api/log-out', 'routes/api/logOut.ts'),
     route('api/more-perfumes', 'routes/api/more-perfumes.ts'),
 

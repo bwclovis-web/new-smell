@@ -1,13 +1,13 @@
-
 import { getFormProps, useForm } from "@conform-to/react"
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react"
+import { useContext, useRef } from "react"
 import { useTranslation } from "react-i18next"
-import { Form, useSubmit } from "react-router"
+import { Form } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import Input from "~/components/Atoms/Input/Input"
 import RangeSlider from "~/components/Atoms/RangeSlider/RangeSlider"
 import SearchBar from "~/components/Organisms/SearchBar/SearchBar"
+import { useMyScentsForm } from "~/hooks/useMyScentsForm"
 import SessionContext from "~/providers/sessionProvider"
 import type { UserPerfumeI } from "~/types"
 
@@ -15,90 +15,18 @@ interface MyScentsModalProps {
   perfume?: UserPerfumeI
 }
 
-// Custom hook to manage perfume form state
-function useMyScentsForm(initialPerfume?: UserPerfumeI) {
-  const [selectedPerfume, setSelectedPerfume] =
-    useState<UserPerfumeI | null>(initialPerfume || null)
-  const [perfumeData, setPerfumeData] = useState({
-    amount: "",
-    price: "",
-    placeOfPurchase: ""
-  })
-  const submit = useSubmit()
-
-  const resetForm = useCallback(() => {
-    setSelectedPerfume(null)
-    setPerfumeData({ amount: "", price: "", placeOfPurchase: "" })
-  }, [])
-
-  const handleClick = useCallback((item: UserPerfumeI) => {
-    setSelectedPerfume(item)
-    setPerfumeData({
-      amount: item.amount || "",
-      price: item.price || "",
-      placeOfPurchase: item.placeOfPurchase || ""
-    })
-  }, [])
-
-  // Create form data
-  const createFormData = useCallback(() => {
-    if (!selectedPerfume) {
-      return null
-    }
-
-    const formData = new FormData()
-    formData.append("perfumeId", selectedPerfume.id)
-    formData.append("amount", perfumeData.amount)
-    formData.append("price", perfumeData.price)
-    formData.append("placeOfPurchase", perfumeData.placeOfPurchase)
-    formData.append("action", "add")
-
-    return formData
-  }, [selectedPerfume, perfumeData])
-
-  // Submit the form
-  const handleAddPerfume = useCallback((evt: React.FormEvent) => {
-    evt.preventDefault()
-
-    const formData = createFormData()
-    if (!formData) {
-      return
-    }
-
-    submit(formData, { method: "post", action: "/admin/my-scents" })
-    resetForm()
-  }, [createFormData, resetForm, submit])
-
-  // Update state when perfume changes
-  useEffect(() => {
-    if (initialPerfume) {
-      setSelectedPerfume(initialPerfume)
-      setPerfumeData({
-        amount: initialPerfume.amount || "",
-        price: (initialPerfume as any).price || "",
-        placeOfPurchase: (initialPerfume as any).placeOfPurchase || ""
-      })
-    }
-  }, [initialPerfume])
-
-  return {
-    selectedPerfume,
-    perfumeData,
-    setPerfumeData,
-    handleClick,
-    handleAddPerfume
-  }
-}
-
 const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
   const { modalData } = useContext(SessionContext)
   const { t } = useTranslation()
+
   const priceInputRef = useRef<HTMLInputElement>(null)
   const placeInputRef = useRef<HTMLInputElement>(null)
+
   const [form] = useForm({
     id: "perfume-form"
   })
 
+  // Custom hook calls last
   const {
     selectedPerfume,
     perfumeData,
@@ -107,18 +35,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
     handleAddPerfume
   } = useMyScentsForm(perfume)
 
-  useEffect(() => {
-    if (perfume) {
-      setPerfumeData({
-        amount: perfume.amount || "",
-        price: perfume.price || "",
-        placeOfPurchase: perfume.placeOfPurchase || ""
-      })
-    }
-  }, [perfume])
-
-
-
+  // Render UI
   return (
     <div className="w-full">
       <div className="flex  items-center justify-between mb-4">
@@ -199,8 +116,6 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
                 />
               </div>
             </div>
-
-
           </fieldset>
           <Button type="submit" className="mt-6">{t('myScents.modal.submitButton')}</Button>
         </Form>

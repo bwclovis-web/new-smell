@@ -2,8 +2,14 @@ import { parseCookies, verifyJwt } from '@api/utils'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
 
 import { getAllPerfumes } from '~/models/perfume.server'
-import { getUserById } from '~/models/user.server'
-import { addUserPerfume, getUserPerfumes, removeUserPerfume } from '~/models/user.server'
+import {
+  addPerfumeComment,
+  addUserPerfume,
+  getUserById,
+  getUserPerfumes,
+  removeUserPerfume,
+  updateAvailableAmount
+} from '~/models/user.server'
 
 // Type definitions
 type AuthResult = {
@@ -11,6 +17,16 @@ type AuthResult = {
   error?: string;
   status?: number;
   user?: any;
+}
+
+type PerfumeActionParams = {
+  user: any;
+  perfumeId: string;
+  actionType: string;
+  amount?: string;
+  comment?: string;
+  isPublic?: boolean;
+  userPerfumeId?: string;
 }
 
 // Helper functions for authentication
@@ -63,18 +79,41 @@ const authenticateUser = async (request: Request): Promise<AuthResult> => {
 }
 
 // Helper function to process the user perfume action
-const processUserPerfumeAction = async (
-  user: any,
-  perfumeId: string,
-  actionType: string,
-  amount?: string
-) => {
+const processUserPerfumeAction = async (params: PerfumeActionParams) => {
+  const {
+    user,
+    perfumeId,
+    actionType,
+    amount,
+    comment,
+    isPublic,
+    userPerfumeId
+  } = params
+
   if (actionType === 'add') {
-    return await addUserPerfume(user.id, perfumeId, amount)
+    return await addUserPerfume({
+      userId: user.id,
+      perfumeId,
+      amount
+    })
   }
 
   if (actionType === 'remove') {
     return await removeUserPerfume(user.id, perfumeId)
+  }
+
+  if (actionType === 'decant') {
+    return await updateAvailableAmount(user.id, perfumeId, amount || '0')
+  }
+
+  if (actionType === 'add-comment' && comment && userPerfumeId) {
+    return await addPerfumeComment({
+      userId: user.id,
+      perfumeId,
+      comment,
+      isPublic,
+      userPerfumeId
+    })
   }
 
   return { success: false, error: 'Invalid action' }
@@ -143,23 +182,42 @@ const processFormData = async (request: Request) => {
   return {
     perfumeId: formData.get('perfumeId') as string,
     actionType: formData.get('action') as string,
-    amount: formData.get('amount') as string | undefined
+    amount: formData.get('amount') as string | undefined,
+    comment: formData.get('comment') as string | undefined,
+    isPublic: formData.get('isPublic') === 'true',
+    userPerfumeId: formData.get('userPerfumeId') as string | undefined
   }
 }
 
 // Helper function to prepare perfume action
-const prepareAction = async (
-  authResult: AuthResult,
-  perfumeId: string,
-  actionType: string,
-  amount?: string
-) => {
-  const result = await processUserPerfumeAction(
-    authResult.user,
+const prepareAction = async (params: {
+  authResult: AuthResult;
+  perfumeId: string;
+  actionType: string;
+  amount?: string;
+  comment?: string;
+  isPublic?: boolean;
+  userPerfumeId?: string;
+}) => {
+  const {
+    authResult,
     perfumeId,
     actionType,
-    amount
-  )
+    amount,
+    comment,
+    isPublic,
+    userPerfumeId
+  } = params
+
+  const result = await processUserPerfumeAction({
+    user: authResult.user,
+    perfumeId,
+    actionType,
+    amount,
+    comment,
+    isPublic,
+    userPerfumeId
+  })
 
   return new Response(
     JSON.stringify(result),
@@ -169,7 +227,8 @@ const prepareAction = async (
 
 // Helper function to process action request
 const processActionRequest = async (request: Request) => {
-  const { perfumeId, actionType, amount } = await processFormData(request)
+  const formData = await processFormData(request)
+  const { perfumeId } = formData
 
   const validationError = validatePerfumeId(perfumeId)
   if (validationError) {
@@ -181,7 +240,10 @@ const processActionRequest = async (request: Request) => {
     return handleAuthError(authResult)
   }
 
-  return prepareAction(authResult, perfumeId, actionType, amount)
+  return prepareAction({
+    authResult,
+    ...formData
+  })
 }
 
 // Action function to add or remove user perfumes
