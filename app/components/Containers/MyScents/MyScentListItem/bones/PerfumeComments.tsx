@@ -6,13 +6,20 @@ import { Button } from "~/components/Atoms/Button/Button"
 import CheckBox from "~/components/Atoms/CheckBox/CheckBox"
 import Modal from "~/components/Organisms/Modal/Modal"
 import SessionContext from "~/providers/sessionProvider"
-import type { Comment, PerfumeWithComments } from "~/types/comments"
+import type { UserPerfumeI } from "~/types"
 import { createCommentFormData } from "~/utils/comment-utils"
 
 import CommentsModal from "../../CommentsModal/CommentsModal"
 
+interface Comment {
+  id: string
+  comment: string
+  createdAt: string
+  isPublic: boolean
+}
+
 interface PerfumeCommentsProps {
-  userPerfume: PerfumeWithComments
+  userPerfume: UserPerfumeI
 }
 
 const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {

@@ -192,5 +192,13 @@
     "heading": "Looking a bit lost",
     "subheading": "The page you are looking for does not exist.",
     "homeLink": "Head back home"
+  },
+  "traderProfile": {
+    "meta": {
+      "title": "Trader Profile - Good Scents",
+      "description": "Trader Profile of {{traderName}}"
+    },
+    "heading": "Trader {{traderName}}",
+    "subheading": "Trader Profile of {{traderName}}"
   }
 }

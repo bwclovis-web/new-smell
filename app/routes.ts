@@ -7,6 +7,7 @@ export default [
     route('perfume-house/:houseId', 'routes/perfume-house.tsx'),
 
     route('all-perfumes', 'routes/all-perfumes.tsx'),
+    route('trader/:id', 'routes/trader-profile.tsx'),
     route('trading-post', 'routes/trading-post.tsx'),
     route('perfume/:id', 'routes/perfume.tsx'),
     // API ROUTES

@@ -65,4 +65,10 @@ export interface UserPerfumeI {
   price?: string
   type?: string
   placeOfPurchase?: string
+  comments?: {
+    id: string
+    comment: string
+    createdAt: string
+    isPublic: boolean
+  }[]
 }

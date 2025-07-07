@@ -36,6 +36,50 @@ export async function getUserById(id: string) {
   return prisma.user.findUnique({ where: { id } })
 }
 
+export const getTraderById = async (id: string) => {
+  const trader = await prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      UserPerfume: {
+        select: {
+          id: true,
+          perfumeId: true,
+          available: true,
+          amount: true,
+          price: true,
+          placeOfPurchase: true,
+          comments: {
+            where: {
+              isPublic: true
+            },
+            select: {
+              id: true,
+              comment: true,
+              isPublic: true,
+              createdAt: true,
+              updatedAt: true,
+              user: {
+                select: {
+                  id: true,
+                  name: true
+                }
+              }
+            },
+            orderBy: {
+              createdAt: 'desc'
+            }
+          }
+        }
+      }
+    }
+  })
+  console.log('getTraderById called with id:', trader)
+  return trader
+}
+
 
 export const signInCustomer = async (data: FormData) => {
   const password = data.get('password') as string
