@@ -85,7 +85,7 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
 
       <VooDooDetails summary="View / Edit Details" className="text-start py-3 mt-3 border-t-noir-gold border-t" name="perfume-details">
         <GeneralDetails userPerfume={userPerfume} />
-        <VooDooDetails summary="Perfume Comments" className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded" name="inner-details">
+        <VooDooDetails summary="Perfume Comments" className="text-start text-noir-dark  py-3 mt-3 bg-noir-gold px-2 rounded" name="inner-details">
           <PerfumeComments userPerfume={userPerfume} />
         </VooDooDetails>
         <VooDooDetails summary="De-stash Perfume" className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded" name="inner-details">

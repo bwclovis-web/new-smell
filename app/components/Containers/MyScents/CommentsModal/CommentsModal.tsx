@@ -5,48 +5,76 @@ import { Form, useFetcher } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import SessionContext from "~/providers/sessionProvider"
-import type { UserPerfumeI } from "~/types"
+import type { CommentsModalProps } from "~/types/comments"
+import { createCommentFormData, createTemporaryComment } from "~/utils/comment-utils"
 
-interface CommentsModalProps {
-  perfume: UserPerfumeI
-}
-
-const CommentsModal = ({ perfume }: CommentsModalProps) => {
+const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
   const { t } = useTranslation()
   const { toggleModal, modalId } = useContext(SessionContext)
   const [isPublic, setIsPublic] = useState(false)
   const fetcher = useFetcher()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = async (evt: FormEvent<HTMLFormElement>) => {
-    evt.preventDefault()
-    setIsSubmitting(true)
-
-    const formData = new FormData(evt.currentTarget as HTMLFormElement)
-    formData.append('perfumeId', perfume.perfume.id)
-    formData.append('userPerfumeId', perfume.id)
-    formData.append('action', 'add-comment')
-    formData.append('isPublic', isPublic ? 'true' : 'false')
-
-    fetcher.submit(formData, {
-      method: 'post',
-      action: '/api/user-perfumes'
-    })
+  const handlePostSubmission = (commentText: string) => {
+    if (onCommentAdded) {
+      onCommentAdded(createTemporaryComment(commentText, isPublic, perfume.id))
+    }
 
     // Close the modal after submission
     setTimeout(() => {
-      // Create a button element to use as a trigger for toggling modal
       const buttonRef = { current: document.createElement('button') }
       toggleModal(buttonRef as any, modalId || 'add-scent')
       setIsSubmitting(false)
     }, 500)
   }
 
+  // Prepare form data for comment submission
+  const prepareCommentData = (form: HTMLFormElement) => {
+    const formData = new FormData(form)
+    const commentText = formData.get('comment') as string
+    const perfumeId = perfume.perfumeId || perfume.perfume?.id
+    const userPerfumeId = perfume.id
+
+    if (!perfumeId || !userPerfumeId) {
+      throw new Error('Missing required IDs for comment')
+    }
+
+    // Create and submit form data
+    return {
+      formData: createCommentFormData('add-comment', {
+        commentText,
+        perfumeId,
+        userPerfumeId,
+        isPublic
+      }),
+      commentText
+    }
+  }
+
+  const handleSubmit = async (evt: FormEvent<HTMLFormElement>) => {
+    evt.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      const form = evt.currentTarget as HTMLFormElement
+      const { formData: commentFormData, commentText } = prepareCommentData(form)
+
+      fetcher.submit(commentFormData, {
+        method: 'post',
+        action: '/api/user-perfumes'
+      })
+
+      handlePostSubmission(commentText)
+    } catch {
+      // Handle error silently
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <div className="p-4 bg-noir-light rounded-md">
       <h2 className="text-xl font-bold mb-2">{t('comments.title', 'Comments')}</h2>
       <p className="mb-4">{t('comments.description', 'This is where you can add your personal comments about the scents.')}</p>
-
       <Form method="post" className="space-y-4" onSubmit={handleSubmit}>
         <label htmlFor="comment" className="block text-sm font-medium text-noir-dark">
           {t('comments.addLabel', 'Add a comment:')}

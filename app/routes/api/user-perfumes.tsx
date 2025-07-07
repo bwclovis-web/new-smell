@@ -5,10 +5,12 @@ import { getAllPerfumes } from '~/models/perfume.server'
 import {
   addPerfumeComment,
   addUserPerfume,
+  deletePerfumeComment,
   getUserById,
   getUserPerfumes,
   removeUserPerfume,
-  updateAvailableAmount
+  updateAvailableAmount,
+  updatePerfumeComment
 } from '~/models/user.server'
 
 // Type definitions
@@ -27,6 +29,7 @@ type PerfumeActionParams = {
   comment?: string;
   isPublic?: boolean;
   userPerfumeId?: string;
+  commentId?: string;
 }
 
 // Helper functions for authentication
@@ -78,6 +81,77 @@ const authenticateUser = async (request: Request): Promise<AuthResult> => {
   return getUserFromValidation(validation)
 }
 
+// Helper functions for different action types
+const handleAddAction = async (
+  user: any,
+  perfumeId: string,
+  amount?: string
+) => addUserPerfume({
+  userId: user.id,
+  perfumeId,
+  amount
+})
+
+const handleRemoveAction = async (
+  user: any,
+  perfumeId: string
+) => removeUserPerfume(user.id, perfumeId)
+
+const handleDecantAction = async (
+  user: any,
+  perfumeId: string,
+  amount: string = '0'
+) => updateAvailableAmount(user.id, perfumeId, amount)
+
+const handleAddCommentAction = async (params: {
+  user: any
+  perfumeId: string
+  comment?: string
+  isPublic?: boolean
+  userPerfumeId?: string
+}) => {
+  const { user, perfumeId, comment, isPublic, userPerfumeId } = params
+
+  if (!comment || !userPerfumeId) {
+    return { success: false, error: 'Comment and userPerfumeId are required' }
+  }
+
+  return await addPerfumeComment({
+    userId: user.id,
+    perfumeId,
+    comment,
+    isPublic,
+    userPerfumeId
+  })
+}
+
+const handleToggleCommentVisibilityAction = async (
+  user: any,
+  commentId?: string,
+  isPublic?: boolean
+) => {
+  if (!commentId) {
+    return { success: false, error: 'Comment ID is required' }
+  }
+
+  return await updatePerfumeComment({
+    userId: user.id,
+    commentId,
+    isPublic
+  })
+}
+
+const handleDeleteCommentAction = async (
+  user: any,
+  commentId?: string
+) => {
+  if (!commentId) {
+    return { success: false, error: 'Comment ID is required' }
+  }
+
+  return await deletePerfumeComment(user.id, commentId)
+}
+
 // Helper function to process the user perfume action
 const processUserPerfumeAction = async (params: PerfumeActionParams) => {
   const {
@@ -87,36 +161,28 @@ const processUserPerfumeAction = async (params: PerfumeActionParams) => {
     amount,
     comment,
     isPublic,
-    userPerfumeId
+    userPerfumeId,
+    commentId
   } = params
 
-  if (actionType === 'add') {
-    return await addUserPerfume({
-      userId: user.id,
-      perfumeId,
-      amount
-    })
+  switch (actionType) {
+    case 'add':
+      return handleAddAction(user, perfumeId, amount)
+    case 'remove':
+      return handleRemoveAction(user, perfumeId)
+    case 'decant':
+      return handleDecantAction(user, perfumeId, amount)
+    case 'add-comment':
+      return handleAddCommentAction({
+        user, perfumeId, comment, isPublic, userPerfumeId
+      })
+    case 'toggle-comment-visibility':
+      return handleToggleCommentVisibilityAction(user, commentId, isPublic)
+    case 'delete-comment':
+      return handleDeleteCommentAction(user, commentId)
+    default:
+      return { success: false, error: 'Invalid action' }
   }
-
-  if (actionType === 'remove') {
-    return await removeUserPerfume(user.id, perfumeId)
-  }
-
-  if (actionType === 'decant') {
-    return await updateAvailableAmount(user.id, perfumeId, amount || '0')
-  }
-
-  if (actionType === 'add-comment' && comment && userPerfumeId) {
-    return await addPerfumeComment({
-      userId: user.id,
-      perfumeId,
-      comment,
-      isPublic,
-      userPerfumeId
-    })
-  }
-
-  return { success: false, error: 'Invalid action' }
 }
 
 // Helper function to handle successful authentication in loader
@@ -185,7 +251,8 @@ const processFormData = async (request: Request) => {
     amount: formData.get('amount') as string | undefined,
     comment: formData.get('comment') as string | undefined,
     isPublic: formData.get('isPublic') === 'true',
-    userPerfumeId: formData.get('userPerfumeId') as string | undefined
+    userPerfumeId: formData.get('userPerfumeId') as string | undefined,
+    commentId: formData.get('commentId') as string | undefined
   }
 }
 
@@ -198,6 +265,7 @@ const prepareAction = async (params: {
   comment?: string;
   isPublic?: boolean;
   userPerfumeId?: string;
+  commentId?: string;
 }) => {
   const {
     authResult,
@@ -206,7 +274,8 @@ const prepareAction = async (params: {
     amount,
     comment,
     isPublic,
-    userPerfumeId
+    userPerfumeId,
+    commentId
   } = params
 
   const result = await processUserPerfumeAction({
@@ -216,7 +285,8 @@ const prepareAction = async (params: {
     amount,
     comment,
     isPublic,
-    userPerfumeId
+    userPerfumeId,
+    commentId
   })
 
   return new Response(
