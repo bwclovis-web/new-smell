@@ -4,14 +4,16 @@ export const houseTypes = [
   { id: 'celebrity', name: 'celebrity', label: 'Celebrity' },
   { id: 'indie', name: 'indie', label: 'Indie' },
   { id: 'drugstore', name: 'drugstore', label: 'Drugstore' }
-
 ]
 
-export const notSureYet = [
-  { id: '6', name: 'artisanal', label: 'Artisanal' },
-  { id: '7', name: 'vintage', label: 'Vintage' },
-  { id: '8', name: 'limited-edition', label: 'Limited Edition' },
-  { id: '9', name: 'unisex', label: 'Unisex' },
-  { id: '10', name: 'unisex-woody', label: 'Unisex Woody' },
-  { id: '11', name: 'unisex-floral', label: 'Unisex Floral' }
+export const perfumeTypes = [
+  { id: 'eauDeParfum', name: 'eauDeParfum', label: 'Eau de Parfum' },
+  { id: 'eauDeToilette', name: 'eauDeToilette', label: 'Eau de Toilette' },
+  { id: 'eauDeCologne', name: 'eauDeCologne', label: 'Eau de Cologne' },
+  { id: 'parfum', name: 'parfum', label: 'Parfum' },
+  { id: 'cologne', name: 'cologne', label: 'Cologne' },
+  { id: 'extraitDeParfum', name: 'extraitDeParfum', label: 'Extrait de Parfum' },
+  { id: 'extraitOil', name: 'extraitOil', label: 'Extrait Oil' },
+  { id: 'waterMist', name: 'waterMist', label: 'Water Mist' },
+  { id: 'ipmSpray', name: 'ipmSpray', label: 'IPM Spray' }
 ]

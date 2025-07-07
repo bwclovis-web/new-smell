@@ -6,7 +6,9 @@ import { Form } from "react-router"
 import { Button } from "~/components/Atoms/Button/Button"
 import Input from "~/components/Atoms/Input/Input"
 import RangeSlider from "~/components/Atoms/RangeSlider/RangeSlider"
+import Select from "~/components/Atoms/Select/Select"
 import SearchBar from "~/components/Organisms/SearchBar/SearchBar"
+import { perfumeTypes } from "~/data/SelectTypes"
 import { useMyScentsForm } from "~/hooks/useMyScentsForm"
 import SessionContext from "~/providers/sessionProvider"
 import type { UserPerfumeI } from "~/types"
@@ -82,6 +84,13 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
                 />
               </div>
               <div className="w-1/2">
+                <Select
+                  selectData={perfumeTypes}
+                  name="type"
+                  label={t('myScents.modal.typeLabel')}
+                  // value={perfumeData.type}
+
+                  selectId={""} />
                 <Input
                   inputType="number"
                   name="price"

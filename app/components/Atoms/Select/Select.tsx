@@ -27,7 +27,7 @@ const Select: FC<SelectProps> = ({
     <select id={selectId} name={selectId} className="w-full mt-1 rounded-sm border border-gray-500 px-2 py-1 text-lg dark:text-noir-light">
       {selectData.map(item => (
         <option key={item.id} value={item.id} selected={item.id === defaultId} className="dark:bg-noir-dark">
-          {item.name}
+          {item.label}
         </option>
       ))}
     </select>

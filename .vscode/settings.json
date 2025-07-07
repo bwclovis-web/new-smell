@@ -14,7 +14,15 @@
   },
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
-  "cSpell.words": ["cuid", "gsap", "isbot", "languagedetector", "Pipeable"],
+  "cSpell.words": [
+    "cuid",
+    "extrait",
+    "gsap",
+    "isbot",
+    "languagedetector",
+    "Parfum",
+    "Pipeable"
+  ],
   "github.copilot.chat.codeGeneration.instructions": [
     { "file": "../copilot-instructions/js-styles.md" },
     { "file": "../copilot-instructions/css-styles.md" },
