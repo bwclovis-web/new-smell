@@ -1,11 +1,12 @@
 import { useTranslation } from "react-i18next"
 import { type LoaderFunctionArgs, useLoaderData } from "react-router"
 
+import ItemsToTrade from "~/components/Containers/TraderProfile/ItemsToTrade/ItemsToTrade"
 import TitleBanner from "~/components/Organisms/TitleBanner/TitleBanner"
 import { getTraderById } from "~/models/user.server"
 import { getTraderDisplayName } from "~/utils/user"
 
-import banner from '../images/traderBoth.webp'
+import banner from '../images/traderf.webp'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!params.id) {
@@ -23,13 +24,11 @@ const TraderProfilePage = () => {
   const { t } = useTranslation()
   const traderName = getTraderDisplayName(trader)
 
-  console.log('Trader Profile Page', trader)
-
   return (
     <section>
       <TitleBanner
-        imagePos="object-top"
         image={banner}
+        flipImage={true}
         heading={t("traderProfile.heading", { traderName })}
         subheading={t("traderProfile.subheading", { traderName })}
       />
@@ -38,14 +37,12 @@ const TraderProfilePage = () => {
           <h2>Items Available</h2>
           {trader.UserPerfume.length > 0 ? (
             <ul>
-              {trader.UserPerfume.map((userPerfume: any) => {
-                console.log('User Perfume', userPerfume)
-                return (
-                  <li key={userPerfume.id} className="mb-2">
-                    {/* <span className="font-semibold">{userPerfume.perfume.name}</span> - {userPerfume.available}ml */}
-                  </li>
-                )
-              })}
+              {trader.UserPerfume.map((userPerfume: any) => (
+                <ItemsToTrade
+                  key={userPerfume.id}
+                  userPerfume={userPerfume}
+                />
+              ))}
             </ul>
           ) : (
             <p>No items available for trading.</p>

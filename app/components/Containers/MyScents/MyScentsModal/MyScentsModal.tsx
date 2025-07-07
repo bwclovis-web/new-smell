@@ -37,7 +37,6 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
     handleAddPerfume
   } = useMyScentsForm(perfume)
 
-  // Render UI
   return (
     <div className="w-full">
       <div className="flex  items-center justify-between mb-4">

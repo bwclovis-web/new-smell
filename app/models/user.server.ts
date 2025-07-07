@@ -44,6 +44,11 @@ export const getTraderById = async (id: string) => {
       email: true,
       name: true,
       UserPerfume: {
+        where: {
+          available: {
+            not: '0'
+          }
+        },
         select: {
           id: true,
           perfumeId: true,
@@ -51,6 +56,18 @@ export const getTraderById = async (id: string) => {
           amount: true,
           price: true,
           placeOfPurchase: true,
+          perfume: {
+            select: {
+              id: true,
+              name: true,
+              perfumeHouse: {
+                select: {
+                  id: true,
+                  name: true
+                }
+              }
+            }
+          },
           comments: {
             where: {
               isPublic: true
@@ -76,7 +93,6 @@ export const getTraderById = async (id: string) => {
       }
     }
   })
-  console.log('getTraderById called with id:', trader)
   return trader
 }
 

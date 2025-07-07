@@ -7,16 +7,10 @@ import CheckBox from "~/components/Atoms/CheckBox/CheckBox"
 import Modal from "~/components/Organisms/Modal/Modal"
 import SessionContext from "~/providers/sessionProvider"
 import type { UserPerfumeI } from "~/types"
+import type { Comment } from "~/types/comments"
 import { createCommentFormData } from "~/utils/comment-utils"
 
 import CommentsModal from "../../CommentsModal/CommentsModal"
-
-interface Comment {
-  id: string
-  comment: string
-  createdAt: string
-  isPublic: boolean
-}
 
 interface PerfumeCommentsProps {
   userPerfume: UserPerfumeI
@@ -81,6 +75,7 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
   return (
     <div className="mt-4 bg-noir-light text-noir-dark p-4 shadow-lg border border-noir-dark/90 dark:border-noir-light/90 rounded-md">
       <h3 className="text-xl  text-noir-dark">Comments</h3>
+
       {comments.length > 0 ? (
         <ul className="list-disc pl-5">
           {comments.map(comment => (
