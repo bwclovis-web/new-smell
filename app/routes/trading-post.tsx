@@ -47,26 +47,21 @@ const TradingPostPage = () => {
                   {t('tradingPost.availableFrom')}:
                 </p>
                 <ul>
-                  {perfume.userPerfume.map(userPerfume => {
-                    console.log('userPerfume', userPerfume)
-                    return (
-                      <li key={userPerfume.id} className="mb-1">
-                        <NavLink to={`/trader/${userPerfume.userId}`} key={userPerfume.id} className="text-sm font-semibold text-noir-blue/80 hover:text-noir-blue underline">
-                          {getUserDisplayName(userPerfume.user)}:
-                        </NavLink>
+                  {perfume.userPerfume.map(userPerfume => (
+                    <li key={userPerfume.id} className="mb-1">
+                      <NavLink to={`/trader/${userPerfume.userId}`} key={userPerfume.id} className="text-sm font-semibold text-noir-blue/80 hover:text-noir-blue underline">
+                        {getUserDisplayName(userPerfume.user)}:
+                      </NavLink>
 
-                        <span className="text-sm ml-2 text-noir-gray">
-                          {getPerfumeTypeLabel(userPerfume.type) || 'Unknown Type'}
-                          {' '}
-                          {userPerfume.available} ml
-                        </span>
-                      </li>
-                    )
-                  })}
+                      <span className="text-sm ml-2 text-noir-gray">
+                        {getPerfumeTypeLabel(userPerfume.type) || 'Unknown Type'}
+                        {' '}
+                        {userPerfume.available} ml
+                      </span>
+                    </li>
+                  ))}
                 </ul>
-
               </div>
-
             </li>
           ))}
         </ul>

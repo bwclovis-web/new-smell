@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { MdDeleteForever } from "react-icons/md"
 import { useFetcher } from "react-router"
 
@@ -9,14 +10,15 @@ import SessionContext from "~/providers/sessionProvider"
 import type { UserPerfumeI } from "~/types"
 import type { Comment } from "~/types/comments"
 import { createCommentFormData } from "~/utils/comment-utils"
+import { FORM_DATA_ACTIONS } from "~/utils/constants"
 
 import CommentsModal from "../../CommentsModal/CommentsModal"
 
 interface PerfumeCommentsProps {
   userPerfume: UserPerfumeI
 }
-
 const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
+  const { t } = useTranslation()
   const { modalOpen, toggleModal, modalId } = useContext(SessionContext)
   const fetcher = useFetcher()
   const [comments, setComments] = useState<Comment[]>([])
@@ -38,12 +40,15 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
       return
     }
 
-    const formData = createCommentFormData('toggle-comment-visibility', {
-      commentId,
-      perfumeId,
-      userPerfumeId,
-      isPublic: !currentIsPublic
-    })
+    const formData = createCommentFormData(
+      FORM_DATA_ACTIONS.TOGGLE_COMMENT_VISIBILITY,
+      {
+        commentId,
+        perfumeId,
+        userPerfumeId,
+        isPublic: !currentIsPublic
+      }
+    )
 
     fetcher.submit(formData, {
       method: 'post',
@@ -60,7 +65,7 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
       return
     }
 
-    const formData = createCommentFormData('delete-comment', {
+    const formData = createCommentFormData(FORM_DATA_ACTIONS.DELETE_COMMENT, {
       commentId,
       perfumeId,
       userPerfumeId
@@ -73,13 +78,17 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
   }
 
   return (
-    <div className="mt-4 bg-noir-light text-noir-dark p-4 shadow-lg border border-noir-dark/90 dark:border-noir-light/90 rounded-md">
-      <h3 className="text-xl  text-noir-dark">Comments</h3>
-
+    <div className="mt1 p-4  rounded-md">
+      <h3 className="text-lg font-semibold">
+        {t('myScents.comments.heading')}
+      </h3>
+      <p className="text-sm  mb-2">
+        {t('myScents.comments.subheading', { perfumeName: userPerfume.perfume.name })}
+      </p>
       {comments.length > 0 ? (
         <ul className="list-disc pl-5">
           {comments.map(comment => (
-            <li key={comment.id} className="mb-1 border-b border-noir-dark/20 dark:border-noir-light/90 pb-2">
+            <li key={comment.id} className="mb-1 border-b border-noir-dark/20 dark:border-noir-light/90 pb-2 bg-noir-light">
               <p className="text-base">
                 {comment.comment}
               </p>
@@ -105,7 +114,7 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-noir-dark mb-2">No comments yet.</p>
+        <p className="text-sm text-noir-dark mb-2">{t('myScents.comments.noComments')}</p>
       )}
       <Button
         className="mt-2"
@@ -113,7 +122,7 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
           const buttonRef = { current: document.createElement('button') }
           toggleModal(buttonRef as any, uniqueModalId, 'create')
         }}
-        size={'sm'}> Create Comment</Button>
+        size={'sm'}>{t('myScents.comments.addCommentButton')}</Button>
 
       {modalOpen && modalId === uniqueModalId && (
         <Modal>

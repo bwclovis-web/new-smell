@@ -37,7 +37,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   return { userPerfumes }
 }
-
 interface AddParams {
   userId: string
   perfumeId: string
@@ -109,13 +108,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 const MyScentsPage = () => {
   const { userPerfumes: initialUserPerfumes } = useLoaderData() as LoaderData
   const [userPerfumes, setUserPerfumes] = useState(initialUserPerfumes)
-
   const { t } = useTranslation()
 
   useEffect(() => {
     setUserPerfumes(initialUserPerfumes)
   }, [initialUserPerfumes])
-
 
   return (
     <section>
@@ -123,12 +120,12 @@ const MyScentsPage = () => {
         <AddToCollectionModal className="mt-4" />
       </TitleBanner>
       <div className='bg-noir-gold text-center p-6 rounded-md border-4 border-noir-light/90 dark:border-noir-dark shadow-lg'>
-        <h2 className="text-2xl font-semibold mb-2">My Collection</h2>
+        <h2 className="text-2xl font-semibold mb-2">{t('myScents.collection.heading')}</h2>
         {userPerfumes.length === 0
           ? (
             <div className="italic text-noir-light dark:text-noir-dark">
-              <h3>{t('myScents.empty.heading')}</h3>
-              <p>{t('myScents.empty.subheading')}</p>
+              <h3>{t('myScents.collection.empty.heading')}</h3>
+              <p>{t('myScents.collection.empty.subheading')}</p>
             </div>
           )
           : (

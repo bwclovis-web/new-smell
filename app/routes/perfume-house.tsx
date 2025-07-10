@@ -109,7 +109,7 @@ const HouseDetailPage = () => {
         )}
       </header>
 
-      <div className="flex gap-20 flex-col md:flex-row items-start justify-between">
+      <div className="flex gap-20 flex-col lg:flex-row items-start justify-between">
         <div className="md:w-1/2 noir-outline rounded-b-lg relative">
           <img
             src={perfumeHouse.image ?? undefined}

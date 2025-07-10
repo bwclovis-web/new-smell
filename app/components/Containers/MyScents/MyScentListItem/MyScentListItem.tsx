@@ -1,4 +1,5 @@
 import { type Dispatch, type SetStateAction } from "react"
+import { useTranslation } from "react-i18next"
 import { MdDeleteForever } from "react-icons/md"
 import { useFetcher, useNavigation } from "react-router"
 
@@ -18,6 +19,7 @@ interface MySentListItemI {
 
 const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
   MySentListItemI) => {
+  const { t } = useTranslation()
   const fetcher = useFetcher()
   const navigation = useNavigation()
   const isSubmitting = navigation.state === 'submitting'
@@ -59,15 +61,15 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
       <div className="flex justify-between items-center mb-2 gap-6">
         <div className='flex gap-8'>
           <h3 className="font-medium flex flex-col justify-start items-start max-w-[40ch] min-w-[40ch] text-left">
-            <span className='text-xl'>Name:</span>
+            <span className='text-xl'>{t('myScents.listItem.name')}</span>
             <span className='text-2xl'>{userPerfume.perfume.name}</span>
           </h3>
           <p className='flex flex-col items-start justify-start'>
-            <span className='text-lg'>Total Amount:</span>
+            <span className='text-lg'>{t('myScents.listItem.total')}</span>
             <span className='text-xl'>{userPerfume.amount} ml</span>
           </p>
           <p className='flex flex-col items-start justify-start'>
-            <span className='text-lg'>DeStashed:</span>
+            <span className='text-lg'>{t('myScents.listItem.destashed')}</span>
             <span className='text-xl'>{userPerfume.available || '0'} ml</span>
           </p>
         </div>
@@ -81,9 +83,9 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
           >
             <span className="text-white/90 font-bold text-sm">
               {
-                isSubmitting ?
-                  "Removing..." :
-                  "Remove Perfume"
+                isSubmitting
+                  ? t('myScents.listItem.removing')
+                  : t('myScents.listItem.removeButton')
               }
             </span>
             <MdDeleteForever size={40} fill="white" />
@@ -91,12 +93,12 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
         </div>
       </div>
 
-      <VooDooDetails summary="View / Edit Details" className="text-start pt-3 mt-3 border-t-noir-gold border-t" name="perfume-details">
+      <VooDooDetails summary={t('myScents.listItem.viewDetails')} className="text-start pt-3 mt-3 border-t-noir-gold border-t" name="perfume-details">
         <GeneralDetails userPerfume={userPerfume} />
-        <VooDooDetails summary="Perfume Comments" className="text-start text-noir-dark  py-3 mt-3 bg-noir-gold px-2 rounded" name="inner-details">
+        <VooDooDetails summary={t('myScents.listItem.viewComments')} className="text-start text-noir-dark  py-3 mt-3 bg-noir-gold px-2 rounded" name="inner-details">
           <PerfumeComments userPerfume={userPerfume} />
         </VooDooDetails>
-        <VooDooDetails summary="De-stash Perfume" className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded" name="inner-details">
+        <VooDooDetails summary={t('myScents.listItem.setDestashed')} className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded" name="inner-details">
           <DeStashForm
             handleDecantConfirm={handleDecantConfirm}
             userPerfume={userPerfume}
