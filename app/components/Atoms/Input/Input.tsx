@@ -13,6 +13,7 @@ interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
   inputId?: string
   label?: string
   placeholder?: string
+  shading?: boolean
   inputRef: RefObject<HTMLInputElement | null>
   action?: FieldMetadata<unknown>
   actionData?: {
@@ -30,6 +31,7 @@ const Input: FC<InputProps> = ({
   action,
   label,
   placeholder,
+  shading,
   ...props
 }) => {
   const inputProps = action
@@ -54,7 +56,7 @@ const Input: FC<InputProps> = ({
         defaultValue={defaultValue ? defaultValue : ''}
         aria-invalid={actionData?.errors?.action ? true : undefined}
         aria-describedby={`${inputId}-error`}
-        className={styleMerge(inputVariants({ className }))}
+        className={styleMerge(inputVariants({ shading }))}
         {...inputProps}
       />
       {action?.errors && (

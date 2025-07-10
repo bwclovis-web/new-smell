@@ -1,41 +1,29 @@
 {
-  "auth": {
-    "heading": "Bienvenido de Vuelta",
-    "subheading": "Inicia sesión en tu cuenta aquí. Si no tienes una,",
-    "createAccount": "Haz clic aquí para crear"
-  },
-  "navigation": {
-    "logo": " Good Scents",
-    "login": "Iniciar Sesión",
-    "loggingIn": "Iniciando sesión...",
-    "houses": "Casas de Perfume",
-    "perfumes": "Perfumes",
-    "available": "Puesto de Intercambio",
-    "admin": "Administrador"
-  },
-  "home": {
-    "meta": {
-      "title": "Good Scents - Base de Datos de Perfumes",
-      "description": "Explora una base de datos completa de perfumes y sus casas."
-    },
-    "radio": {
-      "houses": "Casas de Perfume",
-      "perfumes": "Perfumes"
-    },
-    "heading": "Good Scents",
-    "description": "Una base de datos completa de perfumes y sus casas.",
-    "subheading": "Buscar por:"
-  },
   "allHouses": {
     "meta": {
-      "title": "Todas las Casas de Perfume - Good Scents",
-      "description": "Explora todas las casas de perfume disponibles en nuestra base de datos."
+      "title": "Todas las Casas de Perfumes - Good Scents",
+      "description": "Explora todas las casas de perfumes disponibles en nuestra base de datos."
     },
-    "heading": "Todas las Casas de Perfume",
-    "subheading": "Explora todas las casas de perfume disponibles en nuestra base de datos.",
-    "button": {
-      "byType": "Ordenar por tipo",
-      "byCreated": "Ordenar por fecha de creación"
+    "heading": "Todas las Casas de Perfumes",
+    "subheading": "Explora todas las casas de perfumes disponibles en nuestra base de datos.",
+    "filters": {
+      "houseType": "Filtrar por Tipo:",
+      "sortBy": "Ordenar por:"
+    },
+    "houseTypes": {
+      "all": "Todos",
+      "niche": "Nicho",
+      "designer": "Diseñador",
+      "indie": "Independiente",
+      "celebrity": "Celebridad",
+      "drugstore": "Farmacia"
+    },
+    "sortOptions": {
+      "created-desc": "Más Reciente Primero",
+      "created-asc": "Más Antiguo Primero",
+      "name-asc": "Nombre A-Z",
+      "name-desc": "Nombre Z-A",
+      "type-asc": "Tipo"
     }
   },
   "allPerfumes": {
@@ -46,21 +34,165 @@
     "heading": "Todos los Perfumes",
     "subheading": "Descubre todos los perfumes disponibles en nuestra base de datos."
   },
-  "availablePerfumes": {
-    "meta": {
-      "title": "Perfumes Disponibles para Decantación - Good Scents",
-      "description": "Explora perfumes disponibles para decantación de miembros de la comunidad."
+  "auth": {
+    "heading": "Bienvenido de Vuelta",
+    "subheading": "Inicia sesión en tu cuenta aquí. Si no tienes una,",
+    "createAccount": "Haz clic aquí para crear"
+  },
+  "components": {
+    "modal": {
+      "close": "Cerrar Modal"
     },
-    "heading": "Perfumes Disponibles",
-    "subheading": "Estos perfumes están disponibles para decantación de miembros de la comunidad.",
-    "count": "perfumes disponibles",
-    "empty": "No hay perfumes disponibles para decantación en este momento.",
-    "availableFrom": "Disponible de"
+    "search": {
+      "placeholder": "Buscar perfumes o casas...",
+      "button": "Buscar"
+    },
+    "filter": {
+      "heading": "Filtrar",
+      "clearFilters": "Limpiar Filtros",
+      "applyFilters": "Aplicar Filtros"
+    },
+    "sort": {
+      "heading": "Ordenar Por",
+      "options": {
+        "nameAsc": "Nombre A-Z",
+        "nameDesc": "Nombre Z-A",
+        "createdAsc": "Más Antiguo Primero",
+        "createdDesc": "Más Reciente Primero"
+      }
+    }
+  },
+  "createHouse": {
+    "meta": {
+      "title": "Crear Casa de Perfumes - Good Scents",
+      "description": "Crea una nueva casa de perfumes en nuestra base de datos."
+    },
+    "heading": "Crear Casa de Perfumes",
+    "subheading": "Completa los detalles para crear una nueva casa de perfumes.",
+    "name": "Nombre",
+    "namePlaceholder": "Ingresa el nombre de la casa de perfumes",
+    "type": "Tipo",
+    "typePlaceholder": "Selecciona el tipo de casa de perfumes",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Ingresa una breve descripción de la casa de perfumes",
+    "submitButton": "Crear Casa"
+  },
+  "createPerfume": {
+    "meta": {
+      "title": "Crear Perfume - Good Scents",
+      "description": "Crea un nuevo perfume en nuestra base de datos."
+    },
+    "heading": "Crear Perfume",
+    "subheading": "Completa los detalles para crear un nuevo perfume.",
+    "name": "Nombre",
+    "namePlaceholder": "Ingresa el nombre del perfume",
+    "house": "Casa de Perfumes",
+    "housePlaceholder": "Selecciona la casa de perfumes",
+    "notes": "Notas",
+    "notesPlaceholder": "Ingresa las notas del perfume",
+    "submitButton": "Crear Perfume"
+  },
+  "forms": {
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "loading": "Cargando...",
+    "error": "Ocurrió un error. Por favor intenta de nuevo.",
+    "email": "Correo Electrónico",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Ingresa tu contraseña"
+  },
+  "home": {
+    "meta": {
+      "title": "Good Scents - Base de Datos de Perfumes",
+      "description": "Explora una base de datos completa de perfumes y sus casas."
+    },
+    "radio": {
+      "houses": "Casas de Perfumes",
+      "perfumes": "Perfumes"
+    },
+    "heading": "Good Scents",
+    "description": "Una base de datos completa de perfumes y sus casas.",
+    "subheading": "Buscar por:"
+  },
+  "myScents": {
+    "meta": {
+      "title": "Mis Fragancias - Good Scents",
+      "description": "Gestiona tu colección personal de perfumes."
+    },
+    "collection": {
+      "heading": "Mi Colección de Perfumes",
+      "itemsCount": "{{count}} artículos en tu colección",
+      "empty": {
+        "heading": "Tu colección está vacía.",
+        "subheading": "¡Comienza a agregar perfumes a tu colección!"
+      }
+    },
+    "listItem": {
+      "destashed": "Destash",
+      "name": "Nombre",
+      "pointOfPurchase": "Punto de Compra",
+      "price": "Precio",
+      "removeButton": "Eliminar de la Colección",
+      "removing": "Eliminando de la Colección...",
+      "total": "Total",
+      "type": "Tipo",
+      "viewDetails": "Ver / Editar detalles",
+      "viewComments": "Ver Mis Comentarios",
+      "setDestashed": "Destash Perfume"
+    },
+    "heading": "Mis Fragancias",
+    "subheading": "Gestiona tu colección personal de perfumes.",
+    "itemsInCollection": "artículos en la Colección",
+    "addButton": "Agregar a la Colección",
+    "removeButton": "Eliminar de la Colección",
+    "modal": {
+      "typeLabel": "Tipo de Perfume",
+      "title": "Mis Fragancias",
+      "selectedPerfume": "Perfume Seleccionado",
+      "description": "Aquí es donde puedes gestionar tus fragancias favoritas.",
+      "createButton": "Crear Nuevo Perfume",
+      "amountLabel": "Cantidad",
+      "amountPlaceholder": "Ingresa la cantidad de perfume",
+      "submitButton": "Agregar a la Colección",
+      "placeOfPurchasePlaceholder": "Ingresa el lugar de compra",
+      "placeOfPurchase": "Lugar de Compra",
+      "priceLabel": "Precio de Compra",
+      "pricePlaceholder": "Ingresa el precio del perfume"
+    },
+    "comments": {
+      "heading": "Comentarios",
+      "subheading": "Comparte tus pensamientos sobre {{perfumeName}}.",
+      "addCommentPlaceholder": "Agregar un comentario...",
+      "addCommentButton": "Agregar Comentario",
+      "noComments": "Aún no hay comentarios. ¡Sé el primero en compartir tus pensamientos!"
+    }
+  },
+  "navigation": {
+    "logo": " Good Scents",
+    "login": "Iniciar Sesión",
+    "loggingIn": "Iniciando sesión...",
+    "houses": "Casas de Perfumes",
+    "perfumes": "Perfumes",
+    "available": "Puesto de Intercambio",
+    "admin": "Perfil"
+  },
+  "profile": {
+    "heading": "¡Bienvenido de Vuelta!",
+    "subheading": "Gestiona tu perfil y configuración.",
+    "userInfo": "Información del Usuario",
+    "email": "Correo Electrónico",
+    "emailPlaceholder": "Ingresa tu correo electrónico",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "role": "Rol",
+    "name": "Nombre",
+    "notFound": "Perfil de usuario no encontrado"
   },
   "singleHouse": {
     "meta": {
-      "title": "Detalles de la Casa de Perfume - Good Scents",
-      "description": "Explora los detalles de una casa de perfume específica."
+      "title": "Detalles de la Casa de Perfumes - Good Scents",
+      "description": "Explora los detalles de una casa de perfumes específica."
     }
   },
   "singlePerfume": {
@@ -72,93 +204,47 @@
     "notes": {
       "opening": "Notas de Apertura",
       "mid": "Notas Medias",
-      "end": "Notas de Fondo"
+      "end": "Notas de Fondo",
+      "general": "Notas Generales"
     }
   },
-  "createHouse": {
+  "tradingPost": {
     "meta": {
-      "title": "Crear Casa de Perfume - Good Scents",
-      "description": "Crea una nueva casa de perfume en nuestra base de datos."
+      "title": "Perfumes Disponibles para Intercambio - Good Scents",
+      "description": "Explora perfumes disponibles para intercambio de miembros de nuestra comunidad."
     },
-    "heading": "Crear Casa de Perfume",
-    "subheading": "Completa los detalles para crear una nueva casa de perfume.",
-    "name": "Nombre",
-    "namePlaceholder": "Introduce el nombre de la casa de perfume",
-    "type": "Tipo",
-    "typePlaceholder": "Selecciona el tipo de casa de perfume",
-    "description": "Descripción",
-    "descriptionPlaceholder": "Introduce una breve descripción de la casa de perfume",
-    "submitButton": "Crear Casa"
+    "heading": "Perfumes para intercambio",
+    "subheading": "Estos perfumes están disponibles para intercambio de miembros de la comunidad.",
+    "count": "perfumes disponibles",
+    "empty": "No hay perfumes disponibles para intercambio actualmente.",
+    "availableFrom": "Disponible de"
   },
-  "createPerfume": {
+  "traderProfile": {
     "meta": {
-      "title": "Crear Perfume - Good Scents",
-      "description": "Crea un nuevo perfume en nuestra base de datos."
+      "title": "Perfil del Intercambiador - Good Scents",
+      "description": "Perfil del Intercambiador de {{traderName}}"
     },
-    "heading": "Crear Perfume",
-    "subheading": "Completa los detalles para crear un nuevo perfume.",
-    "name": "Nombre",
-    "namePlaceholder": "Introduce el nombre del perfume",
-    "house": "Casa de Perfume",
-    "housePlaceholder": "Selecciona la casa de perfume",
-    "notes": "Notas",
-    "notesPlaceholder": "Introduce las notas del perfume",
-    "submitButton": "Crear Perfume"
+    "heading": "Intercambiador {{traderName}}",
+    "subheading": "Perfil del Intercambiador de {{traderName}}"
   },
   "wishlist": {
     "meta": {
-      "title": "Lista de deseos - Good Scents",
-      "description": "Administra tu lista de deseos de perfumes."
+      "title": "Lista de Deseos - Good Scents",
+      "description": "Gestiona tu lista de deseos de perfumes."
     },
     "empty": {
       "heading": "Tu lista de deseos está vacía.",
       "subheading": "¡Comienza a agregar perfumes a tu lista de deseos!"
     },
     "heading": "Mi Lista de Deseos",
-    "subheading": "Administra tu lista de deseos de perfumes.",
+    "subheading": "Gestiona tu lista de deseos de perfumes.",
     "itemsInWishlist": "artículos en la Lista de Deseos",
     "addButton": "Agregar a la Lista de Deseos",
-    "removeButton": "Quitar de la Lista de Deseos"
-  },
-  "myScents": {
-    "meta": {
-      "title": "Mis Fragancias - Good Scents",
-      "description": "Administra tu colección personal de perfumes."
-    },
-    "empty": {
-      "heading": "Tu colección está vacía.",
-      "subheading": "¡Comienza a agregar perfumes a tu colección!"
-    },
-    "heading": "Mis Fragancias",
-    "subheading": "Administra tu colección personal de perfumes.",
-    "itemsInCollection": "artículos en la Colección",
-    "addButton": "Agregar a la Colección",
-    "removeButton": "Quitar de la Colección"
-  },
-  "profile": {
-    "title": "Perfil de Usuario",
-    "userInfo": "Información del Usuario",
-    "email": "Correo electrónico",
-    "emailPlaceholder": "Introduce tu correo electrónico",
-    "password": "Contraseña",
-    "passwordPlaceholder": "Introduce tu contraseña",
-    "role": "Rol",
-    "name": "Nombre",
-    "notFound": "Perfil de usuario no encontrado"
-  },
-  "forms": {
-    "submit": "Enviar",
-    "cancel": "Cancelar",
-    "loading": "Cargando...",
-    "error": "Ocurrió un error. Por favor, inténtalo de nuevo.",
-    "email": "Correo electrónico",
-    "emailPlaceholder": "Introduce tu correo electrónico",
-    "password": "Contraseña",
-    "passwordPlaceholder": "Introduce tu contraseña"
+    "removeButton": "Eliminar de la Lista de Deseos"
   },
   "404": {
-    "heading": "Parece que estás un poco perdido",
-    "subheading": "La página que estás buscando no existe.",
+    "heading": "Parece que estás perdido",
+    "subheading": "La página que buscas no existe.",
     "homeLink": "Volver al inicio"
   }
 }

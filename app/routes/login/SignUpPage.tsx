@@ -36,11 +36,11 @@ const RegisterPage = () => {
   })
 
   return (
-    <section className="flex flex-col items-center bg-noir-light/40 backdrop-blur-sm rounded-md shadow-md p-4 w-full max-w-md mx-auto border border-noir-dark shadow-noir-dark">
+    <section className="flex flex-col items-center  p-4 w-full max-w-md mx-auto ">
       <Form {...getFormProps(signupForm)} method="POST" className="max-w-md mx-auto p-4 rounded w-full flex flex-col gap-6 ">
-        <Input inputId={t('forms.email')} inputType="email" action={email} inputRef={inputRef} />
-        <Input inputId={t('forms.password')} inputType="password" action={password} inputRef={inputRef} />
-        <Input inputId={t('forms.passwordMatch')} inputType="password" action={confirmPassword} inputRef={inputRef} />
+        <Input shading={true} inputId={t('forms.email')} inputType="email" action={email} inputRef={inputRef} />
+        <Input shading={true} inputId={t('forms.password')} inputType="password" action={password} inputRef={inputRef} />
+        <Input shading={true} inputId={t('forms.passwordMatch')} inputType="password" action={confirmPassword} inputRef={inputRef} />
         {actionData?.error && (
           <p className="text-red-600 mb-2">{actionData.error}</p>
         )}

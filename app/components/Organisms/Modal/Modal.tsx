@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 
 import { type VariantProps } from 'class-variance-authority'
 import {
@@ -11,6 +12,7 @@ import {
   useState
 } from 'react'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import { IoMdCloseCircle } from "react-icons/io"
 
 import SessionContext from '~/providers/sessionProvider'
@@ -32,6 +34,7 @@ const Modal: FC<ModalProps>
     const [windowPosition, setWindowPosition] = useState(0)
     const modalRef = useRef<HTMLDivElement>(null)
     const { toggleModal, triggerId } = useContext(SessionContext)
+    const { t } = useTranslation()
     const handleClick = () => {
       setAnimate(false)
       setTimeout(() => {
@@ -94,7 +97,7 @@ const Modal: FC<ModalProps>
             type="button"
             className="absolute top-5 right-5 max-w-max cursor-pointer"
             onClick={() => handleClick()}
-            aria-label='Close modal'
+            aria-label={t('components.modal.close') || 'Close modal'}
           >
             <IoMdCloseCircle size={34} color="currentColor" className='fill-noir-gold' />
           </button>

@@ -1,31 +1,4 @@
 {
-  "auth": {
-    "heading": "Welcome Back",
-    "subheading": "Log in to your account here. If you do not have one,",
-    "createAccount": "Click here to create"
-  },
-  "navigation": {
-    "logo": " Good Scents",
-    "login": "Log In",
-    "loggingIn": "Logging in...",
-    "houses": "Perfume Houses",
-    "perfumes": "Perfumes",
-    "available": "Trading Post",
-    "admin": "Admin"
-  },
-  "home": {
-    "meta": {
-      "title": "Good Scents - Perfume Database",
-      "description": "Explore a comprehensive database of perfumes and their houses."
-    },
-    "radio": {
-      "houses": "Perfume Houses",
-      "perfumes": "Perfumes"
-    },
-    "heading": "Good Scents",
-    "description": "A comprehensive database of perfumes and their houses.",
-    "subheading": "Search by:"
-  },
   "allHouses": {
     "meta": {
       "title": "All Perfume Houses - Good Scents",
@@ -61,34 +34,32 @@
     "heading": "All Perfumes",
     "subheading": "Discover all the perfumes available in our database."
   },
-  "tradingPost": {
-    "meta": {
-      "title": "Available Perfumes for Trade - Good Scents",
-      "description": "Browse perfumes available for trade from our community members."
-    },
-    "heading": "Perfumes for trade",
-    "subheading": "These perfumes are available for trade from community members.",
-    "count": "perfumes available",
-    "empty": "No perfumes are currently available for trade.",
-    "availableFrom": "Available from"
+  "auth": {
+    "heading": "Welcome Back",
+    "subheading": "Log in to your account here. If you do not have one,",
+    "createAccount": "Click here to create"
   },
-  "singleHouse": {
-    "meta": {
-      "title": "Perfume House Details - Good Scents",
-      "description": "Explore the details of a specific perfume house."
-    }
-  },
-  "singlePerfume": {
-    "meta": {
-      "title": "Perfume Details - Good Scents",
-      "description": "Discover the details of a specific perfume."
+  "components": {
+    "modal": {
+      "close": "Close Modal"
     },
-    "subheading": "By: ",
-    "notes": {
-      "opening": "Opening Notes",
-      "mid": "Mid Notes",
-      "end": "End Notes",
-      "general": "General Notes"
+    "search": {
+      "placeholder": "Search for perfumes or houses...",
+      "button": "Search"
+    },
+    "filter": {
+      "heading": "Filter",
+      "clearFilters": "Clear Filters",
+      "applyFilters": "Apply Filters"
+    },
+    "sort": {
+      "heading": "Sort By",
+      "options": {
+        "nameAsc": "Name A-Z",
+        "nameDesc": "Name Z-A",
+        "createdAsc": "Oldest First",
+        "createdDesc": "Newest First"
+      }
     }
   },
   "createHouse": {
@@ -121,14 +92,54 @@
     "notesPlaceholder": "Enter the notes of the perfume",
     "submitButton": "Create Perfume"
   },
+  "forms": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "error": "An error occurred. Please try again.",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password"
+  },
+  "home": {
+    "meta": {
+      "title": "Good Scents - Perfume Database",
+      "description": "Explore a comprehensive database of perfumes and their houses."
+    },
+    "radio": {
+      "houses": "Perfume Houses",
+      "perfumes": "Perfumes"
+    },
+    "heading": "Good Scents",
+    "description": "A comprehensive database of perfumes and their houses.",
+    "subheading": "Search by:"
+  },
   "myScents": {
     "meta": {
       "title": "My Scents - Good Scents",
       "description": "Manage your personal collection of perfumes."
     },
-    "empty": {
-      "heading": "Your collection is empty.",
-      "subheading": "Start adding perfumes to your collection!"
+    "collection": {
+      "heading": "My Perfume Collection",
+      "itemsCount": "{{count}} items in your collection",
+      "empty": {
+        "heading": "Your collection is empty.",
+        "subheading": "Start adding perfumes to your collection!"
+      }
+    },
+    "listItem": {
+      "destashed": "DeStashed",
+      "name": "Name",
+      "pointOfPurchase": "Point of Purchase",
+      "price": "Price",
+      "removeButton": "Remove from Collection",
+      "removing": "Removing from Collection...",
+      "total": "Total",
+      "type": "Type",
+      "viewDetails": "View / Edit details",
+      "viewComments": "View My Comments",
+      "setDestashed": "De-stash Perfume"
     },
     "heading": "My Scents",
     "subheading": "Manage your personal collection of perfumes.",
@@ -148,7 +159,23 @@
       "placeOfPurchase": "Place of Purchase",
       "priceLabel": "Purchase Price",
       "pricePlaceholder": "Enter the price of the perfume"
+    },
+    "comments": {
+      "heading": "Comments",
+      "subheading": "Share your thoughts about {{perfumeName}}.",
+      "addCommentPlaceholder": "Add a comment...",
+      "addCommentButton": "Add Comment",
+      "noComments": "No comments yet. Be the first to share your thoughts!"
     }
+  },
+  "navigation": {
+    "logo": " Good Scents",
+    "login": "Log In",
+    "loggingIn": "Logging in...",
+    "houses": "Perfume Houses",
+    "perfumes": "Perfumes",
+    "available": "Trading Post",
+    "admin": "Profile"
   },
   "profile": {
     "heading": "Welcome Back!",
@@ -162,15 +189,43 @@
     "name": "Name",
     "notFound": "User profile not found"
   },
-  "forms": {
-    "submit": "Submit",
-    "cancel": "Cancel",
-    "loading": "Loading...",
-    "error": "An error occurred. Please try again.",
-    "email": "Email",
-    "emailPlaceholder": "Enter your email",
-    "password": "Password",
-    "passwordPlaceholder": "Enter your password"
+  "singleHouse": {
+    "meta": {
+      "title": "Perfume House Details - Good Scents",
+      "description": "Explore the details of a specific perfume house."
+    }
+  },
+  "singlePerfume": {
+    "meta": {
+      "title": "Perfume Details - Good Scents",
+      "description": "Discover the details of a specific perfume."
+    },
+    "subheading": "By: ",
+    "notes": {
+      "opening": "Opening Notes",
+      "mid": "Mid Notes",
+      "end": "End Notes",
+      "general": "General Notes"
+    }
+  },
+  "tradingPost": {
+    "meta": {
+      "title": "Available Perfumes for Trade - Good Scents",
+      "description": "Browse perfumes available for trade from our community members."
+    },
+    "heading": "Perfumes for trade",
+    "subheading": "These perfumes are available for trade from community members.",
+    "count": "perfumes available",
+    "empty": "No perfumes are currently available for trade.",
+    "availableFrom": "Available from"
+  },
+  "traderProfile": {
+    "meta": {
+      "title": "Trader Profile - Good Scents",
+      "description": "Trader Profile of {{traderName}}"
+    },
+    "heading": "Trader {{traderName}}",
+    "subheading": "Trader Profile of {{traderName}}"
   },
   "wishlist": {
     "meta": {
@@ -192,13 +247,5 @@
     "heading": "Looking a bit lost",
     "subheading": "The page you are looking for does not exist.",
     "homeLink": "Head back home"
-  },
-  "traderProfile": {
-    "meta": {
-      "title": "Trader Profile - Good Scents",
-      "description": "Trader Profile of {{traderName}}"
-    },
-    "heading": "Trader {{traderName}}",
-    "subheading": "Trader Profile of {{traderName}}"
   }
 }
