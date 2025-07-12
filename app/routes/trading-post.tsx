@@ -38,7 +38,7 @@ const TradingPostPage = () => {
           <h2 className="text-noir-light font-black text-3xl text-shadow-md text-shadow-noir-dark">{t('tradingPost.empty')}</h2>
         </div>
       ) : (
-        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 inner-container">
           {availablePerfumes?.map(perfume => (
             <li key={perfume.id} className="relative">
               <LinkCard data={perfume} type="perfume" />

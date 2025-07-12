@@ -5,6 +5,7 @@ import { type MetaFunction } from 'react-router'
 
 import RadioSelect from '~/components/Atoms/RadioSelect/RadioSelect'
 import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
+import SearchBar from '~/components/Organisms/SearchBar/SearchBar'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import { useHousesWithLocalCache } from '~/hooks/useHousesWithLocalCache'
 import { getAllHouses } from '~/models/house.server'
@@ -82,23 +83,29 @@ const HouseFiltersSection = ({
   onHouseTypeChange: any
   onSortChange: any
 }) => (
-  <div className="space-y-6 inner-container flex flex-col md:flex-row md:justify-between md:items-center border border-noir-gold">
-    <div>
-      <h3 className="text-lg font-medium mb-2">{t('allHouses.filters.houseType')}</h3>
-      <RadioSelect
-        data={houseTypeOptions}
-        handleRadioChange={onHouseTypeChange}
-        className="flex-wrap"
-      />
+  <div className="space-y-6 inner-container py-4 flex flex-col md:flex-row md:justify-between md:items-center border border-noir-gold">
+    <div className='w-1/4 mb-0'>
+      <SearchBar searchType={'perfume-house'} />
     </div>
 
-    <div>
-      <h3 className="text-lg font-medium mb-2">{t('allHouses.filters.sortBy')}</h3>
-      <RadioSelect
-        data={sortOptions}
-        handleRadioChange={onSortChange}
-        className="flex-wrap"
-      />
+    <div className='flex flex-col md:flex-row gap-4 w-full md:w-3/4 justify-end items-end md:items-center'>
+      <div>
+        <h3 className="text-lg font-medium mb-2">{t('allHouses.filters.houseType')}</h3>
+        <RadioSelect
+          data={houseTypeOptions}
+          handleRadioChange={onHouseTypeChange}
+          className="flex-wrap"
+        />
+      </div>
+
+      <div>
+        <h3 className="text-lg font-medium mb-2">{t('allHouses.filters.sortBy')}</h3>
+        <RadioSelect
+          data={sortOptions}
+          handleRadioChange={onSortChange}
+          className="flex-wrap"
+        />
+      </div>
     </div>
   </div>
 )
