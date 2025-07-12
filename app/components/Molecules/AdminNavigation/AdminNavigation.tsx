@@ -22,6 +22,7 @@ const AdminNavigation: FC<AdminNavigationProps> = ({ className, user }) => (
           <NavLink
             viewTransition
             to={item.path}
+            suppressHydrationWarning
             className={({ isActive }) => styleMerge(
               'text-noir-light hover:text-noir-dark transition-colors duration-200 hover:bg-noir-light p-1 rounded-sm',
               isActive ? 'text-noir-light  bg-noir-gold/80 border-2 border-noir-gold' : ''
@@ -36,6 +37,7 @@ const AdminNavigation: FC<AdminNavigationProps> = ({ className, user }) => (
           <NavLink
             viewTransition
             to={item.path}
+            suppressHydrationWarning
             className={({ isActive }) => styleMerge(
               'text-noir-light hover:text-noir-dark transition-colors duration-200 hover:bg-noir-light p-1 rounded-sm',
               isActive ? 'text-noir-light  bg-noir-gold/80 border-2 border-noir-gold' : ''

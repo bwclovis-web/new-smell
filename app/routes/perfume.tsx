@@ -67,7 +67,7 @@ const PerfumePage = () => {
 
   return (
     <section className="relative z-10">
-      <header className="flex items-center justify-start mb-10 relative py-40 ">
+      <header className="flex items-center bg-noir-dark/60 justify-start mb-10 relative py-40 ">
         <img
           src={perfume.image || ''}
           alt={perfume.name}
