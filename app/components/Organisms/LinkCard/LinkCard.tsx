@@ -23,13 +23,13 @@ const LinkCard = ({ data, type }) => {
           </p>
         )}
       </div>
-      <div className="relative w-140 h-140 min-w-1/2 rounded-lg ">
+      <div className="relative w-100 h-100 min-w-1/2 rounded-lg ">
         <img
           src={data.image}
           alt={data.name}
           className="w-full h-full object-cover mask-radial-at-center mask-radial-from-10% mask-radial-to-75%
-          transition-all duration-500 ease-in-out scale-110
-          filter grayscale-100 group-hover:grayscale-0 group-hover:scale-90 group-hover:mask-radial-from-30% group-hover:mask-radial-to-100%"
+          transition-all duration-500 ease-in-out scale-120
+          filter grayscale-100 group-hover:grayscale-0 group-hover:scale-100 group-hover:mask-radial-from-30% group-hover:mask-radial-to-100%"
           style={{
             viewTransitionName: `perfume-image-${data.id}`,
             contain: 'layout style paint'

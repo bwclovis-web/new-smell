@@ -80,7 +80,7 @@ const PerfumePage = () => {
             contain: 'layout style paint'
           }}
         />
-        <div className='relative z-10 w-full max-w-max px-8 backdrop-blur-sm bg-noir-dark/20 rounded-lg py-4 text-noir-light text-shadow-md text-shadow-noir-dark'>
+        <div className='relative z-10  px-8 backdrop-blur-sm bg-noir-dark/20 rounded-lg py-4 text-noir-light text-shadow-md text-shadow-noir-dark'>
           <h1>{perfume.name}</h1>
           <p className='text-lg tracking-wide mt-2'>
             {t('singlePerfume.subheading')}
@@ -95,7 +95,7 @@ const PerfumePage = () => {
         </div>
       </header>
 
-      <div className="flex flex-col md:flex-row gap-20">
+      <div className="flex flex-col md:flex-row gap-20 inner-container">
         <div className="md:w-1/3 noir-outline rounded-b-lg">
           <div className="p-6">
             <p className='mb-3'>{perfume.description}</p>
