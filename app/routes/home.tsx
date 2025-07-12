@@ -76,7 +76,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-noir-black/85 md:mask-radial-from-25% mask-radial-to-44%"></div>
       <section className='text-noir-gold relative z-10 flex flex-col items-center gap-4'>
         <div className='text-shadow-lg/90 text-shadow-noir-black text-center'>
-          <h1 className="text-center hero-title">
+          <h1 className="hero-title">
             {t('home.heading')}
           </h1>
           <p className="subtitle opacity-0">{t('home.subheading')}</p>
@@ -91,7 +91,7 @@ export default function Home() {
             defaultId={searchType}
             ariaLabel="Select search type"
           />
-          <SearchBar searchType={searchType} className="mt-2 md:mt-8 " />
+          <SearchBar searchType={searchType} className="mt-2 md:mt-8" />
         </div>
       </section>
     </div>

@@ -9,26 +9,34 @@ const LinkCard = ({ data, type }) => {
     <NavLink
       viewTransition
       to={`${url}/${data.name}`}
-      className="p-4 flex justify-between items-center gap-4 noir-outline relative"
+      className="p-4 flex flex-col overflow-hidden justify-between items-center relative group
+      border-4 border-double border-noir-gold h-full transition-all duration-300 ease-in-out
+      before:content-[''] before:absolute before:w-3 before:h-3 before:border-2 before:border-noir-gold before:top-0 before:left-0 before:border-r-0 before:border-b-0
+      after:content-[''] after:absolute after:w-3 after:h-3 after:border-2 after:border-noir-gold after:bottom-0 after:right-0 after:border-l-0 after:border-t-0"
     >
-      <img
-        src={data.image}
-        alt={data.name}
-        className="w-58 h-50 object-cover mb-2 min-w-1/2 rounded-lg dark:brightness-85"
-        style={{
-          viewTransitionName: `perfume-image-${data.id}`,
-          contain: 'layout style paint'
-        }}
-      />
-      <div className="w-1/2">
-        <h2 className="text-2xl font-semibold text-wrap break-words text-noir-dark dark:text-noir-white">{data.name}</h2>
-        <p className="text-sm text-noir-black max-w-[175ch] text-ellipsis overflow-hidden line-clamp-4 dark:text-noir-light">{data.description}</p>
+      <div className='text-center'>
+        <h2 className="text-noir-gold font-semibold text-wrap break-words">{data.name}</h2>
+        {data?.perfumeHouse?.name && <p className='text-md font-semibold text-noir-gold'>{data.perfumeHouse.name}</p>}
         {data.type && (
           <p className="text-sm absolute bottom-2 right-2 bg-noir-gold dark:bg-noir-gold/80 border rounded-sm text-noir-black px-2 py-1 capitalize font-bold border-noir-dark">
             {data.type}
           </p>
         )}
       </div>
+      <div className="relative w-140 h-140 min-w-1/2 rounded-lg ">
+        <img
+          src={data.image}
+          alt={data.name}
+          className="w-full h-full object-cover mask-radial-at-center mask-radial-from-10% mask-radial-to-75%
+          transition-all duration-500 ease-in-out scale-110
+          filter grayscale-100 group-hover:grayscale-0 group-hover:scale-90 group-hover:mask-radial-from-30% group-hover:mask-radial-to-100%"
+          style={{
+            viewTransitionName: `perfume-image-${data.id}`,
+            contain: 'layout style paint'
+          }}
+        />
+      </div>
+
     </NavLink>
   )
 }

@@ -40,7 +40,7 @@ h1 {
 }
 
 h2 {
-  font-size: clamp(1.5rem, 2vw + 1rem, 1.8rem);
+  font-size: clamp(1.5rem, 2vw + 1rem, 2.3rem);
   font-weight: 800;
   line-height: 1.2;
 }
@@ -76,4 +76,9 @@ h2 {
 
 .details-title {
   view-transition-name: image-title;
+}
+
+.mask-radial-gradient {
+  mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
 }
