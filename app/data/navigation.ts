@@ -1,5 +1,6 @@
 import { ROUTE_PATH as CREATE_HOUSE } from '~/routes/admin/CreatePerfumeHousePage'
 import { ROUTE_PATH as CREATE_PERFUME } from '~/routes/admin/CreatePerfumePage'
+import { ROUTE_PATH as DATA_QUALITY } from '~/routes/admin/data-quality'
 import { ROUTE_PATH as MY_SCENTS } from '~/routes/admin/MyScents'
 import { ROUTE_PATH as WISHLIST } from '~/routes/admin/WishlistPage'
 import { ROUTE_PATH as ALL_HOUSES } from '~/routes/all-houses'
@@ -37,6 +38,11 @@ export const adminNavigation = [
     id: '2',
     label: 'create perfume',
     path: CREATE_PERFUME
+  },
+  {
+    id: '3',
+    label: 'data quality',
+    path: DATA_QUALITY
   }
 ]
 

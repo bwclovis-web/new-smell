@@ -6,3 +6,7 @@
 /build/
 /scraper/
 .vercel
+
+# Temporary files
+/temp/
+/temp_missing_*.json

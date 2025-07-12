@@ -23,6 +23,7 @@ export default [
     route('api/user-perfumes', 'routes/api/user-perfumes.tsx'),
     route('api/log-out', 'routes/api/logOut.ts'),
     route('api/more-perfumes', 'routes/api/more-perfumes.ts'),
+    route('api/data-quality', 'routes/api/data-quality.tsx'),
 
     layout('routes/admin/AdminLayout.tsx', [
       route('admin/', 'routes/admin/adminIndex.tsx'),
@@ -32,7 +33,8 @@ export default [
       route('admin/perfume-house/:houseId/edit', 'routes/admin/EditPerfumeHousePage.tsx'),
       route('admin/profile', 'routes/admin/profilePage.tsx'),
       route('admin/wishlist', 'routes/admin/WishlistPage.tsx'),
-      route('admin/my-scents', 'routes/admin/MyScents.tsx')
+      route('admin/my-scents', 'routes/admin/MyScents.tsx'),
+      route('admin/data-quality', 'routes/admin/data-quality.tsx')
     ]),
 
     layout('routes/login/LoginLayout.tsx', [

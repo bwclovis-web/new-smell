@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Import Sage Goddess Perfumes",
+      "type": "shell",
+      "command": "node perfume_import.js csv/perfumes_sagegoddess.csv",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Generate Data Quality Reports",
+      "type": "shell",
+      "command": "node scripts/generate_data_quality_reports.js",
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}
