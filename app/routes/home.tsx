@@ -43,21 +43,22 @@ export default function Home() {
         duration: 1.2,
         ease: "power2.out"
       })
-      gsap.to(".subtitle", {
-        opacity: 1,
-        duration: 1.8,
-        delay: 1,
-        ease: "power2.out",
-        onComplete: () => {
-          gsap.to(".subtitle", {
-            opacity: 0.85,
-            repeat: -1,
-            yoyo: true,
-            duration: 2.5,
-            ease: "sine.inOut"
-          })
+      gsap.fromTo(
+        ".subtitle",
+        {
+          opacity: 0,
+          filter: "blur(6px)",
+          y: 20
+        },
+        {
+          opacity: 1,
+          filter: "blur(0px)",
+          y: 0,
+          duration: 2,
+          delay: 1.2,
+          ease: "power3.out"
         }
-      })
+      )
     },
     { scope: container }
   )
@@ -72,12 +73,14 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-8 items-center justify-center min-h-screen px-4 relative bg-noir-gold/50" ref={container}>
       <img src={banner} alt="" className="hero-image absolute object-cover w-full h-full filter grayscale-[100%] contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-multiply" />
-      <div className="absolute inset-0 bg-noir-black/75 mask-radial-from-25% mask-radial-to-44%"></div>
+      <div className="absolute inset-0 bg-noir-black/85 md:mask-radial-from-25% mask-radial-to-44%"></div>
       <section className='text-noir-gold relative z-10 flex flex-col items-center gap-4'>
-        <h1 className="text-center hero-title">
-          {t('home.heading')}
-        </h1>
-        <p className="subtitle mb-4 pb-2 opacity-0">{t('home.subheading')}</p>
+        <div className='text-shadow-lg/90 text-shadow-noir-black text-center'>
+          <h1 className="text-center hero-title">
+            {t('home.heading')}
+          </h1>
+          <p className="subtitle opacity-0">{t('home.subheading')}</p>
+        </div>
         <div className='flex items-baseline justify-start w-full max-w-4xl mt-6'>
           <Select
             size="expanded"
@@ -88,7 +91,7 @@ export default function Home() {
             defaultId={searchType}
             ariaLabel="Select search type"
           />
-          <SearchBar searchType={searchType} className="mt-8" />
+          <SearchBar searchType={searchType} className="mt-2 md:mt-8 " />
         </div>
       </section>
     </div>

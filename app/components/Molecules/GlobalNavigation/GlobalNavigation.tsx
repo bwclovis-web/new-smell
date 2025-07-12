@@ -32,57 +32,59 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
   const logoText = ready && isClientReady ? t('navigation.logo') : ' Shadow and Sillage'
 
   return (
-    <nav className="flex fixed justify-between z-30 w-full h-auto bg-noir-dark" data-cy="GlobalNavigation">
-      <NavLink to="/" className="text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400">
-        {logoText}
-      </NavLink>
-      <ul className="flex gap-4 items-center justify-center tracking-wide">
-        {mainNavigation.map(item => (
-          <li key={item.id}>
-            <NavLink
-              viewTransition
-              to={item.path}
-              className={({ isActive }) => styleMerge(
-                'text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400',
-                isActive && isClientReady && 'text-noir-light bg-noir-black/30 rounded-full border-noir-light/90',
-              )}
-            >
-              {ready && isClientReady ? t('navigation.' + item.key) : item.label}
-            </NavLink>
-          </li>
-        ))}
-        {user && (
-          <li>
-            <NavLink
-              viewTransition
-              to={ADMIN_PATH}
-              className={({ isActive }) => styleMerge(
-                'text-noir-dark hover:text-noir-light dark:text-noir-light/70 dark:hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400',
-                isActive && isClientReady && 'text-noir-light bg-noir-black/30 rounded-full border-noir-light/90',
-              )}
-            >
-              {ready && isClientReady ? t('navigation.admin') : 'Admin'}
-            </NavLink>
-          </li>
-        )}
-        <li>
-          {!user
-            ? (
+    <header className='fixed z-30  w-full h-auto bg-noir-dark/60 backdrop-blur-md'>
+      <nav className="flex justify-between inner-container py-5" data-cy="GlobalNavigation">
+        <NavLink to="/" className="text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400">
+          {logoText}
+        </NavLink>
+        <ul className="flex gap-4 items-center tracking-wide max-w-max">
+          {mainNavigation.map(item => (
+            <li key={item.id}>
               <NavLink
                 viewTransition
-                to={SIGN_IN}
+                to={item.path}
                 className={({ isActive }) => styleMerge(
-                  'text-noir-dark hover:text-noir-light dark:text-noir-light/70 dark:hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400 flex',
+                  'text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400',
                   isActive && isClientReady && 'text-noir-light bg-noir-black/30 rounded-full border-noir-light/90',
                 )}
               >
-                <FaUser size={24} title="Sign In" />
+                {ready && isClientReady ? t('navigation.' + item.key) : item.label}
               </NavLink>
-            )
-            : <LogoutButton />}
-        </li>
-      </ul>
-    </nav>
+            </li>
+          ))}
+          {user && (
+            <li>
+              <NavLink
+                viewTransition
+                to={ADMIN_PATH}
+                className={({ isActive }) => styleMerge(
+                  'text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400',
+                  isActive && isClientReady && 'text-noir-light bg-noir-gold rounded-full border-noir-light/90',
+                )}
+              >
+                {ready && isClientReady ? t('navigation.admin') : 'Admin'}
+              </NavLink>
+            </li>
+          )}
+          <li>
+            {!user
+              ? (
+                <NavLink
+                  viewTransition
+                  to={SIGN_IN}
+                  className={({ isActive }) => styleMerge(
+                    'text-noir-gold hover:text-noir-light dark:text-noir-light/70 dark:hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400 flex',
+                    isActive && isClientReady && 'text-noir-light bg-noir-black/30 rounded-full border-noir-light/90',
+                  )}
+                >
+                  <FaUser size={24} title="Sign In" />
+                </NavLink>
+              )
+              : <LogoutButton />}
+          </li>
+        </ul>
+      </nav>
+    </header>
   )
 }
 
