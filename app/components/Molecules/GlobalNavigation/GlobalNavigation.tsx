@@ -29,11 +29,11 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
   useEffect(() => {
     setIsClientReady(true)
   }, [])
-  const logoText = ready && isClientReady ? t('navigation.logo') : ' Good Scents'
+  const logoText = ready && isClientReady ? t('navigation.logo') : ' Shadow and Sillage'
 
   return (
-    <nav className="flex sticky gap-3 bg-noir-gold/20 dark:bg-noir-dark/30 backdrop-blur-md z-50 top-0 w-full py-5 px-8 mt-6 rounded flex-col md:flex-row justify-items-center md:justify-items-start md:justify-between items-center" data-cy="GlobalNavigation">
-      <NavLink to="/" className="text-noir-dark hover:text-noir-light dark:text-noir-light/70 dark:hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400">
+    <nav className="flex fixed justify-between z-30 w-full h-auto bg-noir-dark" data-cy="GlobalNavigation">
+      <NavLink to="/" className="text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400">
         {logoText}
       </NavLink>
       <ul className="flex gap-4 items-center justify-center tracking-wide">
@@ -43,7 +43,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
               viewTransition
               to={item.path}
               className={({ isActive }) => styleMerge(
-                'text-noir-dark hover:text-noir-light dark:text-noir-light/70 dark:hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400',
+                'text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400',
                 isActive && isClientReady && 'text-noir-light bg-noir-black/30 rounded-full border-noir-light/90',
               )}
             >

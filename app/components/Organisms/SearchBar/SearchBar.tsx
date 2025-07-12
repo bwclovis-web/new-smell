@@ -46,36 +46,34 @@ const SearchBar: FC<SearchBarProps> =
     )
 
     return (
-      <>
-        <div className="relative">
-          <form className="flex gap-2 w-full md:w-1/2 lg:w-3/4 mx-auto" onSubmit={evt => evt.preventDefault()}>
-            <label htmlFor="search" className="sr-only">Search</label>
-            <input
-              type="text"
-              id="search"
-              autoComplete="off"
-              onChange={evt => setSearchValue(evt.target.value)}
-              value={searchValue}
-              placeholder={placeholder || `Search ${searchType}`}
-              onKeyUp={evt => {
-                handleKeyUp(evt)
-              }}
-              className={styleMerge(searchbarVariants({ className }))}
-            />
-          </form>
-          {results.length > 0 && (
-            <ul className="bg-white rounded-b-md absolute w-full md:w-1/2 lg:w-3/4 mx-auto left-0 right-0">
-              {results.map((item: any) => (
-                <li key={item.id} className="p-2 hover:bg-noir-gray hover:text-noir-light cursor-pointer last-of-type:rounded-b-md">
-                  {action ?
-                    <button className='block min-w-full text-left' onClick={() => handleAction(item)}>{item.name}</button> :
-                    <RenderLink item={item} />}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </>
+      <div className="relative w-full">
+        <form className="flex gap-2" onSubmit={evt => evt.preventDefault()}>
+          <label htmlFor="search" className="sr-only">Search</label>
+          <input
+            type="text"
+            id="search"
+            autoComplete="off"
+            onChange={evt => setSearchValue(evt.target.value)}
+            value={searchValue}
+            placeholder={placeholder || `Search ${searchType}`}
+            onKeyUp={evt => {
+              handleKeyUp(evt)
+            }}
+            className={styleMerge(searchbarVariants({ className }))}
+          />
+        </form>
+        {results.length > 0 && (
+          <ul className="bg-noir-dark rounded-b-md absolute w-full mx-auto left-0 right-0 border-l-8 border-b-8 border-r-8 border-noir-gold/80 border-double z-10">
+            {results.map((item: any) => (
+              <li key={item.id} className="p-2 hover:bg-noir-gold hover:text-noir-black font-semibold cursor-pointer last-of-type:rounded-b-md transition-colors">
+                {action ?
+                  <button className='block min-w-full text-left' onClick={() => handleAction(item)}>{item.name}</button> :
+                  <RenderLink item={item} />}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     )
   }
 export default SearchBar
