@@ -1,7 +1,7 @@
 {
   "allHouses": {
     "meta": {
-      "title": "Todas las Casas de Perfumes - Good Scents",
+      "title": "Todas las Casas de Perfumes - Shadow and Sillage",
       "description": "Explora todas las casas de perfumes disponibles en nuestra base de datos."
     },
     "heading": "Todas las Casas de Perfumes",
@@ -28,7 +28,7 @@
   },
   "allPerfumes": {
     "meta": {
-      "title": "Todos los Perfumes - Good Scents",
+      "title": "Todos los Perfumes - Shadow and Sillage",
       "description": "Descubre todos los perfumes disponibles en nuestra base de datos."
     },
     "heading": "Todos los Perfumes",
@@ -64,7 +64,7 @@
   },
   "createHouse": {
     "meta": {
-      "title": "Crear Casa de Perfumes - Good Scents",
+      "title": "Crear Casa de Perfumes - Shadow and Sillage",
       "description": "Crea una nueva casa de perfumes en nuestra base de datos."
     },
     "heading": "Crear Casa de Perfumes",
@@ -79,7 +79,7 @@
   },
   "createPerfume": {
     "meta": {
-      "title": "Crear Perfume - Good Scents",
+      "title": "Crear Perfume - Shadow and Sillage",
       "description": "Crea un nuevo perfume en nuestra base de datos."
     },
     "heading": "Crear Perfume",
@@ -104,20 +104,20 @@
   },
   "home": {
     "meta": {
-      "title": "Good Scents - Base de Datos de Perfumes",
+      "title": "Shadow and Sillage - Base de Datos de Perfumes",
       "description": "Explora una base de datos completa de perfumes y sus casas."
     },
     "radio": {
       "houses": "Casas de Perfumes",
       "perfumes": "Perfumes"
     },
-    "heading": "Good Scents",
+    "heading": "Shadow and Sillage",
     "description": "Una base de datos completa de perfumes y sus casas.",
     "subheading": "Buscar por:"
   },
   "myScents": {
     "meta": {
-      "title": "Mis Fragancias - Good Scents",
+      "title": "Mis Fragancias - Shadow and Sillage",
       "description": "Gestiona tu colección personal de perfumes."
     },
     "collection": {
@@ -169,7 +169,7 @@
     }
   },
   "navigation": {
-    "logo": " Good Scents",
+    "logo": " Shadow and Sillage",
     "login": "Iniciar Sesión",
     "loggingIn": "Iniciando sesión...",
     "houses": "Casas de Perfumes",
@@ -191,13 +191,13 @@
   },
   "singleHouse": {
     "meta": {
-      "title": "Detalles de la Casa de Perfumes - Good Scents",
+      "title": "Detalles de la Casa de Perfumes - Shadow and Sillage",
       "description": "Explora los detalles de una casa de perfumes específica."
     }
   },
   "singlePerfume": {
     "meta": {
-      "title": "Detalles del Perfume - Good Scents",
+      "title": "Detalles del Perfume - Shadow and Sillage",
       "description": "Descubre los detalles de un perfume específico."
     },
     "subheading": "Por: ",
@@ -210,7 +210,7 @@
   },
   "tradingPost": {
     "meta": {
-      "title": "Perfumes Disponibles para Intercambio - Good Scents",
+      "title": "Perfumes Disponibles para Intercambio - Shadow and Sillage",
       "description": "Explora perfumes disponibles para intercambio de miembros de nuestra comunidad."
     },
     "heading": "Perfumes para intercambio",
@@ -221,7 +221,7 @@
   },
   "traderProfile": {
     "meta": {
-      "title": "Perfil del Intercambiador - Good Scents",
+      "title": "Perfil del Intercambiador - Shadow and Sillage",
       "description": "Perfil del Intercambiador de {{traderName}}"
     },
     "heading": "Intercambiador {{traderName}}",
@@ -229,7 +229,7 @@
   },
   "wishlist": {
     "meta": {
-      "title": "Lista de Deseos - Good Scents",
+      "title": "Lista de Deseos - Shadow and Sillage",
       "description": "Gestiona tu lista de deseos de perfumes."
     },
     "empty": {

@@ -4,7 +4,7 @@ import { type ChangeEvent, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MetaFunction } from 'react-router'
 
-import RadioSelect from '~/components/Atoms/RadioSelect/RadioSelect'
+import Select from '~/components/Atoms/Select/Select'
 import SearchBar from '~/components/Organisms/SearchBar/SearchBar'
 import { getAllFeatures } from '~/models/feature.server'
 
@@ -26,14 +26,37 @@ export async function loader() {
 }
 gsap.registerPlugin(useGSAP)
 export default function Home() {
-  const [searchType, setSearchType] = useState<'perfume-house' | 'perfume'>('perfume-house')
+  const [searchType, setSearchType] = useState<'perfume-house' | 'perfume'>('perfume')
   const container = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
 
   useGSAP(
     () => {
-      gsap.to('.features', {
-        duration: 0.4, ease: 'power1.inOut', opacity: 1, startAt: { y: 500 }, y: 280
+      gsap.fromTo(
+        ".hero-image",
+        { filter: "grayscale(100%) contrast(0.5) brightness(0.4)" },
+        { filter: "grayscale(100%) contrast(1.4) brightness(0.9)", duration: 2 }
+      )
+      gsap.from(".hero-title", {
+        opacity: 0,
+        y: 50,
+        duration: 1.2,
+        ease: "power2.out"
+      })
+      gsap.to(".subtitle", {
+        opacity: 1,
+        duration: 1.8,
+        delay: 1,
+        ease: "power2.out",
+        onComplete: () => {
+          gsap.to(".subtitle", {
+            opacity: 0.85,
+            repeat: -1,
+            yoyo: true,
+            duration: 2.5,
+            ease: "sine.inOut"
+          })
+        }
       })
     },
     { scope: container }
@@ -42,22 +65,31 @@ export default function Home() {
   const handleSelectType = (evt: ChangeEvent<HTMLInputElement>) => {
     setSearchType(evt.target.value as 'perfume-house' | 'perfume')
   }
+  const data = [
+    { id: 'perfume-house', name: t('home.radio.houses'), label: t('home.radio.houses') },
+    { id: 'perfume', name: t('home.radio.perfumes'), label: t('home.radio.perfumes') }
+  ]
   return (
-    <div className="flex flex-col gap-8 items-center min-h-screen px-4 relative" ref={container}>
-      <img src={banner} alt="" className="absolute object-cover dark:opacity-75 w-full h-1/2 lg:h-2/3 rounded-md border-10 border-amber-50 drop-shadow-xl drop-shadow-noir-gold/40" />
-      <section className="features translate-y-full opacity-0 text-noir-dark dark:text-noir-light/90 min-h-max relative w-full md:w-3/4 xl:w-3/4 mx-auto border border-noir-gold py-5 px-6 rounded-md bg-noir-light/60 dark:bg-noir-dark/50 backdrop-blur shadow-md">
-        <h1 className="text-center callout">{t('home.heading')}</h1>
-        <p className="text-center text-xl mb-4 pb-2 ">{t('home.subheading')}</p>
-        <div className="flex flex-col md:flex-row gap-4 justify-center items-center mb-4">
-          <RadioSelect
-            handleRadioChange={evt => handleSelectType(evt)}
-            data={[
-              { id: '1', name: 'type', type: 'radio', label: t('home.radio.houses'), value: 'perfume-house', defaultChecked: true },
-              { id: '2', name: 'type', type: 'radio', label: t('home.radio.perfumes'), value: 'perfume' }
-            ]}
+    <div className="flex flex-col gap-8 items-center justify-center min-h-screen px-4 relative bg-noir-gold/50" ref={container}>
+      <img src={banner} alt="" className="hero-image absolute object-cover w-full h-full filter grayscale-[100%] contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-multiply" />
+      <div className="absolute inset-0 bg-noir-black/75 mask-radial-from-25% mask-radial-to-44%"></div>
+      <section className='text-noir-gold relative z-10 flex flex-col items-center gap-4'>
+        <h1 className="text-center hero-title">
+          {t('home.heading')}
+        </h1>
+        <p className="subtitle mb-4 pb-2 opacity-0">{t('home.subheading')}</p>
+        <div className='flex items-baseline justify-start w-full max-w-4xl mt-6'>
+          <Select
+            size="expanded"
+            value={searchType}
+            action={handleSelectType}
+            selectId='search-type'
+            selectData={data}
+            defaultId={searchType}
+            ariaLabel="Select search type"
           />
+          <SearchBar searchType={searchType} className="mt-8" />
         </div>
-        <SearchBar searchType={searchType} className="mt-8" />
       </section>
     </div>
   )

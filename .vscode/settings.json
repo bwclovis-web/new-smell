@@ -22,7 +22,8 @@
     "isbot",
     "languagedetector",
     "Parfum",
-    "Pipeable"
+    "Pipeable",
+    "Sillage"
   ],
   "github.copilot.chat.codeGeneration.instructions": [
     { "file": "../copilot-instructions/js-styles.md" },

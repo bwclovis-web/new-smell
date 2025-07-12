@@ -7,7 +7,7 @@
     --color-noir-dark: oklch(0.28 0.1158 29.23);
     --color-noir-light: oklch(0.93 0.0245 77.45);
     --color-noir-gray: oklch(0.54 0 0);
-    --color-noir-gold: oklch(0.73 0.1306 86.65);
+    --color-noir-gold: oklch(75% 0.14 85);
     --color-noir-black: oklch(22.64% 0.000 0);
     --color-noir-white: oklch(0.95 0 0);
     --color-noir-blue: oklch(0.45 0.15 240);
@@ -16,7 +16,7 @@
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950 min-h-screen text-noir-black dark:text-noir-light font-sans text-base leading-7;
+  @apply bg-white dark:bg-gray-950 min-h-screen dark:text-noir-light font-sans text-base leading-7;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
@@ -25,6 +25,12 @@ body {
 
 h1,h2,h3 {
  @apply font-headline;
+}
+
+.hero-title {
+  @apply font-black text-center text-noir-gold text-shadow-lg/90 text-shadow-noir-black mb-0 pb-0;
+  font-size: clamp(2.5rem, 5vw + 1rem, 20rem);
+  view-transition-name: hero-title;
 }
 
 h1 {
@@ -40,7 +46,7 @@ h2 {
 }
 
 .subtitle {
-  font-size: clamp(1rem, 1.5vw + 0.5rem, 1.4rem);
+  font-size: clamp(1rem, 1.5vw + 0.5rem, 2rem);
   font-weight: 500;
   line-height: 1.3;
 }
