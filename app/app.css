@@ -8,6 +8,8 @@
     --color-noir-light: oklch(0.93 0.0245 77.45);
     --color-noir-gray: oklch(0.54 0 0);
     --color-noir-gold: oklch(75% 0.14 85);
+    --color-noir-gold-100: oklch(80% 0.06 85); /* Soft ivory-gold */
+    --color-noir-gold-500:  oklch(95% 0.16 85);
     --color-noir-black: oklch(22.64% 0.000 0);
     --color-noir-white: oklch(0.95 0 0);
     --color-noir-blue: oklch(0.45 0.15 240);
@@ -81,4 +83,9 @@ h2 {
 .mask-radial-gradient {
   mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
   -webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+}
+
+.mask-linear-gradient-to-b {
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0) 100%);
 }

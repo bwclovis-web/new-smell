@@ -12,9 +12,9 @@ interface PerfumeNotesProps {
 }
 
 const renderSingleNotesList = (notes: PerfumeNote[], t: any) => (
-  <div className="border py-4 rounded-md bg-noir-dark text-noir-light px-2">
+  <div className="border py-4 rounded-md bg-noir-dark text-noir-gold-100 px-2">
     <div className="flex flex-col items-start gap-2">
-      <span className='block w-full font-bold tracking-wide border-b border-noir-light/60 pb-1'>{t('singlePerfume.notes.general')}: </span>
+      <span className='block w-full font-bold tracking-wide border-b border-noir-gold-100 pb-1'>{t('singlePerfume.notes.general')}: </span>
       <ul className="flex font-semibold capitalize flex-wrap ">
         {notes.map((note, idx) => (
           <li key={note.id}>
@@ -46,10 +46,10 @@ const renderCategorizedNotes = ({
   hasClose,
   t
 }: CategorizedNotesProps) => (
-  <div className="border py-4 rounded-md bg-noir-dark text-noir-light px-2">
+  <div className="border py-4 rounded-md bg-noir-dark text-noir-gold-100 px-2">
     {hasOpen && (
       <div className="flex flex-col items-start gap-1">
-        <span className='block w-full font-bold tracking-wide border-b border-noir-light/60 pb-1'>{t('singlePerfume.notes.opening')}: </span>
+        <span className='block w-full font-bold tracking-wide border-b border-noir-gold/60 pb-1'>{t('singlePerfume.notes.opening')}: </span>
         <ul className="flex capitalize flex-wrap mb-2.5">
           {perfumeNotesOpen.map((note, idx) => (
             <li key={note.id}>
@@ -62,7 +62,7 @@ const renderCategorizedNotes = ({
     )}
     {hasHeart && (
       <div className="flex flex-col items-start gap-2">
-        <span className='block w-full font-bold tracking-wide border-b border-noir-light/60 pb-1'>{t('singlePerfume.notes.mid')}: </span>
+        <span className='block w-full font-bold tracking-wide border-b border-noir-gold/60 pb-1'>{t('singlePerfume.notes.mid')}: </span>
         <ul className="flex gap-2 font-semibold capitalize flex-wrap mb-4">
           {perfumeNotesHeart.map((note, idx) => (
             <li key={note.id}>
@@ -76,7 +76,7 @@ const renderCategorizedNotes = ({
     {
       hasClose && (
         <div className="flex flex-col items-start gap-2">
-          <span className='block w-full font-bold tracking-wide border-b border-noir-light/60 pb-1'>{t('singlePerfume.notes.end')}: </span>
+          <span className='block w-full font-bold tracking-wide border-b border-noir-gold/60 pb-1'>{t('singlePerfume.notes.end')}: </span>
           <ul className="flex gap-2 font-semibold capitalize flex-wrap">
             {perfumeNotesClose.map((note, idx) => (
               <li key={note.id}>
