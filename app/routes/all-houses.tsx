@@ -82,7 +82,7 @@ const HouseFiltersSection = ({
   onHouseTypeChange: any
   onSortChange: any
 }) => (
-  <div className="space-y-6 mb-6 flex items-center justify-between flex-wrap bg-noir-gray/50 p-4 rounded-md border-4 border-noir-light">
+  <div className="space-y-6 inner-container flex flex-col md:flex-row md:justify-between md:items-center border border-noir-gold">
     <div>
       <h3 className="text-lg font-medium mb-2">{t('allHouses.filters.houseType')}</h3>
       <RadioSelect
@@ -132,7 +132,7 @@ const AllHousesPage = () => {
         onSortChange={handlers.handleSortChange}
       />
 
-      <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 pb-4">
+      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-4 inner-container mt-6 auto-rows-fr">
         {data.isLoading ? (
           <div>Loading houses...</div>
         ) : (
