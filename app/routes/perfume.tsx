@@ -9,8 +9,8 @@ import PerfumeNotes from '~/components/Containers/Perfume/PerfumeNotes/PerfumeNo
 import { getPerfumeByName } from '~/models/perfume.server'
 import { isInWishlist } from '~/models/wishlist.server'
 
-import { ROUTE_PATH as ALL_PERFUMES } from './the-vault'
 import { ROUTE_PATH as HOUSE_PATH } from './perfume-house'
+import { ROUTE_PATH as ALL_PERFUMES } from './the-vault'
 export const ROUTE_PATH = '/perfume'
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
