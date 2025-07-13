@@ -46,7 +46,7 @@ const Input: FC<InputProps> = ({
     <div className={styleMerge(inputWrapperVariants({ className }))} data-cy="Input" {...props}>
       <label
         htmlFor={inputId}
-        className='block-label'
+        className='font-semibold text-2xl mb-1 capitalize text-noir-gold text-shadow-lg text-shadow-noir-black/60 tracking-wide'
       >
         {label ? label : action?.name}
       </label>

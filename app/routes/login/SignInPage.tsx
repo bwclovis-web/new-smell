@@ -13,6 +13,7 @@ export const ROUTE_PATH = '/sign-in'
 import { useTranslation } from 'react-i18next'
 import type { ActionFunctionArgs } from 'react-router-dom'
 
+import { Button } from '~/components/Atoms/Button/Button'
 import { login } from '~/models/session.server'
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
@@ -38,14 +39,14 @@ const LogInPage = () => {
   })
 
   return (
-    <section className="flex flex-col p-1 md:p-4 w-full self-end mx-auto">
-      <Form {...getFormProps(signInForm)} method="POST" className="max-w-md mx-auto p-1 md:p-4 rounded w-full flex flex-col gap-4">
+    <section className="flex flex-col p-1 md:px-4 w-full mx-auto ">
+      <Form {...getFormProps(signInForm)} method="POST" className="max-w-md mx-auto p-1 md:p-4 rounded w-full flex flex-col gap-4 noir-border">
         <Input shading={true} inputId={t('forms.email')} inputType="email" action={email} inputRef={inputRef} />
         <Input shading={true} inputId={t('forms.password')} inputType="password" action={password} inputRef={inputRef} />
         {actionData?.error && (
           <p className="text-red-600 mb-2">{actionData.error}</p>
         )}
-        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded mt-8">{t('forms.submit')}</button>
+        <Button type="submit" variant={'icon'} background={'gold'} size={'xl'}>{t('forms.submit')}</Button>
       </Form>
     </section>
   )
