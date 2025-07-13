@@ -18,7 +18,7 @@ export const meta: MetaFunction = () => {
     { name: 'description', content: t('allPerfumes.meta.description') }
   ]
 }
-import banner from '../images/perfume.webp'
+import banner from '../images/vault.webp'
 const AllPerfumesPage = () => {
   const { t } = useTranslation()
   const { allPerfumes } = useLoaderData<typeof loader>()

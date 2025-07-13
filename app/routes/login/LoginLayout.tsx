@@ -14,7 +14,7 @@ const RootLayout = () => {
       <img src={banner} alt="" className="hero-image absolute object-cover w-full h-full filter grayscale-[100%] contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-multiply" />
       <div className="absolute inset-0 bg-noir-black/85 md:mask-radial-from-45% mask-radial-to-64%"></div>
       <div className="relative w-full flex flex-col items-center justify-around gap-4 md:gap-8 mx-auto">
-        <div className="mx-auto min-w-1/3 border noir-border py-5 px-3 rounded-md bg-noir-dark/10 shadow-md text-noir-gold content text-center">
+        <div className="mx-auto min-w-1/3 relative noir-border py-5 px-3 bg-noir-dark/10 shadow-md text-noir-gold content text-center">
           <h1 className=" text-shadow-lg text-shadow-black">{t('auth.heading')}</h1>
           <p className="subtitle">{t('auth.subheading')}
             <VooDooLink

@@ -9,7 +9,7 @@ interface SelectProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
   VariantProps<typeof selectWrapperVariants> {
   selectId: string
   // eslint-disable-next-line no-unused-vars
-  action: (evt: ChangeEvent<HTMLSelectElement>) => void
+  action?: (evt: ChangeEvent<HTMLSelectElement>) => void
   defaultId?: string | number
   ariaLabel?: string
   size?: 'default' | 'compact' | 'expanded'
@@ -32,7 +32,7 @@ const Select: FC<SelectProps> = ({
       className={styleMerge(selectWrapperVariants({ className }))}
       data-cy="Select"
     >
-      {!ariaLabel && <label htmlFor={selectId} className="block-label">{label}</label>}
+      {!ariaLabel && <label className='font-semibold text-2xl mb-1 capitalize text-noir-gold text-shadow-lg text-shadow-noir-black/60 tracking-wide' htmlFor={selectId}>{label}</label>}
       <select
         onChange={evt => handleChange(evt)}
         id={selectId}

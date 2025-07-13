@@ -57,20 +57,20 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
   }
 
   return (
-    <li key={userPerfume.id} className="border rounded p-4 flex flex-col w-full bg-noir-dark text-noir-light mb-4 last-of-type:mb-0">
+    <li key={userPerfume.id} className="border p-4 flex flex-col w-full bg-noir-dark/60 text-noir-gold mb-4 last-of-type:mb-0">
       <div className="flex justify-between items-center mb-2 gap-6">
         <div className='flex gap-8'>
           <h3 className="font-medium flex flex-col justify-start items-start max-w-[40ch] min-w-[40ch] text-left">
             <span className='text-xl'>{t('myScents.listItem.name')}</span>
-            <span className='text-2xl'>{userPerfume.perfume.name}</span>
+            <span className='text-2xl text-noir-gold-100'>{userPerfume.perfume.name}</span>
           </h3>
-          <p className='flex flex-col items-start justify-start'>
-            <span className='text-lg'>{t('myScents.listItem.total')}</span>
-            <span className='text-xl'>{userPerfume.amount} ml</span>
+          <p className='flex flex-col items-end justify-start'>
+            <span className='text-lg font-medium'>{t('myScents.listItem.total')}</span>
+            <span className='text-xl text-noir-gold-100'>{userPerfume.amount} ml</span>
           </p>
-          <p className='flex flex-col items-start justify-start'>
-            <span className='text-lg'>{t('myScents.listItem.destashed')}</span>
-            <span className='text-xl'>{userPerfume.available || '0'} ml</span>
+          <p className='flex flex-col items-end justify-start'>
+            <span className='text-lg font-medium'>{t('myScents.listItem.destashed')}</span>
+            <span className='text-xl text-noir-gold-100'>{userPerfume.available || '0'} ml</span>
           </p>
         </div>
         <div className='flex gap-4'>
@@ -95,10 +95,10 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
 
       <VooDooDetails summary={t('myScents.listItem.viewDetails')} className="text-start pt-3 mt-3 border-t-noir-gold border-t" name="perfume-details">
         <GeneralDetails userPerfume={userPerfume} />
-        <VooDooDetails summary={t('myScents.listItem.viewComments')} className="text-start text-noir-dark  py-3 mt-3 bg-noir-gold px-2 rounded" name="inner-details">
+        <VooDooDetails summary={t('myScents.listItem.viewComments')} className="text-start text-noir-dark  py-3 mt-3 bg-noir-gold noir-border-dk px-2 relative open:bg-noir-gold-100" name="inner-details">
           <PerfumeComments userPerfume={userPerfume} />
         </VooDooDetails>
-        <VooDooDetails summary={t('myScents.listItem.setDestashed')} className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded" name="inner-details">
+        <VooDooDetails summary={t('myScents.listItem.setDestashed')} className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded noir-border-dk relative open:bg-noir-gold-100" name="inner-details">
           <DeStashForm
             handleDecantConfirm={handleDecantConfirm}
             userPerfume={userPerfume}

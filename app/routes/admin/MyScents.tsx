@@ -117,15 +117,15 @@ const MyScentsPage = () => {
   return (
     <section>
       <TitleBanner imagePos="object-bottom" image={banner} heading={t('myScents.heading')} subheading={t('myScents.subheading')} >
-        <AddToCollectionModal className="mt-4" />
+        <AddToCollectionModal />
       </TitleBanner>
-      <div className='bg-noir-gold text-center p-6 rounded-md border-4 border-noir-light/90 dark:border-noir-dark shadow-lg'>
-        <h2 className="text-2xl font-semibold mb-2">{t('myScents.collection.heading')}</h2>
+      <div className='noir-border relative max-w-max mx-auto text-center flex flex-col items-center justify-center gap-4 p-4 my-6'>
+        <h2 className="text-noir-gold mb-2">{t('myScents.collection.heading')}</h2>
         {userPerfumes.length === 0
           ? (
-            <div className="italic text-noir-light dark:text-noir-dark">
-              <h3>{t('myScents.collection.empty.heading')}</h3>
-              <p>{t('myScents.collection.empty.subheading')}</p>
+            <div>
+              <p className='text-noir-gold-100 text-xl'>{t('myScents.collection.empty.heading')}</p>
+              <p className='text-noir-gold-500 italic'>{t('myScents.collection.empty.subheading')}</p>
             </div>
           )
           : (
