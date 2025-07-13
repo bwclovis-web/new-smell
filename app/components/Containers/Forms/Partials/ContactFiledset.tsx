@@ -17,8 +17,9 @@ interface ContactFieldsetProps {
 }
 const ContactFieldset: FC<ContactFieldsetProps> = ({ inputRef, data, actions }) => (
   <fieldset className="grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 ">
-    <legend className="text-2xl text-noir-gray font-bold mb-2">Contact</legend>
+    <legend className="text-3xl text-noir-gold-100 font-bold mb-2">Contact</legend>
     <Input
+      shading={true}
       inputType="text"
       inputRef={inputRef}
       action={actions.phone}
@@ -26,6 +27,7 @@ const ContactFieldset: FC<ContactFieldsetProps> = ({ inputRef, data, actions }) 
       defaultValue={data?.phone}
     />
     <Input
+      shading={true}
       inputType="text"
       inputRef={inputRef}
       action={actions.email}
@@ -33,6 +35,7 @@ const ContactFieldset: FC<ContactFieldsetProps> = ({ inputRef, data, actions }) 
       defaultValue={data?.email}
     />
     <Input
+      shading={true}
       inputType="text"
       inputRef={inputRef}
       action={actions.website}

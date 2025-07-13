@@ -33,6 +33,7 @@ const DeStashForm = ({
       <form onSubmit={handleSubmit} className="mt-4">
         <RangeSlider
           min={0}
+          theme="dark"
           max={parseFloat(userPerfume.amount)}
           step={0.1}
           value={parseFloat(deStashAmount) || 0}

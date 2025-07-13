@@ -42,7 +42,7 @@ const PerfumeHouseForm = ({ formType, lastResult, data }: PerfumeHouseFormProps)
       method="POST"
       {...getFormProps(form)}
       autoComplete="off"
-      className=" p-4 rounded-md noir-outline flex flex-col gap-3"
+      className="p-6 rounded-md mt-6 noir-border flex flex-col gap-3 max-w-6xl mx-auto bg-noir-dark/10"
     >
       <InfoFieldset
         inputRef={inputRef}

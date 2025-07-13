@@ -16,7 +16,7 @@ import {
 import type { UserPerfumeI } from '~/types'
 import { sharedLoader } from '~/utils/sharedLoader'
 
-import banner from '../../images/myScents.webp'
+import banner from '../../images/perfume.webp'
 
 export const ROUTE_PATH = '/admin/my-scents'
 
