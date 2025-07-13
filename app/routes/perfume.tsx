@@ -98,22 +98,22 @@ const PerfumePage = () => {
       </header>
 
       <div className="flex flex-col gap-20 mx-auto max-w-6xl">
-        <div className="border-4 border-noir-gold border-double shadow-lg flex bg-white/5 text-noir-gold-500">
-          <div className="p-6 w-full">
-            <p className='mb-3'>{perfume.description}</p>
+        <div className="w-full flex gap-4">
+          {user && (
+            <PerfumeIcons
+              perfume={perfume}
+              handleDelete={handleDelete}
+              userRole={user.role}
+              isInWishlist={isInUserWishlist}
+            />
+          )}
+          <div className='bg-white/5 w-3/4 border-4 noir-border shadow-lg text-noir-gold-500'>
             <PerfumeNotes
               perfumeNotesOpen={perfume.perfumeNotesOpen}
               perfumeNotesHeart={perfume.perfumeNotesHeart}
               perfumeNotesClose={perfume.perfumeNotesClose}
             />
-            {user && (
-              <PerfumeIcons
-                perfume={perfume}
-                handleDelete={handleDelete}
-                userRole={user.role}
-                isInWishlist={isInUserWishlist}
-              />
-            )}
+            <p className='p-4'>{perfume.description}</p>
           </div>
         </div>
         <div className="w-1/2">

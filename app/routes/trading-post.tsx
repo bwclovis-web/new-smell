@@ -30,7 +30,7 @@ const TradingPostPage = () => {
   return (
     <section>
       <TitleBanner image={banner} heading={t('tradingPost.heading')} subheading={t('tradingPost.subheading')}>
-        <span className='bg-noir-gold p-2 mt-4 block max-w-max rounded-md uppercase font-semibold'>{availablePerfumes.length} {t('tradingPost.count')}</span>
+        <span className=' p-2 mt-6 block max-w-max rounded-md uppercase font-semibold text-noir-gold-500 mx-auto'>{availablePerfumes.length} {t('tradingPost.count')}</span>
       </TitleBanner>
 
       {availablePerfumes.length === 0 ? (
@@ -38,30 +38,31 @@ const TradingPostPage = () => {
           <h2 className="text-noir-light font-black text-3xl text-shadow-md text-shadow-noir-dark">{t('tradingPost.empty')}</h2>
         </div>
       ) : (
-        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 inner-container">
+        <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 inner-container py-6 auto-rows-fr">
           {availablePerfumes?.map(perfume => (
             <li key={perfume.id} className="relative">
-              <LinkCard data={perfume} type="perfume" />
-              <div className="mt-2 p-2 bg-green-50 rounded-md">
-                <p className="text-sm font-medium text-green-800 mb-1">
-                  {t('tradingPost.availableFrom')}:
-                </p>
-                <ul>
-                  {perfume.userPerfume.map(userPerfume => (
-                    <li key={userPerfume.id} className="mb-1">
-                      <NavLink to={`/trader/${userPerfume.userId}`} key={userPerfume.id} className="text-sm font-semibold text-noir-blue/80 hover:text-noir-blue underline">
-                        {getUserDisplayName(userPerfume.user)}:
-                      </NavLink>
+              <LinkCard data={perfume} type="perfume">
+                <div className="mt-2 rounded-md">
+                  <p className="text-base font-medium text-noir-gold mb-1">
+                    {t('tradingPost.availableFrom')}:
+                  </p>
+                  <ul>
+                    {perfume.userPerfume.map(userPerfume => (
+                      <li key={userPerfume.id} className="mb-1">
+                        <NavLink to={`/trader/${userPerfume.userId}`} key={userPerfume.id} className="text-sm font-semibold text-blue-300 hover:text-noir-blue underline">
+                          {getUserDisplayName(userPerfume.user)}:
+                        </NavLink>
 
-                      <span className="text-sm ml-2 text-noir-gray">
-                        {getPerfumeTypeLabel(userPerfume.type) || 'Unknown Type'}
-                        {' '}
-                        {userPerfume.available} ml
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                        <span className="text-sm ml-2 text-noir-gold-100">
+                          {getPerfumeTypeLabel(userPerfume.type) || 'Unknown Type'}
+                          {' '}
+                          {userPerfume.available} ml
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </LinkCard>
             </li>
           ))}
         </ul>

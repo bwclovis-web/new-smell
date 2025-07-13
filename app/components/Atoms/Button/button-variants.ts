@@ -19,10 +19,11 @@ export const buttonVariants = cva(['rounded-sm cursor-pointer '], {
       secondary: 'bg-btn-secondary hover:bg-btn-secondary-hover focus:bg-btn-secondary-focus disabled:bg-btn-secondary-disabled text-white',
       danger: 'bg-btn-danger hover:bg-btn-danger-hover focus:bg-btn-danger-focus disabled:bg-btn-danger-disabled text-white',
       link: 'bg-transparent text-blue-200 font-semibold hover:underline focus:bg-noir-gold/20 disabled:bg-transparent text-nowrap px-0',
-      icon: 'bg-transparent rounded-full p-2.5 transition-all duration-300 ease-in-out hover:bg-noir-gold/20 focus:bg-noir-gold/20 disabled:bg-transparent cursor-pointer border max-w-max items-center justify-center flex items-center justify-center gap-3',
+      icon: 'block bg-transparent rounded-sm p-2.5 transition-all duration-300 ease-in-out hover:bg-noir-gold/20 focus:bg-noir-gold/20 disabled:bg-transparent font-medium border gap-3',
     },
     background: {
       red: 'bg-red-600 hover:bg-red-700 focus:bg-red-800 disabled:bg-red-400 text-white',
+      gold: 'border w-full border-noir-gold text-noir-gold hover:border-noir-gold-500 hover:text-noir-gold-500 transition-all duration-300 ease-in-out gap-4'
     }
   }
 })

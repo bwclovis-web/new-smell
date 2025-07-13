@@ -23,12 +23,12 @@ const AddToCollectionModal =
     const { t } = useTranslation()
     const ButtonClasses = cx({
       [`z-50 ${className}`]: true,
-      'bg-amber-400/60 hover:bg-amber-400/90 border-amber-600 hover:border-amber-700/90': type === 'icon',
     })
     return (
       <>
         <div>
           <Button
+            background={type === 'icon' ? 'gold' : undefined}
             variant={type}
             className={ButtonClasses}
             onClick={() => {
@@ -38,8 +38,8 @@ const AddToCollectionModal =
           >
             {type === 'icon' ?
               <div className="flex items-center gap-2">
-                <span className="text-green-900 font-bold text-sm">{t('myScents.addButton')}</span>
-                <MdLibraryAdd size={40} fill="green" />
+                <span className=" text-sm">{t('myScents.addButton')}</span>
+                <MdLibraryAdd size={20} />
               </div> :
               <p>{t('myScents.addButton')}</p>
             }
