@@ -66,7 +66,7 @@ const TitleBanner: FC<TitleBannerProps> =
           <h1>{heading}</h1>
           <p className='subtitle-sm'>{subheading}</p>
           {children && (
-            <div>
+            <div className='p-2 mt-6 '>
               {children}
             </div>
           )}

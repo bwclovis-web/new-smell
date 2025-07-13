@@ -9,7 +9,7 @@ import PerfumeNotes from '~/components/Containers/Perfume/PerfumeNotes/PerfumeNo
 import { getPerfumeByName } from '~/models/perfume.server'
 import { isInWishlist } from '~/models/wishlist.server'
 
-import { ROUTE_PATH as ALL_PERFUMES } from './all-perfumes'
+import { ROUTE_PATH as ALL_PERFUMES } from './the-vault'
 import { ROUTE_PATH as HOUSE_PATH } from './perfume-house'
 export const ROUTE_PATH = '/perfume'
 

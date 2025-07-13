@@ -12,38 +12,38 @@ interface AdminNavigationProps extends HTMLProps<HTMLUListElement>,
   VariantProps<typeof adminNavigationVariants> { }
 
 const AdminNavigation: FC<AdminNavigationProps> = ({ className, user }) => (
-  <>
+  <aside className='fixed top-20 left-0 z-20 w-full md:w-64  text-noir-light py-4'>
     <ul
       className={styleMerge(adminNavigationVariants({ className }))}
       data-cy="AdminNavigation"
     >
       {user.role === 'admin' && adminNavigation.map(item => (
-        <li key={item.id} className="py-2">
+        <li key={item.id} className="capitalize font-semibold text-shadow-sm text-shadow-noir-dark/70">
           <NavLink
             viewTransition
             to={item.path}
             suppressHydrationWarning
             className={({ isActive }) => styleMerge(
-              'text-noir-light hover:text-noir-dark transition-colors duration-200 hover:bg-noir-light p-1 rounded-sm',
-              isActive ? 'text-noir-light  bg-noir-gold/80 border-2 border-noir-gold' : ''
+              'text-noir-gold py-2  hover:text-noir-gold-500 transition-colors duration-200 hover:bg-noir-dark/80 block w-full',
+              isActive ? 'text-noir-dark text-shadow-none  bg-noir-gold/80 border-2 border-noir-gold' : ''
             )}
           >
-            {item.label}
+            <span className='pl-2'>{item.label}</span>
           </NavLink>
         </li>
       ))}
       {profileNavigation.map(item => (
-        <li key={item.id} className="py-2">
+        <li key={item.id} className="capitalize font-semibold text-shadow-sm text-shadow-noir-dark/70">
           <NavLink
             viewTransition
             to={item.path}
             suppressHydrationWarning
             className={({ isActive }) => styleMerge(
-              'text-noir-light hover:text-noir-dark transition-colors duration-200 hover:bg-noir-light p-1 rounded-sm',
-              isActive ? 'text-noir-light  bg-noir-gold/80 border-2 border-noir-gold' : ''
+              'text-noir-gold py-2  hover:text-noir-gold-500 transition-colors duration-200 hover:bg-noir-dark/80 block w-full',
+              isActive ? 'text-noir-dark text-shadow-none  bg-noir-gold/80 border-2 border-noir-gold' : ''
             )}
           >
-            {item.label}
+            <span className='pl-2'>{item.label}</span>
           </NavLink>
         </li>
       ))}
@@ -51,6 +51,6 @@ const AdminNavigation: FC<AdminNavigationProps> = ({ className, user }) => (
         <LanguageSwitcher />
       </li>
     </ul>
-  </>
+  </aside>
 )
 export default AdminNavigation

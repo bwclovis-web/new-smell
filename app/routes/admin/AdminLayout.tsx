@@ -13,9 +13,9 @@ const AdminLayout = () => {
   const { user } = useLoaderData<typeof loader>()
 
   return (
-    <div className="flex flex-col md:flex-row w-full gap-4 md:gap-10 items-start relative z-10">
+    <div className="relative flex flex-col md:flex-row w-full gap-4 md:gap-10 items-start z-10">
       {user && <AdminNavigation user={user} />}
-      <div className="flex-1 p-4 w-full">
+      <div className="flex-1  w-full">
         <Outlet context={{ user }} />
       </div>
       {!user && (

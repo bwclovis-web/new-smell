@@ -1,4 +1,4 @@
-export const ROUTE_PATH = '/all-houses'
+export const ROUTE_PATH = '/behind-the-bottle'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MetaFunction } from 'react-router'
