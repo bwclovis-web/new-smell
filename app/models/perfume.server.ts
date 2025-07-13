@@ -133,7 +133,9 @@ export const getAvailablePerfumesForDecanting = async () => {
           user: {
             select: {
               id: true,
-              name: true,
+              firstName: true,
+              lastName: true,
+              username: true,
               email: true
             }
           }

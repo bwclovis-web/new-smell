@@ -64,7 +64,9 @@ export const getUserWishlist = async (userId: string) => {
               user: {
                 select: {
                   id: true,
-                  name: true,
+                  firstName: true,
+                  lastName: true,
+                  username: true,
                   email: true
                 }
               }
