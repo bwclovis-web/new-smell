@@ -15,7 +15,7 @@ import PerfumeHouseAddressBlock from '~/components/Containers/PerfumeHouse/Addre
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getPerfumeHouseByName } from '~/models/house.server'
 
-import { ROUTE_PATH as ALL_HOUSES } from './all-houses'
+import { ROUTE_PATH as ALL_HOUSES } from './behind-the-bottle'
 
 // Simple loader - get house with only first 9 perfumes
 export const loader = async ({ params }: LoaderFunctionArgs) => {

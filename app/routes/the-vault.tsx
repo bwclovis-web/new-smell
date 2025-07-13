@@ -5,7 +5,7 @@ import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import { getAllPerfumes } from '~/models/perfume.server'
 
-export const ROUTE_PATH = '/all-perfumes'
+export const ROUTE_PATH = '/the-vault'
 
 export const loader = async () => {
   const allPerfumes = await getAllPerfumes()

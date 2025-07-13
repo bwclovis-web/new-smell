@@ -8,7 +8,7 @@ import { getAvailablePerfumesForDecanting } from '~/models/perfume.server'
 import { getUserDisplayName } from '~/utils/user'
 
 import banner from '../images/trading.webp'
-export const ROUTE_PATH = '/trading-post'
+export const ROUTE_PATH = '/the-exchange'
 
 export const loader = async () => {
   const availablePerfumes = await getAvailablePerfumesForDecanting()
@@ -30,7 +30,7 @@ const TradingPostPage = () => {
   return (
     <section>
       <TitleBanner image={banner} heading={t('tradingPost.heading')} subheading={t('tradingPost.subheading')}>
-        <span className=' p-2 mt-6 block max-w-max rounded-md uppercase font-semibold text-noir-gold-500 mx-auto'>{availablePerfumes.length} {t('tradingPost.count')}</span>
+        <span className=' block max-w-max rounded-md uppercase font-semibold text-noir-gold-500 mx-auto'>{availablePerfumes.length} {t('tradingPost.count')}</span>
       </TitleBanner>
 
       {availablePerfumes.length === 0 ? (

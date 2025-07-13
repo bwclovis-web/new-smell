@@ -22,8 +22,10 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="bg-noir-light/40 backdrop-blur-sm rounded-md shadow-md p-6 border border-noir-dark">
-      <TitleBanner image={banner} heading={t('profile.heading')} subheading={`${getUserDisplayName(user)} ${t('profile.subheading')}`} />
+    <div className="">
+      <TitleBanner image={banner} heading={t('profile.heading')} subheading={` ${t('profile.subheading')}`}>
+        <span className='block max-w-max rounded-md font-semibold text-noir-gold-500 mx-auto'>{getUserDisplayName(user)}</span>
+      </TitleBanner>
     </div >
   )
 }

@@ -3,9 +3,9 @@ import { ROUTE_PATH as CREATE_PERFUME } from '~/routes/admin/CreatePerfumePage'
 import { ROUTE_PATH as DATA_QUALITY } from '~/routes/admin/data-quality'
 import { ROUTE_PATH as MY_SCENTS } from '~/routes/admin/MyScents'
 import { ROUTE_PATH as WISHLIST } from '~/routes/admin/WishlistPage'
-import { ROUTE_PATH as ALL_HOUSES } from '~/routes/all-houses'
-import { ROUTE_PATH as ALL_PERFUMES } from '~/routes/all-perfumes'
-import { ROUTE_PATH as AVAILABLE_PERFUMES } from '~/routes/trading-post'
+import { ROUTE_PATH as ALL_HOUSES } from '~/routes/behind-the-bottle'
+import { ROUTE_PATH as ALL_PERFUMES } from '~/routes/the-vault'
+import { ROUTE_PATH as AVAILABLE_PERFUMES } from '~/routes/the-exchange'
 
 export const mainNavigation = [
   {
