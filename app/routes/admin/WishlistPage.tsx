@@ -43,7 +43,7 @@ const WishlistPage = () => {
   return (
     <section>
       <TitleBanner image={banner} heading={t('wishlist.heading')} subheading={t('wishlist.subheading')}>
-        <p className="bg-noir-gold max-w-max px-4 py-2 rounded-lg text-noir-light font-semibold text-lg shadow-md block mt-4">
+        <p className="max-w-max rounded-lg text-noir-gold-500 font-semibold text-lg shadow-md mx-auto block">
           {wishlist.length}
           {' '}
           {t('wishlist.itemsInWishlist')}
@@ -52,11 +52,11 @@ const WishlistPage = () => {
 
       {wishlist.length === 0
         ? (
-          <div className="bg-noir-gold text-center p-6 rounded-md border-4 border-noir-light/90 dark:border-noir-dark shadow-lg">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+          <div className="noir-border max-w-max mx-auto text-center flex flex-col items-center justify-center gap-4 p-4 my-6">
+            <h2 className="text-noir-gold">
               {t('wishlist.empty.heading')}
-            </h3>
-            <p className="text-noir-light dark:text-gray-400 mb-4">
+            </h2>
+            <p className="text-noir-gold-100 text-xl">
               {t('wishlist.empty.subheading')}
             </p>
             <VooDooLink

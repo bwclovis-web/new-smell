@@ -39,10 +39,10 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
 
   return (
     <div className="w-full">
-      <div className="flex  items-center justify-between mb-4">
+      <div className="flex flex-col items-start justify-between mb-4">
         <div>
-          <h2> {t('myScents.modal.title')}</h2>
-          <p>{t('myScents.modal.description')}</p>
+          <h2 className="text-noir-gold"> {t('myScents.modal.title')}</h2>
+          <p className="text-xl text-noir-gold-100">{t('myScents.modal.description')}</p>
         </div>
         {modalData === "create" && !perfume && (
           <SearchBar
@@ -61,12 +61,12 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
           onSubmit={handleAddPerfume}
         >
           <fieldset>
-            <legend className="text-lg font-black tracking-wide">
+            <legend className="text-xl font-semibold text-noir-gold tracking-wide">
               {t('myScents.modal.selectedPerfume')}
             </legend>
-            <p className="text-noir-dark dark:text-white mb-4 font-semibold">{selectedPerfume.name}</p>
-            <div className="flex items-center justify-between gap-6">
-              <div className="w-1/2">
+            <p className="text-noir-gold-100 mb-4 font-semibold">{selectedPerfume.name}</p>
+            <div className="flex items-start justify-between gap-6">
+              <div className="w-1/2 noir-border relative p-4">
                 <RangeSlider
                   min={0}
                   max={10}
@@ -82,15 +82,18 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
                   label={t('myScents.modal.amountLabel')}
                 />
               </div>
-              <div className="w-1/2">
+              <div className="w-1/2 noir-border relative p-4">
                 <Select
                   selectData={perfumeTypes}
                   name="type"
+                  size="default"
                   label={t('myScents.modal.typeLabel')}
-                  selectId={""} />
+                  selectId={""}
+                />
                 <Input
                   inputType="number"
                   name="price"
+                  shading={true}
                   label={t('myScents.modal.priceLabel')}
                   value={perfumeData.price}
                   inputRef={priceInputRef}
@@ -110,6 +113,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
                   label={t('myScents.modal.placeOfPurchase')}
                   value={perfumeData.placeOfPurchase}
                   inputRef={placeInputRef}
+                  shading={true}
                   onChange={event => {
                     const target = event.target as HTMLInputElement
                     setPerfumeData({

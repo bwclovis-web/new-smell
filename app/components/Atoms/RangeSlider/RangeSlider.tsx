@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { type VariantProps } from "class-variance-authority"
 import {
   type FC,
@@ -56,12 +57,12 @@ const RangeSlider: FC<RangeSliderProps> = ({
   })
 
   return (
-    <div className="w-full space-y-2">
+    <div className="w-full space-y-2 text-noir-gold">
       {label && (
-        <div className="flex justify-between items-center text-sm text-gray-700">
+        <div className="flex justify-between items-center text-md">
           <span>{label}</span>
           <span className="font-medium">
-            {formatValue ? formatValue(internalValue) : internalValue}
+            {formatValue ? formatValue(internalValue) : internalValue + 'ml'}
           </span>
         </div>
       )}
@@ -81,8 +82,8 @@ const RangeSlider: FC<RangeSliderProps> = ({
           aria-disabled={disabled}
           className={`
             absolute top-1/2 left-0 right-0 h-2 -translate-y-1/2 
-            bg-gray-200 rounded-full cursor-pointer transition-colors
-            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+            bg-noir-gold-100 rounded-full cursor-pointer transition-colors
+            focus:outline-none focus:ring-2 focus:ring-noir-gold focus:ring-offset-2
             ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-300'}
           `}
           onClick={handleTrackClick}
@@ -91,7 +92,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
         >
           <div
             ref={fillRef}
-            className="absolute top-0 left-0 h-full bg-blue-500 rounded-full"
+            className="absolute top-0 left-0 h-full bg-noir-gold-500 rounded-full"
             style={{ width: `${percentage}%` }}
           />
         </div>
@@ -114,9 +115,9 @@ const RangeSlider: FC<RangeSliderProps> = ({
           style={{ left: `${percentage}%` }}
         >
           <div className={`
-            w-5 h-5 bg-white border-2 border-blue-500 rounded-full shadow-md
-            ${disabled ? 'border-gray-400' : 'hover:border-blue-600'}
-            ${isDragging ? 'border-blue-600' : ''}
+            w-5 h-5 bg-white border-2 border-noir-gold rounded-full shadow-md
+            ${disabled ? 'border-gray-400' : 'hover:border-noir-gold-100'}
+            ${isDragging ? 'border-noir-gold' : ''}
           `}></div>
         </div>
 
@@ -130,7 +131,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
         />
       </div>
 
-      <div className="flex justify-between text-xs text-gray-500">
+      <div className="flex justify-between text-xs text-noir-gold-500">
         <span>{min}</span>
         <span>{max}</span>
       </div>

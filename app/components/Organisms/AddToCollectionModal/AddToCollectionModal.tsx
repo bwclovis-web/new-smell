@@ -47,7 +47,7 @@ const AddToCollectionModal =
         </div>
 
         {modalOpen && modalId === 'add-scent' && (
-          <Modal>
+          <Modal innerType="dark" id="add-scent">
             <MyScentsModal perfume={perfume} />
           </Modal>
         )}

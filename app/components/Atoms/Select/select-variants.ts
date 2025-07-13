@@ -2,7 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 export type SelectWrapperVariants = VariantProps<typeof selectWrapperVariants>
 export type SelectVariants = VariantProps<typeof selectVariants>
-export const selectWrapperVariants = cva([''], {
+export const selectWrapperVariants = cva(['flex flex-col'], {
   compoundVariants: [{}],
   defaultVariants: {},
   variants: {}
