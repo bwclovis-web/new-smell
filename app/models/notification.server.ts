@@ -32,7 +32,9 @@ export const checkAndNotifyWishlistAvailability = async () => {
               user: {
                 select: {
                   id: true,
-                  name: true,
+                  firstName: true,
+                  lastName: true,
+                  username: true,
                   email: true
                 }
               }

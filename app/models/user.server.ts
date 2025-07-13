@@ -42,7 +42,9 @@ export const getTraderById = async (id: string) => {
     select: {
       id: true,
       email: true,
-      name: true,
+      firstName: true,
+      lastName: true,
+      username: true,
       UserPerfume: {
         where: {
           available: {
@@ -84,7 +86,9 @@ export const getTraderById = async (id: string) => {
               user: {
                 select: {
                   id: true,
-                  name: true
+                  firstName: true,
+                  lastName: true,
+                  username: true
                 }
               }
             },
@@ -542,7 +546,9 @@ export const getPublicPerfumeComments = async (perfumeId: string) => {
         user: {
           select: {
             id: true,
-            name: true
+            firstName: true,
+            lastName: true,
+            username: true
           }
         },
         userPerfume: true

@@ -11,7 +11,9 @@ export interface User {
   id: string
   email: string
   password: string
-  name?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  username?: string | null
   createdAt: Date
   updatedAt: Date
   role: UserRole
@@ -24,7 +26,9 @@ export interface User {
 export interface SafeUser {
   id: string
   email: string
-  name?: string | null
+  firstName?: string | null
+  lastName?: string | null
+  username?: string | null
   role: UserRole
 }
 
@@ -36,8 +40,14 @@ export function createSafeUser(user: User | null): SafeUser | null {
     return null
   }
 
-  const { password, ...safeUser } = user
-  return safeUser as SafeUser
+  return {
+    id: user.id,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    username: user.username,
+    role: user.role
+  }
 }
 
 export type { UserRole }
