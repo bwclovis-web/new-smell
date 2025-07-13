@@ -14,6 +14,20 @@
       "command": "node scripts/generate_data_quality_reports.js",
       "group": "build",
       "problemMatcher": []
+    },
+    {
+      "label": "Import All Perfume Data",
+      "type": "shell",
+      "command": "bash import_all.sh",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Import All Perfume Data (Node)",
+      "type": "shell",
+      "command": "node run_all_imports.js",
+      "group": "build",
+      "problemMatcher": []
     }
   ]
 }

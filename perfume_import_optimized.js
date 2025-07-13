@@ -140,17 +140,14 @@ async function processSingleNote(perfumeId, noteName, noteType) {
   }
 }
 
-async function processNoteType(perfumeId, noteList, noteType) {
-  for (const noteName of noteList) {
-    await processSingleNote(perfumeId, noteName, noteType)
-  }
-}
-
 async function processNotesForPerfume(perfumeId, notes) {
   const noteTypes = ['open', 'heart', 'base']
   for (const noteType of noteTypes) {
     if (notes[noteType]) {
-      await processNoteType(perfumeId, notes[noteType], noteType)
+      const noteList = notes[noteType]
+      for (const noteName of noteList) {
+        await processSingleNote(perfumeId, noteName, noteType)
+      }
     }
   }
 }
@@ -192,16 +189,8 @@ async function findAndMergePerfume(perfume, houseId) {
   return null
 }
 
-function isExactMatch(existingName, perfumeName) {
-  return existingName.toLowerCase() === perfumeName.toLowerCase()
-}
-
-async function findExactMatch(existingPerfumes, perfume) {
-  return existingPerfumes.find(existing => isExactMatch(existing.name, perfume.name))
-}
-
 async function handleExistingPerfume(existingPerfumes, perfume) {
-  const exactMatch = await findExactMatch(existingPerfumes, perfume)
+  const exactMatch = existingPerfumes.find(existing => existing.name.toLowerCase() === perfume.name.toLowerCase())
 
   if (exactMatch) {
     const notes = parseNotes(perfume)
@@ -222,12 +211,7 @@ async function createNewPerfume(perfume, houseId) {
         name: perfume.name,
         perfumeHouseId: houseId,
         image: perfume.image,
-        concentration: perfume.concentration,
-        gender: perfume.gender,
-        perfumer: perfume.perfumer,
         description: perfume.description,
-        year: perfume.year,
-        tags: perfume.tags,
       },
     })
     stats.created++
@@ -334,25 +318,16 @@ async function processPerfumeRecord(perfume, houseId) {
   return perfumeRecord
 }
 
-async function validateAndProcess(perfume) {
+async function processPerfume(perfume) {
   const validation = validatePerfume(perfume)
   if (!validation.valid) {
     stats.skipped++
-    return null
+    return
   }
 
   const houseId = await findOrCreateHouse(perfume.perfumeHouse)
   if (!houseId) {
     stats.skipped++
-    return null
-  }
-
-  return houseId
-}
-
-async function processPerfume(perfume) {
-  const houseId = await validateAndProcess(perfume)
-  if (!houseId) {
     return
   }
 
@@ -387,17 +362,14 @@ async function processFile(fileName) {
   }
 }
 
-function checkArguments() {
+async function main() {
   const fileNames = process.argv.slice(2)
   if (fileNames.length === 0) {
     // eslint-disable-next-line no-console
     console.log('No CSV file specified. Usage: node perfume_import.js <csv-file>')
-    return null
+    return
   }
-  return fileNames
-}
 
-async function processAllFiles(fileNames) {
   for (const fileName of fileNames) {
     try {
       await processFile(fileName)
@@ -413,15 +385,6 @@ async function processAllFiles(fileNames) {
       stats.errors++
     }
   }
-}
-
-async function main() {
-  const fileNames = checkArguments()
-  if (!fileNames) {
-    return
-  }
-
-  await processAllFiles(fileNames)
 }
 
 main()

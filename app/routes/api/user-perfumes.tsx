@@ -30,6 +30,9 @@ type PerfumeActionParams = {
   isPublic?: boolean;
   userPerfumeId?: string;
   commentId?: string;
+  tradePrice?: string;
+  tradePreference?: string;
+  tradeOnly?: boolean;
 }
 
 // Helper functions for authentication
@@ -97,11 +100,24 @@ const handleRemoveAction = async (
   perfumeId: string
 ) => removeUserPerfume(user.id, perfumeId)
 
-const handleDecantAction = async (
-  user: any,
-  perfumeId: string,
-  amount: string = '0'
-) => updateAvailableAmount(user.id, perfumeId, amount)
+const handleDecantAction = async (params: {
+  user: any;
+  perfumeId: string;
+  amount?: string;
+  tradePrice?: string;
+  tradePreference?: string;
+  tradeOnly?: boolean;
+}) => {
+  const { user, perfumeId, amount = '0', tradePrice, tradePreference, tradeOnly } = params
+  return updateAvailableAmount({
+    userId: user.id,
+    perfumeId,
+    availableAmount: amount,
+    tradePrice,
+    tradePreference,
+    tradeOnly
+  })
+}
 
 const handleAddCommentAction = async (params: {
   user: any
@@ -162,7 +178,10 @@ const processUserPerfumeAction = async (params: PerfumeActionParams) => {
     comment,
     isPublic,
     userPerfumeId,
-    commentId
+    commentId,
+    tradePrice,
+    tradePreference,
+    tradeOnly
   } = params
 
   switch (actionType) {
@@ -171,7 +190,14 @@ const processUserPerfumeAction = async (params: PerfumeActionParams) => {
     case 'remove':
       return handleRemoveAction(user, perfumeId)
     case 'decant':
-      return handleDecantAction(user, perfumeId, amount)
+      return handleDecantAction({
+        user,
+        perfumeId,
+        amount,
+        tradePrice,
+        tradePreference,
+        tradeOnly
+      })
     case 'add-comment':
       return handleAddCommentAction({
         user, perfumeId, comment, isPublic, userPerfumeId
@@ -252,7 +278,10 @@ const processFormData = async (request: Request) => {
     comment: formData.get('comment') as string | undefined,
     isPublic: formData.get('isPublic') === 'true',
     userPerfumeId: formData.get('userPerfumeId') as string | undefined,
-    commentId: formData.get('commentId') as string | undefined
+    commentId: formData.get('commentId') as string | undefined,
+    tradePrice: formData.get('tradePrice') as string | undefined,
+    tradePreference: formData.get('tradePreference') as string | undefined,
+    tradeOnly: formData.get('tradeOnly') === 'true'
   }
 }
 
@@ -266,6 +295,9 @@ const prepareAction = async (params: {
   isPublic?: boolean;
   userPerfumeId?: string;
   commentId?: string;
+  tradePrice?: string;
+  tradePreference?: string;
+  tradeOnly?: boolean;
 }) => {
   const {
     authResult,
@@ -275,7 +307,10 @@ const prepareAction = async (params: {
     comment,
     isPublic,
     userPerfumeId,
-    commentId
+    commentId,
+    tradePrice,
+    tradePreference,
+    tradeOnly
   } = params
 
   const result = await processUserPerfumeAction({
@@ -286,7 +321,10 @@ const prepareAction = async (params: {
     comment,
     isPublic,
     userPerfumeId,
-    commentId
+    commentId,
+    tradePrice,
+    tradePreference,
+    tradeOnly
   })
 
   return new Response(

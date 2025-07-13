@@ -1,15 +1,25 @@
-import { type Dispatch, type SetStateAction } from "react"
+import { type Dispatch, type SetStateAction, useContext } from "react"
 import { useTranslation } from "react-i18next"
 import { MdDeleteForever } from "react-icons/md"
 import { useFetcher, useNavigation } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import VooDooDetails from "~/components/Atoms/VooDooDetails/VooDooDetails"
+import DangerModal from "~/components/Organisms/DangerModal/DangerModal"
+import Modal from "~/components/Organisms/Modal/Modal"
+import SessionContext from "~/providers/sessionProvider"
 import type { UserPerfumeI } from "~/types"
 
 import DeStashForm from "../DeStashForm/DeStashForm"
 import GeneralDetails from "./bones/GeneralDetails"
 import PerfumeComments from "./bones/PerfumeComments"
+
+interface DeStashData {
+  amount: string
+  price?: string
+  tradePreference: 'cash' | 'trade' | 'both'
+  tradeOnly: boolean
+}
 
 interface MySentListItemI {
   userPerfume: UserPerfumeI
@@ -22,32 +32,44 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
   const { t } = useTranslation()
   const fetcher = useFetcher()
   const navigation = useNavigation()
+  const { modalOpen, toggleModal, modalId } = useContext(SessionContext)
   const isSubmitting = navigation.state === 'submitting'
 
-  const handleDecantConfirm = (amount: string) => {
-    const foundUserPerfume =
-      userPerfumes.find(item => item.id === userPerfume.id)
+  const updateUserPerfumeState = (amount: string) => {
+    setUserPerfumes(prev => prev.map(perfume => perfume.id === userPerfume.id
+      ? { ...perfume, available: amount }
+      : perfume))
+  }
+
+  const createDecantFormData = (data: DeStashData, perfumeId: string) => {
+    const formData = new FormData()
+    formData.append('perfumeId', perfumeId)
+    formData.append('availableAmount', data.amount)
+    formData.append('action', 'decant')
+
+    if (data.price) {
+      formData.append('tradePrice', data.price)
+    }
+    formData.append('tradePreference', data.tradePreference)
+    formData.append('tradeOnly', data.tradeOnly.toString())
+
+    return formData
+  }
+
+  const handleDecantConfirm = (data: DeStashData) => {
+    const foundUserPerfume = userPerfumes.find(item => item.id === userPerfume.id)
     if (!foundUserPerfume) {
       // eslint-disable-next-line no-console
       console.error('User perfume not found for de-stashing')
       return
     }
 
-    // Use an approach that preserves the original array order
-    setUserPerfumes(prev => prev.map(perfume => perfume.id === userPerfume.id
-      ? { ...perfume, available: amount }
-      : perfume))
-
-    const formData = new FormData()
-    formData.append('perfumeId', foundUserPerfume.perfume.id)
-    formData.append('availableAmount', amount)
-    formData.append('action', 'decant')
-
+    updateUserPerfumeState(data.amount)
+    const formData = createDecantFormData(data, foundUserPerfume.perfume.id)
     fetcher.submit(formData, { method: 'post', action: '/admin/my-scents' })
   }
 
   const handleRemovePerfume = (perfumeId: string) => {
-    // Optimistically remove the perfume from the UI
     setUserPerfumes(prev => prev.filter(perfume => perfume.perfume.id !== perfumeId))
 
     const formData = new FormData()
@@ -76,7 +98,10 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
         <div className='flex gap-4'>
           <Button
             className="bg-red-500/20  hover:bg-red-600/50 focus:bg-red-700 disabled:bg-red-400 border-red-700 gap-2 flex items-center justify-center"
-            onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
+            onClick={() => {
+              const buttonRef = { current: document.createElement('button') }
+              toggleModal(buttonRef as any, 'delete-item', 'delete-item')
+            }}
             disabled={isSubmitting}
             variant={'icon'}
             size="sm"
@@ -105,6 +130,23 @@ const MyScentsListItem = ({ userPerfume, setUserPerfumes, userPerfumes }:
           />
         </VooDooDetails>
       </VooDooDetails>
+
+      {modalOpen && modalId === 'delete-item' && (
+        <Modal
+          innerType="dark"
+          animateStart="top"
+        >
+          <DangerModal>
+            <Button
+              className="bg-red-500/20 hover:bg-red-600/50 focus:bg-red-700 disabled:bg-red-400"
+              onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
+              disabled={isSubmitting}
+            >
+              Remove
+            </Button>
+          </DangerModal>
+        </Modal>
+      )}
     </li>
   )
 }
