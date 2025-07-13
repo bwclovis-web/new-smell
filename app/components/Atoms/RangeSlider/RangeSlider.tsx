@@ -8,10 +8,10 @@ import {
 import { useRangeSlider } from "~/hooks/useRangeSlider"
 import { styleMerge } from "~/utils/styleUtils"
 
-import { rangesliderVariants } from "./rangeslider-variants"
+import { rangeSliderFillVariants, rangeSliderMaxVariants, rangeSliderVariants, rangeSliderWrapVariants } from "./rangeSlider-variants"
 
 interface RangeSliderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>,
-  VariantProps<typeof rangesliderVariants> {
+  VariantProps<typeof rangeSliderWrapVariants> {
   min?: number
   max?: number
   step?: number
@@ -32,6 +32,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
   disabled = false,
   label,
   formatValue,
+  theme,
   size = "medium",
   ...restProps
 }) => {
@@ -68,7 +69,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
       )}
 
       <div
-        className={styleMerge(rangesliderVariants({ size, className }))}
+        className={styleMerge(rangeSliderWrapVariants({ size, className, theme }))}
         data-cy="RangeSlider"
         {...restProps}
       >
@@ -80,19 +81,14 @@ const RangeSlider: FC<RangeSliderProps> = ({
           aria-valuemax={max}
           aria-valuenow={internalValue}
           aria-disabled={disabled}
-          className={`
-            absolute top-1/2 left-0 right-0 h-2 -translate-y-1/2 
-            bg-noir-gold-100 rounded-full cursor-pointer transition-colors
-            focus:outline-none focus:ring-2 focus:ring-noir-gold focus:ring-offset-2
-            ${disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-300'}
-          `}
+          className={styleMerge(rangeSliderVariants({ className, theme }))}
           onClick={handleTrackClick}
           onTouchStart={handleTrackTouch}
           onKeyDown={handleKeyDown}
         >
           <div
             ref={fillRef}
-            className="absolute top-0 left-0 h-full bg-noir-gold-500 rounded-full"
+            className={styleMerge(rangeSliderFillVariants({ className, theme }))}
             style={{ width: `${percentage}%` }}
           />
         </div>
@@ -130,8 +126,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
           style={{ left: `${percentage}%` }}
         />
       </div>
-
-      <div className="flex justify-between text-xs text-noir-gold-500">
+      <div className={styleMerge(rangeSliderMaxVariants({ className, theme }))}>
         <span>{min}</span>
         <span>{max}</span>
       </div>

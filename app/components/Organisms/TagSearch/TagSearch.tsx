@@ -2,6 +2,7 @@ import { type VariantProps } from 'class-variance-authority'
 import { type FC, type HTMLProps, useState } from 'react'
 
 import { Button } from '~/components/Atoms/Button/Button'
+import Input from '~/components/Atoms/Input/Input'
 import { styleMerge } from '~/utils/styleUtils'
 
 import CreateTagButton from './Partials/CreateTagButton'
@@ -42,17 +43,16 @@ const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => 
     >
       <div className="flex flex-col mb-6">
         <label htmlFor="tag-search" className='block-label'>{`${label} search`}</label>
-        <input
+        <Input
+          shading={true}
           type="text"
           autoComplete="off"
           id="tag-search"
-          className="w-full rounded-sm border border-gray-500 px-2 py-1 text-lg mt-1 transition-all focus:bg-white/20 focus:outline-none focus:ring-2 focus:ring-noir-gold focus:border-transparent focus:ring-offset-2 dark:bg-noir-gray dark:text-white dark:focus:bg-noir-gray/20 dark:focus:ring-offset-noir-gray"
           onKeyUp={handleKeyUp}
           value={inputValue}
-          onChange={evt => setInputValue(evt.target.value)}
-        />
+          onChange={evt => setInputValue(evt.target.value)} inputType={''} inputRef={undefined} />
         {openDropdown && (
-          <ul className="bg-white rounded-b-md w-full relative z-10">
+          <ul className="bg-white rounded-b-md w-full absolute z-10">
             {results.map((item: any) => (
               <li key={item.id} className="p-2 hover:bg-noir-gray hover:text-noir-light cursor-pointer last-of-type:rounded-b-md">
                 <Button

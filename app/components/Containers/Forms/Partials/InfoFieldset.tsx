@@ -3,8 +3,9 @@ import Select from '~/components/Atoms/Select/Select'
 import { houseTypes } from '~/data/SelectTypes'
 const InfoFieldset = ({ inputRef, data, actions }) => (
   <fieldset className="flex flex-col gap-2">
-    <legend className="text-2xl text-noir-gray font-bold mb-2">Info</legend>
+    <legend className="text-3xl text-noir-gold-100 font-bold mb-2">Info</legend>
     <Input
+      shading={true}
       inputType="text"
       inputRef={inputRef}
       action={actions.name}
@@ -12,6 +13,7 @@ const InfoFieldset = ({ inputRef, data, actions }) => (
       defaultValue={data?.name}
     />
     <Input
+      shading={true}
       inputType="text"
       inputRef={inputRef}
       action={actions.description}
@@ -20,6 +22,7 @@ const InfoFieldset = ({ inputRef, data, actions }) => (
     />
     <div className="grid grid-cols-2 gap-2">
       <Input
+        shading={true}
         inputType="text"
         inputRef={inputRef}
         action={actions.founded}
@@ -29,6 +32,7 @@ const InfoFieldset = ({ inputRef, data, actions }) => (
       <Select label="House Type" selectId="type" selectData={houseTypes} defaultId={data?.type} />
     </div>
     <Input
+      shading={true}
       inputType="text"
       inputRef={inputRef}
       action={actions.image}

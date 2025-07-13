@@ -39,12 +39,19 @@ const PerfumeForm
       }
     })
 
+    const formatSelectData = (allHouses: any[]) => allHouses.map(house => ({
+      id: house.id,
+      name: house.name,
+      label: house.name,
+    }))
+
     return (
-      <Form method="POST" {...getFormProps(form)} className="p-4 rounded-md noir-outline flex flex-col gap-3">
+      <Form method="POST" {...getFormProps(form)} className="p-6 rounded-md noir-border max-w-6xl mx-auto bg-noir-dark/10 flex flex-col gap-3">
         <Input
           inputType="text"
           inputRef={inputRef}
           action={name}
+          shading={true}
           defaultValue={data?.name}
         />
         <Input
@@ -52,16 +59,18 @@ const PerfumeForm
           inputRef={inputRef}
           action={description}
           inputId="description"
+          shading={true}
           defaultValue={data?.description}
         />
         <Input
+          shading={true}
           inputType="text"
           inputRef={inputRef}
           action={image}
           inputId="image"
           defaultValue={data?.image}
         />
-        <Select selectData={allHouses} selectId="house" label="Perfume House" defaultId={data?.perfumeHouseId} />
+        <Select selectData={formatSelectData(allHouses)} selectId="house" label="Perfume House" defaultId={data?.perfumeHouseId} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
           <TagSearch
             name="notesTop"

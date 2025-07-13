@@ -125,7 +125,10 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
         size={'sm'}>{t('myScents.comments.addCommentButton')}</Button>
 
       {modalOpen && modalId === uniqueModalId && (
-        <Modal>
+        <Modal
+          innerType="dark"
+          animateStart="left"
+        >
           <CommentsModal
             perfume={userPerfume}
             onCommentAdded={newComment => {

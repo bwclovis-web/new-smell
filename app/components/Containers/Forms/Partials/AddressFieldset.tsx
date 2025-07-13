@@ -15,9 +15,10 @@ interface AddressFieldsetProps {
 }
 const AddressFieldset: FC<AddressFieldsetProps> = ({ inputRef, address, data }) => (
   <fieldset className="flex gap-2">
-    <legend className="text-2xl text-noir-gray font-bold mb-2">Address</legend>
+    <legend className="text-3xl text-noir-gold-100 font-bold mb-2">Address</legend>
     <div className="grid grid-cols-2 w-full gap-2">
       <Input
+        shading={true}
         inputType="text"
         inputRef={inputRef}
         action={address}
