@@ -1,3 +1,4 @@
+
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GrEdit } from 'react-icons/gr'
@@ -51,7 +52,7 @@ type OutletContextType = {
 // Main component
 const HouseDetailPage = () => {
   const { perfumeHouse } = useLoaderData<typeof loader>()
-  const context = useOutletContext<OutletContextType>()
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const {
@@ -75,67 +76,54 @@ const HouseDetailPage = () => {
     }
   }
 
+  console.log('perfumeHouse', perfumeHouse)
   return (
-    <section className='relative z-10'>
-      <header className="flex items-center justify-between mb-4">
-        <div className="flex flex-col">
-          <h1>{perfumeHouse.name}</h1>
-          <div className="flex gap-2 items-center justify-between">
-            <p className="text-xl text-shadow-noir-gold/20 text-shadow-sm font-black tracking-wide">
-              <span>Founded:</span>
-              {' '}
-              <span className='italic'>{perfumeHouse.founded}</span>
-            </p>
-          </div>
+    <section className='relative z-10 my-4'>
+      <header className="flex items-end justify-center mb-10 relative h-[600px]">
+        <img
+          src={perfumeHouse.image || ''}
+          alt={perfumeHouse.name}
+          loading="lazy"
+          width={300}
+          height={600}
+          className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 details-title filter contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-screen mask-linear-gradient-to-b"
+          style={{
+            viewTransitionName: `perfume-image-${perfumeHouse.id}`,
+            contain: 'layout style paint'
+          }}
+        />
+
+        <div className='relative z-10 px-8 text-center filter w-full rounded-lg py-4 text-shadow-lg text-shadow-noir-black/90'>
+          <h1 className='text-noir-gold'>{perfumeHouse.name}</h1>
         </div>
-        {context?.user?.role === 'admin' && (
-          <div className="flex gap-4 items-center">
-            <button
-              onClick={handleDelete}
-              aria-label={`delete ${perfumeHouse.name}`}
-              className="bg-red-600/60 hover:bg-red-600/90 rounded-full p-2 cursor-pointer border-2 border-red-600/60 hover:border-red-600/90 transition-all duration-300 ease-in-out"
-            >
-              <MdDeleteForever size={40} fill="white" />
-            </button>
-            <NavLink
-              aria-label={`edit ${perfumeHouse.name}`}
-              viewTransition
-              to={`/admin/perfume-house/${perfumeHouse.name}/edit`}
-              className="bg-blue-600/60 p-3 hover:bg-blue-600/90 text-white rounded-full flex items-center justify-center border-2 border-blue-600/60 hover:border-blue-600 transition-all duration-300 ease-in-out"
-            >
-              <GrEdit size={32} fill="white" />
-            </NavLink>
-          </div>
-        )}
       </header>
 
-      <div className="flex gap-20 flex-col lg:flex-row items-start justify-between">
-        <div className="md:w-1/2 noir-outline rounded-b-lg relative">
-          <img
-            src={perfumeHouse.image ?? undefined}
-            alt=""
-            className="w-full h-58 object-cover mb-2 rounded-t-lg dark:brightness-90 details-title"
-          />
-          <div className="px-6">
-            <p>{perfumeHouse.description}</p>
-            <PerfumeHouseAddressBlock perfumeHouse={perfumeHouse} />
-            <span className="tag absolute">{perfumeHouse.type}</span>
-          </div>
+      <div className="flex flex-col gap-20 mx-auto max-w-6xl">
+        <div className="noir-border relative bg-white/5 text-noir-gold-500">
+          <PerfumeHouseAddressBlock perfumeHouse={perfumeHouse} />
+          <p className='p-4 mb-4'>{perfumeHouse.description}</p>
+          <span className="tag absolute">{perfumeHouse.type}</span>
         </div>
         {perfumes.length > 0 && (
           <div
             ref={scrollContainerRef}
-            className="md:w-1/2 rounded-b-lg max-h-[800px] overflow-y-auto w-full relative overflow-x-hidden style-scroll"
+            className=" rounded-b-lg max-h-[800px] overflow-y-auto w-full relative overflow-x-hidden style-scroll"
           >
-            <h2 className="text-2xl font-bold mb-4">Perfumes</h2>
-            <ul className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 p-2">
+            <h2 className="text-noir-gold text-center mb-4">Perfumes</h2>
+            <ul className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 p-2 pb-4">
               {perfumes.map((perfume: any) => (
                 <li key={perfume.id}>
                   <NavLink
                     viewTransition
                     to={`/perfume/${perfume.name}`}
-                    className="block p-2 h-full noir-outline hover:bg-gray-100 w-full transition-colors duration-300 ease-in-out"
+                    className="block p-2 h-full noir-border relative w-full transition-colors duration-300 ease-in-out"
                   >
+                    <h3 className="
+                      text-center block text-lg tracking-wide py-2
+                      font-semibold text-noir-gold  leading-6"
+                    >
+                      {perfume.name}
+                    </h3>
                     <img
                       src={perfume.image ?? undefined}
                       alt={perfume.name}
@@ -145,21 +133,17 @@ const HouseDetailPage = () => {
                         contain: 'layout style paint'
                       }}
                     />
-                    <span className="
-                      text-center block text-lg tracking-wide py-2
-                      font-semibold text-noir-light bg-noir-gray rounded-md leading-6"
-                    >
-                      {perfume.name}
-                    </span>
+
                   </NavLink>
                 </li>
               ))}
-            </ul>            <div
+            </ul>
+            <div
               ref={observerRef}
               aria-live="polite"
               aria-busy={loading}
               role="status"
-              className="sticky bottom-0 w-full bg-gradient-to-t from-noir-light to-transparent flex flex-col items-center justify-center py-4"
+              className="sticky bottom-0 w-full bg-gradient-to-t from-noir-black to-transparent flex flex-col items-center justify-center py-4"
             >
               {loading && <span>Loading more perfumes…</span>}
               {!loading && hasMore && (
@@ -175,7 +159,6 @@ const HouseDetailPage = () => {
           </div>
         )}
       </div>
-
     </section>
   )
 }
