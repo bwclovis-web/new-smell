@@ -18,6 +18,7 @@ interface LinkProps extends Omit<LinkHTMLAttributes<HTMLAnchorElement>, 'style'>
   variant?: 'primary' | 'secondary' | 'danger' | 'link' | 'icon' | null
   url: string
   ref?: Ref<HTMLAnchorElement>
+  background?: 'red' | 'gold' | null
 }
 
 const Button: FC<ButtonProps> = ({ className, size, variant, children, background, type = 'button', ref, ...props }) => (
@@ -33,12 +34,12 @@ const Button: FC<ButtonProps> = ({ className, size, variant, children, backgroun
 )
 
 const VooDooLink: FC<LinkProps> = ({
-  className, size, variant, children, url, ...props }) => (
+  className, size, variant, children, url, background, ...props }) => (
   <NavLink
     to={url}
     viewTransition
     prefetch="intent"
-    className={styleMerge(buttonVariants({ className, size, variant }))}
+    className={styleMerge(buttonVariants({ className, size, variant, background }))}
     {...props}
   >
     {children}

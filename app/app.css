@@ -36,13 +36,13 @@ h1,h2,h3 {
 }
 
 h1 {
-  font-size: clamp(2rem, 3vw + 1rem, 20rem);
+  font-size: clamp(2rem, 4vw + 1rem, 20rem);
   font-weight: 900;
   line-height: 1;
 }
 
 h2 {
-  font-size: clamp(1.5rem, 2vw + 1rem, 2.3rem);
+  font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
   font-weight: 800;
   line-height: 1.2;
 }
@@ -50,6 +50,12 @@ h2 {
 .subtitle {
   font-size: clamp(1.3rem, 1.5vw + 0.5rem, 2rem);
   font-weight: 500;
+  line-height: 1.3;
+}
+
+.subtitle-sm {
+  @apply font-medium text-noir-gold-100;
+  font-size: clamp(1.3rem, 1.5vw + 0.5rem, 1.7rem);
   line-height: 1.3;
 }
 
@@ -65,15 +71,13 @@ h2 {
  @apply block font-medium text-noir-dark dark:text-white capitalize bg-noir-gold max-w-max p-1 md:p-2
 }
 
-.noir-outline {
-  @apply bg-noir-gray/20 rounded-md border-3 lg:border-6 border-noir-light/90 shadow-sm backdrop-blur-xs hover:bg-noir-gray/50 transition-colors duration-300 ease-in-out;
-}
+
 
 .tag {
   @apply text-sm bottom-2 right-2 bg-noir-gold/80 border-2 border-noir-gold rounded-lg text-noir-dark px-2 py-1 capitalize font-semibold
 }
 .inner-container {
-  @apply w-full lg:max-w-[90%] mx-auto px-4 sm:px-6 lg:px-8;
+  @apply w-full lg:max-w-[90%] mx-auto px-4 sm:px-6 lg:px-8 min-h-full;
 }
 
 .details-title {
@@ -88,4 +92,10 @@ h2 {
 .mask-linear-gradient-to-b {
   mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0) 100%);
   -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0) 100%);
+}
+
+.noir-border {
+  @apply border-4 relative border-double border-noir-gold  transition-all duration-300 ease-in-out
+        before:content-[''] before:absolute before:w-3 before:h-3 before:border-2 before:border-noir-gold before:top-0 before:left-0 before:border-r-0 before:border-b-0
+        after:content-[''] after:absolute after:w-3 after:h-3 after:border-2 after:border-noir-gold after:bottom-0 after:right-0 after:border-l-0 after:border-t-0;
 }

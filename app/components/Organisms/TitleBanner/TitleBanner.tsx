@@ -64,7 +64,7 @@ const TitleBanner: FC<TitleBannerProps> =
         />
         <div className='relative z-10 w-full max-w-max p-2 md:px-8 rounded-lg md:py-4 text-noir-gold text-center text-shadow-md text-shadow-lg/90 text-shadow-noir-black'>
           <h1>{heading}</h1>
-          <p className='subtitle'>{subheading}</p>
+          <p className='subtitle-sm'>{subheading}</p>
           {children && (
             <div>
               {children}

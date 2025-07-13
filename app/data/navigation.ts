@@ -11,7 +11,7 @@ export const mainNavigation = [
   {
     id: '1',
     key: 'houses',
-    label: 'Perfume Houses',
+    label: 'Behind the Bottle',
     path: ALL_HOUSES
   },
   {

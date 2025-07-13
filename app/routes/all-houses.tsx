@@ -83,7 +83,7 @@ const HouseFiltersSection = ({
   onHouseTypeChange: any
   onSortChange: any
 }) => (
-  <div className="space-y-6 inner-container py-4 flex flex-col md:flex-row md:justify-between md:items-center border border-noir-gold">
+  <div className="space-y-6 inner-container py-4 flex flex-col md:flex-row md:justify-between md:items-center noir-border">
     <div className='w-1/4 mb-0'>
       <SearchBar searchType={'perfume-house'} />
     </div>
@@ -139,7 +139,7 @@ const AllHousesPage = () => {
         onSortChange={handlers.handleSortChange}
       />
 
-      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-4 inner-container mt-6 auto-rows-fr">
+      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-4 inner-container my-6 auto-rows-fr">
         {data.isLoading ? (
           <div>Loading houses...</div>
         ) : (

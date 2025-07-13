@@ -1,11 +1,11 @@
 {
   "allHouses": {
     "meta": {
-      "title": "All Perfume Houses - Shadow and Sillage",
+      "title": "Behind the Bottle - Shadow and Sillage",
       "description": "Explore all the perfume houses available in our database."
     },
-    "heading": "All Perfume Houses",
-    "subheading": "Explore all the perfume houses available in our database.",
+    "heading": "Behind the Bottle",
+    "subheading": "They don't just make perfume, they leave a mark.",
     "filters": {
       "houseType": "Filter by Type:",
       "sortBy": "Sort by:"
@@ -28,11 +28,11 @@
   },
   "allPerfumes": {
     "meta": {
-      "title": "All Perfumes - Shadow and Sillage",
+      "title": "The Vault - Shadow and Sillage",
       "description": "Discover all the perfumes available in our database."
     },
-    "heading": "All Perfumes",
-    "subheading": "Discover all the perfumes available in our database."
+    "heading": "The Vault",
+    "subheading": "Every bottle tells a story. Some whisper. Some scream."
   },
   "auth": {
     "heading": "Welcome Back",
@@ -172,14 +172,14 @@
     "logo": " Shadow and Sillage",
     "login": "Log In",
     "loggingIn": "Logging in...",
-    "houses": "Perfume Houses",
-    "perfumes": "Perfumes",
-    "available": "Trading Post",
-    "admin": "Profile"
+    "houses": "Behind the Bottle",
+    "perfumes": "The Vault",
+    "available": "The Exchange",
+    "admin": "The Profile"
   },
   "profile": {
-    "heading": "Welcome Back!",
-    "subheading": "Manage your profile and settings.",
+    "heading": "The Profile",
+    "subheading": "What you keep. What you chase. What you leave behind.",
     "userInfo": "User Information",
     "email": "Email",
     "emailPlaceholder": "Enter your email",
@@ -210,11 +210,11 @@
   },
   "tradingPost": {
     "meta": {
-      "title": "Available Perfumes for Trade - Shadow and Sillage",
+      "title": "The Exchange - Shadow and Sillage",
       "description": "Browse perfumes available for trade from our community members."
     },
-    "heading": "Perfumes for trade",
-    "subheading": "These perfumes are available for trade from community members.",
+    "heading": "The Exchange",
+    "subheading": "Every bottle has a past. Every trade leaves a trace.",
     "count": "perfumes available",
     "empty": "No perfumes are currently available for trade.",
     "availableFrom": "Available from"
