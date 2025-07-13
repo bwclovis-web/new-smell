@@ -5,7 +5,7 @@ const TradersComments = ({ comments }) => (
         <span className="text-xs text-noir-gold-100">
           {new Date(comment.createdAt).toLocaleDateString()}
         </span>
-        <p className="text-noir-gold">{comment.comment}</p>
+        <p className="text-noir-gold text-base">{comment.comment}</p>
       </li>
     ))}
   </ul>

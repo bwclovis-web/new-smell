@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import process from 'node:process'
 
 import prom from '@isaacs/express-prometheus-middleware'
@@ -85,8 +87,7 @@ app.use((req, res, next) => {
     const query = req.url.slice(req.path.length)
     const safePath = req.path.slice(0, -1).replace(/\/+/g, '/')
     res.redirect(301, safePath + query)
-  }
- else {
+  } else {
     next()
   }
 })

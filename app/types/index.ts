@@ -64,6 +64,9 @@ export interface UserPerfumeI {
   price?: string
   type?: string
   placeOfPurchase?: string
+  tradePrice?: string
+  tradePreference?: 'cash' | 'trade' | 'both'
+  tradeOnly?: boolean
   comments?: {
     id: string
     userId: string

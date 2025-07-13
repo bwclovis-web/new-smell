@@ -65,13 +65,31 @@ const performRemoveAction = async (userId: string, perfumeId: string) => (
   await removeUserPerfume(userId, perfumeId)
 )
 
-const performDecantAction = async (
-  userId: string,
-  perfumeId: string,
-  availableAmount: string
-) => (
-  await updateAvailableAmount(userId, perfumeId, availableAmount)
-)
+const performDecantAction = async (params: {
+  userId: string;
+  perfumeId: string;
+  availableAmount: string;
+  tradePrice?: string;
+  tradePreference?: string;
+  tradeOnly?: boolean;
+}) => {
+  const {
+    userId,
+    perfumeId,
+    availableAmount,
+    tradePrice,
+    tradePreference,
+    tradeOnly
+  } = params
+  return await updateAvailableAmount({
+    userId,
+    perfumeId,
+    availableAmount,
+    tradePrice,
+    tradePreference,
+    tradeOnly
+  })
+}
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
@@ -81,6 +99,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const price = formData.get('price') as string | undefined
   const placeOfPurchase = formData.get('placeOfPurchase') as string | undefined
   const availableAmount = formData.get('availableAmount') as string | undefined
+  const tradePrice = formData.get('tradePrice') as string | undefined
+  const tradePreference = formData.get('tradePreference') as string | undefined
+  const tradeOnly = formData.get('tradeOnly') === 'true'
   const user = await sharedLoader(request)
 
   if (actionType === 'add') {
@@ -98,7 +119,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   if (actionType === 'decant' && availableAmount) {
-    const result = await performDecantAction(user.id, perfumeId, availableAmount)
+    const result = await performDecantAction({
+      userId: user.id,
+      perfumeId,
+      availableAmount,
+      tradePrice,
+      tradePreference,
+      tradeOnly
+    })
     return result
   }
 

@@ -56,6 +56,9 @@ export const getTraderById = async (id: string) => {
           amount: true,
           price: true,
           placeOfPurchase: true,
+          tradePrice: true,
+          tradePreference: true,
+          tradeOnly: true,
           perfume: {
             select: {
               id: true,
@@ -271,12 +274,55 @@ export const removeUserPerfume = async (userId: string, perfumeId: string) => {
   }
 }
 
-export const updateAvailableAmount = async (
-  userId: string,
-  perfumeId: string,
-  availableAmount: string
+// Helper to prepare update data for available amount
+const prepareUpdateData = (
+  availableAmount: string,
+  tradePrice?: string,
+  tradePreference?: string,
+  tradeOnly?: boolean
 ) => {
+  const updateData: any = { available: availableAmount }
+
+  if (tradePrice !== undefined) {
+    updateData.tradePrice = tradePrice || null
+  }
+  if (tradePreference !== undefined) {
+    updateData.tradePreference = tradePreference
+  }
+  if (tradeOnly !== undefined) {
+    updateData.tradeOnly = tradeOnly
+  }
+
+  return updateData
+}
+
+// Helper to update perfume in database
+const updatePerfumeInDatabase = async (perfumeId: string, updateData: any) => (
+  await prisma.userPerfume.update({
+    where: { id: perfumeId },
+    data: updateData,
+    include: { perfume: true }
+  })
+)
+
+export const updateAvailableAmount = async (params: {
+  userId: string;
+  perfumeId: string;
+  availableAmount: string;
+  tradePrice?: string;
+  tradePreference?: string;
+  tradeOnly?: boolean;
+}) => {
   try {
+    const {
+      userId,
+      perfumeId,
+      availableAmount,
+      tradePrice,
+      tradePreference,
+      tradeOnly
+    } = params
+
     // Check if the user owns this perfume
     const existingPerfume = await findUserPerfume(userId, perfumeId)
 
@@ -284,12 +330,19 @@ export const updateAvailableAmount = async (
       return { success: false, error: 'Perfume not found in your collection' }
     }
 
-    // Update the available amount
-    const updatedPerfume = await prisma.userPerfume.update({
-      where: { id: existingPerfume.id },
-      data: { available: availableAmount },
-      include: { perfume: true }
-    })
+    // Prepare update data
+    const updateData = prepareUpdateData(
+      availableAmount,
+      tradePrice,
+      tradePreference,
+      tradeOnly
+    )
+
+    // Update the perfume with new data
+    const updatedPerfume = await updatePerfumeInDatabase(
+      existingPerfume.id,
+      updateData
+    )
 
     return { success: true, userPerfume: updatedPerfume }
   } catch (error) {
@@ -353,15 +406,15 @@ interface UpdateCommentParams {
 }
 
 // Helper function to find a user's comment
-const findUserComment = async (commentId: string) =>
+const findUserComment = async (commentId: string) => (
   // Note: After running npx prisma generate, this will be available
   prisma.userPerfumeComment.findUnique({
     where: { id: commentId }
   })
-
+)
 
 // Helper function to perform the comment update
-const performCommentUpdate = async (commentId: string, updateData: any) =>
+const performCommentUpdate = async (commentId: string, updateData: any) => (
   // Note: After running npx prisma generate, this will be available
   prisma.userPerfumeComment.update({
     where: { id: commentId },
@@ -370,7 +423,7 @@ const performCommentUpdate = async (commentId: string, updateData: any) =>
       perfume: true
     }
   })
-
+)
 
 // Helper function to validate comment ownership
 const validateCommentOwnership = (comment: any, userId: string) => {
