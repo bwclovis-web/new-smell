@@ -85,13 +85,20 @@ model UserPerfume {
 }
 
 model UserPerfumeRating {
-  id        String   @id @default(cuid())
-  userId    String
-  perfumeId String
-  rating    Int
-  createdAt DateTime @default(now())
-  perfume   Perfume  @relation(fields: [perfumeId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  id         String   @id @default(cuid())
+  userId     String
+  perfumeId  String
+  longevity  Int? // 1-5: Fleeting Shadow to Eternal Obsession
+  sillage    Int? // 1-5: Whispered Secret to Room Domination
+  gender     Int? // 1-5: Distinctly Feminine to Distinctly Masculine
+  priceValue Int? // 1-5: Highway Robbery to Stolen Treasure
+  overall    Int? // 1-5: Despise to Obsessed
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  perfume    Perfume  @relation(fields: [perfumeId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, perfumeId])
 }
 
 model UserPerfumeReview {

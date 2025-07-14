@@ -54,7 +54,7 @@ const PerfumeIcons: FC<PerfumeIconsProps>
     }
 
     return (
-      <div className="grid grid-cols-1 gap-2 noir-border p-4">
+      <div className="grid grid-cols-1 gap-2 noir-border relative p-4">
         <Button
           onClick={handleWishlistToggle}
           variant='icon'
