@@ -183,9 +183,37 @@ const parseMissingData = async (filePath: string) => {
     missingByBrand[brand]++
   })
 
+  // --- Perfume House missing info logic ---
+  // Query PerfumeHouse from Prisma and check for missing fields
+  const { prisma } = await import('../../db.server')
+  const houses = await prisma.perfumeHouse.findMany()
+  const missingHouseInfoByBrand: Record<string, number> = {}
+  let totalMissingHouseInfo = 0
+  houses.forEach(house => {
+    let missingFields = 0
+    if (!house.image) {
+      missingFields++
+    }
+    if (!house.description) {
+      missingFields++
+    }
+    if (!house.founded) {
+      missingFields++
+    }
+    if (!house.website) {
+      missingFields++
+    }
+    if (missingFields > 0) {
+      missingHouseInfoByBrand[house.name] = missingFields
+      totalMissingHouseInfo++
+    }
+  })
+
   return {
     totalMissing: missingData.length,
     missingByBrand,
+    totalMissingHouseInfo,
+    missingHouseInfoByBrand,
   }
 }
 
@@ -356,7 +384,12 @@ const collectReportData = async (
   allReports: ReportInfo[]
 ) => {
   // Parse the report files
-  const { totalMissing, missingByBrand } = await parseMissingData(missingPath)
+  const {
+    totalMissing,
+    missingByBrand,
+    totalMissingHouseInfo,
+    missingHouseInfoByBrand
+  } = await parseMissingData(missingPath)
   const { totalDuplicates, duplicatesByBrand } =
     await parseDuplicatesData(duplicatesPath)
 
@@ -369,6 +402,8 @@ const collectReportData = async (
     missingByBrand,
     duplicatesByBrand,
     historyData,
+    totalMissingHouseInfo,
+    missingHouseInfoByBrand,
   }
 }
 

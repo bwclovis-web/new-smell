@@ -35,9 +35,23 @@ type DataQualityStats = {
     missing: number[]
     duplicates: number[]
   }
+  totalMissingHouseInfo?: number
+  missingHouseInfoByBrand?: Record<string, number>
 }
 
 // Helper functions for chart data preparation
+// Helper to generate breakdown for missing house info
+const getMissingHouseInfoBreakdown =
+  (stats: DataQualityStats | null)
+    : Record<string, string[]> => {
+    if (!stats || !stats.missingHouseInfoByBrand) {
+      return {}
+    }
+    // This assumes backend returns missingHouseInfoByBrand as { houseName: number }
+    // For a more detailed breakdown, backend should return { houseName: [fields] }
+    // For now, we infer missing fields by showing count as array of 'Field missing'
+    return Object.fromEntries(Object.entries(stats.missingHouseInfoByBrand).map(([house, count]) => [house, Array(count).fill('Field missing')]))
+  }
 const prepareMissingChartData = (stats: DataQualityStats | null) => ({
   labels: stats ? Object.keys(stats.missingByBrand).slice(0, 10) : [],
   datasets: [
@@ -46,6 +60,24 @@ const prepareMissingChartData = (stats: DataQualityStats | null) => ({
       data: stats ? Object.values(stats.missingByBrand).slice(0, 10) : [],
       backgroundColor: 'rgba(255, 99, 132, 0.5)',
       borderColor: 'rgb(255, 99, 132)',
+      borderWidth: 1,
+    },
+  ],
+})
+const prepareMissingHouseInfoChartData = (stats: DataQualityStats | null) => ({
+  labels:
+    stats && stats.missingHouseInfoByBrand
+      ? Object.keys(stats.missingHouseInfoByBrand).slice(0, 10)
+      : [],
+  datasets: [
+    {
+      label: 'Missing House Info',
+      data:
+        stats && stats.missingHouseInfoByBrand
+          ? Object.values(stats.missingHouseInfoByBrand).slice(0, 10)
+          : [],
+      backgroundColor: 'rgba(255, 206, 86, 0.5)',
+      borderColor: 'rgb(255, 206, 86)',
       borderWidth: 1,
     },
   ],
@@ -111,15 +143,28 @@ const renderSummaryStats = (stats: DataQualityStats) => (
       <p className="text-3xl font-bold text-blue-600 mt-2">{stats.totalDuplicates}</p>
       <p className="text-sm text-blue-700 mt-1">Perfumes with multiple entries</p>
     </div>
+    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+      <h3 className="text-lg font-medium text-yellow-800">Missing House Info</h3>
+      <p className="text-3xl font-bold text-yellow-600 mt-2">{stats.totalMissingHouseInfo ?? 0}</p>
+      <p className="text-sm text-yellow-700 mt-1">Perfume houses missing contact info, descriptions, etc.</p>
+    </div>
   </div>
 )
 
-const renderChartVisualizations = (
-  missingChartData: any,
-  duplicateChartData: any,
-  chartOptions: any
-) => (
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+const renderChartVisualizations = ({
+  missingChartData,
+  duplicateChartData,
+  missingHouseInfoChartData,
+  chartOptions,
+  missingHouseInfoBreakdown
+}: {
+  missingChartData: any;
+  duplicateChartData: any;
+  missingHouseInfoChartData: any;
+  chartOptions: any;
+  missingHouseInfoBreakdown?: Record<string, string[]>;
+}) => (
+  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
     <div className="bg-gray-50 rounded-lg p-4">
       <h3 className="text-lg font-medium text-gray-800 mb-4">Top Brands with Missing Data</h3>
       <Bar options={chartOptions} data={missingChartData} />
@@ -128,6 +173,37 @@ const renderChartVisualizations = (
     <div className="bg-gray-50 rounded-lg p-4">
       <h3 className="text-lg font-medium text-gray-800 mb-4">Top Brands with Duplicates</h3>
       <Bar options={chartOptions} data={duplicateChartData} />
+    </div>
+
+    <div className="bg-gray-50 rounded-lg p-4">
+      <h3 className="text-lg font-medium text-gray-800 mb-4">Top Houses Missing Info</h3>
+      <Bar options={chartOptions} data={missingHouseInfoChartData} />
+      {/* Breakdown Table for Missing House Info */}
+      <>
+        {missingHouseInfoBreakdown &&
+          Object.keys(missingHouseInfoBreakdown).length > 0 && (
+            <div className="mt-6">
+              <h4 className="text-md font-semibold text-yellow-800 mb-2">Breakdown by House</h4>
+              <table className="min-w-full text-sm border border-yellow-200 rounded">
+                <thead>
+                  <tr className="bg-yellow-50">
+                    <th className="px-2 py-1 text-left text-yellow-900">House</th>
+                    <th className="px-2 py-1 text-left text-yellow-900">Missing Fields</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Object.entries(missingHouseInfoBreakdown)
+                    .map(([house, fields]) => (
+                      <tr key={house} className="border-t border-yellow-100">
+                        <td className="px-2 py-1 text-yellow-900">{house}</td>
+                        <td className="px-2 py-1 text-yellow-700">{fields.length}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+      </>
     </div>
   </div>
 )
@@ -201,7 +277,9 @@ const DashboardContent = ({
   chartOptions,
   missingChartData,
   duplicateChartData,
-  trendChartData
+  missingHouseInfoChartData,
+  trendChartData,
+  missingHouseInfoBreakdown
 }: {
   stats: DataQualityStats;
   timeframe: 'week' | 'month' | 'all';
@@ -209,7 +287,9 @@ const DashboardContent = ({
   chartOptions: any;
   missingChartData: any;
   duplicateChartData: any;
+  missingHouseInfoChartData: any;
   trendChartData: any;
+  missingHouseInfoBreakdown?: Record<string, string[]>;
 }) => (
   <div className="bg-white rounded-lg shadow p-6">
     <h2 className="text-2xl font-bold text-gray-900 mb-4">Perfume Data Quality Dashboard</h2>
@@ -221,7 +301,13 @@ const DashboardContent = ({
     {renderSummaryStats(stats)}
 
     {/* Chart Visualizations */}
-    {renderChartVisualizations(missingChartData, duplicateChartData, chartOptions)}
+    {renderChartVisualizations({
+      missingChartData,
+      duplicateChartData,
+      missingHouseInfoChartData,
+      chartOptions,
+      missingHouseInfoBreakdown
+    })}
 
     {/* Trend Chart */}
     {renderTrendChart(trendChartData)}
@@ -324,7 +410,9 @@ const createChartConfig = () => ({
 const prepareAllChartData = (stats: DataQualityStats | null) => ({
   missingChartData: prepareMissingChartData(stats),
   duplicateChartData: prepareDuplicateChartData(stats),
-  trendChartData: prepareTrendChartData(stats)
+  trendChartData: prepareTrendChartData(stats),
+  missingHouseInfoChartData: prepareMissingHouseInfoChartData(stats),
+  missingHouseInfoBreakdown: getMissingHouseInfoBreakdown(stats),
 })
 
 // Render component based on loading/error state
@@ -366,7 +454,9 @@ const renderDashboardState = ({
       chartOptions={chartOptions}
       missingChartData={chartData.missingChartData}
       duplicateChartData={chartData.duplicateChartData}
+      missingHouseInfoChartData={chartData.missingHouseInfoChartData}
       trendChartData={chartData.trendChartData}
+      missingHouseInfoBreakdown={chartData.missingHouseInfoBreakdown}
     />
   )
 }
