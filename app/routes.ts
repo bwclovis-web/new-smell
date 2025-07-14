@@ -7,6 +7,7 @@ export default [
     route('perfume-house/:houseId', 'routes/perfume-house.tsx'),
 
     route('the-vault', 'routes/the-vault.tsx'),
+    route('rating-demo', 'routes/rating-demo.tsx'),
     route('trader/:id', 'routes/trader-profile.tsx'),
     route('the-exchange', 'routes/the-exchange.tsx'),
     route('perfume/:id', 'routes/perfume.tsx'),
@@ -24,6 +25,7 @@ export default [
     route('api/log-out', 'routes/api/logOut.ts'),
     route('api/more-perfumes', 'routes/api/more-perfumes.ts'),
     route('api/data-quality', 'routes/api/data-quality.tsx'),
+    route('api/ratings', 'routes/api.ratings.tsx'),
 
     layout('routes/admin/AdminLayout.tsx', [
       route('admin/', 'routes/admin/adminIndex.tsx'),

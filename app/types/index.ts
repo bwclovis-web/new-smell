@@ -52,6 +52,85 @@ export function createSafeUser(user: User | null): SafeUser | null {
 
 export type { UserRole }
 
+// Rating System Types - Film Noir Themed
+export interface RatingLabels {
+  longevity: Record<number, string>
+  sillage: Record<number, string>
+  gender: Record<number, string>
+  priceValue: Record<number, string>
+  overall: Record<number, string>
+}
+
+export const RATING_LABELS: RatingLabels = {
+  longevity: {
+    1: 'Fleeting Shadow',
+    2: 'Brief Encounter',
+    3: 'Steady Presence',
+    4: 'Lingering Mystery',
+    5: 'Eternal Obsession'
+  },
+  sillage: {
+    1: 'Whispered Secret',
+    2: 'Subtle Intrigue',
+    3: 'Bold Statement',
+    4: 'Commanding Aura',
+    5: 'Room Domination'
+  },
+  gender: {
+    1: 'Distinctly Feminine',
+    2: 'Elegantly Feminine',
+    3: 'Mysterious Unisex',
+    4: 'Dashingly Masculine',
+    5: 'Distinctly Masculine'
+  },
+  priceValue: {
+    1: 'Highway Robbery',
+    2: 'Steep Price',
+    3: 'Fair Deal',
+    4: 'Smart Investment',
+    5: 'Stolen Treasure'
+  },
+  overall: {
+    1: 'Despise',
+    2: 'Dismiss',
+    3: 'Tolerable',
+    4: 'Admire',
+    5: 'Obsessed'
+  }
+}
+
+export interface UserPerfumeRating {
+  id: string
+  userId: string
+  perfumeId: string
+  longevity?: number | null
+  sillage?: number | null
+  gender?: number | null
+  priceValue?: number | null
+  overall?: number | null
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface PerfumeRatingStats {
+  perfumeId: string
+  totalVotes: number
+  averages: {
+    longevity: number | null
+    sillage: number | null
+    gender: number | null
+    priceValue: number | null
+    overall: number | null
+  }
+  distribution: {
+    longevity: Record<number, number>
+    sillage: Record<number, number>
+    gender: Record<number, number>
+    priceValue: Record<number, number>
+    overall: Record<number, number>
+  }
+}
+
 interface PerfumeHouseI {
   id: string
   name: string
