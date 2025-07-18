@@ -62,11 +62,11 @@ const TitleBanner: FC<TitleBannerProps> =
           alt=""
           className={`hero-image w-full h-full object-cover ${imagePos} ${flipImage && 'scale-x-[-1]'} mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 hero-image object-cover w-full h-full filter grayscale-[100%] contrast-[1] brightness-[0.9] sepia-[0.2] mix-blend-overlay mask-linear-gradient-to-b`}
         />
-        <div className='relative z-10 w-full max-w-max p-2 md:px-8 rounded-lg md:py-4 text-noir-gold text-center text-shadow-md text-shadow-lg/90 text-shadow-noir-black'>
+        <div className='relative z-10 w-full max-w-max p-2 md:px-8 rounded-lg md:py-4 text-noir-gold text-center text-shadow-lg text-shadow-noir-black'>
           <h1 className='hero-title'>{heading}</h1>
           <p className='subtitle-sm filter'>{subheading}</p>
           {children && (
-            <div className='p-2 mt-6 '>
+            <div className='p-2 mt-6'>
               {children}
             </div>
           )}

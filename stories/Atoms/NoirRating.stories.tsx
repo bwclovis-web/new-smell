@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import NoirRating from '~/components/Atoms/NoirRating/NoirRating'
+import NoirRating from '~/components/Organisms/NoirRating/NoirRating'
 
 // Demo component to showcase NoirRating functionality
 function NoirRatingDemo() {

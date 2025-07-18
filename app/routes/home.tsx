@@ -91,7 +91,11 @@ export default function Home() {
             defaultId={searchType}
             ariaLabel="Select search type"
           />
-          <SearchBar searchType={searchType} className="mt-2 md:mt-8" />
+          <SearchBar
+            searchType={searchType}
+            variant='flat'
+            className="mt-2 md:mt-8"
+          />
         </div>
       </section>
     </div>

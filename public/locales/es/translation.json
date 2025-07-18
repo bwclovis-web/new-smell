@@ -1,11 +1,11 @@
 {
   "allHouses": {
     "meta": {
-      "title": "Todas las Casas de Perfumes - Shadow and Sillage",
+      "title": "Tras el Frasco - Shadow and Sillage",
       "description": "Explora todas las casas de perfumes disponibles en nuestra base de datos."
     },
-    "heading": "Todas las Casas de Perfumes",
-    "subheading": "Explora todas las casas de perfumes disponibles en nuestra base de datos.",
+    "heading": "Tras el Frasco",
+    "subheading": "No solo hacen perfume, dejan huella.",
     "filters": {
       "houseType": "Filtrar por Tipo:",
       "sortBy": "Ordenar por:"
@@ -28,14 +28,14 @@
   },
   "allPerfumes": {
     "meta": {
-      "title": "Todos los Perfumes - Shadow and Sillage",
+      "title": "La Bóveda - Shadow and Sillage",
       "description": "Descubre todos los perfumes disponibles en nuestra base de datos."
     },
-    "heading": "Todos los Perfumes",
-    "subheading": "Descubre todos los perfumes disponibles en nuestra base de datos."
+    "heading": "La Bóveda",
+    "subheading": "Cada frasco cuenta una historia. Algunos susurran. Algunos gritan."
   },
   "auth": {
-    "heading": "Bienvenido de Vuelta",
+    "heading": "Bienvenido de nuevo",
     "subheading": "Inicia sesión en tu cuenta aquí. Si no tienes una,",
     "createAccount": "Haz clic aquí para crear"
   },
@@ -111,9 +111,9 @@
       "houses": "Casas de Perfumes",
       "perfumes": "Perfumes"
     },
-    "heading": "Shadow and Sillage",
+    "heading": "Shadow & Sillage",
     "description": "Una base de datos completa de perfumes y sus casas.",
-    "subheading": "Buscar por:"
+    "subheading": "Para coleccionistas de perfumes y secretos."
   },
   "myScents": {
     "meta": {
@@ -129,7 +129,7 @@
       }
     },
     "listItem": {
-      "destashed": "Destash",
+      "destashed": "DeStashed",
       "name": "Nombre",
       "pointOfPurchase": "Punto de Compra",
       "price": "Precio",
@@ -139,7 +139,7 @@
       "type": "Tipo",
       "viewDetails": "Ver / Editar detalles",
       "viewComments": "Ver Mis Comentarios",
-      "setDestashed": "Destash Perfume"
+      "setDestashed": "De-stash Perfume"
     },
     "heading": "Mis Fragancias",
     "subheading": "Gestiona tu colección personal de perfumes.",
@@ -172,14 +172,14 @@
     "logo": " Shadow and Sillage",
     "login": "Iniciar Sesión",
     "loggingIn": "Iniciando sesión...",
-    "houses": "Casas de Perfumes",
-    "perfumes": "Perfumes",
-    "available": "Puesto de Intercambio",
-    "admin": "Perfil"
+    "houses": "Tras el Frasco",
+    "perfumes": "La Bóveda",
+    "available": "El Intercambio",
+    "admin": "El Perfil"
   },
   "profile": {
-    "heading": "¡Bienvenido de Vuelta!",
-    "subheading": "Gestiona tu perfil y configuración.",
+    "heading": "El Perfil",
+    "subheading": "Lo que guardas. Lo que persigues. Lo que dejas atrás.",
     "userInfo": "Información del Usuario",
     "email": "Correo Electrónico",
     "emailPlaceholder": "Ingresa tu correo electrónico",

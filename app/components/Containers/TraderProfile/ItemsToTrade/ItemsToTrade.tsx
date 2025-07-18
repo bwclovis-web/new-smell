@@ -23,23 +23,24 @@ const PerfumeHeader = ({ userPerfume }: { userPerfume: UserPerfumeI }) => (
 
 // Price and availability component
 const PriceInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => (
-  <div className="text-md text-noir-gold-500 mt-1">
-    Available: {userPerfume.available || '0'}ml
-    {userPerfume.price && (
-      <span className="ml-2">• Price: ${userPerfume.price}</span>
-    )}
-  </div>
+  <p className="text-md text-noir-gold-100 mt-4">
+    Available: <span className="text-noir-gold-500">{userPerfume.available || '0'}ml</span>
+  </p>
 )
 
 // Helper component for trade information
 const TradeInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => (
-  <div className="text-sm text-noir-gold-300 mt-2 space-y-1">
+  <div className="text-sm text-noir-gold-300 space-y-1">
     {userPerfume.tradePrice && (
-      <div className="font-medium">Trade Price: ${userPerfume.tradePrice}/ml</div>
+      <p className="font-medium text-noir-gold-100">Trade Price:
+        <span className="text-noir-gold-500"> ${userPerfume.tradePrice}/ml</span>
+      </p>
     )}
-    <div>Preference: {getTradeLabel(userPerfume.tradePreference || 'cash')}</div>
+    <p className="text-noir-gold-100">Preference:
+      <span className="text-noir-gold-500"> {getTradeLabel(userPerfume.tradePreference || 'cash')}</span>
+    </p>
     {userPerfume.tradeOnly && (
-      <div className="text-amber-300 font-medium">🔄 Trade Only Item</div>
+      <div className="text-gold-noir font-medium">🔄 Trade Only Item</div>
     )}
   </div>
 )
