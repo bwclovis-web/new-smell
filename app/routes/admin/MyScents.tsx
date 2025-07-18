@@ -148,7 +148,7 @@ const MyScentsPage = () => {
         <AddToCollectionModal />
       </TitleBanner>
       <div className='noir-border relative max-w-max mx-auto text-center flex flex-col items-center justify-center gap-4 p-4 my-6'>
-        <h2 className="text-noir-gold mb-2">{t('myScents.collection.heading')}</h2>
+        <h2 className="mb-2">{t('myScents.collection.heading')}</h2>
         {userPerfumes.length === 0
           ? (
             <div>

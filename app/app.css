@@ -26,13 +26,17 @@ body {
 }
 
 h1,h2,h3 {
- @apply font-headline;
+ @apply font-headline text-noir-gold;
 }
 
 .hero-title {
   @apply font-black text-center text-noir-gold  mb-0 pb-0;
   font-size: clamp(3rem, 6vw + 1rem, 20rem);
   view-transition-name: hero-title;
+}
+
+.title-banner{
+  height: calc(100vh - 80px);
 }
 
 h1 {

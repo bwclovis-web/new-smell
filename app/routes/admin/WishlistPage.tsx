@@ -53,7 +53,7 @@ const WishlistPage = () => {
       {wishlist.length === 0
         ? (
           <div className="noir-border max-w-max mx-auto text-center flex flex-col items-center justify-center gap-4 p-4 my-6">
-            <h2 className="text-noir-gold">
+            <h2>
               {t('wishlist.empty.heading')}
             </h2>
             <p className="text-noir-gold-100 text-xl">

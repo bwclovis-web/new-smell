@@ -6,6 +6,7 @@
 /build/
 /scraper/
 .vercel
+/csv/
 
 # Temporary files
 /temp/

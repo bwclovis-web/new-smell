@@ -52,7 +52,7 @@ const TitleBanner: FC<TitleBannerProps> =
       { scope: container }
     )
     return (
-      <header className="relative w-full h-[400px] lg:h-[1100px] flex items-end py-6 justify-center overflow-hidden">
+      <header className="relative w-full title-banner flex items-end py-6 justify-center overflow-hidden">
         <div className="absolute inset-0 bg-noir-black/30 mask-t-from-5% mask-t-to-100% mask"></div>
         <img
           src={image}

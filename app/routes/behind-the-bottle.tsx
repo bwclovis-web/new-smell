@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { type MetaFunction } from 'react-router'
 
 import RadioSelect from '~/components/Atoms/RadioSelect/RadioSelect'
+import Select from '~/components/Atoms/Select/Select'
 import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
 import SearchBar from '~/components/Organisms/SearchBar/SearchBar'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
@@ -88,22 +89,24 @@ const HouseFiltersSection = ({
       <SearchBar searchType={'perfume-house'} />
     </div>
 
-    <div className='flex flex-col md:flex-row gap-4 w-full md:w-3/4 justify-end items-end md:items-center'>
+    <div className='flex flex-col md:flex-row gap-6 w-full md:w-3/4 justify-end items-end md:items-center'>
       <div>
-        <h3 className="text-lg font-medium mb-2">{t('allHouses.filters.houseType')}</h3>
-        <RadioSelect
-          data={houseTypeOptions}
-          handleRadioChange={onHouseTypeChange}
+        <h3 className="mb-2">{t('allHouses.filters.houseType')}</h3>
+        <Select
+          selectData={houseTypeOptions}
+          action={onHouseTypeChange}
           className="flex-wrap"
+          selectId="house-type"
         />
       </div>
 
       <div>
-        <h3 className="text-lg font-medium mb-2">{t('allHouses.filters.sortBy')}</h3>
-        <RadioSelect
-          data={sortOptions}
-          handleRadioChange={onSortChange}
+        <h3 className="mb-2">{t('allHouses.filters.sortBy')}</h3>
+        <Select
+          selectData={sortOptions}
+          action={onSortChange}
           className="flex-wrap"
+          selectId="sort-by"
         />
       </div>
     </div>

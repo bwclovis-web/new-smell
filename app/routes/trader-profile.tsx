@@ -33,7 +33,7 @@ const TraderProfilePage = () => {
       />
       <div className="flex flex-col md:flex-row justify-between inner-container items-start gap-8 p-6">
         <div className="noir-border relative w-1/2 p-4">
-          <h2 className="text-noir-gold">Items Available</h2>
+          <h2 >Items Available</h2>
           {trader.UserPerfume.length > 0 ? (
             <ul className="mt-6">
               {trader.UserPerfume.map((userPerfume: any) => (
@@ -48,7 +48,7 @@ const TraderProfilePage = () => {
           )}
         </div>
         <div className="noir-border relative w-1/2 p-4">
-          <h2 className="text-noir-gold">Items Searching For</h2>
+          <h2>Items Searching For</h2>
         </div>
       </div>
     </section>

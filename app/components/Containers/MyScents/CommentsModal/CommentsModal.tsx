@@ -73,7 +73,7 @@ const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
 
   return (
     <div className="p-4">
-      <h2 className="text-noir-gold">{t('comments.title', 'Comments')}</h2>
+      <h2>{t('comments.title', 'Comments')}</h2>
       <p className="mb-4 text-xl text-noir-gold-100">{t('comments.description', 'This is where you can add your personal comments about the scents.')}</p>
       <Form method="post" className="space-y-3" onSubmit={handleSubmit}>
         <label htmlFor="comment" className="block text-md font-medium text-noir-gold-500">
