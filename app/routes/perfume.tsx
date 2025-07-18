@@ -150,7 +150,7 @@ const PerfumeHeader = ({
       }}
     />
     <div className='relative z-10 px-8 text-center filter w-full rounded-lg py-4 text-shadow-lg text-shadow-noir-black/90'>
-      <h1 className='text-noir-gold'>{perfume.name}</h1>
+      <h1>{perfume.name}</h1>
       <p className='text-lg tracking-wide mt-2 text-noir-gold-500'>
         {t('singlePerfume.subheading')}
         <NavLink

@@ -85,12 +85,12 @@ const PerfumeRatingSystem = ({
 
   return (
     <div className="bg-noir-dark/20 rounded-lg p-6">
-      <h2 className="text-xl font-bold text-noir-gold mb-6 text-center">
+      <h2 className="text-xl font-bold text-noir-gold mb-1 text-center">
         {isInteractive ? 'Rate This Perfume' : 'Community Ratings'}
       </h2>
 
       {!isLoggedIn && (
-        <p className="text-sm text-noir-gold-200 mb-4 text-center">
+        <p className="text-sm text-noir-gold-500 mb-4 text-center">
           Please log in to rate this perfume
         </p>
       )}
@@ -111,7 +111,7 @@ const PerfumeRatingSystem = ({
                 showLabel
               />
 
-              <div className="text-xs text-noir-gold-400 text-center">
+              <div className="text-xs text-noir-gold-100 text-center">
                 {averageRatings && averageRatings[key] ? (
                   <>
                     Community Average: {averageRatings[key]?.toFixed(1)}/5

@@ -94,7 +94,7 @@ const HouseDetailPage = () => {
         />
 
         <div className='relative z-10 px-8 text-center filter w-full rounded-lg py-4 text-shadow-lg text-shadow-noir-black/90'>
-          <h1 className='text-noir-gold'>{perfumeHouse.name}</h1>
+          <h1>{perfumeHouse.name}</h1>
         </div>
       </header>
 
@@ -109,7 +109,7 @@ const HouseDetailPage = () => {
             ref={scrollContainerRef}
             className=" rounded-b-lg max-h-[800px] overflow-y-auto w-full relative overflow-x-hidden style-scroll"
           >
-            <h2 className="text-noir-gold text-center mb-4">Perfumes</h2>
+            <h2 className="text-center mb-4">Perfumes</h2>
             <ul className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 p-2 pb-4">
               {perfumes.map((perfume: any) => (
                 <li key={perfume.id}>

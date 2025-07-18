@@ -41,7 +41,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
     <div className="w-full">
       <div className="flex flex-col items-start justify-between mb-4">
         <div>
-          <h2 className="text-noir-gold"> {t('myScents.modal.title')}</h2>
+          <h2> {t('myScents.modal.title')}</h2>
           <p className="text-xl text-noir-gold-100">{t('myScents.modal.description')}</p>
         </div>
         {modalData === "create" && !perfume && (

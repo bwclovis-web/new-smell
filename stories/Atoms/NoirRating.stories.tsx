@@ -20,7 +20,7 @@ function NoirRatingDemo() {
         <div className="bg-noir-dark-800 rounded-lg p-6 space-y-8">
           <div className="grid gap-6">
             <div className="flex flex-col items-center">
-              <h3 className="text-noir-gold-200 mb-3 font-medium">
+              <h3 className="mb-3 font-medium">
                 Longevity
               </h3>
               <NoirRating
@@ -33,7 +33,7 @@ function NoirRatingDemo() {
             </div>
 
             <div className="flex flex-col items-center">
-              <h3 className="text-noir-gold-200 mb-3 font-medium">
+              <h3 className="mb-3">
                 Sillage
               </h3>
               <NoirRating
@@ -46,7 +46,7 @@ function NoirRatingDemo() {
             </div>
 
             <div className="flex flex-col items-center">
-              <h3 className="text-noir-gold-200 mb-3 font-medium">
+              <h3 className="mb-3">
                 Gender Appeal
               </h3>
               <NoirRating
@@ -59,7 +59,7 @@ function NoirRatingDemo() {
             </div>
 
             <div className="flex flex-col items-center">
-              <h3 className="text-noir-gold-200 mb-3 font-medium">
+              <h3 className="mb-3">
                 Price Value
               </h3>
               <NoirRating
@@ -72,7 +72,7 @@ function NoirRatingDemo() {
             </div>
 
             <div className="flex flex-col items-center">
-              <h3 className="text-noir-gold-200 mb-3 font-medium">
+              <h3 className="mb-3">
                 Overall Rating
               </h3>
               <NoirRating
@@ -86,7 +86,7 @@ function NoirRatingDemo() {
           </div>
 
           <div className="border-t border-noir-dark-600 pt-6">
-            <h3 className="text-noir-gold-200 mb-4 font-medium text-center">
+            <h3 className="mb-4 text-center">
               Read-Only Example (Different Sizes)
             </h3>
             <div className="space-y-4">

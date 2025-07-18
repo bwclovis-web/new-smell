@@ -13,7 +13,7 @@ const LinkCard = ({ data, type, children }) => {
         className="p-4 flex flex-col overflow-hidden justify-between items-center group h-full transition-all duration-300 ease-in-out"
       >
         <div className='text-center'>
-          <h2 className="text-noir-gold font-semibold text-wrap break-words text-xl">{data.name}</h2>
+          <h2 className="text-wrap break-words">{data.name}</h2>
           {data?.perfumeHouse?.name && <p className='text-md font-semibold text-noir-gold-100'>{data.perfumeHouse.name}</p>}
           {data.type && (
             <p className="text-sm absolute bottom-2 right-2 bg-noir-gold dark:bg-noir-gold/80 border rounded-sm text-noir-black px-2 py-1 capitalize font-bold border-noir-dark">

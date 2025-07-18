@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 
+import { RATING_LABELS } from '~/utils/constants'
+
 // import NoirIcon from '~/components/Atoms/NoirRating/NoirIcon'
-import { RATING_LABELS } from '~/types'
+
 
 interface SimpleNoirRatingProps {
   category: 'longevity' | 'sillage' | 'gender' | 'priceValue' | 'overall'
@@ -65,7 +67,7 @@ const SimpleNoirRating = ({
             onMouseEnter={() => onChange && handleHover(rating)}
             onMouseLeave={() => onChange && handleLeave()}
             className={`
-              w-16 h-20 
+              w-16 my-2
               transition-opacity duration-300 
               cursor-pointer
               ${onChange ? 'hover:opacity-80' : 'cursor-default'}
