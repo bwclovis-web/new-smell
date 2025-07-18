@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 
-import { RATING_LABELS } from '~/types'
+import { RATING_LABELS } from '~/utils/constants'
 
 import RatingLabel from './RatingLabel'
 import StarRating from './StarRating'
@@ -14,9 +14,6 @@ interface NoirRatingProps {
   size?: 'sm' | 'md' | 'lg'
   showLabel?: boolean
 }
-
-
-
 
 const NoirRating = ({
   category,
