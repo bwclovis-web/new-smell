@@ -2,10 +2,10 @@
  * Utility functions for user-related operations
  */
 
-type UserLike = { 
-  firstName?: string | null; 
-  lastName?: string | null; 
-  email: string 
+type UserLike = {
+  firstName?: string | null;
+  lastName?: string | null;
+  email: string
 } | null
 
 /**
@@ -18,11 +18,11 @@ export const getUserDisplayName = (user: UserLike): string => {
   if (!user) {
     return 'Unknown User'
   }
-  
+
   if (user.firstName || user.lastName) {
     return `${user.firstName || ''} ${user.lastName || ''}`.trim()
   }
-  
+
   return user.email
 }
 
@@ -36,10 +36,25 @@ export const getTraderDisplayName = (trader: UserLike): string => {
   if (!trader) {
     return 'Unknown Trader'
   }
-  
+
   if (trader.firstName || trader.lastName) {
     return `${trader.firstName || ''} ${trader.lastName || ''}`.trim()
   }
-  
+
   return trader.email
+}
+
+export const createSafeUser = (user: UserI | null): SafeUser | null => {
+  if (!user) {
+    return null
+  }
+
+  return {
+    id: user.id,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    username: user.username,
+    role: user.role
+  }
 }

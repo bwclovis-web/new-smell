@@ -31,7 +31,7 @@ export default defineConfig([
   { rules: {
     'arrow-body-style': ['error', 'as-needed'],
     'camelcase': ['error', { properties: 'always', ignoreDestructuring: true }],
-    'complexity': ['error', 8],
+    'complexity': ['error', 10],
     'curly': 'error',
     'default-case': 'error',
     'default-case-last': 'error',

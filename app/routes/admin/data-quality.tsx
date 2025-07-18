@@ -1,22 +1,16 @@
 import { useLoaderData } from 'react-router'
 
-import DataQualityDashboard from '~/components/Organisms/DataQualityDashboard/DataQualityDashboard'
+import DataQualityDashboard from '~/components/Containers/DataQualityDashboard/DataQualityDashboard'
 import { sharedLoader } from '~/utils/sharedLoader'
 export const ROUTE_PATH = '/admin/data-quality' as const
-// Ensure only admin users can access this route
+
 export const loader = async ({ request }: { request: Request }) => {
   const user = await sharedLoader(request)
-
-  // Here you could add additional admin-only check
-  // if you have a role system in your app
-
   return { user }
 }
 
 export default function DataQualityPage() {
   const { user } = useLoaderData<typeof loader>()
-
-  // Only show dashboard if user is admin
   const isAdmin = user?.role === 'admin' || user?.isAdmin
 
   return (
