@@ -5,7 +5,7 @@ import { styleMerge } from '~/utils/styleUtils'
 
 import { selectVariants, selectWrapperVariants } from './select-variants'
 
-interface SelectProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
+interface SelectProps extends Omit<HTMLProps<HTMLSelectElement>, 'action' | 'size'>,
   VariantProps<typeof selectWrapperVariants> {
   selectId: string
   // eslint-disable-next-line no-unused-vars
@@ -14,6 +14,7 @@ interface SelectProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
   ariaLabel?: string
   size?: 'default' | 'compact' | 'expanded'
   selectData: Array<{
+    label: string
     id: string | number
     name: string
   }>

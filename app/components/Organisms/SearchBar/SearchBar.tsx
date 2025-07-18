@@ -13,7 +13,7 @@ interface SearchBarProps extends HTMLProps<HTMLDivElement>,
 }
 
 const SearchBar: FC<SearchBarProps> =
-  ({ className, searchType, action, placeholder }) => {
+  ({ className, searchType, action, placeholder, variant }) => {
     const [results, setResults] = useState([])
     const [searchValue, setSearchValue] = useState('')
 
@@ -59,7 +59,7 @@ const SearchBar: FC<SearchBarProps> =
             onKeyUp={evt => {
               handleKeyUp(evt)
             }}
-            className={styleMerge(searchbarVariants({ className }))}
+            className={styleMerge(searchbarVariants({ className, variant }))}
           />
         </form>
         {results.length > 0 && (
