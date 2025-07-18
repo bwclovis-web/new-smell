@@ -1,3 +1,62 @@
+// Download all house fields as CSV
+const handleDownloadCSV = async () => {
+  const res = await fetch('/api/data-quality-houses')
+  const response = await res.json()
+  const houses = response.houses || []
+  const fields = [
+    'id', 'name', 'description', 'image', 'website', 'country', 'founded', 'type', 'email', 'phone', 'address', 'createdAt', 'updatedAt'
+  ]
+  const rows = [fields]
+  for (const house of houses) {
+    rows.push(fields.map(field => {
+      let val = ''
+      if (field === 'id') {
+        val = house.id ?? ''
+      } else if (field === 'type' && typeof house.type !== 'string' && house.name) {
+        val = house.name ?? ''
+      } else if (field === 'address' && typeof house.address !== 'string' && house.type) {
+        val = house.type ?? ''
+      } else if (field === 'createdAt' && house.createdAt) {
+        val = typeof house.createdAt === 'string' ? house.createdAt : new Date(house.createdAt).toISOString()
+      } else if (field === 'updatedAt' && house.updatedAt) {
+        val = typeof house.updatedAt === 'string' ? house.updatedAt : new Date(house.updatedAt).toISOString()
+      } else if (Object.prototype.hasOwnProperty.call(house, field)) {
+        val = house[field] ?? ''
+      }
+      // Escape quotes and wrap in quotes (Excel compatible)
+      return `"${String(val).replace(/"/g, '""')}"`
+    }))
+  }
+  const csvContent = rows.map(row => row.join(',')).join('\n')
+  const blob = new Blob([csvContent], { type: 'text/csv' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'perfume_houses.csv'
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+// Upload CSV and POST to backend
+const handleUploadCSV = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0]
+  if (!file) {
+    return
+  }
+  const text = await file.text()
+  const res = await fetch('/api/update-house-info', {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/csv' },
+    body: text
+  })
+  const result = await res.json()
+  if (result.error) {
+    alert('Error updating houses: ' + result.error)
+  } else {
+    alert('CSV uploaded! Updated: ' + result.results.length)
+    window.location.reload()
+  }
+}
 import {
   BarElement,
   CategoryScale,
@@ -9,7 +68,7 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Bar, Line } from 'react-chartjs-2'
 
 // Register ChartJS components
@@ -461,17 +520,55 @@ const renderDashboardState = ({
   )
 }
 
-const DataQualityDashboard = () => {
+type DataQualityDashboardProps = {
+  user?: { id: string; email: string; role?: string };
+  isAdmin?: boolean;
+};
+
+const DataQualityDashboard: React.FC<DataQualityDashboardProps> = ({ user, isAdmin }) => {
   const [timeframe, setTimeframe] = useState<'week' | 'month' | 'all'>('month')
   const { stats, loading, error } = useFetchDataQualityStats(timeframe)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  return renderDashboardState({
-    loading,
-    error,
-    stats,
-    timeframe,
-    setTimeframe
-  })
+
+
+  // Admin controls for CSV
+  const renderAdminCSVControls = () => (
+    <div className="mb-6 flex gap-4 items-center">
+      <button
+        className="px-4 py-2 bg-green-600 text-white rounded shadow"
+        onClick={handleDownloadCSV}
+      >
+        Download House Info CSV
+      </button>
+      <input
+        type="file"
+        accept=".csv"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleUploadCSV}
+      />
+      <button
+        className="px-4 py-2 bg-blue-600 text-white rounded shadow"
+        onClick={() => fileInputRef.current?.click()}
+      >
+        Upload Edited CSV
+      </button>
+    </div>
+  )
+
+  return (
+    <>
+      {isAdmin && renderAdminCSVControls()}
+      {renderDashboardState({
+        loading,
+        error,
+        stats,
+        timeframe,
+        setTimeframe
+      })}
+    </>
+  )
 }
 
 export default DataQualityDashboard
