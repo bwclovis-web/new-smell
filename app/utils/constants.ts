@@ -21,7 +21,7 @@ export const FORM_DATA_ACTIONS = {
   DELETE_COMMENT: 'delete-comment' as const
 }
 
-export const RATING_LABELS: RatingLabels = {
+export const RATING_LABELS = {
   longevity: {
     1: 'Fleeting Shadow',
     2: 'Brief Encounter',
@@ -38,9 +38,9 @@ export const RATING_LABELS: RatingLabels = {
   },
   gender: {
     1: 'Distinctly Feminine',
-    2: 'Elegantly Feminine',
+    2: 'Ladylike Edge',
     3: 'Mysterious Unisex',
-    4: 'Dashingly Masculine',
+    4: 'Suited Mystique',
     5: 'Distinctly Masculine'
   },
   priceValue: {

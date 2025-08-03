@@ -369,7 +369,8 @@ const useFetchDataQualityStats = (timeframe: 'week' | 'month' | 'all') => {
     fetchStats()
   }, [timeframe, lastFetch])
 
-  return { stats, loading, error }
+  // Expose setLastFetch so parent can force refresh
+  return { stats, loading, error, setLastFetch }
 }
 
 // Loading indicator component
@@ -468,12 +469,24 @@ type DataQualityDashboardProps = {
   isAdmin?: boolean;
 };
 
+
 const DataQualityDashboard: FC<DataQualityDashboardProps> = ({ user, isAdmin }) => {
   const [timeframe, setTimeframe] = useState<'week' | 'month' | 'all'>('month')
-  const { stats, loading, error } = useFetchDataQualityStats(timeframe)
+  const { stats, loading, error, setLastFetch } = useFetchDataQualityStats(timeframe)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-
+  // Wrap the upload handler to refresh dashboard after upload
+  const handleUploadAndRefresh: React.ChangeEventHandler<HTMLInputElement> = async e => {
+    try {
+      await handleUploadCSV(e)
+      // Force refresh by updating lastFetch to 0 (or Date.now())
+      setLastFetch(0)
+    } catch (err) {
+      // Optionally handle error
+      // eslint-disable-next-line no-console
+      console.error('CSV upload failed', err)
+    }
+  }
 
   // Admin controls for CSV
   const renderAdminCSVControls = () => (
@@ -489,7 +502,7 @@ const DataQualityDashboard: FC<DataQualityDashboardProps> = ({ user, isAdmin }) 
         accept=".csv"
         ref={fileInputRef}
         style={{ display: 'none' }}
-        onChange={handleUploadCSV}
+        onChange={handleUploadAndRefresh}
       />
       <button
         className="px-4 py-2 bg-blue-600 text-white rounded shadow"
