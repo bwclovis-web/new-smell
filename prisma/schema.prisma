@@ -88,12 +88,12 @@ model UserPerfumeRating {
   id         String   @id @default(cuid())
   userId     String
   perfumeId  String
-  longevity  Int? // 1-5: Fleeting Shadow to Eternal Obsession
-  sillage    Int? // 1-5: Whispered Secret to Room Domination
-  gender     Int? // 1-5: Distinctly Feminine to Distinctly Masculine
-  priceValue Int? // 1-5: Highway Robbery to Stolen Treasure
-  overall    Int? // 1-5: Despise to Obsessed
   createdAt  DateTime @default(now())
+  gender     Int?
+  longevity  Int?
+  overall    Int?
+  priceValue Int?
+  sillage    Int?
   updatedAt  DateTime @updatedAt
   perfume    Perfume  @relation(fields: [perfumeId], references: [id])
   user       User     @relation(fields: [userId], references: [id])

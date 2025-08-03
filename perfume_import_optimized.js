@@ -193,6 +193,25 @@ async function handleExistingPerfume(existingPerfumes, perfume) {
   const exactMatch = existingPerfumes.find(existing => existing.name.toLowerCase() === perfume.name.toLowerCase())
 
   if (exactMatch) {
+    let updated = false
+    // Update description and image if they differ
+    const updates = {}
+    if (perfume.description && perfume.description !== exactMatch.description) {
+      updates.description = perfume.description
+      updated = true
+    }
+    if (perfume.image && perfume.image !== exactMatch.image) {
+      updates.image = perfume.image
+      updated = true
+    }
+    if (updated) {
+      await prisma.perfume.update({
+        where: { id: exactMatch.id },
+        data: updates,
+      })
+      stats.updated++
+      return exactMatch
+    }
     const notes = parseNotes(perfume)
     const needsNotes = await checkIfPerfumeNeedsNotes(exactMatch.id, notes)
     if (needsNotes) {

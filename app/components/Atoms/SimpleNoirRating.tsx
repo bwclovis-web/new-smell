@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react'
+
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { RATING_LABELS } from '~/utils/constants'
 
@@ -13,6 +15,7 @@ interface SimpleNoirRatingProps {
   showLabel?: boolean
 }
 
+// eslint-disable-next-line max-statements
 const SimpleNoirRating = ({
   category,
   value,
@@ -20,6 +23,7 @@ const SimpleNoirRating = ({
   readonly = false,
   showLabel = true
 }: SimpleNoirRatingProps) => {
+  const { t } = useTranslation()
   const [hoverValue, setHoverValue] = useState<number | null>(null)
   const [displayValue, setDisplayValue] = useState(value || 0)
   const labels = RATING_LABELS[category]
@@ -83,7 +87,7 @@ const SimpleNoirRating = ({
       </div>
       {showLabel && (
         <span className="text-xs text-noir-gold font-medium text-center">
-          {labels[currentValue] ?? 'select ranking'}
+          {labels[currentValue] ?? t('singlePerfume.rating.selectRating')}
         </span>
       )}
     </div>

@@ -12,6 +12,7 @@ import {
 } from 'react-router'
 import { useOutletContext } from 'react-router-dom'
 
+import { Button, VooDooLink } from '~/components/Atoms/Button/Button'
 import PerfumeHouseAddressBlock from '~/components/Containers/PerfumeHouse/AddressBlock/PerfumeHouseAddressBlock'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getPerfumeHouseByName } from '~/models/house.server'
@@ -53,6 +54,7 @@ type OutletContextType = {
 const HouseDetailPage = () => {
   const { perfumeHouse } = useLoaderData<typeof loader>()
   const { t } = useTranslation()
+  const { user } = useOutletContext<OutletContextType>()
   const navigate = useNavigate()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const {
@@ -76,7 +78,6 @@ const HouseDetailPage = () => {
     }
   }
 
-  console.log('perfumeHouse', perfumeHouse)
   return (
     <section className='relative z-10 my-4'>
       <header className="flex items-end justify-center mb-10 relative h-[600px]">
@@ -94,11 +95,42 @@ const HouseDetailPage = () => {
         />
 
         <div className='relative z-10 px-8 text-center filter w-full rounded-lg py-4 text-shadow-lg text-shadow-noir-black/90'>
-          <h1>{perfumeHouse.name}</h1>
+          <h1 className='text-noir-gold'>{perfumeHouse.name}</h1>
         </div>
       </header>
 
       <div className="flex flex-col gap-20 mx-auto max-w-6xl">
+        {user?.role === 'admin'
+          && (
+            <div>
+              <h3 className='text-lg font-semibold text-center text-noir-gold-500 mb-2'>Admin</h3>
+              <div className='flex flex-col items-center justify-between gap-2'>
+                <VooDooLink
+                  aria-label={`edit ${perfumeHouse.name}`}
+                  variant="icon"
+                  background={'gold'}
+                  size={'sm'}
+                  className='flex items-center justify-between gap-2'
+                  url={`/admin/perfume-house/${perfumeHouse.name}/edit`}
+                >
+                  <span>Edit Perfume</span>
+                  <GrEdit size={22} />
+                </VooDooLink>
+                <Button
+                  onClick={() => handleDelete()}
+                  aria-label={`delete ${perfumeHouse.name}`}
+                  variant="icon"
+                  className='flex items-center justify-between gap-2'
+                  background={'gold'}
+                  size={'sm'}
+                >
+                  <span>Delete Perfume</span>
+                  <MdDeleteForever size={22} />
+                </Button>
+              </div>
+            </div>
+          )
+        }
         <div className="noir-border relative bg-white/5 text-noir-gold-500">
           <PerfumeHouseAddressBlock perfumeHouse={perfumeHouse} />
           <p className='p-4 mb-4'>{perfumeHouse.description}</p>

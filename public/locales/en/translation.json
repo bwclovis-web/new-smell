@@ -206,6 +206,9 @@
       "mid": "Mid Notes",
       "end": "End Notes",
       "general": "General Notes"
+    },
+    "rating": {
+      "selectRating": "Select your rating"
     }
   },
   "tradingPost": {

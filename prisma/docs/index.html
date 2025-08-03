@@ -128,7 +128,7 @@
                   <div class="mt-1 ml-2">
                     <div class="mb-1 font-medium text-gray-600"><a href="#model-UserPerfumeRating-fields">Fields</a></div>
                       <ul class="pl-3 ml-1 border-l-2 border-gray-400">
-                      <li><a href="#model-UserPerfumeRating-id">id</a></li><li><a href="#model-UserPerfumeRating-userId">userId</a></li><li><a href="#model-UserPerfumeRating-perfumeId">perfumeId</a></li><li><a href="#model-UserPerfumeRating-longevity">longevity</a></li><li><a href="#model-UserPerfumeRating-sillage">sillage</a></li><li><a href="#model-UserPerfumeRating-gender">gender</a></li><li><a href="#model-UserPerfumeRating-priceValue">priceValue</a></li><li><a href="#model-UserPerfumeRating-overall">overall</a></li><li><a href="#model-UserPerfumeRating-createdAt">createdAt</a></li><li><a href="#model-UserPerfumeRating-updatedAt">updatedAt</a></li><li><a href="#model-UserPerfumeRating-perfume">perfume</a></li><li><a href="#model-UserPerfumeRating-user">user</a></li>
+                      <li><a href="#model-UserPerfumeRating-id">id</a></li><li><a href="#model-UserPerfumeRating-userId">userId</a></li><li><a href="#model-UserPerfumeRating-perfumeId">perfumeId</a></li><li><a href="#model-UserPerfumeRating-createdAt">createdAt</a></li><li><a href="#model-UserPerfumeRating-gender">gender</a></li><li><a href="#model-UserPerfumeRating-longevity">longevity</a></li><li><a href="#model-UserPerfumeRating-overall">overall</a></li><li><a href="#model-UserPerfumeRating-priceValue">priceValue</a></li><li><a href="#model-UserPerfumeRating-sillage">sillage</a></li><li><a href="#model-UserPerfumeRating-updatedAt">updatedAt</a></li><li><a href="#model-UserPerfumeRating-perfume">perfume</a></li><li><a href="#model-UserPerfumeRating-user">user</a></li>
                       </ul>
                   </div>
                   <div class="mt-2 ml-2">
@@ -4212,40 +4212,20 @@
       </td>
     </tr>
     
-    <tr id="model-UserPerfumeRating-longevity">
+    <tr id="model-UserPerfumeRating-createdAt">
       <td class="px-4 py-2 border">
-       longevity 
+       createdAt 
       </td>
       <td class="px-4 py-2 border">
-       Int?
-      </td>
-      <td class="px-4 py-2 border">
-        <ul>
-          <li> - </li>
-        </ul>
-      </td>
-      <td class="px-4 py-2 border">
-        No
-      </td>
-      <td class="px-4 py-2 border">
-        -
-      </td>
-    </tr>
-    
-    <tr id="model-UserPerfumeRating-sillage">
-      <td class="px-4 py-2 border">
-       sillage 
-      </td>
-      <td class="px-4 py-2 border">
-       Int?
+       DateTime
       </td>
       <td class="px-4 py-2 border">
         <ul>
-          <li> - </li>
+          <li><strong>@default(now())</strong></li>
         </ul>
       </td>
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
       </td>
       <td class="px-4 py-2 border">
         -
@@ -4272,9 +4252,9 @@
       </td>
     </tr>
     
-    <tr id="model-UserPerfumeRating-priceValue">
+    <tr id="model-UserPerfumeRating-longevity">
       <td class="px-4 py-2 border">
-       priceValue 
+       longevity 
       </td>
       <td class="px-4 py-2 border">
        Int?
@@ -4312,20 +4292,40 @@
       </td>
     </tr>
     
-    <tr id="model-UserPerfumeRating-createdAt">
+    <tr id="model-UserPerfumeRating-priceValue">
       <td class="px-4 py-2 border">
-       createdAt 
+       priceValue 
       </td>
       <td class="px-4 py-2 border">
-       DateTime
+       Int?
       </td>
       <td class="px-4 py-2 border">
         <ul>
-          <li><strong>@default(now())</strong></li>
+          <li> - </li>
         </ul>
       </td>
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
+      </td>
+      <td class="px-4 py-2 border">
+        -
+      </td>
+    </tr>
+    
+    <tr id="model-UserPerfumeRating-sillage">
+      <td class="px-4 py-2 border">
+       sillage 
+      </td>
+      <td class="px-4 py-2 border">
+       Int?
+      </td>
+      <td class="px-4 py-2 border">
+        <ul>
+          <li> - </li>
+        </ul>
+      </td>
+      <td class="px-4 py-2 border">
+        No
       </td>
       <td class="px-4 py-2 border">
         -
@@ -13276,25 +13276,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
+        <a href="#type-inputType-DateTimeFilter">DateTimeFilter</a> | DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -13312,7 +13300,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
       </td>
@@ -13336,13 +13324,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-DateTimeFilter">DateTimeFilter</a> | DateTime
+        <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -13436,21 +13436,9 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
+        <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -13472,7 +13460,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
       </td>
@@ -13496,9 +13484,21 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
+        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -13644,25 +13644,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
+        <a href="#type-inputType-DateTimeFilter">DateTimeFilter</a> | DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -13680,7 +13668,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
       </td>
@@ -13704,13 +13692,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-DateTimeFilter">DateTimeFilter</a> | DateTime
+        <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -13804,21 +13804,9 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
+        <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -13840,7 +13828,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
       </td>
@@ -13864,9 +13852,21 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
+        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a> | <a href="#type-inputType-SortOrderInput">SortOrderInput</a>
       </td>
 
       <td class="px-4 py-2 border">
@@ -14036,25 +14036,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-IntNullableWithAggregatesFilter">IntNullableWithAggregatesFilter</a> | Int | Null
+        <a href="#type-inputType-DateTimeWithAggregatesFilter">DateTimeWithAggregatesFilter</a> | DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-IntNullableWithAggregatesFilter">IntNullableWithAggregatesFilter</a> | Int | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -14072,7 +14060,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-IntNullableWithAggregatesFilter">IntNullableWithAggregatesFilter</a> | Int | Null
       </td>
@@ -14096,13 +14084,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-DateTimeWithAggregatesFilter">DateTimeWithAggregatesFilter</a> | DateTime
+        <a href="#type-inputType-IntNullableWithAggregatesFilter">IntNullableWithAggregatesFilter</a> | Int | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-IntNullableWithAggregatesFilter">IntNullableWithAggregatesFilter</a> | Int | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -22004,25 +22004,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | Null
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -22040,7 +22028,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | Null
       </td>
@@ -22064,13 +22052,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -22164,25 +22164,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | Null
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -22200,7 +22188,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | Null
       </td>
@@ -22224,13 +22212,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -22276,25 +22276,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -22312,7 +22300,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
@@ -22336,13 +22324,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -22436,25 +22436,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -22472,7 +22460,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
@@ -22496,13 +22484,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -22572,25 +22572,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | Null
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -22608,7 +22596,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | Null
       </td>
@@ -22632,13 +22620,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -22684,25 +22684,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -22720,7 +22708,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
@@ -22744,13 +22732,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -22820,25 +22820,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -22856,7 +22844,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
@@ -22880,13 +22868,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -30004,19 +30004,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -30040,7 +30028,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -30064,7 +30052,19 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -30104,6 +30104,18 @@
           
     <tr>
       <td class="px-4 py-2 border">
+        gender </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         longevity </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -30116,19 +30128,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gender </td>
+        overall </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -30152,7 +30152,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        overall </td>
+        sillage </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -30216,19 +30216,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -30252,7 +30240,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -30276,7 +30264,19 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -30352,19 +30352,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -30388,7 +30376,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -30412,7 +30400,19 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -30452,6 +30452,18 @@
           
     <tr>
       <td class="px-4 py-2 border">
+        gender </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-SortOrder">SortOrder</a>
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         longevity </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
@@ -30464,19 +30476,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-SortOrder">SortOrder</a>
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gender </td>
+        overall </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -30500,7 +30500,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        overall </td>
+        sillage </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-SortOrder">SortOrder</a>
       </td>
@@ -44708,25 +44708,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | Null
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -44744,7 +44732,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | Null
       </td>
@@ -44768,13 +44756,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -44844,25 +44844,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | Null
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -44880,7 +44868,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | Null
       </td>
@@ -44904,13 +44892,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -46412,25 +46412,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
+        <a href="#type-inputType-DateTimeFilter">DateTimeFilter</a> | DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -46448,7 +46436,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
       </td>
@@ -46472,13 +46460,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        <a href="#type-inputType-DateTimeFilter">DateTimeFilter</a> | DateTime
+        <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        <a href="#type-inputType-IntNullableFilter">IntNullableFilter</a> | Int | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -49732,25 +49732,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | Null
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -49768,7 +49756,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | Null
       </td>
@@ -49792,13 +49780,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -49868,25 +49868,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | Null
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -49904,7 +49892,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | Null
       </td>
@@ -49928,13 +49916,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -67280,25 +67280,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | Null
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -67316,7 +67304,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | Null
       </td>
@@ -67340,13 +67328,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -68328,25 +68328,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -68364,7 +68352,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
@@ -68388,13 +68376,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -68464,25 +68464,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -68500,7 +68488,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
@@ -68524,13 +68512,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -68588,25 +68588,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -68624,7 +68612,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
@@ -68648,13 +68636,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -70260,25 +70260,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | Null
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -70296,7 +70284,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | Null
       </td>
@@ -70320,13 +70308,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -71992,25 +71992,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -72028,7 +72016,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
@@ -72052,13 +72040,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -72128,25 +72128,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -72164,7 +72152,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
@@ -72188,13 +72176,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -72252,25 +72252,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
       </td>
     </tr>
     
@@ -72288,7 +72276,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
@@ -72312,13 +72300,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime | <a href="#type-inputType-DateTimeFieldUpdateOperationsInput">DateTimeFieldUpdateOperationsInput</a>
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
       </td>
 
       <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int | <a href="#type-inputType-NullableIntFieldUpdateOperationsInput">NullableIntFieldUpdateOperationsInput</a> | Null
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -74142,25 +74142,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -74178,7 +74166,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -74202,13 +74190,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -76034,25 +76034,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -76070,7 +76058,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -76094,13 +76082,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -76194,25 +76194,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -76230,7 +76218,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -76254,13 +76242,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -78434,25 +78434,13 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
+        <strong>Yes</strong>
       </td>
     </tr>
     
@@ -78470,7 +78458,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -78494,13 +78482,25 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int
       </td>
 
       <td class="px-4 py-2 border">
-        <strong>Yes</strong>
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
       </td>
     </tr>
     
@@ -81486,19 +81486,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        <strong>Yes</strong>
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -81522,7 +81510,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -81546,7 +81534,19 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
+      <td class="px-4 py-2 border">
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        <strong>Yes</strong>
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -81598,6 +81598,18 @@
           
     <tr>
       <td class="px-4 py-2 border">
+        gender </td>
+      <td class="px-4 py-2 border">
+        Float
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         longevity </td>
       <td class="px-4 py-2 border">
         Float
@@ -81610,19 +81622,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Float
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gender </td>
+        overall </td>
       <td class="px-4 py-2 border">
         Float
       </td>
@@ -81646,7 +81646,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        overall </td>
+        sillage </td>
       <td class="px-4 py-2 border">
         Float
       </td>
@@ -81674,6 +81674,18 @@
           
     <tr>
       <td class="px-4 py-2 border">
+        gender </td>
+      <td class="px-4 py-2 border">
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
         longevity </td>
       <td class="px-4 py-2 border">
         Int
@@ -81686,19 +81698,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        gender </td>
+        overall </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -81722,7 +81722,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        overall </td>
+        sillage </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -81786,21 +81786,9 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
@@ -81822,7 +81810,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -81846,9 +81834,21 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int
       </td>
 
       <td class="px-4 py-2 border">
@@ -81922,21 +81922,9 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        longevity </td>
+        createdAt </td>
       <td class="px-4 py-2 border">
-        Int
-      </td>
-
-      <td class="px-4 py-2 border">
-        No
-      </td>
-    </tr>
-    
-    <tr>
-      <td class="px-4 py-2 border">
-        sillage </td>
-      <td class="px-4 py-2 border">
-        Int
+        DateTime
       </td>
 
       <td class="px-4 py-2 border">
@@ -81958,7 +81946,7 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        priceValue </td>
+        longevity </td>
       <td class="px-4 py-2 border">
         Int
       </td>
@@ -81982,9 +81970,21 @@
     
     <tr>
       <td class="px-4 py-2 border">
-        createdAt </td>
+        priceValue </td>
       <td class="px-4 py-2 border">
-        DateTime
+        Int
+      </td>
+
+      <td class="px-4 py-2 border">
+        No
+      </td>
+    </tr>
+    
+    <tr>
+      <td class="px-4 py-2 border">
+        sillage </td>
+      <td class="px-4 py-2 border">
+        Int
       </td>
 
       <td class="px-4 py-2 border">
