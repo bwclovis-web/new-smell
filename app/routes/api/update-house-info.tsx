@@ -1,53 +1,9 @@
 import Papa from 'papaparse'
 
-import { updatePerfumeHouse } from '~/models/house.server'
 
 
 
-function cleanCsvField(raw: string): string {
-  if (!raw) {
-    return ''
-  }
-  let value = raw.trim()
-  if (value.startsWith('"') && value.endsWith('"')) {
-    value = value.slice(1, -1)
-  }
-  return value
-}
 
-async function processCsvLine(fields: string[], values: string[], getPerfumeHouseByName: any, createPerfumeHouse: any) {
-  const formData = new FormData()
-  fields.forEach((field, i) => {
-    formData.append(field, cleanCsvField(values[i] || ''))
-  })
-  // Prefer id, fallback to name
-  const id = formData.get('id') as string
-  let houseId = id
-  if (!houseId) {
-    const name = formData.get('name') as string
-    const house = await getPerfumeHouseByName(name)
-    houseId = house?.id ?? ''
-  }
-  if (!houseId) {
-    // Create new house if not found
-    try {
-      const createResult = await createPerfumeHouse(formData)
-      if (createResult.success) {
-        return { name: formData.get('name'), status: 'created' }
-      } else {
-        return { name: formData.get('name'), status: 'error', error: createResult.error }
-      }
-    } catch (err) {
-      return { name: formData.get('name'), status: 'error', error: String(err) }
-    }
-  }
-  try {
-    await updatePerfumeHouse(houseId, formData)
-    return { name: formData.get('name'), status: 'updated' }
-  } catch (err) {
-    return { name: formData.get('name'), status: 'error', error: String(err) }
-  }
-}
 
 export const action = async ({ request }: { request: Request }) => {
   if (request.method !== 'POST') {
@@ -60,7 +16,7 @@ export const action = async ({ request }: { request: Request }) => {
     return new Response(JSON.stringify({ error: 'CSV parse error', details: parsed.errors }), { status: 400, headers: { 'Content-Type': 'application/json' } })
   }
   const rows = parsed.data as Record<string, string>[]
-  const { getPerfumeHouseByName, createPerfumeHouse } = await import('~/models/house.server')
+  const { getPerfumeHouseByName, createPerfumeHouse, updatePerfumeHouse } = await import('~/models/house.server')
   const results = []
   for (const row of rows) {
     // Check if house exists by id or name
