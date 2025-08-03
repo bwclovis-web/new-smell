@@ -5,10 +5,9 @@ import {
   type HTMLAttributes
 } from "react"
 
+import { rangeSliderFillVariants, rangeSliderMaxVariants, rangeSliderVariants, rangeSliderWrapVariants } from "~/components/Atoms/RangeSlider/rangeSlider-variants"
 import { useRangeSlider } from "~/hooks/useRangeSlider"
 import { styleMerge } from "~/utils/styleUtils"
-
-import { rangeSliderFillVariants, rangeSliderMaxVariants, rangeSliderVariants, rangeSliderWrapVariants } from "./rangeSlider-variants"
 
 interface RangeSliderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'>,
   VariantProps<typeof rangeSliderWrapVariants> {
