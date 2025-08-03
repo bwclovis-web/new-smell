@@ -75,6 +75,7 @@
     "@tailwindcss/vite": "^4.1.8",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20",
+    "@types/papaparse": "^5.3.16",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.0.1",
     "cross-env": "^7.0.3",
