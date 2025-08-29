@@ -10,6 +10,7 @@
     "db:push": "prisma db push",
     "db:serve": "prisma db pull && prisma db push && run-p db:studio db:docs dev",
     "db:studio": "npx prisma studio",
+    "import:s&s": "node scripts/import_s_and_s_complete.js",
     "lint": "eslint --fix --ignore-pattern .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "dev": "run-p start:server open:localhost",
     "open:localhost": "start http://localhost:2112",

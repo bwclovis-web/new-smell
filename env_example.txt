@@ -1,0 +1,17 @@
+# CrewAI Configuration
+# Copy this file to .env and fill in your actual values
+
+# OpenAI API Key (required for CrewAI)
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Optional: Customize the LLM model
+# OPENAI_MODEL=gpt-4o-mini
+
+# Optional: Set custom rate limiting (in seconds)
+# MIN_REQUEST_DELAY=2
+
+# Optional: Set output directory
+# OUTPUT_DIR=enriched_data
+
+# Optional: Set logging level
+# LOG_LEVEL=INFO

@@ -47,6 +47,18 @@ export const getAllHouses = async () => prisma.perfumeHouse.findMany({
   orderBy: { createdAt: 'desc' }
 })
 
+export const getHousesByLetter = async (letter: string) => {
+  return prisma.perfumeHouse.findMany({
+    where: {
+      name: {
+        startsWith: letter,
+        mode: 'insensitive'
+      }
+    },
+    orderBy: { name: 'asc' }
+  })
+}
+
 export const getPerfumeHouseByName =
   async (name: string, opts?: { skip?: number, take?: number }) => {
     const house = await prisma.perfumeHouse.findUnique({

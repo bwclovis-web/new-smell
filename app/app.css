@@ -35,8 +35,8 @@ h1,h2,h3 {
   view-transition-name: hero-title;
 }
 
-.title-banner{
-  height: calc(100vh - 80px);
+.title-banner {
+  @apply h-[calc(50vh-80px)] lg:h-[calc(100vh-80px)];
 }
 
 h1 {

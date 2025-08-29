@@ -26,6 +26,7 @@ export default [
     route('api/more-perfumes', 'routes/api/more-perfumes.ts'),
     route('api/data-quality', 'routes/api/data-quality.tsx'),
     route('api/data-quality-houses', 'routes/api/data-quality-houses.tsx'),
+    route('api/houses-by-letter', 'routes/api/houses-by-letter.ts'),
     route('api/update-house-info', 'routes/api/update-house-info.tsx'),
     route('api/ratings', 'routes/api.ratings.tsx'),
 

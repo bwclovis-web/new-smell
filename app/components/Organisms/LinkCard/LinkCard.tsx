@@ -2,7 +2,7 @@ import { NavLink } from 'react-router'
 
 import { ROUTE_PATH as PERFUME_PATH } from '~/routes/perfume'
 import { ROUTE_PATH as PERFUME_HOUSE } from '~/routes/perfume-house'
-const LinkCard = ({ data, type, children }) => {
+const LinkCard = ({ data, type, children }: { data: any; type: any; children?: any }) => {
   const url = type === 'house' ? PERFUME_HOUSE : PERFUME_PATH
 
   return (
