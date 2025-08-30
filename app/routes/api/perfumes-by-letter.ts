@@ -5,6 +5,8 @@ import { getAllPerfumes } from '~/models/perfume.server'
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const letter = url.searchParams.get('letter')
+  const skip = parseInt(url.searchParams.get('skip') || '0')
+  const take = parseInt(url.searchParams.get('take') || '12')
 
   if (!letter) {
     return Response.json({
@@ -22,12 +24,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
       perfume.name.charAt(0).toUpperCase() === letter.toUpperCase()
     )
 
+    // Apply pagination
+    const totalCount = filteredPerfumes.length
+    const paginatedPerfumes = filteredPerfumes.slice(skip, skip + take)
+    const hasMore = skip + take < totalCount
+
     return Response.json({
       success: true,
-      perfumes: filteredPerfumes,
+      perfumes: paginatedPerfumes,
       meta: {
         letter,
-        totalCount: filteredPerfumes.length
+        totalCount,
+        hasMore,
+        skip,
+        take
       }
     })
   } catch (error) {
