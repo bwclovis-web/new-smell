@@ -19,6 +19,7 @@ export default [
     route('api/deletePerfume', 'routes/api/deletePerfume.ts'),
     route('api/getTag', 'routes/api/tagLoader.ts'),
     route('api/houseSortLoader', 'routes/api/houseSortLoader.ts'),
+    route('api/perfumeSortLoader', 'routes/api/perfumeSortLoader.ts'),
     route('api/createTag', 'routes/api/createTag.ts'),
     route('api/wishlist', 'routes/api/wishlist.tsx'),
     route('api/user-perfumes', 'routes/api/user-perfumes.tsx'),
@@ -28,6 +29,7 @@ export default [
     route('api/data-quality-houses', 'routes/api/data-quality-houses.tsx'),
     route('api/houses-by-letter', 'routes/api/houses-by-letter.ts'),
     route('api/houses-by-letter-paginated', 'routes/api/houses-by-letter-paginated.tsx'),
+    route('api/perfumes-by-letter', 'routes/api/perfumes-by-letter.ts'),
     route('api/update-house-info', 'routes/api/update-house-info.tsx'),
     route('api/ratings', 'routes/api.ratings.tsx'),
 

@@ -62,6 +62,13 @@
       }
     }
   },
+  "sortOptions": {
+    "created-desc": "Newest First",
+    "created-asc": "Oldest First",
+    "name-asc": "Name A-Z",
+    "name-desc": "Name Z-A",
+    "type-asc": "Type"
+  },
   "createHouse": {
     "meta": {
       "title": "Create Perfume House - Shadow and Sillage",

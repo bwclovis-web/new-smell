@@ -3,12 +3,13 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MetaFunction, NavLink } from 'react-router'
 
-import RadioSelect from '~/components/Atoms/RadioSelect/RadioSelect'
-import Select from '~/components/Atoms/Select/Select'
+import AlphabeticalNav from '~/components/Organisms/AlphabeticalNav/AlphabeticalNav'
+import DataDisplay from '~/components/Organisms/DataDisplay/DataDisplay'
+import DataFilters from '~/components/Organisms/DataFilters/DataFilters'
 import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
-import SearchBar from '~/components/Organisms/SearchBar/SearchBar'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import { useInfiniteScrollHouses } from '~/hooks/useInfiniteScrollHouses'
+import { getDefaultSortOptions } from '~/utils/sortUtils'
 
 // No server imports needed for client component
 import banner from '../images/house.webp'
@@ -16,7 +17,6 @@ import banner from '../images/house.webp'
 export const loader = async () =>
   // Don't load all houses upfront - we'll load by letter on demand
   ({})
-
 
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
@@ -36,13 +36,7 @@ const useHouseFilters = (t: ReturnType<typeof useTranslation>['t']) => {
     { id: 'drugstore', value: 'drugstore', label: t('allHouses.houseTypes.drugstore'), name: 'houseType', defaultChecked: false }
   ]
 
-  const sortOptions = [
-    { id: 'created-desc', value: 'created-desc', label: t('allHouses.sortOptions.created-desc'), name: 'sortBy', defaultChecked: true },
-    { id: 'created-asc', value: 'created-asc', label: t('allHouses.sortOptions.created-asc'), name: 'sortBy', defaultChecked: false },
-    { id: 'name-asc', value: 'name-asc', label: t('allHouses.sortOptions.name-asc'), name: 'sortBy', defaultChecked: false },
-    { id: 'name-desc', value: 'name-desc', label: t('allHouses.sortOptions.name-desc'), name: 'sortBy', defaultChecked: false },
-    { id: 'type-asc', value: 'type-asc', label: t('allHouses.sortOptions.type-asc'), name: 'sortBy', defaultChecked: false }
-  ]
+  const sortOptions = getDefaultSortOptions(t)
 
   return { houseTypeOptions, sortOptions }
 }
@@ -98,58 +92,16 @@ const useHouseHandlers = (
   }
 
   const handleSortChange = (evt: { target: { value: string } }) => {
-    setSelectedSort(evt.target.value)
+    setSelectedSort(evt.target.value as any)
   }
 
   return { handleHouseTypeChange, handleSortChange }
 }
 
-const HouseFiltersSection = ({
-  t,
-  houseTypeOptions,
-  sortOptions,
-  onHouseTypeChange,
-  onSortChange
-}: {
-  t: ReturnType<typeof useTranslation>['t']
-  houseTypeOptions: any[]
-  sortOptions: any[]
-  onHouseTypeChange: any
-  onSortChange: any
-}) => (
-  <div className="space-y-6 inner-container py-4 flex flex-col md:flex-row md:justify-between md:items-center noir-border">
-    <div className='w-1/4 mb-0'>
-      <SearchBar searchType={'perfume-house'} />
-    </div>
-
-    <div className='flex flex-col md:flex-row gap-6 w-full md:w-3/4 justify-end items-end md:items-center'>
-      <div>
-        <h3 className="mb-2">{t('allHouses.filters.houseType')}</h3>
-        <Select
-          selectData={houseTypeOptions}
-          action={onHouseTypeChange}
-          className="flex-wrap"
-          selectId="house-type"
-        />
-      </div>
-
-      <div>
-        <h3 className="mb-2">{t('allHouses.filters.sortBy')}</h3>
-        <Select
-          selectData={sortOptions}
-          action={onSortChange}
-          className="flex-wrap"
-          selectId="sort-by"
-        />
-      </div>
-    </div>
-  </div>
-)
-
 const AllHousesPage = () => {
   const { t } = useTranslation()
   const [selectedHouseType, setSelectedHouseType] = useState('all')
-  const [selectedSort, setSelectedSort] = useState('created-desc')
+  const [selectedSort, setSelectedSort] = useState<any>('created-desc')
   const [selectedLetter, setSelectedLetter] = useState<string | null>(null)
   const [isClient, setIsClient] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -157,9 +109,6 @@ const AllHousesPage = () => {
   const filters = useHouseFilters(t)
   const data = useHouseData()
   const handlers = useHouseHandlers(setSelectedHouseType, setSelectedSort)
-
-  // Generate alphabet array
-  const alphabet = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))
 
   // Ensure hydration compatibility
   useEffect(() => {
@@ -182,9 +131,12 @@ const AllHousesPage = () => {
     take: 12
   })
 
+  const handleLetterClick = async (letter: string | null) => {
+    if (letter === null) {
+      setSelectedLetter(null)
+      return
+    }
 
-
-  const handleLetterClick = async (letter: string) => {
     if (selectedLetter === letter) {
       // Deselect the letter
       setSelectedLetter(null)
@@ -213,58 +165,26 @@ const AllHousesPage = () => {
         subheading={t('allHouses.subheading')}
       />
 
-      <HouseFiltersSection
-        t={t}
-        houseTypeOptions={filters.houseTypeOptions}
+      <DataFilters
+        searchType="perfume-house"
         sortOptions={filters.sortOptions}
-        onHouseTypeChange={handlers.handleHouseTypeChange}
+        typeOptions={filters.houseTypeOptions}
+        selectedSort={selectedSort}
+        selectedType={selectedHouseType}
         onSortChange={handlers.handleSortChange}
+        onTypeChange={handlers.handleHouseTypeChange}
       />
 
-      {/* Alphabetical Navigation */}
-      <div className="inner-container mb-6">
-        <div className="noir-border p-4">
-          <h3 className="text-lg font-semibold text-noir-gold mb-4 text-center">
-            Browse Houses by Letter
-          </h3>
-          <div className="grid grid-cols-6 md:grid-cols-13 gap-2">
-            {alphabet.map(letter => (
-              <button
-                key={letter}
-                onClick={() => handleLetterClick(letter)}
-                className={`p-3 text-center rounded-lg transition-colors font-semibold ${selectedLetter === letter
-                  ? 'bg-noir-gold text-noir-black'
-                  : 'noir-border hover:bg-noir-gold/10 text-noir-gold'
-                  }`}
-              >
-                {letter}
-              </button>
-            ))}
-          </div>
-          {isClient && selectedLetter && (
-            <div className="mt-4 text-center">
-              <p className="text-noir-gold mb-2">
-                Showing houses starting with "{selectedLetter}" ({totalCount > 0 ? `${houses.length} of ${totalCount}` : houses.length} total)
-              </p>
-              <button
-                onClick={() => {
-                  setSelectedLetter(null)
-                  // Clear houses when showing all
-                }}
-                className="text-noir-gold hover:text-noir-gold/80 underline"
-              >
-                Show all houses
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
+      <AlphabeticalNav
+        selectedLetter={selectedLetter}
+        onLetterSelect={handleLetterClick}
+      />
 
       {/* Houses Display */}
       {isClient && selectedLetter ? (
         <div
           ref={scrollContainerRef}
-          className="inner-container my-6  overflow-y-auto style-scroll"
+          className="inner-container my-6 overflow-y-auto style-scroll"
         >
           <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-4 auto-rows-fr">
             {data.isLoading ? (

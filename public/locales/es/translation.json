@@ -62,6 +62,13 @@
       }
     }
   },
+  "sortOptions": {
+    "created-desc": "Más Reciente Primero",
+    "created-asc": "Más Antiguo Primero",
+    "name-asc": "Nombre A-Z",
+    "name-desc": "Nombre Z-A",
+    "type-asc": "Tipo"
+  },
   "createHouse": {
     "meta": {
       "title": "Crear Casa de Perfumes - Shadow and Sillage",

@@ -5,10 +5,23 @@ export const getAllPerfumes = async () => {
   const perfumes = await prisma.perfume.findMany({
     include: {
       perfumeHouse: true
-    },
-    take: 20
+    }
   })
   return perfumes
+}
+
+export const getAllPerfumesWithOptions = async (options?: {
+  sortBy?: 'name-asc' | 'name-desc' | 'created-desc' | 'created-asc' | 'type-asc'
+}) => {
+  const { sortBy } = options || {}
+  const orderBy = buildPerfumeOrderBy(sortBy)
+
+  return prisma.perfume.findMany({
+    include: {
+      perfumeHouse: true
+    },
+    orderBy
+  })
 }
 
 export const getPerfumeByName = async (name: string) => {
