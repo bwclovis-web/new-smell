@@ -59,6 +59,37 @@ export const getHousesByLetter = async (letter: string) => {
   })
 }
 
+export const getHousesByLetterPaginated = async (letter: string, options: { skip: number; take: number }) => {
+  const { skip, take } = options
+
+  const [houses, totalCount] = await Promise.all([
+    prisma.perfumeHouse.findMany({
+      where: {
+        name: {
+          startsWith: letter,
+          mode: 'insensitive'
+        }
+      },
+      orderBy: { name: 'asc' },
+      skip,
+      take
+    }),
+    prisma.perfumeHouse.count({
+      where: {
+        name: {
+          startsWith: letter,
+          mode: 'insensitive'
+        }
+      }
+    })
+  ])
+
+  return {
+    houses,
+    count: totalCount
+  }
+}
+
 export const getPerfumeHouseByName =
   async (name: string, opts?: { skip?: number, take?: number }) => {
     const house = await prisma.perfumeHouse.findUnique({

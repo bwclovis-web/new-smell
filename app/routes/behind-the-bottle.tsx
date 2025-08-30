@@ -1,5 +1,5 @@
 export const ROUTE_PATH = '/behind-the-bottle'
-import { useState, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MetaFunction, NavLink } from 'react-router'
 
@@ -8,14 +8,15 @@ import Select from '~/components/Atoms/Select/Select'
 import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
 import SearchBar from '~/components/Organisms/SearchBar/SearchBar'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
-// No server imports needed for client component
+import { useInfiniteScrollHouses } from '~/hooks/useInfiniteScrollHouses'
 
+// No server imports needed for client component
 import banner from '../images/house.webp'
 
-export const loader = async () => {
+export const loader = async () =>
   // Don't load all houses upfront - we'll load by letter on demand
-  return {}
-}
+  ({})
+
 
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
@@ -47,38 +48,45 @@ const useHouseFilters = (t: ReturnType<typeof useTranslation>['t']) => {
 }
 
 const useHouseData = () => {
-  const [houses, setHouses] = useState<any[]>([])
+  const [initialHouses, setInitialHouses] = useState<any[]>([])
+  const [totalCount, setTotalCount] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const fetchHousesData = async (letter: string) => {
+    const response = await fetch(`/api/houses-by-letter-paginated?letter=${letter}&skip=0&take=12`)
+    if (!response.ok) {
+      throw new Error(`Failed to fetch houses: ${response.status} ${response.statusText}`)
+    }
+    const data = await response.json()
+    if (!data.success) {
+      throw new Error(data.message || 'Failed to fetch houses')
+    }
+    return data
+  }
 
   const loadHousesByLetter = async (letter: string) => {
     setIsLoading(true)
     setError(null)
     try {
-      console.log(`Fetching houses for letter: ${letter}`)
-      const response = await fetch(`/api/houses-by-letter?letter=${letter}`)
-      console.log(`Response status: ${response.status}`)
-      if (!response.ok) {
-        const errorText = await response.text()
-        console.error('Response error:', errorText)
-        throw new Error(`Failed to fetch houses: ${response.status} ${response.statusText}`)
-      }
-      const data = await response.json()
-      console.log('Response data:', data)
-      if (data.success) {
-        setHouses(data.houses)
-      } else {
-        throw new Error(data.message || 'Failed to fetch houses')
-      }
+      const data = await fetchHousesData(letter)
+      const houses = data.houses
+      const count = data.meta?.totalCount || houses.length
+
+      setInitialHouses(houses)
+      setTotalCount(count)
+
+      return { houses, totalCount: count }
     } catch (err) {
-      console.error('Error in loadHousesByLetter:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load houses')
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load houses'
+      setError(errorMessage)
+      return null
     } finally {
       setIsLoading(false)
     }
   }
 
-  return { houses, isLoading, error, loadHousesByLetter }
+  return { initialHouses, totalCount, isLoading, error, loadHousesByLetter }
 }
 
 const useHouseHandlers = (
@@ -144,6 +152,7 @@ const AllHousesPage = () => {
   const [selectedSort, setSelectedSort] = useState('created-desc')
   const [selectedLetter, setSelectedLetter] = useState<string | null>(null)
   const [isClient, setIsClient] = useState(false)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   const filters = useHouseFilters(t)
   const data = useHouseData()
@@ -157,6 +166,24 @@ const AllHousesPage = () => {
     setIsClient(true)
   }, [])
 
+  // Infinite scroll hook for houses
+  const {
+    houses,
+    loading: infiniteLoading,
+    hasMore,
+    totalCount,
+    observerRef,
+    loadMoreHouses,
+    resetHouses
+  } = useInfiniteScrollHouses({
+    letter: selectedLetter || '',
+    initialHouses: data.initialHouses,
+    scrollContainerRef,
+    take: 12
+  })
+
+
+
   const handleLetterClick = async (letter: string) => {
     if (selectedLetter === letter) {
       // Deselect the letter
@@ -166,7 +193,12 @@ const AllHousesPage = () => {
 
     // Select new letter and load houses
     setSelectedLetter(letter)
-    await data.loadHousesByLetter(letter)
+    const fetchedData = await data.loadHousesByLetter(letter)
+
+    // Initialize the infinite scroll hook with the new houses using the returned data
+    if (fetchedData && fetchedData.houses.length > 0) {
+      resetHouses(fetchedData.houses, fetchedData.totalCount)
+    }
   }
 
   if (data.error) {
@@ -196,7 +228,7 @@ const AllHousesPage = () => {
             Browse Houses by Letter
           </h3>
           <div className="grid grid-cols-6 md:grid-cols-13 gap-2">
-            {alphabet.map((letter) => (
+            {alphabet.map(letter => (
               <button
                 key={letter}
                 onClick={() => handleLetterClick(letter)}
@@ -212,7 +244,7 @@ const AllHousesPage = () => {
           {isClient && selectedLetter && (
             <div className="mt-4 text-center">
               <p className="text-noir-gold mb-2">
-                Showing houses starting with "{selectedLetter}"
+                Showing houses starting with "{selectedLetter}" ({totalCount > 0 ? `${houses.length} of ${totalCount}` : houses.length} total)
               </p>
               <button
                 onClick={() => {
@@ -230,19 +262,50 @@ const AllHousesPage = () => {
 
       {/* Houses Display */}
       {isClient && selectedLetter ? (
-        <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-4 inner-container my-6 auto-rows-fr">
-          {data.isLoading ? (
-            <div className="col-span-full text-center py-8">
-              <div className="text-noir-gold">Loading houses for letter "{selectedLetter}"...</div>
-            </div>
-          ) : (
-            data.houses.map((house: any) => (
-              <li key={house.id}>
-                <LinkCard data={house} type="house" />
-              </li>
-            ))
-          )}
-        </ul>
+        <div
+          ref={scrollContainerRef}
+          className="inner-container my-6  overflow-y-auto style-scroll"
+        >
+          <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-4 auto-rows-fr">
+            {data.isLoading ? (
+              <div className="col-span-full text-center py-8">
+                <div className="text-noir-gold">Loading houses for letter "{selectedLetter}"...</div>
+              </div>
+            ) : (
+              houses.map((house: any) => (
+                <li key={house.id}>
+                  <LinkCard data={house} type="house" />
+                </li>
+              ))
+            )}
+          </ul>
+
+          {/* Infinite Scroll Observer */}
+          <div
+            ref={observerRef}
+            aria-live="polite"
+            aria-busy={infiniteLoading}
+            role="status"
+            className="sticky bottom-0 w-full bg-gradient-to-t from-noir-black to-transparent flex flex-col items-center justify-center py-4 mt-6"
+          >
+            {infiniteLoading && (
+              <span className="text-noir-gold">Loading more houses...</span>
+            )}
+            {!infiniteLoading && hasMore && (
+              <button
+                onClick={loadMoreHouses}
+                className="bg-noir-gold text-noir-black px-4 py-2 rounded-md font-semibold hover:bg-noir-gold/80 transition-all"
+              >
+                Load More Houses
+              </button>
+            )}
+            {!hasMore && houses.length > 0 && (
+              <span className="text-noir-gold">
+                {totalCount > 0 ? `All ${totalCount} houses loaded.` : 'No more houses to load.'}
+              </span>
+            )}
+          </div>
+        </div>
       ) : (
         <div className="inner-container my-6 text-center py-12">
           <h3 className="text-xl text-noir-gold mb-4">Select a letter to browse houses</h3>
