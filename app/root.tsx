@@ -12,11 +12,13 @@ import {
 } from 'react-router'
 
 import type { Route } from './+types/root'
+import ImagePreloader from './components/Atoms/ImagePreloader'
+import PerformanceMonitor from './components/Atoms/PerformanceMonitor'
+import ServiceWorkerRegistration from './components/Atoms/ServiceWorkerRegistration'
 import FourOFourPage from './components/Containers/404Page/404Page'
 import { NonceProvider, useNonce } from './hooks/use-nonce'
 import i18n from './modules/i18n/i18n.client'
 import { SessionProvider } from './providers/sessionProvider'
-import ImagePreloader from './components/Atoms/ImagePreloader'
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -28,7 +30,12 @@ export const links: Route.LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: 'https://fonts.googleapis.com/css2?family=Limelight&display=swap'
-  }
+  },
+  // PWA manifest
+  { rel: 'manifest', href: '/manifest.json' },
+  // Preload critical resources
+  { rel: 'dns-prefetch', href: '//fonts.googleapis.com' },
+  { rel: 'dns-prefetch', href: '//fonts.gstatic.com' }
 ]
 
 export function Layout({ children }: { children: ReactNode }) {
@@ -46,6 +53,21 @@ export function Layout({ children }: { children: ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Discover and trade unique perfumes in our exclusive fragrance community" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="color-scheme" content="dark light" />
+
+        {/* Performance and SEO meta tags */}
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="Voodoo Perfumes" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Voodoo Perfumes" />
+        <meta property="og:description" content="Discover and trade unique perfumes in our exclusive fragrance community" />
+
+        {/* Preload critical fonts */}
+        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" as="style" />
+        <link rel="preload" href="https://fonts.gstatic.com/s/limelight/v18/XLYkIZL7aopVbUpxq3gM8X8.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+
         <Meta />
         <Links />
         <ImagePreloader images={criticalImages} priority="high" />
@@ -54,6 +76,8 @@ export function Layout({ children }: { children: ReactNode }) {
         {children}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
+        <PerformanceMonitor />
+        <ServiceWorkerRegistration />
         <div id="modal-portal" />
       </body>
     </html>

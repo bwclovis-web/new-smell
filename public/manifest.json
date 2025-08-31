@@ -1,0 +1,62 @@
+{
+  "name": "Voodoo Perfumes",
+  "short_name": "Voodoo",
+  "description": "Discover and trade unique perfumes in our exclusive fragrance community",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["lifestyle", "shopping", "social"],
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16 32x32",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/images/home.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/scent.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/images/home.webp",
+      "sizes": "1280x720",
+      "type": "image/webp",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/images/scent.webp",
+      "sizes": "750x1334",
+      "type": "image/webp",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Browse Perfumes",
+      "short_name": "Perfumes",
+      "description": "Browse the perfume collection",
+      "url": "/perfumes",
+      "icons": [{ "src": "/images/perfume.webp", "sizes": "96x96" }]
+    },
+    {
+      "name": "Trading Post",
+      "short_name": "Trade",
+      "description": "Visit the trading post",
+      "url": "/the-exchange",
+      "icons": [{ "src": "/images/trading.webp", "sizes": "96x96" }]
+    }
+  ]
+}

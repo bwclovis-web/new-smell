@@ -1,11 +1,14 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 interface ImagePreloaderProps {
   images: string[]
   priority?: 'high' | 'low'
+  lazy?: boolean
 }
 
-const ImagePreloader = ({ images, priority = 'low' }: ImagePreloaderProps) => {
+const ImagePreloader = ({ images, priority = 'low', lazy = true }: ImagePreloaderProps) => {
+  const observerRef = useRef<IntersectionObserver | null>(null)
+
   useEffect(() => {
     if (priority === 'high') {
       // High priority: preload immediately
@@ -16,6 +19,34 @@ const ImagePreloader = ({ images, priority = 'low' }: ImagePreloaderProps) => {
         link.href = src
         link.fetchPriority = 'high'
         document.head.appendChild(link)
+      })
+    } else if (lazy && 'IntersectionObserver' in window) {
+      // Lazy loading with Intersection Observer
+      const imageElements = images.map(src => {
+        const img = new Image()
+        img.src = src
+        img.loading = 'lazy'
+        img.decoding = 'async'
+        return img
+      })
+
+      observerRef.current = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const img = entry.target as HTMLImageElement
+            img.src = img.dataset.src || img.src
+            observerRef.current?.unobserve(img)
+          }
+        })
+      }, {
+        rootMargin: '50px 0px',
+        threshold: 0.1
+      })
+
+      imageElements.forEach((img) => {
+        if (observerRef.current) {
+          observerRef.current.observe(img)
+        }
       })
     } else {
       // Low priority: preload when idle
@@ -47,6 +78,9 @@ const ImagePreloader = ({ images, priority = 'low' }: ImagePreloaderProps) => {
 
     // Cleanup function
     return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+      }
       const preloadLinks = document.querySelectorAll('link[rel="preload"][as="image"]')
       preloadLinks.forEach((link) => {
         if (images.includes((link as HTMLLinkElement).href)) {
@@ -54,7 +88,7 @@ const ImagePreloader = ({ images, priority = 'low' }: ImagePreloaderProps) => {
         }
       })
     }
-  }, [images, priority])
+  }, [images, priority, lazy])
 
   return null // This component doesn't render anything
 }
