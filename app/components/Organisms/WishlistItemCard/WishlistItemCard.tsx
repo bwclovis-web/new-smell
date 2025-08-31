@@ -15,9 +15,9 @@ const WishlistItemCard = ({
   availableAmount
 }: WishlistItemCardProps) => (
   <div
-    className={`rounded-lg shadow-md overflow-hidden border transition-all duration-300 relative ${isAvailable
+    className={`rounded-lg shadow-md overflow-hidden border transition-all duration-300 my-10 relative ${isAvailable
       ? 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-300 dark:border-green-600 ring-2 ring-green-200 dark:ring-green-700 shadow-green-100 dark:shadow-green-900/20'
-      : 'bg-white dark:bg-gray-800'
+      : 'bg-noir-dark'
       }`}
   >
     {/* Remove button */}
@@ -34,7 +34,7 @@ const WishlistItemCard = ({
     </Form>
 
     {isAvailable && (
-      <div className="bg-green-600 text-white text-xs font-bold px-3 py-1 text-center animate-pulse">
+      <div className="bg-noir-light text-noir-dark text-xs font-bold px-3 py-1 text-center animate-pulse">
         🎉 AVAILABLE IN TRADING POST! 🎉
       </div>
     )}
@@ -47,13 +47,13 @@ const WishlistItemCard = ({
       <h3 className="text-lg font-semibold mb-2">
         {item.perfume.name}
       </h3>
-      <p className="text-sm text-gray-600 mb-2">
+      <p className="text-sm text-noir-gold mb-2">
         by
         {' '}
         {item.perfume.perfumeHouse?.name || 'Unknown House'}
       </p>
       {item.perfume.description && (
-        <p className="text-sm text-gray-700 mb-4">
+        <p className="text-sm text-noir-gold-100 mb-4">
           {item.perfume.description}
         </p>
       )}
@@ -67,7 +67,7 @@ const WishlistItemCard = ({
       )}
 
       <div className="flex items-center justify-between mt-4">
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-noir-gold-500">
           Added
           {' '}
           {new Date(item.createdAt).toLocaleDateString()}
@@ -75,7 +75,7 @@ const WishlistItemCard = ({
         <div className="flex items-center gap-2">
           <NavLink
             to={`/perfume/${item.perfume.name}`}
-            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+            className="text-noir-blue/90 hover:text-noir-blue text-sm font-medium"
           >
             View Details
           </NavLink>

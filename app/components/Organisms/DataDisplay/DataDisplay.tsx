@@ -1,4 +1,4 @@
-import React from 'react'
+import type { FC } from 'react'
 
 import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
 import { groupByFirstLetter, type SortableItem } from '~/utils/sortUtils'
@@ -10,7 +10,7 @@ interface DataDisplayProps {
   className?: string
 }
 
-const DataDisplay: React.FC<DataDisplayProps> = ({
+const DataDisplay: FC<DataDisplayProps> = ({
   items,
   type,
   selectedLetter,
