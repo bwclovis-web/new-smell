@@ -21,7 +21,6 @@ interface UseInfiniteScrollPerfumesReturn {
 
 async function fetchPerfumesByLetter(letter: string, skip: number, take: number) {
   const url = `/api/perfumes-by-letter?letter=${letter}&skip=${skip}&take=${take}`
-  console.log('Fetching more perfumes:', { letter, skip, take, url })
   const response = await fetch(url)
   return response.json()
 }
@@ -46,40 +45,26 @@ export function useInfiniteScrollPerfumes(options: UseInfiniteScrollPerfumesOpti
   const lastTriggerTime = useRef(0)
 
   const loadMorePerfumes = async () => {
-    if (loading || !hasMore) {
-      console.log('loadMorePerfumes blocked:', { loading, hasMore })
-      return
-    }
+    if (loading || !hasMore) return
 
-    console.log('Loading more perfumes...')
     setLoading(true)
     try {
       const data = await fetchPerfumesByLetter(letter, skip, take)
-      console.log('loadMorePerfumes response:', data)
       if (data.success && Array.isArray(data.perfumes)) {
-        // Add new perfumes to the END of the existing list
         setPerfumes(prev => [...prev, ...data.perfumes])
         setSkip(prev => prev + data.perfumes.length)
-        setHasMore(data.meta?.hasMore || false)
-        setTotalCount(data.meta?.totalCount || data.perfumes.length)
-        console.log('Updated state:', {
-          newPerfumesCount: data.perfumes.length,
-          hasMore: data.meta?.hasMore,
-          totalCount: data.meta?.totalCount
-        })
+        setHasMore(data.meta.hasMore)
+        setTotalCount(data.meta.totalCount)
       } else {
         setHasMore(false)
-        console.log('Setting hasMore to false due to failed response')
       }
     } catch (error) {
-      console.error('Error loading more perfumes:', error)
       setHasMore(false)
     }
     setLoading(false)
   }
 
   const resetPerfumes = (newPerfumes: any[], newTotalCount: number) => {
-    console.log('resetPerfumes called:', { newPerfumes: newPerfumes.length, newTotalCount })
     setPerfumes(newPerfumes)
     setSkip(newPerfumes.length)
     setTotalCount(newTotalCount)
@@ -92,26 +77,17 @@ export function useInfiniteScrollPerfumes(options: UseInfiniteScrollPerfumesOpti
       return
     }
 
-    if (!scrollContainerRef.current) {
-      return
-    }
+    if (!scrollContainerRef.current) return
 
     const scrollContainer = scrollContainerRef.current
     const handleScroll = () => {
-      if (loading || !hasMore) {
-        console.log('Scroll blocked:', { loading, hasMore })
-        return
-      }
+      if (loading || !hasMore) return
 
       const now = Date.now()
-      if (now - lastTriggerTime.current < debounceTime) {
-        return
-      }
+      if (now - lastTriggerTime.current < debounceTime) return
 
       const { scrollTop, scrollHeight, clientHeight } = scrollContainer
-      console.log('Scroll check:', { scrollTop, scrollHeight, clientHeight, threshold })
       if (scrollTop + clientHeight >= scrollHeight - threshold) {
-        console.log('Triggering loadMorePerfumes')
         lastTriggerTime.current = now
         loadMorePerfumes()
       }
@@ -119,9 +95,7 @@ export function useInfiniteScrollPerfumes(options: UseInfiniteScrollPerfumesOpti
 
     scrollContainer.addEventListener('scroll', handleScroll)
     return () => scrollContainer.removeEventListener('scroll', handleScroll)
-  }, [
-    loading, hasMore, skip, scrollContainerRef.current, debounceTime, threshold, letter
-  ])
+  }, [loading, hasMore, skip, scrollContainerRef.current, debounceTime, threshold, letter])
 
   return { perfumes, loading, hasMore, totalCount, observerRef, loadMorePerfumes, resetPerfumes }
 }

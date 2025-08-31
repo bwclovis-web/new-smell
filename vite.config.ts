@@ -2,32 +2,12 @@ import { reactRouter } from '@react-router/dev/vite'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   plugins: [
     tailwindcss(),
     tsconfigPaths(),
-    reactRouter(),
-    VitePWA({
-      registerType: 'autoUpdate',
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp}'],
-        runtimeCaching: [
-          {
-            urlPattern: /\.(?:png|jpg|jpeg|svg|webp)$/,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'images',
-              expiration: {
-                maxEntries: 60,
-                maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
-              }
-            }
-          }
-        ]
-      }
-    })
+    reactRouter()
   ],
   server: {
     hmr: {
