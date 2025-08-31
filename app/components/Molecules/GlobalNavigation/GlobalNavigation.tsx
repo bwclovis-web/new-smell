@@ -33,7 +33,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
 
   return (
     <header className='fixed z-30  w-full h-auto bg-noir-dark/60 backdrop-blur-md'>
-      <nav className="flex justify-between inner-container py-5" data-cy="GlobalNavigation">
+      <nav className="hidden md:flex justify-between inner-container py-5" data-cy="GlobalNavigation">
         <NavLink to="/" className="text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400">
           {logoText}
         </NavLink>

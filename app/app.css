@@ -115,3 +115,76 @@ h3 {
         before:content-[''] before:absolute before:w-3 before:h-3 before:border-2 before:border-noir-dark/80 before:top-0 before:left-0 before:border-r-0 before:border-b-0
         after:content-[''] after:absolute after:w-3 after:h-3 after:border-2 after:border-noir-dark/80 after:bottom-0 after:right-0 after:border-l-0 after:border-t-0;
 }
+
+/* Mobile Navigation Styles */
+.mobile-nav {
+  position: relative;
+  z-index: 40;
+}
+
+.mobile-nav-overlay {
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.mobile-nav-close {
+  animation: slideOutRight 0.3s ease-in;
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Mobile-specific utilities */
+.mobile-safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.mobile-safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Touch-friendly button sizes */
+.mobile-touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Mobile scrollbar */
+.mobile-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-noir-gold) transparent;
+}
+
+.mobile-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mobile-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mobile-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-noir-gold);
+  border-radius: 2px;
+}
+
+/* Mobile backdrop blur fallback */
+@supports not (backdrop-filter: blur(8px)) {
+  .mobile-nav-backdrop {
+    background: rgba(0, 0, 0, 0.9);
+  }
+}

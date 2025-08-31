@@ -1,4 +1,6 @@
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+
 import LinkCard from '../LinkCard/LinkCard'
 
 interface DataDisplaySectionProps {
@@ -26,15 +28,16 @@ const DataDisplaySection = ({
   selectedLetter,
   scrollContainerRef
 }: DataDisplaySectionProps) => {
+  const { t } = useTranslation()
   const itemName = type === 'house' ? 'houses' : 'perfumes'
   const itemNameSingular = type === 'house' ? 'house' : 'perfume'
 
   if (!selectedLetter) {
     return (
       <div className="inner-container my-6 text-center py-12">
-        <h3 className="text-xl text-noir-gold mb-4">Select a letter to browse {itemName}</h3>
+        <h2 className="text-xl text-noir-gold mb-4">{t('components.dataDisplaySection.heading', { itemName })}</h2>
         <p className="text-noir-gold/80">
-          Click on any letter above to see {itemName} starting with that letter
+          {t('components.dataDisplaySection.subheading', { itemName })}
         </p>
       </div>
     )

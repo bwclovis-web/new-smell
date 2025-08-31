@@ -28,8 +28,6 @@ const DataFilters: React.FC<DataFiltersProps> = ({
   searchType,
   sortOptions,
   typeOptions,
-  selectedSort,
-  selectedType,
   onSortChange,
   onTypeChange,
   className = ''

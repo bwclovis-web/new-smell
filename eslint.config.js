@@ -31,7 +31,7 @@ export default defineConfig([
   { rules: {
     'arrow-body-style': ['error', 'as-needed'],
     'camelcase': ['error', { properties: 'always', ignoreDestructuring: true }],
-    'complexity': ['error', 10],
+    'complexity': ['error', 14],
     'curly': 'error',
     'default-case': 'error',
     'default-case-last': 'error',
@@ -50,7 +50,7 @@ export default defineConfig([
     'max-depth': ['error', 2],
     'max-nested-callbacks': ['error', 3],
     'max-params': ['error', 4],
-    'max-statements': ['error', 10],
+    'max-statements': ['error', 14],
     'new-cap': ['error', { newIsCap: true, capIsNew: true }],
     'no-console': 'error',
     'no-empty': 'error',

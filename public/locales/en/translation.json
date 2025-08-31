@@ -40,6 +40,10 @@
     "createAccount": "Click here to create"
   },
   "components": {
+    "dataDisplaySection": {
+      "heading": "Select a letter to browse {{itemName}}",
+      "subheading": "Click on any letter above to see {{itemName}} starting with that letter"
+    },
     "modal": {
       "close": "Close Modal"
     },
