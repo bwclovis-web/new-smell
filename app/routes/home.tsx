@@ -72,7 +72,7 @@ export default function Home() {
   ]
   return (
     <div className="flex flex-col gap-8 items-center justify-center min-h-screen px-4 relative bg-noir-gold-500/30" ref={container}>
-      <img src={banner} alt="" className="hero-image absolute object-cover w-full h-full filter grayscale-[100%] contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-multiply" />
+      <img src={banner} alt="" className="absolute object-cover w-full h-full filter grayscale-[100%] contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-multiply" />
       <div className="absolute inset-0 bg-noir-black/85 md:mask-radial-from-25% mask-radial-to-44%"></div>
       <section className='text-noir-gold relative z-10 flex flex-col items-center gap-4'>
         <div className='text-shadow-lg/90 text-shadow-noir-black text-center'>
