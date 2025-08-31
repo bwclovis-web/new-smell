@@ -11,3 +11,6 @@
 # Temporary files
 /temp/
 /temp_missing_*.json
+
+# Generated images
+/public/images/

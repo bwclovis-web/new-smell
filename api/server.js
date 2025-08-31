@@ -55,6 +55,8 @@ const metricsApp = express()
 // Place Vite dev server middleware first to ensure HMR works properly
 if (viteDevServer) {
   app.use(viteDevServer.middlewares)
+  // Serve images in development
+  app.use('/images', express.static('public/images', { maxAge: '1h' }))
 } else {
   app.use(
     '/assets',
@@ -64,6 +66,8 @@ if (viteDevServer) {
     })
   )
   app.use(express.static('build/client', { maxAge: '1h' }))
+  // Serve images in production
+  app.use('/images', express.static('public/images', { maxAge: '1h' }))
 }
 
 app.disable('x-powered-by')
@@ -128,6 +132,17 @@ app.get('/test-session', (req, res) => {
     req.session.views++
   }
   res.send(`Session works! You've visited ${req.session.views} times.`)
+})
+
+app.get('/test-images', (req, res) => {
+  res.json({
+    message: 'Image serving test',
+    images: [
+      '/images/home.webp',
+      '/images/scent.webp',
+      '/images/login.webp'
+    ]
+  })
 })
 
 app.all(

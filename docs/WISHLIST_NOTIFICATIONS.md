@@ -109,7 +109,7 @@ node scripts/process-notifications.js
 ### Environment Variables
 
 - `APP_URL`: Base URL of your application (default: http://localhost:2112)
-- `DATABASE_URL`: PostgreSQL connection string
+- `LOCAL_DATABASE_URL`: PostgreSQL connection string
 
 ### Email Integration
 

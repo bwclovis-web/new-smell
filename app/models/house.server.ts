@@ -26,8 +26,11 @@ export const getAllHousesWithOptions = async (options?: {
   sortByType?: boolean
   houseType?: string
   sortBy?: 'name-asc' | 'name-desc' | 'created-desc' | 'created-asc' | 'type-asc'
+  skip?: number
+  take?: number
+  selectFields?: boolean // If true, only return essential fields
 }) => {
-  const { sortByType, houseType, sortBy } = options || {}
+  const { sortByType, houseType, sortBy, skip, take, selectFields } = options || {}
 
   const where: Prisma.PerfumeHouseWhereInput = {}
   if (houseType && houseType !== 'all') {
@@ -36,16 +39,114 @@ export const getAllHousesWithOptions = async (options?: {
 
   const orderBy = buildHouseOrderBy(sortBy, sortByType)
 
+  // If selectFields is true, only return essential fields to reduce response size
+  if (selectFields) {
+    return prisma.perfumeHouse.findMany({
+      where,
+      orderBy,
+      skip,
+      take,
+      select: {
+        id: true,
+        name: true,
+        type: true,
+        country: true,
+        founded: true,
+        createdAt: true,
+        updatedAt: true,
+        // Exclude large fields like description, image, website, email, phone, address
+      }
+    })
+  }
+
   return prisma.perfumeHouse.findMany({
     where,
-    orderBy
+    orderBy,
+    skip,
+    take
   })
 }
 
-// Simple getAllHouses for backward compatibility
-export const getAllHouses = async () => prisma.perfumeHouse.findMany({
-  orderBy: { createdAt: 'desc' }
-})
+// Add a new function for paginated results with count
+export const getHousesPaginated = async (options?: {
+  sortByType?: boolean
+  houseType?: string
+  sortBy?: 'name-asc' | 'name-desc' | 'created-desc' | 'created-asc' | 'type-asc'
+  skip?: number
+  take?: number
+  selectFields?: boolean
+}) => {
+  const { sortByType, houseType, sortBy, skip = 0, take = 50, selectFields } = options || {}
+
+  const where: Prisma.PerfumeHouseWhereInput = {}
+  if (houseType && houseType !== 'all') {
+    where.type = houseType as HouseType
+  }
+
+  const orderBy = buildHouseOrderBy(sortBy, sortByType)
+
+  const [houses, totalCount] = await Promise.all([
+    selectFields
+      ? prisma.perfumeHouse.findMany({
+        where,
+        orderBy,
+        skip,
+        take,
+        select: {
+          id: true,
+          name: true,
+          type: true,
+          country: true,
+          founded: true,
+          createdAt: true,
+          updatedAt: true,
+        }
+      })
+      : prisma.perfumeHouse.findMany({
+        where,
+        orderBy,
+        skip,
+        take
+      }),
+    prisma.perfumeHouse.count({ where })
+  ])
+
+  return {
+    houses,
+    count: totalCount,
+    hasMore: skip + take < totalCount,
+    currentPage: Math.floor(skip / take) + 1,
+    totalPages: Math.ceil(totalCount / take)
+  }
+}
+
+// Simple getAllHouses for backward compatibility - now with pagination
+export const getAllHouses = async (options?: { skip?: number; take?: number; selectFields?: boolean }) => {
+  const { skip, take, selectFields } = options || {}
+
+  if (selectFields) {
+    return prisma.perfumeHouse.findMany({
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take,
+      select: {
+        id: true,
+        name: true,
+        type: true,
+        country: true,
+        founded: true,
+        createdAt: true,
+        updatedAt: true,
+      }
+    })
+  }
+
+  return prisma.perfumeHouse.findMany({
+    orderBy: { createdAt: 'desc' },
+    skip,
+    take
+  })
+}
 
 export const getHousesByLetter = async (letter: string) => {
   return prisma.perfumeHouse.findMany({

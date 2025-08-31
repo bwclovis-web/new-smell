@@ -43,26 +43,27 @@ const usePerfumeData = () => {
     return data
   }
 
-  const loadPerfumesByLetter = async (letter: string) => {
-    setIsLoading(true)
-    setError(null)
-    try {
-      const data = await fetchPerfumesData(letter)
-      const perfumes = data.perfumes
-      const count = data.meta?.totalCount || perfumes.length
+  const loadPerfumesByLetter =
+    async (letter: string) => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const data = await fetchPerfumesData(letter)
+        const perfumes = data.perfumes
+        const count = data.meta?.totalCount || perfumes.length
 
-      setInitialPerfumes(perfumes)
-      setTotalCount(count)
+        setInitialPerfumes(perfumes)
+        setTotalCount(count)
 
-      return { perfumes, totalCount: count }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load perfumes'
-      setError(errorMessage)
-      return null
-    } finally {
-      setIsLoading(false)
+        return { perfumes, totalCount: count }
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load perfumes'
+        setError(errorMessage)
+        return null
+      } finally {
+        setIsLoading(false)
+      }
     }
-  }
 
   return { initialPerfumes, totalCount, isLoading, error, loadPerfumesByLetter }
 }

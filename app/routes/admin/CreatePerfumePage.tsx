@@ -30,7 +30,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 }
 
 export const loader = async () => {
-  const allHouses = await getAllHouses()
+  const allHouses = await getAllHouses({ selectFields: true, take: 1000 }) // Limit to 1000 houses and only essential fields
   return { allHouses }
 }
 

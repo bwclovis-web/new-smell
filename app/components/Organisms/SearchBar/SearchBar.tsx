@@ -36,7 +36,7 @@ const SearchBar: FC<SearchBarProps> =
     }
 
     const RenderLink = ({ item }) => (
-      <NavLink viewTransition to={`${searchType}/${item.name}`} className="block w-full h-full">
+      <NavLink viewTransition to={`/${searchType}/${item.name}`} className="block w-full h-full">
         {({ isTransitioning }) => (
           <span className={`contain-layout ${isTransitioning ? 'image-title' : 'none'}`}>
             {item.name}
@@ -63,9 +63,9 @@ const SearchBar: FC<SearchBarProps> =
           />
         </form>
         {results.length > 0 && (
-          <ul className="bg-noir-dark rounded-b-md absolute w-full mx-auto left-0 right-0 border-l-8 border-b-8 border-r-8 border-noir-gold/80 border-double z-10">
+          <ul className="bg-noir-dark rounded-b-md absolute w-full mx-auto left-0 right-0 border-l-8 border-b-8 border-r-8 border-noir-gold/80 border-double z-10 max-h-52 overflow-y-auto">
             {results.map((item: any) => (
-              <li key={item.id} className="p-2 hover:bg-noir-gold hover:text-noir-black font-semibold cursor-pointer last-of-type:rounded-b-md transition-colors">
+              <li key={item.id} className="p-2 text-noir-gold-100 hover:bg-noir-gold hover:text-noir-black font-semibold cursor-pointer last-of-type:rounded-b-md transition-colors">
                 {action ?
                   <button className='block min-w-full text-left' onClick={() => handleAction(item)}>{item.name}</button> :
                   <RenderLink item={item} />}

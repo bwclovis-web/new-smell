@@ -186,7 +186,17 @@ const parseMissingData = async (filePath: string) => {
   // --- Perfume House missing info logic ---
   // Query PerfumeHouse from Prisma and check for missing fields
   const { prisma } = await import('../../db.server')
-  const houses = await prisma.perfumeHouse.findMany()
+  const houses = await prisma.perfumeHouse.findMany({
+    select: {
+      id: true,
+      name: true,
+      image: true,
+      description: true,
+      founded: true,
+      website: true,
+    },
+    take: 1000 // Limit to prevent large responses
+  })
   const missingHouseInfoByBrand: Record<string, number> = {}
   let totalMissingHouseInfo = 0
   houses.forEach(house => {

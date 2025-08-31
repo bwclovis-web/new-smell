@@ -16,6 +16,7 @@ import FourOFourPage from './components/Containers/404Page/404Page'
 import { NonceProvider, useNonce } from './hooks/use-nonce'
 import i18n from './modules/i18n/i18n.client'
 import { SessionProvider } from './providers/sessionProvider'
+import ImagePreloader from './components/Atoms/ImagePreloader'
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -32,6 +33,14 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: ReactNode }) {
   const nonce = useNonce()
+
+  // Critical images to preload
+  const criticalImages = [
+    '/images/home.webp',
+    '/images/scent.webp',
+    '/images/login.webp'
+  ]
+
   return (
     <html lang="en" >
       <head>
@@ -39,6 +48,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <ImagePreloader images={criticalImages} priority="high" />
       </head>
       <body className="bg-noir-black">
         {children}

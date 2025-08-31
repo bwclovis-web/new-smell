@@ -24,7 +24,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     throw new Error('Perfume ID is required')
   }
   const perfume = await getPerfumeByName(params.id)
-  const allHouses = await getAllHouses()
+  const allHouses = await getAllHouses({ selectFields: true, take: 1000 })
   if (!perfume) {
     throw new Response('House not found', { status: 404 })
   }

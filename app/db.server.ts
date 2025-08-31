@@ -4,12 +4,12 @@ import { PrismaClient } from '@prisma/client'
 
 import { singleton } from './utils/server/utility.server'
 
-console.log("Initializing Prisma with DATABASE_URL:", process.env.DATABASE_URL)
+console.log("Initializing Prisma with LOCAL_DATABASE_URL:", process.env.LOCAL_DATABASE_URL)
 
 const prisma = singleton('prisma', () => new PrismaClient({
   datasources: {
     db: {
-      url: process.env.DATABASE_URL,
+      url: process.env.LOCAL_DATABASE_URL,
     },
   },
 }))
