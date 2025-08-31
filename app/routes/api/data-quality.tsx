@@ -143,16 +143,36 @@ const getLatestReportFiles = async (timeframe: string = 'all') => {
   // Get files filtered by timeframe
   const filteredFiles = getFilteredFiles(allFiles, timeframe)
 
-  // No files matching the timeframe
+  // If no files match the timeframe, fall back to all files (most recent)
+  let filesToUse = filteredFiles
   if (filteredFiles.length === 0) {
-    throw new Error(`No report files found for timeframe: ${timeframe}`)
+    console.log(`No reports found for timeframe: ${timeframe}, falling back to most recent reports`)
+    // Get all timestamped files and use the most recent ones
+    const allTimestampedFiles = allFiles
+      .filter(file => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
+      .map(file => {
+        const match = file.match(/(\d{4}-\d{2}-\d{2})T\d{2}-\d{2}-\d{2}-\d{3}Z/)
+        return {
+          filename: file,
+          timestamp: match ? match[0] : '',
+          date: match ? new Date(match[1]) : new Date(0)
+        }
+      })
+      .filter(file => file.timestamp)
+      .sort((fileA, fileB) => {
+        const dateA = new Date(fileA.timestamp).getTime()
+        const dateB = new Date(fileB.timestamp).getTime()
+        return dateB - dateA
+      })
+
+    filesToUse = allTimestampedFiles
   }
 
   // Get the latest timestamp
-  const latestTimestamp = filteredFiles[0].timestamp
+  const latestTimestamp = filesToUse[0].timestamp
 
   // Extract all unique dates for history and sort them
-  const dateStrings = filteredFiles.map(file => file.date.toISOString().split('T')[0])
+  const dateStrings = filesToUse.map(file => file.date.toISOString().split('T')[0])
   const uniqueDates = [...new Set(dateStrings)].sort()
 
   // Get paths for report types
@@ -160,7 +180,7 @@ const getLatestReportFiles = async (timeframe: string = 'all') => {
     missingJsonPath: path.join(reportsDir, `missing_info_${latestTimestamp}.json`),
     duplicatesPath: path.join(reportsDir, `duplicates_${latestTimestamp}.md`),
     historyDates: uniqueDates,
-    allReports: filteredFiles.map(file => ({
+    allReports: filesToUse.map(file => ({
       date: file.date.toISOString().split('T')[0],
       missing: path.join(reportsDir, `missing_info_${file.timestamp}.json`),
       duplicates: path.join(reportsDir, `duplicates_${file.timestamp}.md`)

@@ -48,7 +48,7 @@
       "button": "Search"
     },
     "filter": {
-      "heading": "Filter",
+      "heading": "Filter By Type",
       "clearFilters": "Clear Filters",
       "applyFilters": "Apply Filters"
     },
