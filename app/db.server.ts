@@ -4,15 +4,26 @@ import { PrismaClient } from '@prisma/client'
 
 import { singleton } from './utils/server/utility.server'
 
-console.log("Initializing Prisma with LOCAL_DATABASE_URL:", process.env.LOCAL_DATABASE_URL)
+// Support both local development and production environments
+const databaseUrl = process.env.DATABASE_URL || process.env.LOCAL_DATABASE_URL
+
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL environment variable is required')
+}
+
+console.log("Initializing Prisma with database URL:", databaseUrl)
 
 const prisma = singleton('prisma', () => new PrismaClient({
   datasources: {
     db: {
-      url: process.env.LOCAL_DATABASE_URL,
+      url: databaseUrl,
     },
   },
 }))
-prisma.$connect()
+
+// Only connect in production or when explicitly needed
+if (process.env.NODE_ENV === 'production') {
+  prisma.$connect()
+}
 
 export { prisma }

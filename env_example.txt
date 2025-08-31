@@ -1,6 +1,17 @@
-# CrewAI Configuration
+# Database Configuration
 # Copy this file to .env and fill in your actual values
 
+# Primary Database URL (used by Prisma)
+DATABASE_URL=postgresql://username:password@localhost:5432/database_name
+
+# Local Development Database (fallback)
+LOCAL_DATABASE_URL=postgresql://username:password@localhost:5432/database_name
+
+# Vercel Environment Variables
+# Add these in your Vercel project settings:
+# DATABASE_URL=your_production_database_url
+
+# CrewAI Configuration
 # OpenAI API Key (required for CrewAI)
 OPENAI_API_KEY=your_openai_api_key_here
 
@@ -15,3 +26,9 @@ OPENAI_API_KEY=your_openai_api_key_here
 
 # Optional: Set logging level
 # LOG_LEVEL=INFO
+
+# Session Secret (required for authentication)
+SESSION_SECRET=your_session_secret_here
+
+# Node Environment
+NODE_ENV=development
