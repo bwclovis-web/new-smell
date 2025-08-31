@@ -1,11 +1,11 @@
 import { cx } from "class-variance-authority"
-import { use, useRef } from "react"
+import { useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { MdLibraryAdd } from "react-icons/md"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import MyScentsModal from "~/components/Containers/MyScents/MyScentsModal/MyScentsModal"
-import SessionContext from "~/providers/sessionProvider"
+import { useSessionStore } from '~/stores/sessionStore'
 import type { PerfumeI } from "~/types"
 
 import Modal from "../Modal/Modal"
@@ -18,7 +18,7 @@ interface AddToCollectionModalProps {
 
 const AddToCollectionModal =
   ({ type, perfume, className }: AddToCollectionModalProps) => {
-    const { modalOpen, toggleModal, modalId } = use(SessionContext)
+    const { modalOpen, toggleModal, modalId } = useSessionStore()
     const modalTrigger = useRef<HTMLButtonElement>(null)
     const { t } = useTranslation()
     const ButtonClasses = cx({

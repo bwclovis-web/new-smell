@@ -1,5 +1,5 @@
 import { getFormProps, useForm } from "@conform-to/react"
-import { useContext, useRef } from "react"
+import { useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { Form } from "react-router"
 
@@ -10,15 +10,14 @@ import Select from "~/components/Atoms/Select/Select"
 import SearchBar from "~/components/Organisms/SearchBar/SearchBar"
 import { perfumeTypes } from "~/data/SelectTypes"
 import { useMyScentsForm } from "~/hooks/useMyScentsForm"
-import SessionContext from "~/providers/sessionProvider"
+import { useSessionStore } from '~/stores/sessionStore'
 import type { UserPerfumeI } from "~/types"
-
 interface MyScentsModalProps {
   perfume?: UserPerfumeI
 }
 
 const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
-  const { modalData } = useContext(SessionContext)
+  const { modalData } = useSessionStore()
   const { t } = useTranslation()
 
   const priceInputRef = useRef<HTMLInputElement>(null)
@@ -65,7 +64,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
               {t('myScents.modal.selectedPerfume')}
             </legend>
             <p className="text-noir-gold-100 mb-4 font-semibold">{selectedPerfume.name}</p>
-            <div className="flex items-start justify-between gap-6">
+            <div className="flex flex-col md:flex-row items-start justify-between gap-6">
               <div className="w-1/2 noir-border relative p-4">
                 <RangeSlider
                   min={0}

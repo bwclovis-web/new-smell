@@ -1,16 +1,16 @@
 import type { FormEvent } from "react"
-import { useContext, useState } from "react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Form, useFetcher } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
-import SessionContext from "~/providers/sessionProvider"
+import { useSessionStore } from '~/stores/sessionStore'
 import type { CommentsModalProps } from "~/types/comments"
 import { createCommentFormData, createTemporaryComment } from "~/utils/comment-utils"
 
 const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
   const { t } = useTranslation()
-  const { toggleModal, modalId } = useContext(SessionContext)
+  const { toggleModal, modalId } = useSessionStore()
   const [isPublic, setIsPublic] = useState(false)
   const fetcher = useFetcher()
   const [isSubmitting, setIsSubmitting] = useState(false)

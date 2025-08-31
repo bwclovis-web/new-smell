@@ -181,7 +181,7 @@ const PerfumeContent = ({
   handleDelete: () => void
 }) => (
   <div className="flex flex-col gap-20 mx-auto inner-container items-center">
-    <div className="w-full flex gap-4 max-w-6xl">
+    <div className="w-full flex flex-col md:flex-row gap-4 max-w-6xl">
       {user && (
         <PerfumeIcons
           perfume={perfume}
@@ -190,7 +190,7 @@ const PerfumeContent = ({
           isInWishlist={isInUserWishlist}
         />
       )}
-      <div className='bg-white/5 w-3/4 border-4 noir-border relative shadow-lg text-noir-gold-500'>
+      <div className='bg-white/5 md:w-3/4 border-4 noir-border relative shadow-lg text-noir-gold-500'>
         <PerfumeNotes
           perfumeNotesOpen={perfume.perfumeNotesOpen}
           perfumeNotesHeart={perfume.perfumeNotesHeart}
@@ -199,7 +199,8 @@ const PerfumeContent = ({
         <p className='p-4'>{perfume.description}</p>
       </div>
     </div>
-    <div className="w-full flex gap-4 items-start justify-center">
+
+    <div className="w-full flex flex-col md:flex-row gap-4 items-start justify-center">
       <aside className='noir-border relative'>
         <PerfumeRatingSystem
           perfumeId={perfume.id}
@@ -208,7 +209,7 @@ const PerfumeContent = ({
           averageRatings={averageRatings}
         />
       </aside>
-      <div className='noir-border relative w-2/3'>
+      <div className='noir-border relative w-full md:w-2/3'>
         <h2>Reviews</h2>
       </div>
     </div>

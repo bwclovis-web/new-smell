@@ -1,21 +1,19 @@
-/* eslint-disable max-statements */
+
 
 import { type VariantProps } from 'class-variance-authority'
 import {
   type FC,
   type HTMLProps,
   type ReactNode,
-  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
   useState
 } from 'react'
 import { createPortal } from 'react-dom'
-import { useTranslation } from 'react-i18next'
-import { IoMdCloseCircle } from "react-icons/io"
+import { IoMdCloseCircle } from 'react-icons/io'
 
-import SessionContext from '~/providers/sessionProvider'
+import { useSessionStore } from '~/stores/sessionStore'
 import { styleMerge } from '~/utils/styleUtils'
 
 import { modalBackgroundVariant, modalContentVariant } from './modal-variants'
@@ -31,22 +29,17 @@ const Modal: FC<ModalProps>
   = ({ children, background, innerType, animateStart, ref }) => {
     const [mounted, setMounted] = useState(false)
     const [animate, setAnimate] = useState(false)
-    const [windowPosition, setWindowPosition] = useState(0)
     const modalRef = useRef<HTMLDivElement>(null)
-    const { toggleModal, triggerId } = useContext(SessionContext)
-    const { t } = useTranslation()
+    const { closeModal, modalOpen } = useSessionStore()
+
     const handleClick = () => {
       setAnimate(false)
       setTimeout(() => {
-        if (triggerId) {
-          toggleModal(triggerId, '')
-        }
+        closeModal()
       }, 60)
     }
 
     useLayoutEffect(() => {
-      const here = document.documentElement.scrollTop
-      setWindowPosition(here)
       setMounted(true)
       return () => setMounted(false)
     }, [])
@@ -58,15 +51,16 @@ const Modal: FC<ModalProps>
           setAnimate(true)
         }, 140)
       }
-    }, [mounted, windowPosition])
+    }, [mounted])
 
     const template = (
       <div
         ref={ref}
         id="modalContainer"
-        className="absolute h-full w-full z-50 flex justify-center items-center"
+        className="fixed inset-0 z-[9999] flex justify-center items-center isolate"
+        style={{ willChange: 'opacity' }}
       >
-        <div
+        {modalOpen && <div
           className={styleMerge(modalBackgroundVariant({
             animate,
             animateStart,
@@ -79,12 +73,11 @@ const Modal: FC<ModalProps>
             if (evt.key === 'Enter' || evt.key === ' ') {
               evt.preventDefault()
               setAnimate(true)
-              if (triggerId) {
-                toggleModal(triggerId, '')
-              }
+              closeModal()
             }
           }}
-        />
+          style={{ willChange: 'opacity' }}
+        />}
         <div
           ref={modalRef}
           className={styleMerge(modalContentVariant({
@@ -92,14 +85,14 @@ const Modal: FC<ModalProps>
             animateStart,
             innerType
           }))}
+          style={{ willChange: 'transform, opacity' }}
         >
           <button
             type="button"
             className="absolute top-5 right-5 max-w-max cursor-pointer"
             onClick={() => handleClick()}
-            aria-label={t('components.modal.close') || 'Close modal'}
           >
-            <IoMdCloseCircle size={34} color="currentColor" className='fill-noir-gold' />
+            <IoMdCloseCircle size={34} color="currentColor" className="fill-cyan-800" />
           </button>
           {children}
         </div>

@@ -34,12 +34,12 @@ const DataFilters: React.FC<DataFiltersProps> = ({
 }) => {
   const { t } = useTranslation()
   return (
-    <div className={`space-y-6 inner-container py-4 flex flex-col md:flex-row md:justify-between md:items-center noir-border ${className}`}>
-      <div className='w-1/4 mb-0'>
+    <div className={`space-y-6 inner-container py-4 flex flex-col gap-6 md:flex-row md:justify-between md:items-center noir-border ${className}`}>
+      <div className='w-full md:w-1/4 mb-0'>
         <SearchBar searchType={searchType} />
       </div>
 
-      <div className='flex flex-col md:flex-row gap-6 w-full md:w-3/4 justify-end items-end md:items-center'>
+      <div className='flex  gap-6 w-full md:w-3/4 justify-start md:justify-end items-end md:items-center'>
         {typeOptions && onTypeChange && (
           <div>
             <h3 className="mb-2">{t('components.filter.heading')}</h3>

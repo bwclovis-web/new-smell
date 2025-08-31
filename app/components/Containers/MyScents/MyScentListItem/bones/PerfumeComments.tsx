@@ -6,7 +6,7 @@ import { useFetcher } from "react-router"
 import { Button } from "~/components/Atoms/Button/Button"
 import CheckBox from "~/components/Atoms/CheckBox/CheckBox"
 import Modal from "~/components/Organisms/Modal/Modal"
-import SessionContext from "~/providers/sessionProvider"
+import { useSessionStore } from '~/stores/sessionStore'
 import type { UserPerfumeI } from "~/types"
 import type { Comment } from "~/types/comments"
 import { createCommentFormData } from "~/utils/comment-utils"
@@ -19,7 +19,7 @@ interface PerfumeCommentsProps {
 }
 const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
   const { t } = useTranslation()
-  const { modalOpen, toggleModal, modalId } = useContext(SessionContext)
+  const { toggleModal, modalId } = useSessionStore()
   const fetcher = useFetcher()
   const [comments, setComments] = useState<Comment[]>([])
   const uniqueModalId = `add-scent-${userPerfume.id}`

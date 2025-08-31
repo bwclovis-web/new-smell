@@ -28,7 +28,7 @@ export const modalBackgroundVariant = cva(
         top: 'left-0'
       },
       background: {
-        default: 'bg-noir-black/50 backdrop-blur-xs',
+        default: 'bg-noir-dark/50 backdrop-blur-xs',
         light: 'bg-white/80',
         purple: 'bg-purple-700/50'
       }
@@ -37,18 +37,18 @@ export const modalBackgroundVariant = cva(
 )
 
 export const modalContentVariant = cva(
-  ['fixed min-h-full lg:min-h-auto z-30 h-auto transition-all delay-200 pb-10 xl:p-8 pointer-none flex'],
+  ['min-h-full lg:min-h-auto z-30 h-auto transition-all delay-200 pb-10 xl:p-8 pointer-none flex'],
   {
     compoundVariants: [
       {
         animate: false,
         animateStart: 'top',
-        className: 'lg:-translate-y-80 h-0'
+        className: 'lg:translate-y-80 h-0'
       },
       {
         animate: true,
         animateStart: 'top',
-        className: 'lg:translate-y-40 delay-200 top-3 overflowY-auto'
+        className: 'translate-y-140 lg:-translate-y-90 delay-200 top-3 overflowY-auto'
       },
       {
         animate: false,

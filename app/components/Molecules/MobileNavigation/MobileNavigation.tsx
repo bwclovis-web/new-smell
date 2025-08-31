@@ -1,4 +1,4 @@
-import { type FC, type HTMLProps, useContext, useEffect, useRef, useState } from 'react'
+import { type FC, type HTMLProps, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AiFillHome } from 'react-icons/ai'
 import { FaBars, FaUser } from 'react-icons/fa6'
@@ -7,7 +7,7 @@ import { NavLink } from 'react-router'
 
 import Modal from '~/components/Organisms/Modal/Modal'
 import { mainNavigation } from '~/data/navigation'
-import SessionContext from '~/providers/sessionProvider'
+import { useSessionStore } from '~/stores/sessionStore'
 import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/profilePage'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 import { styleMerge } from '~/utils/styleUtils'
@@ -76,18 +76,18 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
       {/* Mobile Menu Modal */}
       {modalOpen && modalId === MOBILE_MENU_ID && (
         <Modal
-          animateStart="left"
+          animateStart="top"
           background="default"
           innerType="dark"
         >
-          <div className="flex flex-col h-full mobile-safe-top mobile-safe-bottom pointer-events-auto">
+          <div className="flex flex-col h-full max-h-[90vh] mobile-safe-top mobile-safe-bottom pointer-events-auto overflow-y-auto">
             {/* Header */}
-            <div className="flex justify-between items-center p-4 border-b border-noir-light/20 mb-6">
+            <div className="flex justify-between items-center p-4 border-b border-noir-light/20 mb-4 sticky top-0 bg-noir-black/95 backdrop-blur-sm">
               <h2 className="text-noir-gold font-semibold text-xl">Menu</h2>
             </div>
 
             {/* Navigation Links */}
-            <nav className="flex-1 px-4">
+            <nav className="flex-1 px-4 pb-4">
               <ul className="space-y-2">
                 {mainNavigation.map(item => (
                   <li key={item.id}>
@@ -124,7 +124,7 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
             </nav>
 
             {/* User Section */}
-            <div className="p-4 border-t border-noir-light/20 mt-6">
+            <div className="p-4 border-t border-noir-light/20 mt-4">
               {!user ? (
                 <NavLink
                   viewTransition
