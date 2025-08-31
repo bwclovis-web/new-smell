@@ -6,7 +6,7 @@ const LinkCard = ({ data, type, children }: { data: any; type: any; children?: a
   const url = type === 'house' ? PERFUME_HOUSE : PERFUME_PATH
 
   return (
-    <div className='relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out'>
+    <div className='relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out noir-o '>
       <NavLink
         viewTransition
         to={`${url}/${data.name}`}

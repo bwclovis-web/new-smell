@@ -35,7 +35,16 @@ export const links: Route.LinksFunction = () => [
   { rel: 'manifest', href: '/manifest.json' },
   // Preload critical resources
   { rel: 'dns-prefetch', href: '//fonts.googleapis.com' },
-  { rel: 'dns-prefetch', href: '//fonts.gstatic.com' }
+  { rel: 'dns-prefetch', href: '//fonts.gstatic.com' },
+  // Resource hints for better performance
+  { rel: 'preload', href: '/images/home.webp', as: 'image', type: 'image/webp' },
+  { rel: 'preload', href: '/images/scent.webp', as: 'image', type: 'image/webp' },
+  // Preload critical fonts
+  { rel: 'preload', href: 'https://fonts.gstatic.com/s/limelight/v18/XLYkIZL7aopVbUpxq3gM8X8.woff2', as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' },
+  // Prefetch non-critical resources
+  { rel: 'prefetch', href: '/images/login.webp' },
+  { rel: 'prefetch', href: '/images/house.webp' },
+  { rel: 'prefetch', href: '/images/perfume.webp' }
 ]
 
 export function Layout({ children }: { children: ReactNode }) {
