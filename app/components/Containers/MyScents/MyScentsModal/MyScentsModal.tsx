@@ -37,7 +37,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
   } = useMyScentsForm(perfume)
 
   return (
-    <div className="w-full">
+    <div className="w-full p-6">
       <div className="flex flex-col items-start justify-between mb-4">
         <div>
           <h2> {t('myScents.modal.title')}</h2>
@@ -65,7 +65,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
             </legend>
             <p className="text-noir-gold-100 mb-4 font-semibold">{selectedPerfume.name}</p>
             <div className="flex flex-col md:flex-row items-start justify-between gap-6">
-              <div className="w-1/2 noir-border relative p-4">
+              <div className="w-full md:w-1/2 noir-border relative p-4">
                 <RangeSlider
                   min={0}
                   max={10}
@@ -81,7 +81,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
                   label={t('myScents.modal.amountLabel')}
                 />
               </div>
-              <div className="w-1/2 noir-border relative p-4">
+              <div className="w-full md:w-1/2 noir-border relative p-4">
                 <Select
                   selectData={perfumeTypes}
                   name="type"
