@@ -10,7 +10,7 @@ export const modalBackgroundVariant = cva(
       {
         animateStart: 'top',
         background: 'default',
-        className: 'backdrop-blur-xs bg-atom-gray-22/50'
+        className: 'backdrop-blur-xs bg-noir-dark/50'
       }
     ],
     defaultVariants: {
@@ -43,12 +43,12 @@ export const modalContentVariant = cva(
       {
         animate: false,
         animateStart: 'top',
-        className: 'lg:translate-y-80 h-0'
+        className: 'lg:translate-y-[0%] h-0'
       },
       {
         animate: true,
         animateStart: 'top',
-        className: 'translate-y-140 lg:-translate-y-90 delay-200 top-3 overflowY-auto'
+        className: 'lg:translate-y-[20%] delay-200  overflowY-auto'
       },
       {
         animate: false,
@@ -63,12 +63,12 @@ export const modalContentVariant = cva(
       {
         animate: false,
         animateStart: 'left',
-        className: 'lg:translate-x-[100%] h-0 h-full'
+        className: 'translate-x-[100%] h-0 h-full'
       },
       {
         animate: true,
         animateStart: 'left',
-        className: 'lg:translate-x-[0%] delay-200'
+        className: 'translate-x-[0%] delay-200'
       }
     ],
     defaultVariants: {

@@ -37,7 +37,7 @@ const AddToCollectionModal =
             ref={modalTrigger}
           >
             {type === 'icon' ?
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-between gap-2">
                 <span className=" text-sm">{t('myScents.addButton')}</span>
                 <MdLibraryAdd size={20} />
               </div> :
@@ -47,7 +47,7 @@ const AddToCollectionModal =
         </div>
 
         {modalOpen && modalId === 'add-scent' && (
-          <Modal innerType="dark" id="add-scent">
+          <Modal innerType="dark" id="add-scent" animateStart="top">
             <MyScentsModal perfume={perfume} />
           </Modal>
         )}

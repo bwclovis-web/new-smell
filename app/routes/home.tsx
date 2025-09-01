@@ -63,7 +63,7 @@ export default function Home() {
     { scope: container }
   )
 
-  const handleSelectType = (evt: ChangeEvent<HTMLInputElement>) => {
+  const handleSelectType = (evt: ChangeEvent<HTMLSelectElement>) => {
     setSearchType(evt.target.value as 'perfume-house' | 'perfume')
   }
   const data = [
@@ -71,33 +71,35 @@ export default function Home() {
     { id: 'perfume', name: t('home.radio.perfumes'), label: t('home.radio.perfumes') }
   ]
   return (
-    <div className="flex flex-col gap-8 items-center justify-center min-h-screen px-4 relative bg-noir-gold-500/30" ref={container}>
-      <img src={banner} alt="" className="absolute object-cover w-full h-full filter grayscale-[100%] contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-multiply" />
-      <div className="absolute inset-0 bg-noir-black/85 md:mask-radial-from-25% mask-radial-to-44%"></div>
-      <section className='text-noir-gold relative z-10 flex flex-col items-center gap-4'>
-        <div className='text-shadow-lg/90 text-shadow-noir-black text-center'>
-          <h1 className="hero-title">
-            {t('home.heading')}
-          </h1>
-          <p className="subtitle opacity-0">{t('home.subheading')}</p>
-        </div>
-        <div className='flex items-baseline justify-start w-full max-w-4xl mt-6'>
-          <Select
-            size="expanded"
-            value={searchType}
-            action={handleSelectType}
-            selectId='search-type'
-            selectData={data}
-            defaultId={searchType}
-            ariaLabel="Select search type"
-          />
-          <SearchBar
-            searchType={searchType}
-            variant='flat'
-            className="mt-2 md:mt-8"
-          />
-        </div>
-      </section>
+    <div className="relative z-10 top-0 pb-20 md:pb-0">
+      <div className="flex flex-col gap-8 items-center md:justify-center min-h-screen px-4 relative bg-noir-gold-500/30" ref={container}>
+        <img src={banner} alt="" className="absolute object-cover w-full h-full filter grayscale-[100%] contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-multiply" />
+        <div className="absolute inset-0 bg-noir-black/85 mask-radial-from-10% mask-radial-to-74% md:mask-radial-from-25% md:mask-radial-to-44%"></div>
+        <section className='text-noir-gold relative z-10 flex flex-col items-center gap-4 pt-40 md:pt-0'>
+          <div className='text-shadow-lg/90 text-shadow-noir-black text-center'>
+            <h1 className="hero-title">
+              {t('home.heading')}
+            </h1>
+            <p className="subtitle opacity-0">{t('home.subheading')}</p>
+          </div>
+          <div className='flex items-baseline justify-start w-full max-w-4xl mt-6'>
+            <Select
+              size="expanded"
+              value={searchType}
+              action={handleSelectType}
+              selectId='search-type'
+              selectData={data}
+              defaultId={searchType}
+              ariaLabel="Select search type"
+            />
+            <SearchBar
+              searchType={searchType}
+              variant='flat'
+              className="mt-2 md:mt-8"
+            />
+          </div>
+        </section>
+      </div>
     </div>
   )
 }

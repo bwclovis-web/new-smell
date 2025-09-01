@@ -46,9 +46,9 @@ const renderCategorizedNotes = ({
   hasClose,
   t
 }: CategorizedNotesProps) => (
-  <div className=" p-4 bg-noir-dark text-noir-gold-100 flex gap-4 mb-4">
+  <div className=" p-4 bg-noir-dark text-noir-gold-100 flex flex-col md:flex-row gap-4 mb-4">
     {hasOpen && (
-      <div className="flex flex-col items-start gap-1 border-r-4 border-r-noir-gold pr-4">
+      <div className="flex flex-col items-start gap-1 border-r-4 md:border-r-noir-gold pr-4">
         <span className='font-medium tracking-wide pb-1 text-2xl text-noir-gold'>{t('singlePerfume.notes.opening')}</span>
         <ul className="flex capitalize flex-wrap mb-2.5">
           {perfumeNotesOpen.map((note, idx) => (
@@ -61,7 +61,7 @@ const renderCategorizedNotes = ({
       </div>
     )}
     {hasHeart && (
-      <div className="flex flex-col items-start border-r-2 border-r-noir-gold-100 pr-4 last-of-type:border-r-0">
+      <div className="flex flex-col items-start border-r-2 md:border-r-noir-gold-100 pr-4 last-of-type:border-r-0">
         <span className='font-medium tracking-wide pb-1 text-2xl text-noir-gold'>{t('singlePerfume.notes.mid')}</span>
         <ul className="flex gap-2 font-semibold capitalize flex-wrap mb-2">
           {perfumeNotesHeart.map((note, idx) => (
@@ -75,7 +75,7 @@ const renderCategorizedNotes = ({
     )}
     {
       hasClose && (
-        <div className="flex flex-col items-start border-r-2 border-r-noir-gold-100 pr-4 last-of-type:border-r-0">
+        <div className="flex flex-col items-start border-r-2 md:border-r-noir-gold-100 pr-4 last-of-type:border-r-0">
           <span className='font-medium tracking-wide pb-1 text-2xl text-noir-gold'>{t('singlePerfume.notes.end')} </span>
           <ul className="flex gap-2 font-semibold capitalize flex-wrap">
             {perfumeNotesClose.map((note, idx) => (

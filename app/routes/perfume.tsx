@@ -201,7 +201,7 @@ const PerfumeContent = ({
     </div>
 
     <div className="w-full flex flex-col md:flex-row gap-4 items-start justify-center">
-      <aside className='noir-border relative'>
+      <aside className='noir-border relative w-full md:w-1/3'>
         <PerfumeRatingSystem
           perfumeId={perfume.id}
           userId={user?.id || 'anonymous'}
@@ -209,7 +209,7 @@ const PerfumeContent = ({
           averageRatings={averageRatings}
         />
       </aside>
-      <div className='noir-border relative w-full md:w-2/3'>
+      <div className='noir-border relative w-full md:w-3/4'>
         <h2>Reviews</h2>
       </div>
     </div>

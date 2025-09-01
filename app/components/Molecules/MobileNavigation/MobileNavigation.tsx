@@ -1,4 +1,4 @@
-import { type FC, type HTMLProps, useEffect, useRef, useState } from 'react'
+import { type FC, type HTMLProps, useContext, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AiFillHome } from 'react-icons/ai'
 import { FaBars, FaUser } from 'react-icons/fa6'
@@ -7,9 +7,9 @@ import { NavLink } from 'react-router'
 
 import Modal from '~/components/Organisms/Modal/Modal'
 import { mainNavigation } from '~/data/navigation'
-import { useSessionStore } from '~/stores/sessionStore'
 import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/profilePage'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
+import { useSessionStore } from '~/stores/sessionStore'
 import { styleMerge } from '~/utils/styleUtils'
 
 import LogoutButton from '../LogoutButton/LogoutButton'
@@ -29,7 +29,7 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
 }) => {
   const { t, ready } = useTranslation()
   const [isClientReady, setIsClientReady] = useState(false)
-  const { toggleModal, modalOpen, modalId } = useContext(SessionContext)
+  const { toggleModal, modalOpen, modalId } = useSessionStore()
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const MOBILE_MENU_ID = 'mobile-navigation-menu'
 
@@ -47,7 +47,7 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
   const logoText = ready && isClientReady ? t('navigation.logo') : 'Shadow and Sillage'
 
   return (
-    <div className={styleMerge('mobile-nav md:hidden', className)}>
+    <div className={styleMerge('mobile-nav md:hidden fixed w-full z-30', className)}>
       {/* Mobile Header */}
       <div className="flex justify-between items-center w-full py-4 px-4 mobile-safe-top bg-noir-dark/60 backdrop-blur-md">
         <NavLink
@@ -76,7 +76,7 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
       {/* Mobile Menu Modal */}
       {modalOpen && modalId === MOBILE_MENU_ID && (
         <Modal
-          animateStart="top"
+          animateStart="left"
           background="default"
           innerType="dark"
         >

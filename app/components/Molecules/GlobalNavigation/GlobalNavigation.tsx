@@ -84,6 +84,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
           </li>
         </ul>
       </nav>
+
     </header>
   )
 }
