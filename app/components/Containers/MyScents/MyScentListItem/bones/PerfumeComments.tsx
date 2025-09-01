@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { MdDeleteForever } from "react-icons/md"
 import { useFetcher } from "react-router"
@@ -19,7 +19,7 @@ interface PerfumeCommentsProps {
 }
 const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
   const { t } = useTranslation()
-  const { toggleModal, modalId } = useSessionStore()
+  const { toggleModal, modalId, modalOpen } = useSessionStore()
   const fetcher = useFetcher()
   const [comments, setComments] = useState<Comment[]>([])
   const uniqueModalId = `add-scent-${userPerfume.id}`
