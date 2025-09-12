@@ -5,7 +5,7 @@ import {
   type HTMLAttributes
 } from "react"
 
-import { rangeSliderFillVariants, rangeSliderMaxVariants, rangeSliderVariants, rangeSliderWrapVariants } from "./rangeSlider-variants"
+import { rangeSliderFillVariants, rangeSliderMaxVariants, rangeSliderVariants, rangeSliderWrapVariants } from "./rangeSlider-variants.ts"
 import { useRangeSlider } from "~/hooks/useRangeSlider"
 import { styleMerge } from "~/utils/styleUtils"
 
