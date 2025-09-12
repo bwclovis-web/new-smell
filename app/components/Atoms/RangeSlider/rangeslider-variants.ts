@@ -1,7 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
-export type RangeSliderWrapVariants = VariantProps<typeof rangeSliderWrapVariants>
-export type RangeSliderVariants = VariantProps<typeof rangeSliderWrapVariants>
 export const rangeSliderWrapVariants = cva([
   "relative",
   "w-full",
@@ -20,6 +18,8 @@ export const rangeSliderWrapVariants = cva([
   }
 })
 
+export type RangeSliderWrapVariants = VariantProps<typeof rangeSliderWrapVariants>
+
 export const rangeSliderVariants = cva(["absolute top-1/2 left-0 right-0 h-2 -translate-y-1/2 rounded-full cursor-pointer transition-colors"], {
   compoundVariants: [{}],
   defaultVariants: {
@@ -33,6 +33,8 @@ export const rangeSliderVariants = cva(["absolute top-1/2 left-0 right-0 h-2 -tr
     }
   }
 })
+
+export type RangeSliderVariants = VariantProps<typeof rangeSliderVariants>
 
 export const rangeSliderFillVariants = cva(["absolute top-0 left-0 h-full rounded-full transition-all"], {
   compoundVariants: [{}],
