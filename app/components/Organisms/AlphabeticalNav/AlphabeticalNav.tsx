@@ -1,5 +1,3 @@
-import type { FC } from 'react'
-
 import { Button } from '~/components/Atoms/Button/Button'
 import { getAlphabetLetters } from '~/utils/sortUtils'
 
@@ -10,15 +8,15 @@ interface AlphabeticalNavProps {
   className?: string
 }
 
-const AlphabeticalNav: FC<AlphabeticalNavProps> = ({
+const AlphabeticalNav = ({
   selectedLetter,
   onLetterSelect,
   className = ''
-}) => {
+}: AlphabeticalNavProps) => {
   const letters = getAlphabetLetters()
 
   return (
-    <div className={`grid grid-cols-9 gap-4 justify-center inner-container mt-10 mb-18 ${className}`}>
+    <div className={`grid grid-cols-9 gap-4 justify-center inner-container mt-10 md:mb-18 ${className}`}>
       <Button
         onClick={() => onLetterSelect(null)}
         className={`px-3 py-2 rounded-md font-medium transition-colors relative ${selectedLetter === null
@@ -33,12 +31,12 @@ const AlphabeticalNav: FC<AlphabeticalNavProps> = ({
         <Button
           key={letter}
           onClick={() => onLetterSelect(letter)}
-          className={`px-3 py-2 rounded-md font-medium transition-colors relative ${selectedLetter === letter
+          className={`px-3 py-2 rounded-md font-medium transition-colors flex items-center justify-center relative ${selectedLetter === letter
             ? 'bg-noir-gold text-noir-black'
             : 'bg-noir-dark text-noir-gold hover:bg-noir-gold/20 noir-outline'
             }`}
         >
-          {letter}
+          <span className='lg:text-2xl'>{letter}</span>
         </Button>
       ))}
     </div>
