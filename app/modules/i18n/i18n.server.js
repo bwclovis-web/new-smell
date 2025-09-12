@@ -1,38 +1,31 @@
-import i18n from 'i18next'
-import Backend from 'i18next-fs-backend'
-import { LanguageDetector } from 'i18next-http-middleware'
-import path from 'path'
-import { initReactI18next } from 'react-i18next'
-import fs from 'node:fs' // Use node:fs directly instead of dynamic import
+import i18n from 'i18next';
+import Backend from 'i18next-fs-backend';
+import { initReactI18next } from 'react-i18next';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
 
-i18n
-  .use(Backend)
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    fallbackLng: 'en',
-    supportedLngs: ['en', 'es'],
-    load: 'languageOnly',
-    interpolation: {
-      escapeValue: false // React already does escaping
-    },
-    backend: {
-      loadPath: path.resolve('./public/locales/{{lng}}/{{ns}}.json'),
-      // Add fs instance to avoid dynamic import
-      readFile: (filename, callback) => {
-        fs.readFile(filename, 'utf8', callback)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+if (!i18n.isInitialized) {
+  i18n
+    .use(Backend)
+    .use(initReactI18next)
+    .init({
+      fallbackLng: 'en',
+      supportedLngs: ['en', 'es'],
+      load: 'languageOnly',
+      debug: process.env.NODE_ENV === 'development',
+      interpolation: {
+        escapeValue: false // React already does escaping
       },
-      writeFile: (filename, data, callback) => {
-        fs.writeFile(filename, data, 'utf8', callback)
-      }
-    },
-    detection: {
-      order: ['cookie', 'header'],
-      caches: false
-    },
-    react: {
-      useSuspense: true,
-      bindI18n: 'languageChanged'
-    }
-  })
-export default i18n
+      backend: {
+        loadPath: resolve(__dirname, '../../public/locales/{{lng}}/{{ns}}.json'),
+      },
+      react: {
+        useSuspense: false, // Disable Suspense for SSR to prevent hydration issues
+      },
+    });
+}
+
+export default i18n;

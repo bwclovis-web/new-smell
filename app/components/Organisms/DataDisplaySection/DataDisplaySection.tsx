@@ -30,7 +30,7 @@ const DataDisplaySection = ({
 }: DataDisplaySectionProps) => {
   const { t } = useTranslation()
   const itemName = type === 'house' ? 'houses' : 'perfumes'
-  const itemNameSingular = type === 'house' ? 'house' : 'perfume'
+  // const itemNameSingular = type === 'house' ? 'house' : 'perfume'
 
   if (!selectedLetter) {
     return (
@@ -48,14 +48,14 @@ const DataDisplaySection = ({
       ref={scrollContainerRef}
       className="inner-container my-6 overflow-y-auto style-scroll"
     >
-      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-4 auto-rows-fr">
+      <ul className="grid grid-cols-2 gap-6 md:grid-cols-2 2xl:grid-cols-4 auto-rows-fr">
         {isLoading ? (
           <div className="col-span-full text-center py-8">
             <div className="text-noir-gold">Loading {itemName} for letter "{selectedLetter}"...</div>
           </div>
         ) : (
           data.map((item: any) => (
-            <li key={item.id}>
+            <li key={item.id} className='h-full'>
               <LinkCard data={item} type={type} />
             </li>
           ))

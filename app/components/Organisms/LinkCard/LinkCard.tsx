@@ -2,15 +2,16 @@ import { NavLink } from 'react-router'
 
 import { ROUTE_PATH as PERFUME_PATH } from '~/routes/perfume'
 import { ROUTE_PATH as PERFUME_HOUSE } from '~/routes/perfume-house'
-const LinkCard = ({ data, type, children }: { data: any; type: any; children?: any }) => {
+const LinkCard = ({ data, type, children }:
+  { data: any; type: any; children?: any }) => {
   const url = type === 'house' ? PERFUME_HOUSE : PERFUME_PATH
 
   return (
-    <div className='relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out noir-o '>
+    <div className='relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out'>
       <NavLink
         viewTransition
         to={`${url}/${data.name}`}
-        className="p-4 flex flex-col overflow-hidden justify-between items-center group h-full transition-all duration-300 ease-in-out"
+        className="p-4 flex flex-col overflow-hidden justify-between items-center group  transition-all duration-300 ease-in-out"
       >
         <div className='text-center'>
           <h2 className="text-wrap break-words">{data.name}</h2>
@@ -21,11 +22,13 @@ const LinkCard = ({ data, type, children }: { data: any; type: any; children?: a
             </p>
           )}
         </div>
-        <div className="relative w-100 h-100 min-w-1/2 rounded-lg ">
+        <div className="relative rounded-lg ">
           <img
             src={data.image}
             alt={data.name}
-            className="w-full h-full object-cover mask-radial-at-center mask-radial-from-10% mask-radial-to-75%
+            // height={300}
+            // width={300}
+            className="w-full object-cover mask-radial-at-center mask-radial-from-10% mask-radial-to-75%
             transition-all duration-500 ease-in-out scale-120
             filter grayscale-100 group-hover:grayscale-0 group-hover:scale-100 group-hover:mask-radial-from-30% group-hover:mask-radial-to-100%"
             style={{

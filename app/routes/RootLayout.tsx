@@ -32,7 +32,7 @@ const RootLayout = () => {
         <GlobalNavigation user={user} />
         <MobileNavigation user={user} />
         <MobileBottomNavigation user={user} />
-        <main className="w-full min-h-screen relative ">
+        <main className="w-full min-h-screen relative mb-28">
           <Outlet
             context={{ user }}
           />
