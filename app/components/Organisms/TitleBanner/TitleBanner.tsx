@@ -7,6 +7,7 @@ interface TitleBannerProps {
   subheading: string
   children?: ReactNode,
   imagePos?: "object-center" | "object-top" | "object-bottom"
+  flipImage?: boolean
 }
 gsap.registerPlugin(useGSAP)
 const TitleBanner: FC<TitleBannerProps> =
@@ -60,7 +61,7 @@ const TitleBanner: FC<TitleBannerProps> =
           width={300}
           height={300}
           alt=""
-          className={`w-full h-full object-cover ${imagePos} ${flipImage && 'scale-x-[-1]'} mb-2 mt-14 md:mt-0 rounded-lg absolute top-0 left-0 right-0 z-0 object-cover w-full h-full filter grayscale-[100%] contrast-[1] brightness-[0.9] sepia-[0.2] mix-blend-overlay mask-linear-gradient-to-b`}
+          className={`hero-image w-full h-full object-cover ${imagePos} ${flipImage && 'scale-x-[-1]'} mb-2 mt-14 md:mt-0 rounded-lg absolute top-0 left-0 right-0 z-0 filter grayscale-[100%] contrast-[1] brightness-[0.9] sepia-[0.2] mix-blend-overlay mask-linear-gradient-to-b`}
         />
         <div className='relative z-10 w-full max-w-max p-2 top-2 md:top-0 md:px-8 rounded-lg md:py-4 text-noir-gold text-center text-shadow-lg text-shadow-noir-black'>
           <h1 className='hero-title'>{heading}</h1>
