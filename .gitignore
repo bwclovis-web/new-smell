@@ -21,4 +21,5 @@
 .env.test
 .env.test.local
 .env.test.development
-.env.test.production
+.env.test.production.env
+.env.*
