@@ -2,10 +2,11 @@ import { ROUTE_PATH as CREATE_HOUSE } from '~/routes/admin/CreatePerfumeHousePag
 import { ROUTE_PATH as CREATE_PERFUME } from '~/routes/admin/CreatePerfumePage'
 import { ROUTE_PATH as DATA_QUALITY } from '~/routes/admin/data-quality'
 import { ROUTE_PATH as MY_SCENTS } from '~/routes/admin/MyScents'
+import { ROUTE_PATH as SECURITY_MONITOR } from '~/routes/admin/security-monitor'
 import { ROUTE_PATH as WISHLIST } from '~/routes/admin/WishlistPage'
 import { ROUTE_PATH as ALL_HOUSES } from '~/routes/behind-the-bottle'
-import { ROUTE_PATH as ALL_PERFUMES } from '~/routes/the-vault'
 import { ROUTE_PATH as AVAILABLE_PERFUMES } from '~/routes/the-exchange'
+import { ROUTE_PATH as ALL_PERFUMES } from '~/routes/the-vault'
 
 export const mainNavigation = [
   {
@@ -43,6 +44,11 @@ export const adminNavigation = [
     id: '3',
     label: 'data quality',
     path: DATA_QUALITY
+  },
+  {
+    id: '4',
+    label: 'security monitor',
+    path: SECURITY_MONITOR
   }
 ]
 

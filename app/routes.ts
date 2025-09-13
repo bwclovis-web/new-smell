@@ -42,7 +42,8 @@ export default [
       route('admin/profile', 'routes/admin/profilePage.tsx'),
       route('admin/wishlist', 'routes/admin/WishlistPage.tsx'),
       route('admin/my-scents', 'routes/admin/MyScents.tsx'),
-      route('admin/data-quality', 'routes/admin/data-quality.tsx')
+      route('admin/data-quality', 'routes/admin/data-quality.tsx'),
+      route('admin/security-monitor', 'routes/admin/security-monitor.tsx')
     ]),
 
     layout('routes/login/LoginLayout.tsx', [

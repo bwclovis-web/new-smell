@@ -16,8 +16,11 @@ import path from 'path'
 import serverless from 'serverless-http'
 
 import i18n from '../app/modules/i18n/i18n.server.js'
+import { AUDIT_CATEGORIES, AUDIT_LEVELS, getAuditLogs, getAuditStats, logAuditEvent } from '../app/utils/security/audit-logger.server.js'
 // Rate limiting monitoring
 import { getRateLimitStats, shouldBlockIP, trackRateLimitViolation } from '../app/utils/security/rate-limit-monitor.server.js'
+// Security monitoring
+import { getEventsForIP, getSecurityStats, logSecurityEvent, SECURITY_EVENT_TYPES } from '../app/utils/security/security-monitor.server.js'
 // Validate environment variables at startup
 import { validateEnvironmentAtStartup } from '../app/utils/security/startup-validation.server.js'
 // CSRF protection
@@ -200,6 +203,27 @@ app.use((req, res, next) => {
   const clientIP = req.ip || req.connection.remoteAddress || req.socket.remoteAddress
   
   if (shouldBlockIP(clientIP)) {
+    // Log security event and audit
+    logSecurityEvent({
+      type: SECURITY_EVENT_TYPES.IP_BLOCKED,
+      ipAddress: clientIP,
+      path: req.path,
+      method: req.method,
+      details: { reason: 'too_many_violations', userAgent: req.get('User-Agent') },
+      severity: 'high'
+    })
+    
+    logAuditEvent({
+      level: AUDIT_LEVELS.WARN,
+      category: AUDIT_CATEGORIES.SECURITY,
+      action: 'IP_BLOCKED',
+      ipAddress: clientIP,
+      userAgent: req.get('User-Agent'),
+      resource: req.path,
+      details: { reason: 'too_many_violations' },
+      outcome: 'blocked'
+    })
+    
     return res.status(429).json({
       error: 'IP temporarily blocked',
       message: 'Too many violations detected. Please try again later.',
@@ -219,6 +243,14 @@ app.use((req, res, next) => {
     return authRateLimit(req, res, err => {
       if (err) {
         trackRateLimitViolation(clientIP, req.path, 'auth')
+        logSecurityEvent({
+          type: SECURITY_EVENT_TYPES.RATE_LIMIT_EXCEEDED,
+          ipAddress: clientIP,
+          path: req.path,
+          method: req.method,
+          details: { limitType: 'auth', userAgent: req.get('User-Agent') },
+          severity: 'medium'
+        })
       }
       next(err)
     })
@@ -228,6 +260,14 @@ app.use((req, res, next) => {
     return apiRateLimit(req, res, err => {
       if (err) {
         trackRateLimitViolation(clientIP, req.path, 'api')
+        logSecurityEvent({
+          type: SECURITY_EVENT_TYPES.RATE_LIMIT_EXCEEDED,
+          ipAddress: clientIP,
+          path: req.path,
+          method: req.method,
+          details: { limitType: 'api', userAgent: req.get('User-Agent') },
+          severity: 'medium'
+        })
       }
       next(err)
     })
@@ -237,6 +277,14 @@ app.use((req, res, next) => {
     return ratingRateLimit(req, res, err => {
       if (err) {
         trackRateLimitViolation(clientIP, req.path, 'rating')
+        logSecurityEvent({
+          type: SECURITY_EVENT_TYPES.RATE_LIMIT_EXCEEDED,
+          ipAddress: clientIP,
+          path: req.path,
+          method: req.method,
+          details: { limitType: 'rating', userAgent: req.get('User-Agent') },
+          severity: 'medium'
+        })
       }
       next(err)
     })
@@ -247,6 +295,14 @@ app.use((req, res, next) => {
     return strongRateLimit(req, res, err => {
       if (err) {
         trackRateLimitViolation(clientIP, req.path, 'general')
+        logSecurityEvent({
+          type: SECURITY_EVENT_TYPES.RATE_LIMIT_EXCEEDED,
+          ipAddress: clientIP,
+          path: req.path,
+          method: req.method,
+          details: { limitType: 'general', userAgent: req.get('User-Agent') },
+          severity: 'low'
+        })
       }
       next(err)
     })
@@ -255,6 +311,14 @@ app.use((req, res, next) => {
   return generalRateLimit(req, res, err => {
     if (err) {
       trackRateLimitViolation(clientIP, req.path, 'general')
+      logSecurityEvent({
+        type: SECURITY_EVENT_TYPES.RATE_LIMIT_EXCEEDED,
+        ipAddress: clientIP,
+        path: req.path,
+        method: req.method,
+        details: { limitType: 'general', userAgent: req.get('User-Agent') },
+        severity: 'low'
+      })
     }
     next(err)
   })
@@ -312,13 +376,65 @@ app.get('/test-images', (req, res) => {
   })
 })
 
-// Rate limiting monitoring endpoint (admin only)
+// Security monitoring endpoints (admin only)
 app.get('/admin/rate-limit-stats', (req, res) => {
   // In production, add proper authentication here
   const stats = getRateLimitStats()
   res.json({
     message: 'Rate limiting statistics',
     stats,
+    timestamp: new Date().toISOString()
+  })
+})
+
+// Security events monitoring
+app.get('/admin/security-stats', (req, res) => {
+  const stats = getSecurityStats()
+  res.json({
+    message: 'Security monitoring statistics',
+    stats,
+    timestamp: new Date().toISOString()
+  })
+})
+
+// Audit logs endpoint
+app.get('/admin/audit-logs', (req, res) => {
+  const { category, level, userId, ipAddress, limit = 100 } = req.query
+  const logs = getAuditLogs({
+    category,
+    level,
+    userId,
+    ipAddress,
+    limit: parseInt(limit)
+  })
+  
+  res.json({
+    message: 'Audit logs',
+    logs,
+    count: logs.length,
+    timestamp: new Date().toISOString()
+  })
+})
+
+// Audit statistics
+app.get('/admin/audit-stats', (req, res) => {
+  const stats = getAuditStats()
+  res.json({
+    message: 'Audit statistics',
+    stats,
+    timestamp: new Date().toISOString()
+  })
+})
+
+// Security events for specific IP
+app.get('/admin/security-events/:ip', (req, res) => {
+  const { ip } = req.params
+  const events = getEventsForIP(ip)
+  
+  res.json({
+    message: `Security events for IP: ${ip}`,
+    events,
+    count: events.length,
     timestamp: new Date().toISOString()
   })
 })
