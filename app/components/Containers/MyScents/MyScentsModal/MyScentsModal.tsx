@@ -55,7 +55,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
       {selectedPerfume && (
         <Form
           method="POST"
-          className="mt-4"
+          className="mt-4 pb-10 md:pb-0"
           {...getFormProps(form)}
           onSubmit={handleAddPerfume}
         >

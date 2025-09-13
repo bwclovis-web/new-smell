@@ -37,18 +37,18 @@ export const modalBackgroundVariant = cva(
 )
 
 export const modalContentVariant = cva(
-  ['min-h-auto z-30 h-auto transition-all delay-200 pb-10 xl:p-8 pointer-events-auto flex relative overflow-y-auto max-h-[90vh]'],
+  ['fixed max-h-full z-30 rounded transition-all delay-300 py-2 pb-10 xl:p-8 duration-500 w-full lg:w-4/5 xl:w-2/5 pointer-none flex'],
   {
     compoundVariants: [
       {
         animate: false,
         animateStart: 'top',
-        className: 'top-[0%] h-0'
+        className: 'top-[0%]'
       },
       {
         animate: true,
         animateStart: 'top',
-        className: 'top-[5%] sm:top-0 sm:relative'
+        className: 'top-[20%] md:top-[30%] max-h-[80vh] overflow-y-auto fixed'
       },
       {
         animate: false,
@@ -58,17 +58,17 @@ export const modalContentVariant = cva(
       {
         animate: true,
         animateStart: 'bottom',
-        className: 'lg:translate-y-40 delay-200 top-3 overflowY-scroll'
+        className: 'lg:translate-y-40 delay-200 top-3'
       },
       {
         animate: false,
         animateStart: 'left',
-        className: 'translate-x-[100%] h-0 h-full overflow-y-scroll'
+        className: 'translate-x-[100%] h-0 h-full'
       },
       {
         animate: true,
         animateStart: 'left',
-        className: 'translate-x-[0%] delay-200 overflow-y-scroll'
+        className: 'translate-x-[0%] delay-200'
       }
     ],
     defaultVariants: {
