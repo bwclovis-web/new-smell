@@ -21,7 +21,7 @@ if (!i18n.isInitialized) {
       },
       react: {
         useSuspense: false, // Match server configuration to prevent hydration issues
-        bindI18n: 'languageChanged'
+        bindI18n: 'languageChanged loaded'
       },
       detection: {
         order: ['cookie', 'localStorage', 'navigator', 'htmlTag'],

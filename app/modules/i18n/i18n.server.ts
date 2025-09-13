@@ -24,6 +24,7 @@ if (!i18n.isInitialized) {
       },
       react: {
         useSuspense: false, // Disable Suspense for SSR to prevent hydration issues
+        bindI18n: 'loaded'
       },
       initImmediate: false, // Important for server-side
     });

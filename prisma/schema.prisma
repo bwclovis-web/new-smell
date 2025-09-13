@@ -21,7 +21,6 @@ model User {
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   role                  UserRole               @default(user)
-  sessions              Session[]
   UserPerfume           UserPerfume[]
   userPerfumeComments   UserPerfumeComment[]
   UserPerfumeRating     UserPerfumeRating[]
@@ -156,25 +155,6 @@ model WishlistNotification {
   user       User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, perfumeId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  userId       String
-  refreshToken String   @unique
-  userAgent    String?
-  ipAddress    String?
-  isActive     Boolean  @default(true)
-  expiresAt    DateTime
-  lastActivity DateTime @default(now())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([refreshToken])
-  @@index([expiresAt])
-  @@index([isActive])
 }
 
 enum UserRole {

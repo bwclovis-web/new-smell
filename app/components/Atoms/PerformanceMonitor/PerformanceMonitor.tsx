@@ -74,7 +74,7 @@ const PerformanceMonitor = () => {
       })
       fcpObserver.observe({ entryTypes: ['first-contentful-paint'] })
 
-      // Time to Interactive (TTI)
+      // Time to Interactive (TTI) - using longtask instead of interaction
       const ttiObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries()
         entries.forEach((entry) => {
@@ -87,7 +87,7 @@ const PerformanceMonitor = () => {
           }
         })
       })
-      ttiObserver.observe({ entryTypes: ['interaction'] })
+      ttiObserver.observe({ entryTypes: ['longtask'] })
 
       // Cleanup
       return () => {

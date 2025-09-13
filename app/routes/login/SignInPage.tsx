@@ -2,30 +2,54 @@ import { getFormProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useRef } from 'react'
 import { Form, useActionData } from 'react-router'
-
-import Input from '~/components/Atoms/Input/Input'
-// import { login } from '~/models/session.server'
-import { signInCustomer } from '~/models/user.server'
-import { UserLogInSchema } from '~/utils/formValidationSchemas'
-
-import { ROUTE_PATH as ADMIN_PATH } from '../admin/profilePage'
-export const ROUTE_PATH = '/sign-in'
 import { useTranslation } from 'react-i18next'
 import type { ActionFunctionArgs } from 'react-router-dom'
 
+import Input from '~/components/Atoms/Input/Input'
 import { Button } from '~/components/Atoms/Button/Button'
+import { signInCustomer } from '~/models/user.server'
 import { login } from '~/models/session.server'
+import { UserLogInSchema } from '~/utils/formValidationSchemas'
+import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/profilePage'
+
+export const ROUTE_PATH = '/sign-in'
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
-  const formData = await request.formData()
+  try {
+    const formData = await request.formData()
 
-  const existingUser = await signInCustomer(formData)
-  if (!existingUser) {
-    return { error: 'Invalid email or password' }
+    const existingUser = await signInCustomer(formData)
+    if (!existingUser) {
+      return { error: 'Invalid email or password' }
+    }
+
+    await login({ context, userId: existingUser.id, redirectTo: ADMIN_PATH })
+    return { success: true }
+  } catch (error) {
+    // Check if this is a redirect (which is expected behavior)
+    if (error instanceof Response && error.status === 302) {
+      // This is a redirect, not an error - let it through
+      throw error
+    }
+
+    console.error('Sign-in error:', error)
+
+    // Check for specific error types
+    if (error instanceof Error) {
+      if (error.message.includes('JWT_SECRET')) {
+        return { error: 'Server configuration error. Please contact support.' }
+      }
+      if (error.message.includes('DATABASE_URL')) {
+        return { error: 'Database connection error. Please try again later.' }
+      }
+      if (error.message.includes('SESSION_SECRET')) {
+        return { error: 'Server configuration error. Please contact support.' }
+      }
+    }
+
+    // Generic error for production
+    return { error: 'An unexpected error occurred. Please try again.' }
   }
-
-  await login({ context, userId: existingUser.id, redirectTo: ADMIN_PATH })
-  return { success: true }
 }
 const LogInPage = () => {
   const actionData = useActionData()

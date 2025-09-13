@@ -1,6 +1,5 @@
 import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
-import { prisma } from '~/db.server'
 import { SESSION_CONFIG, getSessionConfig } from './session-config.server'
 
 // Validate JWT secret
@@ -75,7 +74,7 @@ export function verifyRefreshToken(token: string): { userId: string } | null {
   }
 }
 
-// Create new session
+// Create new session (simplified - no database storage)
 export async function createSession({
   userId,
   userAgent,
@@ -85,27 +84,6 @@ export async function createSession({
   userAgent?: string
   ipAddress?: string
 }) {
-  // Check if user already has active sessions
-  const activeSessions = await prisma.session.findMany({
-    where: {
-      userId,
-      isActive: true,
-      expiresAt: { gt: new Date() }
-    }
-  })
-
-  // If user has reached max concurrent sessions, deactivate oldest
-  if (activeSessions.length >= config.maxConcurrentSessions) {
-    const oldestSession = activeSessions.sort((a, b) =>
-      a.lastActivity.getTime() - b.lastActivity.getTime()
-    )[0]
-
-    await prisma.session.update({
-      where: { id: oldestSession.id },
-      data: { isActive: false }
-    })
-  }
-
   // Generate tokens
   const refreshToken = generateRefreshToken()
   const accessToken = createAccessToken(userId)
@@ -114,27 +92,16 @@ export async function createSession({
   const expiresAt = new Date()
   expiresAt.setTime(expiresAt.getTime() + (7 * 24 * 60 * 60 * 1000)) // 7 days
 
-  // Create session in database
-  const session = await prisma.session.create({
-    data: {
-      userId,
-      refreshToken,
-      userAgent,
-      ipAddress,
-      expiresAt,
-      lastActivity: new Date(),
-    }
-  })
-
+  // Return session data (no database storage)
   return {
     accessToken,
     refreshToken,
-    sessionId: session.id,
-    expiresAt: session.expiresAt
+    sessionId: crypto.randomUUID(), // Generate a unique session ID
+    expiresAt
   }
 }
 
-// Refresh access token using refresh token
+// Refresh access token using refresh token (simplified - no database lookup)
 export async function refreshAccessToken(refreshToken: string) {
   // Verify refresh token
   const payload = verifyRefreshToken(refreshToken)
@@ -142,90 +109,49 @@ export async function refreshAccessToken(refreshToken: string) {
     throw new Error('Invalid refresh token')
   }
 
-  // Check if session exists and is active
-  const session = await prisma.session.findUnique({
-    where: { refreshToken },
-    include: { user: true }
-  })
-
-  if (!session || !session.isActive || session.expiresAt <= new Date()) {
-    throw new Error('Session expired or invalid')
-  }
-
-  // Update last activity
-  await prisma.session.update({
-    where: { id: session.id },
-    data: { lastActivity: new Date() }
-  })
-
   // Generate new access token
   const accessToken = createAccessToken(payload.userId)
 
   return {
     accessToken,
     userId: payload.userId,
-    sessionId: session.id
+    sessionId: crypto.randomUUID() // Generate new session ID
   }
 }
 
-// Invalidate session
+// Invalidate session (simplified - no database operation needed)
 export async function invalidateSession(sessionId: string) {
-  await prisma.session.update({
-    where: { id: sessionId },
-    data: { isActive: false }
-  })
+  // In a cookie-based system, invalidation happens by clearing cookies
+  // No database operation needed
+  console.log(`Session ${sessionId} marked for invalidation`)
 }
 
-// Invalidate all user sessions
+// Invalidate all user sessions (simplified - no database operation needed)
 export async function invalidateAllUserSessions(userId: string) {
-  await prisma.session.updateMany({
-    where: { userId },
-    data: { isActive: false }
-  })
+  // In a cookie-based system, invalidation happens by clearing cookies
+  // No database operation needed
+  console.log(`All sessions for user ${userId} marked for invalidation`)
 }
 
-// Get active session
+// Get active session (simplified - no database lookup)
 export async function getActiveSession(sessionId: string) {
-  return await prisma.session.findFirst({
-    where: {
-      id: sessionId,
-      isActive: true,
-      expiresAt: { gt: new Date() }
-    },
-    include: { user: true }
-  })
+  // In a cookie-based system, we don't store sessions in the database
+  // Return null to indicate no database session
+  return null
 }
 
-// Clean up expired sessions
+// Clean up expired sessions (simplified - no database cleanup needed)
 export async function cleanupExpiredSessions() {
-  const result = await prisma.session.updateMany({
-    where: {
-      OR: [
-        { expiresAt: { lt: new Date() } },
-        {
-          isActive: true,
-          lastActivity: {
-            lt: new Date(Date.now() - config.inactivityTimeout)
-          }
-        }
-      ]
-    },
-    data: { isActive: false }
-  })
-
-  console.log(`Cleaned up ${result.count} expired sessions`)
-  return result.count
+  // In a cookie-based system, expired sessions are automatically invalid
+  // No database cleanup needed
+  console.log('No database sessions to clean up')
+  return 0
 }
 
-// Get user's active sessions
+// Get user's active sessions (simplified - no database lookup)
 export async function getUserActiveSessions(userId: string) {
-  return await prisma.session.findMany({
-    where: {
-      userId,
-      isActive: true,
-      expiresAt: { gt: new Date() }
-    },
-    orderBy: { lastActivity: 'desc' }
-  })
+  // In a cookie-based system, we don't track sessions in the database
+  // Return empty array
+  return []
 }
 

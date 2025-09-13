@@ -19,6 +19,7 @@ interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
   actionData?: {
     errors?: { [key: string]: string }
   }
+  autoComplete?: string
 }
 
 const Input: FC<InputProps> = ({
@@ -32,15 +33,17 @@ const Input: FC<InputProps> = ({
   label,
   placeholder,
   shading,
+  autoComplete,
   ...props
 }) => {
   const inputProps = action
     ? {
       ...getInputProps(action, { ariaAttributes: true, type: inputType }),
       id: inputId,
-      placeholder
+      placeholder,
+      autoComplete: autoComplete || (inputType === 'password' ? 'current-password' : inputType === 'email' ? 'email' : undefined)
     }
-    : { id: inputId, type: inputType, placeholder }
+    : { id: inputId, type: inputType, placeholder, autoComplete: autoComplete || (inputType === 'password' ? 'current-password' : inputType === 'email' ? 'email' : undefined) }
 
   return (
     <div className={styleMerge(inputWrapperVariants({ className }))} data-cy="Input" {...props}>

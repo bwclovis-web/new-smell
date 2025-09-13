@@ -39,8 +39,7 @@ export const links: Route.LinksFunction = () => [
   // Resource hints for better performance
   { rel: 'preload', href: '/images/home.webp', as: 'image', type: 'image/webp' },
   { rel: 'preload', href: '/images/scent.webp', as: 'image', type: 'image/webp' },
-  // Preload critical fonts
-  { rel: 'preload', href: 'https://fonts.gstatic.com/s/limelight/v18/XLYkIZL7aopVbUpxq3gM8X8.woff2', as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' },
+  // Preload critical fonts - removed problematic font file
   // Prefetch non-critical resources
   { rel: 'prefetch', href: '/images/login.webp' },
   { rel: 'prefetch', href: '/images/house.webp' },
@@ -75,7 +74,6 @@ export function Layout({ children }: { children: ReactNode }) {
 
         {/* Preload critical fonts */}
         <link rel="preload" href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" as="style" />
-        <link rel="preload" href="https://fonts.gstatic.com/s/limelight/v18/XLYkIZL7aopVbUpxq3gM8X8.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
 
         <Meta />
         <Links />

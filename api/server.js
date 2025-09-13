@@ -153,7 +153,12 @@ app.use(helmet({
 "'self'", "data:", "https:", "blob:"
 ],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // Note: unsafe-eval needed for Vite in dev
-      connectSrc: ["'self'", "https:", "wss:"],
+      connectSrc: [
+        "'self'", 
+        "https:", 
+        "wss:", 
+        ...(NODE_ENV === 'development' ? ["ws://localhost:*", "ws://127.0.0.1:*"] : [])
+      ],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
       formAction: ["'self'"],
