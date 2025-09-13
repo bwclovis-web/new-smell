@@ -12,7 +12,7 @@ This roadmap outlines the implementation of security improvements, performance e
 
 #### Day 1-2: Environment Security
 
-- [ ] Remove hardcoded JWT secret fallback
+- [x] Remove hardcoded JWT secret fallback
 - [ ] Move database credentials to environment variables
 - [ ] Implement environment variable validation
 - [ ] Set up secure secret management

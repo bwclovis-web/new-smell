@@ -30,5 +30,8 @@ OPENAI_API_KEY=your_openai_api_key_here
 # Session Secret (required for authentication)
 SESSION_SECRET=your_session_secret_here
 
+# JWT Secret (required for authentication - minimum 32 characters)
+JWT_SECRET=your_jwt_secret_key_here_minimum_32_characters_long
+
 # Node Environment
 NODE_ENV=development
