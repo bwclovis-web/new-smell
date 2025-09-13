@@ -25,7 +25,7 @@ export const modalBackgroundVariant = cva(
       animateStart: {
         bottom: 'left-0',
         left: 'right-0',
-        top: 'left-0'
+        top: 'top-0'
       },
       background: {
         default: 'bg-noir-dark/50 backdrop-blur-xs',
@@ -37,18 +37,18 @@ export const modalBackgroundVariant = cva(
 )
 
 export const modalContentVariant = cva(
-  ['min-h-full lg:min-h-auto z-30 h-auto transition-all delay-200 pb-10 xl:p-8 pointer-none flex'],
+  ['min-h-auto z-30 h-auto transition-all delay-200 pb-10 xl:p-8 pointer-events-auto flex relative overflow-y-auto max-h-[90vh]'],
   {
     compoundVariants: [
       {
         animate: false,
         animateStart: 'top',
-        className: 'lg:translate-y-[0%] h-0'
+        className: 'top-[0%] h-0'
       },
       {
         animate: true,
         animateStart: 'top',
-        className: 'lg:translate-y-[20%] delay-200  overflowY-auto'
+        className: 'top-[5%] sm:top-0 sm:relative'
       },
       {
         animate: false,
@@ -58,17 +58,17 @@ export const modalContentVariant = cva(
       {
         animate: true,
         animateStart: 'bottom',
-        className: 'lg:translate-y-40 delay-200 top-3 overflowY-auto'
+        className: 'lg:translate-y-40 delay-200 top-3 overflowY-scroll'
       },
       {
         animate: false,
         animateStart: 'left',
-        className: 'translate-x-[100%] h-0 h-full'
+        className: 'translate-x-[100%] h-0 h-full overflow-y-scroll'
       },
       {
         animate: true,
         animateStart: 'left',
-        className: 'translate-x-[0%] delay-200'
+        className: 'translate-x-[0%] delay-200 overflow-y-scroll'
       }
     ],
     defaultVariants: {
@@ -82,15 +82,15 @@ export const modalContentVariant = cva(
         true: 'opacity-100 transition-animate shadow-2xl '
       },
       animateStart: {
-        bottom: 'w-full lg:w-4/5 xl:w-2/5 duration-500 rounded',
+        bottom: 'w-full sm:w-11/12 lg:w-4/5 xl:w-2/5 duration-500 rounded mx-2 sm:mx-4',
         left: 'w-full lg:w-1/3 xl2:w-1/4 right-0 top-0 duration-300 h-full',
-        top: 'w-full lg:w-4/5 xl:w-3/5 duration-500 rounded'
+        top: 'w-full sm:w-11/12 lg:w-4/5 xl:w-3/5 duration-500 rounded mx-2 sm:mx-4'
       },
       innerType: {
-        default: 'bg-noir-light text-gray-900 p-4',
-        light: 'bg-white',
-        dark: 'bg-noir-black text-gray-100 noir-border',
-        slate: 'bg-slate-800 text-slate-100'
+        default: 'bg-noir-light text-gray-900 p-4 sm:p-6',
+        light: 'bg-white p-4 sm:p-6',
+        dark: 'bg-noir-black text-gray-100 noir-border p-4 sm:p-6',
+        slate: 'bg-slate-800 text-slate-100 p-4 sm:p-6'
       }
     }
   }
