@@ -16,12 +16,13 @@ import path from 'path'
 import serverless from 'serverless-http'
 
 import i18n from '../app/modules/i18n/i18n.server.js'
+// Rate limiting monitoring
+import { getRateLimitStats, shouldBlockIP, trackRateLimitViolation } from '../app/utils/security/rate-limit-monitor.server.js'
 // Validate environment variables at startup
 import { validateEnvironmentAtStartup } from '../app/utils/security/startup-validation.server.js'
-import { parseCookies, verifyJwt } from './utils.js'
-
 // CSRF protection
-import { csrfMiddleware, setCSRFCookie, generateCSRFToken } from '../app/utils/server/csrf-middleware.server.js'
+import { csrfMiddleware, generateCSRFToken, setCSRFCookie } from '../app/utils/server/csrf-middleware.server.js'
+import { parseCookies, verifyJwt } from './utils.js'
 
 // Run environment validation before starting the server
 console.log('🚀 Starting Voodoo Perfumes server...')
@@ -46,18 +47,74 @@ const defaultRateLimit = {
   windowMs: 60 * 1000
 }
 
+// Enhanced rate limiting configurations
+const authRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5 * MAX_LIMIT_MULTIPLE, // 5 attempts per window
+  message: {
+    error: "Too many authentication attempts",
+    message: "Please try again in 15 minutes",
+    retryAfter: 15 * 60
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true, // Don't count successful requests
+})
+
+const apiRateLimit = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 100 * MAX_LIMIT_MULTIPLE, // 100 requests per minute
+  message: {
+    error: "Too many API requests",
+    message: "Please slow down your requests",
+    retryAfter: 60
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
+const ratingRateLimit = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 20 * MAX_LIMIT_MULTIPLE, // 20 rating submissions per 5 minutes
+  message: {
+    error: "Too many rating submissions",
+    message: "Please wait before submitting more ratings",
+    retryAfter: 5 * 60
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+})
+
 const strongestRateLimit = rateLimit({
   ...defaultRateLimit,
   max: 10 * MAX_LIMIT_MULTIPLE,
-  windowMs: 60 * 1000
+  windowMs: 60 * 1000,
+  message: {
+    error: "Rate limit exceeded",
+    message: "Too many requests, please slow down",
+    retryAfter: 60
+  }
 })
 
 const strongRateLimit = rateLimit({
   ...defaultRateLimit,
   max: 100 * MAX_LIMIT_MULTIPLE,
-  windowMs: 60 * 1000
+  windowMs: 60 * 1000,
+  message: {
+    error: "Rate limit exceeded", 
+    message: "Too many requests, please slow down",
+    retryAfter: 60
+  }
 })
-const generalRateLimit = rateLimit(defaultRateLimit)
+
+const generalRateLimit = rateLimit({
+  ...defaultRateLimit,
+  message: {
+    error: "Rate limit exceeded",
+    message: "Too many requests, please slow down", 
+    retryAfter: 60
+  }
+})
 
 const app = express()
 const metricsApp = express()
@@ -138,15 +195,69 @@ app.use((req, res, next) => {
   }
 })
 
+// IP blocking middleware
 app.use((req, res, next) => {
-  const STRONG_PATHS = ['/auth/login']
-  if (req.method !== 'GET' && req.method !== 'HEAD') {
-    if (STRONG_PATHS.some(path => req.path.includes(path))) {
-      return strongestRateLimit(req, res, next)
-    }
-    return strongRateLimit(req, res, next)
+  const clientIP = req.ip || req.connection.remoteAddress || req.socket.remoteAddress
+  
+  if (shouldBlockIP(clientIP)) {
+    return res.status(429).json({
+      error: 'IP temporarily blocked',
+      message: 'Too many violations detected. Please try again later.',
+      retryAfter: 15 * 60 // 15 minutes
+    })
   }
-  return generalRateLimit(req, res, next)
+  
+  next()
+})
+
+// Enhanced rate limiting middleware with monitoring
+app.use((req, res, next) => {
+  const clientIP = req.ip || req.connection.remoteAddress || req.socket.remoteAddress
+  
+  // Apply specific rate limits based on path
+  if (req.path.startsWith('/auth/')) {
+    return authRateLimit(req, res, err => {
+      if (err) {
+        trackRateLimitViolation(clientIP, req.path, 'auth')
+      }
+      next(err)
+    })
+  }
+  
+  if (req.path.startsWith('/api/')) {
+    return apiRateLimit(req, res, err => {
+      if (err) {
+        trackRateLimitViolation(clientIP, req.path, 'api')
+      }
+      next(err)
+    })
+  }
+  
+  if (req.path.includes('/rating') || req.path.includes('/rate')) {
+    return ratingRateLimit(req, res, err => {
+      if (err) {
+        trackRateLimitViolation(clientIP, req.path, 'rating')
+      }
+      next(err)
+    })
+  }
+  
+  // Apply general rate limits for other requests
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    return strongRateLimit(req, res, err => {
+      if (err) {
+        trackRateLimitViolation(clientIP, req.path, 'general')
+      }
+      next(err)
+    })
+  }
+  
+  return generalRateLimit(req, res, err => {
+    if (err) {
+      trackRateLimitViolation(clientIP, req.path, 'general')
+    }
+    next(err)
+  })
 })
 
 // Generate and set CSRF token for all requests
@@ -198,6 +309,17 @@ app.get('/test-images', (req, res) => {
       '/images/scent.webp',
       '/images/login.webp'
     ]
+  })
+})
+
+// Rate limiting monitoring endpoint (admin only)
+app.get('/admin/rate-limit-stats', (req, res) => {
+  // In production, add proper authentication here
+  const stats = getRateLimitStats()
+  res.json({
+    message: 'Rate limiting statistics',
+    stats,
+    timestamp: new Date().toISOString()
   })
 })
 
