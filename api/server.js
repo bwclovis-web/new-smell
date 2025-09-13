@@ -20,6 +20,9 @@ import i18n from '../app/modules/i18n/i18n.server.js'
 import { validateEnvironmentAtStartup } from '../app/utils/security/startup-validation.server.js'
 import { parseCookies, verifyJwt } from './utils.js'
 
+// CSRF protection
+import { csrfMiddleware, setCSRFCookie, generateCSRFToken } from '../app/utils/server/csrf-middleware.server.js'
+
 // Run environment validation before starting the server
 console.log('🚀 Starting Voodoo Perfumes server...')
 validateEnvironmentAtStartup()
@@ -145,6 +148,20 @@ app.use((req, res, next) => {
   }
   return generalRateLimit(req, res, next)
 })
+
+// Generate and set CSRF token for all requests
+app.use((req, res, next) => {
+  if (!req.cookies?._csrf) {
+    const csrfToken = generateCSRFToken()
+    setCSRFCookie(res, csrfToken)
+  }
+  next()
+})
+
+// CSRF protection middleware - only for specific routes that need it
+app.use('/auth', csrfMiddleware) // Apply CSRF to auth routes
+app.use('/api', csrfMiddleware)  // Apply CSRF to API routes
+
 app.use(i18nextMiddleware.handle(i18n))
 app.use((req, res, next) => {
   req.context = { req, res, session: req.session }

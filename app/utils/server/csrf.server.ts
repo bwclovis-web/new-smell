@@ -1,28 +1,81 @@
-import { createCookie } from 'react-router'
-import { CSRF, CSRFError } from 'remix-utils/csrf/server'
+import crypto from 'crypto'
+import cookie from 'cookie'
 
 export const CSRF_COOKIE_KEY = '_csrf'
+export const CSRF_HEADER_KEY = 'x-csrf-token'
 
-const csfrCookie = createCookie(CSRF_COOKIE_KEY, {
-  httpOnly: true,
-  path: '/',
-  sameSite: 'lax',
-  secrets: [process.env.SESSION_SECRET || 'NOT_A_STRONG_SECRET'],
-  secure: process.env.NODE_ENV === 'production'
-})
+// Generate a secure CSRF token
+export function generateCSRFToken(): string {
+  return crypto.randomBytes(32).toString('hex')
+}
 
-export const csrf = new CSRF({
-  cookie: csfrCookie
-})
+// Validate CSRF token
+export function validateCSRFToken(
+  token: string,
+  sessionToken: string
+): boolean {
+  if (!token || !sessionToken) {
+    return false
+  }
 
-export async function validateCSRF(formData: FormData, headers: Headers) {
   try {
-    await csrf.validate(formData, headers)
+    return crypto.timingSafeEqual(
+      Buffer.from(token, 'hex'),
+      Buffer.from(sessionToken, 'hex')
+    )
+  } catch {
+    return false
   }
-  catch (err: unknown) {
-    if (err instanceof CSRFError) {
-      throw new Response('Invalid CSRF token', { status: 403 })
-    }
-    throw err
+}
+
+// Get CSRF token from request
+export function getCSRFTokenFromRequest(request: Request): string | null {
+  // Try to get from header first
+  const headerToken = request.headers.get(CSRF_HEADER_KEY)
+  if (headerToken) {
+    return headerToken
   }
+
+  // Try to get from form data
+  const formData = request.formData ? request.formData() : null
+  if (formData) {
+    return formData.then(data => data.get('_csrf') as string || null).catch(() => null)
+  }
+
+  return null
+}
+
+// Get CSRF token from cookies
+export function getCSRFTokenFromCookies(request: Request): string | null {
+  const cookieHeader = request.headers.get('cookie')
+  if (!cookieHeader) {
+    return null
+  }
+
+  const cookies = cookie.parse(cookieHeader)
+  return cookies[CSRF_COOKIE_KEY] || null
+}
+
+// Validate CSRF for form submissions
+export async function validateCSRF(request: Request): Promise<boolean> {
+  const formData = await request.formData()
+  const token = formData.get('_csrf') as string
+  const sessionToken = getCSRFTokenFromCookies(request)
+
+  if (!token || !sessionToken) {
+    return false
+  }
+
+  return validateCSRFToken(token, sessionToken)
+}
+
+// Create CSRF cookie
+export function createCSRFCookie(token: string): string {
+  return cookie.serialize(CSRF_COOKIE_KEY, token, {
+    httpOnly: true,
+    path: '/',
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 60 * 60 * 24 // 24 hours
+  })
 }
