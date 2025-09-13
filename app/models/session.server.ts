@@ -1,27 +1,15 @@
 // app/models/session.server.ts
 import cookie from 'cookie'
-import jwt from 'jsonwebtoken'
 import { redirect } from 'react-router-dom'
 
-// Validate JWT secret on startup
-function validateJwtSecret() {
-  const jwtSecret = process.env.JWT_SECRET
-  if (!jwtSecret) {
-    throw new Error(
-      'JWT_SECRET environment variable is required but not set. ' +
-      'Please set a secure JWT secret (minimum 32 characters) in your environment variables.'
-    )
-  }
-  if (jwtSecret.length < 32) {
-    throw new Error(
-      'JWT_SECRET must be at least 32 characters long for security. ' +
-      'Current length: ' + jwtSecret.length
-    )
-  }
-  return jwtSecret
-}
-
-const JWT_SECRET = validateJwtSecret()
+import {
+  createSession,
+  refreshAccessToken,
+  verifyAccessToken,
+  invalidateSession,
+  invalidateAllUserSessions,
+  getActiveSession
+} from '~/utils/security/session-manager.server'
 
 import { ROUTE_PATH as ADMIN_PROFILE } from '~/routes/admin/profilePage'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
@@ -46,38 +34,79 @@ export async function requireUser(context: { userSession: any }) {
 export async function login({
   context,
   userId,
-  redirectTo = ADMIN_PROFILE
+  redirectTo = ADMIN_PROFILE,
+  userAgent,
+  ipAddress
 }: {
   context: { req: any, res?: any }
   userId: string
   redirectTo?: string
+  userAgent?: string
+  ipAddress?: string
 }) {
-  const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '1d' })
-  const setCookie = cookie.serialize('token', token, {
+  // Create new session
+  const { accessToken, refreshToken, sessionId } = await createSession({
+    userId,
+    userAgent,
+    ipAddress
+  })
+
+  // Set both access and refresh token cookies
+  const accessTokenCookie = cookie.serialize('accessToken', accessToken, {
     httpOnly: true,
     path: '/',
-    maxAge: 60 * 60 * 24, // 1 day
+    maxAge: 60 * 60, // 60 minutes
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production'
   })
+
+  const refreshTokenCookie = cookie.serialize('refreshToken', refreshToken, {
+    httpOnly: true,
+    path: '/',
+    maxAge: 60 * 60 * 24 * 7, // 7 days
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production'
+  })
+
   throw redirect(redirectTo, {
     headers: {
-      'Set-Cookie': setCookie
+      'Set-Cookie': [accessTokenCookie, refreshTokenCookie]
     }
   })
 }
 
-export async function logout({ context }: { context: { res?: any } }) {
-  const setCookie = cookie.serialize('token', '', {
+export async function logout({
+  context,
+  sessionId
+}: {
+  context: { res?: any }
+  sessionId?: string
+}) {
+  // Invalidate session if sessionId provided
+  if (sessionId) {
+    await invalidateSession(sessionId)
+  }
+
+  // Clear both cookies
+  const accessTokenCookie = cookie.serialize('accessToken', '', {
     httpOnly: true,
     path: '/',
     maxAge: 0, // Expire immediately
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production'
   })
+
+  const refreshTokenCookie = cookie.serialize('refreshToken', '', {
+    httpOnly: true,
+    path: '/',
+    maxAge: 0, // Expire immediately
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production'
+  })
+
   throw redirect(SIGN_IN, {
     headers: {
-      'Set-Cookie': setCookie
+      'Set-Cookie': [accessTokenCookie, refreshTokenCookie]
     }
   })
 }
@@ -91,4 +120,29 @@ export async function requireRoles(
     throw redirect(SIGN_IN) // or custom unauthorized route
   }
   return user
+}
+
+// Refresh access token using refresh token
+export async function refreshSession(refreshToken: string) {
+  try {
+    const { accessToken, userId, sessionId } = await refreshAccessToken(refreshToken)
+    return { accessToken, userId, sessionId }
+  } catch (error) {
+    console.error('Session refresh failed:', error)
+    return null
+  }
+}
+
+// Invalidate all user sessions (for password change)
+export async function invalidateAllSessions(userId: string) {
+  await invalidateAllUserSessions(userId)
+}
+
+// Get user from access token
+export async function getUserFromToken(accessToken: string) {
+  const payload = verifyAccessToken(accessToken)
+  if (!payload) {
+    return null
+  }
+  return await getUserById(payload.userId)
 }

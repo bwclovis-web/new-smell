@@ -1,6 +1,6 @@
 import { parseCookies, verifyJwt } from '@api/utils'
 import { useTranslation } from 'react-i18next'
-import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, useNavigate, useLocation } from 'react-router'
+import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, useLocation, useNavigate } from 'react-router'
 import { useOutletContext } from 'react-router-dom'
 
 import PerfumeIcons from '~/components/Containers/Perfume/PerfumeIcons/PerfumeIcons'
@@ -10,9 +10,9 @@ import { getPerfumeByName } from '~/models/perfume.server'
 import { getPerfumeRatings, getUserPerfumeRating } from '~/models/perfumeRating.server'
 import { isInWishlist } from '~/models/wishlist.server'
 
+import { ROUTE_PATH as BEHIND_THE_BOTTLE } from './behind-the-bottle'
 import { ROUTE_PATH as HOUSE_PATH } from './perfume-house'
 import { ROUTE_PATH as ALL_PERFUMES } from './the-vault'
-import { ROUTE_PATH as BEHIND_THE_BOTTLE } from './behind-the-bottle'
 export const ROUTE_PATH = '/perfume'
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {

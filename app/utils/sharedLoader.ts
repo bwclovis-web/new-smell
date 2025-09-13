@@ -1,30 +1,75 @@
 /* eslint-disable max-statements */
 import { parseCookies, verifyJwt } from '@api/utils'
 import { redirect } from 'react-router'
+import cookie from 'cookie'
 
 import { getUserById } from '~/models/user.server'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 import { createSafeUser } from '~/types'
+import { refreshSession } from '~/models/session.server'
 
 export const sharedLoader = async (request: Request) => {
   const cookieHeader = request.headers.get('cookie') || ''
   const cookies = parseCookies({ headers: { cookie: cookieHeader } })
 
-  if (!cookies.token) {
+  // Try access token first
+  let accessToken = cookies.accessToken
+  let refreshToken = cookies.refreshToken
+
+  // Fallback to legacy token for backward compatibility
+  if (!accessToken && cookies.token) {
+    accessToken = cookies.token
+  }
+
+  if (!accessToken) {
     throw redirect(SIGN_IN)
   }
 
-  const payload = verifyJwt(cookies.token)
-  if (!payload || !payload.userId) {
-    throw redirect('/sign-in')
+  // Verify access token
+  const payload = verifyJwt(accessToken)
+  if (payload && payload.userId) {
+    const fullUser = await getUserById(payload.userId)
+    const user = createSafeUser(fullUser)
+
+    if (!user) {
+      throw redirect('/sign-in')
+    }
+
+    return user
   }
 
-  const fullUser = await getUserById(payload.userId)
-  const user = createSafeUser(fullUser)
+  // If access token is invalid, try refresh token
+  if (refreshToken) {
+    try {
+      const refreshResult = await refreshSession(refreshToken)
+      if (refreshResult) {
+        // Set new access token cookie
+        const newAccessTokenCookie = cookie.serialize('accessToken', refreshResult.accessToken, {
+          httpOnly: true,
+          path: '/',
+          maxAge: 60 * 60, // 60 minutes
+          sameSite: 'lax',
+          secure: process.env.NODE_ENV === 'production'
+        })
 
-  if (!user) {
-    throw redirect('/sign-in')
+        const fullUser = await getUserById(refreshResult.userId)
+        const user = createSafeUser(fullUser)
+
+        if (!user) {
+          throw redirect('/sign-in')
+        }
+
+        // Return user with new token in headers
+        throw redirect(request.url, {
+          headers: {
+            'Set-Cookie': newAccessTokenCookie
+          }
+        })
+      }
+    } catch (error) {
+      console.error('Token refresh failed:', error)
+    }
   }
 
-  return user
+  throw redirect('/sign-in')
 }

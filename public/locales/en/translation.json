@@ -111,7 +111,9 @@
     "email": "Email",
     "emailPlaceholder": "Enter your email",
     "password": "Password",
-    "passwordPlaceholder": "Enter your password"
+    "passwordPlaceholder": "Enter your password",
+    "passwordMatch": "Confirm Password",
+    "passwordMatchPlaceholder": "Confirm your password"
   },
   "home": {
     "meta": {
@@ -253,7 +255,6 @@
     "heading": "My Wishlist",
     "subheading": "Manage your wishlist of perfumes.",
     "itemsInWishlist": "items in Wishlist",
-
     "addButton": "Add to Wishlist",
     "removeButton": "Remove from Wishlist"
   },

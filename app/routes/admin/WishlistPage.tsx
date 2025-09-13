@@ -10,10 +10,9 @@ import { sharedLoader } from '~/utils/sharedLoader'
 import banner from '../../images/wish.webp'
 export const ROUTE_PATH = 'admin/wishlist'
 export const meta: MetaFunction = () => {
-  const { t } = useTranslation()
   return [
-    { title: t('wishlist.meta.title') },
-    { name: 'description', content: t('wishlist.meta.description') }
+    { title: 'Wishlist - Shadow and Sillage' },
+    { name: 'description', content: 'Manage your wishlist of perfumes.' }
   ]
 }
 

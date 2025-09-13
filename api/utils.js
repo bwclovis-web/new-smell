@@ -20,15 +20,20 @@ function validateJwtSecret() {
 }
 
 const JWT_SECRET = validateJwtSecret()
-const JWT_EXPIRES_IN = '1d' // token validity
 
+// Legacy functions for backward compatibility
 export function signJwt(payload) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '60m' })
 }
 
 export function verifyJwt(token) {
   try {
-    return jwt.verify(token, JWT_SECRET)
+    const payload = jwt.verify(token, JWT_SECRET)
+    // Check if it's an access token
+    if (payload.type === 'access') {
+      return payload
+    }
+    return null
   } catch {
     return null
   }

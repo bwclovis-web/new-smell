@@ -335,7 +335,24 @@ app.use((req, res, next) => {
 
 // CSRF protection middleware - only for specific routes that need it
 app.use('/auth', csrfMiddleware) // Apply CSRF to auth routes
-app.use('/api', csrfMiddleware)  // Apply CSRF to API routes
+
+// Apply CSRF to API routes, but exclude certain routes
+app.use('/api', (req, res, next) => {
+  // Skip CSRF for routes that don't need it
+  const excludedRoutes = [
+    '/log-out',           // Logout doesn't need CSRF
+    '/rate-limit-stats',  // Monitoring endpoints
+    '/security-stats',
+    '/audit-logs',
+    '/audit-stats'
+  ]
+  
+  if (excludedRoutes.includes(req.path)) {
+    return next()
+  }
+  
+  return csrfMiddleware(req, res, next)
+})
 
 app.use(i18nextMiddleware.handle(i18n))
 app.use((req, res, next) => {

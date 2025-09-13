@@ -27,17 +27,43 @@ export const UpdateUserPerfumeSchema = z.object({
   // isFavorite: z.boolean().optional()
 })
 
+// Enhanced password validation with complexity requirements
+const passwordSchema = z.string()
+  .min(8, { message: 'Password must be at least 8 characters long' })
+  .max(128, { message: 'Password must be less than 128 characters' })
+  .regex(/[a-z]/, { message: 'Password must contain at least one lowercase letter' })
+  .regex(/[A-Z]/, { message: 'Password must contain at least one uppercase letter' })
+  .regex(/[0-9]/, { message: 'Password must contain at least one number' })
+  .regex(/[^a-zA-Z0-9]/, { message: 'Password must contain at least one special character' })
+  .refine(password => !password.includes(' '), {
+    message: 'Password cannot contain spaces'
+  })
+
 export const UserFormSchema = z.object({
   email: z.string().email({ message: 'Email is required' }),
-  password: z.string().min(6, { message: 'Password is required' }),
-  confirmPassword: z.string().min(6, { message: 'Confirm Password is required' })
+  password: passwordSchema,
+  confirmPassword: z.string().min(1, { message: 'Confirm Password is required' })
 }).refine(data => data.password === data.confirmPassword, {
-  message: 'Passwords do not match'
+  message: 'Passwords do not match',
+  path: ['confirmPassword']
 })
 
 export const UserLogInSchema = z.object({
   email: z.string().email({ message: 'Email is required' }),
-  password: z.string().min(6, { message: 'Password is required' })
+  password: z.string().min(1, { message: 'Password is required' })
+})
+
+// Schema for password change/reset
+export const ChangePasswordSchema = z.object({
+  currentPassword: z.string().min(1, { message: 'Current password is required' }),
+  newPassword: passwordSchema,
+  confirmNewPassword: z.string().min(1, { message: 'Confirm new password is required' })
+}).refine(data => data.newPassword === data.confirmNewPassword, {
+  message: 'New passwords do not match',
+  path: ['confirmNewPassword']
+}).refine(data => data.currentPassword !== data.newPassword, {
+  message: 'New password must be different from current password',
+  path: ['newPassword']
 })
 
 export const UpdateProfileSchema = z.object({

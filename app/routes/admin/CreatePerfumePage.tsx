@@ -13,10 +13,9 @@ import { CreatePerfumeSchema } from '~/utils/formValidationSchemas'
 import banner from '../../images/perfumeCreate.webp'
 export const ROUTE_PATH = '/admin/create-perfume' as const
 export const meta: MetaFunction = () => {
-  const { t } = useTranslation()
   return [
-    { title: t('createPerfume.meta.title') },
-    { name: 'description', content: t('createPerfume.meta.description') }
+    { title: 'Create Perfume - Shadow and Sillage' },
+    { name: 'description', content: 'Create a new perfume in our database.' }
   ]
 }
 export const action = async ({ request }: ActionFunctionArgs) => {

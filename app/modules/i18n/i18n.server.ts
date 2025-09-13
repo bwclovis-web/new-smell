@@ -20,11 +20,12 @@ if (!i18n.isInitialized) {
         escapeValue: false // React already does escaping
       },
       backend: {
-        loadPath: resolve(__dirname, '../../public/locales/{{lng}}/{{ns}}.json'),
+        loadPath: resolve(__dirname, '../../../public/locales/{{lng}}/{{ns}}.json'),
       },
       react: {
         useSuspense: false, // Disable Suspense for SSR to prevent hydration issues
       },
+      initImmediate: false, // Important for server-side
     });
 }
 

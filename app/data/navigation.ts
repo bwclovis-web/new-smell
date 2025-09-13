@@ -1,3 +1,4 @@
+import { ROUTE_PATH as CHANGE_PASSWORD } from '~/routes/admin/change-password'
 import { ROUTE_PATH as CREATE_HOUSE } from '~/routes/admin/CreatePerfumeHousePage'
 import { ROUTE_PATH as CREATE_PERFUME } from '~/routes/admin/CreatePerfumePage'
 import { ROUTE_PATH as DATA_QUALITY } from '~/routes/admin/data-quality'
@@ -62,5 +63,10 @@ export const profileNavigation = [
     id: '2',
     label: 'My Scents',
     path: MY_SCENTS
+  },
+  {
+    id: '3',
+    label: 'Change Password',
+    path: CHANGE_PASSWORD
   }
 ]

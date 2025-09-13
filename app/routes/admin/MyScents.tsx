@@ -21,10 +21,9 @@ import banner from '../../images/perfume.webp'
 export const ROUTE_PATH = '/admin/my-scents'
 
 export const meta: MetaFunction = () => {
-  const { t } = useTranslation()
   return [
-    { title: t('myScents.meta.title') },
-    { name: 'description', content: t('myScents.meta.description') }
+    { title: 'My Scents - Shadow and Sillage' },
+    { name: 'description', content: 'Manage your personal collection of perfumes.' }
   ]
 }
 interface LoaderData {

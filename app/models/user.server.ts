@@ -1,6 +1,14 @@
 import bcrypt from 'bcryptjs'
 
 import { prisma } from '~/db.server'
+import {
+  hashPassword,
+  verifyPassword,
+  validatePasswordComplexity,
+  calculatePasswordStrength,
+  PASSWORD_CONFIG
+} from '~/utils/security/password-security.server'
+import { invalidateAllSessions } from '~/models/session.server'
 
 
 
@@ -10,10 +18,20 @@ export const createUser = async (data: FormData) => {
     throw new Error('Password is required and must be a string')
   }
 
+  // Validate password complexity
+  const passwordValidation = validatePasswordComplexity(password)
+  if (!passwordValidation.isValid) {
+    throw new Error(`Password validation failed: ${passwordValidation.errors.join(', ')}`)
+  }
+
+  // Calculate password strength for logging
+  const strengthInfo = calculatePasswordStrength(password)
+  console.log(`New user password strength: ${strengthInfo.strength} (score: ${strengthInfo.score})`)
+
   const user = await prisma.user.create({
     data: {
       email: data.get('email') as string,
-      password: await bcrypt.hash(password, 10)
+      password: await hashPassword(password)
     }
   })
   return user
@@ -111,11 +129,80 @@ export const signInCustomer = async (data: FormData) => {
   if (!user) {
     return null
   }
-  const isValidPassword = await bcrypt.compare(password, user.password)
+
+  // Use enhanced password verification
+  const isValidPassword = await verifyPassword(password, user.password)
   if (!isValidPassword) {
     return null
   }
   return user
+}
+
+// Enhanced password change functionality
+export const changePassword = async (userId: string, currentPassword: string, newPassword: string) => {
+  try {
+    // Get user with password
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, password: true }
+    })
+
+    if (!user) {
+      return { success: false, error: 'User not found' }
+    }
+
+    // Verify current password
+    const isCurrentPasswordValid = await verifyPassword(currentPassword, user.password)
+    if (!isCurrentPasswordValid) {
+      return { success: false, error: 'Current password is incorrect' }
+    }
+
+    // Validate new password complexity
+    const passwordValidation = validatePasswordComplexity(newPassword)
+    if (!passwordValidation.isValid) {
+      return {
+        success: false,
+        error: `Password validation failed: ${passwordValidation.errors.join(', ')}`
+      }
+    }
+
+    // Check if new password is different from current
+    if (currentPassword === newPassword) {
+      return { success: false, error: 'New password must be different from current password' }
+    }
+
+    // Calculate password strength
+    const strengthInfo = calculatePasswordStrength(newPassword)
+    console.log(`Password change - new password strength: ${strengthInfo.strength} (score: ${strengthInfo.score})`)
+
+    // Hash and update password
+    const hashedNewPassword = await hashPassword(newPassword)
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        password: hashedNewPassword,
+        updatedAt: new Date()
+      }
+    })
+
+    // Invalidate all user sessions after password change
+    await invalidateAllSessions(userId)
+
+    return {
+      success: true,
+      message: 'Password changed successfully. All sessions have been invalidated for security.',
+      strength: strengthInfo.strength
+    }
+  } catch (error) {
+    console.error('Password change error:', error)
+    return { success: false, error: 'Failed to change password' }
+  }
+}
+
+// Password strength check for frontend
+export const checkPasswordStrength = (password: string) => {
+  return calculatePasswordStrength(password)
 }
 
 export const getUserPerfumes = async (userId: string) => {

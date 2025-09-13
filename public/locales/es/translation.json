@@ -107,7 +107,9 @@
     "email": "Correo Electrónico",
     "emailPlaceholder": "Ingresa tu correo electrónico",
     "password": "Contraseña",
-    "passwordPlaceholder": "Ingresa tu contraseña"
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "passwordMatch": "Confirmar Contraseña",
+    "passwordMatchPlaceholder": "Confirma tu contraseña"
   },
   "home": {
     "meta": {
