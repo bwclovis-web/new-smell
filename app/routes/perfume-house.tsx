@@ -8,6 +8,7 @@ import {
   type MetaFunction,
   NavLink,
   useLoaderData,
+  useLocation,
   useNavigate
 } from 'react-router'
 import { useOutletContext } from 'react-router-dom'
@@ -18,6 +19,7 @@ import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getPerfumeHouseByName } from '~/models/house.server'
 
 import { ROUTE_PATH as ALL_HOUSES } from './behind-the-bottle'
+const BEHIND_THE_BOTTLE = '/behind-the-bottle'
 
 // Simple loader - get house with only first 9 perfumes
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -53,10 +55,14 @@ type OutletContextType = {
 // Main component
 const HouseDetailPage = () => {
   const { perfumeHouse } = useLoaderData<typeof loader>()
-  const { t } = useTranslation()
   const { user } = useOutletContext<OutletContextType>()
   const navigate = useNavigate()
+  const location = useLocation()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
+
+  // Get selectedLetter from navigation state
+  const selectedLetter = (location.state as { selectedLetter?: string })
+    ?.selectedLetter
   const {
     perfumes,
     loading,
@@ -80,6 +86,9 @@ const HouseDetailPage = () => {
 
   return (
     <section className='relative z-10 my-4'>
+      {/* Back Button */}
+
+
       <header className="flex items-end justify-center mb-10 relative h-[600px]">
         <img
           src={perfumeHouse.image || ''}
@@ -135,6 +144,15 @@ const HouseDetailPage = () => {
           <PerfumeHouseAddressBlock perfumeHouse={perfumeHouse} />
           <p className='p-4 mb-4'>{perfumeHouse.description}</p>
           <span className="tag absolute">{perfumeHouse.type}</span>
+          <button
+            onClick={() => navigate(BEHIND_THE_BOTTLE, {
+              state: selectedLetter ? { selectedLetter } : {}
+            })}
+            className="absolute top-4 left-4 z-20 bg-noir-gold/90 hover:bg-noir-gold text-noir-black px-4 py-2 rounded-md font-semibold transition-all duration-300 ease-in-out shadow-lg"
+            aria-label={selectedLetter ? `Back to houses starting with ${selectedLetter}` : 'Back to houses'}
+          >
+            ← Back to {selectedLetter || 'Houses'}
+          </button>
         </div>
         {perfumes.length > 0 && (
           <div
@@ -148,6 +166,7 @@ const HouseDetailPage = () => {
                   <NavLink
                     viewTransition
                     to={`/perfume/${perfume.name}`}
+                    state={selectedLetter ? { selectedLetter } : {}}
                     className="block p-2 h-full noir-border relative w-full transition-colors duration-300 ease-in-out"
                   >
                     <h3 className="

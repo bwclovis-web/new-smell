@@ -1,3 +1,6 @@
+import { useState } from "react"
+
+import RangeSlider from "~/components/Atoms/RangeSlider/RangeSlider"
 import { useRangeSlider } from "~/hooks/useRangeSlider"
 
 // Example of how to create a simple price filter component using the reusable hook
@@ -118,6 +121,31 @@ export const VolumeControl = () => {
       </div>
 
       <span className="text-sm w-8">{internalValue}%</span>
+    </div>
+  )
+}
+
+// Example using the RangeSlider component with manual input
+export const PerfumeAmountControl = () => {
+  const [amount, setAmount] = useState(5.0)
+
+  return (
+    <div className="w-full max-w-md p-4 border rounded-lg">
+      <h3 className="text-lg font-semibold mb-4">Perfume Amount Control</h3>
+      <RangeSlider
+        min={0}
+        max={10}
+        step={0.1}
+        value={amount}
+        onChange={setAmount}
+        formatValue={value => value.toFixed(1)}
+        label="Amount (ml)"
+        showManualInput={true}
+        inputPlaceholder="Enter amount (0-10ml)"
+      />
+      <div className="mt-4 text-sm text-gray-600">
+        You have {amount.toFixed(1)}ml of perfume
+      </div>
     </div>
   )
 }

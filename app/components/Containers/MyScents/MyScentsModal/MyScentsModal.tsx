@@ -79,6 +79,8 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
                   }}
                   formatValue={value => value.toFixed(1)}
                   label={t('myScents.modal.amountLabel')}
+                  showManualInput={true}
+                  inputPlaceholder="Enter amount (0-10ml)"
                 />
               </div>
               <div className="w-full md:w-1/2 noir-border relative p-4">

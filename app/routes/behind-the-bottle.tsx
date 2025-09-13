@@ -1,7 +1,7 @@
 export const ROUTE_PATH = '/behind-the-bottle'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type MetaFunction } from 'react-router'
+import { type MetaFunction, useLocation } from 'react-router'
 
 import AlphabeticalNav from '~/components/Organisms/AlphabeticalNav/AlphabeticalNav'
 import DataDisplaySection from '~/components/Organisms/DataDisplaySection/DataDisplaySection'
@@ -59,10 +59,14 @@ const useHouseHandlers = (
 
 const AllHousesPage = () => {
   const { t } = useTranslation()
+  const location = useLocation()
   const [selectedHouseType, setSelectedHouseType] = useState('all')
   const [selectedSort, setSelectedSort] = useState<any>('created-desc')
   const [isClient, setIsClient] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
+
+  // Get selectedLetter from navigation state
+  const initialSelectedLetter = (location.state as { selectedLetter?: string })?.selectedLetter
 
   const filters = useHouseFilters(t)
   const data = useDataByLetter({ endpoint: '/api/houses-by-letter-paginated', itemName: 'houses' })
@@ -73,6 +77,9 @@ const AllHousesPage = () => {
     setIsClient(true)
   }, [])
 
+  // Track if we've already processed the initial letter selection
+  const [hasProcessedInitialLetter, setHasProcessedInitialLetter] = useState(false)
+
   // Get letter selection first
   const { selectedLetter, handleLetterClick } = useLetterSelection({
     loadDataByLetter: data.loadDataByLetter,
@@ -81,6 +88,14 @@ const AllHousesPage = () => {
       resetHouses(houses, totalCount)
     }
   })
+
+  // Handle initial letter selection from navigation state
+  useEffect(() => {
+    if (initialSelectedLetter && initialSelectedLetter !== selectedLetter && !hasProcessedInitialLetter) {
+      setHasProcessedInitialLetter(true)
+      handleLetterClick(initialSelectedLetter)
+    }
+  }, [initialSelectedLetter, selectedLetter, hasProcessedInitialLetter])
 
   // Infinite scroll hook for houses - now properly initialized with selected letter
   const {
@@ -140,6 +155,7 @@ const AllHousesPage = () => {
           type="house"
           selectedLetter={selectedLetter}
           scrollContainerRef={scrollContainerRef}
+          sourcePage="behind-the-bottle"
         />
       )}
     </section>

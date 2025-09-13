@@ -2,15 +2,19 @@ import { NavLink } from 'react-router'
 
 import { ROUTE_PATH as PERFUME_PATH } from '~/routes/perfume'
 import { ROUTE_PATH as PERFUME_HOUSE } from '~/routes/perfume-house'
-const LinkCard = ({ data, type, children }:
-  { data: any; type: any; children?: any }) => {
+const LinkCard = ({ data, type, children, selectedLetter, sourcePage }:
+  { data: any; type: any; children?: any; selectedLetter?: string | null; sourcePage?: string }) => {
   const url = type === 'house' ? PERFUME_HOUSE : PERFUME_PATH
+
+  // Ensure we have a selectedLetter to pass
+  const stateToPass = selectedLetter ? { selectedLetter, sourcePage } : { sourcePage }
 
   return (
     <div className='relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out'>
       <NavLink
         viewTransition
         to={`${url}/${data.name}`}
+        state={stateToPass}
         className="p-4 flex flex-col overflow-hidden justify-between items-center group  transition-all duration-300 ease-in-out"
       >
         <div className='text-center'>

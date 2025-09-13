@@ -105,3 +105,26 @@ export const Interactive = () => {
     </div>
   )
 }
+
+export const WithManualInput = () => {
+  const [value, setValue] = useState(25)
+
+  return (
+    <div className="w-96 p-4">
+      <RangeSlider
+        label={`Manual Input Slider (${value}ml)`}
+        min={0}
+        max={100}
+        step={0.5}
+        value={value}
+        onChange={setValue}
+        formatValue={val => val.toFixed(1)}
+        showManualInput={true}
+        inputPlaceholder="Enter value (0-100ml)"
+      />
+      <div className="mt-4 text-sm text-gray-600">
+        Current value: {value}ml
+      </div>
+    </div>
+  )
+}

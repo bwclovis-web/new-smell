@@ -73,6 +73,8 @@ const DeStashForm = ({
             }
             formatValue={value => value.toFixed(1)}
             label="Amount to De-stash"
+            showManualInput={true}
+            inputPlaceholder={`Enter amount (0-${userPerfume.amount}ml)`}
           />
         </div>
 

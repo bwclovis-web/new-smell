@@ -1,7 +1,7 @@
 export const ROUTE_PATH = '/the-vault'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { type MetaFunction } from 'react-router'
+import { type MetaFunction, useLocation } from 'react-router'
 
 import AlphabeticalNav from '~/components/Organisms/AlphabeticalNav/AlphabeticalNav'
 import DataDisplaySection from '~/components/Organisms/DataDisplaySection/DataDisplaySection'
@@ -29,9 +29,13 @@ export const meta: MetaFunction = () => {
 
 const AllPerfumesPage = () => {
   const { t } = useTranslation()
+  const location = useLocation()
   const [selectedSort, setSelectedSort] = useState('created-desc')
   const [isClient, setIsClient] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
+
+  // Get selectedLetter from navigation state
+  const initialSelectedLetter = (location.state as { selectedLetter?: string })?.selectedLetter
 
   const sortOptions = getDefaultSortOptions(t)
   const data = useDataByLetter({ endpoint: '/api/perfumes-by-letter', itemName: 'perfumes' })
@@ -41,6 +45,9 @@ const AllPerfumesPage = () => {
     setIsClient(true)
   }, [])
 
+  // Track if we've already processed the initial letter selection
+  const [hasProcessedInitialLetter, setHasProcessedInitialLetter] = useState(false)
+
   // Get letter selection first
   const { selectedLetter, handleLetterClick } = useLetterSelection({
     loadDataByLetter: data.loadDataByLetter,
@@ -49,6 +56,14 @@ const AllPerfumesPage = () => {
       resetPerfumes(perfumes, totalCount)
     }
   })
+
+  // Handle initial letter selection from navigation state
+  useEffect(() => {
+    if (initialSelectedLetter && initialSelectedLetter !== selectedLetter && !hasProcessedInitialLetter) {
+      setHasProcessedInitialLetter(true)
+      handleLetterClick(initialSelectedLetter)
+    }
+  }, [initialSelectedLetter, selectedLetter, hasProcessedInitialLetter])
 
   // Infinite scroll hook for perfumes - now properly initialized with selected letter
   const {
@@ -105,6 +120,7 @@ const AllPerfumesPage = () => {
           type="perfume"
           selectedLetter={selectedLetter}
           scrollContainerRef={scrollContainerRef}
+          sourcePage="vault"
         />
       )}
     </section>

@@ -1,6 +1,6 @@
 import { parseCookies, verifyJwt } from '@api/utils'
 import { useTranslation } from 'react-i18next'
-import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, useNavigate } from 'react-router'
+import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, useNavigate, useLocation } from 'react-router'
 import { useOutletContext } from 'react-router-dom'
 
 import PerfumeIcons from '~/components/Containers/Perfume/PerfumeIcons/PerfumeIcons'
@@ -12,6 +12,7 @@ import { isInWishlist } from '~/models/wishlist.server'
 
 import { ROUTE_PATH as HOUSE_PATH } from './perfume-house'
 import { ROUTE_PATH as ALL_PERFUMES } from './the-vault'
+import { ROUTE_PATH as BEHIND_THE_BOTTLE } from './behind-the-bottle'
 export const ROUTE_PATH = '/perfume'
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
@@ -100,7 +101,12 @@ const PerfumePage = () => {
   type OutletContextType = { user: { role: string, id: string } | null }
   const { user } = useOutletContext<OutletContextType>()
   const navigate = useNavigate()
+  const location = useLocation()
   const { t } = useTranslation()
+
+  // Get selectedLetter and sourcePage from navigation state
+  const selectedLetter = (location.state as { selectedLetter?: string })?.selectedLetter
+  const sourcePage = (location.state as { sourcePage?: string })?.sourcePage
 
   const handleDelete = async () => {
     const url = `/api/deletePerfume?id=${perfume.id}`
@@ -110,13 +116,37 @@ const PerfumePage = () => {
     }
   }
 
+  const handleBack = () => {
+    if (sourcePage === 'vault') {
+      // Navigate back to vault
+      if (selectedLetter) {
+        navigate(ALL_PERFUMES, {
+          state: { selectedLetter },
+          replace: false
+        })
+      } else {
+        navigate(ALL_PERFUMES)
+      }
+    } else {
+      // Default to behind-the-bottle (for houses or fallback)
+      if (selectedLetter) {
+        navigate(BEHIND_THE_BOTTLE, {
+          state: { selectedLetter },
+          replace: false
+        })
+      } else {
+        navigate(BEHIND_THE_BOTTLE)
+      }
+    }
+  }
+
   if (!perfume) {
     return <div className="p-4">Perfume not found</div>
   }
 
   return (
     <section className="relative z-10 min-h-screen">
-      <PerfumeHeader perfume={perfume} t={t} />
+      <PerfumeHeader perfume={perfume} t={t} onBack={handleBack} selectedLetter={selectedLetter} />
       <PerfumeContent
         perfume={perfume}
         user={user}
@@ -124,6 +154,9 @@ const PerfumePage = () => {
         userRatings={userRatings}
         averageRatings={averageRatings}
         handleDelete={handleDelete}
+        onBack={handleBack}
+        selectedLetter={selectedLetter}
+        sourcePage={sourcePage}
       />
     </section>
   )
@@ -131,10 +164,14 @@ const PerfumePage = () => {
 
 const PerfumeHeader = ({
   perfume,
-  t
+  t,
+  onBack,
+  selectedLetter
 }: {
   perfume: any
   t: any
+  onBack: () => void
+  selectedLetter?: string | null
 }) => (
   <header className="flex items-end justify-center mb-10 relative h-[600px]">
     <img
@@ -171,7 +208,10 @@ const PerfumeContent = ({
   isInUserWishlist,
   userRatings,
   averageRatings,
-  handleDelete
+  handleDelete,
+  onBack,
+  selectedLetter,
+  sourcePage
 }: {
   perfume: any
   user: any
@@ -179,6 +219,9 @@ const PerfumeContent = ({
   userRatings: any
   averageRatings: any
   handleDelete: () => void
+  onBack: () => void
+  selectedLetter?: string | null
+  sourcePage?: string
 }) => (
   <div className="flex flex-col gap-20 mx-auto inner-container items-center">
     <div className="w-full flex flex-col md:flex-row gap-4 max-w-6xl">
@@ -191,6 +234,15 @@ const PerfumeContent = ({
         />
       )}
       <div className='bg-white/5 md:w-3/4 border-4 noir-border relative shadow-lg text-noir-gold-500'>
+        {/* Back Button */}
+        <button
+          onClick={onBack}
+          className="absolute top-4 right-4 z-20 bg-noir-gold/90 hover:bg-noir-gold text-noir-black px-4 py-2 rounded-md font-semibold transition-all duration-300 ease-in-out shadow-lg"
+          aria-label={selectedLetter ? `Back to ${sourcePage === 'vault' ? 'perfumes' : 'houses'} starting with ${selectedLetter}` : `Back to ${sourcePage === 'vault' ? 'perfumes' : 'houses'}`}
+        >
+          ← Back {selectedLetter ? `to ${selectedLetter}` : `to ${sourcePage === 'vault' ? 'Perfumes' : 'Houses'}`}
+        </button>
+
         <PerfumeNotes
           perfumeNotesOpen={perfume.perfumeNotesOpen}
           perfumeNotesHeart={perfume.perfumeNotesHeart}

@@ -14,6 +14,7 @@ interface DataDisplaySectionProps {
   type: 'house' | 'perfume'
   selectedLetter: string | null
   scrollContainerRef: React.RefObject<HTMLDivElement>
+  sourcePage?: string
 }
 
 const DataDisplaySection = ({
@@ -26,7 +27,8 @@ const DataDisplaySection = ({
   onLoadMore,
   type,
   selectedLetter,
-  scrollContainerRef
+  scrollContainerRef,
+  sourcePage
 }: DataDisplaySectionProps) => {
   const { t } = useTranslation()
   const itemName = type === 'house' ? 'houses' : 'perfumes'
@@ -56,7 +58,7 @@ const DataDisplaySection = ({
         ) : (
           data.map((item: any) => (
             <li key={item.id} className='h-full'>
-              <LinkCard data={item} type={type} />
+              <LinkCard data={item} type={type} selectedLetter={selectedLetter} sourcePage={sourcePage} />
             </li>
           ))
         )}
