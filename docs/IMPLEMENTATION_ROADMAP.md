@@ -13,13 +13,13 @@ This roadmap outlines the implementation of security improvements, performance e
 #### Day 1-2: Environment Security
 
 - [x] Remove hardcoded JWT secret fallback
-- [ ] Move database credentials to environment variables
-- [ ] Implement environment variable validation
-- [ ] Set up secure secret management
+- [x] Move database credentials to environment variables
+- [x] Implement environment variable validation
+- [x] Set up secure secret management
 
 #### Day 3-4: Security Headers & Middleware
 
-- [ ] Implement helmet.js with proper configuration
+- [x] Implement helmet.js with proper configuration
 - [ ] Add CSRF protection
 - [ ] Implement rate limiting enhancements
 - [ ] Add security monitoring

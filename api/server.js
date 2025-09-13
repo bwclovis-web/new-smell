@@ -9,13 +9,20 @@ import crypto from 'crypto'
 import express from 'express'
 import { rateLimit } from 'express-rate-limit'
 import fs from 'fs'
+import helmet from 'helmet'
 import i18nextMiddleware from 'i18next-http-middleware'
 import morgan from 'morgan'
 import path from 'path'
 import serverless from 'serverless-http'
 
 import i18n from '../app/modules/i18n/i18n.server.js'
+// Validate environment variables at startup
+import { validateEnvironmentAtStartup } from '../app/utils/security/startup-validation.server.js'
 import { parseCookies, verifyJwt } from './utils.js'
+
+// Run environment validation before starting the server
+console.log('🚀 Starting Voodoo Perfumes server...')
+validateEnvironmentAtStartup()
 const METRICS_PORT = process.env.METRICS_PORT || 3030
 const PORT = process.env.APP_PORT || 2112
 const NODE_ENV = process.env.NODE_ENV ?? 'development'
@@ -71,6 +78,38 @@ if (viteDevServer) {
 }
 
 app.disable('x-powered-by')
+
+// Security headers with helmet.js
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: [
+"'self'", "data:", "https:", "blob:"
+],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // Note: unsafe-eval needed for Vite in dev
+      connectSrc: ["'self'", "https:", "wss:"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
+      formAction: ["'self'"],
+      frameAncestors: ["'none'"],
+    },
+  },
+  hsts: {
+    maxAge: 31536000, // 1 year
+    includeSubDomains: true,
+    preload: true,
+  },
+  noSniff: true,
+  xssFilter: true,
+  referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+  crossOriginEmbedderPolicy: false, // Disable for compatibility
+  crossOriginOpenerPolicy: { policy: "same-origin" },
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+}))
+
 app.use(compression())
 app.use(morgan('tiny'))
 

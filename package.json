@@ -20,7 +20,8 @@
     "dev": "node scripts/copy-images.js && run-p start:server open:localhost",
     "open:localhost": "start http://localhost:2112",
     "start": "run-p start:server",
-    "start:server": "cross-env LOCAL_DATABASE_URL=\"postgresql://postgres:Toaster69@localhost:5432/new_scent\" node ./api/server.js",
+    "start:server": "node ./api/server.js",
+    "validate:env": "node scripts/validate-env.js",
     "typecheck": "react-router typegen && tsc",
     "postinstall": "prisma generate --no-engine"
   },

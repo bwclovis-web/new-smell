@@ -15,33 +15,33 @@ const extendedSchema = z.object({
   SESSION_SECRET: z.string().min(32, "SESSION_SECRET must be at least 32 characters long"),
   DATABASE_URL: z.string().url("DATABASE_URL must be a valid URL"),
   NODE_ENV: z.enum(["development", "production", "test"]),
-
+  
   // Server configuration
   METRICS_PORT: z.string().regex(/^\d+$/, "METRICS_PORT must be a valid port number").optional(),
   APP_PORT: z.string().regex(/^\d+$/, "APP_PORT must be a valid port number").optional(),
-
+  
   // Database configuration
   LOCAL_DATABASE_URL: z.string().url("LOCAL_DATABASE_URL must be a valid URL").optional(),
-
+  
   // AI/ML services
   OPENAI_API_KEY: z.string().min(1, "OPENAI_API_KEY cannot be empty").optional(),
   OPENAI_MODEL: z.string().optional(),
-
+  
   // Security features
   HONEYPOT_ENCRYPTION_SEED: z.string().min(16, "HONEYPOT_ENCRYPTION_SEED must be at least 16 characters").optional(),
-
+  
   // Redis configuration
   REDIS_HOST: z.string().optional(),
   REDIS_PORT: z.string().regex(/^\d+$/, "REDIS_PORT must be a valid port number").optional(),
   REDIS_PASSWORD: z.string().optional(),
-
+  
   // Monitoring
   MONITORING_ENABLED: z.enum(["true", "false"]).optional(),
-
+  
   // Testing
   TEST_DATABASE_URL: z.string().url("TEST_DATABASE_URL must be a valid URL").optional(),
   CI: z.enum(["true", "false"]).optional(),
-
+  
   // Cerewai configuration
   MIN_REQUEST_DELAY: z.string().regex(/^\d+$/, "MIN_REQUEST_DELAY must be a number").optional(),
   OUTPUT_DIR: z.string().optional(),
@@ -74,9 +74,11 @@ export function validateSecurityEnv() {
   return validateCoreSecurityEnv()
 }
 
-// Validate environment on module load
-export const env = validateCoreSecurityEnv()
-
-// Type definitions for better TypeScript support
-export type CoreEnv = z.infer<typeof coreSecuritySchema>
-export type ExtendedEnv = z.infer<typeof extendedSchema>
+// Lazy validation - only validate when accessed
+let _env = null
+export function getEnv() {
+  if (!_env) {
+    _env = validateCoreSecurityEnv()
+  }
+  return _env
+}
