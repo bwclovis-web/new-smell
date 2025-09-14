@@ -14,13 +14,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const cookieHeader = request.headers.get('cookie') || ''
   const cookies = cookie.parse(cookieHeader)
 
-  console.log('🔍 RootLayout Auth Debug:', {
-    hasCookies: !!cookieHeader,
-    cookieKeys: Object.keys(cookies),
-    hasAccessToken: !!cookies.accessToken,
-    hasLegacyToken: !!cookies.token
-  })
-
   let user = null
 
   // Try access token first
@@ -32,17 +25,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }
 
   if (accessToken) {
-    console.log('🔍 RootLayout: Verifying token...')
     const payload = verifyAccessToken(accessToken)
-    console.log('🔍 RootLayout: Token payload:', payload ? 'Valid' : 'Invalid')
 
     if (payload && payload.userId) {
       const fullUser = await getUserById(payload.userId)
       user = createSafeUser(fullUser)
-      console.log('🔍 RootLayout: User found:', user ? user.email : 'None')
     }
-  } else {
-    console.log('🔍 RootLayout: No access token found')
   }
 
   return { user }

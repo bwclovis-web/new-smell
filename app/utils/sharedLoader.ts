@@ -13,14 +13,6 @@ export const sharedLoader = async (request: Request) => {
   // Parse cookies correctly
   const cookies = cookie.parse(cookieHeader)
 
-  // Debug logging
-  console.log('🔍 Auth Debug:', {
-    hasCookies: !!cookieHeader,
-    cookieKeys: Object.keys(cookies),
-    hasAccessToken: !!cookies.accessToken,
-    hasRefreshToken: !!cookies.refreshToken,
-    hasLegacyToken: !!cookies.token
-  })
 
   // Try access token first
   let accessToken = cookies.accessToken
@@ -32,29 +24,22 @@ export const sharedLoader = async (request: Request) => {
   }
 
   if (!accessToken && !refreshToken) {
-    console.log('❌ No tokens found, redirecting to sign-in')
     throw redirect(SIGN_IN)
   }
 
   // Verify access token
   if (accessToken) {
-    console.log('🔍 Verifying access token...')
     const payload = verifyAccessToken(accessToken)
-    console.log('🔍 Token payload:', payload ? 'Valid' : 'Invalid')
 
     if (payload && payload.userId) {
       const fullUser = await getUserById(payload.userId)
       const user = createSafeUser(fullUser)
 
       if (!user) {
-        console.log('❌ User not found in database')
         throw redirect('/sign-in')
       }
 
-      console.log('✅ User authenticated successfully:', user.email)
       return user
-    } else {
-      console.log('❌ Access token invalid, trying refresh token...')
     }
   }
 
@@ -87,7 +72,7 @@ export const sharedLoader = async (request: Request) => {
         })
       }
     } catch (error) {
-      console.error('Token refresh failed:', error)
+      // Token refresh failed
     }
   }
 
