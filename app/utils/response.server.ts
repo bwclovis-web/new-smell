@@ -1,3 +1,5 @@
+import { AppError, createErrorResponse as createAppErrorResponse } from './errorHandling'
+
 export const createJsonResponse = (
   data: any,
   status = 200,
@@ -13,7 +15,10 @@ export const createJsonResponse = (
   }
 )
 
-export function createErrorResponse(error: string, status = 400) {
+export function createErrorResponse(error: string | AppError, status = 400) {
+  if (error instanceof AppError) {
+    return createAppErrorResponse(error, status)
+  }
   return createJsonResponse({ success: false, error }, status)
 }
 

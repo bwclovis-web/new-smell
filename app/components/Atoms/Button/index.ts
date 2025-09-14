@@ -1,1 +1,1 @@
-export { default } from './Button'
+export { Button, VooDooLink } from './Button'

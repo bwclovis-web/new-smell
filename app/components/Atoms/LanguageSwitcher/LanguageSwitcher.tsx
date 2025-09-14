@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import Button from '~/components/Atoms/Button'
+import { Button } from '~/components/Atoms/Button'
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation()

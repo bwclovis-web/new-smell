@@ -1,16 +1,18 @@
 import { getFormProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useRef } from 'react'
-import { Form, useActionData } from 'react-router'
 import { useTranslation } from 'react-i18next'
+import { Form, useActionData } from 'react-router'
 import type { ActionFunctionArgs } from 'react-router-dom'
 
-import Input from '~/components/Atoms/Input'
 import { Button } from '~/components/Atoms/Button'
-import { signInCustomer } from '~/models/user.server'
+import ErrorDisplay from '~/components/Atoms/ErrorDisplay'
+import Input from '~/components/Atoms/Input'
 import { login } from '~/models/session.server'
-import { UserLogInSchema } from '~/utils/formValidationSchemas'
+import { signInCustomer } from '~/models/user.server'
 import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/profilePage'
+import { AuthErrorHandler } from '~/utils/errorHandling.server'
+import { UserLogInSchema } from '~/utils/formValidationSchemas'
 
 export const ROUTE_PATH = '/sign-in'
 
@@ -32,23 +34,13 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
       throw error
     }
 
-    console.error('Sign-in error:', error)
+    // Use centralized error handling
+    const appError = AuthErrorHandler.handle(error, {
+      formData: Object.fromEntries(await request.formData()),
+      action: 'signIn'
+    })
 
-    // Check for specific error types
-    if (error instanceof Error) {
-      if (error.message.includes('JWT_SECRET')) {
-        return { error: 'Server configuration error. Please contact support.' }
-      }
-      if (error.message.includes('DATABASE_URL')) {
-        return { error: 'Database connection error. Please try again later.' }
-      }
-      if (error.message.includes('SESSION_SECRET')) {
-        return { error: 'Server configuration error. Please contact support.' }
-      }
-    }
-
-    // Generic error for production
-    return { error: 'An unexpected error occurred. Please try again.' }
+    return { error: appError.userMessage }
   }
 }
 const LogInPage = () => {
@@ -68,7 +60,11 @@ const LogInPage = () => {
         <Input shading={true} inputId={t('forms.email')} inputType="email" action={email} inputRef={inputRef} />
         <Input shading={true} inputId={t('forms.password')} inputType="password" action={password} inputRef={inputRef} />
         {actionData?.error && (
-          <p className="text-red-600 mb-2">{actionData.error}</p>
+          <ErrorDisplay 
+            error={actionData.error} 
+            variant="inline"
+            title="Sign-in Error"
+          />
         )}
         <Button type="submit" variant={'icon'} background={'gold'} size={'xl'}>{t('forms.submit')}</Button>
       </Form>

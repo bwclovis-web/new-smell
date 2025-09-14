@@ -12,6 +12,7 @@ import {
 } from 'react-router'
 
 import type { Route } from './+types/root'
+import ErrorBoundaryComponent from './components/Atoms/ErrorBoundary'
 import ImagePreloader from './components/Atoms/ImagePreloader'
 import PerformanceMonitor from './components/Atoms/PerformanceMonitor'
 import ServiceWorkerRegistration from './components/Atoms/ServiceWorkerRegistration'
@@ -19,6 +20,7 @@ import FourOFourPage from './components/Containers/404Page/404Page'
 import { NonceProvider, useNonce } from './hooks/use-nonce'
 import i18n from './modules/i18n/i18n.client'
 import { SessionProvider } from './providers/sessionProvider'
+import { AppError } from './utils/errorHandling'
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -103,35 +105,72 @@ export default function App() {
   )
 }
 
-// TODO: Refactor per error
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = 'Oops!'
-  let details = 'An unexpected error occurred.'
-  let stack: string | undefined
-
-  if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? '404' : 'Error'
-    details
-      = error.status === 404
-        ? 'The requested page could not be found.'
-        : error.statusText || details
-    if (error.status === 404) {
-      return <FourOFourPage />
-    }
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message
-    stack = error.stack
+  // Handle 404 errors with custom page
+  if (isRouteErrorResponse(error) && error.status === 404) {
+    return <FourOFourPage />
   }
 
+  // Use our centralized error handling for other errors
+  const appError = error instanceof Error 
+    ? new AppError(error.message, 'UNKNOWN' as any, 'MEDIUM' as any, 'ROUTE_ERROR', undefined, { 
+        status: isRouteErrorResponse(error) ? error.status : undefined,
+        statusText: isRouteErrorResponse(error) ? error.statusText : undefined,
+        stack: error.stack
+      })
+    : new AppError('An unexpected error occurred', 'UNKNOWN' as any, 'MEDIUM' as any, 'ROUTE_ERROR')
+
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
-    </main>
+    <ErrorBoundaryComponent level="page" fallback={(error: any, errorId: string) => (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-6">
+          <div className="text-center mb-6">
+            <div className="text-4xl mb-4">⚠️</div>
+            <h1 className="text-xl font-bold text-gray-900 mb-2">Something went wrong</h1>
+            <p className="text-gray-600">{error.userMessage}</p>
+          </div>
+          
+          <div className="space-y-3">
+            <button
+              onClick={() => window.location.reload()}
+              className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Refresh Page
+            </button>
+            <button
+              onClick={() => window.history.back()}
+              className="w-full bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors"
+            >
+              Go Back
+            </button>
+          </div>
+          
+          {import.meta.env.DEV && (
+            <details className="mt-4 text-left">
+              <summary className="text-sm text-gray-500 cursor-pointer">Developer Details</summary>
+              <pre className="mt-2 text-xs text-gray-600 bg-gray-100 p-2 rounded overflow-x-auto">
+                {JSON.stringify(error.toJSON(), null, 2)}
+              </pre>
+            </details>
+          )}
+          
+          <p className="text-xs text-gray-500 mt-4 text-center">Error ID: {errorId}</p>
+        </div>
+      </div>
+    )}>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-6 text-center">
+          <div className="text-4xl mb-4">⚠️</div>
+          <h1 className="text-xl font-bold text-gray-900 mb-2">Something went wrong</h1>
+          <p className="text-gray-600">{appError.userMessage}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Refresh Page
+          </button>
+        </div>
+      </div>
+    </ErrorBoundaryComponent>
   )
 }
