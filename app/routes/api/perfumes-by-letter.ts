@@ -1,43 +1,34 @@
 import type { LoaderFunctionArgs } from 'react-router'
 
-import { getAllPerfumes } from '~/models/perfume.server'
+import { getPerfumesByLetterPaginated } from '~/models/perfume.server'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const letter = url.searchParams.get('letter')
-  const skip = parseInt(url.searchParams.get('skip') || '0')
-  const take = parseInt(url.searchParams.get('take') || '12')
+  const skip = parseInt(url.searchParams.get('skip') || '0', 10)
+  const take = parseInt(url.searchParams.get('take') || '12', 10)
 
-  if (!letter) {
+  if (!letter || !/^[A-Za-z]$/.test(letter)) {
     return Response.json({
       success: false,
-      message: 'Letter parameter is required',
+      message: 'Valid letter parameter is required',
       perfumes: []
     }, { status: 400 })
   }
 
   try {
-    const allPerfumes = await getAllPerfumes()
-
-    // Filter perfumes by the first letter of their name
-    const filteredPerfumes = allPerfumes.filter(perfume =>
-      perfume.name.charAt(0).toUpperCase() === letter.toUpperCase()
-    )
-
-    // Apply pagination
-    const totalCount = filteredPerfumes.length
-    const paginatedPerfumes = filteredPerfumes.slice(skip, skip + take)
-    const hasMore = skip + take < totalCount
+    const perfumes = await getPerfumesByLetterPaginated(letter.toUpperCase(), { skip, take })
 
     return Response.json({
       success: true,
-      perfumes: paginatedPerfumes,
+      perfumes: perfumes.perfumes,
+      count: perfumes.count,
       meta: {
         letter,
-        totalCount,
-        hasMore,
         skip,
-        take
+        take,
+        hasMore: perfumes.perfumes.length === take,
+        totalCount: perfumes.count
       }
     })
   } catch (error) {

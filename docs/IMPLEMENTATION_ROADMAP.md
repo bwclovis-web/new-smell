@@ -146,7 +146,7 @@ This roadmap outlines the implementation of security improvements, performance e
 
 - [x] Standardize file structure
 - [x] Implement centralized error handling
-- [ ] Extract custom hooks
+- [x] Extract custom hooks
 - [ ] Break down large components
 
 #### Day 4-5: Type Safety & Validation
@@ -688,6 +688,111 @@ This roadmap outlines the implementation of security improvements, performance e
 - **Enhanced Application Reliability** with proper error boundaries and fallback mechanisms
 - **Easier Maintenance** with centralized error handling logic and utilities
 - **Better Error Monitoring** with comprehensive logging and reporting system
+
+### ✅ COMPLETED: Extract Custom Hooks
+
+**Date Completed:** December 2024
+
+**Major Accomplishments:**
+
+1. **Comprehensive Hook Library**
+
+   - Created 8 new custom hooks covering common patterns
+   - Implemented full TypeScript support with proper type definitions
+   - Added comprehensive error handling and validation
+   - Created reusable, composable hook architecture
+
+2. **Rating System Hook (`useRatingSystem`)**
+
+   - Manages rating state with optimistic updates
+   - Handles server communication and error recovery
+   - Provides consistent rating categories and validation
+   - Integrated with existing rating components
+
+3. **Password Strength Hook (`usePasswordStrength`)**
+
+   - Calculates password strength with configurable requirements
+   - Provides visual feedback and validation
+   - Supports customizable strength criteria
+   - Enhanced security with pattern detection
+
+4. **Form State Management Hook (`useFormState`)**
+
+   - Centralized form state management with validation
+   - Built-in error handling and submission logic
+   - Type-safe form value management
+   - Automatic validation and error clearing
+
+5. **Server Error Handling Hook (`useServerError`)**
+
+   - Manages server errors with automatic clearing
+   - Provides user-friendly error messages
+   - Integrates with centralized error handling system
+   - Supports auto-clear and manual error management
+
+6. **Optimistic Updates Hook (`useOptimisticUpdate`)**
+
+   - Manages optimistic updates with rollback capability
+   - Provides better UX for async operations
+   - Handles error recovery and state reversion
+   - Supports success and error callbacks
+
+7. **Local Storage Hook (`useLocalStorage`)**
+
+   - Type-safe localStorage management
+   - Automatic serialization/deserialization
+   - Error handling and fallback support
+   - SSR-safe implementation
+
+8. **Utility Hooks**
+   - `useDebounce`: Performance optimization for search and input
+   - `useToggle`: Boolean state management with utilities
+   - `useErrorHandler`: Comprehensive error handling system
+
+**Key Features Implemented:**
+
+- **Type Safety**: Full TypeScript support with proper generics
+- **Error Handling**: Integrated with centralized error system
+- **Performance**: Optimized with proper dependency arrays and memoization
+- **Reusability**: Composable hooks that work together seamlessly
+- **Documentation**: Comprehensive JSDoc comments and examples
+- **Testing**: Hooks designed for easy testing and mocking
+
+**Files Created/Modified:**
+
+- `app/hooks/useRatingSystem.ts` - Rating system management
+- `app/hooks/usePasswordStrength.ts` - Password strength calculation
+- `app/hooks/useFormState.ts` - Form state management
+- `app/hooks/useServerError.ts` - Server error handling
+- `app/hooks/useOptimisticUpdate.ts` - Optimistic updates
+- `app/hooks/useLocalStorage.ts` - Local storage management
+- `app/hooks/useDebounce.ts` - Debouncing utility
+- `app/hooks/useToggle.ts` - Toggle state management
+- `app/hooks/index.ts` - Updated exports
+- `docs/CUSTOM_HOOKS.md` - Comprehensive documentation
+- `app/components/Containers/Perfume/PerfumeRatingSystem/PerfumeRatingSystem.tsx` - Updated to use new hooks
+- `app/components/Atoms/PasswordStrengthIndicator/PasswordStrengthIndicator.tsx` - Refactored with new hook
+- `app/components/Containers/MyScents/DeStashForm/DeStashForm.tsx` - Updated with form state hook
+
+**Key Improvements:**
+
+- **Code Reusability** with extracted common patterns
+- **Better Developer Experience** with typed, documented hooks
+- **Improved Performance** with optimized state management
+- **Enhanced Error Handling** with centralized error management
+- **Type Safety** with comprehensive TypeScript support
+- **Maintainability** with clear separation of concerns
+- **Testing** with easily testable hook architecture
+
+**Impact:**
+
+- **Reduced Code Duplication** by extracting common patterns into reusable hooks
+- **Improved Developer Productivity** with well-documented, typed hooks
+- **Better User Experience** with optimistic updates and proper error handling
+- **Enhanced Code Quality** with consistent patterns and error handling
+- **Easier Maintenance** with centralized logic and clear documentation
+- **Better Testing** with isolated, testable hook functions
+- **Performance Optimization** with debouncing and efficient state management
 
 ## Conclusion
 

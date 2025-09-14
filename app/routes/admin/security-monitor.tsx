@@ -59,52 +59,21 @@ export const ROUTE_PATH = '/admin/security-monitor' as const
 export const loader = async ({ request }: { request: Request }) => {
   const user = await sharedLoader(request)
 
-  // Check if we're in production (Vercel) where localhost APIs might not be available
-  const isProduction = process.env.NODE_ENV === 'production'
-
-  if (isProduction) {
-    // In production, return mock data or skip API calls
-    return {
-      user,
-      security: {
-        totalEvents: 0,
-        eventsByType: {},
-        eventsBySeverity: {},
-        uniqueIPs: 0,
-        recentEvents: [],
-        activeAlerts: 0,
-        suspiciousIPs: 0
-      },
-      rateLimit: {
-        totalViolations: 0,
-        uniqueIPs: 0,
-        violationsByPath: {},
-        recentViolations: []
-      },
-      audit: {
-        totalLogs: 0,
-        logsByLevel: {},
-        logsByCategory: {},
-        logsByOutcome: {},
-        recentLogs: [],
-        uniqueUsers: 0,
-        uniqueIPs: 0
-      },
-      error: 'Security monitoring APIs not available in production'
-    }
-  }
-
   try {
+    // Get the base URL from the request
+    const url = new URL(request.url)
+    const baseUrl = `${url.protocol}//${url.host}`
+
     // Fetch security statistics
-    const securityResponse = await fetch('http://localhost:2112/admin/security-stats')
+    const securityResponse = await fetch(`${baseUrl}/admin/security-stats`)
     const securityData = await securityResponse.json()
 
     // Fetch rate limit statistics
-    const rateLimitResponse = await fetch('http://localhost:2112/admin/rate-limit-stats')
+    const rateLimitResponse = await fetch(`${baseUrl}/admin/rate-limit-stats`)
     const rateLimitData = await rateLimitResponse.json()
 
     // Fetch audit statistics
-    const auditResponse = await fetch('http://localhost:2112/admin/audit-stats')
+    const auditResponse = await fetch(`${baseUrl}/admin/audit-stats`)
     const auditData = await auditResponse.json()
 
     // Ensure data is properly serialized and structured

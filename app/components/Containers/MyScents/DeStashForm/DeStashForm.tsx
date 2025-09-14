@@ -1,5 +1,3 @@
-import React from "react"
-
 import { Button } from "~/components/Atoms/Button"
 import CheckBox from "~/components/Atoms/CheckBox"
 import RadioSelect from "~/components/Atoms/RadioSelect"
@@ -70,8 +68,6 @@ const DeStashForm = ({
     { id: 'both', value: 'both', label: 'Cash or Trade', name: 'tradePreference' }
   ]
 
-  // Form submission is now handled by useFormState
-
   return (
     <div className='p-4'>
       <h3 className='text-lg font-semibold mb-2'>Decant Options</h3>
@@ -116,7 +112,6 @@ const DeStashForm = ({
           </div>
         )}
 
-        {/* Trade Preferences */}
         {parseFloat(values.deStashAmount) > 0 && (
           <div>
             <fieldset>
@@ -134,7 +129,6 @@ const DeStashForm = ({
           </div>
         )}
 
-        {/* Trade Only Checkbox */}
         {parseFloat(values.deStashAmount) > 0 && values.tradePreference !== 'cash' && (
           <div>
             <CheckBox
