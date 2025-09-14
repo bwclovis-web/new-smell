@@ -1,3 +1,4 @@
+import { NavLink } from 'react-router'
 import { ROUTE_PATH as PERFUME_PATH } from '~/routes/perfume'
 import { ROUTE_PATH as PERFUME_HOUSE } from '~/routes/perfume-house'
 const LinkCard = ({ data, type, children, selectedLetter, sourcePage }:
@@ -6,8 +7,10 @@ const LinkCard = ({ data, type, children, selectedLetter, sourcePage }:
 
   return (
     <div className='relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out'>
-      <a
-        href={`${url}/${data.name}`}
+      <NavLink
+        to={`${url}/${data.name}`}
+        state={selectedLetter ? { selectedLetter, sourcePage } : { sourcePage }}
+        viewTransition
         className="p-4 flex flex-col overflow-hidden justify-between items-center group  transition-all duration-300 ease-in-out"
       >
         <div className='text-center'>
@@ -34,7 +37,7 @@ const LinkCard = ({ data, type, children, selectedLetter, sourcePage }:
             }}
           />
         </div>
-      </a>
+      </NavLink>
       {children && (
         <div className="absolute bottom-0 left-0 right-0 bg-noir-dark/80 p-2 border-t border-noir-gold">
           {children}

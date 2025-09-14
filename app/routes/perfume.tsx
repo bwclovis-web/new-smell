@@ -246,7 +246,7 @@ const PerfumeContent = ({
         {/* Back Button */}
         <button
           onClick={onBack}
-          className="absolute top-4 right-4 z-20 bg-noir-gold/90 hover:bg-noir-gold text-noir-black px-4 py-2 rounded-md font-semibold transition-all duration-300 ease-in-out shadow-lg"
+          className="absolute top-4 right-4 z-20 bg-noir-gold/90 hover:bg-noir-gold text-noir-black px-2 rounded-md font-semibold transition-all duration-300 ease-in-out shadow-lg"
           aria-label={selectedLetter ? `Back to ${sourcePage === 'vault' ? 'perfumes' : 'houses'} starting with ${selectedLetter}` : `Back to ${sourcePage === 'vault' ? 'perfumes' : 'houses'}`}
         >
           ← Back {selectedLetter ? `to ${selectedLetter}` : `to ${sourcePage === 'vault' ? 'Perfumes' : 'Houses'}`}
