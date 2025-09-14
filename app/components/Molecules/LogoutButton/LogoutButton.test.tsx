@@ -6,6 +6,6 @@ import LogoutButton from './LogoutButton'
 describe('LogoutButton', () => {
   it('renders a logoutbutton', () => {
     render(<LogoutButton />)
-    expect(screen.getByText('LogoutButton')).toBeInTheDocument()
+    expect(screen.getByRole('button')).toBeInTheDocument()
   })
 })

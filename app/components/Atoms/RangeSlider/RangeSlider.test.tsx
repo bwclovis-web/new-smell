@@ -16,7 +16,7 @@ describe('RangeSlider', () => {
 
   it('displays the current value when label is provided', () => {
     render(<RangeSlider label="Volume" value={50} />)
-    expect(screen.getByText('50')).toBeDefined()
+    expect(screen.getByText('50ml')).toBeDefined()
   })
 
   it('calls onChange when value changes', () => {

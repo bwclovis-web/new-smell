@@ -1,7 +1,7 @@
 import { cx, VariantProps } from 'class-variance-authority'
 import { FC, HTMLProps, ReactElement, useRef, useState } from 'react'
 
-import { styleMerge } from '@/utils/styleUtils'
+import { styleMerge } from '~/utils/styleUtils'
 
 import TabPanel from './TabPanel/TabPanel'
 import { tabsVariants } from './tabs-variants'

@@ -1,11 +1,22 @@
+/**
+ * Global type definitions for the application
+ * This file serves as the main entry point for all type definitions
+ */
+
+// Re-export all types from specialized modules
+export * from './database'
+export * from './api'
+export * from './forms'
+export * from './components'
+export * from './utils'
+export * from './comments'
+
+// Legacy types for backward compatibility
 import type { UserRole } from '@prisma/client'
 
 /**
- * Global type definitions for the application
- */
-
-/**
- * User interface matching the Prisma User model
+ * @deprecated Use types from './database' instead
+ * Legacy user interface - use SafeUser from database types
  */
 export interface User {
   id: string
@@ -20,8 +31,8 @@ export interface User {
 }
 
 /**
- * Safe user information (excluding sensitive data like password)
- * Use this for passing user data to the client
+ * @deprecated Use SafeUser from './database' instead
+ * Legacy safe user interface
  */
 export interface SafeUser {
   id: string
@@ -33,7 +44,8 @@ export interface SafeUser {
 }
 
 /**
- * Create a safe user object by omitting sensitive fields
+ * @deprecated Use createSafeUser from './database' instead
+ * Legacy function to create safe user object
  */
 export function createSafeUser(user: User | null): SafeUser | null {
   if (!user) {

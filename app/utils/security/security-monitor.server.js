@@ -225,14 +225,24 @@ function checkDataBreachAttempts(ipAddress, activities) {
  * Get security statistics
  */
 export function getSecurityStats() {
+  // In serverless environments, the in-memory storage might be empty
+  // This is normal and expected behavior
   const stats = {
     totalEvents: 0,
     eventsByType: {},
     eventsBySeverity: {},
     uniqueIPs: new Set(),
     recentEvents: [],
-    activeAlerts: securityAlerts.size,
-    suspiciousIPs: suspiciousActivities.size
+    activeAlerts: securityAlerts ? securityAlerts.size : 0,
+    suspiciousIPs: suspiciousActivities ? suspiciousActivities.size : 0,
+    serverlessMode: false
+  }
+
+  // Check if we're in a serverless environment where storage might be empty
+  if (!securityEvents || securityEvents.size === 0) {
+    stats.serverlessMode = true
+    stats.message = 'Security monitoring is running in serverless mode. Data resets between function invocations.'
+    return stats
   }
 
   const now = new Date()

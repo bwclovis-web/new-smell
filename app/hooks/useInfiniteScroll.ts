@@ -2,9 +2,11 @@
 //
 import { type RefObject, useEffect, useRef, useState } from 'react'
 
+import type { SafeUserPerfume } from '~/types'
+
 interface UseInfiniteScrollOptions {
   houseName: string
-  initialPerfumes: any[]
+  initialPerfumes: SafeUserPerfume[]
   scrollContainerRef: RefObject<HTMLDivElement | null>
   take?: number
   threshold?: number
@@ -12,7 +14,7 @@ interface UseInfiniteScrollOptions {
 }
 
 interface UseInfiniteScrollReturn {
-  perfumes: any[]
+  perfumes: SafeUserPerfume[]
   loading: boolean
   hasMore: boolean
   observerRef: RefObject<HTMLDivElement | null>

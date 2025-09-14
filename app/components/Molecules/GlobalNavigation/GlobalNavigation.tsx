@@ -3,7 +3,7 @@ import { type FC, type HTMLProps, useEffect, useState } from 'react'
 import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FaUser } from "react-icons/fa6"
-import { NavLink } from 'react-router'
+import { NavLink } from 'react-router-dom'
 
 import { mainNavigation } from '~/data/navigation'
 import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/profilePage'

@@ -11,18 +11,20 @@ import TagSearch from '~/components/Organisms/TagSearch/TagSearch'
 import type { FORM_TYPES } from '~/utils/constants'
 import { CreatePerfumeSchema } from '~/utils/formValidationSchemas'
 
+import type { SafeUserPerfume, PerfumeHouse } from '~/types'
+
 interface PerfumeFormProps {
   formType: typeof FORM_TYPES[keyof typeof FORM_TYPES]
-  lastResult: any
-  data?: any
-  allHouses: any[]
+  lastResult: unknown
+  data?: SafeUserPerfume
+  allHouses: PerfumeHouse[]
 }
 const PerfumeForm
   = ({ formType, lastResult, data, allHouses }: PerfumeFormProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null)
-    const [topNotes, setTopNotes] = useState<any[]>([])
-    const [heartNotes, setHeartNotes] = useState<any[]>([])
-    const [baseNotes, setBaseNotes] = useState<any[]>([])
+    const [topNotes, setTopNotes] = useState<string[]>([])
+    const [heartNotes, setHeartNotes] = useState<string[]>([])
+    const [baseNotes, setBaseNotes] = useState<string[]>([])
     const [serverError, setServerError] = useState<string | null>(null)
     useEffect(() => {
       if (lastResult && !lastResult.success) {

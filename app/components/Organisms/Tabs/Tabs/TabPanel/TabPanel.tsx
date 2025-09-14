@@ -1,6 +1,6 @@
 import { FC, ReactElement } from 'react'
 
-import { styleMerge } from '@/utils/styleUtils'
+import { styleMerge } from '~/utils/styleUtils'
 
 import { tabsPanelVariants } from '../tabs-variants'
 interface TabPanelProps {

@@ -1,7 +1,7 @@
 import { AppError, createErrorResponse as createAppErrorResponse } from './errorHandling'
 
-export const createJsonResponse = (
-  data: any,
+export const createJsonResponse = <T = unknown>(
+  data: T,
   status = 200,
   headers: Record<string, string> = {}
 ) => new Response(
@@ -22,6 +22,6 @@ export function createErrorResponse(error: string | AppError, status = 400) {
   return createJsonResponse({ success: false, error }, status)
 }
 
-export function createSuccessResponse(data?: any) {
+export function createSuccessResponse<T = Record<string, unknown>>(data?: T) {
   return createJsonResponse({ success: true, ...data })
 }

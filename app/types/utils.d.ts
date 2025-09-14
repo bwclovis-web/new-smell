@@ -15,5 +15,5 @@ declare module '@api/utils' {
   /**
    * Sign JWT token
    */
-  export function signJwt(payload: any): string;
+  export function signJwt(payload: Record<string, unknown>): string;
 }

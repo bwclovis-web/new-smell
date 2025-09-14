@@ -1,6 +1,6 @@
 import { type VariantProps } from 'class-variance-authority'
 import { type FC, type HTMLProps } from 'react'
-import { NavLink } from 'react-router'
+import { NavLink } from 'react-router-dom'
 
 import LanguageSwitcher from '~/components/Atoms/LanguageSwitcher'
 import { adminNavigation, profileNavigation } from '~/data/navigation'
