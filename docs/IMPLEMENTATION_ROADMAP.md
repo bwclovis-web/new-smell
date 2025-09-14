@@ -27,8 +27,8 @@ This roadmap outlines the implementation of security improvements, performance e
 #### Day 5-7: Authentication & Authorization
 
 - [x] Enhance password security with bcrypt
-- [ ] Implement proper session management
-- [ ] Add input validation framework
+- [x] Implement proper session management
+- [x] Add input validation framework
 - [ ] Create security audit logging
 
 **Deliverables:**
