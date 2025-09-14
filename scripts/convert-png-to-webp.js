@@ -15,7 +15,7 @@
  *   --dry-run          Show what would be converted without actually converting
  */
 
-import { convertPngToWebP, convertMultiplePngToWebP, findPngFiles, getOptimizedOptions, generateConversionReport, validateWebPSupport } from '../app/utils/imageConversion.js'
+import { convertPngToWebP, convertMultiplePngToWebP, findPngFiles, getOptimizedOptions, generateConversionReport, validateWebPSupport } from '../app/utils/imageConversion.ts'
 import { promises as fs } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'

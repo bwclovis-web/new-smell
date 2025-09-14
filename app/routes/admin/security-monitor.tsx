@@ -123,12 +123,13 @@ const SecurityMonitor = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
+      <TitleBanner
+        image={banner}
+        heading={t('allHouses.heading')}
+        subheading={t('allHouses.subheading')}
+      />
       <div className="max-w-7xl mx-auto">
-        <TitleBanner
-          image={banner}
-          heading={t('allHouses.heading')}
-          subheading={t('allHouses.subheading')}
-        />
+
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
