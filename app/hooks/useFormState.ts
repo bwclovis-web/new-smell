@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export interface UseFormStateOptions<T> {
   initialValues: T
@@ -47,7 +47,7 @@ export const useFormState = <T extends Record<string, any>>({
   )
 
   // Set individual field value
-  const setValue = useCallback(<K extends keyof T>(field: K, value: T[K]) => {
+  const setValue = <K extends keyof T>(field: K, value: T[K]) => {
     setValuesState(prev => {
       const newValues = { ...prev, [field]: value }
       setIsDirty(true)
@@ -62,49 +62,49 @@ export const useFormState = <T extends Record<string, any>>({
         return newErrors
       })
     }
-  }, [errors])
+  }
 
   // Set multiple field values
-  const setValues = useCallback((newValues: Partial<T>) => {
+  const setValues = (newValues: Partial<T>) => {
     setValuesState(prev => {
       const updated = { ...prev, ...newValues }
       setIsDirty(true)
       return updated
     })
-  }, [])
+  }
 
   // Set individual field error
-  const setError = useCallback(<K extends keyof T>(field: K, error: string) => {
+  const setError = <K extends keyof T>(field: K, error: string) => {
     setErrorsState(prev => ({
       ...prev,
       [field]: error
     }))
-  }, [])
+  }
 
   // Set multiple field errors
-  const setErrors = useCallback((newErrors: Partial<Record<keyof T, string>>) => {
+  const setErrors = (newErrors: Partial<Record<keyof T, string>>) => {
     setErrorsState(prev => ({
       ...prev,
       ...newErrors
     }))
-  }, [])
+  }
 
   // Clear individual field error
-  const clearError = useCallback(<K extends keyof T>(field: K) => {
+  const clearError = <K extends keyof T>(field: K) => {
     setErrorsState(prev => {
       const newErrors = { ...prev }
       delete newErrors[field]
       return newErrors
     })
-  }, [])
+  }
 
   // Clear all errors
-  const clearErrors = useCallback(() => {
+  const clearErrors = () => {
     setErrorsState({})
-  }, [])
+  }
 
   // Validate form
-  const validateForm = useCallback((): boolean => {
+  const validateForm = (): boolean => {
     if (!validate) return true
 
     const validationErrors = validate(values)
@@ -117,10 +117,10 @@ export const useFormState = <T extends Record<string, any>>({
 
     clearErrors()
     return true
-  }, [values, validate, setErrors, clearErrors])
+  }
 
   // Handle form submission
-  const handleSubmit = useCallback(async (e?: React.FormEvent) => {
+  const handleSubmit = async (e?: React.FormEvent) => {
     if (e) {
       e.preventDefault()
     }
@@ -142,21 +142,21 @@ export const useFormState = <T extends Record<string, any>>({
     } finally {
       setIsSubmitting(false)
     }
-  }, [validateForm, onSubmit, values, resetOnSubmit])
+  }
 
   // Reset form to initial values
-  const reset = useCallback(() => {
+  const reset = () => {
     setValuesState(initialValues)
     setErrorsState({})
     setIsDirty(false)
     setIsSubmitting(false)
-  }, [initialValues])
+  }
 
   // Update values when initialValues change
   useEffect(() => {
     setValuesState(initialValues)
     setIsDirty(false)
-  }, [initialValues])
+  })
 
   return {
     values,

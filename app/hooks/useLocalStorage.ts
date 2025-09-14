@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export interface UseLocalStorageOptions<T> {
   key: string
@@ -53,7 +53,7 @@ export const useLocalStorage = <T>({
   }, [key, storage, deserialize])
 
   // Set value in localStorage and state
-  const setValue = useCallback((newValue: T | ((prev: T) => T)) => {
+  const setValue = (newValue: T | ((prev: T) => T)) => {
     try {
       const valueToStore = newValue instanceof Function ? newValue(value) : newValue
       setValueState(valueToStore)
@@ -64,10 +64,10 @@ export const useLocalStorage = <T>({
     } catch (error) {
       console.error(`Error setting localStorage key "${key}":`, error)
     }
-  }, [key, storage, serialize, value])
+  }
 
   // Remove value from localStorage and reset to initial
-  const removeValue = useCallback(() => {
+  const removeValue = () => {
     try {
       setValueState(initialValue)
       if (storage) {
@@ -76,10 +76,10 @@ export const useLocalStorage = <T>({
     } catch (error) {
       console.error(`Error removing localStorage key "${key}":`, error)
     }
-  }, [key, storage, initialValue])
+  }
 
   // Clear all localStorage
-  const clearStorage = useCallback(() => {
+  const clearStorage = () => {
     try {
       if (storage) {
         storage.clear()
@@ -88,7 +88,7 @@ export const useLocalStorage = <T>({
     } catch (error) {
       console.error('Error clearing localStorage:', error)
     }
-  }, [storage, initialValue])
+  }
 
   return {
     value,

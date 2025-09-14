@@ -2,7 +2,6 @@
 import { type VariantProps } from "class-variance-authority"
 import {
   type HTMLAttributes,
-  useCallback,
   useEffect,
   useState
 } from "react"
@@ -67,12 +66,12 @@ const RangeSlider = ({
     useState(formatValue ? formatValue(internalValue) : internalValue.toString())
   const [isInputFocused, setIsInputFocused] = useState(false)
 
-  const updateInputValue = useCallback(() => {
+  const updateInputValue = () => {
     if (!isInputFocused) {
       setInputValue(formatValue ?
         formatValue(internalValue) : internalValue.toString())
     }
-  }, [internalValue, formatValue, isInputFocused])
+  }
 
   // Update input value when internal value changes
   useEffect(() => {
@@ -80,14 +79,13 @@ const RangeSlider = ({
   }, [updateInputValue])
 
   // Handle manual input changes
-  const handleInputChange =
-    useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = event.target.value
-      setInputValue(newValue)
-    }, [])
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value
+    setInputValue(newValue)
+  }
 
   // Handle manual input blur/enter - validate and update slider
-  const handleInputBlur = useCallback(() => {
+  const handleInputBlur = () => {
     setIsInputFocused(false)
     const numericValue = parseFloat(inputValue)
 
@@ -105,21 +103,19 @@ const RangeSlider = ({
       // Reset to current value if invalid
       setInputValue(formatValue ? formatValue(internalValue) : internalValue.toString())
     }
-  }, [
-    inputValue, min, max, step, internalValue, onChange, formatValue
-  ])
+  }
 
   // Handle manual input focus
-  const handleInputFocus = useCallback(() => {
+  const handleInputFocus = () => {
     setIsInputFocused(true)
-  }, [])
+  }
 
   // Handle Enter key in input
-  const handleInputKeyDown = useCallback((event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
       event.currentTarget.blur()
     }
-  }, [])
+  }
 
   return (
     <div className="w-full space-y-2 text-noir-gold">

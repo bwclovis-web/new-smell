@@ -1,4 +1,5 @@
-import { ChangeEvent, useState } from 'react'
+import { type ChangeEvent, useState } from 'react'
+import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs"
 import { Form } from 'react-router-dom'
 
 import { Button } from '~/components/Atoms/Button'
@@ -62,7 +63,7 @@ export const ChangePasswordForm = ({ actionData, isSubmitting = false, className
             onClick={() => togglePasswordVisibility('current')}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
           >
-            {showPasswords.current ? '🙈' : '👁️'}
+            {showPasswords.current ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
           </button>
         </div>
       </div>
@@ -87,7 +88,7 @@ export const ChangePasswordForm = ({ actionData, isSubmitting = false, className
             onClick={() => togglePasswordVisibility('new')}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
           >
-            {showPasswords.new ? '🙈' : '👁️'}
+            {showPasswords.new ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
           </button>
         </div>
 
@@ -121,7 +122,7 @@ export const ChangePasswordForm = ({ actionData, isSubmitting = false, className
             onClick={() => togglePasswordVisibility('confirm')}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
           >
-            {showPasswords.confirm ? '🙈' : '👁️'}
+            {showPasswords.confirm ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
           </button>
         </div>
 
@@ -205,3 +206,5 @@ export const ChangePasswordForm = ({ actionData, isSubmitting = false, className
     </Form>
   )
 }
+
+export default ChangePasswordForm

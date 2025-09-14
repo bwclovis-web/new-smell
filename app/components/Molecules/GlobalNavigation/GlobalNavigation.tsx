@@ -21,7 +21,7 @@ interface GlobalNavigationProps extends HTMLProps<HTMLDivElement>,
   } | null
 }
 
-const GlobalNavigationContent = ({ className, user }: GlobalNavigationProps) => {
+const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
   const { t, ready } = useTranslation()
   const [isClientReady, setIsClientReady] = useState(false)
 

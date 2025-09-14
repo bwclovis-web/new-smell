@@ -4,7 +4,6 @@ import React, {
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type TouchEvent as ReactTouchEvent,
-  useCallback,
   useEffect,
   useRef,
   useState
@@ -64,12 +63,12 @@ export const useRangeSlider = ({
 
   const percentage = calculatePercentage(internalValue, min, max)
 
-  const updateValue = useCallback((newValue: number) => {
+  const updateValue = (newValue: number) => {
     setInternalValue(newValue)
     onChange?.(newValue)
-  }, [onChange])
+  }
 
-  const calculateValue = useCallback((clientX: number) => {
+  const calculateValue = (clientX: number) => {
     if (!trackRef.current) {
       return internalValue
     }
@@ -80,9 +79,7 @@ export const useRangeSlider = ({
       max,
       step
     })
-  }, [
-    min, max, step, internalValue
-  ])
+  }
 
   // Animation effects
   useGSAP(() => {
@@ -94,7 +91,7 @@ export const useRangeSlider = ({
         isDragging
       )
     }
-  }, [percentage, isDragging])
+  })
 
   // Hover animations
   useGSAP(() => {
@@ -102,7 +99,7 @@ export const useRangeSlider = ({
       return
     }
     return setupHoverListeners(thumbRef.current, disabled, isDragging)
-  }, [disabled, isDragging])
+  })
 
   // Drag state management
   const { startDragging } = useDragState({
@@ -112,33 +109,33 @@ export const useRangeSlider = ({
   })
 
   // Event handlers
-  const handleMouseDown = useCallback((event: ReactMouseEvent) => {
+  const handleMouseDown = (event: ReactMouseEvent) => {
     if (disabled) {
       return
     }
     event.preventDefault()
     setIsDragging(true)
     startDragging(event.clientX)
-  }, [disabled, startDragging])
+  }
 
-  const handleTouchStart = useCallback((event: ReactTouchEvent) => {
+  const handleTouchStart = (event: ReactTouchEvent) => {
     if (disabled || event.touches.length === 0) {
       return
     }
     event.preventDefault() // Prevent scrolling when interacting with slider
     setIsDragging(true)
     startDragging(event.touches[0].clientX)
-  }, [disabled, startDragging])
+  }
 
-  const handleTrackClick = useCallback((event: ReactMouseEvent) => {
+  const handleTrackClick = (event: ReactMouseEvent) => {
     if (disabled || event.target === thumbRef.current) {
       return
     }
     const newValue = calculateValue(event.clientX)
     updateValue(newValue)
-  }, [disabled, calculateValue, updateValue])
+  }
 
-  const handleTrackTouch = useCallback((event: ReactTouchEvent) => {
+  const handleTrackTouch = (event: ReactTouchEvent) => {
     if (disabled ||
       event.touches.length === 0 ||
       event.target === thumbRef.current) {
@@ -147,9 +144,9 @@ export const useRangeSlider = ({
     event.preventDefault() // Prevent scrolling
     const newValue = calculateValue(event.touches[0].clientX)
     updateValue(newValue)
-  }, [disabled, calculateValue, updateValue])
+  }
 
-  const handleKeyDown = useCallback((event: ReactKeyboardEvent) => {
+  const handleKeyDown = (event: ReactKeyboardEvent) => {
     if (disabled) {
       return
     }
@@ -165,14 +162,12 @@ export const useRangeSlider = ({
       event.preventDefault()
       updateValue(newValue)
     }
-  }, [
-    disabled, internalValue, min, max, step, updateValue
-  ])
+  }
 
   // Sync external value changes
   useEffect(() => {
     setInternalValue(value)
-  }, [value])
+  })
 
   return {
     trackRef,

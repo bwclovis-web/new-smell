@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export interface PasswordStrengthInfo {
   score: number
@@ -40,7 +40,7 @@ export const usePasswordStrength = (
   const config = { ...DEFAULT_OPTIONS, ...options }
   const [strengthInfo, setStrengthInfo] = useState<PasswordStrengthInfo | null>(null)
 
-  const calculateStrength = useCallback((pwd: string): PasswordStrengthInfo => {
+  const calculateStrength = (pwd: string): PasswordStrengthInfo => {
     const feedback: string[] = []
     let score = 0
 
@@ -138,7 +138,7 @@ export const usePasswordStrength = (
       isValid,
       color
     }
-  }, [config])
+  }
 
   useEffect(() => {
     if (!password) {
@@ -150,7 +150,7 @@ export const usePasswordStrength = (
     setStrengthInfo(strength)
   }, [password, calculateStrength])
 
-  const getStrengthColor = useCallback((strength: PasswordStrengthInfo['strength']) => {
+  const getStrengthColor = (strength: PasswordStrengthInfo['strength']) => {
     const colors = {
       weak: 'bg-red-500',
       fair: 'bg-orange-500',
@@ -159,9 +159,9 @@ export const usePasswordStrength = (
       very_strong: 'bg-green-500'
     }
     return colors[strength]
-  }, [])
+  }
 
-  const getStrengthText = useCallback((strength: PasswordStrengthInfo['strength']) => {
+  const getStrengthText = (strength: PasswordStrengthInfo['strength']) => {
     const texts = {
       weak: 'Weak',
       fair: 'Fair',
@@ -170,7 +170,7 @@ export const usePasswordStrength = (
       very_strong: 'Very Strong'
     }
     return texts[strength]
-  }, [])
+  }
 
   return {
     strengthInfo,

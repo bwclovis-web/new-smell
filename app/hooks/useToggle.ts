@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 
 export interface UseToggleOptions {
   initialValue?: boolean
@@ -25,28 +25,28 @@ export const useToggle = ({
 }: UseToggleOptions = {}): UseToggleReturn => {
   const [value, setValueState] = useState(initialValue)
 
-  const toggle = useCallback(() => {
+  const toggle = () => {
     setValueState(prev => {
       const newValue = !prev
       onToggle?.(newValue)
       return newValue
     })
-  }, [onToggle])
+  }
 
-  const setTrue = useCallback(() => {
+  const setTrue = () => {
     setValueState(true)
     onToggle?.(true)
-  }, [onToggle])
+  }
 
-  const setFalse = useCallback(() => {
+  const setFalse = () => {
     setValueState(false)
     onToggle?.(false)
-  }, [onToggle])
+  }
 
-  const setValue = useCallback((newValue: boolean) => {
+  const setValue = (newValue: boolean) => {
     setValueState(newValue)
     onToggle?.(newValue)
-  }, [onToggle])
+  }
 
   return {
     value,
