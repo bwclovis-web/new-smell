@@ -1,6 +1,6 @@
 import type { FC } from 'react'
 
-import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
+import LinkCard from '~/components/Organisms/LinkCard'
 import { groupByFirstLetter, type SortableItem } from '~/utils/sortUtils'
 
 interface DataDisplayProps {

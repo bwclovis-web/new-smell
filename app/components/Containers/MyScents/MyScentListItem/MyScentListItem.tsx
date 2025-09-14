@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next"
 import { MdDeleteForever } from "react-icons/md"
 import { useFetcher, useNavigation } from "react-router"
 
-import { Button } from "~/components/Atoms/Button/Button"
-import VooDooDetails from "~/components/Atoms/VooDooDetails/VooDooDetails"
-import DangerModal from "~/components/Organisms/DangerModal/DangerModal"
-import Modal from "~/components/Organisms/Modal/Modal"
+import { Button } from "~/components/Atoms/Button"
+import VooDooDetails from "~/components/Atoms/VooDooDetails"
+import DangerModal from "~/components/Organisms/DangerModal"
+import Modal from "~/components/Organisms/Modal"
 import { useSessionStore } from '~/stores/sessionStore'
 import type { UserPerfumeI } from "~/types"
 

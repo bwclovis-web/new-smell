@@ -4,8 +4,8 @@ import { BsHeartFill, BsHearts } from 'react-icons/bs'
 import { GrEdit } from 'react-icons/gr'
 import { MdDeleteForever } from 'react-icons/md'
 
-import { Button, VooDooLink } from '~/components/Atoms/Button/Button'
-import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal/AddToCollectionModal'
+import { Button, VooDooLink } from '~/components/Atoms/Button'
+import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal'
 
 interface Perfume {
   id: string

@@ -3,8 +3,8 @@ import { useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { MdLibraryAdd } from "react-icons/md"
 
-import { Button } from "~/components/Atoms/Button/Button"
-import MyScentsModal from "~/components/Containers/MyScents/MyScentsModal/MyScentsModal"
+import { Button } from "~/components/Atoms/Button"
+import MyScentsModal from "~/components/Containers/MyScents/MyScentsModal"
 import { useSessionStore } from '~/stores/sessionStore'
 import type { PerfumeI } from "~/types"
 

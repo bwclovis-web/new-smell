@@ -1,8 +1,8 @@
 
 import { useTranslation } from 'react-i18next'
 
-import Select from '~/components/Atoms/Select/Select'
-import SearchBar from '~/components/Organisms/SearchBar/SearchBar'
+import Select from '~/components/Atoms/Select'
+import SearchBar from '~/components/Organisms/SearchBar'
 import { type SortOption } from '~/utils/sortUtils'
 
 export interface FilterOption {

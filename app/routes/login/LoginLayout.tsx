@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
 
-import { VooDooLink } from '~/components/Atoms/Button/Button'
+import { VooDooLink } from '~/components/Atoms/Button'
 import banner from '~/images/password.webp'
 
 import { ROUTE_PATH as SIGN_UP_PATH } from './SignUpPage'

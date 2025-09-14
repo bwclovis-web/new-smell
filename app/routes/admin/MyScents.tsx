@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next'
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from 'react-router'
 import { useLoaderData } from 'react-router-dom'
 
-import MyScentsListItem from '~/components/Containers/MyScents/MyScentListItem/MyScentListItem'
-import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal/AddToCollectionModal'
-import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
+import MyScentsListItem from '~/components/Containers/MyScents/MyScentListItem'
+import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal'
+import TitleBanner from '~/components/Organisms/TitleBanner'
 import {
   addUserPerfume,
   getUserPerfumes,

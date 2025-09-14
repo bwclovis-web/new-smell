@@ -1,9 +1,9 @@
 import { type FormEvent, useState } from "react"
 
-import { Button } from "~/components/Atoms/Button/Button"
-import CheckBox from "~/components/Atoms/CheckBox/CheckBox"
-import RadioSelect from "~/components/Atoms/RadioSelect/RadioSelect"
-import RangeSlider from "~/components/Atoms/RangeSlider/RangeSlider"
+import { Button } from "~/components/Atoms/Button"
+import CheckBox from "~/components/Atoms/CheckBox"
+import RadioSelect from "~/components/Atoms/RadioSelect"
+import RangeSlider from "~/components/Atoms/RangeSlider"
 import type { UserPerfumeI } from "~/types"
 
 interface DeStashFormProps {

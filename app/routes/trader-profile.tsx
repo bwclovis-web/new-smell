@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next"
 import { type LoaderFunctionArgs, useLoaderData } from "react-router"
 
-import ItemsToTrade from "~/components/Containers/TraderProfile/ItemsToTrade/ItemsToTrade"
-import TitleBanner from "~/components/Organisms/TitleBanner/TitleBanner"
+import ItemsToTrade from "~/components/Containers/TraderProfile/ItemsToTrade"
+import TitleBanner from "~/components/Organisms/TitleBanner"
 import { getTraderById } from "~/models/user.server"
 import { getTraderDisplayName } from "~/utils/user"
 

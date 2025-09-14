@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next"
 import { MdDeleteForever } from "react-icons/md"
 import { useFetcher } from "react-router"
 
-import { Button } from "~/components/Atoms/Button/Button"
-import CheckBox from "~/components/Atoms/CheckBox/CheckBox"
-import Modal from "~/components/Organisms/Modal/Modal"
+import { Button } from "~/components/Atoms/Button"
+import CheckBox from "~/components/Atoms/CheckBox"
+import Modal from "~/components/Organisms/Modal"
 import { useSessionStore } from '~/stores/sessionStore'
 import type { UserPerfumeI } from "~/types"
 import type { Comment } from "~/types/comments"

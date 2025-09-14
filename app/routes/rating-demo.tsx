@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-import NoirRating from '~/components/Organisms/NoirRating/NoirRating'
-import PerfumeRatingSystem from '~/components/Containers/Perfume/PerfumeRatingSystem/PerfumeRatingSystem'
+import NoirRating from '~/components/Organisms/NoirRating'
+import PerfumeRatingSystem from '~/components/Containers/Perfume/PerfumeRatingSystem'
 
 function NoirRatingShowcase() {
   const [selectedCategory, setSelectedCategory] = useState<

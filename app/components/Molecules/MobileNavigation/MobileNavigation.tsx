@@ -5,7 +5,7 @@ import { FaBars, FaUser } from 'react-icons/fa6'
 import { LuSearch } from 'react-icons/lu'
 import { NavLink } from 'react-router'
 
-import Modal from '~/components/Organisms/Modal/Modal'
+import Modal from '~/components/Organisms/Modal'
 import { mainNavigation } from '~/data/navigation'
 import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/profilePage'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'

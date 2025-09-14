@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { type MetaFunction, NavLink, useLoaderData } from 'react-router'
 
-import LinkCard from '~/components/Organisms/LinkCard/LinkCard'
-import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
+import LinkCard from '~/components/Organisms/LinkCard'
+import TitleBanner from '~/components/Organisms/TitleBanner'
 import { getPerfumeTypeLabel } from '~/data/SelectTypes'
 import { getAvailablePerfumesForDecanting } from '~/models/perfume.server'
 import { getUserDisplayName } from '~/utils/user'

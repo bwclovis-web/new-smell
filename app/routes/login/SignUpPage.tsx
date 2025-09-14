@@ -3,8 +3,8 @@ import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useRef, useState } from 'react'
 import { Form, useActionData } from 'react-router'
 
-import Input from '~/components/Atoms/Input/Input'
-import PasswordStrengthIndicator from '~/components/Atoms/PasswordStrengthIndicator/PasswordStrengthIndicator'
+import Input from '~/components/Atoms/Input'
+import PasswordStrengthIndicator from '~/components/Atoms/PasswordStrengthIndicator'
 import { login } from '~/models/session.server'
 import { createUser, getUserByName } from '~/models/user.server'
 import { UserFormSchema } from '~/utils/formValidationSchemas'
@@ -14,7 +14,7 @@ export const ROUTE_PATH = '/sign-up'
 import { useTranslation } from 'react-i18next'
 import type { ActionFunctionArgs } from 'react-router-dom'
 
-import { Button } from '~/components/Atoms/Button/Button'
+import { Button } from '~/components/Atoms/Button'
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const formData = await request.formData()

@@ -4,8 +4,8 @@ import { type ChangeEvent, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MetaFunction } from 'react-router'
 
-import Select from '~/components/Atoms/Select/Select'
-import SearchBar from '~/components/Organisms/SearchBar/SearchBar'
+import Select from '~/components/Atoms/Select'
+import SearchBar from '~/components/Organisms/SearchBar'
 import { getAllFeatures } from '~/models/feature.server'
 
 import banner from '../images/scent.webp'

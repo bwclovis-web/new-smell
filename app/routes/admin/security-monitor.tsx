@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLoaderData } from 'react-router'
 
-import { Button } from '~/components/Atoms/Button/Button'
-import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
+import Button from '~/components/Atoms/Button'
+import TitleBanner from '~/components/Organisms/TitleBanner'
 import banner from '~/images/security.webp'
 import { sharedLoader } from '~/utils/sharedLoader'
 

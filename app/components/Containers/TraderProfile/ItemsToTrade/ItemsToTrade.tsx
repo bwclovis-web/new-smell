@@ -1,4 +1,4 @@
-import VooDooDetails from "~/components/Atoms/VooDooDetails/VooDooDetails"
+import VooDooDetails from "~/components/Atoms/VooDooDetails"
 import type { UserPerfumeI } from "~/types"
 
 import TradersComments from "./TradersComments"

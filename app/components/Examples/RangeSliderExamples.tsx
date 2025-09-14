@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import RangeSlider from "~/components/Atoms/RangeSlider/RangeSlider"
+import RangeSlider from "~/components/Atoms/RangeSlider"
 import { useRangeSlider } from "~/hooks/useRangeSlider"
 
 // Example of how to create a simple price filter component using the reusable hook
