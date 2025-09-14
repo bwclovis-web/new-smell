@@ -1,4 +1,4 @@
-import React, { type ErrorInfo, type ReactNode, useState, useCallback } from 'react'
+import React, { type ErrorInfo, type ReactNode, useCallback, useState } from 'react'
 
 import { type AppError } from '~/utils/errorHandling'
 
