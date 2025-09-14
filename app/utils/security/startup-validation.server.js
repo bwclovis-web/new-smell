@@ -67,9 +67,13 @@ function validateSecurityRequirements(env) {
     throw new Error('SESSION_SECRET appears to be a default/weak value. Please use a strong, unique secret.')
   }
   
-  // Validate database URL format
-  if (!env.DATABASE_URL.startsWith('postgresql://')) {
-    throw new Error('DATABASE_URL must be a PostgreSQL connection string')
+  // Validate database URL format - support PostgreSQL, Prisma Accelerate, and Prisma Accelerate with prisma+postgres format
+  const isPostgreSQL = env.DATABASE_URL.startsWith('postgresql://')
+  const isPrismaAccelerate = env.DATABASE_URL.startsWith('prisma://')
+  const isPrismaAccelerateWithPrefix = env.DATABASE_URL.startsWith('prisma+postgres://')
+  
+  if (!isPostgreSQL && !isPrismaAccelerate && !isPrismaAccelerateWithPrefix) {
+    throw new Error('DATABASE_URL must be either a PostgreSQL connection string (postgresql://), a Prisma Accelerate URL (prisma://), or a Prisma Accelerate URL with prisma+postgres prefix')
   }
   
   // Check for localhost in production
@@ -82,7 +86,7 @@ function validateSecurityRequirements(env) {
  * Generate a secure secret for development
  */
 export function generateSecureSecret(length = 64) {
-  const crypto = require('crypto')
+  const crypto = require('node:crypto')
   return crypto.randomBytes(length).toString('hex')
 }
 

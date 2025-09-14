@@ -34,9 +34,9 @@ const TraderProfilePage = () => {
       <div className="flex flex-col md:flex-row justify-between inner-container items-start gap-8 p-6">
         <div className="noir-border relative w-1/2 p-4">
           <h2 >Items Available</h2>
-          {trader.UserPerfume.length > 0 ? (
+          {trader.userPerfume.length > 0 ? (
             <ul className="mt-6">
-              {trader.UserPerfume.map((userPerfume: any) => (
+              {trader.userPerfume.map((userPerfume: any) => (
                 <ItemsToTrade
                   key={userPerfume.id}
                   userPerfume={userPerfume}

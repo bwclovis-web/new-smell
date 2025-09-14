@@ -27,6 +27,8 @@ const TradingPostPage = () => {
   const { t } = useTranslation()
   const { availablePerfumes } = useLoaderData<typeof loader>()
 
+  console.log(availablePerfumes)
+
   return (
     <section>
       <TitleBanner image={banner} heading={t('tradingPost.heading')} subheading={t('tradingPost.subheading')}>
@@ -47,7 +49,7 @@ const TradingPostPage = () => {
                     {t('tradingPost.availableFrom')}:
                   </p>
                   <ul>
-                    {perfume.userPerfume.map(userPerfume => (
+                    {/* {perfume.userPerfume.map(userPerfume => (
                       <li key={userPerfume.id} className="mb-1">
                         <NavLink to={`/trader/${userPerfume.userId}`} key={userPerfume.id} className="text-sm font-semibold text-blue-300 hover:text-noir-blue underline">
                           {getUserDisplayName(userPerfume.user)}:
@@ -59,7 +61,7 @@ const TradingPostPage = () => {
                           {userPerfume.available} ml
                         </span>
                       </li>
-                    ))}
+                    ))} */}
                   </ul>
                 </div>
               </LinkCard>

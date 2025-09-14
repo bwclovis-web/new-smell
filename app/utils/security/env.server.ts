@@ -4,7 +4,24 @@ import { z } from "zod"
 const coreSecuritySchema = z.object({
   JWT_SECRET: z.string().min(32, "JWT_SECRET must be at least 32 characters long"),
   SESSION_SECRET: z.string().min(32, "SESSION_SECRET must be at least 32 characters long"),
-  DATABASE_URL: z.string().url("DATABASE_URL must be a valid URL"),
+  DATABASE_URL: z.string().refine(
+    (url) => {
+      // Check if it's a valid URL format or a Prisma Accelerate URL with prisma+postgres prefix
+      if (url.startsWith('prisma+postgres://')) {
+        return true // Skip URL validation for this special format
+      }
+      try {
+        new URL(url)
+        return true
+      } catch {
+        return false
+      }
+    },
+    "DATABASE_URL must be a valid URL"
+  ).refine(
+    (url) => url.startsWith('postgresql://') || url.startsWith('prisma://') || url.startsWith('prisma+postgres://'),
+    "DATABASE_URL must be either a PostgreSQL connection string (postgresql://), a Prisma Accelerate URL (prisma://), or a Prisma Accelerate URL with prisma+postgres prefix"
+  ),
   NODE_ENV: z.enum(["development", "production", "test"]),
 })
 
@@ -13,7 +30,24 @@ const extendedSchema = z.object({
   // Core security variables
   JWT_SECRET: z.string().min(32, "JWT_SECRET must be at least 32 characters long"),
   SESSION_SECRET: z.string().min(32, "SESSION_SECRET must be at least 32 characters long"),
-  DATABASE_URL: z.string().url("DATABASE_URL must be a valid URL"),
+  DATABASE_URL: z.string().refine(
+    (url) => {
+      // Check if it's a valid URL format or a Prisma Accelerate URL with prisma+postgres prefix
+      if (url.startsWith('prisma+postgres://')) {
+        return true // Skip URL validation for this special format
+      }
+      try {
+        new URL(url)
+        return true
+      } catch {
+        return false
+      }
+    },
+    "DATABASE_URL must be a valid URL"
+  ).refine(
+    (url) => url.startsWith('postgresql://') || url.startsWith('prisma://') || url.startsWith('prisma+postgres://'),
+    "DATABASE_URL must be either a PostgreSQL connection string (postgresql://), a Prisma Accelerate URL (prisma://), or a Prisma Accelerate URL with prisma+postgres prefix"
+  ),
   NODE_ENV: z.enum(["development", "production", "test"]),
 
   // Server configuration

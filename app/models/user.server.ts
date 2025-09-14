@@ -63,7 +63,7 @@ export const getTraderById = async (id: string) => {
       firstName: true,
       lastName: true,
       username: true,
-      UserPerfume: {
+      userPerfume: {
         where: {
           available: {
             not: '0'
