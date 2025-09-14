@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react'
-import { useFetcher } from 'react-router-dom'
-
 import SimpleNoirRating from '~/components/Organisms/SimpleNoirRating'
+import { useRatingSystem } from '~/hooks'
 
 interface PerfumeRatingSystemProps {
   perfumeId: string
@@ -31,57 +29,18 @@ const PerfumeRatingSystem = ({
   averageRatings = null,
   readonly = false
 }: PerfumeRatingSystemProps) => {
-  const fetcher = useFetcher()
-  const [currentRatings, setCurrentRatings] = useState(userRatings)
-  const isLoggedIn = Boolean(userId) && userId !== 'anonymous'
-  const isInteractive = isLoggedIn && !readonly
-
-  useEffect(() => {
-    setCurrentRatings(userRatings)
-  }, [userRatings])
-
-  const handleRatingChange = (
-    category: 'longevity' | 'sillage' | 'gender' | 'priceValue' | 'overall',
-    rating: number
-  ) => {
-    if (!isInteractive) {
-      return
-    }
-    console.log('handleRatingChange called:', { category, rating })
-    // Optimistic update
-    setCurrentRatings(prev => ({
-      ...prev,
-      [category]: rating
-    }))
-
-    // Submit to server
-    const formData = new FormData()
-    formData.append('userId', userId!)
-    formData.append('perfumeId', perfumeId)
-    formData.append('category', category)
-    formData.append('rating', rating.toString())
-    console.log('Submitting rating to server:', { userId, perfumeId, category, rating })
-    fetcher.submit(formData, {
-      method: 'POST',
-      action: '/api/ratings'
-    })
-  }
-
-  // Handle fetcher errors by reverting optimistic updates
-  useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data?.error) {
-      // Revert to original ratings on error
-      setCurrentRatings(userRatings)
-    }
-  }, [fetcher.state, fetcher.data, userRatings])
-
-  const categories = [
-    { key: 'longevity' as const, label: 'Longevity' },
-    { key: 'sillage' as const, label: 'Sillage' },
-    { key: 'gender' as const, label: 'Gender Appeal' },
-    { key: 'priceValue' as const, label: 'Price Value' },
-    { key: 'overall' as const, label: 'Overall Rating' }
-  ]
+  const {
+    currentRatings,
+    isLoggedIn,
+    isInteractive,
+    handleRatingChange,
+    categories
+  } = useRatingSystem({
+    perfumeId,
+    userId,
+    initialRatings: userRatings,
+    readonly
+  })
 
   return (
     <div className="bg-noir-dark/20 rounded-lg p-6">
@@ -130,23 +89,7 @@ const PerfumeRatingSystem = ({
         ))}
       </div>
 
-      {fetcher.state === 'submitting' && (
-        <div className="mt-4 text-center">
-          <p className="text-sm text-noir-gold-300">Saving your rating...</p>
-        </div>
-      )}
-
-      {fetcher.state === 'idle' && fetcher.data?.error && (
-        <div className="mt-4 text-center">
-          <p className="text-sm text-red-400">Failed to save rating. Please try again.</p>
-        </div>
-      )}
-
-      {fetcher.state === 'idle' && fetcher.data?.success && (
-        <div className="mt-4 text-center">
-          <p className="text-sm text-green-400">Rating saved successfully!</p>
-        </div>
-      )}
+      {/* Loading and error states are now handled by the useRatingSystem hook */}
     </div>
   )
 }

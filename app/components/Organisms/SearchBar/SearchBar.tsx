@@ -20,23 +20,47 @@ const SearchBar: FC<SearchBarProps> =
     const [searchValue, setSearchValue] = useState('')
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 })
 
+    const handleSearch = async (query: string) => {
+      if (query.length < 2) {
+        setResults([])
+        return
+      }
+
+      try {
+        const url = searchType === 'perfume-house' ? '/api/perfume-houses' : '/api/perfume'
+        const res = await fetch(`${url}?name=${encodeURIComponent(query)}`)
+        const data = await res.json()
+        setResults(data)
+
+        // Calculate dropdown position
+        if (data.length > 0) {
+          const input = document.getElementById('search') as HTMLInputElement
+          if (input) {
+            const rect = input.getBoundingClientRect()
+            setDropdownPosition({
+              top: rect.bottom + window.scrollY,
+              left: rect.left + window.scrollX,
+              width: rect.width
+            })
+          }
+        } else {
+          console.log('No search results for query:', query)
+        }
+      } catch (error) {
+        console.error('Search error:', error)
+        setResults([])
+      }
+    }
+
     const handleKeyUp = async (evt: KeyboardEvent<HTMLInputElement>) => {
       const query = (evt.target as HTMLInputElement).value
-      const url = searchType === 'perfume-house' ? '/api/perfume-houses' : '/api/perfume'
-      const res = await fetch(`${url}?name=${encodeURIComponent(query)}`)
-      const data = await res.json()
-      setResults(data)
+      await handleSearch(query)
+    }
 
-      // Calculate dropdown position
-      if (data.length > 0) {
-        const input = evt.target as HTMLInputElement
-        const rect = input.getBoundingClientRect()
-        setDropdownPosition({
-          top: rect.bottom + window.scrollY,
-          left: rect.left + window.scrollX,
-          width: rect.width
-        })
-      }
+    const handleChange = async (evt: React.ChangeEvent<HTMLInputElement>) => {
+      const query = evt.target.value
+      setSearchValue(query)
+      await handleSearch(query)
     }
 
     const handleAction = (item: any) => {
@@ -50,15 +74,21 @@ const SearchBar: FC<SearchBarProps> =
       }
     }
 
-    const RenderLink = ({ item }: { item: any }) => (
-      <NavLink viewTransition to={`/${searchType}/${item.name}`} className="block w-full h-full">
-        {({ isTransitioning }) => (
-          <span className={`contain-layout ${isTransitioning ? 'image-title' : 'none'}`}>
-            {item.name}
-          </span>
-        )}
-      </NavLink>
-    )
+    const RenderLink = ({ item }: { item: any }) => {
+      const routePath = searchType === 'perfume-house'
+        ? `/perfume-house/${item.name}`
+        : `/perfume/${item.name}`
+
+      return (
+        <NavLink viewTransition to={routePath} className="block w-full h-full">
+          {({ isTransitioning }) => (
+            <span className={`contain-layout ${isTransitioning ? 'image-title' : 'none'}`}>
+              {item.name}
+            </span>
+          )}
+        </NavLink>
+      )
+    }
 
     return (
       <div className="relative w-full">
@@ -68,12 +98,10 @@ const SearchBar: FC<SearchBarProps> =
             type="text"
             id="search"
             autoComplete="off"
-            onChange={evt => setSearchValue(evt.target.value)}
+            onChange={handleChange}
             value={searchValue}
             placeholder={placeholder || `Search ${searchType}`}
-            onKeyUp={evt => {
-              handleKeyUp(evt)
-            }}
+            onKeyUp={handleKeyUp}
             className={styleMerge(searchbarVariants({ className, variant }))}
           />
         </form>

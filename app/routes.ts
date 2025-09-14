@@ -4,13 +4,13 @@ export default [
   layout('routes/RootLayout.tsx', [
     index('routes/home.tsx'),
     route('behind-the-bottle', 'routes/behind-the-bottle.tsx'),
-    route('perfume-house/:houseId', 'routes/perfume-house.tsx'),
+    route('perfume-house/:houseName', 'routes/perfume-house.tsx'),
 
     route('the-vault', 'routes/the-vault.tsx'),
     route('rating-demo', 'routes/rating-demo.tsx'),
     route('trader/:id', 'routes/trader-profile.tsx'),
     route('the-exchange', 'routes/the-exchange.tsx'),
-    route('perfume/:id', 'routes/perfume.tsx'),
+    route('perfume/:perfumeName', 'routes/perfume.tsx'),
     // API ROUTES
     route('api/available-perfumes', 'routes/api/available-perfumes.ts'),
     route('api/perfume-houses', 'routes/api/houseLoader.ts'),

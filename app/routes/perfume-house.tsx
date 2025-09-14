@@ -23,11 +23,11 @@ const BEHIND_THE_BOTTLE = '/behind-the-bottle'
 
 // Simple loader - get house with only first 9 perfumes
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  if (!params.houseId) {
-    throw new Error('House ID is required')
+  if (!params.houseName) {
+    throw new Error('House name is required')
   }
   const perfumeHouse =
-    await getPerfumeHouseByName(params.houseId, { skip: 0, take: 9 })
+    await getPerfumeHouseByName(params.houseName, { skip: 0, take: 9 })
   if (!perfumeHouse) {
     throw new Response('House not found', { status: 404 })
   }

@@ -17,10 +17,10 @@ import { ROUTE_PATH as ALL_PERFUMES } from './the-vault'
 export const ROUTE_PATH = '/perfume'
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  if (!params.id) {
-    throw new Error('Note ID is required')
+  if (!params.perfumeName) {
+    throw new Error('Perfume name is required')
   }
-  const perfume = await getPerfumeByName(params.id)
+  const perfume = await getPerfumeByName(params.perfumeName)
   if (!perfume) {
     throw new Response('House not found', { status: 404 })
   }

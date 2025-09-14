@@ -34,7 +34,7 @@ const DataDisplaySection = ({
   const itemName = type === 'house' ? 'houses' : 'perfumes'
   // const itemNameSingular = type === 'house' ? 'house' : 'perfume'
 
-  if (!selectedLetter) {
+  if (!selectedLetter && data.length === 0) {
     return (
       <div className="inner-container my-6 text-center py-12">
         <h2 className="text-xl text-noir-gold mb-4">{t('components.dataDisplaySection.heading', { itemName })}</h2>

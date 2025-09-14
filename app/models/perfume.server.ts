@@ -1,6 +1,22 @@
 import { Prisma } from '@prisma/client'
 
 import { prisma } from '~/db.server'
+
+const buildPerfumeOrderBy = (sortBy?: string): Prisma.PerfumeOrderByWithRelationInput => {
+  if (sortBy) {
+    switch (sortBy) {
+      case 'name-asc':
+        return { name: 'asc' }
+      case 'name-desc':
+        return { name: 'desc' }
+      case 'created-asc':
+        return { createdAt: 'asc' }
+      default:
+        return { createdAt: 'desc' }
+    }
+  }
+  return { createdAt: 'desc' }
+}
 export const getAllPerfumes = async () => {
   const perfumes = await prisma.perfume.findMany({
     include: {
@@ -35,6 +51,19 @@ export const getPerfumeByName = async (name: string) => {
     }
   })
   return house
+}
+
+export const getPerfumeById = async (id: string) => {
+  const perfume = await prisma.perfume.findUnique({
+    where: { id },
+    include: {
+      perfumeHouse: true,
+      perfumeNotesOpen: true,
+      perfumeNotesHeart: true,
+      perfumeNotesClose: true
+    }
+  })
+  return perfume
 }
 
 export const deletePerfume = async (id: string) => {
@@ -160,4 +189,38 @@ export const getAvailablePerfumesForDecanting = async () => {
     }
   })
   return availablePerfumes
+}
+
+export const getPerfumesByLetterPaginated = async (letter: string, options: { skip: number; take: number }) => {
+  const { skip, take } = options
+
+  const [perfumes, totalCount] = await Promise.all([
+    prisma.perfume.findMany({
+      where: {
+        name: {
+          startsWith: letter,
+          mode: 'insensitive'
+        }
+      },
+      include: {
+        perfumeHouse: true
+      },
+      orderBy: { name: 'asc' },
+      skip,
+      take
+    }),
+    prisma.perfume.count({
+      where: {
+        name: {
+          startsWith: letter,
+          mode: 'insensitive'
+        }
+      }
+    })
+  ])
+
+  return {
+    perfumes,
+    count: totalCount
+  }
 }

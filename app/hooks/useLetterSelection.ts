@@ -19,12 +19,16 @@ const useLetterSelection = ({
   const handleLetterClick = useCallback(async (letter: string | null) => {
     if (letter === null) {
       setSelectedLetter(null)
+      // When "All" is clicked, we should load all data or show a message
+      // For now, we'll just clear the data by resetting with empty arrays
+      resetDataRef.current([], 0)
       return
     }
 
     if (selectedLetter === letter) {
       // Deselect the letter
       setSelectedLetter(null)
+      resetDataRef.current([], 0)
       return
     }
 
