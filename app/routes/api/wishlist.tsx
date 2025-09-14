@@ -3,7 +3,8 @@ import type { ActionFunctionArgs } from 'react-router'
 import { addToWishlist, removeFromWishlist } from '~/models/wishlist.server'
 import { authenticateUser } from '~/utils/auth.server'
 import { createErrorResponse, createJsonResponse } from '~/utils/response.server'
-import { validateActionType, validatePerfumeId } from '~/utils/validation.server'
+import { validateFormData } from '~/utils/validation'
+import { WishlistActionSchema } from '~/utils/formValidationSchemas'
 
 const processWishlistAction = async (
   userId: string,
@@ -19,15 +20,15 @@ const processWishlistAction = async (
   throw new Error('Invalid action type')
 }
 
-const validateRequestData = (perfumeId: string, actionType: string) => {
-  const perfumeIdError = validatePerfumeId(perfumeId)
-  if (perfumeIdError) {
-    return perfumeIdError
-  }
+const validateRequestData = (formData: FormData) => {
+  const validation = validateFormData(WishlistActionSchema, formData)
 
-  const actionTypeError = validateActionType(actionType)
-  if (actionTypeError) {
-    return actionTypeError
+  if (!validation.success) {
+    return createErrorResponse(
+      'Validation failed',
+      400,
+      validation.errors
+    )
   }
 
   return null
@@ -54,13 +55,14 @@ const processAuthenticatedRequest = async (
 
 const processRequest = async (request: Request) => {
   const formData = await request.formData()
-  const perfumeId = formData.get('perfumeId') as string
-  const actionType = formData.get('action') as string
 
-  const validationError = validateRequestData(perfumeId, actionType)
+  const validationError = validateRequestData(formData)
   if (validationError) {
     return validationError
   }
+
+  const perfumeId = formData.get('perfumeId') as string
+  const actionType = formData.get('action') as string
 
   return await processAuthenticatedRequest(request, perfumeId, actionType)
 }
