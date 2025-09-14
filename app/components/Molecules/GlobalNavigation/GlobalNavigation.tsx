@@ -1,5 +1,5 @@
 import { type VariantProps } from 'class-variance-authority'
-import { type FC, type HTMLProps, useEffect, useState } from 'react'
+import { type HTMLProps, useEffect, useState } from 'react'
 import { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FaUser } from "react-icons/fa6"
@@ -21,11 +21,10 @@ interface GlobalNavigationProps extends HTMLProps<HTMLDivElement>,
   } | null
 }
 
-const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user }) => {
+const GlobalNavigationContent = ({ className, user }: GlobalNavigationProps) => {
   const { t, ready } = useTranslation()
   const [isClientReady, setIsClientReady] = useState(false)
 
-  // Ensure client-side hydration consistency
   useEffect(() => {
     setIsClientReady(true)
   }, [])
@@ -89,7 +88,7 @@ const GlobalNavigationContent: FC<GlobalNavigationProps> = ({ className, user })
   )
 }
 
-const GlobalNavigation: FC<GlobalNavigationProps> = props => (
+const GlobalNavigation = (props: GlobalNavigationProps) => (
   <Suspense fallback={<div>Loading...</div>}>
     <GlobalNavigationContent {...props} />
   </Suspense>

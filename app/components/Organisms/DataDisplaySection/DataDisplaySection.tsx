@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import type { RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import LinkCard from '../LinkCard/LinkCard'
@@ -9,11 +9,11 @@ interface DataDisplaySectionProps {
   infiniteLoading: boolean
   hasMore: boolean
   totalCount: number
-  observerRef: React.RefObject<HTMLDivElement>
+  observerRef: RefObject<HTMLDivElement>
   onLoadMore: () => void
   type: 'house' | 'perfume'
   selectedLetter: string | null
-  scrollContainerRef: React.RefObject<HTMLDivElement>
+  scrollContainerRef: RefObject<HTMLDivElement>
   sourcePage?: string
 }
 
@@ -58,13 +58,17 @@ const DataDisplaySection = ({
         ) : (
           data.map((item: any) => (
             <li key={item.id} className='h-full'>
-              <LinkCard data={item} type={type} selectedLetter={selectedLetter} sourcePage={sourcePage} />
+              <LinkCard
+                data={item}
+                type={type}
+                selectedLetter={selectedLetter}
+                sourcePage={sourcePage}
+              />
             </li>
           ))
         )}
       </ul>
 
-      {/* Infinite Scroll Observer */}
       <div
         ref={observerRef}
         aria-live="polite"

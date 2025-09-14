@@ -1,6 +1,6 @@
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
-import { type FC, type ReactNode, useRef } from "react"
+import { type ReactNode, useRef } from "react"
 interface TitleBannerProps {
   image: string
   heading: string
@@ -10,8 +10,8 @@ interface TitleBannerProps {
   flipImage?: boolean
 }
 gsap.registerPlugin(useGSAP)
-const TitleBanner: FC<TitleBannerProps> =
-  ({ image, heading, subheading, children, imagePos = "object-center", flipImage }) => {
+const TitleBanner =
+  ({ image, heading, subheading, children, imagePos = "object-center", flipImage }: TitleBannerProps) => {
     const container = useRef<HTMLDivElement>(null)
     useGSAP(
       () => {

@@ -1,5 +1,3 @@
-import React from 'react'
-
 const BottleAccents = ({ category }: { category: string }) => (
   <>
     {/* Elegant bottle label */}

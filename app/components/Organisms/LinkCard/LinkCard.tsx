@@ -7,7 +7,9 @@ const LinkCard = ({ data, type, children, selectedLetter, sourcePage }:
   const url = type === 'house' ? PERFUME_HOUSE : PERFUME_PATH
 
   // Ensure we have a selectedLetter to pass
-  const stateToPass = selectedLetter ? { selectedLetter, sourcePage } : { sourcePage }
+  const stateToPass = selectedLetter ? {
+    selectedLetter, sourcePage
+  } : { sourcePage }
 
   return (
     <div className='relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out'>

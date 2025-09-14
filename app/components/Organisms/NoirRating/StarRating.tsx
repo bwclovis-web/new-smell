@@ -1,5 +1,3 @@
-import React from 'react'
-
 import NoirButton from './NoirButton'
 
 type StarRatingProps = {

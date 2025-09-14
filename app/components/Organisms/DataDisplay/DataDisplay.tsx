@@ -1,5 +1,3 @@
-import type { FC } from 'react'
-
 import LinkCard from '~/components/Organisms/LinkCard'
 import { groupByFirstLetter, type SortableItem } from '~/utils/sortUtils'
 
@@ -10,14 +8,13 @@ interface DataDisplayProps {
   className?: string
 }
 
-const DataDisplay: FC<DataDisplayProps> = ({
+const DataDisplay = ({
   items,
   type,
   selectedLetter,
   className = ''
-}) => {
+}: DataDisplayProps) => {
   if (selectedLetter) {
-    // Show items for specific letter
     const letterItems =
       items.filter(item => item.name.charAt(0).toUpperCase() === selectedLetter)
 
@@ -42,7 +39,6 @@ const DataDisplay: FC<DataDisplayProps> = ({
     )
   }
 
-  // Show all items grouped by letter
   const groupedItems = groupByFirstLetter(items)
   const letters = Object.keys(groupedItems).sort()
 

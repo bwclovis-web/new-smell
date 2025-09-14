@@ -1,9 +1,4 @@
-/**
- * Validated input component with comprehensive validation support
- * Integrates with the validation system and provides real-time feedback
- */
-
-import React, { forwardRef, useCallback, useEffect, useState } from 'react'
+import { type ChangeEvent, forwardRef, useState } from 'react'
 import { z } from 'zod'
 
 import { useFieldValidation } from '~/hooks/useValidation'
@@ -71,7 +66,6 @@ const ValidatedInput = forwardRef<HTMLInputElement, ValidatedInputProps>((
 ) => {
   const [touched, setTouched] = useState(false)
 
-  // Use field validation hook if schema is provided
   const fieldValidation = useFieldValidation(
     validationSchema || z.any(),
     name as any,
@@ -82,19 +76,16 @@ const ValidatedInput = forwardRef<HTMLInputElement, ValidatedInputProps>((
     }
   )
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(e.target.value)
-    },
-    [onChange]
-  )
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value)
+  }
 
-  const handleBlur = useCallback(() => {
+  const handleBlur = () => {
     setTouched(true)
     if (onBlur) {
       onBlur()
     }
-  }, [onBlur])
+  }
 
   // Determine validation state
   const hasError = touched && fieldValidation.error

@@ -1,5 +1,5 @@
 import { type VariantProps } from 'class-variance-authority'
-import { type FC, type HTMLProps, type KeyboardEvent, useState } from 'react'
+import { type ChangeEvent, type HTMLProps, type KeyboardEvent, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { NavLink } from 'react-router'
 
@@ -14,8 +14,8 @@ interface SearchBarProps extends HTMLProps<HTMLDivElement>,
   action?: (item: any) => void
 }
 
-const SearchBar: FC<SearchBarProps> =
-  ({ className, searchType, action, placeholder, variant }) => {
+const SearchBar =
+  ({ className, searchType, action, placeholder, variant }: SearchBarProps) => {
     const [results, setResults] = useState<any[]>([])
     const [searchValue, setSearchValue] = useState('')
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 })
@@ -32,7 +32,6 @@ const SearchBar: FC<SearchBarProps> =
         const data = await res.json()
         setResults(data)
 
-        // Calculate dropdown position
         if (data.length > 0) {
           const input = document.getElementById('search') as HTMLInputElement
           if (input) {
@@ -57,7 +56,7 @@ const SearchBar: FC<SearchBarProps> =
       await handleSearch(query)
     }
 
-    const handleChange = async (evt: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = async (evt: ChangeEvent<HTMLInputElement>) => {
       const query = evt.target.value
       setSearchValue(query)
       await handleSearch(query)
@@ -69,12 +68,12 @@ const SearchBar: FC<SearchBarProps> =
         setResults([])
         setSearchValue('')
       } else {
-        // eslint-disable-next-line no-console
         console.warn('No action provided for SearchBar')
       }
     }
 
     const RenderLink = ({ item }: { item: any }) => {
+
       const routePath = searchType === 'perfume-house'
         ? `/perfume-house/${item.name}`
         : `/perfume/${item.name}`

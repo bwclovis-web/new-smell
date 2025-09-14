@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { Form } from 'react-router-dom'
 
 import { Button } from '~/components/Atoms/Button'
@@ -10,7 +10,7 @@ interface ChangePasswordFormProps {
   className?: string
 }
 
-export default function ChangePasswordForm({ actionData, isSubmitting = false, className = '' }: ChangePasswordFormProps) {
+export const ChangePasswordForm = ({ actionData, isSubmitting = false, className = '' }: ChangePasswordFormProps) => {
   const [formData, setFormData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -22,12 +22,11 @@ export default function ChangePasswordForm({ actionData, isSubmitting = false, c
     confirm: false
   })
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  // Remove the handleSubmit function since we're using React Router's Form
 
   const togglePasswordVisibility = (field: 'current' | 'new' | 'confirm') => {
     setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }))
@@ -43,7 +42,6 @@ export default function ChangePasswordForm({ actionData, isSubmitting = false, c
         <p className="text-gray-600">Update your password to keep your account secure.</p>
       </div>
 
-      {/* Current Password */}
       <div>
         <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-2">
           Current Password
@@ -69,7 +67,6 @@ export default function ChangePasswordForm({ actionData, isSubmitting = false, c
         </div>
       </div>
 
-      {/* New Password */}
       <div>
         <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-2">
           New Password
@@ -94,7 +91,6 @@ export default function ChangePasswordForm({ actionData, isSubmitting = false, c
           </button>
         </div>
 
-        {/* Password Strength Indicator */}
         {formData.newPassword && (
           <div className="mt-2">
             <PasswordStrengthIndicator password={formData.newPassword} />
@@ -102,7 +98,6 @@ export default function ChangePasswordForm({ actionData, isSubmitting = false, c
         )}
       </div>
 
-      {/* Confirm New Password */}
       <div>
         <label htmlFor="confirmNewPassword" className="block text-sm font-medium text-gray-700 mb-2">
           Confirm New Password
@@ -130,7 +125,6 @@ export default function ChangePasswordForm({ actionData, isSubmitting = false, c
           </button>
         </div>
 
-        {/* Password Match Indicator */}
         {formData.confirmNewPassword && (
           <div className="mt-1 text-sm">
             {passwordsMatch ? (
@@ -148,7 +142,6 @@ export default function ChangePasswordForm({ actionData, isSubmitting = false, c
         )}
       </div>
 
-      {/* Error Messages */}
       {actionData?.error && (
         <div className="bg-red-50 border border-red-200 rounded-md p-4">
           <div className="flex">
@@ -165,7 +158,6 @@ export default function ChangePasswordForm({ actionData, isSubmitting = false, c
         </div>
       )}
 
-      {/* Success Messages */}
       {actionData?.success && (
         <div className="bg-green-50 border border-green-200 rounded-md p-4">
           <div className="flex">
@@ -182,7 +174,6 @@ export default function ChangePasswordForm({ actionData, isSubmitting = false, c
         </div>
       )}
 
-      {/* Password Requirements */}
       <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
         <h4 className="text-sm font-medium text-blue-800 mb-2">Password Requirements:</h4>
         <ul className="text-sm text-blue-700 space-y-1">
@@ -195,7 +186,6 @@ export default function ChangePasswordForm({ actionData, isSubmitting = false, c
         </ul>
       </div>
 
-      {/* Submit Button */}
       <div className="flex justify-end space-x-3">
         <button
           type="button"

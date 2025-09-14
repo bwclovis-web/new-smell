@@ -13,10 +13,10 @@ import {
 
 import type { Route } from './+types/root'
 import ImagePreloader from './components/Atoms/ImagePreloader'
-import ServiceWorkerRegistration from './components/Atoms/ServiceWorkerRegistration'
 import FourOFourPage from './components/Containers/404Page/404Page'
 import ErrorBoundaryComponent from './components/Containers/ErrorBoundary'
 import PerformanceMonitor from './components/Containers/PerformanceMonitor'
+import ServiceWorkerRegistration from './components/Containers/ServiceWorkerRegistration'
 import { CSRFTokenProvider } from './components/Molecules/CSRFToken'
 import { NonceProvider, useNonce } from './hooks/use-nonce'
 import i18n from './modules/i18n/i18n.client'
