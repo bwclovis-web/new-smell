@@ -59,42 +59,128 @@ export const ROUTE_PATH = '/admin/security-monitor' as const
 export const loader = async ({ request }: { request: Request }) => {
   const user = await sharedLoader(request)
 
+  // Check if we're in production (Vercel) where localhost APIs might not be available
+  const isProduction = process.env.NODE_ENV === 'production'
+
+  if (isProduction) {
+    // In production, return mock data or skip API calls
+    return {
+      user,
+      security: {
+        totalEvents: 0,
+        eventsByType: {},
+        eventsBySeverity: {},
+        uniqueIPs: 0,
+        recentEvents: [],
+        activeAlerts: 0,
+        suspiciousIPs: 0
+      },
+      rateLimit: {
+        totalViolations: 0,
+        uniqueIPs: 0,
+        violationsByPath: {},
+        recentViolations: []
+      },
+      audit: {
+        totalLogs: 0,
+        logsByLevel: {},
+        logsByCategory: {},
+        logsByOutcome: {},
+        recentLogs: [],
+        uniqueUsers: 0,
+        uniqueIPs: 0
+      },
+      error: 'Security monitoring APIs not available in production'
+    }
+  }
+
   try {
     // Fetch security statistics
     const securityResponse = await fetch('http://localhost:2112/admin/security-stats')
-    const securityStats: SecurityStats = await securityResponse.json()
+    const securityData = await securityResponse.json()
 
     // Fetch rate limit statistics
     const rateLimitResponse = await fetch('http://localhost:2112/admin/rate-limit-stats')
-    const rateLimitStats: RateLimitStats = await rateLimitResponse.json()
+    const rateLimitData = await rateLimitResponse.json()
 
     // Fetch audit statistics
     const auditResponse = await fetch('http://localhost:2112/admin/audit-stats')
-    const auditStats: AuditStats = await auditResponse.json()
+    const auditData = await auditResponse.json()
+
+    // Ensure data is properly serialized and structured
+    const security = securityData?.stats || securityData || {
+      totalEvents: 0,
+      eventsByType: {},
+      eventsBySeverity: {},
+      uniqueIPs: 0,
+      recentEvents: [],
+      activeAlerts: 0,
+      suspiciousIPs: 0
+    }
+
+    const rateLimit = rateLimitData?.stats || rateLimitData || {
+      totalViolations: 0,
+      uniqueIPs: 0,
+      violationsByPath: {},
+      recentViolations: []
+    }
+
+    const audit = auditData?.stats || auditData || {
+      totalLogs: 0,
+      logsByLevel: {},
+      logsByCategory: {},
+      logsByOutcome: {},
+      recentLogs: [],
+      uniqueUsers: 0,
+      uniqueIPs: 0
+    }
 
     return {
       user,
-      security: securityStats.stats,
-      rateLimit: rateLimitStats.stats,
-      audit: auditStats.stats
+      security,
+      rateLimit,
+      audit
     }
   } catch (error) {
     console.error('Failed to fetch security monitoring data:', error)
     return {
       user,
-      security: null,
-      rateLimit: null,
-      audit: null,
+      security: {
+        totalEvents: 0,
+        eventsByType: {},
+        eventsBySeverity: {},
+        uniqueIPs: 0,
+        recentEvents: [],
+        activeAlerts: 0,
+        suspiciousIPs: 0
+      },
+      rateLimit: {
+        totalViolations: 0,
+        uniqueIPs: 0,
+        violationsByPath: {},
+        recentViolations: []
+      },
+      audit: {
+        totalLogs: 0,
+        logsByLevel: {},
+        logsByCategory: {},
+        logsByOutcome: {},
+        recentLogs: [],
+        uniqueUsers: 0,
+        uniqueIPs: 0
+      },
       error: 'Failed to load security monitoring data'
     }
   }
 }
 
 const SecurityMonitor = () => {
-  const { security, rateLimit, audit, error } = useLoaderData<typeof loader>()
+  const loaderData = useLoaderData<typeof loader>()
+  const { security, rateLimit, audit, error } = loaderData || {}
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [lastRefresh, setLastRefresh] = useState(new Date())
   const { t } = useTranslation()
+
   // Auto-refresh every 30 seconds
   useEffect(() => {
     const interval = setInterval(() => {
@@ -108,6 +194,20 @@ const SecurityMonitor = () => {
 
     return () => clearInterval(interval)
   }, [])
+
+  // Handle loading state
+  if (!loaderData) {
+    return (
+      <div className="min-h-screen bg-gray-50 p-8">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">Security Monitor</h1>
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <p className="text-yellow-800">Loading security monitoring data...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   if (error) {
     return (
@@ -158,7 +258,7 @@ const SecurityMonitor = () => {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-base font-semibold font-noir-gold-500">Security Events</h3>
-                  <p className="text-3xl font-bold text-noir-gold">{security.totalEvents}</p>
+                  <p className="text-3xl font-bold text-noir-gold">{security?.totalEvents || 0}</p>
                 </div>
               </div>
             </div>
@@ -172,7 +272,7 @@ const SecurityMonitor = () => {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-lg font-semibold text-gray-900">Active Alerts</h3>
-                  <p className="text-3xl font-bold text-orange-600">{security.activeAlerts}</p>
+                  <p className="text-3xl font-bold text-orange-600">{security?.activeAlerts || 0}</p>
                 </div>
               </div>
             </div>
@@ -186,7 +286,7 @@ const SecurityMonitor = () => {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-lg font-semibold text-gray-900">Unique IPs</h3>
-                  <p className="text-3xl font-bold text-blue-600">{security.uniqueIPs}</p>
+                  <p className="text-3xl font-bold text-blue-600">{security?.uniqueIPs || 0}</p>
                 </div>
               </div>
             </div>
@@ -200,7 +300,7 @@ const SecurityMonitor = () => {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-lg font-semibold text-gray-900">Suspicious IPs</h3>
-                  <p className="text-3xl font-bold text-yellow-600">{security.suspiciousIPs}</p>
+                  <p className="text-3xl font-bold text-yellow-600">{security?.suspiciousIPs || 0}</p>
                 </div>
               </div>
             </div>
@@ -213,30 +313,30 @@ const SecurityMonitor = () => {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-gray-900">Rate Limiting Statistics</h2>
               <div className="text-sm text-gray-500">
-                {rateLimit.totalViolations > 0 ? '⚠️ Violations detected' : '✅ No violations'}
+                {(rateLimit?.totalViolations || 0) > 0 ? '⚠️ Violations detected' : '✅ No violations'}
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Total Violations</h3>
-                <p className="text-3xl font-bold text-gray-900">{rateLimit.totalViolations}</p>
+                <p className="text-3xl font-bold text-gray-900">{rateLimit?.totalViolations || 0}</p>
               </div>
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Unique IPs</h3>
-                <p className="text-3xl font-bold text-gray-900">{rateLimit.uniqueIPs}</p>
+                <p className="text-3xl font-bold text-gray-900">{rateLimit?.uniqueIPs || 0}</p>
               </div>
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Recent Violations</h3>
-                <p className="text-3xl font-bold text-gray-900">{rateLimit.recentViolations.length}</p>
+                <p className="text-3xl font-bold text-gray-900">{rateLimit?.recentViolations?.length || 0}</p>
               </div>
             </div>
 
             {/* Violations by Path */}
-            {Object.keys(rateLimit.violationsByPath).length > 0 && (
+            {rateLimit?.violationsByPath && Object.keys(rateLimit.violationsByPath).length > 0 && (
               <div className="mt-6">
                 <h3 className="text-lg font-medium text-gray-900 mb-3">Violations by Path</h3>
                 <div className="space-y-2">
-                  {Object.entries(rateLimit.violationsByPath).map(([path, count]) => (
+                  {Object.entries(rateLimit?.violationsByPath || {}).map(([path, count]: [string, any]) => (
                     <div key={path} className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
                       <span className="text-sm font-medium text-gray-700">{path}</span>
                       <span className="text-sm font-bold text-red-600">{count} violations</span>
@@ -255,26 +355,26 @@ const SecurityMonitor = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Total Logs</h3>
-                <p className="text-3xl font-bold text-gray-900">{audit.totalLogs}</p>
+                <p className="text-3xl font-bold text-gray-900">{audit?.totalLogs || 0}</p>
               </div>
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Unique Users</h3>
-                <p className="text-3xl font-bold text-gray-900">{audit.uniqueUsers}</p>
+                <p className="text-3xl font-bold text-gray-900">{audit?.uniqueUsers || 0}</p>
               </div>
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Unique IPs</h3>
-                <p className="text-3xl font-bold text-gray-900">{audit.uniqueIPs}</p>
+                <p className="text-3xl font-bold text-gray-900">{audit?.uniqueIPs || 0}</p>
               </div>
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Recent Logs</h3>
-                <p className="text-3xl font-bold text-gray-900">{audit.recentLogs.length}</p>
+                <p className="text-3xl font-bold text-gray-900">{audit?.recentLogs?.length || 0}</p>
               </div>
             </div>
           </div>
         )}
 
         {/* Recent Security Events */}
-        {security && security.recentEvents && security.recentEvents.length > 0 && (
+        {security && security?.recentEvents && Array.isArray(security.recentEvents) && security.recentEvents.length > 0 && (
           <div className="bg-noir-light/20 rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Security Events</h2>
             <div className="overflow-x-auto">
@@ -299,28 +399,28 @@ const SecurityMonitor = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {security.recentEvents.slice(0, 10).map(event => (
+                  {security?.recentEvents?.slice(0, 10).map((event: any) => (
                     <tr key={event.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {new Date(event.timestamp).toLocaleString()}
+                        {event.timestamp ? new Date(event.timestamp).toLocaleString() : 'N/A'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">
-                          {event.type}
+                          {event.type || 'Unknown'}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <span className="font-mono">{event.ipAddress}</span>
+                        <span className="font-mono">{event.ipAddress || 'N/A'}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <span className="font-mono text-xs">{event.path}</span>
+                        <span className="font-mono text-xs">{event.path || 'N/A'}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${event.severity === 'high' ? 'bg-red-100 text-red-800' :
                           event.severity === 'medium' ? 'bg-yellow-100 text-yellow-800' :
                             'bg-green-100 text-green-800'
                           }`}>
-                          {event.severity}
+                          {event.severity || 'Unknown'}
                         </span>
                       </td>
                     </tr>
@@ -332,7 +432,7 @@ const SecurityMonitor = () => {
         )}
 
         {/* No Events Message */}
-        {security && (!security.recentEvents || security.recentEvents.length === 0) && (
+        {security && (!security?.recentEvents || !Array.isArray(security.recentEvents) || security.recentEvents.length === 0) && (
           <div className="bg-noir-light/20 rounded-lg shadow p-6 text-center">
             <div className="text-6xl mb-4">🛡️</div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">No Recent Security Events</h2>
