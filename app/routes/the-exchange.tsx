@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { type MetaFunction, NavLink, useLoaderData } from 'react-router'
+import { type MetaFunction, useLoaderData } from 'react-router'
 
 import LinkCard from '~/components/Organisms/LinkCard'
 import TitleBanner from '~/components/Organisms/TitleBanner'
@@ -15,19 +15,14 @@ export const loader = async () => {
   return { availablePerfumes }
 }
 
-export const meta: MetaFunction = () => {
-  const { t } = useTranslation()
-  return [
-    { title: t('tradingPost.meta.title') },
-    { name: 'description', content: t('tradingPost.meta.description') }
-  ]
-}
+export const meta: MetaFunction = () => [
+  { title: 'The Exchange - Trading Post' },
+  { name: 'description', content: 'Browse available perfumes for trading and decanting' }
+]
 
 const TradingPostPage = () => {
   const { t } = useTranslation()
   const { availablePerfumes } = useLoaderData<typeof loader>()
-
-  console.log(availablePerfumes)
 
   return (
     <section>
@@ -48,21 +43,19 @@ const TradingPostPage = () => {
                   <p className="text-base font-medium text-noir-gold mb-1">
                     {t('tradingPost.availableFrom')}:
                   </p>
-                  <ul>
-                    {/* {perfume.userPerfume.map(userPerfume => (
-                      <li key={userPerfume.id} className="mb-1">
-                        <NavLink to={`/trader/${userPerfume.userId}`} key={userPerfume.id} className="text-sm font-semibold text-blue-300 hover:text-noir-blue underline">
-                          {getUserDisplayName(userPerfume.user)}:
-                        </NavLink>
 
-                        <span className="text-sm ml-2 text-noir-gold-100">
-                          {getPerfumeTypeLabel(userPerfume.type) || 'Unknown Type'}
-                          {' '}
-                          {userPerfume.available} ml
-                        </span>
-                      </li>
-                    ))} */}
-                  </ul>
+                  {perfume.userPerfume.map(userPerfume => (
+                    <div key={userPerfume.id} className="mb-1">
+                      <a href={`/trader/${userPerfume.userId}`} className="text-sm font-semibold text-blue-300 hover:text-noir-blue underline">
+                        {getUserDisplayName(userPerfume.user)}:
+                      </a>
+                      <span className="text-sm ml-2 text-noir-gold-100">
+                        {getPerfumeTypeLabel(userPerfume.type) || 'Unknown Type'}
+                        {' '}
+                        {userPerfume.available} ml
+                      </span>
+                    </div>
+                  ))}
                 </div>
               </LinkCard>
             </li>

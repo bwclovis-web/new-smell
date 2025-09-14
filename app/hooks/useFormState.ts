@@ -42,9 +42,7 @@ export const useFormState = <T extends Record<string, any>>({
   const [isDirty, setIsDirty] = useState(false)
 
   // Check if form is valid
-  const isValid = Object.keys(errors).length === 0 && Object.values(values).every(value =>
-    value !== null && value !== undefined && value !== ''
-  )
+  const isValid = Object.keys(errors).length === 0
 
   // Set individual field value
   const setValue = <K extends keyof T>(field: K, value: T[K]) => {
@@ -156,7 +154,7 @@ export const useFormState = <T extends Record<string, any>>({
   useEffect(() => {
     setValuesState(initialValues)
     setIsDirty(false)
-  })
+  }, [initialValues])
 
   return {
     values,

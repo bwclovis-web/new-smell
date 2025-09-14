@@ -1,6 +1,6 @@
 import { type ChangeEvent, useState } from 'react'
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs"
-import { Form } from 'react-router-dom'
+import { Form } from 'react-router'
 
 import { Button } from '~/components/Atoms/Button'
 import PasswordStrengthIndicator from '~/components/Organisms/PasswordStrengthIndicator'

@@ -136,7 +136,6 @@
     "heading": "Security Monitor",
     "subheading": "So you sleep safe at night"
   },
-
   "myScents": {
     "meta": {
       "title": "My Scents - Shadow and Sillage",
@@ -250,7 +249,16 @@
       "description": "Trader Profile of {{traderName}}"
     },
     "heading": "Trader {{traderName}}",
-    "subheading": "Trader Profile of {{traderName}}"
+    "subheading": "Trader Profile of {{traderName}}",
+    "itemsAvailable": "Items Available",
+    "itemsSearchingFor": "Items Searching For",
+    "noItemsAvailable": "No items available for trading.",
+    "noItemsSearchingFor": "No items searching for.",
+    "amount": "Amount Available",
+    "tradePrice": "Trade Price",
+    "preference": "Preference",
+    "tradeOnly": "Trade Only Item",
+    "comments": "Traders Comments"
   },
   "wishlist": {
     "meta": {

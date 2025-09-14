@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next"
+import { GiTrade } from "react-icons/gi"
+
 import VooDooDetails from "~/components/Atoms/VooDooDetails"
 import type { UserPerfumeI } from "~/types"
 
@@ -21,40 +24,48 @@ const PerfumeHeader = ({ userPerfume }: { userPerfume: UserPerfumeI }) => (
   </>
 )
 
-// Price and availability component
-const PriceInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => (
-  <p className="text-md text-noir-gold-100 mt-4">
-    Available: <span className="text-noir-gold-500">{userPerfume.available || '0'}ml</span>
-  </p>
-)
+const PriceInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
+  const { t } = useTranslation()
+  return (
+    <p className="text-md text-noir-gold-100 mt-4">
+      {t("traderProfile.amount")}: <span className="text-noir-gold-500">{userPerfume.available || '0'}ml</span>
+    </p>
+  )
+}
 
 // Helper component for trade information
-const TradeInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => (
-  <div className="text-sm text-noir-gold-300 space-y-1">
-    {userPerfume.tradePrice && (
-      <p className="font-medium text-noir-gold-100">Trade Price:
-        <span className="text-noir-gold-500"> ${userPerfume.tradePrice}/ml</span>
+const TradeInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
+  const { t } = useTranslation()
+  return (
+    <div className="text-sm text-noir-gold-300 space-y-1">
+      {userPerfume.tradePrice && (
+        <p className="font-medium text-noir-gold-100">{t("traderProfile.tradePrice")}:
+          <span className="text-noir-gold-500"> ${userPerfume.tradePrice}/ml</span>
+        </p>
+      )}
+      <p className="text-noir-gold-100">{t("traderProfile.preference")}:
+        <span className="text-noir-gold-500"> {getTradeLabel(userPerfume.tradePreference || 'cash')}</span>
       </p>
-    )}
-    <p className="text-noir-gold-100">Preference:
-      <span className="text-noir-gold-500"> {getTradeLabel(userPerfume.tradePreference || 'cash')}</span>
-    </p>
-    {userPerfume.tradeOnly && (
-      <div className="text-gold-noir font-medium">🔄 Trade Only Item</div>
-    )}
-  </div>
-)
+      {userPerfume.tradeOnly && (
+        <div className="text-gold-noir font-medium flex gap-2 items-center"><GiTrade size={20} className="fill-noir-gold-100" /> <span className="text-noir-gold-500">{t("traderProfile.tradeOnly")}</span></div>
+      )}
+    </div>
+  )
+}
 
 // Comments component
-const CommentsSection = ({ userPerfume }: { userPerfume: UserPerfumeI }) => (
-  <>
-    {(userPerfume?.comments?.length || 0) > 0 && (
-      <VooDooDetails summary="Traders Comments" className="text-noir-gold mt-2">
-        <TradersComments comments={userPerfume.comments} />
-      </VooDooDetails>
-    )}
-  </>
-)
+const CommentsSection = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
+  const { t } = useTranslation()
+  return (
+    <>
+      {(userPerfume?.comments?.length || 0) > 0 && (
+        <VooDooDetails summary={t("traderProfile.comments")} className="text-noir-gold mt-2">
+          <TradersComments comments={userPerfume.comments} />
+        </VooDooDetails>
+      )}
+    </>
+  )
+}
 
 const ItemsToTrade = ({ userPerfume }: { userPerfume: UserPerfumeI }) => (
   <li key={userPerfume.id} className="mb-4 border bg-noir-gold/20 border-noir-gold rounded p-2">

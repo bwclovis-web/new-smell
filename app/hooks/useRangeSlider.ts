@@ -4,6 +4,7 @@ import React, {
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type TouchEvent as ReactTouchEvent,
+  useCallback,
   useEffect,
   useRef,
   useState
@@ -24,7 +25,7 @@ interface UseRangeSliderOptions {
   max?: number
   step?: number
   value?: number
-  onChange?: (value: number) => void
+  onChange?: (newValue: number) => void
   disabled?: boolean
 }
 
@@ -63,12 +64,12 @@ export const useRangeSlider = ({
 
   const percentage = calculatePercentage(internalValue, min, max)
 
-  const updateValue = (newValue: number) => {
+  const updateValue = useCallback((newValue: number) => {
     setInternalValue(newValue)
     onChange?.(newValue)
-  }
+  }, [onChange])
 
-  const calculateValue = (clientX: number) => {
+  const calculateValue = useCallback((clientX: number) => {
     if (!trackRef.current) {
       return internalValue
     }
@@ -79,7 +80,12 @@ export const useRangeSlider = ({
       max,
       step
     })
-  }
+  }, [
+    internalValue,
+    min,
+    max,
+    step
+  ])
 
   // Animation effects
   useGSAP(() => {
@@ -91,7 +97,7 @@ export const useRangeSlider = ({
         isDragging
       )
     }
-  })
+  }, [percentage, isDragging])
 
   // Hover animations
   useGSAP(() => {
@@ -99,7 +105,7 @@ export const useRangeSlider = ({
       return
     }
     return setupHoverListeners(thumbRef.current, disabled, isDragging)
-  })
+  }, [disabled, isDragging])
 
   // Drag state management
   const { startDragging } = useDragState({
@@ -167,7 +173,7 @@ export const useRangeSlider = ({
   // Sync external value changes
   useEffect(() => {
     setInternalValue(value)
-  })
+  }, [value])
 
   return {
     trackRef,

@@ -2,6 +2,7 @@
 import { type VariantProps } from "class-variance-authority"
 import {
   type HTMLAttributes,
+  useCallback,
   useEffect,
   useState
 } from "react"
@@ -66,12 +67,12 @@ const RangeSlider = ({
     useState(formatValue ? formatValue(internalValue) : internalValue.toString())
   const [isInputFocused, setIsInputFocused] = useState(false)
 
-  const updateInputValue = () => {
+  const updateInputValue = useCallback(() => {
     if (!isInputFocused) {
       setInputValue(formatValue ?
         formatValue(internalValue) : internalValue.toString())
     }
-  }
+  }, [formatValue, internalValue, isInputFocused])
 
   // Update input value when internal value changes
   useEffect(() => {

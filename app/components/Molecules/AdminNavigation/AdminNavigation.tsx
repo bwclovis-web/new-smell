@@ -1,6 +1,6 @@
 import { type VariantProps } from 'class-variance-authority'
 import { type HTMLProps } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router'
 
 import LanguageSwitcher from '~/components/Organisms/LanguageSwitcher'
 import { adminNavigation, profileNavigation } from '~/data/navigation'
@@ -9,7 +9,11 @@ import { styleMerge } from '~/utils/styleUtils'
 import { adminNavigationVariants } from './adminNavigation-variants'
 
 interface AdminNavigationProps extends HTMLProps<HTMLUListElement>,
-  VariantProps<typeof adminNavigationVariants> { }
+  VariantProps<typeof adminNavigationVariants> {
+  user?: {
+    role?: string
+  }
+}
 
 const AdminNavigation = ({ className, user }: AdminNavigationProps) => (
   <aside className='fixed top-20 left-0 z-20 w-full md:w-64  text-noir-light py-4'>
@@ -17,7 +21,7 @@ const AdminNavigation = ({ className, user }: AdminNavigationProps) => (
       className={styleMerge(adminNavigationVariants({ className }))}
       data-cy="AdminNavigation"
     >
-      {user.role === 'admin' && adminNavigation.map(item => (
+      {user?.role === 'admin' && adminNavigation.map(item => (
         <li key={item.id} className="capitalize font-semibold text-shadow-sm text-shadow-noir-dark/70">
           <NavLink
             viewTransition

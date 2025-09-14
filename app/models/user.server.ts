@@ -1,14 +1,11 @@
-import bcrypt from 'bcryptjs'
-
 import { prisma } from '~/db.server'
-import {
-  hashPassword,
-  verifyPassword,
-  validatePasswordComplexity,
-  calculatePasswordStrength,
-  PASSWORD_CONFIG
-} from '~/utils/security/password-security.server'
 import { invalidateAllSessions } from '~/models/session.server'
+import {
+  calculatePasswordStrength,
+  hashPassword,
+  validatePasswordComplexity,
+  verifyPassword
+} from '~/utils/security/password-security.server'
 
 
 
@@ -63,7 +60,7 @@ export const getTraderById = async (id: string) => {
       firstName: true,
       lastName: true,
       username: true,
-      userPerfume: {
+      UserPerfume: {
         where: {
           available: {
             not: '0'
@@ -201,9 +198,7 @@ export const changePassword = async (userId: string, currentPassword: string, ne
 }
 
 // Password strength check for frontend
-export const checkPasswordStrength = (password: string) => {
-  return calculatePasswordStrength(password)
-}
+export const checkPasswordStrength = (password: string) => calculatePasswordStrength(password)
 
 export const getUserPerfumes = async (userId: string) => {
   const userPerfumes = await prisma.userPerfume.findMany({

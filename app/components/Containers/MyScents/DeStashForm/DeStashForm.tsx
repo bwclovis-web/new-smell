@@ -1,3 +1,5 @@
+import { useCallback, useMemo } from "react"
+
 import { Button } from "~/components/Atoms/Button"
 import CheckBox from "~/components/Atoms/CheckBox"
 import RadioSelect from "~/components/Atoms/RadioSelect"
@@ -23,6 +25,49 @@ const DeStashForm = ({
   handleDecantConfirm,
   userPerfume
 }: DeStashFormProps) => {
+  // Memoize initial values to prevent infinite re-renders
+  const initialValues = useMemo(() => ({
+    deStashAmount: "0",
+    price: "",
+    tradePreference: 'cash' as 'cash' | 'trade' | 'both',
+    tradeOnly: false
+  }), [])
+
+  // Memoize validation function
+  const validate = useCallback((values: typeof initialValues) => {
+    const errors: Partial<Record<keyof typeof values, string>> = {}
+
+    const amount = parseFloat(values.deStashAmount)
+    if (isNaN(amount) || amount < 0) {
+      errors.deStashAmount = "Amount must be a positive number"
+    }
+    if (amount > parseFloat(userPerfume.amount)) {
+      errors.deStashAmount = "Amount cannot exceed available amount"
+    }
+
+    // Price is optional, but if provided, it should be a valid number
+    if (values.price && values.price !== '') {
+      const price = parseFloat(values.price)
+      if (isNaN(price) || price < 0) {
+        errors.price = "Price must be a positive number"
+      }
+    }
+
+    return errors
+  }, [userPerfume.amount])
+
+  // Memoize submit handler
+  const onSubmit = useCallback((values: typeof initialValues) => {
+    const deStashData: DeStashData = {
+      amount: values.deStashAmount,
+      price: values.price || undefined,
+      tradePreference: values.tradePreference,
+      tradeOnly: values.tradeOnly
+    }
+    handleDecantConfirm(deStashData)
+    // Form will be reset by parent component after successful destash processing
+  }, [handleDecantConfirm])
+
   const {
     values,
     errors,
@@ -31,35 +76,10 @@ const DeStashForm = ({
     handleSubmit,
     reset
   } = useFormState({
-    initialValues: {
-      deStashAmount: "0",
-      price: "",
-      tradePreference: 'cash' as 'cash' | 'trade' | 'both',
-      tradeOnly: false
-    },
-    validate: values => {
-      const errors: Partial<Record<keyof typeof values, string>> = {}
-
-      const amount = parseFloat(values.deStashAmount)
-      if (amount < 0) {
-        errors.deStashAmount = "Amount must be positive"
-      }
-      if (amount > parseFloat(userPerfume.amount)) {
-        errors.deStashAmount = "Amount cannot exceed available amount"
-      }
-
-      return errors
-    },
-    onSubmit: values => {
-      const deStashData: DeStashData = {
-        amount: values.deStashAmount,
-        price: values.price || undefined,
-        tradePreference: values.tradePreference,
-        tradeOnly: values.tradeOnly
-      }
-      handleDecantConfirm(deStashData)
-      reset()
-    }
+    initialValues,
+    validate,
+    onSubmit,
+    resetOnSubmit: false
   })
 
   const tradeOptions = [

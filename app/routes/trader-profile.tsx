@@ -6,7 +6,7 @@ import TitleBanner from "~/components/Organisms/TitleBanner"
 import { getTraderById } from "~/models/user.server"
 import { getTraderDisplayName } from "~/utils/user"
 
-import banner from '../images/traderf.webp'
+import banner from '../images/trade.webp'
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!params.id) {
@@ -33,10 +33,10 @@ const TraderProfilePage = () => {
       />
       <div className="flex flex-col md:flex-row justify-between inner-container items-start gap-8 p-6">
         <div className="noir-border relative w-1/2 p-4">
-          <h2 >Items Available</h2>
-          {trader.userPerfume.length > 0 ? (
+          <h2>{t("traderProfile.itemsAvailable")}</h2>
+          {trader.UserPerfume.length > 0 ? (
             <ul className="mt-6">
-              {trader.userPerfume.map((userPerfume: any) => (
+              {trader.UserPerfume.map((userPerfume: any) => (
                 <ItemsToTrade
                   key={userPerfume.id}
                   userPerfume={userPerfume}
@@ -44,11 +44,11 @@ const TraderProfilePage = () => {
               ))}
             </ul>
           ) : (
-            <p>No items available for trading.</p>
+            <p>{t("traderProfile.noItemsAvailable")}</p>
           )}
         </div>
         <div className="noir-border relative w-1/2 p-4">
-          <h2>Items Searching For</h2>
+          <h2>{t("traderProfile.itemsSearchingFor")}</h2>
         </div>
       </div>
     </section>
