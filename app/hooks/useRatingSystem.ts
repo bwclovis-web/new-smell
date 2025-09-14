@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useFetcher } from 'react-router-dom'
 
 import { useErrorHandler } from './useErrorHandler'
+import { useCSRF } from './useCSRF'
 
 export interface RatingData {
   longevity?: number | null
@@ -46,6 +47,7 @@ export const useRatingSystem = ({
 }: UseRatingSystemOptions): UseRatingSystemReturn => {
   const fetcher = useFetcher()
   const { handleError } = useErrorHandler()
+  const { addToFormData } = useCSRF()
 
   const [currentRatings, setCurrentRatings] = useState<RatingData | null>(initialRatings)
 
@@ -97,11 +99,14 @@ export const useRatingSystem = ({
     formData.append('category', category)
     formData.append('rating', rating.toString())
 
-    fetcher.submit(formData, {
+    // Add CSRF protection
+    const protectedFormData = addToFormData(formData)
+
+    fetcher.submit(protectedFormData, {
       method: 'POST',
       action: '/api/ratings'
     })
-  }, [isInteractive, userId, perfumeId, fetcher])
+  }, [isInteractive, userId, perfumeId, fetcher, addToFormData])
 
   const resetRatings = useCallback(() => {
     setCurrentRatings(initialRatings)

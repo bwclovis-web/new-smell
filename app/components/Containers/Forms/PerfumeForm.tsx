@@ -7,6 +7,7 @@ import { Form } from 'react-router'
 import { Button } from '~/components/Atoms/Button/Button'
 import Input from '~/components/Atoms/Input/Input'
 import Select from '~/components/Atoms/Select/Select'
+import { CSRFToken } from '~/components/Molecules/CSRFToken'
 import TagSearch from '~/components/Organisms/TagSearch/TagSearch'
 import type { FORM_TYPES } from '~/utils/constants'
 import { CreatePerfumeSchema } from '~/utils/formValidationSchemas'
@@ -104,6 +105,7 @@ const PerfumeForm
         {baseNotes.map(tag => (
           <input key={tag.id} type="hidden" name="notesBase" value={tag.id} />
         ))}
+        <CSRFToken />
         {serverError && (
           <div className="bg-red-500 text-lg font-semibold px-3 py-2 max-w-max rounded-2xl border-2 text-white">
             {serverError}

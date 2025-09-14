@@ -7,6 +7,7 @@ import type { ActionFunctionArgs } from 'react-router-dom'
 
 import { Button } from '~/components/Atoms/Button/Button'
 import Input from '~/components/Atoms/Input/Input'
+import { CSRFToken } from '~/components/Molecules/CSRFToken'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import type { SafeUser } from '~/types'
 import { UpdateProfileSchema } from '~/utils/formValidationSchemas'
@@ -97,6 +98,7 @@ const ProfileForm = ({ user }: { user: SafeUser }) => {
       method="POST"
       className="space-y-4 noir-border p-6"
     >
+      <CSRFToken />
       <input type="hidden" name="userId" value={user.id} />
 
       <Input

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Form } from 'react-router'
 
 import { Button } from '~/components/Atoms/Button/Button'
+import { CSRFToken } from '~/components/Molecules/CSRFToken'
 import { FORM_TYPES } from '~/utils/constants'
 import { CreatePerfumeHouseSchema } from '~/utils/formValidationSchemas'
 
@@ -60,6 +61,7 @@ const PerfumeHouseForm = ({ formType, lastResult, data }: PerfumeHouseFormProps)
           {serverError}
         </div>
       )}
+      <CSRFToken />
       <input type="hidden" name="houseId" value={data?.id} />
       <Button type="submit" className="mt-4 max-w-max">
         {formType === FORM_TYPES.CREATE_HOUSE_FORM ? 'Create Perfume House' : 'Submit Changes'}

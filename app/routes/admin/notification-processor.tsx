@@ -1,18 +1,22 @@
 import { useState } from 'react'
 
+import { useCSRF } from '~/hooks/useCSRF'
 import type { NotificationResult } from '~/utils/wishlist-notification-processor'
 
 export default function NotificationProcessor() {
   const [isProcessing, setIsProcessing] = useState(false)
   const [results, setResults] = useState<NotificationResult[]>([])
   const [error, setError] = useState<string | null>(null)
+  const { addToHeaders } = useCSRF()
 
   const handleApiCall = async () => {
+    const headers = addToHeaders({
+      'Content-Type': 'application/json'
+    })
+
     const response = await fetch('/api/process-wishlist-notifications', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      headers
     })
 
     return response.json()

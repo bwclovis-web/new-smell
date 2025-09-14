@@ -8,6 +8,7 @@ import type { ActionFunctionArgs } from 'react-router-dom'
 import { Button } from '~/components/Atoms/Button'
 import ErrorDisplay from '~/components/Atoms/ErrorDisplay'
 import Input from '~/components/Atoms/Input'
+import { CSRFToken } from '~/components/Molecules/CSRFToken'
 import { login } from '~/models/session.server'
 import { signInCustomer } from '~/models/user.server'
 import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/profilePage'
@@ -57,6 +58,7 @@ const LogInPage = () => {
   return (
     <section className="flex flex-col p-1 md:px-4 w-full mx-auto ">
       <Form {...getFormProps(signInForm)} method="POST" className="max-w-md mx-auto p-1 md:p-4 relative w-full flex flex-col gap-4 noir-border">
+        <CSRFToken />
         <Input shading={true} inputId={t('forms.email')} inputType="email" action={email} inputRef={inputRef} />
         <Input shading={true} inputId={t('forms.password')} inputType="password" action={password} inputRef={inputRef} />
         {actionData?.error && (

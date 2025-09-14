@@ -17,6 +17,7 @@ import ImagePreloader from './components/Atoms/ImagePreloader'
 import PerformanceMonitor from './components/Atoms/PerformanceMonitor'
 import ServiceWorkerRegistration from './components/Atoms/ServiceWorkerRegistration'
 import FourOFourPage from './components/Containers/404Page/404Page'
+import { CSRFTokenProvider } from './components/Molecules/CSRFToken'
 import { NonceProvider, useNonce } from './hooks/use-nonce'
 import i18n from './modules/i18n/i18n.client'
 import { SessionProvider } from './providers/sessionProvider'
@@ -97,9 +98,11 @@ export default function App() {
   return (
     <NonceProvider value={undefined}>
       <I18nextProvider i18n={i18n}>
-        <SessionProvider>
-          <Outlet />
-        </SessionProvider>
+        <CSRFTokenProvider>
+          <SessionProvider>
+            <Outlet />
+          </SessionProvider>
+        </CSRFTokenProvider>
       </I18nextProvider>
     </NonceProvider>
   )

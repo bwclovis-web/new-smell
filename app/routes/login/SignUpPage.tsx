@@ -5,6 +5,7 @@ import { Form, useActionData } from 'react-router'
 
 import Input from '~/components/Atoms/Input'
 import PasswordStrengthIndicator from '~/components/Atoms/PasswordStrengthIndicator'
+import { CSRFToken } from '~/components/Molecules/CSRFToken'
 import { login } from '~/models/session.server'
 import { createUser, getUserByName } from '~/models/user.server'
 import { UserFormSchema } from '~/utils/formValidationSchemas'
@@ -42,6 +43,7 @@ const RegisterPage = () => {
   return (
     <section className="flex flex-col items-center px-4 w-full max-w-md mx-auto ">
       <Form {...getFormProps(signupForm)} method="POST" className="max-w-md mx-auto p-4 relative w-full flex flex-col gap-4 noir-border">
+        <CSRFToken />
         <Input shading={true} inputId={t('forms.email')} inputType="email" action={email} inputRef={inputRef} />
         <div>
           <Input
