@@ -427,7 +427,7 @@ app.get('/admin/audit-logs', (req, res) => {
     level,
     userId,
     ipAddress,
-    limit: parseInt(limit)
+    limit: parseInt(limit, 10)
   })
   
   res.json({

@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useLoaderData } from 'react-router'
 
+import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
+import banner from '~/images/perfumeCreate.webp'
 import { sharedLoader } from '~/utils/sharedLoader'
 
 interface SecurityStats {
@@ -86,11 +89,11 @@ export const loader = async ({ request }: { request: Request }) => {
   }
 }
 
-export default function SecurityMonitor() {
+const SecurityMonitor = () => {
   const { security, rateLimit, audit, error } = useLoaderData<typeof loader>()
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [lastRefresh, setLastRefresh] = useState(new Date())
-
+  const { t } = useTranslation()
   // Auto-refresh every 30 seconds
   useEffect(() => {
     const interval = setInterval(() => {
@@ -121,6 +124,11 @@ export default function SecurityMonitor() {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
+        <TitleBanner
+          image={banner}
+          heading={t('allHouses.heading')}
+          subheading={t('allHouses.subheading')}
+        />
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
@@ -398,3 +406,4 @@ export default function SecurityMonitor() {
     </div>
   )
 }
+export default SecurityMonitor
