@@ -28,7 +28,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Update state so the next render will show the fallback UI
     const appError = ErrorHandler.handle(error, { component: 'ErrorBoundary' })
     const errorId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-    
+
     return {
       hasError: true,
       error: appError,
@@ -75,7 +75,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         errorId: this.state.errorId,
         error: this.state.error.toJSON()
       })
-      
+
       // Show user feedback
       alert('Error has been reported. Thank you for your feedback!')
     }
@@ -147,7 +147,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <h1 className="text-xl font-bold text-gray-900 mb-2">Something went wrong</h1>
             <p className="text-gray-600">{error.userMessage}</p>
           </div>
-          
+
           <div className="space-y-3">
             <button
               onClick={this.handleRetry}
@@ -168,7 +168,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               Report Issue
             </button>
           </div>
-          
+
           <p className="text-xs text-gray-500 mt-4 text-center">Error ID: {errorId}</p>
         </div>
       </div>

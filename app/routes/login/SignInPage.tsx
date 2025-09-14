@@ -60,8 +60,8 @@ const LogInPage = () => {
         <Input shading={true} inputId={t('forms.email')} inputType="email" action={email} inputRef={inputRef} />
         <Input shading={true} inputId={t('forms.password')} inputType="password" action={password} inputRef={inputRef} />
         {actionData?.error && (
-          <ErrorDisplay 
-            error={actionData.error} 
+          <ErrorDisplay
+            error={actionData.error}
             variant="inline"
             title="Sign-in Error"
           />

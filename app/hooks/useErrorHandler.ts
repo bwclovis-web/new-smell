@@ -150,7 +150,7 @@ export const useApiErrorHandler = (userId?: string) => {
       statusCode,
       timestamp: new Date().toISOString()
     }
-    
+
     let errorType: ErrorType = 'UNKNOWN' as ErrorType
     if (statusCode) {
       if (statusCode >= 400 && statusCode < 500) {

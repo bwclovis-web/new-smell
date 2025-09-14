@@ -110,7 +110,7 @@ const ErrorDisplay: FC<ErrorDisplayProps> = ({
           <div className="mt-2 text-sm text-red-700">
             <p>{message}</p>
           </div>
-          
+
           {showDetails && isAppError && (
             <div className="mt-3 text-xs text-red-600">
               <p><strong>Error Code:</strong> {code}</p>

@@ -112,12 +112,12 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   // Use our centralized error handling for other errors
-  const appError = error instanceof Error 
-    ? new AppError(error.message, 'UNKNOWN' as any, 'MEDIUM' as any, 'ROUTE_ERROR', undefined, { 
-        status: isRouteErrorResponse(error) ? error.status : undefined,
-        statusText: isRouteErrorResponse(error) ? error.statusText : undefined,
-        stack: error.stack
-      })
+  const appError = error instanceof Error
+    ? new AppError(error.message, 'UNKNOWN' as any, 'MEDIUM' as any, 'ROUTE_ERROR', undefined, {
+      status: isRouteErrorResponse(error) ? error.status : undefined,
+      statusText: isRouteErrorResponse(error) ? error.statusText : undefined,
+      stack: error.stack
+    })
     : new AppError('An unexpected error occurred', 'UNKNOWN' as any, 'MEDIUM' as any, 'ROUTE_ERROR')
 
   return (
@@ -129,7 +129,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
             <h1 className="text-xl font-bold text-gray-900 mb-2">Something went wrong</h1>
             <p className="text-gray-600">{error.userMessage}</p>
           </div>
-          
+
           <div className="space-y-3">
             <button
               onClick={() => window.location.reload()}
@@ -144,7 +144,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
               Go Back
             </button>
           </div>
-          
+
           {import.meta.env.DEV && (
             <details className="mt-4 text-left">
               <summary className="text-sm text-gray-500 cursor-pointer">Developer Details</summary>
@@ -153,7 +153,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
               </pre>
             </details>
           )}
-          
+
           <p className="text-xs text-gray-500 mt-4 text-center">Error ID: {errorId}</p>
         </div>
       </div>

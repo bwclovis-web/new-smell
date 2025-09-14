@@ -67,7 +67,7 @@ export class ServerErrorHandler {
    */
   static handleLoaderError(error: unknown, context?: Record<string, any>): never {
     const appError = this.handle(error, { ...context, loader: true })
-    
+
     // For critical errors, redirect to error page
     if (appError.severity === 'CRITICAL') {
       throw redirect('/error?type=critical')

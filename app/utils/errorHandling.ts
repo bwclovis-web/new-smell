@@ -126,7 +126,7 @@ export class ErrorLogger {
   private static instance: ErrorLogger
   private logs: Array<{ error: AppError; timestamp: Date; userId?: string }> = []
 
-  private constructor() {}
+  private constructor() { }
 
   static getInstance(): ErrorLogger {
     if (!ErrorLogger.instance) {
@@ -230,7 +230,7 @@ export class ErrorHandler {
 // Error Response Utilities
 export const createErrorResponse = (error: AppError, status?: number) => {
   const statusCode = status || getStatusCodeForErrorType(error.type)
-  
+
   return new Response(
     JSON.stringify({
       success: false,

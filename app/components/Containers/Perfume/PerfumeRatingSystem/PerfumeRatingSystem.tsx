@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useFetcher } from 'react-router-dom'
 
-import SimpleNoirRating from '~/components/Atoms/SimpleNoirRating'
+import SimpleNoirRating from '~/components/Organisms/SimpleNoirRating'
 
 interface PerfumeRatingSystemProps {
   perfumeId: string
