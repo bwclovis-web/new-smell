@@ -1,5 +1,5 @@
 import { type VariantProps } from 'class-variance-authority'
-import { type ButtonHTMLAttributes, type FC, type LinkHTMLAttributes, type Ref } from 'react'
+import { type ButtonHTMLAttributes, type LinkHTMLAttributes, type Ref } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import { styleMerge } from '~/utils/styleUtils'
@@ -21,7 +21,7 @@ interface LinkProps extends Omit<LinkHTMLAttributes<HTMLAnchorElement>, 'style'>
   background?: 'red' | 'gold' | null
 }
 
-const Button: FC<ButtonProps> = ({ className, size, variant, children, background, type = 'button', ref, ...props }) => (
+const Button = ({ className, size, variant, children, background, type = 'button', ref, ...props }: ButtonProps) => (
   <button
     className={styleMerge(buttonVariants({ className, size, variant, background }))}
     data-cy="button"
@@ -33,8 +33,8 @@ const Button: FC<ButtonProps> = ({ className, size, variant, children, backgroun
   </button>
 )
 
-const VooDooLink: FC<LinkProps> = ({
-  className, size, variant, children, url, background, ...props }) => (
+const VooDooLink = ({
+  className, size, variant, children, url, background, ...props }: LinkProps) => (
   <NavLink
     to={url}
     viewTransition

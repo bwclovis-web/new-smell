@@ -12,7 +12,7 @@ const ImagePreloader = ({ images, priority = 'low', lazy = true }: ImagePreloade
   useEffect(() => {
     if (priority === 'high') {
       // High priority: preload immediately
-      images.forEach((src) => {
+      images.forEach(src => {
         const link = document.createElement('link')
         link.rel = 'preload'
         link.as = 'image'
@@ -30,8 +30,8 @@ const ImagePreloader = ({ images, priority = 'low', lazy = true }: ImagePreloade
         return img
       })
 
-      observerRef.current = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
+      observerRef.current = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             const img = entry.target as HTMLImageElement
             img.src = img.dataset.src || img.src
@@ -43,7 +43,7 @@ const ImagePreloader = ({ images, priority = 'low', lazy = true }: ImagePreloade
         threshold: 0.1
       })
 
-      imageElements.forEach((img) => {
+      imageElements.forEach(img => {
         if (observerRef.current) {
           observerRef.current.observe(img)
         }
@@ -52,7 +52,7 @@ const ImagePreloader = ({ images, priority = 'low', lazy = true }: ImagePreloade
       // Low priority: preload when idle
       if ('requestIdleCallback' in window) {
         requestIdleCallback(() => {
-          images.forEach((src) => {
+          images.forEach(src => {
             const link = document.createElement('link')
             link.rel = 'preload'
             link.as = 'image'
@@ -64,7 +64,7 @@ const ImagePreloader = ({ images, priority = 'low', lazy = true }: ImagePreloade
       } else {
         // Fallback for browsers without requestIdleCallback
         setTimeout(() => {
-          images.forEach((src) => {
+          images.forEach(src => {
             const link = document.createElement('link')
             link.rel = 'preload'
             link.as = 'image'
@@ -82,7 +82,7 @@ const ImagePreloader = ({ images, priority = 'low', lazy = true }: ImagePreloade
         observerRef.current.disconnect()
       }
       const preloadLinks = document.querySelectorAll('link[rel="preload"][as="image"]')
-      preloadLinks.forEach((link) => {
+      preloadLinks.forEach(link => {
         if (images.includes((link as HTMLLinkElement).href)) {
           link.remove()
         }

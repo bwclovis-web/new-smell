@@ -1,11 +1,10 @@
 /* eslint-disable complexity */
 import { type VariantProps } from "class-variance-authority"
 import {
-  type FC,
   type HTMLAttributes,
-  useState,
   useCallback,
-  useEffect
+  useEffect,
+  useState
 } from "react"
 
 import { useRangeSlider } from "~/hooks/useRangeSlider"
@@ -27,7 +26,7 @@ interface RangeSliderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChang
   inputPlaceholder?: string
 }
 
-const RangeSlider: FC<RangeSliderProps> = ({
+const RangeSlider = ({
   className,
   min = 0,
   max = 100,
@@ -41,7 +40,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
   showManualInput = false,
   inputPlaceholder,
   ...restProps
-}) => {
+}: RangeSliderProps) => {
   const {
     trackRef,
     fillRef,
@@ -64,13 +63,14 @@ const RangeSlider: FC<RangeSliderProps> = ({
   })
 
   // Manual input state
-  const [inputValue, setInputValue] = useState(formatValue ? formatValue(internalValue) : internalValue.toString())
+  const [inputValue, setInputValue] =
+    useState(formatValue ? formatValue(internalValue) : internalValue.toString())
   const [isInputFocused, setIsInputFocused] = useState(false)
 
-  // Update input value when slider value changes (but not when user is typing)
   const updateInputValue = useCallback(() => {
     if (!isInputFocused) {
-      setInputValue(formatValue ? formatValue(internalValue) : internalValue.toString())
+      setInputValue(formatValue ?
+        formatValue(internalValue) : internalValue.toString())
     }
   }, [internalValue, formatValue, isInputFocused])
 
@@ -80,10 +80,11 @@ const RangeSlider: FC<RangeSliderProps> = ({
   }, [updateInputValue])
 
   // Handle manual input changes
-  const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value
-    setInputValue(newValue)
-  }, [])
+  const handleInputChange =
+    useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = event.target.value
+      setInputValue(newValue)
+    }, [])
 
   // Handle manual input blur/enter - validate and update slider
   const handleInputBlur = useCallback(() => {
@@ -104,7 +105,9 @@ const RangeSlider: FC<RangeSliderProps> = ({
       // Reset to current value if invalid
       setInputValue(formatValue ? formatValue(internalValue) : internalValue.toString())
     }
-  }, [inputValue, min, max, step, internalValue, onChange, formatValue])
+  }, [
+    inputValue, min, max, step, internalValue, onChange, formatValue
+  ])
 
   // Handle manual input focus
   const handleInputFocus = useCallback(() => {

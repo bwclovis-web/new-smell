@@ -1,7 +1,7 @@
 /* eslint-disable complexity */
 import { type FieldMetadata, getInputProps } from '@conform-to/react'
 import { type VariantProps } from 'class-variance-authority'
-import { type FC, type HTMLProps, type RefObject } from 'react'
+import { type HTMLProps, type RefObject } from 'react'
 
 import { styleMerge } from '~/utils/styleUtils'
 
@@ -22,7 +22,7 @@ interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
   autoComplete?: string
 }
 
-const Input: FC<InputProps> = ({
+const Input = ({
   inputType,
   inputId = inputType,
   className,
@@ -35,7 +35,7 @@ const Input: FC<InputProps> = ({
   shading,
   autoComplete,
   ...props
-}) => {
+}: InputProps) => {
   const inputProps = action
     ? {
       ...getInputProps(action, { ariaAttributes: true, type: inputType }),

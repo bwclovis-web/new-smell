@@ -2,14 +2,26 @@ import { reactRouter } from '@react-router/dev/vite'
 import tailwindcss from '@tailwindcss/vite'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
+import babel from 'vite-plugin-babel'
 import { compression } from 'vite-plugin-compression2'
 import tsconfigPaths from 'vite-tsconfig-paths'
+
+const ReactCompilerConfig = {
+  // React Compiler configuration
+}
 
 export default defineConfig({
   plugins: [
     tailwindcss(),
     tsconfigPaths(),
     reactRouter(),
+    babel({
+      filter: /\.[jt]sx?$/,
+      babelConfig: {
+        presets: ['@babel/preset-typescript'],
+        plugins: [['babel-plugin-react-compiler', ReactCompilerConfig],],
+      },
+    }),
     // Bundle analyzer for performance monitoring
     visualizer({
       filename: 'dist/stats.html',

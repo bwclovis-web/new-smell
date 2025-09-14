@@ -41,8 +41,6 @@ const ImagePlaceholder = ({
       />
     )
   }
-
-  // Default skeleton variant
   return (
     <div
       className={`${baseClasses} ${animateClasses} ${className}`}

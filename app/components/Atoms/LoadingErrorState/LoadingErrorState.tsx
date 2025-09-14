@@ -1,6 +1,6 @@
-import { type FC } from 'react'
+import type { ReactNode } from 'react'
 
-import ErrorDisplay from '~/components/Atoms/ErrorDisplay'
+import ErrorDisplay from '~/components/Containers/ErrorDisplay'
 
 interface LoadingErrorStateProps {
   isLoading?: boolean
@@ -11,10 +11,10 @@ interface LoadingErrorStateProps {
   onRetry?: () => void
   onDismiss?: () => void
   className?: string
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
-const LoadingErrorState: FC<LoadingErrorStateProps> = ({
+const LoadingErrorState = ({
   isLoading = false,
   error,
   loadingText = 'Loading...',
@@ -24,8 +24,7 @@ const LoadingErrorState: FC<LoadingErrorStateProps> = ({
   onDismiss,
   className = '',
   children
-}) => {
-  // Show error state if there's an error
+}: LoadingErrorStateProps) => {
   if (error) {
     return (
       <div className={className}>
@@ -41,7 +40,6 @@ const LoadingErrorState: FC<LoadingErrorStateProps> = ({
     )
   }
 
-  // Show loading state
   if (isLoading) {
     return (
       <div className={`flex items-center justify-center p-8 ${className}`}>
@@ -52,8 +50,6 @@ const LoadingErrorState: FC<LoadingErrorStateProps> = ({
       </div>
     )
   }
-
-  // Show children if no loading or error state
   return <>{children}</>
 }
 

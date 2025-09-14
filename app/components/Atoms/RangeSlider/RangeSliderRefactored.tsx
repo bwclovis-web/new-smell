@@ -24,7 +24,7 @@ interface RangeSliderProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChang
   inputPlaceholder?: string
 }
 
-const RangeSlider: FC<RangeSliderProps> = ({
+const RangeSlider = ({
   className,
   min = 0,
   max = 100,
@@ -38,7 +38,7 @@ const RangeSlider: FC<RangeSliderProps> = ({
   showManualInput = false,
   inputPlaceholder,
   ...restProps
-}) => {
+}: RangeSliderProps) => {
   const {
     trackRef,
     fillRef,

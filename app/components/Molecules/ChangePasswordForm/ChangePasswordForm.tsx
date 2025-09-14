@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Form } from 'react-router-dom'
 
 import { Button } from '~/components/Atoms/Button'
-import PasswordStrengthIndicator from '~/components/Atoms/PasswordStrengthIndicator'
+import PasswordStrengthIndicator from '~/components/Organisms/PasswordStrengthIndicator'
 
 interface ChangePasswordFormProps {
   actionData?: any

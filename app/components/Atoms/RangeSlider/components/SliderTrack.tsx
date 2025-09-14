@@ -1,4 +1,4 @@
-import { type FC, type RefObject } from 'react'
+import { type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent, type RefObject, type TouchEvent as ReactTouchEvent } from 'react'
 
 import { styleMerge } from '~/utils/styleUtils'
 
@@ -13,12 +13,12 @@ interface SliderTrackProps {
   value: number
   disabled: boolean
   className?: string
-  onTrackClick: (event: React.MouseEvent) => void
-  onTrackTouch: (event: React.TouchEvent) => void
-  onKeyDown: (event: React.KeyboardEvent) => void
+  onTrackClick: (event: ReactMouseEvent) => void
+  onTrackTouch: (event: ReactTouchEvent) => void
+  onKeyDown: (event: ReactKeyboardEvent) => void
 }
 
-const SliderTrack: FC<SliderTrackProps> = ({
+const SliderTrack = ({
   trackRef,
   fillRef,
   percentage,
@@ -30,7 +30,7 @@ const SliderTrack: FC<SliderTrackProps> = ({
   onTrackClick,
   onTrackTouch,
   onKeyDown
-}) => (
+}: SliderTrackProps) => (
   <div
     ref={trackRef}
     role="slider"

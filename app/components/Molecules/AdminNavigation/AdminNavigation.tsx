@@ -1,8 +1,8 @@
 import { type VariantProps } from 'class-variance-authority'
-import { type FC, type HTMLProps } from 'react'
+import { type HTMLProps } from 'react'
 import { NavLink } from 'react-router-dom'
 
-import LanguageSwitcher from '~/components/Atoms/LanguageSwitcher'
+import LanguageSwitcher from '~/components/Organisms/LanguageSwitcher'
 import { adminNavigation, profileNavigation } from '~/data/navigation'
 import { styleMerge } from '~/utils/styleUtils'
 
@@ -11,7 +11,7 @@ import { adminNavigationVariants } from './adminNavigation-variants'
 interface AdminNavigationProps extends HTMLProps<HTMLUListElement>,
   VariantProps<typeof adminNavigationVariants> { }
 
-const AdminNavigation: FC<AdminNavigationProps> = ({ className, user }) => (
+const AdminNavigation = ({ className, user }: AdminNavigationProps) => (
   <aside className='fixed top-20 left-0 z-20 w-full md:w-64  text-noir-light py-4'>
     <ul
       className={styleMerge(adminNavigationVariants({ className }))}

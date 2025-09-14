@@ -1,5 +1,5 @@
 import type { VariantProps } from 'class-variance-authority'
-import type { FC, HTMLProps } from 'react'
+import type { HTMLProps } from 'react'
 
 import { styleMerge } from '~/utils/styleUtils'
 
@@ -13,7 +13,7 @@ interface CheckBoxProps extends Omit<HTMLProps<HTMLDivElement>, 'onChange'>,
   onChange?: () => void
 }
 
-const CheckBox: FC<CheckBoxProps> = ({
+const CheckBox = ({
   className,
   defaultChecked,
   checked,
@@ -23,7 +23,7 @@ const CheckBox: FC<CheckBoxProps> = ({
   labelSize,
   value,
   inputType,
-  ...props }) => (
+  ...props }: CheckBoxProps) => (
   <div
     className={styleMerge(checkboxVariants({ className, labelPosition }))}
     data-cy="CheckBox"

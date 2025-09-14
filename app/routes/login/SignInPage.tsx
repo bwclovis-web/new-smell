@@ -6,7 +6,7 @@ import { Form, useActionData } from 'react-router'
 import type { ActionFunctionArgs } from 'react-router-dom'
 
 import { Button } from '~/components/Atoms/Button'
-import ErrorDisplay from '~/components/Atoms/ErrorDisplay'
+import ErrorDisplay from '~/components/Containers/ErrorDisplay'
 import Input from '~/components/Atoms/Input'
 import { CSRFToken } from '~/components/Molecules/CSRFToken'
 import { login } from '~/models/session.server'

@@ -1,6 +1,6 @@
 import { type FC } from 'react'
 
-import { AppError, getErrorMessage, getErrorCode, getErrorType } from '~/utils/errorHandling'
+import { AppError, getErrorCode, getErrorMessage, getErrorType } from '~/utils/errorHandling'
 
 interface ErrorDisplayProps {
   error: unknown
@@ -62,7 +62,9 @@ const ErrorDisplay: FC<ErrorDisplayProps> = ({
   }
 
   const getTitle = () => {
-    if (title) return title
+    if (title) {
+      return title
+    }
 
     switch (type) {
       case 'AUTHENTICATION':

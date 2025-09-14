@@ -4,7 +4,7 @@ import { useRef, useState } from 'react'
 import { Form, useActionData } from 'react-router'
 
 import Input from '~/components/Atoms/Input'
-import PasswordStrengthIndicator from '~/components/Atoms/PasswordStrengthIndicator'
+import PasswordStrengthIndicator from '~/components/Organisms/PasswordStrengthIndicator'
 import { CSRFToken } from '~/components/Molecules/CSRFToken'
 import { login } from '~/models/session.server'
 import { createUser, getUserByName } from '~/models/user.server'

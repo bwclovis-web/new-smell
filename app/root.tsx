@@ -12,11 +12,11 @@ import {
 } from 'react-router'
 
 import type { Route } from './+types/root'
-import ErrorBoundaryComponent from './components/Atoms/ErrorBoundary'
 import ImagePreloader from './components/Atoms/ImagePreloader'
-import PerformanceMonitor from './components/Atoms/PerformanceMonitor'
 import ServiceWorkerRegistration from './components/Atoms/ServiceWorkerRegistration'
 import FourOFourPage from './components/Containers/404Page/404Page'
+import ErrorBoundaryComponent from './components/Containers/ErrorBoundary'
+import PerformanceMonitor from './components/Containers/PerformanceMonitor'
 import { CSRFTokenProvider } from './components/Molecules/CSRFToken'
 import { NonceProvider, useNonce } from './hooks/use-nonce'
 import i18n from './modules/i18n/i18n.client'

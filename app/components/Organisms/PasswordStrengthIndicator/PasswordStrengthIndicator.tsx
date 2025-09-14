@@ -21,14 +21,15 @@ export default function PasswordStrengthIndicator({
   requireSpecialChars = true,
   minScore = 3
 }: PasswordStrengthIndicatorProps) {
-  const { strengthInfo, isValid, getStrengthColor, getStrengthText } = usePasswordStrength(password, {
-    minLength,
-    requireUppercase,
-    requireLowercase,
-    requireNumbers,
-    requireSpecialChars,
-    minScore
-  })
+  const { strengthInfo, isValid, getStrengthColor, getStrengthText } =
+    usePasswordStrength(password, {
+      minLength,
+      requireUppercase,
+      requireLowercase,
+      requireNumbers,
+      requireSpecialChars,
+      minScore
+    })
 
   if (!password || !strengthInfo) {
     return null
