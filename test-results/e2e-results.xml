@@ -1,0 +1,128 @@
+<testsuites id="" name="" tests="28" failures="0" skipped="28" errors="0" time="0.23538199999999962">
+<testsuite name="basic-functionality.test.ts" timestamp="2025-09-14T14:32:34.642Z" hostname="chromium" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Basic Application Functionality › should load the home page successfully" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should have working navigation" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should handle page interactions without errors" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should be responsive on mobile" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="basic-functionality.test.ts" timestamp="2025-09-14T14:32:34.642Z" hostname="firefox" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Basic Application Functionality › should load the home page successfully" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should have working navigation" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should handle page interactions without errors" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should be responsive on mobile" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="basic-functionality.test.ts" timestamp="2025-09-14T14:32:34.642Z" hostname="webkit" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Basic Application Functionality › should load the home page successfully" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should have working navigation" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should handle page interactions without errors" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should be responsive on mobile" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="basic-functionality.test.ts" timestamp="2025-09-14T14:32:34.642Z" hostname="Mobile Chrome" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Basic Application Functionality › should load the home page successfully" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should have working navigation" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should handle page interactions without errors" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should be responsive on mobile" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="basic-functionality.test.ts" timestamp="2025-09-14T14:32:34.642Z" hostname="Mobile Safari" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Basic Application Functionality › should load the home page successfully" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should have working navigation" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should handle page interactions without errors" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should be responsive on mobile" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="basic-functionality.test.ts" timestamp="2025-09-14T14:32:34.642Z" hostname="Microsoft Edge" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Basic Application Functionality › should load the home page successfully" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should have working navigation" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should handle page interactions without errors" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should be responsive on mobile" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="basic-functionality.test.ts" timestamp="2025-09-14T14:32:34.642Z" hostname="Google Chrome" tests="4" failures="0" skipped="4" time="0" errors="0">
+<testcase name="Basic Application Functionality › should load the home page successfully" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should have working navigation" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should handle page interactions without errors" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="Basic Application Functionality › should be responsive on mobile" classname="basic-functionality.test.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

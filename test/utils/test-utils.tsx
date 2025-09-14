@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, type RenderOptions, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { createMemoryHistory } from 'history'
-import { type ReactElement, type ReactNode } from 'react'
+import React, { type ReactElement, type ReactNode } from 'react'
 import { MemoryRouter, Router } from 'react-router-dom'
 import { expect, vi } from 'vitest'
 

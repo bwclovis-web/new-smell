@@ -17,7 +17,7 @@
 
 import { convertPngToWebP, convertMultiplePngToWebP, findPngFiles, getOptimizedOptions, generateConversionReport, validateWebPSupport } from '../app/utils/imageConversion.ts'
 import { promises as fs } from 'fs'
-import { join, dirname } from 'path'
+import { join, dirname, basename } from 'path'
 import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -159,7 +159,7 @@ async function main() {
 
     console.log(`📁 Found ${pngFiles.length} PNG file(s) to convert`)
     console.log(`📂 Input: ${options.input}`)
-    console.log(`📂 Output: ${options.output}`)
+    console.log(`📂 Output: ${options.output} (and app/images)`)
 
     if (options.dryRun) {
       console.log('\n🔍 Dry run - files that would be converted:')
@@ -188,8 +188,21 @@ async function main() {
 
     console.log('\n🚀 Starting conversion...\n')
 
-    // Convert files
-    const results = await convertMultiplePngToWebP(pngFiles, options.output, conversionOptions)
+    // Convert files to both app/images and public/images
+    const results = []
+    
+    for (const pngFile of pngFiles) {
+      // Convert to public/images (for web serving)
+      const publicOutputPath = join(options.output, basename(pngFile, '.png') + '.webp')
+      const publicResult = await convertPngToWebP(pngFile, publicOutputPath, conversionOptions)
+      results.push(publicResult)
+      
+      // Also convert to app/images (for development)
+      const appImagesDir = join(__dirname, '../app/images')
+      const appOutputPath = join(appImagesDir, basename(pngFile, '.png') + '.webp')
+      const appResult = await convertPngToWebP(pngFile, appOutputPath, conversionOptions)
+      results.push(appResult)
+    }
 
     // Generate and display report
     const report = generateConversionReport(results)

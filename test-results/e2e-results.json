@@ -1,0 +1,788 @@
+{
+  "config": {
+    "configFile": "C:\\Repos\\new-smell\\playwright.config.ts",
+    "rootDir": "C:/Repos/new-smell/test/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": "C:\\Repos\\new-smell\\test\\e2e\\global-setup.ts",
+    "globalTeardown": "C:\\Repos\\new-smell\\test\\e2e\\global-teardown.ts",
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "failures-only",
+    "reporter": [
+      [
+        "html",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/e2e-results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "test-results/e2e-results.xml"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Repos/new-smell/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Repos/new-smell/test/e2e",
+        "testIgnore": [
+          "**/node_modules/**",
+          "**/build/**",
+          "**/dist/**",
+          "**/coverage/**"
+        ],
+        "testMatch": [
+          "**/test/e2e/**/*.test.ts",
+          "**/test/e2e/**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Repos/new-smell/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Repos/new-smell/test/e2e",
+        "testIgnore": [
+          "**/node_modules/**",
+          "**/build/**",
+          "**/dist/**",
+          "**/coverage/**"
+        ],
+        "testMatch": [
+          "**/test/e2e/**/*.test.ts",
+          "**/test/e2e/**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Repos/new-smell/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Repos/new-smell/test/e2e",
+        "testIgnore": [
+          "**/node_modules/**",
+          "**/build/**",
+          "**/dist/**",
+          "**/coverage/**"
+        ],
+        "testMatch": [
+          "**/test/e2e/**/*.test.ts",
+          "**/test/e2e/**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Repos/new-smell/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "C:/Repos/new-smell/test/e2e",
+        "testIgnore": [
+          "**/node_modules/**",
+          "**/build/**",
+          "**/dist/**",
+          "**/coverage/**"
+        ],
+        "testMatch": [
+          "**/test/e2e/**/*.test.ts",
+          "**/test/e2e/**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Repos/new-smell/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "Mobile Safari",
+        "name": "Mobile Safari",
+        "testDir": "C:/Repos/new-smell/test/e2e",
+        "testIgnore": [
+          "**/node_modules/**",
+          "**/build/**",
+          "**/dist/**",
+          "**/coverage/**"
+        ],
+        "testMatch": [
+          "**/test/e2e/**/*.test.ts",
+          "**/test/e2e/**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Repos/new-smell/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "Microsoft Edge",
+        "name": "Microsoft Edge",
+        "testDir": "C:/Repos/new-smell/test/e2e",
+        "testIgnore": [
+          "**/node_modules/**",
+          "**/build/**",
+          "**/dist/**",
+          "**/coverage/**"
+        ],
+        "testMatch": [
+          "**/test/e2e/**/*.test.ts",
+          "**/test/e2e/**/*.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Repos/new-smell/test-results/artifacts",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "Google Chrome",
+        "name": "Google Chrome",
+        "testDir": "C:/Repos/new-smell/test/e2e",
+        "testIgnore": [
+          "**/node_modules/**",
+          "**/build/**",
+          "**/dist/**",
+          "**/coverage/**"
+        ],
+        "testMatch": [
+          "**/test/e2e/**/*.test.ts",
+          "**/test/e2e/**/*.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "all",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 8,
+    "webServer": {
+      "command": "npm run dev",
+      "url": "http://localhost:2112",
+      "reuseExistingServer": true,
+      "timeout": 120000,
+      "env": {
+        "NODE_ENV": "test",
+        "PLAYWRIGHT_TEST": "true"
+      }
+    }
+  },
+  "suites": [
+    {
+      "title": "basic-functionality.test.ts",
+      "file": "basic-functionality.test.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Basic Application Functionality",
+          "file": "basic-functionality.test.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should load the home page successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-3ddafd269c24a8c105f0",
+              "file": "basic-functionality.test.ts",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "should have working navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-c75606c0c4fed9bfb74a",
+              "file": "basic-functionality.test.ts",
+              "line": 26,
+              "column": 3
+            },
+            {
+              "title": "should handle page interactions without errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-23c6ce788b1e887fb217",
+              "file": "basic-functionality.test.ts",
+              "line": 36,
+              "column": 3
+            },
+            {
+              "title": "should be responsive on mobile",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-223b325d228cbf11894f",
+              "file": "basic-functionality.test.ts",
+              "line": 48,
+              "column": 3
+            },
+            {
+              "title": "should load the home page successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-8430d5e9e8be1ecab15e",
+              "file": "basic-functionality.test.ts",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "should have working navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-560369f7f17fd4d0bc24",
+              "file": "basic-functionality.test.ts",
+              "line": 26,
+              "column": 3
+            },
+            {
+              "title": "should handle page interactions without errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-d7cd1f2db72149060139",
+              "file": "basic-functionality.test.ts",
+              "line": 36,
+              "column": 3
+            },
+            {
+              "title": "should be responsive on mobile",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-6ff7b7f82c94ef2a9112",
+              "file": "basic-functionality.test.ts",
+              "line": 48,
+              "column": 3
+            },
+            {
+              "title": "should load the home page successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-039ebdbc6130db6c2e85",
+              "file": "basic-functionality.test.ts",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "should have working navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-196320240c074f979c8b",
+              "file": "basic-functionality.test.ts",
+              "line": 26,
+              "column": 3
+            },
+            {
+              "title": "should handle page interactions without errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-588225f13604879b59ed",
+              "file": "basic-functionality.test.ts",
+              "line": 36,
+              "column": 3
+            },
+            {
+              "title": "should be responsive on mobile",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-18ed4f6d172b7c94f65b",
+              "file": "basic-functionality.test.ts",
+              "line": 48,
+              "column": 3
+            },
+            {
+              "title": "should load the home page successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-bfc06c6db7bc4a3e3107",
+              "file": "basic-functionality.test.ts",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "should have working navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-7049d46567f8e1f396d6",
+              "file": "basic-functionality.test.ts",
+              "line": 26,
+              "column": 3
+            },
+            {
+              "title": "should handle page interactions without errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-5bd4c3f63e660eea2205",
+              "file": "basic-functionality.test.ts",
+              "line": 36,
+              "column": 3
+            },
+            {
+              "title": "should be responsive on mobile",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-f43c7beeac8fe24e402c",
+              "file": "basic-functionality.test.ts",
+              "line": 48,
+              "column": 3
+            },
+            {
+              "title": "should load the home page successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-100a130eb3643fec5b5f",
+              "file": "basic-functionality.test.ts",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "should have working navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-6822f682b0a3ee13cef2",
+              "file": "basic-functionality.test.ts",
+              "line": 26,
+              "column": 3
+            },
+            {
+              "title": "should handle page interactions without errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-651f79315b562e11c1bb",
+              "file": "basic-functionality.test.ts",
+              "line": 36,
+              "column": 3
+            },
+            {
+              "title": "should be responsive on mobile",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-bb9c82b4c743cf219c18",
+              "file": "basic-functionality.test.ts",
+              "line": 48,
+              "column": 3
+            },
+            {
+              "title": "should load the home page successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-db72e9e2476ff5acf18c",
+              "file": "basic-functionality.test.ts",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "should have working navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-1d15763849e9a3b5b0ed",
+              "file": "basic-functionality.test.ts",
+              "line": 26,
+              "column": 3
+            },
+            {
+              "title": "should handle page interactions without errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-f0770ae3b54977a8dd9a",
+              "file": "basic-functionality.test.ts",
+              "line": 36,
+              "column": 3
+            },
+            {
+              "title": "should be responsive on mobile",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-7758855661c9afedc1b2",
+              "file": "basic-functionality.test.ts",
+              "line": 48,
+              "column": 3
+            },
+            {
+              "title": "should load the home page successfully",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-0b5e72e56c0e56c55fcb",
+              "file": "basic-functionality.test.ts",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "should have working navigation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-f3f6353f9d46dd49e886",
+              "file": "basic-functionality.test.ts",
+              "line": 26,
+              "column": 3
+            },
+            {
+              "title": "should handle page interactions without errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-adb18803d5e3587c3a3c",
+              "file": "basic-functionality.test.ts",
+              "line": 36,
+              "column": 3
+            },
+            {
+              "title": "should be responsive on mobile",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e457f0054602125e68f9-5f4f9bc34b6440b5b69d",
+              "file": "basic-functionality.test.ts",
+              "line": 48,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-09-14T14:32:34.415Z",
+    "duration": 235.3819999999996,
+    "expected": 0,
+    "skipped": 28,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

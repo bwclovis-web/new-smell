@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLoaderData } from 'react-router'
 
+import { Button } from '~/components/Atoms/Button/Button'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
-import banner from '~/images/perfumeCreate.webp'
+import banner from '~/images/security.webp'
 import { sharedLoader } from '~/utils/sharedLoader'
 
 interface SecurityStats {
@@ -122,32 +123,26 @@ const SecurityMonitor = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen">
       <TitleBanner
         image={banner}
-        heading={t('allHouses.heading')}
-        subheading={t('allHouses.subheading')}
+        heading={t('securityMonitor.heading')}
+        subheading={t('securityMonitor.subheading')}
       />
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Security Monitor</h1>
-            <p className="text-gray-600 mt-2">Real-time security monitoring and analytics</p>
-          </div>
           <div className="flex items-center space-x-4">
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-noir-gold">
               Last updated: {lastRefresh.toLocaleTimeString()}
             </div>
-            <button
+            <Button
               onClick={() => window.location.reload()}
-              className={`px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors ${isRefreshing ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
               disabled={isRefreshing}
             >
               {isRefreshing ? 'Refreshing...' : 'Refresh'}
-            </button>
+            </Button>
           </div>
         </div>
 

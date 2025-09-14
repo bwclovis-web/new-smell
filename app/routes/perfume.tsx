@@ -1,9 +1,7 @@
+import cookie from 'cookie'
 import { useTranslation } from 'react-i18next'
 import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, useLocation, useNavigate } from 'react-router'
 import { useOutletContext } from 'react-router-dom'
-import cookie from 'cookie'
-
-import { verifyAccessToken } from '~/utils/security/session-manager.server'
 
 import PerfumeIcons from '~/components/Containers/Perfume/PerfumeIcons/PerfumeIcons'
 import PerfumeNotes from '~/components/Containers/Perfume/PerfumeNotes/PerfumeNotes'
@@ -11,6 +9,7 @@ import PerfumeRatingSystem from '~/components/Containers/Perfume/PerfumeRatingSy
 import { getPerfumeByName } from '~/models/perfume.server'
 import { getPerfumeRatings, getUserPerfumeRating } from '~/models/perfumeRating.server'
 import { isInWishlist } from '~/models/wishlist.server'
+import { verifyAccessToken } from '~/utils/security/session-manager.server'
 
 import { ROUTE_PATH as BEHIND_THE_BOTTLE } from './behind-the-bottle'
 import { ROUTE_PATH as HOUSE_PATH } from './perfume-house'
