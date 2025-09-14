@@ -199,6 +199,1003 @@
   },
   "suites": [
     {
+      "title": "admin-flows.test.ts",
+      "file": "admin-flows.test.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Admin Flows",
+          "file": "admin-flows.test.ts",
+          "line": 6,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should allow admin to access admin dashboard",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-8c0b945c3e52dce00a88",
+              "file": "admin-flows.test.ts",
+              "line": 19,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to security monitor",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-7ebb627291ae7fbfb2d3",
+              "file": "admin-flows.test.ts",
+              "line": 27,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to data quality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-eb8c2c56e6e46f373da2",
+              "file": "admin-flows.test.ts",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-486c76395e6be3572b10",
+              "file": "admin-flows.test.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume house",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-75dc56dd15a6f6af8162",
+              "file": "admin-flows.test.ts",
+              "line": 60,
+              "column": 3
+            },
+            {
+              "title": "should redirect non-admin users from admin pages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-d4fcb90b9b793a711017",
+              "file": "admin-flows.test.ts",
+              "line": 71,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to logout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-f8f6f978eb653c540b65",
+              "file": "admin-flows.test.ts",
+              "line": 84,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to access admin dashboard",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-49c835f03bbcdd866c65",
+              "file": "admin-flows.test.ts",
+              "line": 19,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to security monitor",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-b42788e456704f077a5d",
+              "file": "admin-flows.test.ts",
+              "line": 27,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to data quality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-3d7be3046a1b2efdca7e",
+              "file": "admin-flows.test.ts",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-9036a64ed17ef028d5b5",
+              "file": "admin-flows.test.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume house",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-547a2c005aa2efe836a6",
+              "file": "admin-flows.test.ts",
+              "line": 60,
+              "column": 3
+            },
+            {
+              "title": "should redirect non-admin users from admin pages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-4cb0ab95beeec3fb89ce",
+              "file": "admin-flows.test.ts",
+              "line": 71,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to logout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-424a6385351eb7751bef",
+              "file": "admin-flows.test.ts",
+              "line": 84,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to access admin dashboard",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-7f7b6599080faa99a859",
+              "file": "admin-flows.test.ts",
+              "line": 19,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to security monitor",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-faa319c8eb36af0156b2",
+              "file": "admin-flows.test.ts",
+              "line": 27,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to data quality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-aeceb9cbf4a35b472596",
+              "file": "admin-flows.test.ts",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-cab3c02834ff94f94a55",
+              "file": "admin-flows.test.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume house",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-0e12fcf48128ba649f7a",
+              "file": "admin-flows.test.ts",
+              "line": 60,
+              "column": 3
+            },
+            {
+              "title": "should redirect non-admin users from admin pages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-791c71cdc1f0a0817ba9",
+              "file": "admin-flows.test.ts",
+              "line": 71,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to logout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-e80146f8b0f46454bae2",
+              "file": "admin-flows.test.ts",
+              "line": 84,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to access admin dashboard",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-b445bb028027f7c62831",
+              "file": "admin-flows.test.ts",
+              "line": 19,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to security monitor",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-55988b2d7497294236c0",
+              "file": "admin-flows.test.ts",
+              "line": 27,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to data quality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-c877873aa895657811af",
+              "file": "admin-flows.test.ts",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-e1a85827ba74f3f14556",
+              "file": "admin-flows.test.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume house",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-bbdaa7426b1fbf6a5648",
+              "file": "admin-flows.test.ts",
+              "line": 60,
+              "column": 3
+            },
+            {
+              "title": "should redirect non-admin users from admin pages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-9f23c60e41ab1a2613bd",
+              "file": "admin-flows.test.ts",
+              "line": 71,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to logout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-e6ff9eb14a3e220b9233",
+              "file": "admin-flows.test.ts",
+              "line": 84,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to access admin dashboard",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-45704681c4da22a8071b",
+              "file": "admin-flows.test.ts",
+              "line": 19,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to security monitor",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-d66486899f1bfb73ee41",
+              "file": "admin-flows.test.ts",
+              "line": 27,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to data quality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-1bf827cbc0ad3138b364",
+              "file": "admin-flows.test.ts",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-20527b0420a1dd7ce813",
+              "file": "admin-flows.test.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume house",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-35d23e1187e7ad9aa148",
+              "file": "admin-flows.test.ts",
+              "line": 60,
+              "column": 3
+            },
+            {
+              "title": "should redirect non-admin users from admin pages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-0d42efcf07f01845f95f",
+              "file": "admin-flows.test.ts",
+              "line": 71,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to logout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-dc000f1f80db86279aef",
+              "file": "admin-flows.test.ts",
+              "line": 84,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to access admin dashboard",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-03c47e6e8da02942d94b",
+              "file": "admin-flows.test.ts",
+              "line": 19,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to security monitor",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-5da099ee2d5847b4a434",
+              "file": "admin-flows.test.ts",
+              "line": 27,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to data quality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-25e26232d6b67b94c370",
+              "file": "admin-flows.test.ts",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-52fa7333ff4cebe1db07",
+              "file": "admin-flows.test.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume house",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-781bee2bb2fc294c416b",
+              "file": "admin-flows.test.ts",
+              "line": 60,
+              "column": 3
+            },
+            {
+              "title": "should redirect non-admin users from admin pages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-46764af7df19bfcea31d",
+              "file": "admin-flows.test.ts",
+              "line": 71,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to logout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Microsoft Edge",
+                  "projectName": "Microsoft Edge",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-7e274751c9f104ab3533",
+              "file": "admin-flows.test.ts",
+              "line": 84,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to access admin dashboard",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-1d343d79e51e900e1e93",
+              "file": "admin-flows.test.ts",
+              "line": 19,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to security monitor",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-9a221516a0e93c1b78a7",
+              "file": "admin-flows.test.ts",
+              "line": 27,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to navigate to data quality",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-443f0f17ac0ea1ec3784",
+              "file": "admin-flows.test.ts",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-cbefff0f00f288035012",
+              "file": "admin-flows.test.ts",
+              "line": 49,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to create new perfume house",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-714a1e165f81fdd5d08d",
+              "file": "admin-flows.test.ts",
+              "line": 60,
+              "column": 3
+            },
+            {
+              "title": "should redirect non-admin users from admin pages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-42abb09c977c40d9d1e7",
+              "file": "admin-flows.test.ts",
+              "line": 71,
+              "column": 3
+            },
+            {
+              "title": "should allow admin to logout",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Google Chrome",
+                  "projectName": "Google Chrome",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "e97127ef6d8531a08843-b0f948768a7bea136cad",
+              "file": "admin-flows.test.ts",
+              "line": 84,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
       "title": "basic-functionality.test.ts",
       "file": "basic-functionality.test.ts",
       "column": 0,
@@ -774,14 +1771,2460 @@
           ]
         }
       ]
+    },
+    {
+      "title": "critical-user-flows.test.ts",
+      "file": "critical-user-flows.test.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Critical User Flows",
+          "file": "critical-user-flows.test.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [],
+          "suites": [
+            {
+              "title": "Authentication Flows",
+              "file": "critical-user-flows.test.ts",
+              "line": 9,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should allow user to sign up with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-01ae71cc56d4958baef5",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 10,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to login with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-5d1186f8d1e36bf5b6a4",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 27,
+                  "column": 5
+                },
+                {
+                  "title": "should show error for invalid login credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-49c018087ea01dc450a7",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 38,
+                  "column": 5
+                },
+                {
+                  "title": "should validate password strength during sign up",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-cbe85c82cf2796cd33f7",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 49,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to sign up with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-f9d2e3d314d1a01769fd",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 10,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to login with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-4d2cf156dafb8090b1fd",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 27,
+                  "column": 5
+                },
+                {
+                  "title": "should show error for invalid login credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-23766e02b9a798378885",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 38,
+                  "column": 5
+                },
+                {
+                  "title": "should validate password strength during sign up",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-2ff75a851006948785a7",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 49,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to sign up with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-7714a6c67087515a0b51",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 10,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to login with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-1f23b6fefc257528d2f6",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 27,
+                  "column": 5
+                },
+                {
+                  "title": "should show error for invalid login credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-e9c36b49b1cedd6847ad",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 38,
+                  "column": 5
+                },
+                {
+                  "title": "should validate password strength during sign up",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-12d30a1e23c4b7f11631",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 49,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to sign up with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-960fb2ae8550fac6e45c",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 10,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to login with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-f52054a662a0e893537f",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 27,
+                  "column": 5
+                },
+                {
+                  "title": "should show error for invalid login credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-09df4eea36540d80d4d3",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 38,
+                  "column": 5
+                },
+                {
+                  "title": "should validate password strength during sign up",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-80bdbae7f4a122d66b81",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 49,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to sign up with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-aee4dcf55a971b19e70b",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 10,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to login with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-07fc0843a24a33a78489",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 27,
+                  "column": 5
+                },
+                {
+                  "title": "should show error for invalid login credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-d98e2fb2e227eae5c98d",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 38,
+                  "column": 5
+                },
+                {
+                  "title": "should validate password strength during sign up",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-35dabe9b2b8bbe9099bd",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 49,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to sign up with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-30cdf2d8dfbb0c1d91dc",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 10,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to login with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-74d138ad8a2cf374de7a",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 27,
+                  "column": 5
+                },
+                {
+                  "title": "should show error for invalid login credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-bd701ce98d96e6507b98",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 38,
+                  "column": 5
+                },
+                {
+                  "title": "should validate password strength during sign up",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-c2ba028199a8d7a41404",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 49,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to sign up with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-81c0422878e88c61a1e2",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 10,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to login with valid credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-dced36c36514c1af4642",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 27,
+                  "column": 5
+                },
+                {
+                  "title": "should show error for invalid login credentials",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-68079ce6896969342cca",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 38,
+                  "column": 5
+                },
+                {
+                  "title": "should validate password strength during sign up",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-4efb3f8aeecc314262a2",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 49,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Perfume Browsing Flows",
+              "file": "critical-user-flows.test.ts",
+              "line": 68,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should allow user to browse perfumes in the vault",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-0412d888808d257d9118",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 69,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to search for perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-ec239e273e59411b92cc",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 82,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to filter perfumes by letter",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-03833b63802ebd00de38",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 97,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to sort perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-5c192e21c84e4b4ea136",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 112,
+                  "column": 5
+                },
+                {
+                  "title": "should show no results message for invalid search",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-a35a81cc07fcc2514955",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 127,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to browse perfumes in the vault",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-d7fc7a00e7ee2f1c826e",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 69,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to search for perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-76deec7234bc4c54ab02",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 82,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to filter perfumes by letter",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-9e5eddd511c14eb9ad78",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 97,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to sort perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-64995ac61715fab76283",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 112,
+                  "column": 5
+                },
+                {
+                  "title": "should show no results message for invalid search",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-1d47791256ffb908103e",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 127,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to browse perfumes in the vault",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-ccfc9b239a336334935d",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 69,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to search for perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-36ffbba7421f89e64b3f",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 82,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to filter perfumes by letter",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-d7c31a15b4e42189b9a5",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 97,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to sort perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-be4df2bca41841c87b11",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 112,
+                  "column": 5
+                },
+                {
+                  "title": "should show no results message for invalid search",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-6db9082bfba51b7ff352",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 127,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to browse perfumes in the vault",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-9ae7e4128cca50ba9749",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 69,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to search for perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-f26b2af6694ca31d8741",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 82,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to filter perfumes by letter",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-e83deda6ecd5a0484f39",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 97,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to sort perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-6553d0b314358cf75fac",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 112,
+                  "column": 5
+                },
+                {
+                  "title": "should show no results message for invalid search",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-810ea359fb3ea4ef7cb5",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 127,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to browse perfumes in the vault",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-4bc652ccafab808c776b",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 69,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to search for perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-b7e4d25b318f6726aaed",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 82,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to filter perfumes by letter",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-0012ecf3aa5b4aad8b49",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 97,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to sort perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-70dd7783d25cc314d315",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 112,
+                  "column": 5
+                },
+                {
+                  "title": "should show no results message for invalid search",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-d0da981340865e9030c2",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 127,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to browse perfumes in the vault",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-f79bf4946501ccc5b286",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 69,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to search for perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-544fa31b9d953c3db28c",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 82,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to filter perfumes by letter",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-ebbdb188aa4fd6f6dd12",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 97,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to sort perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-1a7a28eb18b8307295eb",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 112,
+                  "column": 5
+                },
+                {
+                  "title": "should show no results message for invalid search",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-6972c91d75be19a89bd7",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 127,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to browse perfumes in the vault",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-beabccb6c1d1721701dd",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 69,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to search for perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-5cf10d98da62d2ce98cf",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 82,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to filter perfumes by letter",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-30e89ca792447afe0ef3",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 97,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to sort perfumes",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-d0560437bfe07a95d319",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 112,
+                  "column": 5
+                },
+                {
+                  "title": "should show no results message for invalid search",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-b60f1c0e8c2488c948d5",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 127,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Perfume Detail Flows",
+              "file": "critical-user-flows.test.ts",
+              "line": 142,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should allow user to view perfume details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-d78b380d0e1107bd1bee",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 143,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to add perfume to wishlist",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-520b110ab13774626392",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 163,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to rate a perfume",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-33fabe1add6e724047e9",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 183,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to view perfume details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-f177481be45f55ff15b4",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 143,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to add perfume to wishlist",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-1a3b7743d90b5596c408",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 163,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to rate a perfume",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-e6ff5f7a902db3b2f5cc",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 183,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to view perfume details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-89c5ef7450131ae8366a",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 143,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to add perfume to wishlist",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-6a46a8c1ae2da18509d8",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 163,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to rate a perfume",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-7230b8b308a4b17b9391",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 183,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to view perfume details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-25cbb846baa1da3ad081",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 143,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to add perfume to wishlist",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-46dcaf5cf1fac5d5d391",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 163,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to rate a perfume",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-12e837c6440bacaefcee",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 183,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to view perfume details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-51fae2b9036c196d06d5",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 143,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to add perfume to wishlist",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-da051c8fd1566da2b345",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 163,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to rate a perfume",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-9d7ecff53378afa25664",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 183,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to view perfume details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-c1264f850c12fdec2f7e",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 143,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to add perfume to wishlist",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-874ce4573da7d2e8f38d",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 163,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to rate a perfume",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-ed685711bdc1fd21b197",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 183,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to view perfume details",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-a49e462ea06fc9d4f50b",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 143,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to add perfume to wishlist",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-f81752360327f8f2d36f",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 163,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to rate a perfume",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-2f81fc767ffbe8005547",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 183,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Navigation Flows",
+              "file": "critical-user-flows.test.ts",
+              "line": 203,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should allow user to navigate between pages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-5948f70a0d8598af743e",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 204,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain state when navigating back",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-882651eaaabbaf5f3334",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 221,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to navigate between pages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-78d4fe3f904ab0502616",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 204,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain state when navigating back",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-6aa0b04229420aa21a9b",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 221,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to navigate between pages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-c607a6a12d994e5c34cb",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 204,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain state when navigating back",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-af878f49101617c61dad",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 221,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to navigate between pages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-86303a563068f6b7fdb6",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 204,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain state when navigating back",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-daa66f139ee2d6c1771c",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 221,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to navigate between pages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-86ddde2a1a95152bb4c1",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 204,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain state when navigating back",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-b1e2c2073d22001c126f",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 221,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to navigate between pages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-7c11942fb77e223b7cba",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 204,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain state when navigating back",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-08f1a1f4fc4fa789441b",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 221,
+                  "column": 5
+                },
+                {
+                  "title": "should allow user to navigate between pages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-d7811afec0315e314231",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 204,
+                  "column": 5
+                },
+                {
+                  "title": "should maintain state when navigating back",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-b1deb62cd7961087c752",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 221,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Error Handling Flows",
+              "file": "critical-user-flows.test.ts",
+              "line": 242,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-a9ddec284dab022babfc",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 243,
+                  "column": 5
+                },
+                {
+                  "title": "should show appropriate error messages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-cd09ca5dd271feed0512",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 254,
+                  "column": 5
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-f18f85dc3e18c8efe4e8",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 243,
+                  "column": 5
+                },
+                {
+                  "title": "should show appropriate error messages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-644e66c3955e5a03c693",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 254,
+                  "column": 5
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-07ceb6fdf2db9883b500",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 243,
+                  "column": 5
+                },
+                {
+                  "title": "should show appropriate error messages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-9e2684f51ce875649775",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 254,
+                  "column": 5
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-21d092d071f30f338a7e",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 243,
+                  "column": 5
+                },
+                {
+                  "title": "should show appropriate error messages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-79bb07c8434336802bf2",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 254,
+                  "column": 5
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-ae406b1cb49c627a9955",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 243,
+                  "column": 5
+                },
+                {
+                  "title": "should show appropriate error messages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-ba9262a2a9d739a4cee0",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 254,
+                  "column": 5
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-74a3225316cd5b05701d",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 243,
+                  "column": 5
+                },
+                {
+                  "title": "should show appropriate error messages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-4769ba70e3a6e02c020d",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 254,
+                  "column": 5
+                },
+                {
+                  "title": "should handle network errors gracefully",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-290d6904ddab6ef743e1",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 243,
+                  "column": 5
+                },
+                {
+                  "title": "should show appropriate error messages",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-95bfa8dc858e48af692c",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 254,
+                  "column": 5
+                }
+              ]
+            },
+            {
+              "title": "Mobile Responsiveness",
+              "file": "critical-user-flows.test.ts",
+              "line": 266,
+              "column": 8,
+              "specs": [
+                {
+                  "title": "should work correctly on mobile devices",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "chromium",
+                      "projectName": "chromium",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-31c7625cb17f215e01b5",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 267,
+                  "column": 5
+                },
+                {
+                  "title": "should work correctly on mobile devices",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "firefox",
+                      "projectName": "firefox",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-957ed3d1ff8521d7df6a",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 267,
+                  "column": 5
+                },
+                {
+                  "title": "should work correctly on mobile devices",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "webkit",
+                      "projectName": "webkit",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-9c43220144058d344f7b",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 267,
+                  "column": 5
+                },
+                {
+                  "title": "should work correctly on mobile devices",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Chrome",
+                      "projectName": "Mobile Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-ee47f57ff4112aefe505",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 267,
+                  "column": 5
+                },
+                {
+                  "title": "should work correctly on mobile devices",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Mobile Safari",
+                      "projectName": "Mobile Safari",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-47b3585c18820f01e045",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 267,
+                  "column": 5
+                },
+                {
+                  "title": "should work correctly on mobile devices",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Microsoft Edge",
+                      "projectName": "Microsoft Edge",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-03a04e5f76fdf8cf38d4",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 267,
+                  "column": 5
+                },
+                {
+                  "title": "should work correctly on mobile devices",
+                  "ok": true,
+                  "tags": [],
+                  "tests": [
+                    {
+                      "timeout": 30000,
+                      "annotations": [],
+                      "expectedStatus": "passed",
+                      "projectId": "Google Chrome",
+                      "projectName": "Google Chrome",
+                      "results": [],
+                      "status": "skipped"
+                    }
+                  ],
+                  "id": "ca00825c255c14232230-c480924819c074f5a47e",
+                  "file": "critical-user-flows.test.ts",
+                  "line": 267,
+                  "column": 5
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-09-14T14:32:34.415Z",
-    "duration": 235.3819999999996,
+    "startTime": "2025-09-14T14:40:45.228Z",
+    "duration": 482.75199999999995,
     "expected": 0,
-    "skipped": 28,
+    "skipped": 196,
     "unexpected": 0,
     "flaky": 0
   }

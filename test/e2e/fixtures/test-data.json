@@ -1,0 +1,67 @@
+{
+  "users": {
+    "admin": {
+      "email": "admin@example.com",
+      "password": "AdminPassword123!",
+      "firstName": "Admin",
+      "lastName": "User",
+      "role": "admin"
+    },
+    "regular": {
+      "email": "user@example.com",
+      "password": "UserPassword123!",
+      "firstName": "Regular",
+      "lastName": "User",
+      "role": "user"
+    },
+    "newUser": {
+      "email": "newuser@example.com",
+      "password": "NewUserPassword123!",
+      "firstName": "New",
+      "lastName": "User",
+      "role": "user"
+    }
+  },
+  "perfumes": {
+    "testPerfume": {
+      "name": "Test Perfume",
+      "house": "Test House",
+      "description": "A test perfume for E2E testing",
+      "notes": ["rose", "jasmine", "sandalwood"],
+      "image": "/images/test-perfume.webp"
+    },
+    "searchTest": {
+      "name": "Rose Garden",
+      "house": "Floral House",
+      "description": "A floral perfume with rose notes",
+      "notes": ["rose", "lily", "violet"],
+      "image": "/images/rose-garden.webp"
+    }
+  },
+  "perfumeHouses": {
+    "testHouse": {
+      "name": "Test House",
+      "description": "A test perfume house for E2E testing",
+      "country": "France",
+      "founded": "2020",
+      "image": "/images/test-house.webp"
+    }
+  },
+  "searchQueries": {
+    "valid": ["rose", "floral", "woody", "citrus"],
+    "invalid": ["nonexistentperfume12345", "xyzabc123"],
+    "specialCharacters": ["rose & jasmine", "perfume-test", "café"]
+  },
+  "ratings": {
+    "valid": [1, 2, 3, 4, 5],
+    "invalid": [0, 6, -1]
+  },
+  "urls": {
+    "base": "http://localhost:2112",
+    "home": "/",
+    "login": "/login",
+    "vault": "/the-vault",
+    "admin": "/admin",
+    "perfume": "/perfume"
+  }
+}

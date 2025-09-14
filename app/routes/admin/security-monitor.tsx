@@ -149,7 +149,7 @@ const SecurityMonitor = () => {
         {/* Security Events Overview */}
         {security && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
+            <div className="bg-noir-light/20 rounded-lg shadow p-6 border-l-4 border-red-500">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
@@ -157,13 +157,13 @@ const SecurityMonitor = () => {
                   </div>
                 </div>
                 <div className="ml-4">
-                  <h3 className="text-lg font-semibold text-gray-900">Security Events</h3>
-                  <p className="text-3xl font-bold text-red-600">{security.totalEvents}</p>
+                  <h3 className="text-base font-semibold font-noir-gold-500">Security Events</h3>
+                  <p className="text-3xl font-bold text-noir-gold">{security.totalEvents}</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6 border-l-4 border-orange-500">
+            <div className="bg-noir-light/20 rounded-lg shadow p-6 border-l-4 border-orange-500">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
@@ -177,7 +177,7 @@ const SecurityMonitor = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+            <div className="bg-noir-light/20 rounded-lg shadow p-6 border-l-4 border-blue-500">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -191,7 +191,7 @@ const SecurityMonitor = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
+            <div className="bg-noir-light/20 rounded-lg shadow p-6 border-l-4 border-yellow-500">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
@@ -209,7 +209,7 @@ const SecurityMonitor = () => {
 
         {/* Rate Limiting Stats */}
         {rateLimit && (
-          <div className="bg-white rounded-lg shadow p-6 mb-8">
+          <div className="bg-noir-light/20 rounded-lg shadow p-6 mb-8">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-gray-900">Rate Limiting Statistics</h2>
               <div className="text-sm text-gray-500">
@@ -250,7 +250,7 @@ const SecurityMonitor = () => {
 
         {/* Audit Logs Stats */}
         {audit && (
-          <div className="bg-white rounded-lg shadow p-6 mb-8">
+          <div className="bg-noir-light/20 rounded-lg shadow p-6 mb-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Audit Logs Statistics</h2>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="text-center p-4 bg-gray-50 rounded-lg">
@@ -275,7 +275,7 @@ const SecurityMonitor = () => {
 
         {/* Recent Security Events */}
         {security && security.recentEvents && security.recentEvents.length > 0 && (
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-noir-light/20 rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Security Events</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
@@ -333,7 +333,7 @@ const SecurityMonitor = () => {
 
         {/* No Events Message */}
         {security && (!security.recentEvents || security.recentEvents.length === 0) && (
-          <div className="bg-white rounded-lg shadow p-6 text-center">
+          <div className="bg-noir-light/20 rounded-lg shadow p-6 text-center">
             <div className="text-6xl mb-4">🛡️</div>
             <h2 className="text-xl font-semibold text-gray-900 mb-2">No Recent Security Events</h2>
             <p className="text-gray-600">Your application is secure! No security events have been detected recently.</p>
@@ -342,7 +342,7 @@ const SecurityMonitor = () => {
 
         {/* Quick Actions */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-noir-light/20 rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
             <div className="space-y-3">
               <button
@@ -366,7 +366,7 @@ const SecurityMonitor = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-noir-light/20 rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">System Status</h3>
             <div className="space-y-2">
               <div className="flex justify-between items-center">
@@ -388,7 +388,7 @@ const SecurityMonitor = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
+          <div className="bg-noir-light/20 rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Monitoring Info</h3>
             <div className="text-sm text-gray-600 space-y-2">
               <p>• Auto-refresh every 30 seconds</p>
