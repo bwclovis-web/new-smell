@@ -1,16 +1,26 @@
 /* eslint-disable max-statements */
-import { parseCookies, verifyJwt } from '@api/utils'
 import { redirect } from 'react-router'
 import cookie from 'cookie'
 
 import { getUserById } from '~/models/user.server'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 import { createSafeUser } from '~/types'
-import { refreshSession } from '~/models/session.server'
+import { refreshSession, verifyAccessToken } from '~/utils/security/session-manager.server'
 
 export const sharedLoader = async (request: Request) => {
   const cookieHeader = request.headers.get('cookie') || ''
-  const cookies = parseCookies({ headers: { cookie: cookieHeader } })
+
+  // Parse cookies correctly
+  const cookies = cookie.parse(cookieHeader)
+
+  // Debug logging
+  console.log('🔍 Auth Debug:', {
+    hasCookies: !!cookieHeader,
+    cookieKeys: Object.keys(cookies),
+    hasAccessToken: !!cookies.accessToken,
+    hasRefreshToken: !!cookies.refreshToken,
+    hasLegacyToken: !!cookies.token
+  })
 
   // Try access token first
   let accessToken = cookies.accessToken
@@ -21,24 +31,34 @@ export const sharedLoader = async (request: Request) => {
     accessToken = cookies.token
   }
 
-  if (!accessToken) {
+  if (!accessToken && !refreshToken) {
+    console.log('❌ No tokens found, redirecting to sign-in')
     throw redirect(SIGN_IN)
   }
 
   // Verify access token
-  const payload = verifyJwt(accessToken)
-  if (payload && payload.userId) {
-    const fullUser = await getUserById(payload.userId)
-    const user = createSafeUser(fullUser)
+  if (accessToken) {
+    console.log('🔍 Verifying access token...')
+    const payload = verifyAccessToken(accessToken)
+    console.log('🔍 Token payload:', payload ? 'Valid' : 'Invalid')
 
-    if (!user) {
-      throw redirect('/sign-in')
+    if (payload && payload.userId) {
+      const fullUser = await getUserById(payload.userId)
+      const user = createSafeUser(fullUser)
+
+      if (!user) {
+        console.log('❌ User not found in database')
+        throw redirect('/sign-in')
+      }
+
+      console.log('✅ User authenticated successfully:', user.email)
+      return user
+    } else {
+      console.log('❌ Access token invalid, trying refresh token...')
     }
-
-    return user
   }
 
-  // If access token is invalid, try refresh token
+  // If access token is invalid or missing, try refresh token
   if (refreshToken) {
     try {
       const refreshResult = await refreshSession(refreshToken)

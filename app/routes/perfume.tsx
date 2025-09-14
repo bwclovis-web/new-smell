@@ -1,7 +1,9 @@
-import { parseCookies, verifyJwt } from '@api/utils'
 import { useTranslation } from 'react-i18next'
 import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, useLocation, useNavigate } from 'react-router'
 import { useOutletContext } from 'react-router-dom'
+import cookie from 'cookie'
+
+import { verifyAccessToken } from '~/utils/security/session-manager.server'
 
 import PerfumeIcons from '~/components/Containers/Perfume/PerfumeIcons/PerfumeIcons'
 import PerfumeNotes from '~/components/Containers/Perfume/PerfumeNotes/PerfumeNotes'
@@ -44,13 +46,21 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 const getUserIdFromRequest = async (request: Request): Promise<string | null> => {
   try {
     const cookieHeader = request.headers.get('cookie') || ''
-    const cookies = parseCookies({ headers: { cookie: cookieHeader } })
+    const cookies = cookie.parse(cookieHeader)
 
-    if (!cookies.token) {
+    // Try access token first
+    let accessToken = cookies.accessToken
+
+    // Fallback to legacy token for backward compatibility
+    if (!accessToken && cookies.token) {
+      accessToken = cookies.token
+    }
+
+    if (!accessToken) {
       return null
     }
 
-    const payload = verifyJwt(cookies.token)
+    const payload = verifyAccessToken(accessToken)
     return payload?.userId || null
   } catch {
     return null

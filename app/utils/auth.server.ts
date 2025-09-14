@@ -1,6 +1,7 @@
-import { parseCookies, verifyJwt } from '@api/utils'
+import cookie from 'cookie'
 
 import { getUserById } from '~/models/user.server'
+import { verifyAccessToken } from '~/utils/security/session-manager.server'
 
 export type AuthResult = {
   success: boolean
@@ -11,8 +12,17 @@ export type AuthResult = {
 
 const getTokenFromRequest = (request: Request) => {
   const cookieHeader = request.headers.get('cookie') || ''
-  const cookies = parseCookies({ headers: { cookie: cookieHeader } })
-  return cookies.token
+  const cookies = cookie.parse(cookieHeader)
+
+  // Try access token first
+  let accessToken = cookies.accessToken
+
+  // Fallback to legacy token for backward compatibility
+  if (!accessToken && cookies.token) {
+    accessToken = cookies.token
+  }
+
+  return accessToken
 }
 
 const validateToken = (token: string | undefined) => {
@@ -20,7 +30,7 @@ const validateToken = (token: string | undefined) => {
     return { valid: false, error: 'User not authenticated' }
   }
 
-  const payload = verifyJwt(token)
+  const payload = verifyAccessToken(token)
   if (!payload || !payload.userId) {
     return { valid: false, error: 'Invalid authentication token' }
   }
