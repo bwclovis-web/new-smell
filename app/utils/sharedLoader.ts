@@ -1,11 +1,11 @@
 /* eslint-disable max-statements */
-import { redirect } from 'react-router'
 import cookie from 'cookie'
+import { redirect } from 'react-router'
 
 import { getUserById } from '~/models/user.server'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 import { createSafeUser } from '~/types'
-import { refreshSession, verifyAccessToken } from '~/utils/security/session-manager.server'
+import { refreshAccessToken, verifyAccessToken } from '~/utils/security/session-manager.server'
 
 export const sharedLoader = async (request: Request) => {
   const cookieHeader = request.headers.get('cookie') || ''
@@ -46,7 +46,7 @@ export const sharedLoader = async (request: Request) => {
   // If access token is invalid or missing, try refresh token
   if (refreshToken) {
     try {
-      const refreshResult = await refreshSession(refreshToken)
+      const refreshResult = await refreshAccessToken(refreshToken)
       if (refreshResult) {
         // Set new access token cookie
         const newAccessTokenCookie = cookie.serialize('accessToken', refreshResult.accessToken, {
