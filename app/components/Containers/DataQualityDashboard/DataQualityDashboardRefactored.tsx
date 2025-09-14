@@ -12,15 +12,15 @@ interface DataQualityDashboardProps {
 }
 
 // Mock hook for now - this should be replaced with the actual hook
-const useFetchDataQualityStats = (timeframe: 'week' | 'month' | 'all') => {
-  // This is a placeholder - replace with actual implementation
-  return {
-    stats: null as DataQualityStats | null,
-    loading: false,
-    error: null as string | null,
-    setLastFetch: (value: number) => { }
-  }
-}
+const useFetchDataQualityStats = (timeframe: 'week' | 'month' | 'all') =>
+// This is a placeholder - replace with actual implementation
+({
+  stats: null as DataQualityStats | null,
+  loading: false,
+  error: null as string | null,
+  setLastFetch: (value: number) => { }
+})
+
 
 const DataQualityDashboard: FC<DataQualityDashboardProps> = ({ user, isAdmin }) => {
   const [timeframe, setTimeframe] = React.useState<'week' | 'month' | 'all'>('month')
