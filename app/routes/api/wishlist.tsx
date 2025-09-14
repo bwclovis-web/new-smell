@@ -2,9 +2,9 @@ import type { ActionFunctionArgs } from 'react-router'
 
 import { addToWishlist, removeFromWishlist } from '~/models/wishlist.server'
 import { authenticateUser } from '~/utils/auth.server'
+import { WishlistActionSchema } from '~/utils/formValidationSchemas'
 import { createErrorResponse, createJsonResponse } from '~/utils/response.server'
 import { validateFormData } from '~/utils/validation'
-import { WishlistActionSchema } from '~/utils/formValidationSchemas'
 
 const processWishlistAction = async (
   userId: string,

@@ -1,9 +1,9 @@
 import type { ActionFunction } from 'react-router-dom'
 
 import { createPerfumeRating, getUserPerfumeRating, updatePerfumeRating } from '~/models/perfumeRating.server'
+import { CreateRatingSchema } from '~/utils/formValidationSchemas'
 import { createErrorResponse, createSuccessResponse } from '~/utils/response.server'
 import { validateFormData } from '~/utils/validation'
-import { CreateRatingSchema } from '~/utils/formValidationSchemas'
 
 async function validateRatingData(formData: FormData): Promise<
   | { error: string; errors?: any[] }

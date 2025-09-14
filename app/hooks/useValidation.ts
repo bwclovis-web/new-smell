@@ -4,8 +4,8 @@
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import type { ZodError, ZodSchema } from 'zod'
 import { z } from 'zod'
-import type { ZodSchema, ZodError } from 'zod'
 
 // Validation hook types
 export interface UseValidationOptions<T> {
@@ -82,16 +82,10 @@ export function useValidation<T extends Record<string, unknown>>({
   const debouncedValues = useDebounce(values, debounceMs)
 
   // Check if form is dirty
-  const isDirty = useMemo(() => {
-    return JSON.stringify(values) !== JSON.stringify(initialValues)
-  }, [values, initialValues])
+  const isDirty = useMemo(() => JSON.stringify(values) !== JSON.stringify(initialValues), [values, initialValues])
 
   // Check if form is valid
-  const isValid = useMemo(() => {
-    return Object.keys(errors).length === 0 && Object.values(values).every(value =>
-      value !== null && value !== undefined && value !== ''
-    )
-  }, [errors, values])
+  const isValid = useMemo(() => Object.keys(errors).length === 0 && Object.values(values).every(value => value !== null && value !== undefined && value !== ''), [errors, values])
 
   // Validate a single field
   const validateField = useCallback(async <K extends keyof T>(field: K): Promise<boolean> => {
@@ -274,7 +268,9 @@ export function useValidation<T extends Record<string, unknown>>({
     } finally {
       setIsSubmitting(false)
     }
-  }, [validateOnSubmit, validate, values, setAllTouched])
+  }, [
+validateOnSubmit, validate, values, setAllTouched
+])
 
   // Reset form to initial values
   const reset = useCallback(() => {
@@ -301,7 +297,9 @@ export function useValidation<T extends Record<string, unknown>>({
 
       return () => clearTimeout(timeoutId)
     }
-  }, [debouncedValues, validateOnChange, isDirty, validate, debounceMs])
+  }, [
+debouncedValues, validateOnChange, isDirty, validate, debounceMs
+])
 
   // Update values when initialValues change
   useEffect(() => {

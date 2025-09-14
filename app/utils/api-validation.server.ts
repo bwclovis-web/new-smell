@@ -4,9 +4,10 @@
  */
 
 import { z } from 'zod'
+
 import { createErrorResponse } from './response.server'
-import { validateData, validateFormData, validateJsonData, validateSearchParams } from './validation'
 import type { ValidationResult } from './validation'
+import { validateData, validateFormData, validateJsonData, validateSearchParams } from './validation'
 
 // API validation middleware types
 export interface ApiValidationOptions {
@@ -34,9 +35,7 @@ export function createValidationErrorResponse(
 }
 
 // Generic API validation middleware
-export function createApiValidationMiddleware<T extends Record<string, unknown>>(
-  options: ApiValidationOptions
-) {
+export function createApiValidationMiddleware<T extends Record<string, unknown>>(options: ApiValidationOptions) {
   return async (request: Request): Promise<ValidatedRequest<T>> => {
     const validated: ValidatedRequest<T> = {}
     const errors: any[] = []
@@ -169,7 +168,9 @@ export const validateRatingSubmission = createApiValidationMiddleware({
     priceValue: z.number().min(1).max(5).optional(),
     overall: z.number().min(1).max(5).optional()
   }).refine(data => {
-    const ratings = [data.longevity, data.sillage, data.gender, data.priceValue, data.overall]
+    const ratings = [
+      data.longevity, data.sillage, data.gender, data.priceValue, data.overall
+    ]
     return ratings.some(rating => rating !== undefined)
   }, {
     message: 'At least one rating is required'
@@ -193,7 +194,9 @@ export const validateSearchQuery = createApiValidationMiddleware({
     q: z.string().max(100, 'Search query too long').optional(),
     page: z.string().regex(/^\d+$/).transform(Number).optional(),
     limit: z.string().regex(/^\d+$/).transform(Number).optional(),
-    sortBy: z.enum(['name', 'price', 'rating', 'createdAt']).optional(),
+    sortBy: z.enum([
+      'name', 'price', 'rating', 'createdAt'
+    ]).optional(),
     sortOrder: z.enum(['asc', 'desc']).optional()
   })
 })

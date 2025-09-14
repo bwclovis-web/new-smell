@@ -114,7 +114,9 @@ export const CreateRatingSchema = z.object({
   priceValue: ratingSchema.optional(),
   overall: ratingSchema.optional()
 }).refine(data => {
-  const ratings = [data.longevity, data.sillage, data.gender, data.priceValue, data.overall]
+  const ratings = [
+    data.longevity, data.sillage, data.gender, data.priceValue, data.overall
+  ]
   return ratings.some(rating => rating !== undefined)
 }, {
   message: 'At least one rating is required',
@@ -251,7 +253,9 @@ export const PerfumeSearchSchema = z.object({
     max: z.number().max(5, { message: 'Maximum rating must be 5 or less' })
   }).optional(),
   notes: z.array(z.string()).optional(),
-  sortBy: z.enum(['name', 'price', 'rating', 'createdAt']).optional(),
+  sortBy: z.enum([
+    'name', 'price', 'rating', 'createdAt'
+  ]).optional(),
   sortOrder: z.enum(['asc', 'desc']).optional()
 })
 
@@ -274,7 +278,9 @@ export const AdminUserFormSchema = z.object({
 
 // Data quality report schema
 export const DataQualityReportSchema = z.object({
-  timeframe: z.enum(['7d', '30d', '90d', '1y', 'all'], {
+  timeframe: z.enum([
+    '7d', '30d', '90d', '1y', 'all'
+  ], {
     errorMap: () => ({ message: 'Timeframe must be 7d, 30d, 90d, 1y, or all' })
   }),
   includeHistory: z.boolean(),

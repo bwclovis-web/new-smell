@@ -3,41 +3,42 @@
  * Tests all validation schemas, utilities, and components
  */
 
-import { describe, it, expect, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { z } from 'zod'
+
 import {
-  validateData,
-  validateFormData,
-  validateJsonData,
-  validateSearchParams,
-  validateAndSanitize,
-  validateId,
-  validateEmail,
-  validatePassword,
-  validateUrl,
-  validatePhone,
-  validateYear,
-  validateRating,
-  validateAmount,
-  validateEnum,
-  validateArray,
-  validateObject
-} from '~/utils/validation'
-import {
+  AdminUserFormSchema,
+  ChangePasswordSchema,
+  CreateCommentSchema,
   CreatePerfumeHouseSchema,
   CreatePerfumeSchema,
-  UpdateUserPerfumeSchema,
   CreateRatingSchema,
-  CreateCommentSchema,
-  WishlistActionSchema,
+  DataQualityReportSchema,
+  PerfumeSearchSchema,
+  UpdateProfileSchema,
+  UpdateUserPerfumeSchema,
   UserFormSchema,
   UserLogInSchema,
-  ChangePasswordSchema,
-  UpdateProfileSchema,
-  PerfumeSearchSchema,
-  AdminUserFormSchema,
-  DataQualityReportSchema
+  WishlistActionSchema
 } from '~/utils/formValidationSchemas'
+import {
+  validateAmount,
+  validateAndSanitize,
+  validateArray,
+  validateData,
+  validateEmail,
+  validateEnum,
+  validateFormData,
+  validateId,
+  validateJsonData,
+  validateObject,
+  validatePassword,
+  validatePhone,
+  validateRating,
+  validateSearchParams,
+  validateUrl,
+  validateYear
+} from '~/utils/validation'
 
 describe('Validation Utilities', () => {
   describe('validateData', () => {
@@ -209,12 +210,12 @@ describe('Validation Utilities', () => {
 
   describe('validateArray', () => {
     it('should validate valid arrays', () => {
-      const result = validateArray(['1', '2', '3'], (val) => parseInt(val as string, 10))
+      const result = validateArray(['1', '2', '3'], val => parseInt(val as string, 10))
       expect(result).toEqual([1, 2, 3])
     })
 
     it('should reject invalid arrays', () => {
-      expect(() => validateArray('not-array', (val) => val)).toThrow('Array must be an array')
+      expect(() => validateArray('not-array', val => val)).toThrow('Array must be an array')
     })
   })
 
@@ -223,8 +224,8 @@ describe('Validation Utilities', () => {
       const result = validateObject(
         { name: 'John', age: '25' },
         {
-          name: (val) => val as string,
-          age: (val) => parseInt(val as string, 10)
+          name: val => val as string,
+          age: val => parseInt(val as string, 10)
         }
       )
       expect(result).toEqual({ name: 'John', age: 25 })
