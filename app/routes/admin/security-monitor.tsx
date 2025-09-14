@@ -227,7 +227,7 @@ const SecurityMonitor = () => {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-base font-semibold font-noir-gold-500">Security Events</h3>
-                  <p className="text-3xl font-bold text-noir-gold">{security?.totalEvents || 0}</p>
+                  <p className="text-3xl font-bold text-noir-gold">{String(security?.totalEvents || 0)}</p>
                 </div>
               </div>
             </div>
@@ -241,7 +241,7 @@ const SecurityMonitor = () => {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-lg font-semibold text-gray-900">Active Alerts</h3>
-                  <p className="text-3xl font-bold text-orange-600">{security?.activeAlerts || 0}</p>
+                  <p className="text-3xl font-bold text-orange-600">{String(security?.activeAlerts || 0)}</p>
                 </div>
               </div>
             </div>
@@ -255,7 +255,7 @@ const SecurityMonitor = () => {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-lg font-semibold text-gray-900">Unique IPs</h3>
-                  <p className="text-3xl font-bold text-blue-600">{security?.uniqueIPs || 0}</p>
+                  <p className="text-3xl font-bold text-blue-600">{String(security?.uniqueIPs || 0)}</p>
                 </div>
               </div>
             </div>
@@ -269,7 +269,7 @@ const SecurityMonitor = () => {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-lg font-semibold text-gray-900">Suspicious IPs</h3>
-                  <p className="text-3xl font-bold text-yellow-600">{security?.suspiciousIPs || 0}</p>
+                  <p className="text-3xl font-bold text-yellow-600">{String(security?.suspiciousIPs || 0)}</p>
                 </div>
               </div>
             </div>
@@ -288,15 +288,15 @@ const SecurityMonitor = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Total Violations</h3>
-                <p className="text-3xl font-bold text-gray-900">{rateLimit?.totalViolations || 0}</p>
+                <p className="text-3xl font-bold text-gray-900">{String(rateLimit?.totalViolations || 0)}</p>
               </div>
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Unique IPs</h3>
-                <p className="text-3xl font-bold text-gray-900">{rateLimit?.uniqueIPs || 0}</p>
+                <p className="text-3xl font-bold text-gray-900">{String(rateLimit?.uniqueIPs || 0)}</p>
               </div>
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Recent Violations</h3>
-                <p className="text-3xl font-bold text-gray-900">{rateLimit?.recentViolations?.length || 0}</p>
+                <p className="text-3xl font-bold text-gray-900">{String(rateLimit?.recentViolations?.length || 0)}</p>
               </div>
             </div>
 
@@ -308,7 +308,7 @@ const SecurityMonitor = () => {
                   {Object.entries(rateLimit?.violationsByPath || {}).map(([path, count]: [string, any]) => (
                     <div key={path} className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
                       <span className="text-sm font-medium text-gray-700">{path}</span>
-                      <span className="text-sm font-bold text-red-600">{count} violations</span>
+                      <span className="text-sm font-bold text-red-600">{String(count)} violations</span>
                     </div>
                   ))}
                 </div>
@@ -324,19 +324,19 @@ const SecurityMonitor = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Total Logs</h3>
-                <p className="text-3xl font-bold text-gray-900">{audit?.totalLogs || 0}</p>
+                <p className="text-3xl font-bold text-gray-900">{String(audit?.totalLogs || 0)}</p>
               </div>
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Unique Users</h3>
-                <p className="text-3xl font-bold text-gray-900">{audit?.uniqueUsers || 0}</p>
+                <p className="text-3xl font-bold text-gray-900">{String(audit?.uniqueUsers || 0)}</p>
               </div>
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Unique IPs</h3>
-                <p className="text-3xl font-bold text-gray-900">{audit?.uniqueIPs || 0}</p>
+                <p className="text-3xl font-bold text-gray-900">{String(audit?.uniqueIPs || 0)}</p>
               </div>
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="text-sm font-medium text-gray-500 mb-2">Recent Logs</h3>
-                <p className="text-3xl font-bold text-gray-900">{audit?.recentLogs?.length || 0}</p>
+                <p className="text-3xl font-bold text-gray-900">{String(audit?.recentLogs?.length || 0)}</p>
               </div>
             </div>
           </div>

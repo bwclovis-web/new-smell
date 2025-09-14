@@ -15,13 +15,14 @@ export default defineConfig({
     tailwindcss(),
     tsconfigPaths(),
     reactRouter(),
-    babel({
-      filter: /\.[jt]sx?$/,
-      babelConfig: {
-        presets: ['@babel/preset-typescript'],
-        plugins: [['babel-plugin-react-compiler', ReactCompilerConfig],],
-      },
-    }),
+    // Temporarily disabled React Compiler due to build issues
+    // babel({
+    //   filter: /\.[jt]sx?$/,
+    //   babelConfig: {
+    //     presets: ['@babel/preset-typescript'],
+    //     plugins: [['babel-plugin-react-compiler', ReactCompilerConfig],],
+    //   },
+    // }),
     // Bundle analyzer for performance monitoring
     visualizer({
       filename: 'dist/stats.html',

@@ -66,6 +66,10 @@
       }
     }
   },
+  "dataQuality": {
+    "heading": "Data Quality Dashboard",
+    "subheading": "Monitor the quality of the data in our database."
+  },
   "sortOptions": {
     "created-desc": "Newest First",
     "created-asc": "Oldest First",

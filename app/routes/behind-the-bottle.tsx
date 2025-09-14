@@ -13,7 +13,7 @@ import useLetterSelection from '~/hooks/useLetterSelection'
 import { getDefaultSortOptions } from '~/utils/sortUtils'
 
 // No server imports needed for client component
-import banner from '../images/house.webp'
+import banner from '../images/behind.webp'
 
 export const loader = async () =>
   // Don't load all houses upfront - we'll load by letter on demand
