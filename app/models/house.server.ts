@@ -1,4 +1,4 @@
-import { HouseType, Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 import { prisma } from '~/db.server'
 const buildHouseOrderBy = (
