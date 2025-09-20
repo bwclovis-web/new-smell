@@ -14,6 +14,7 @@ import {
 import { useOutletContext } from 'react-router-dom'
 
 import { Button, VooDooLink } from '~/components/Atoms/Button/Button'
+import { OptimizedImage } from '~/components/Atoms/OptimizedImage'
 import PerfumeHouseAddressBlock from '~/components/Containers/PerfumeHouse/AddressBlock/PerfumeHouseAddressBlock'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getPerfumeHouseByName } from '~/models/house.server'
@@ -90,12 +91,13 @@ const HouseDetailPage = () => {
 
 
       <header className="flex items-end justify-center mb-10 relative h-[600px]">
-        <img
+        <OptimizedImage
           src={perfumeHouse.image || ''}
           alt={perfumeHouse.name}
-          loading="lazy"
           width={300}
           height={600}
+          priority={true}
+          sizes="100vw"
           className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 details-title filter contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-screen mask-linear-gradient-to-b"
           style={{
             viewTransitionName: `perfume-image-${perfumeHouse.id}`,

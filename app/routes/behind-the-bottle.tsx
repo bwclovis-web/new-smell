@@ -156,6 +156,10 @@ const AllHousesPage = () => {
           selectedLetter={selectedLetter}
           scrollContainerRef={scrollContainerRef}
           sourcePage="behind-the-bottle"
+          useVirtualScrolling={true}
+          virtualScrollThreshold={20}
+          itemHeight={320}
+          containerHeight={600}
         />
       )}
     </section>

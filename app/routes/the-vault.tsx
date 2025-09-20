@@ -121,6 +121,10 @@ const AllPerfumesPage = () => {
           selectedLetter={selectedLetter}
           scrollContainerRef={scrollContainerRef}
           sourcePage="vault"
+          useVirtualScrolling={true}
+          virtualScrollThreshold={30}
+          itemHeight={300}
+          containerHeight={600}
         />
       )}
     </section>

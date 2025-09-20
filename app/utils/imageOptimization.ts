@@ -1,201 +1,175 @@
-// Image optimization utilities
+/**
+ * Image optimization utilities for format conversion and compression
+ */
 
-export interface ImageSize {
-  width: number
-  height: number
-}
-
-export interface OptimizedImageOptions {
-  width?: number
-  height?: number
+export interface ImageOptimizationOptions {
   quality?: number
   format?: 'webp' | 'avif' | 'jpeg' | 'png'
+  width?: number
+  height?: number
   fit?: 'cover' | 'contain' | 'fill' | 'inside' | 'outside'
 }
 
 /**
- * Generate responsive srcSet for different screen sizes
+ * Generates optimized image URLs with different formats and sizes
+ * This is a placeholder for integration with image optimization services
+ * like Cloudinary, ImageKit, or Next.js Image Optimization
  */
-export function generateSrcSet(
-  baseUrl: string,
-  sizes: number[],
-  options: OptimizedImageOptions = {}
-): string {
-  if (!baseUrl || baseUrl.startsWith('data:') || baseUrl.startsWith('blob:')) {
-    return ''
+export const getOptimizedImageUrl = (
+  src: string,
+  options: ImageOptimizationOptions = {}
+): string => {
+  const {
+    quality = 75,
+    format = 'webp',
+    width,
+    height,
+    fit = 'cover'
+  } = options
+
+  // For local images, return as-is for now
+  // In production, this would integrate with an image optimization service
+  if (src.startsWith('/') || src.startsWith('./')) {
+    return src
   }
 
-  // For external URLs, return empty string to use original
-  if (baseUrl.startsWith('http')) {
-    return ''
-  }
+  // For external images, you could add optimization parameters here
+  // Example for Cloudinary:
+  // return `https://res.cloudinary.com/your-cloud/image/fetch/q_${quality},f_${format},w_${width},h_${height},c_${fit}/${encodeURIComponent(src)}`
+
+  // Example for ImageKit:
+  // return `https://ik.imagekit.io/your-imagekit-id/tr:q-${quality},f-${format},w-${width},h-${height},c-${fit}/${src}`
+
+  return src
+}
+
+/**
+ * Generates responsive image srcSet for different screen sizes
+ */
+export const generateResponsiveSrcSet = (
+  baseSrc: string,
+  sizes: number[] = [320, 640, 768, 1024, 1280, 1536, 1920]
+): string => {
+  if (!baseSrc) return ''
+
+  const baseUrl = baseSrc.replace(/\.[^/.]+$/, '')
+  const extension = baseSrc.split('.').pop() || 'jpg'
 
   return sizes
-    .map(size => {
-      const optimizedUrl = generateOptimizedUrl(baseUrl, { ...options, width: size })
-      return `${optimizedUrl} ${size}w`
-    })
+    .map(size => `${baseUrl}-${size}w.${extension} ${size}w`)
     .join(', ')
 }
 
 /**
- * Generate optimized image URL with parameters
+ * Generates appropriate sizes attribute for responsive images
  */
-export function generateOptimizedUrl(
-  baseUrl: string,
-  options: OptimizedImageOptions = {}
-): string {
-  if (!baseUrl) return ''
-
-  // For external URLs, return original
-  if (baseUrl.startsWith('http')) {
-    return baseUrl
-  }
-
-  // For local images, you could add optimization parameters
-  // This would require a build-time or runtime image processing service
-  const params = new URLSearchParams()
-
-  if (options.width) params.append('w', options.width.toString())
-  if (options.height) params.append('h', options.height.toString())
-  if (options.quality) params.append('q', options.quality.toString())
-  if (options.format) params.append('f', options.format)
-  if (options.fit) params.append('fit', options.fit)
-
-  return params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl
+export const generateSizesAttribute = (
+  breakpoints: { maxWidth: number; size: string }[] = [
+    { maxWidth: 640, size: '100vw' },
+    { maxWidth: 768, size: '50vw' },
+    { maxWidth: 1024, size: '33vw' },
+    { maxWidth: 1280, size: '25vw' }
+  ]
+): string => {
+  return breakpoints
+    .map(bp => `(max-width: ${bp.maxWidth}px) ${bp.size}`)
+    .join(', ') + ', 20vw'
 }
 
 /**
- * Calculate optimal image dimensions based on container and aspect ratio
+ * Determines if an image should be loaded with priority
  */
-export function calculateOptimalDimensions(
-  containerWidth: number,
-  containerHeight: number,
-  aspectRatio: number = 1
-): ImageSize {
-  if (containerWidth && containerHeight) {
-    const containerAspect = containerWidth / containerHeight
-
-    if (containerAspect > aspectRatio) {
-      // Container is wider than image
-      return {
-        width: Math.round(containerHeight * aspectRatio),
-        height: containerHeight
-      }
-    } else {
-      // Container is taller than image
-      return {
-        width: containerWidth,
-        height: Math.round(containerWidth / aspectRatio)
-      }
-    }
-  }
-
-  return { width: containerWidth, height: containerHeight }
+export const shouldLoadWithPriority = (
+  src: string,
+  context: 'hero' | 'above-fold' | 'below-fold' | 'lazy' = 'lazy'
+): boolean => {
+  return context === 'hero' || context === 'above-fold'
 }
 
 /**
- * Generate sizes attribute for responsive images
+ * Generates a blur data URL for placeholder images
  */
-export function generateSizesAttribute(
-  breakpoints: { [key: string]: number } = {
-    'sm': 640,
-    'md': 768,
-    'lg': 1024,
-    'xl': 1280,
-    '2xl': 1536
-  }
-): string {
-  return Object.entries(breakpoints)
-    .map(([breakpoint, width]) => {
-      if (breakpoint === '2xl') {
-        return `${width}px`
-      }
-      return `(min-width: ${width}px) ${width}px`
-    })
-    .join(', ')
-}
-
-/**
- * Check if image format is supported by the browser
- */
-export function isFormatSupported(format: string): boolean {
-  if (typeof window === 'undefined') return true
-
+export const generateBlurDataURL = (width: number = 10, height: number = 10): string => {
   const canvas = document.createElement('canvas')
-  canvas.width = 1
-  canvas.height = 1
+  canvas.width = width
+  canvas.height = height
 
-  try {
-    return canvas.toDataURL(`image/${format}`) !== 'data:,'
-  } catch {
-    return false
-  }
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return ''
+
+  // Create a simple gradient blur
+  const gradient = ctx.createLinearGradient(0, 0, width, height)
+  gradient.addColorStop(0, '#f3f4f6')
+  gradient.addColorStop(1, '#e5e7eb')
+
+  ctx.fillStyle = gradient
+  ctx.fillRect(0, 0, width, height)
+
+  return canvas.toDataURL('image/jpeg', 0.1)
 }
 
 /**
- * Get the best supported format for the browser
+ * Preloads critical images
  */
-export function getBestSupportedFormat(
-  preferredFormats: string[] = ['webp', 'avif', 'jpeg']
-): string {
-  for (const format of preferredFormats) {
-    if (isFormatSupported(format)) {
-      return format
-    }
-  }
-  return 'jpeg' // Fallback
-}
-
-/**
- * Generate a low-quality placeholder URL for blur effect
- */
-export function generateBlurPlaceholder(
-  baseUrl: string,
-  width: number = 20,
-  quality: number = 10
-): string {
-  return generateOptimizedUrl(baseUrl, {
-    width,
-    quality,
-    format: 'jpeg'
+export const preloadImage = (src: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => resolve()
+    img.onerror = () => reject(new Error(`Failed to preload image: ${src}`))
+    img.src = src
   })
 }
 
 /**
- * Preload image for better performance
+ * Preloads multiple images
  */
-export function preloadImage(src: string, priority: 'high' | 'low' = 'low'): void {
-  if (typeof window === 'undefined') return
-
-  const link = document.createElement('link')
-  link.rel = 'preload'
-  link.as = 'image'
-  link.href = src
-  link.fetchPriority = priority
-  document.head.appendChild(link)
+export const preloadImages = async (srcs: string[]): Promise<void> => {
+  const promises = srcs.map(preloadImage)
+  await Promise.allSettled(promises)
 }
 
 /**
- * Batch preload multiple images
+ * Gets the appropriate image format based on browser support
  */
-export function preloadImages(
-  images: string[],
-  priority: 'high' | 'low' = 'low'
-): void {
-  if (priority === 'high') {
-    images.forEach(src => preloadImage(src, 'high'))
-  } else {
-    // Use requestIdleCallback for low priority preloading
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => {
-        images.forEach(src => preloadImage(src, 'low'))
-      })
-    } else {
-      // Fallback for older browsers
-      setTimeout(() => {
-        images.forEach(src => preloadImage(src, 'low'))
-      }, 1000)
+export const getOptimalImageFormat = (): 'webp' | 'avif' | 'jpeg' => {
+  // Check for AVIF support
+  if (typeof window !== 'undefined' && 'createImageBitmap' in window) {
+    const canvas = document.createElement('canvas')
+    canvas.width = 1
+    canvas.height = 1
+    const ctx = canvas.getContext('2d')
+    if (ctx) {
+      try {
+        ctx.drawImage(new Image(), 0, 0)
+        // AVIF is supported
+        return 'avif'
+      } catch (e) {
+        // AVIF not supported, check for WebP
+      }
     }
+  }
+
+  // Check for WebP support
+  if (typeof window !== 'undefined') {
+    const canvas = document.createElement('canvas')
+    canvas.width = 1
+    canvas.height = 1
+    return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0 ? 'webp' : 'jpeg'
+  }
+
+  return 'jpeg'
+}
+
+/**
+ * Calculates the optimal image dimensions based on container size and device pixel ratio
+ */
+export const calculateOptimalDimensions = (
+  containerWidth: number,
+  containerHeight: number,
+  devicePixelRatio: number = 1
+): { width: number; height: number } => {
+  return {
+    width: Math.ceil(containerWidth * devicePixelRatio),
+    height: Math.ceil(containerHeight * devicePixelRatio)
   }
 }

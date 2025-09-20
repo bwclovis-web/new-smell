@@ -211,8 +211,8 @@ This roadmap outlines the implementation of security improvements, performance e
 
 #### Day 1-2: Frontend Performance
 
-- [ ] Implement virtual scrolling
-- [ ] Add image optimization
+- [x] Implement virtual scrolling
+- [x] Add image optimization
 - [ ] Optimize bundle splitting
 - [ ] Create performance components
 

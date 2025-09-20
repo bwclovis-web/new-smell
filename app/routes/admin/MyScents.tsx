@@ -7,6 +7,7 @@ import { useLoaderData } from 'react-router-dom'
 import MyScentsListItem from '~/components/Containers/MyScents/MyScentListItem'
 import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal'
 import TitleBanner from '~/components/Organisms/TitleBanner'
+import { VirtualScrollList } from '~/components/Molecules/VirtualScrollList'
 import {
   addUserPerfume,
   getUserPerfumes,
@@ -141,6 +142,16 @@ const MyScentsPage = () => {
     setUserPerfumes(initialUserPerfumes)
   }, [initialUserPerfumes])
 
+  // Render function for virtual scrolling
+  const renderUserPerfume = (userPerfume: UserPerfumeI) => (
+    <MyScentsListItem
+      key={userPerfume.id}
+      setUserPerfumes={setUserPerfumes}
+      userPerfumes={userPerfumes}
+      userPerfume={userPerfume}
+    />
+  )
+
   return (
     <section>
       <TitleBanner imagePos="object-bottom" image={banner} heading={t('myScents.heading')} subheading={t('myScents.subheading')} >
@@ -155,16 +166,27 @@ const MyScentsPage = () => {
               <p className='text-noir-gold-500 italic'>{t('myScents.collection.empty.subheading')}</p>
             </div>
           )
-          : (
+          : userPerfumes.length > 10 ? (
+            // Use virtual scrolling for large collections
+            <VirtualScrollList
+              items={userPerfumes}
+              itemHeight={200}
+              containerHeight={600}
+              overscan={3}
+              className="w-full style-scroll"
+              renderItem={renderUserPerfume}
+              itemClassName="w-full"
+              emptyState={
+                <div>
+                  <p className='text-noir-gold-100 text-xl'>{t('myScents.collection.empty.heading')}</p>
+                  <p className='text-noir-gold-500 italic'>{t('myScents.collection.empty.subheading')}</p>
+                </div>
+              }
+            />
+          ) : (
+            // Use regular rendering for small collections
             <ul className="w-full">
-              {userPerfumes.map(userPerfume => (
-                <MyScentsListItem
-                  key={userPerfume.id}
-                  setUserPerfumes={setUserPerfumes}
-                  userPerfumes={userPerfumes}
-                  userPerfume={userPerfume}
-                />
-              ))}
+              {userPerfumes.map(userPerfume => renderUserPerfume(userPerfume))}
             </ul>
           )}
       </div>
