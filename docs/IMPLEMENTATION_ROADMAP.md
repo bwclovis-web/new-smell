@@ -213,7 +213,7 @@ This roadmap outlines the implementation of security improvements, performance e
 
 - [x] Implement virtual scrolling
 - [x] Add image optimization
-- [ ] Optimize bundle splitting
+- [x] Optimize bundle splitting
 - [ ] Create performance components
 
 #### Day 3-4: API Performance

@@ -75,14 +75,9 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   const generateSrcSet = (baseSrc: string) => {
     if (!baseSrc || hasError) return undefined
 
-    const baseUrl = baseSrc.replace(/\.[^/.]+$/, '')
-    const extension = baseSrc.split('.').pop()
-
-    // Generate different sizes for responsive images
-    const sizes = [320, 640, 768, 1024, 1280, 1536]
-    return sizes
-      .map(size => `${baseUrl}-${size}w.${extension} ${size}w`)
-      .join(', ')
+    // For now, don't generate srcSet since we don't have multiple image sizes
+    // This can be enabled when we have optimized images with different sizes
+    return undefined
   }
 
   // Generate optimized src with quality parameter

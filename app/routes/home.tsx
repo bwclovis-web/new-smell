@@ -4,7 +4,6 @@ import { type ChangeEvent, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MetaFunction } from 'react-router'
 
-import { OptimizedImage } from '~/components/Atoms/OptimizedImage'
 import Select from '~/components/Atoms/Select'
 import SearchBar from '~/components/Organisms/SearchBar'
 import { getAllFeatures } from '~/models/feature.server'
@@ -74,11 +73,9 @@ export default function Home() {
   return (
     <div className="relative z-10 top-0 pb-20 md:pb-0">
       <div className="flex flex-col gap-8 items-center md:justify-center min-h-screen px-4 relative bg-noir-gold-500/30" ref={container}>
-        <OptimizedImage
+        <img
           src={banner}
           alt=""
-          priority={true}
-          sizes="100vw"
           className="absolute object-cover w-full h-full filter grayscale-[100%] contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-multiply"
         />
         <div className="absolute inset-0 bg-noir-black/85 mask-radial-from-10% mask-radial-to-74% md:mask-radial-from-25% md:mask-radial-to-44%"></div>

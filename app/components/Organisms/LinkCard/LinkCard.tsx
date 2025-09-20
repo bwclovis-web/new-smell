@@ -1,7 +1,6 @@
 import { NavLink } from 'react-router'
 import { ROUTE_PATH as PERFUME_PATH } from '~/routes/perfume'
 import { ROUTE_PATH as PERFUME_HOUSE } from '~/routes/perfume-house'
-import { OptimizedImage } from '~/components/Atoms/OptimizedImage'
 const LinkCard = ({ data, type, children, selectedLetter, sourcePage }:
   { data: any; type: any; children?: any; selectedLetter?: string | null; sourcePage?: string }) => {
   const url = type === 'house' ? PERFUME_HOUSE : PERFUME_PATH
@@ -24,13 +23,12 @@ const LinkCard = ({ data, type, children, selectedLetter, sourcePage }:
           )}
         </div>
         <div className="relative rounded-lg ">
-          <OptimizedImage
+          <img
             src={data.image}
             alt={data.name}
-            width={300}
-            height={300}
-            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="w-full object-cover mask-radial-at-center mask-radial-from-10% mask-radial-to-75%
+            // height={300}
+            // width={300}
+            className="w-full object-cover mask-radial-at-center mask-radial-from-10% mask-radial-to-75%                                                        
             transition-all duration-500 ease-in-out scale-120
             filter grayscale-100 group-hover:grayscale-0 group-hover:scale-100 group-hover:mask-radial-from-30% group-hover:mask-radial-to-100%"
             style={{

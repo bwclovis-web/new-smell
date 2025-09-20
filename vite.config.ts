@@ -77,8 +77,58 @@ export default defineConfig({
           }
           return `assets/[name]-[hash][extname]`
         },
-        chunkFileNames: 'assets/js/[name]-[hash].js',
+        chunkFileNames: chunkInfo => {
+          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk'
+          if (facadeModuleId?.includes('node_modules')) {
+            return 'assets/js/vendor/[name]-[hash].js'
+          }
+          if (facadeModuleId?.includes('admin')) {
+            return 'assets/js/admin/[name]-[hash].js'
+          }
+          if (facadeModuleId?.includes('login')) {
+            return 'assets/js/auth/[name]-[hash].js'
+          }
+          return 'assets/js/[name]-[hash].js'
+        },
         entryFileNames: 'assets/js/[name]-[hash].js',
+        manualChunks: {
+          // Vendor chunks
+          'react-vendor': [
+            'react', 'react-dom', 'react-router', 'react-router-dom'
+          ],
+          'ui-vendor': [
+            '@gsap/react', 'gsap', 'zustand', 'react-i18next', 'i18next'
+          ],
+          'icons-vendor': [
+            'react-icons/gr', 'react-icons/md', 'react-icons/fa', 'react-icons/io5'
+          ],
+          'utils-vendor': [
+            'cookie', 'clsx', 'class-variance-authority', 'tailwind-merge'
+          ],
+
+          // Feature chunks
+          'admin': [
+            './app/routes/admin/adminIndex.tsx',
+            './app/routes/admin/AdminLayout.tsx',
+            './app/routes/admin/MyScents.tsx',
+            './app/routes/admin/WishlistPage.tsx',
+            './app/routes/admin/data-quality.tsx'
+          ],
+          'auth': [
+            './app/routes/login/LoginLayout.tsx',
+            './app/routes/login/SignInPage.tsx',
+            './app/routes/login/SignUpPage.tsx'
+          ],
+          'perfume-detail': [
+            './app/routes/perfume.tsx',
+            './app/routes/perfume-house.tsx'
+          ],
+          'data-display': [
+            './app/routes/behind-the-bottle.tsx',
+            './app/routes/the-vault.tsx',
+            './app/routes/the-exchange.tsx'
+          ]
+        }
       }
     },
     chunkSizeWarningLimit: 1000,

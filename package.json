@@ -7,6 +7,7 @@
     "build:webp": "CONVERT_PNG_TO_WEBP=true node scripts/copy-images.js && vite build && react-router build",
     "convert:png-to-webp": "tsx scripts/convert-png-to-webp.js",
     "optimize:images": "node scripts/optimize-images.js",
+    "analyze:bundle": "node scripts/analyze-bundle.js",
     "create:component": "node generator/create-component.mjs",
     "db:docs": "npx prisma-docs-generator serve",
     "db:generate": "prisma generate",
