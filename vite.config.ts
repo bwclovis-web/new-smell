@@ -91,43 +91,40 @@ export default defineConfig({
           return 'assets/js/[name]-[hash].js'
         },
         entryFileNames: 'assets/js/[name]-[hash].js',
-        manualChunks: {
-          // Vendor chunks
-          'react-vendor': [
-            'react', 'react-dom', 'react-router', 'react-router-dom'
-          ],
-          'ui-vendor': [
-            '@gsap/react', 'gsap', 'zustand', 'react-i18next', 'i18next'
-          ],
-          'icons-vendor': [
-            'react-icons/gr', 'react-icons/md', 'react-icons/fa', 'react-icons/io5'
-          ],
-          'utils-vendor': [
-            'cookie', 'clsx', 'class-variance-authority', 'tailwind-merge'
-          ],
+        manualChunks: (id) => {
+          // Vendor chunks - exclude React as it's handled externally
+          if (id.includes('node_modules')) {
+            if (id.includes('react-dom') || id.includes('react-router')) {
+              return 'react-vendor'
+            }
+            if (id.includes('@gsap') || id.includes('gsap') || id.includes('zustand') || id.includes('i18next')) {
+              return 'ui-vendor'
+            }
+            if (id.includes('react-icons')) {
+              return 'icons-vendor'
+            }
+            if (id.includes('cookie') || id.includes('clsx') || id.includes('class-variance-authority') || id.includes('tailwind-merge')) {
+              return 'utils-vendor'
+            }
+            return 'vendor'
+          }
 
           // Feature chunks
-          'admin': [
-            './app/routes/admin/adminIndex.tsx',
-            './app/routes/admin/AdminLayout.tsx',
-            './app/routes/admin/MyScents.tsx',
-            './app/routes/admin/WishlistPage.tsx',
-            './app/routes/admin/data-quality.tsx'
-          ],
-          'auth': [
-            './app/routes/login/LoginLayout.tsx',
-            './app/routes/login/SignInPage.tsx',
-            './app/routes/login/SignUpPage.tsx'
-          ],
-          'perfume-detail': [
-            './app/routes/perfume.tsx',
-            './app/routes/perfume-house.tsx'
-          ],
-          'data-display': [
-            './app/routes/behind-the-bottle.tsx',
-            './app/routes/the-vault.tsx',
-            './app/routes/the-exchange.tsx'
-          ]
+          if (id.includes('/admin/')) {
+            return 'admin'
+          }
+          if (id.includes('/login/')) {
+            return 'auth'
+          }
+          if (id.includes('perfume.tsx') || id.includes('perfume-house.tsx')) {
+            return 'perfume-detail'
+          }
+          if (id.includes('behind-the-bottle.tsx') || id.includes('the-vault.tsx') || id.includes('the-exchange.tsx')) {
+            return 'data-display'
+          }
+          if (id.includes('performance')) {
+            return 'performance'
+          }
         }
       }
     },

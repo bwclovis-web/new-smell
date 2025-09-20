@@ -8,6 +8,7 @@ export default [
 
     route('the-vault', 'routes/the-vault.tsx'),
     route('rating-demo', 'routes/rating-demo.tsx'),
+    route('performance-demo', 'routes/performance-demo.tsx'),
     route('trader/:id', 'routes/trader-profile.tsx'),
     route('the-exchange', 'routes/the-exchange.tsx'),
     route('perfume/:perfumeName', 'routes/perfume.tsx'),
@@ -44,6 +45,7 @@ export default [
       route('admin/my-scents', 'routes/admin/MyScents.tsx'),
       route('admin/data-quality', 'routes/admin/data-quality.tsx'),
       route('admin/security-monitor', 'routes/admin/security-monitor.tsx'),
+      route('admin/performance-admin', 'routes/admin/performance-admin.tsx'),
       route('admin/change-password', 'routes/admin/change-password.tsx')
     ]),
 

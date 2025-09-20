@@ -17,11 +17,17 @@ interface AdminNavigationProps extends HTMLProps<HTMLUListElement>,
 
 const AdminNavigation = ({ className, user }: AdminNavigationProps) => (
   <aside className='fixed top-20 left-0 z-20 w-full md:w-64  text-noir-light py-4'>
+    {/* Debug info - remove this later */}
+    {process.env.NODE_ENV === 'development' && (
+      <div className="text-xs text-yellow-400 mb-2 p-2 bg-black/50 rounded">
+        Debug: User role = {user?.role || 'undefined'}
+      </div>
+    )}
     <ul
       className={styleMerge(adminNavigationVariants({ className }))}
       data-cy="AdminNavigation"
     >
-      {user?.role === 'admin' && adminNavigation.map(item => (
+      {(user?.role === 'admin' || user?.role === 'editor') && adminNavigation.map(item => (
         <li key={item.id} className="capitalize font-semibold text-shadow-sm text-shadow-noir-dark/70">
           <NavLink
             viewTransition
