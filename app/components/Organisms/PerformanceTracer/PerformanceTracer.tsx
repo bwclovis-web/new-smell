@@ -41,59 +41,6 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
   const observerRef = useRef<PerformanceObserver | null>(null)
   const eventCounterRef = useRef(0)
 
-  const createTraceEvent = useCallback((entry: PerformanceEntry): TraceEvent => {
-    const event: TraceEvent = {
-      id: `event-${++eventCounterRef.current}`,
-      name: entry.name,
-      category: entry.entryType,
-      startTime: entry.startTime,
-      endTime: entry.startTime + entry.duration,
-      duration: entry.duration,
-      data: {
-        type: entry.entryType,
-        name: entry.name,
-        startTime: entry.startTime,
-        duration: entry.duration
-      }
-    }
-
-    // Add specific data based on entry type
-    if (entry.entryType === 'navigation') {
-      const navEntry = entry as PerformanceNavigationTiming
-      event.data = {
-        ...event.data,
-        dns: navEntry.domainLookupEnd - navEntry.domainLookupStart,
-        tcp: navEntry.connectEnd - navEntry.connectStart,
-        ttfb: navEntry.responseStart - navEntry.requestStart,
-        domContentLoaded: navEntry.domContentLoadedEventEnd - navEntry.navigationStart,
-        loadComplete: navEntry.loadEventEnd - navEntry.navigationStart
-      }
-    } else if (entry.entryType === 'resource') {
-      const resourceEntry = entry as PerformanceResourceTiming
-      event.data = {
-        ...event.data,
-        transferSize: resourceEntry.transferSize,
-        encodedBodySize: resourceEntry.encodedBodySize,
-        decodedBodySize: resourceEntry.decodedBodySize,
-        initiatorType: resourceEntry.initiatorType,
-        nextHopProtocol: resourceEntry.nextHopProtocol
-      }
-    } else if (entry.entryType === 'paint') {
-      const paintEntry = entry as PerformancePaintTiming
-      event.data = {
-        ...event.data,
-        paintType: paintEntry.name
-      }
-    } else if (entry.entryType === 'measure') {
-      const measureEntry = entry as PerformanceMeasure
-      event.data = {
-        ...event.data,
-        detail: measureEntry.detail
-      }
-    }
-
-    return event
-  }, [])
 
   const startTracing = useCallback(() => {
     if (!enabled || typeof window === 'undefined' || !('PerformanceObserver' in window)) return
@@ -106,7 +53,59 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
       observerRef.current = new PerformanceObserver((list) => {
         const newEvents = list.getEntries()
           .filter(entry => categories.includes(entry.entryType))
-          .map(createTraceEvent)
+          .map((entry: PerformanceEntry): TraceEvent => {
+            const event: TraceEvent = {
+              id: `event-${++eventCounterRef.current}`,
+              name: entry.name,
+              category: entry.entryType,
+              startTime: entry.startTime,
+              endTime: entry.startTime + entry.duration,
+              duration: entry.duration,
+              data: {
+                type: entry.entryType,
+                name: entry.name,
+                startTime: entry.startTime,
+                duration: entry.duration
+              }
+            }
+
+            // Add specific data based on entry type
+            if (entry.entryType === 'navigation') {
+              const navEntry = entry as PerformanceNavigationTiming
+              event.data = {
+                ...event.data,
+                dns: navEntry.domainLookupEnd - navEntry.domainLookupStart,
+                tcp: navEntry.connectEnd - navEntry.connectStart,
+                ttfb: navEntry.responseStart - navEntry.requestStart,
+                domContentLoaded: navEntry.domContentLoadedEventEnd - navEntry.navigationStart,
+                loadComplete: navEntry.loadEventEnd - navEntry.navigationStart
+              }
+            } else if (entry.entryType === 'resource') {
+              const resourceEntry = entry as PerformanceResourceTiming
+              event.data = {
+                ...event.data,
+                transferSize: resourceEntry.transferSize,
+                encodedBodySize: resourceEntry.encodedBodySize,
+                decodedBodySize: resourceEntry.decodedBodySize,
+                initiatorType: resourceEntry.initiatorType,
+                nextHopProtocol: resourceEntry.nextHopProtocol
+              }
+            } else if (entry.entryType === 'paint') {
+              const paintEntry = entry as PerformancePaintTiming
+              event.data = {
+                ...event.data,
+                paintType: paintEntry.name
+              }
+            } else if (entry.entryType === 'measure') {
+              const measureEntry = entry as PerformanceMeasure
+              event.data = {
+                ...event.data,
+                detail: measureEntry.detail
+              }
+            }
+
+            return event
+          })
 
         setEvents(prev => {
           const updated = [...newEvents, ...prev]
@@ -119,7 +118,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
       console.error('Error starting performance tracing:', error)
       setIsTracing(false)
     }
-  }, [enabled, categories, createTraceEvent, maxEvents])
+  }, [enabled, categories, maxEvents])
 
   const stopTracing = useCallback(() => {
     if (observerRef.current) {
@@ -223,7 +222,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
     return () => {
       stopTracing()
     }
-  }, [enabled, autoStart, startTracing, stopTracing])
+  }, [enabled, autoStart])
 
   // Expose methods globally for debugging
   useEffect(() => {
@@ -257,8 +256,8 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
         <button
           onClick={isTracing ? stopTracing : startTracing}
           className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${isTracing
-              ? 'bg-red-600 text-white hover:bg-red-700'
-              : 'bg-green-600 text-white hover:bg-green-700'
+            ? 'bg-red-600 text-white hover:bg-red-700'
+            : 'bg-green-600 text-white hover:bg-green-700'
             }`}
         >
           {isTracing ? 'Stop Tracing' : 'Start Tracing'}
@@ -328,8 +327,8 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
               key={event.id}
               onClick={() => setSelectedEvent(event)}
               className={`p-3 rounded-lg border cursor-pointer transition-colors ${selectedEvent?.id === event.id
-                  ? 'bg-blue-50 border-blue-300'
-                  : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
+                ? 'bg-blue-50 border-blue-300'
+                : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
                 }`}
             >
               <div className="flex items-center justify-between">

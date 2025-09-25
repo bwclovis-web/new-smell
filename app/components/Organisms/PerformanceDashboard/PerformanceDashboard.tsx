@@ -130,7 +130,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
     const interval = setInterval(collectPerformanceData, refreshInterval)
 
     return () => clearInterval(interval)
-  }, [enabled, collectPerformanceData, refreshInterval])
+  }, [enabled, refreshInterval])
 
   const getPerformanceScore = (value: number, threshold: number, reverse = false) => {
     const ratio = reverse ? threshold / value : value / threshold

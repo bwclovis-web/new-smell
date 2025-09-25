@@ -2,11 +2,11 @@ import cookie from 'cookie'
 import { Suspense } from 'react'
 import { type LoaderFunctionArgs, Outlet, useLoaderData } from 'react-router'
 
-// Performance monitoring only in development
-import { PerformanceMonitor } from '~/components/Atoms/PerformanceMonitor'
 import GlobalNavigation from '~/components/Molecules/GlobalNavigation/GlobalNavigation'
 import MobileBottomNavigation from '~/components/Molecules/MobileBottomNavigation/MobileBottomNavigation'
 import MobileNavigation from '~/components/Molecules/MobileNavigation/MobileNavigation'
+// Performance monitoring only in development
+import { DevPerformanceLoader } from '~/components/Performance'
 import { getUserById } from '~/models/user.server'
 import { createSafeUser } from '~/types'
 import { verifyAccessToken } from '~/utils/security/session-manager.server'
@@ -52,10 +52,7 @@ const RootLayout = () => {
             context={{ user }}
           />
         </main>
-        <PerformanceMonitor
-          enabled={process.env.NODE_ENV === 'development'}
-          showUI={process.env.NODE_ENV === 'development'}
-        />
+        <DevPerformanceLoader />
       </div>
     </Suspense>
   )

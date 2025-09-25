@@ -1,13 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { type MetaFunction } from 'react-router'
 import { useOutletContext } from 'react-router-dom'
 
-import {
-  PerformanceDashboard,
-  PerformanceAlerts,
-  PerformanceOptimizer,
-  PerformanceTracer
-} from '~/components/Organisms/PerformanceComponents'
+import { ConditionalPerformanceLoader } from '~/components/Performance'
 
 interface PerformanceSettings {
   monitoring: {
@@ -42,12 +37,10 @@ interface PerformanceSettings {
 
 export const ROUTE_PATH = '/admin/performance-admin'
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: 'Performance Admin - Voodoo Perfumes' },
-    { name: 'description', content: 'Performance monitoring and management admin interface' }
-  ]
-}
+export const meta: MetaFunction = () => [
+  { title: 'Performance Admin - Voodoo Perfumes' },
+  { name: 'description', content: 'Performance monitoring and management admin interface' }
+]
 
 const PerformanceAdmin: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'dashboard' | 'alerts' | 'optimizer' | 'tracer' | 'settings' | 'reports'>('overview')
@@ -71,7 +64,9 @@ const PerformanceAdmin: React.FC = () => {
     tracing: {
       enabled: true,
       maxEvents: 1000,
-      categories: ['navigation', 'resource', 'paint', 'measure', 'mark']
+      categories: [
+        'navigation', 'resource', 'paint', 'measure', 'mark'
+      ]
     },
     thresholds: {
       lcp: 2500,
@@ -119,7 +114,11 @@ const PerformanceAdmin: React.FC = () => {
       monitoring: { enabled: true, refreshInterval: 5000, autoStart: true },
       alerts: { enabled: true, autoResolve: true, autoResolveDelay: 30000, maxAlerts: 50 },
       optimization: { enabled: true, autoOptimize: false, customRules: false },
-      tracing: { enabled: true, maxEvents: 1000, categories: ['navigation', 'resource', 'paint', 'measure', 'mark'] },
+      tracing: {
+        enabled: true, maxEvents: 1000, categories: [
+          'navigation', 'resource', 'paint', 'measure', 'mark'
+        ]
+      },
       thresholds: { lcp: 2500, fid: 100, cls: 0.1, fcp: 1800, tti: 3800 }
     }
     setSettings(defaultSettings)
@@ -297,7 +296,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="checkbox"
               checked={settings.monitoring.enabled}
-              onChange={(e) => updateSettings('monitoring', { enabled: e.target.checked })}
+              onChange={e => updateSettings('monitoring', { enabled: e.target.checked })}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
           </div>
@@ -306,7 +305,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.monitoring.refreshInterval}
-              onChange={(e) => updateSettings('monitoring', { refreshInterval: Number(e.target.value) })}
+              onChange={e => updateSettings('monitoring', { refreshInterval: Number(e.target.value) })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               min="1000"
               step="1000"
@@ -320,7 +319,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="checkbox"
               checked={settings.monitoring.autoStart}
-              onChange={(e) => updateSettings('monitoring', { autoStart: e.target.checked })}
+              onChange={e => updateSettings('monitoring', { autoStart: e.target.checked })}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
           </div>
@@ -339,7 +338,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="checkbox"
               checked={settings.alerts.enabled}
-              onChange={(e) => updateSettings('alerts', { enabled: e.target.checked })}
+              onChange={e => updateSettings('alerts', { enabled: e.target.checked })}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
           </div>
@@ -351,7 +350,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="checkbox"
               checked={settings.alerts.autoResolve}
-              onChange={(e) => updateSettings('alerts', { autoResolve: e.target.checked })}
+              onChange={e => updateSettings('alerts', { autoResolve: e.target.checked })}
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
           </div>
@@ -360,7 +359,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.alerts.autoResolveDelay}
-              onChange={(e) => updateSettings('alerts', { autoResolveDelay: Number(e.target.value) })}
+              onChange={e => updateSettings('alerts', { autoResolveDelay: Number(e.target.value) })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               min="1000"
               step="1000"
@@ -371,7 +370,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.alerts.maxAlerts}
-              onChange={(e) => updateSettings('alerts', { maxAlerts: Number(e.target.value) })}
+              onChange={e => updateSettings('alerts', { maxAlerts: Number(e.target.value) })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               min="10"
               step="10"
@@ -389,7 +388,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.thresholds.lcp}
-              onChange={(e) => updateSettings('thresholds', { lcp: Number(e.target.value) })}
+              onChange={e => updateSettings('thresholds', { lcp: Number(e.target.value) })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               min="1000"
               step="100"
@@ -400,7 +399,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.thresholds.fid}
-              onChange={(e) => updateSettings('thresholds', { fid: Number(e.target.value) })}
+              onChange={e => updateSettings('thresholds', { fid: Number(e.target.value) })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               min="10"
               step="10"
@@ -411,7 +410,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.thresholds.cls}
-              onChange={(e) => updateSettings('thresholds', { cls: Number(e.target.value) })}
+              onChange={e => updateSettings('thresholds', { cls: Number(e.target.value) })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               min="0.01"
               step="0.01"
@@ -422,7 +421,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.thresholds.fcp}
-              onChange={(e) => updateSettings('thresholds', { fcp: Number(e.target.value) })}
+              onChange={e => updateSettings('thresholds', { fcp: Number(e.target.value) })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               min="500"
               step="100"
@@ -502,36 +501,27 @@ const PerformanceAdmin: React.FC = () => {
         <div className="bg-white rounded-lg shadow">
           {activeTab === 'overview' && renderOverview()}
           {activeTab === 'dashboard' && (
-            <PerformanceDashboard
+            <ConditionalPerformanceLoader
+              userRole={user?.role}
               enabled={settings.monitoring.enabled}
-              showUI={true}
-              refreshInterval={settings.monitoring.refreshInterval}
-              thresholds={settings.thresholds}
             />
           )}
           {activeTab === 'alerts' && (
-            <PerformanceAlerts
+            <ConditionalPerformanceLoader
+              userRole={user?.role}
               enabled={settings.alerts.enabled}
-              showUI={true}
-              autoResolve={settings.alerts.autoResolve}
-              autoResolveDelay={settings.alerts.autoResolveDelay}
-              maxAlerts={settings.alerts.maxAlerts}
             />
           )}
           {activeTab === 'optimizer' && (
-            <PerformanceOptimizer
+            <ConditionalPerformanceLoader
+              userRole={user?.role}
               enabled={settings.optimization.enabled}
-              showUI={true}
-              autoOptimize={settings.optimization.autoOptimize}
             />
           )}
           {activeTab === 'tracer' && (
-            <PerformanceTracer
+            <ConditionalPerformanceLoader
+              userRole={user?.role}
               enabled={settings.tracing.enabled}
-              showUI={true}
-              maxEvents={settings.tracing.maxEvents}
-              categories={settings.tracing.categories}
-              autoStart={settings.monitoring.autoStart}
             />
           )}
           {activeTab === 'settings' && renderSettings()}

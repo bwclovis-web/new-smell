@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { styleMerge } from '~/utils/styleUtils'
 
 interface OptimizationRule {
@@ -41,7 +41,6 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
 }) => {
   const [optimizations, setOptimizations] = useState<OptimizationResult[]>([])
   const [isRunning, setIsRunning] = useState(false)
-  const [rules, setRules] = useState<OptimizationRule[]>([])
 
   // Default optimization rules
   const defaultRules: OptimizationRule[] = [
@@ -194,9 +193,7 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
     }
   ]
 
-  useEffect(() => {
-    setRules([...defaultRules, ...customRules])
-  }, [customRules])
+  const rules = useMemo(() => [...defaultRules, ...customRules], [customRules])
 
   const runOptimization = useCallback(async (rule: OptimizationRule): Promise<OptimizationResult> => {
     const result: OptimizationResult = {
@@ -246,13 +243,8 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
     setOptimizations(prev => [result, ...prev])
   }, [rules, runOptimization])
 
-  const toggleRule = useCallback((ruleId: string) => {
-    setRules(prev =>
-      prev.map(rule =>
-        rule.id === ruleId ? { ...rule, enabled: !rule.enabled } : rule
-      )
-    )
-  }, [])
+  // Note: Rule toggling is not supported with memoized rules
+  // Rules can only be modified through the customRules prop
 
   const clearResults = useCallback(() => {
     setOptimizations([])
@@ -264,7 +256,7 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
       const timer = setTimeout(runAllOptimizations, 2000) // Wait 2 seconds after page load
       return () => clearTimeout(timer)
     }
-  }, [enabled, autoOptimize, runAllOptimizations])
+  }, [enabled, autoOptimize])
 
   const getImpactColor = (impact: string) => {
     switch (impact) {
@@ -348,15 +340,14 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
                   <span className={`text-xs ${getPriorityColor(rule.priority)}`}>
                     {rule.priority} priority
                   </span>
-                  <button
-                    onClick={() => toggleRule(rule.id)}
+                  <div
                     className={`w-4 h-4 rounded border-2 ${rule.enabled
-                        ? 'bg-blue-600 border-blue-600'
-                        : 'bg-white border-gray-300'
+                      ? 'bg-blue-600 border-blue-600'
+                      : 'bg-white border-gray-300'
                       }`}
                   >
                     {rule.enabled && <div className="w-2 h-2 bg-white rounded-sm m-0.5" />}
-                  </button>
+                  </div>
                   <button
                     onClick={() => runOptimizationById(rule.id)}
                     disabled={isRunning}
@@ -380,8 +371,8 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
               <div
                 key={result.id}
                 className={`p-4 rounded-lg border ${result.applied
-                    ? 'bg-green-50 border-green-200'
-                    : 'bg-red-50 border-red-200'
+                  ? 'bg-green-50 border-green-200'
+                  : 'bg-red-50 border-red-200'
                   }`}
               >
                 <div className="flex items-center justify-between">

@@ -224,7 +224,7 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
     } catch (error) {
       console.error('Error collecting performance metrics for alerts:', error)
     }
-  }, [enabled, rules, alerts, checkRule, createAlert, maxAlerts])
+  }, [enabled, rules, checkRule, createAlert, maxAlerts])
 
   const resolveAlert = useCallback((alertId: string) => {
     setAlerts(prev =>
@@ -262,7 +262,7 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
       clearInterval(interval)
       setIsMonitoring(false)
     }
-  }, [enabled, collectMetrics])
+  }, [enabled])
 
   // Auto-resolve alerts
   useEffect(() => {
@@ -437,8 +437,8 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
                 <button
                   onClick={() => toggleRule(rule.id)}
                   className={`w-4 h-4 rounded border-2 ${rule.enabled
-                      ? 'bg-blue-600 border-blue-600'
-                      : 'bg-white border-gray-300'
+                    ? 'bg-blue-600 border-blue-600'
+                    : 'bg-white border-gray-300'
                     }`}
                 >
                   {rule.enabled && <div className="w-2 h-2 bg-white rounded-sm m-0.5" />}
