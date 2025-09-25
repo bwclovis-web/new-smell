@@ -8,6 +8,12 @@ export async function loader() {
       success: true,
       perfumes: availablePerfumes,
       count: availablePerfumes.length
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=300', // 5 minute cache
+        'X-Data-Size': JSON.stringify(availablePerfumes).length.toString()
+      }
     })
   } catch (error) {
     // eslint-disable-next-line no-console

@@ -36,9 +36,6 @@ export const links: Route.LinksFunction = () => [
   },
   // PWA manifest
   { rel: 'manifest', href: '/manifest.json' },
-  // Preload critical resources
-  { rel: 'dns-prefetch', href: '//fonts.googleapis.com' },
-  { rel: 'dns-prefetch', href: '//fonts.gstatic.com' },
   // Resource hints for better performance
   { rel: 'preload', href: '/images/home.webp', as: 'image', type: 'image/webp' },
   { rel: 'preload', href: '/images/scent.webp', as: 'image', type: 'image/webp' },
@@ -75,8 +72,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <meta property="og:title" content="Voodoo Perfumes" />
         <meta property="og:description" content="Discover and trade unique perfumes in our exclusive fragrance community" />
 
-        {/* Preload critical fonts */}
-        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Limelight&display=swap" as="style" />
+        {/* Font loading optimized - removed redundant preload */}
 
         <Meta />
         <Links />

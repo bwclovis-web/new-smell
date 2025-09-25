@@ -28,15 +28,23 @@ export async function loader({ request }: LoaderFunctionArgs) {
       }, { status: 404 })
     }
 
-    // Return the perfumes
+    // Return the perfumes - compression is handled by Express middleware
+    const perfumes = house.perfumes || []
     return Response.json({
       success: true,
-      perfumes: house.perfumes || [],
+      perfumes,
       meta: {
         houseName: house.name,
         skip,
         take,
-        hasMore: (house.perfumes?.length || 0) === take
+        hasMore: perfumes.length === take,
+        count: perfumes.length
+      }
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=600', // 10 minute cache
+        'X-Data-Size': JSON.stringify(perfumes).length.toString()
       }
     })
   } catch {

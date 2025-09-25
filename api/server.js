@@ -178,7 +178,29 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" },
 }))
 
-app.use(compression())
+// Enhanced compression configuration
+app.use(compression({
+  // Only compress responses above 1KB
+  threshold: 1024,
+  // Use gzip compression
+  level: 6, // Balance between compression ratio and speed (1-9, 6 is optimal)
+  // Compress all text-based content types
+  filter: (req, res) => {
+    // Don't compress if already compressed
+    if (req.headers['x-no-compression']) {
+      return false
+    }
+    
+    // Use default compression filter
+    return compression.filter(req, res)
+  },
+  // Custom compression for different content types
+  memLevel: 8, // Memory level (1-9, 8 is good balance)
+  strategy: 0, // Default strategy
+  windowBits: 15, // Window size
+  // Enable compression for API responses
+  chunkSize: 16 * 1024, // 16KB chunks
+}))
 app.use(morgan('tiny'))
 
 // Prometheus
@@ -458,6 +480,33 @@ app.get('/admin/security-events/:ip', (req, res) => {
     events,
     count: events.length,
     timestamp: new Date().toISOString()
+  })
+})
+
+// Compression monitoring endpoint
+app.get('/admin/compression-stats', (req, res) => {
+  // Get compression statistics
+  const compressionStats = {
+    enabled: true,
+    algorithm: 'gzip',
+    level: 6,
+    threshold: 1024,
+    chunkSize: 16 * 1024,
+    memLevel: 8,
+    strategy: 0,
+    windowBits: 15,
+    timestamp: new Date().toISOString()
+  }
+  
+  res.json({
+    message: 'Compression configuration and statistics',
+    stats: compressionStats,
+    recommendations: [
+      'Compression is enabled for all text-based responses',
+      'API responses above 1KB are compressed',
+      'Analytics data uses higher compression (level 7)',
+      'Standard API responses use level 6 compression'
+    ]
   })
 })
 

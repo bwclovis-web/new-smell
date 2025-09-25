@@ -67,8 +67,12 @@ export default defineConfig({
         drop_debugger: true,
       },
     },
+    // Ensure consistent builds
     rollupOptions: {
       output: {
+        // Use deterministic chunk names for better caching
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
         assetFileNames: assetInfo => {
           const info = assetInfo.name?.split('.') || []
           const ext = info[info.length - 1]
@@ -77,53 +81,16 @@ export default defineConfig({
           }
           return `assets/[name]-[hash][extname]`
         },
-        chunkFileNames: chunkInfo => {
-          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk'
-          if (facadeModuleId?.includes('node_modules')) {
-            return 'assets/js/vendor/[name]-[hash].js'
-          }
-          if (facadeModuleId?.includes('admin')) {
-            return 'assets/js/admin/[name]-[hash].js'
-          }
-          if (facadeModuleId?.includes('login')) {
-            return 'assets/js/auth/[name]-[hash].js'
-          }
-          return 'assets/js/[name]-[hash].js'
-        },
-        entryFileNames: 'assets/js/[name]-[hash].js',
-        manualChunks: (id) => {
-          // Vendor chunks - exclude React as it's handled externally
+        manualChunks: id => {
+          // Simplified chunking strategy for better Vercel compatibility
           if (id.includes('node_modules')) {
-            if (id.includes('react-dom') || id.includes('react-router')) {
-              return 'react-vendor'
-            }
-            if (id.includes('@gsap') || id.includes('gsap') || id.includes('zustand') || id.includes('i18next')) {
-              return 'ui-vendor'
-            }
-            if (id.includes('react-icons')) {
-              return 'icons-vendor'
-            }
-            if (id.includes('cookie') || id.includes('clsx') || id.includes('class-variance-authority') || id.includes('tailwind-merge')) {
-              return 'utils-vendor'
-            }
+            // Group all vendor libraries together for stability
             return 'vendor'
           }
 
-          // Feature chunks
-          if (id.includes('/admin/')) {
+          // Only create specific chunks for large admin sections
+          if (id.includes('/admin/') && !id.includes('node_modules')) {
             return 'admin'
-          }
-          if (id.includes('/login/')) {
-            return 'auth'
-          }
-          if (id.includes('perfume.tsx') || id.includes('perfume-house.tsx')) {
-            return 'perfume-detail'
-          }
-          if (id.includes('behind-the-bottle.tsx') || id.includes('the-vault.tsx') || id.includes('the-exchange.tsx')) {
-            return 'data-display'
-          }
-          if (id.includes('performance')) {
-            return 'performance'
           }
         }
       }

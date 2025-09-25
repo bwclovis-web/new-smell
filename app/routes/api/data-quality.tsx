@@ -4,6 +4,9 @@ import * as path from 'path'
 import { fileURLToPath } from 'url'
 import { promisify } from 'util'
 
+// Note: Compression is handled by Express middleware
+// The compression utility is for future use with native Response objects
+
 const execAsync = promisify(exec)
 
 // Get the current module's directory
@@ -375,7 +378,16 @@ export const loader = async ({ request }: { request: Request }) => {
 
   try {
     // Generate and process reports
-    return await generateDataQualityReport(timeframe)
+    const reportData = await generateDataQualityReport(timeframe)
+
+    // Return the data - compression is handled by Express middleware
+    return Response.json(reportData, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=300', // 5 minute cache
+        'X-Data-Size': JSON.stringify(reportData).length.toString()
+      }
+    })
   } catch (error) {
     // If this catch block is reached, something went wrong with Response.json
     // Return a simpler fallback error response
