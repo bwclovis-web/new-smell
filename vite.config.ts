@@ -82,13 +82,45 @@ export default defineConfig({
           return `assets/[name]-[hash][extname]`
         },
         manualChunks: id => {
-          // Simplified chunking strategy for better Vercel compatibility
-          if (id.includes('node_modules')) {
-            // Group all vendor libraries together for stability
-            return 'vendor'
+          // Core React libraries (small, critical, stable)
+          if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+            return 'vendor-core'
           }
 
-          // Only create specific chunks for large admin sections
+          // UI and animation libraries (medium size)
+          if (id.includes('@gsap') || id.includes('chart.js') || id.includes('react-icons') ||
+            id.includes('react-chartjs-2') || id.includes('@conform-to')) {
+            return 'vendor-ui'
+          }
+
+          // Utility libraries (small, non-critical)
+          if (id.includes('zustand') || id.includes('i18next') || id.includes('clsx') ||
+            id.includes('tailwind-merge') || id.includes('class-variance-authority')) {
+            return 'vendor-utils'
+          }
+
+          // Large utility libraries (lazy load)
+          if (id.includes('bcryptjs') || id.includes('jsonwebtoken') || id.includes('sharp') ||
+            id.includes('csv-parser') || id.includes('papaparse')) {
+            return 'vendor-libs'
+          }
+
+          // All other node_modules (fallback)
+          if (id.includes('node_modules')) {
+            return 'vendor-misc'
+          }
+
+          // Route components (lazy load for better performance)
+          if (id.includes('/routes/')) {
+            return 'routes'
+          }
+
+          // Performance and monitoring components (lazy load)
+          if (id.includes('Performance') || id.includes('DataQuality') || id.includes('PerformanceMonitor')) {
+            return 'performance'
+          }
+
+          // Admin components (lazy load)
           if (id.includes('/admin/') && !id.includes('node_modules')) {
             return 'admin'
           }
