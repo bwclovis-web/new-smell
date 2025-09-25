@@ -6,6 +6,7 @@ const ServiceWorkerRegistration = () => {
       return
     }
 
+    // Lazy load service worker after user interaction or idle time
     const registerServiceWorker = async () => {
       try {
         const registration = await navigator.serviceWorker.register('/sw.js', {
@@ -24,26 +25,47 @@ const ServiceWorkerRegistration = () => {
             })
           }
         })
-
-        if (registration.active) {
-          console.log('Service Worker is active')
-        }
       } catch (error) {
         console.error('Service Worker registration failed:', error)
       }
     }
 
-    registerServiceWorker()
+    // Register service worker on first user interaction
+    const handleFirstInteraction = () => {
+      registerServiceWorker()
+      document.removeEventListener('click', handleFirstInteraction)
+      document.removeEventListener('scroll', handleFirstInteraction)
+      document.removeEventListener('keydown', handleFirstInteraction)
+    }
+
+    // Register on user interaction
+    document.addEventListener('click', handleFirstInteraction)
+    document.addEventListener('scroll', handleFirstInteraction)
+    document.addEventListener('keydown', handleFirstInteraction)
+
+    // Fallback: register after idle time or 5 seconds
+    const registerWhenIdle = () => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => {
+          registerServiceWorker()
+        })
+      } else {
+        setTimeout(() => {
+          registerServiceWorker()
+        }, 2000)
+      }
+    }
+
+    // Fallback registration
+    setTimeout(registerWhenIdle, 5000)
 
     // Handle offline/online events
     const handleOnline = () => {
       document.body.classList.remove('offline')
-      console.log('App is online')
     }
 
     const handleOffline = () => {
       document.body.classList.add('offline')
-      console.log('App is offline')
     }
 
     window.addEventListener('online', handleOnline)
@@ -55,6 +77,9 @@ const ServiceWorkerRegistration = () => {
     }
 
     return () => {
+      document.removeEventListener('click', handleFirstInteraction)
+      document.removeEventListener('scroll', handleFirstInteraction)
+      document.removeEventListener('keydown', handleFirstInteraction)
       window.removeEventListener('online', handleOnline)
       window.removeEventListener('offline', handleOffline)
     }
