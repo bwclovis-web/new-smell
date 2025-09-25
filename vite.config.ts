@@ -87,6 +87,11 @@ export default defineConfig({
             return 'vendor-core'
           }
 
+          // i18n libraries (must stay together to prevent module resolution issues)
+          if (id.includes('i18next') || id.includes('react-i18next') || id.includes('i18next-')) {
+            return 'vendor-i18n'
+          }
+
           // UI and animation libraries (medium size)
           if (id.includes('@gsap') || id.includes('chart.js') || id.includes('react-icons') ||
             id.includes('react-chartjs-2') || id.includes('@conform-to')) {
@@ -94,7 +99,7 @@ export default defineConfig({
           }
 
           // Utility libraries (small, non-critical)
-          if (id.includes('zustand') || id.includes('i18next') || id.includes('clsx') ||
+          if (id.includes('zustand') || id.includes('clsx') ||
             id.includes('tailwind-merge') || id.includes('class-variance-authority')) {
             return 'vendor-utils'
           }
@@ -140,7 +145,10 @@ export default defineConfig({
       'react-router-dom',
       'zustand',
       'i18next',
-      'react-i18next'
+      'react-i18next',
+      'i18next-browser-languagedetector',
+      'i18next-http-backend',
+      'i18next-fs-backend'
     ]
   },
   assetsInclude: [

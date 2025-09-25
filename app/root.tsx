@@ -35,15 +35,7 @@ export const links: Route.LinksFunction = () => [
     href: 'https://fonts.googleapis.com/css2?family=Limelight&display=swap'
   },
   // PWA manifest
-  { rel: 'manifest', href: '/manifest.json' },
-  // Resource hints for better performance
-  { rel: 'preload', href: '/images/home.webp', as: 'image', type: 'image/webp' },
-  { rel: 'preload', href: '/images/scent.webp', as: 'image', type: 'image/webp' },
-  // Preload critical fonts - removed problematic font file
-  // Prefetch non-critical resources
-  { rel: 'prefetch', href: '/images/login.webp' },
-  { rel: 'prefetch', href: '/images/house.webp' },
-  { rel: 'prefetch', href: '/images/perfume.webp' }
+  { rel: 'manifest', href: '/manifest.json' }
 ]
 
 export function Layout({ children }: { children: ReactNode }) {
