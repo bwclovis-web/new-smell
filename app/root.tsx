@@ -15,7 +15,10 @@ import type { Route } from './+types/root'
 import ImagePreloader from './components/Atoms/ImagePreloader'
 import FourOFourPage from './components/Containers/404Page/404Page'
 import ErrorBoundaryComponent from './components/Containers/ErrorBoundary'
-import PerformanceMonitor from './components/Containers/PerformanceMonitor'
+// Performance monitoring only in development
+const PerformanceMonitor = process.env.NODE_ENV === 'development'
+  ? require('./components/Containers/PerformanceMonitor').default
+  : () => null
 import ServiceWorkerRegistration from './components/Containers/ServiceWorkerRegistration'
 import { CSRFTokenProvider } from './components/Molecules/CSRFToken'
 import { NonceProvider, useNonce } from './hooks/use-nonce'

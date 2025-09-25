@@ -30,7 +30,7 @@ export const dynamicRouteImports = {
 
   // Utility routes
   notFound: () => import('~/routes/NotFoundPage'),
-  ratingDemo: () => import('~/routes/rating-demo')
+  // ratingDemo: () => import('~/routes/rating-demo') // Removed demo route
 }
 
 // Component-based dynamic imports for heavy components

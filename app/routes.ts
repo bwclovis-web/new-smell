@@ -7,8 +7,6 @@ export default [
     route('perfume-house/:houseName', 'routes/perfume-house.tsx'),
 
     route('the-vault', 'routes/the-vault.tsx'),
-    route('rating-demo', 'routes/rating-demo.tsx'),
-    route('performance-demo', 'routes/performance-demo.tsx'),
     route('trader/:id', 'routes/trader-profile.tsx'),
     route('the-exchange', 'routes/the-exchange.tsx'),
     route('perfume/:perfumeName', 'routes/perfume.tsx'),

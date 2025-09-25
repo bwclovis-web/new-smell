@@ -26,7 +26,7 @@ export const bundleStrategies = {
     lazy: [
       'the-exchange',
       'trader-profile',
-      'rating-demo'
+      // 'rating-demo' // Removed demo route
     ]
   },
 
@@ -50,10 +50,18 @@ export const bundleStrategies = {
 
   // Vendor splitting
   vendor: {
-    react: ['react', 'react-dom', 'react-router', 'react-router-dom'],
-    ui: ['@gsap/react', 'gsap', 'zustand', 'react-i18next', 'i18next'],
-    icons: ['react-icons/gr', 'react-icons/md', 'react-icons/fa', 'react-icons/io5'],
-    utils: ['cookie', 'clsx', 'class-variance-authority', 'tailwind-merge'],
+    react: [
+      'react', 'react-dom', 'react-router', 'react-router-dom'
+    ],
+    ui: [
+      '@gsap/react', 'gsap', 'zustand', 'react-i18next', 'i18next'
+    ],
+    icons: [
+      'react-icons/gr', 'react-icons/md', 'react-icons/fa', 'react-icons/io5'
+    ],
+    utils: [
+      'cookie', 'clsx', 'class-variance-authority', 'tailwind-merge'
+    ],
     charts: ['chart.js', 'react-chartjs-2'] // If using chart libraries
   }
 }
@@ -90,7 +98,9 @@ export const preloadingStrategies = {
 
 // Bundle analysis utilities
 export const analyzeBundle = () => {
-  if (typeof window === 'undefined') return null
+  if (typeof window === 'undefined') {
+    return null
+  }
 
   const performance = window.performance
   const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
@@ -124,7 +134,9 @@ export const analyzeBundle = () => {
 
 // Bundle optimization recommendations
 export const getOptimizationRecommendations = (bundleAnalysis: ReturnType<typeof analyzeBundle>) => {
-  if (!bundleAnalysis) return []
+  if (!bundleAnalysis) {
+    return []
+  }
 
   const recommendations = []
   const { timing, resources } = bundleAnalysis
@@ -168,27 +180,25 @@ export const createRetryableImport = <T>(
   importFn: () => Promise<T>,
   maxRetries: number = 3,
   delay: number = 1000
-) => {
-  return new Promise<T>((resolve, reject) => {
-    let retries = 0
+) => new Promise<T>((resolve, reject) => {
+  let retries = 0
 
-    const attemptImport = async () => {
-      try {
-        const result = await importFn()
-        resolve(result)
-      } catch (error) {
-        retries++
-        if (retries < maxRetries) {
-          setTimeout(attemptImport, delay * retries)
-        } else {
-          reject(error)
-        }
+  const attemptImport = async () => {
+    try {
+      const result = await importFn()
+      resolve(result)
+    } catch (error) {
+      retries++
+      if (retries < maxRetries) {
+        setTimeout(attemptImport, delay * retries)
+      } else {
+        reject(error)
       }
     }
+  }
 
-    attemptImport()
-  })
-}
+  attemptImport()
+})
 
 // Bundle splitting configuration for Vite
 export const viteBundleConfig = {
@@ -196,16 +206,24 @@ export const viteBundleConfig = {
     output: {
       manualChunks: {
         // Core React libraries
-        'react-vendor': ['react', 'react-dom', 'react-router', 'react-router-dom'],
+        'react-vendor': [
+          'react', 'react-dom', 'react-router', 'react-router-dom'
+        ],
 
         // UI and animation libraries
-        'ui-vendor': ['@gsap/react', 'gsap', 'zustand', 'react-i18next', 'i18next'],
+        'ui-vendor': [
+          '@gsap/react', 'gsap', 'zustand', 'react-i18next', 'i18next'
+        ],
 
         // Icon libraries
-        'icons-vendor': ['react-icons/gr', 'react-icons/md', 'react-icons/fa', 'react-icons/io5'],
+        'icons-vendor': [
+          'react-icons/gr', 'react-icons/md', 'react-icons/fa', 'react-icons/io5'
+        ],
 
         // Utility libraries
-        'utils-vendor': ['cookie', 'clsx', 'class-variance-authority', 'tailwind-merge'],
+        'utils-vendor': [
+          'cookie', 'clsx', 'class-variance-authority', 'tailwind-merge'
+        ],
 
         // Admin features
         'admin': [
@@ -223,9 +241,7 @@ export const viteBundleConfig = {
         ],
 
         // Data visualization
-        'data-viz': [
-          './app/components/Containers/DataQualityDashboard/DataQualityDashboard.tsx'
-        ]
+        'data-viz': ['./app/components/Containers/DataQualityDashboard/DataQualityDashboard.tsx']
       }
     }
   }
