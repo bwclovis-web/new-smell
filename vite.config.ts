@@ -82,14 +82,10 @@ export default defineConfig({
           return `assets/[name]-[hash][extname]`
         },
         manualChunks: id => {
-          // Core React libraries (small, critical, stable)
-          if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-            return 'vendor-core'
-          }
-
-          // i18n libraries (must stay together to prevent module resolution issues)
-          if (id.includes('i18next') || id.includes('react-i18next') || id.includes('i18next-')) {
-            return 'vendor-i18n'
+          // Core React ecosystem (must stay together to prevent forwardRef issues)
+          if (id.includes('react') || id.includes('react-dom') || id.includes('react-router') ||
+            id.includes('react-i18next') || id.includes('i18next')) {
+            return 'vendor-react'
           }
 
           // UI and animation libraries (medium size)
@@ -106,7 +102,7 @@ export default defineConfig({
 
           // Large utility libraries (lazy load)
           if (id.includes('bcryptjs') || id.includes('jsonwebtoken') || id.includes('sharp') ||
-            id.includes('csv-parser') || id.includes('papaparse')) {
+            id.includes('papaparse')) {
             return 'vendor-libs'
           }
 
@@ -143,12 +139,14 @@ export default defineConfig({
       'react-dom',
       'react-router',
       'react-router-dom',
-      'zustand',
-      'i18next',
       'react-i18next',
+      'i18next',
       'i18next-browser-languagedetector',
       'i18next-http-backend',
-      'i18next-fs-backend'
+      'i18next-fs-backend',
+      'zustand',
+      'clsx',
+      'tailwind-merge'
     ]
   },
   assetsInclude: [
