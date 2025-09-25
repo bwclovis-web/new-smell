@@ -31,7 +31,6 @@ const AllPerfumesPage = () => {
   const { t } = useTranslation()
   const location = useLocation()
   const [selectedSort, setSelectedSort] = useState('created-desc')
-  const [isClient, setIsClient] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // Get selectedLetter from navigation state
@@ -40,10 +39,6 @@ const AllPerfumesPage = () => {
   const sortOptions = getDefaultSortOptions(t)
   const data = useDataByLetter({ endpoint: '/api/perfumes-by-letter', itemName: 'perfumes' })
 
-  // Ensure hydration compatibility
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
 
   // Track if we've already processed the initial letter selection
   const [hasProcessedInitialLetter, setHasProcessedInitialLetter] = useState(false)
@@ -108,25 +103,23 @@ const AllPerfumesPage = () => {
       />
 
       {/* Perfumes Display */}
-      {isClient && (
-        <DataDisplaySection
-          data={perfumes}
-          isLoading={data.isLoading}
-          infiniteLoading={infiniteLoading}
-          hasMore={hasMore}
-          totalCount={totalCount}
-          observerRef={observerRef}
-          onLoadMore={loadMorePerfumes}
-          type="perfume"
-          selectedLetter={selectedLetter}
-          scrollContainerRef={scrollContainerRef}
-          sourcePage="vault"
-          useVirtualScrolling={true}
-          virtualScrollThreshold={30}
-          itemHeight={300}
-          containerHeight={600}
-        />
-      )}
+      <DataDisplaySection
+        data={perfumes}
+        isLoading={data.isLoading}
+        infiniteLoading={infiniteLoading}
+        hasMore={hasMore}
+        totalCount={totalCount}
+        observerRef={observerRef}
+        onLoadMore={loadMorePerfumes}
+        type="perfume"
+        selectedLetter={selectedLetter}
+        scrollContainerRef={scrollContainerRef}
+        sourcePage="vault"
+        useVirtualScrolling={true}
+        virtualScrollThreshold={30}
+        itemHeight={300}
+        containerHeight={600}
+      />
     </section>
   )
 }

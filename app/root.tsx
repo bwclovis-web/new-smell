@@ -17,8 +17,6 @@ import FourOFourPage from './components/Containers/404Page/404Page'
 import ErrorBoundaryComponent from './components/Containers/ErrorBoundary'
 import ServiceWorkerRegistration from './components/Containers/ServiceWorkerRegistration'
 import { CSRFTokenProvider } from './components/Molecules/CSRFToken'
-// Performance monitoring only in development
-import { DevPerformanceLoader } from './components/Performance'
 import { NonceProvider, useNonce } from './hooks/use-nonce'
 import i18n from './modules/i18n/i18n.client'
 import { SessionProvider } from './providers/sessionProvider'
@@ -75,7 +73,6 @@ export function Layout({ children }: { children: ReactNode }) {
         {children}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <DevPerformanceLoader />
         <ServiceWorkerRegistration />
         <div id="modal-portal" />
       </body>

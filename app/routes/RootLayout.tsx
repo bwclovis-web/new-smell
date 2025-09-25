@@ -6,7 +6,7 @@ import GlobalNavigation from '~/components/Molecules/GlobalNavigation/GlobalNavi
 import MobileBottomNavigation from '~/components/Molecules/MobileBottomNavigation/MobileBottomNavigation'
 import MobileNavigation from '~/components/Molecules/MobileNavigation/MobileNavigation'
 // Performance monitoring only in development
-import { DevPerformanceLoader } from '~/components/Performance'
+// import { DevPerformanceLoader } from '~/components/Performance'
 import { getUserById } from '~/models/user.server'
 import { createSafeUser } from '~/types'
 import { verifyAccessToken } from '~/utils/security/session-manager.server'
@@ -52,7 +52,7 @@ const RootLayout = () => {
             context={{ user }}
           />
         </main>
-        <DevPerformanceLoader />
+        {/* <DevPerformanceLoader /> */}
       </div>
     </Suspense>
   )

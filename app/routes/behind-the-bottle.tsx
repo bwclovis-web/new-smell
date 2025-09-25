@@ -62,7 +62,6 @@ const AllHousesPage = () => {
   const location = useLocation()
   const [selectedHouseType, setSelectedHouseType] = useState('all')
   const [selectedSort, setSelectedSort] = useState<any>('created-desc')
-  const [isClient, setIsClient] = useState(false)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // Get selectedLetter from navigation state
@@ -72,10 +71,6 @@ const AllHousesPage = () => {
   const data = useDataByLetter({ endpoint: '/api/houses-by-letter-paginated', itemName: 'houses' })
   const handlers = useHouseHandlers(setSelectedHouseType, setSelectedSort)
 
-  // Ensure hydration compatibility
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
 
   // Track if we've already processed the initial letter selection
   const [hasProcessedInitialLetter, setHasProcessedInitialLetter] = useState(false)
@@ -143,25 +138,23 @@ const AllHousesPage = () => {
       />
 
       {/* Houses Display */}
-      {isClient && (
-        <DataDisplaySection
-          data={houses}
-          isLoading={data.isLoading}
-          infiniteLoading={infiniteLoading}
-          hasMore={hasMore}
-          totalCount={totalCount}
-          observerRef={observerRef}
-          onLoadMore={loadMoreHouses}
-          type="house"
-          selectedLetter={selectedLetter}
-          scrollContainerRef={scrollContainerRef}
-          sourcePage="behind-the-bottle"
-          useVirtualScrolling={true}
-          virtualScrollThreshold={20}
-          itemHeight={320}
-          containerHeight={600}
-        />
-      )}
+      <DataDisplaySection
+        data={houses}
+        isLoading={data.isLoading}
+        infiniteLoading={infiniteLoading}
+        hasMore={hasMore}
+        totalCount={totalCount}
+        observerRef={observerRef}
+        onLoadMore={loadMoreHouses}
+        type="house"
+        selectedLetter={selectedLetter}
+        scrollContainerRef={scrollContainerRef}
+        sourcePage="behind-the-bottle"
+        useVirtualScrolling={true}
+        virtualScrollThreshold={20}
+        itemHeight={320}
+        containerHeight={600}
+      />
     </section>
   )
 }
