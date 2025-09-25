@@ -82,46 +82,13 @@ export default defineConfig({
           return `assets/[name]-[hash][extname]`
         },
         manualChunks: id => {
-          // Core React ecosystem (must stay together to prevent forwardRef issues)
-          if (id.includes('react') || id.includes('react-dom') || id.includes('react-router') ||
-            id.includes('react-i18next') || id.includes('i18next')) {
-            return 'vendor-react'
-          }
-
-          // UI and animation libraries (medium size)
-          if (id.includes('@gsap') || id.includes('chart.js') || id.includes('react-icons') ||
-            id.includes('react-chartjs-2') || id.includes('@conform-to')) {
-            return 'vendor-ui'
-          }
-
-          // Utility libraries (small, non-critical)
-          if (id.includes('zustand') || id.includes('clsx') ||
-            id.includes('tailwind-merge') || id.includes('class-variance-authority')) {
-            return 'vendor-utils'
-          }
-
-          // Large utility libraries (lazy load)
-          if (id.includes('bcryptjs') || id.includes('jsonwebtoken') || id.includes('sharp') ||
-            id.includes('papaparse')) {
-            return 'vendor-libs'
-          }
-
-          // All other node_modules (fallback)
+          // Simplified chunking strategy for Vercel compatibility
           if (id.includes('node_modules')) {
-            return 'vendor-misc'
+            // Group all vendor libraries together for stability
+            return 'vendor'
           }
 
-          // Route components (lazy load for better performance)
-          if (id.includes('/routes/')) {
-            return 'routes'
-          }
-
-          // Performance and monitoring components (lazy load)
-          if (id.includes('Performance') || id.includes('DataQuality') || id.includes('PerformanceMonitor')) {
-            return 'performance'
-          }
-
-          // Admin components (lazy load)
+          // Only create specific chunks for large admin sections
           if (id.includes('/admin/') && !id.includes('node_modules')) {
             return 'admin'
           }
@@ -146,7 +113,10 @@ export default defineConfig({
       'i18next-fs-backend',
       'zustand',
       'clsx',
-      'tailwind-merge'
+      'tailwind-merge',
+      'class-variance-authority',
+      '@conform-to/react',
+      '@conform-to/zod'
     ]
   },
   assetsInclude: [
