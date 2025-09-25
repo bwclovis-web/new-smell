@@ -16,8 +16,8 @@ if (!i18n.isInitialized) {
       supportedLngs: ['en', 'es'],
       load: 'languageOnly',
       debug: process.env.NODE_ENV === 'development',
-      defaultNS: 'common',
-      ns: ['common'],
+      defaultNS: 'translation',
+      ns: ['translation'],
       interpolation: {
         escapeValue: false // React already does escaping
       },

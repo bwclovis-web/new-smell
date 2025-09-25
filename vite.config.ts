@@ -87,11 +87,6 @@ export default defineConfig({
             // Group all vendor libraries together for stability
             return 'vendor'
           }
-
-          // Only create specific chunks for large admin sections
-          if (id.includes('/admin/') && !id.includes('node_modules')) {
-            return 'admin'
-          }
         }
       }
     },

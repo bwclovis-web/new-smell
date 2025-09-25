@@ -13,6 +13,8 @@ if (!i18n.isInitialized) {
       supportedLngs: ['en', 'es'],
       debug: import.meta.env.DEV,
       load: 'languageOnly',
+      defaultNS: 'translation',
+      ns: ['translation'],
       interpolation: {
         escapeValue: false // React already does escaping
       },
@@ -24,7 +26,9 @@ if (!i18n.isInitialized) {
         bindI18n: 'languageChanged loaded'
       },
       detection: {
-        order: ['cookie', 'localStorage', 'navigator', 'htmlTag'],
+        order: [
+          'cookie', 'localStorage', 'navigator', 'htmlTag'
+        ],
         caches: ['localStorage', 'cookie']
       }
     })
