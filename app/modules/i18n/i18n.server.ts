@@ -1,11 +1,11 @@
-import i18n from 'i18next';
-import Backend from 'i18next-fs-backend';
-import { initReactI18next } from 'react-i18next';
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
+import i18n from 'i18next'
+import Backend from 'i18next-fs-backend'
+import { dirname, resolve } from 'path'
+import { initReactI18next } from 'react-i18next'
+import { fileURLToPath } from 'url'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 if (!i18n.isInitialized) {
   i18n
@@ -16,6 +16,8 @@ if (!i18n.isInitialized) {
       supportedLngs: ['en', 'es'],
       load: 'languageOnly',
       debug: process.env.NODE_ENV === 'development',
+      defaultNS: 'common',
+      ns: ['common'],
       interpolation: {
         escapeValue: false // React already does escaping
       },
@@ -27,7 +29,7 @@ if (!i18n.isInitialized) {
         bindI18n: 'loaded'
       },
       initImmediate: false, // Important for server-side
-    });
+    })
 }
 
-export default i18n;
+export default i18n

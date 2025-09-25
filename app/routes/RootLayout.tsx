@@ -3,9 +3,7 @@ import { Suspense } from 'react'
 import { type LoaderFunctionArgs, Outlet, useLoaderData } from 'react-router'
 
 // Performance monitoring only in development
-const PerformanceMonitor = process.env.NODE_ENV === 'development'
-  ? require('~/components/Atoms/PerformanceMonitor').PerformanceMonitor
-  : () => null
+import { PerformanceMonitor } from '~/components/Atoms/PerformanceMonitor'
 import GlobalNavigation from '~/components/Molecules/GlobalNavigation/GlobalNavigation'
 import MobileBottomNavigation from '~/components/Molecules/MobileBottomNavigation/MobileBottomNavigation'
 import MobileNavigation from '~/components/Molecules/MobileNavigation/MobileNavigation'
