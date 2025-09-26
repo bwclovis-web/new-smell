@@ -163,6 +163,7 @@ model UserPerfumeReview {
 model UserPerfumeWishlist {
   id        String   @id
   userId    String
+  isPublic  Boolean  @default(false)
   perfumeId String
   createdAt DateTime @default(now())
   Perfume   Perfume  @relation(fields: [perfumeId], references: [id])
