@@ -32,7 +32,7 @@ const TraderProfilePage = () => {
         subheading={t("traderProfile.subheading", { traderName })}
       />
       <div className="flex flex-col md:flex-row justify-between inner-container items-start gap-8 p-6">
-        <div className="noir-border relative w-1/2 p-4">
+        <div className="noir-border relative md:w-1/2 w-full p-4">
           <h2>{t("traderProfile.itemsAvailable")}</h2>
           {trader.UserPerfume.length > 0 ? (
             <ul className="mt-6">
@@ -47,7 +47,7 @@ const TraderProfilePage = () => {
             <p>{t("traderProfile.noItemsAvailable")}</p>
           )}
         </div>
-        <div className="noir-border relative w-1/2 p-4">
+        <div className="noir-border relative md:w-1/2 w-full p-4">
           <h2>{t("traderProfile.itemsSearchingFor")}</h2>
           <ItemsSearchingFor
             wishlistItems={
