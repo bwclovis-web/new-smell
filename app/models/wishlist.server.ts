@@ -1,6 +1,6 @@
 import { prisma } from '~/db.server'
 
-export const addToWishlist = async (userId: string, perfumeId: string) => {
+export const addToWishlist = async (userId: string, perfumeId: string, isPublic: boolean = false) => {
   // Check if item already exists in wishlist
   const existing = await prisma.userPerfumeWishlist.findFirst({
     where: {
@@ -16,7 +16,8 @@ export const addToWishlist = async (userId: string, perfumeId: string) => {
   const wishlistItem = await prisma.userPerfumeWishlist.create({
     data: {
       userId,
-      perfumeId
+      perfumeId,
+      isPublic
     }
   })
 
@@ -32,6 +33,20 @@ export const removeFromWishlist = async (userId: string, perfumeId: string) => {
   })
 
   return { success: true, data: deleted }
+}
+
+export const updateWishlistVisibility = async (userId: string, perfumeId: string, isPublic: boolean) => {
+  const updated = await prisma.userPerfumeWishlist.updateMany({
+    where: {
+      userId,
+      perfumeId
+    },
+    data: {
+      isPublic
+    }
+  })
+
+  return { success: true, data: updated }
 }
 
 export const isInWishlist = async (userId: string, perfumeId: string) => {

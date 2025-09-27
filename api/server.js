@@ -368,7 +368,7 @@ app.use('/api', (req, res, next) => {
   // Skip CSRF for routes that don't need it
   const excludedRoutes = [
     '/log-out',           // Logout doesn't need CSRF
-    '/wishlist',          // Wishlist API - temporary exclusion for debugging
+    '/wishlist', 
     '/rate-limit-stats',  // Monitoring endpoints
     '/security-stats',
     '/audit-logs',

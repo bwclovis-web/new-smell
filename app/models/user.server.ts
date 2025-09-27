@@ -112,6 +112,33 @@ export const getTraderById = async (id: string) => {
             }
           }
         }
+      },
+      UserPerfumeWishlist: {
+        where: {
+          isPublic: true
+        },
+        select: {
+          id: true,
+          perfumeId: true,
+          isPublic: true,
+          createdAt: true,
+          perfume: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+              perfumeHouse: {
+                select: {
+                  id: true,
+                  name: true
+                }
+              }
+            }
+          }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
       }
     }
   })

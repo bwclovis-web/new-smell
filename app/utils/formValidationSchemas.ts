@@ -155,9 +155,10 @@ export const UpdateCommentSchema = z.object({
 // Wishlist Schemas
 export const WishlistActionSchema = z.object({
   perfumeId: z.string().min(1, { message: 'Perfume ID is required' }),
-  action: z.enum(['add', 'remove'], {
-    errorMap: () => ({ message: 'Action must be add or remove' })
-  })
+  action: z.enum(['add', 'remove', 'updateVisibility'], {
+    errorMap: () => ({ message: 'Action must be add, remove, or updateVisibility' })
+  }),
+  isPublic: z.string().optional().default('false').transform((val) => val === 'true')
 })
 
 // User Authentication Schemas

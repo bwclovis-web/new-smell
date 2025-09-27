@@ -6,6 +6,7 @@ import { MdDeleteForever } from 'react-icons/md'
 
 import { Button, VooDooLink } from '~/components/Atoms/Button'
 import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal'
+import { useCSRF } from '~/hooks/useCSRF'
 
 interface Perfume {
   id: string
@@ -22,6 +23,9 @@ interface PerfumeIconsProps {
 const PerfumeIcons: FC<PerfumeIconsProps>
   = ({ perfume, handleDelete, userRole, isInWishlist }) => {
     const [inWishlist, setInWishlist] = useState(isInWishlist)
+    const [isPublic, setIsPublic] = useState(false)
+    const [showWishlistForm, setShowWishlistForm] = useState(false)
+    const { addToHeaders } = useCSRF()
 
     const revertWishlistState = () => {
       setInWishlist(!inWishlist)
@@ -30,6 +34,7 @@ const PerfumeIcons: FC<PerfumeIconsProps>
     const updateWishlistAPI = async (formData: FormData) => {
       const response = await fetch('/api/wishlist', {
         method: 'POST',
+        headers: addToHeaders(),
         body: formData
       })
 
@@ -39,12 +44,36 @@ const PerfumeIcons: FC<PerfumeIconsProps>
     }
 
     const handleWishlistToggle = async () => {
+      if (inWishlist) {
+        // Remove from wishlist
+        const formData = new FormData()
+        formData.append('perfumeId', perfume.id)
+        formData.append('action', 'remove')
+
+        // Optimistically update the UI first
+        setInWishlist(false)
+        setShowWishlistForm(false)
+
+        try {
+          await updateWishlistAPI(formData)
+        } catch {
+          revertWishlistState()
+        }
+      } else {
+        // Show form to add to wishlist with public/private option
+        setShowWishlistForm(true)
+      }
+    }
+
+    const handleAddToWishlist = async () => {
       const formData = new FormData()
       formData.append('perfumeId', perfume.id)
-      formData.append('action', inWishlist ? 'remove' : 'add')
+      formData.append('action', 'add')
+      formData.append('isPublic', isPublic.toString())
 
       // Optimistically update the UI first
-      setInWishlist(!inWishlist)
+      setInWishlist(true)
+      setShowWishlistForm(false)
 
       try {
         await updateWishlistAPI(formData)
@@ -55,28 +84,63 @@ const PerfumeIcons: FC<PerfumeIconsProps>
 
     return (
       <div className="grid grid-cols-1 gap-2 noir-border relative p-4">
-        <Button
-          onClick={handleWishlistToggle}
-          variant='icon'
-          background='gold'
-          size={'sm'}
-          aria-label={`${inWishlist ? 'remove' : 'add'} ${perfume.name} ${inWishlist ? 'from' : 'to'} wishlist`}
-        >
-
-          {inWishlist
-            ? (
-              <div className="flex items-center justify-between gap-2">
-                <span>In your wishlist</span>
-                <BsHeartFill size={20} />
-              </div>
-            )
-            : (
-              <div className="flex items-center justify-between gap-2">
-                <span>Add to wishlist</span>
-                <BsHearts size={20} />
-              </div>
-            )}
-        </Button>
+        {!showWishlistForm ? (
+          <Button
+            onClick={handleWishlistToggle}
+            variant='icon'
+            background='gold'
+            size={'sm'}
+            aria-label={`${inWishlist ? 'remove' : 'add'} ${perfume.name} ${inWishlist ? 'from' : 'to'} wishlist`}
+          >
+            {inWishlist
+              ? (
+                <div className="flex items-center justify-between gap-2">
+                  <span>In your wishlist</span>
+                  <BsHeartFill size={20} />
+                </div>
+              )
+              : (
+                <div className="flex items-center justify-between gap-2">
+                  <span>Add to wishlist</span>
+                  <BsHearts size={20} />
+                </div>
+              )}
+          </Button>
+        ) : (
+          <div className="space-y-2 p-3 bg-noir-dark/10 rounded-lg border">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id={`public-${perfume.id}`}
+                checked={isPublic}
+                onChange={(e) => setIsPublic(e.target.checked)}
+                className="rounded"
+              />
+              <label htmlFor={`public-${perfume.id}`} className="text-sm text-noir-gold">
+                Make public (show on trader profile)
+              </label>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                onClick={handleAddToWishlist}
+                variant='icon'
+                background='gold'
+                size={'sm'}
+                className="flex-1"
+              >
+                Add to Wishlist
+              </Button>
+              <Button
+                onClick={() => setShowWishlistForm(false)}
+                variant='icon'
+                background='gray'
+                size={'sm'}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        )}
         <AddToCollectionModal type="icon" perfume={perfume} />
         {userRole === 'admin'
           && (

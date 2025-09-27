@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { type LoaderFunctionArgs, useLoaderData } from "react-router"
 
-import ItemsToTrade from "~/components/Containers/TraderProfile/ItemsToTrade"
+import { ItemsToTrade, ItemsSearchingFor } from "~/components/Containers/TraderProfile"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import { getTraderById } from "~/models/user.server"
 import { getTraderDisplayName } from "~/utils/user"
@@ -49,6 +49,7 @@ const TraderProfilePage = () => {
         </div>
         <div className="noir-border relative w-1/2 p-4">
           <h2>{t("traderProfile.itemsSearchingFor")}</h2>
+          <ItemsSearchingFor wishlistItems={trader.UserPerfumeWishlist || []} />
         </div>
       </div>
     </section>
