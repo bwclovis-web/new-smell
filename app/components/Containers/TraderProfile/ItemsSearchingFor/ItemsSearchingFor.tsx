@@ -44,42 +44,44 @@ const ItemsSearchingFor = ({ wishlistItems }: ItemsSearchingForProps) => {
   return (
     <div className="mt-6">
       <ul className="space-y-4">
-        {wishlistItems.map((item) => (
-          <li
-            key={item.id}
-            className="border bg-noir-gold/10 border-noir-gold rounded p-3 flex items-center gap-3"
-          >
-            <div className="flex-shrink-0">
-              <BsHeartFill className="text-red-500" size={20} />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                {item.perfume.image && (
-                  <img
-                    src={item.perfume.image}
-                    alt={item.perfume.name}
-                    className="w-12 h-12 object-cover rounded"
-                  />
-                )}
-                <div>
-                  <h4 className="font-medium text-noir-gold">
-                    {item.perfume.name}
-                  </h4>
-                  {item.perfume.perfumeHouse && (
-                    <p className="text-sm text-noir-gold-200">
-                      by {item.perfume.perfumeHouse.name}
-                    </p>
+        {wishlistItems.map((item) => {
+          return (
+            <li
+              key={item.id}
+              className="border bg-noir-gold/10 border-noir-gold rounded p-3 flex items-center gap-3"
+            >
+              <div className="flex-shrink-0">
+                <BsHeartFill className="text-red-500" size={20} />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2">
+                  {item.perfume.image && (
+                    <img
+                      src={item.perfume.image}
+                      alt={item.perfume.name}
+                      className="w-12 h-12 object-cover rounded"
+                    />
                   )}
+                  <div>
+                    <h3 className="font-medium text-noir-gold">
+                      {item.perfume.name}
+                    </h3>
+                    {item.perfume.perfumeHouse && (
+                      <p className="text-sm text-noir-gold-100">
+                        by {item.perfume.perfumeHouse.name}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex-shrink-0">
-              <span className="text-xs text-noir-gold-300">
-                Added {new Date(item.createdAt).toLocaleDateString()}
-              </span>
-            </div>
-          </li>
-        ))}
+              <div className="flex-shrink-0">
+                <span className="text-xs text-noir-gold-500">
+                  Added {new Date(item.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+            </li>
+          )
+        })}
       </ul>
     </div>
   )
