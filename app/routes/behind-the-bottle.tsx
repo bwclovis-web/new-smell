@@ -73,6 +73,9 @@ const AllHousesPage = () => {
 
   // Track if we've already processed the initial letter selection
   const [hasProcessedInitialLetter, setHasProcessedInitialLetter] = useState(false)
+  // Track the current letter and house type to know when to reset
+  const [lastResetLetter, setLastResetLetter] = useState<string | null>(null)
+  const [lastResetHouseType, setLastResetHouseType] = useState<string>('all')
 
   // Get letter selection first
   const { selectedLetter, handleLetterClick } = useLetterSelection({
@@ -109,11 +112,15 @@ const AllHousesPage = () => {
   })
 
   // Reset houses when data changes (e.g., when filter changes)
+  // Only reset when letter or house type actually changes
   useEffect(() => {
-    if (data.initialData.length > 0) {
+    const shouldReset = (selectedLetter !== lastResetLetter) || (selectedHouseType !== lastResetHouseType)
+    if (data.initialData.length > 0 && shouldReset) {
       resetHouses(data.initialData, data.totalCount)
+      setLastResetLetter(selectedLetter)
+      setLastResetHouseType(selectedHouseType)
     }
-  }, [data.initialData, data.totalCount, resetHouses])
+  }, [data.initialData, data.totalCount, resetHouses, selectedLetter, selectedHouseType, lastResetLetter, lastResetHouseType])
 
   if (data.error) {
     return <div>Error loading houses: {data.error}</div>

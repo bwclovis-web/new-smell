@@ -29,7 +29,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         houseType,
         skip,
         take,
-        hasMore: houses.houses.length === take,
+        hasMore: skip + houses.houses.length < houses.count,
         totalCount: houses.count
       }
     })
