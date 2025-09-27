@@ -233,6 +233,9 @@ export const searchPerfumeHouseByName = async (name: string) => {
         mode: 'insensitive'
       }
     },
+    orderBy: {
+      name: 'asc'
+    },
     take: 10
   })
   return house

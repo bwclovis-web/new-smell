@@ -84,6 +84,9 @@ export const searchPerfumeByName = async (name: string) => {
         mode: 'insensitive'
       }
     },
+    orderBy: {
+      name: 'asc'
+    },
     take: 10
   })
   return perfume
