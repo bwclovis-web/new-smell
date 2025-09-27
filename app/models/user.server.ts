@@ -80,10 +80,12 @@ export const getTraderById = async (id: string) => {
             select: {
               id: true,
               name: true,
+              slug: true,
               perfumeHouse: {
                 select: {
                   id: true,
-                  name: true
+                  name: true,
+                  slug: true
                 }
               }
             }
@@ -126,11 +128,13 @@ export const getTraderById = async (id: string) => {
             select: {
               id: true,
               name: true,
+              slug: true,
               image: true,
               perfumeHouse: {
                 select: {
                   id: true,
-                  name: true
+                  name: true,
+                  slug: true
                 }
               }
             }

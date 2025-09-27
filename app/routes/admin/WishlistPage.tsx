@@ -7,7 +7,7 @@ import WishlistItemCard from '~/components/Organisms/WishlistItemCard/WishlistIt
 import { getUserWishlist, removeFromWishlist } from '~/models/wishlist.server'
 import { sharedLoader } from '~/utils/sharedLoader'
 
-import banner from '../../images/wish.webp'
+import banner from '../../images/wishlist.webp'
 export const ROUTE_PATH = 'admin/wishlist'
 export const meta: MetaFunction = () => {
   return [

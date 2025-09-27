@@ -50,6 +50,7 @@ export const getAllHousesWithOptions = async (options?: {
       select: {
         id: true,
         name: true,
+        slug: true,
         type: true,
         country: true,
         founded: true,
@@ -96,6 +97,7 @@ export const getHousesPaginated = async (options?: {
         select: {
           id: true,
           name: true,
+          slug: true,
           type: true,
           country: true,
           founded: true,
@@ -133,6 +135,7 @@ export const getAllHouses = async (options?: { skip?: number; take?: number; sel
       select: {
         id: true,
         name: true,
+        slug: true,
         type: true,
         country: true,
         founded: true,
