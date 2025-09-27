@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 interface UseDataByLetterProps {
   endpoint: string
   itemName: string
+  houseType?: string
 }
 
 interface UseDataByLetterReturn<T> {
@@ -10,17 +11,19 @@ interface UseDataByLetterReturn<T> {
   totalCount: number
   isLoading: boolean
   error: string | null
-  loadDataByLetter: (letter: string) => Promise<{ data: T[], totalCount: number } | null>
+  loadDataByLetter: (letter: string, houseType?: string) => Promise<{ data: T[], totalCount: number } | null>
 }
 
-const useDataByLetter = <T>({ endpoint, itemName }: UseDataByLetterProps): UseDataByLetterReturn<T> => {
+const useDataByLetter = <T>({ endpoint, itemName, houseType = 'all' }: UseDataByLetterProps): UseDataByLetterReturn<T> => {
   const [initialData, setInitialData] = useState<T[]>([])
   const [totalCount, setTotalCount] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [currentLetter, setCurrentLetter] = useState<string | null>(null)
 
-  const fetchData = async (letter: string) => {
-    const response = await fetch(`${endpoint}?letter=${letter}&skip=0&take=12`)
+  const fetchData = useCallback(async (letter: string, currentHouseType: string = houseType) => {
+    const url = `${endpoint}?letter=${letter}&skip=0&take=12&houseType=${currentHouseType}`
+    const response = await fetch(url)
     if (!response.ok) {
       throw new Error(`Failed to fetch ${itemName}: ${response.status} ${response.statusText}`)
     }
@@ -29,9 +32,9 @@ const useDataByLetter = <T>({ endpoint, itemName }: UseDataByLetterProps): UseDa
       throw new Error(data.message || `Failed to fetch ${itemName}`)
     }
     return data
-  }
+  }, [endpoint, itemName, houseType])
 
-  const extractItems = (data: any): T[] => {
+  const extractItems = useCallback((data: any): T[] => {
     if (itemName === 'houses') {
       return data.houses || []
     } else if (itemName === 'perfumes') {
@@ -39,13 +42,14 @@ const useDataByLetter = <T>({ endpoint, itemName }: UseDataByLetterProps): UseDa
     } else {
       return data[itemName] || []
     }
-  }
+  }, [itemName])
 
-  const loadDataByLetter = async (letter: string) => {
+  const loadDataByLetter = useCallback(async (letter: string, currentHouseType: string = houseType) => {
     setIsLoading(true)
     setError(null)
+    setCurrentLetter(letter)
     try {
-      const data = await fetchData(letter)
+      const data = await fetchData(letter, currentHouseType)
       const items = extractItems(data)
       const count = data.meta?.totalCount || items.length
 
@@ -60,7 +64,14 @@ const useDataByLetter = <T>({ endpoint, itemName }: UseDataByLetterProps): UseDa
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [fetchData, extractItems, houseType])
+
+  // Reload data when houseType changes if we have a current letter
+  useEffect(() => {
+    if (currentLetter) {
+      loadDataByLetter(currentLetter, houseType)
+    }
+  }, [houseType])
 
   return { initialData, totalCount, isLoading, error, loadDataByLetter }
 }

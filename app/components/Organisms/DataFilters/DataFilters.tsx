@@ -28,6 +28,8 @@ const DataFilters = ({
   searchType,
   sortOptions,
   typeOptions,
+  selectedSort,
+  selectedType,
   onSortChange,
   onTypeChange,
   className = ''
@@ -49,6 +51,7 @@ const DataFilters = ({
                 action={onTypeChange}
                 className="flex-wrap"
                 selectId={`${searchType}-type`}
+                defaultId={selectedType}
               />
             </div>
           )}
@@ -60,6 +63,7 @@ const DataFilters = ({
               action={onSortChange}
               className="flex-wrap"
               selectId={`${searchType}-sort`}
+              defaultId={selectedSort}
             />
           </div>
         </div>

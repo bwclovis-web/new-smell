@@ -160,28 +160,30 @@ export const getHousesByLetter = async (letter: string) => {
   })
 }
 
-export const getHousesByLetterPaginated = async (letter: string, options: { skip: number; take: number }) => {
-  const { skip, take } = options
+export const getHousesByLetterPaginated = async (letter: string, options: { skip: number; take: number; houseType?: string }) => {
+  const { skip, take, houseType = 'all' } = options
+
+  const where: Prisma.PerfumeHouseWhereInput = {
+    name: {
+      startsWith: letter,
+      mode: 'insensitive'
+    }
+  }
+
+  // Add house type filter if not 'all'
+  if (houseType && houseType !== 'all') {
+    where.type = houseType as HouseType
+  }
 
   const [houses, totalCount] = await Promise.all([
     prisma.perfumeHouse.findMany({
-      where: {
-        name: {
-          startsWith: letter,
-          mode: 'insensitive'
-        }
-      },
+      where,
       orderBy: { name: 'asc' },
       skip,
       take
     }),
     prisma.perfumeHouse.count({
-      where: {
-        name: {
-          startsWith: letter,
-          mode: 'insensitive'
-        }
-      }
+      where
     })
   ])
 

@@ -7,6 +7,7 @@ interface UseInfiniteScrollHousesOptions {
   take?: number
   threshold?: number
   debounceTime?: number
+  houseType?: string
 }
 
 interface UseInfiniteScrollHousesReturn {
@@ -19,8 +20,8 @@ interface UseInfiniteScrollHousesReturn {
   resetHouses: (newHouses: any[], newTotalCount: number) => void
 }
 
-async function fetchHousesByLetter(letter: string, skip: number, take: number) {
-  const url = `/api/houses-by-letter-paginated?letter=${letter}&skip=${skip}&take=${take}`
+async function fetchHousesByLetter(letter: string, skip: number, take: number, houseType: string = 'all') {
+  const url = `/api/houses-by-letter-paginated?letter=${letter}&skip=${skip}&take=${take}&houseType=${houseType}`
   const response = await fetch(url)
   return response.json()
 }
@@ -32,7 +33,8 @@ export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions)
     scrollContainerRef,
     take = 12,
     threshold = 200,
-    debounceTime = 500
+    debounceTime = 500,
+    houseType = 'all'
   } = options
 
   const [houses, setHouses] = useState(initialHouses)
@@ -43,13 +45,14 @@ export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions)
   const observerRef = useRef<HTMLDivElement | null>(null)
   const isInitialMount = useRef(true)
   const lastTriggerTime = useRef(0)
+  const previousHouseType = useRef(houseType)
 
   const loadMoreHouses = async () => {
     if (loading || !hasMore) return
 
     setLoading(true)
     try {
-      const data = await fetchHousesByLetter(letter, skip, take)
+      const data = await fetchHousesByLetter(letter, skip, take, houseType)
       if (data.success && Array.isArray(data.houses)) {
         setHouses(prev => [...prev, ...data.houses])
         setSkip(prev => prev + data.houses.length)
@@ -70,6 +73,15 @@ export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions)
     setTotalCount(newTotalCount)
     setHasMore(newHouses.length < newTotalCount)
   }
+
+  // Reset state when houseType changes
+  useEffect(() => {
+    if (previousHouseType.current !== houseType) {
+      previousHouseType.current = houseType
+      // Don't clear houses immediately - let the new data from useDataByLetter populate them
+      // The resetHouses function will be called with new data from the parent
+    }
+  }, [houseType])
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -95,7 +107,7 @@ export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions)
 
     scrollContainer.addEventListener('scroll', handleScroll)
     return () => scrollContainer.removeEventListener('scroll', handleScroll)
-  }, [loading, hasMore, skip, scrollContainerRef.current, debounceTime, threshold, letter])
+  }, [loading, hasMore, skip, scrollContainerRef.current, debounceTime, threshold, letter, houseType])
 
   return { houses, loading, hasMore, totalCount, observerRef, loadMoreHouses, resetHouses }
 }

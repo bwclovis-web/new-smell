@@ -68,9 +68,8 @@ const AllHousesPage = () => {
   const initialSelectedLetter = (location.state as { selectedLetter?: string })?.selectedLetter
 
   const filters = useHouseFilters(t)
-  const data = useDataByLetter({ endpoint: '/api/houses-by-letter-paginated', itemName: 'houses' })
+  const data = useDataByLetter({ endpoint: '/api/houses-by-letter-paginated', itemName: 'houses', houseType: selectedHouseType })
   const handlers = useHouseHandlers(setSelectedHouseType, setSelectedSort)
-
 
   // Track if we've already processed the initial letter selection
   const [hasProcessedInitialLetter, setHasProcessedInitialLetter] = useState(false)
@@ -105,8 +104,16 @@ const AllHousesPage = () => {
     letter: selectedLetter || '',
     initialHouses: data.initialData,
     scrollContainerRef,
-    take: 12
+    take: 12,
+    houseType: selectedHouseType
   })
+
+  // Reset houses when data changes (e.g., when filter changes)
+  useEffect(() => {
+    if (data.initialData.length > 0) {
+      resetHouses(data.initialData, data.totalCount)
+    }
+  }, [data.initialData, data.totalCount, resetHouses])
 
   if (data.error) {
     return <div>Error loading houses: {data.error}</div>
@@ -144,11 +151,11 @@ const AllHousesPage = () => {
         infiniteLoading={infiniteLoading}
         hasMore={hasMore}
         totalCount={totalCount}
-        observerRef={observerRef}
+        observerRef={observerRef as React.RefObject<HTMLDivElement>}
         onLoadMore={loadMoreHouses}
         type="house"
         selectedLetter={selectedLetter}
-        scrollContainerRef={scrollContainerRef}
+        scrollContainerRef={scrollContainerRef as React.RefObject<HTMLDivElement>}
         sourcePage="behind-the-bottle"
         useVirtualScrolling={true}
         virtualScrollThreshold={20}

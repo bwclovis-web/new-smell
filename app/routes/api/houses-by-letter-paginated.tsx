@@ -5,6 +5,7 @@ import { getHousesByLetterPaginated } from '~/models/house.server'
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const letter = url.searchParams.get('letter')
+  const houseType = url.searchParams.get('houseType') || 'all'
   const skip = parseInt(url.searchParams.get('skip') || '0', 10)
   const take = parseInt(url.searchParams.get('take') || '12', 10)
 
@@ -17,7 +18,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   try {
-    const houses = await getHousesByLetterPaginated(letter.toUpperCase(), { skip, take })
+    const houses = await getHousesByLetterPaginated(letter.toUpperCase(), { skip, take, houseType })
 
     return Response.json({
       success: true,
@@ -25,6 +26,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       count: houses.count,
       meta: {
         letter,
+        houseType,
         skip,
         take,
         hasMore: houses.houses.length === take,
