@@ -21,6 +21,7 @@ model User {
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   role                  UserRole               @default(user)
+  SecurityAuditLog      SecurityAuditLog[]
   UserPerfume           UserPerfume[]
   userPerfumeComments   UserPerfumeComment[]
   UserPerfumeRating     UserPerfumeRating[]
@@ -32,7 +33,6 @@ model User {
 model PerfumeHouse {
   id          String    @id @default(cuid())
   name        String    @unique
-  slug        String    @unique
   description String?
   image       String?
   website     String?
@@ -44,18 +44,19 @@ model PerfumeHouse {
   type        HouseType @default(indie)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  slug        String    @unique
   perfumes    Perfume[]
 }
 
 model Perfume {
   id                    String                 @id @default(cuid())
   name                  String                 @unique
-  slug                  String                 @unique
   description           String?
   image                 String?
   perfumeHouseId        String?
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
+  slug                  String                 @unique
   perfumeHouse          PerfumeHouse?          @relation(fields: [perfumeHouseId], references: [id])
   perfumeNotesClose     PerfumeNotes[]         @relation("PerfumeNotesBase")
   perfumeNotesHeart     PerfumeNotes[]         @relation("PerfumeNotesHeart")
@@ -116,9 +117,9 @@ model UserPerfumeReview {
 model UserPerfumeWishlist {
   id        String   @id @default(cuid())
   userId    String
-  isPublic  Boolean  @default(false)
   perfumeId String
   createdAt DateTime @default(now())
+  isPublic  Boolean  @default(false)
   perfume   Perfume  @relation(fields: [perfumeId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 }
@@ -160,6 +161,21 @@ model WishlistNotification {
   @@unique([userId, perfumeId])
 }
 
+model SecurityAuditLog {
+  id         String                @id
+  userId     String?
+  action     SecurityAuditAction
+  severity   SecurityAuditSeverity @default(info)
+  resource   String?
+  resourceId String?
+  ipAddress  String?
+  userAgent  String?
+  details    Json?
+  metadata   Json?
+  createdAt  DateTime              @default(now())
+  User       User?                 @relation(fields: [userId], references: [id])
+}
+
 enum UserRole {
   user
   admin
@@ -190,4 +206,35 @@ enum TradePreference {
   cash
   trade
   both
+}
+
+enum SecurityAuditAction {
+  LOGIN_SUCCESS
+  LOGIN_FAILED
+  LOGOUT
+  PASSWORD_CHANGE
+  PROFILE_UPDATE
+  ADMIN_ACCESS
+  DATA_ACCESS
+  DATA_MODIFICATION
+  DATA_DELETION
+  SUSPICIOUS_ACTIVITY
+  RATE_LIMIT_EXCEEDED
+  INVALID_TOKEN
+  UNAUTHORIZED_ACCESS
+  CSRF_VIOLATION
+  SQL_INJECTION_ATTEMPT
+  XSS_ATTEMPT
+  FILE_UPLOAD
+  API_ACCESS
+  SYSTEM_ERROR
+  SECURITY_SCAN
+}
+
+enum SecurityAuditSeverity {
+  low
+  info
+  warning
+  error
+  critical
 }
