@@ -49,7 +49,14 @@ const TraderProfilePage = () => {
         </div>
         <div className="noir-border relative w-1/2 p-4">
           <h2>{t("traderProfile.itemsSearchingFor")}</h2>
-          <ItemsSearchingFor wishlistItems={trader.UserPerfumeWishlist || []} />
+          <ItemsSearchingFor
+            wishlistItems={
+              (trader.UserPerfumeWishlist || []).map((item: any) => ({
+                ...item,
+                user: trader,
+              }))
+            }
+          />
         </div>
       </div>
     </section>

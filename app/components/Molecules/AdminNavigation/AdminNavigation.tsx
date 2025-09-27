@@ -16,7 +16,7 @@ interface AdminNavigationProps extends HTMLProps<HTMLUListElement>,
 }
 
 const AdminNavigation = ({ className, user }: AdminNavigationProps) => (
-  <aside className='fixed top-20 left-0 z-20 w-full md:w-64  text-noir-light py-4'>
+  <aside className='relative md:fixed top-20 md:left-0 z-20 w-full md:w-64  text-noir-light py-4'>
     {/* Debug info - remove this later */}
     {process.env.NODE_ENV === 'development' && (
       <div className="text-xs text-yellow-400 mb-2 p-2 bg-black/50 rounded">

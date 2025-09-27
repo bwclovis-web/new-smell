@@ -23,6 +23,7 @@ export const getUserDisplayName = (user: UserLike): string => {
     return `${user.firstName || ''} ${user.lastName || ''}`.trim()
   }
 
+
   return user.email
 }
 
@@ -41,7 +42,7 @@ export const getTraderDisplayName = (trader: UserLike): string => {
     return `${trader.firstName || ''} ${trader.lastName || ''}`.trim()
   }
 
-  return trader.email
+  return getUsernameFromEmail(trader.email)
 }
 
 export const createSafeUser = (user: UserI | null): SafeUser | null => {
@@ -57,4 +58,22 @@ export const createSafeUser = (user: UserI | null): SafeUser | null => {
     username: user.username,
     role: user.role
   }
+}
+
+/**
+ * Extracts the username part from an email address (everything before the @)
+ * @param email - The email address to extract username from
+ * @returns The username part of the email, or the full email if no @ is found
+ */
+export const getUsernameFromEmail = (email: string): string => {
+  if (!email) {
+    return ''
+  }
+
+  const atIndex = email.indexOf('@')
+  if (atIndex === -1) {
+    return email
+  }
+
+  return email.substring(0, atIndex)
 }

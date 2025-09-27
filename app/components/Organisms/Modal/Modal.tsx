@@ -57,7 +57,7 @@ const Modal: FC<ModalProps>
       <div
         ref={ref}
         id="modalContainer"
-        className="fixed inset-0 z-[9999] flex justify-center items-start isolate"
+        className="fixed inset-0 z-[9999] flex justify-center items-center isolate"
         style={{ willChange: 'opacity' }}
       >
         {modalOpen && <div

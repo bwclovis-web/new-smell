@@ -6,6 +6,13 @@ interface WishlistItem {
   perfumeId: string
   isPublic: boolean
   createdAt: string
+  user: {
+    id: string
+    firstName: string
+    lastName: string
+    username: string
+    email: string
+  }
   perfume: {
     id: string
     name: string
@@ -27,7 +34,7 @@ const ItemsSearchingFor = ({ wishlistItems }: ItemsSearchingForProps) => {
   if (wishlistItems.length === 0) {
     return (
       <div className="mt-6">
-        <p className="text-noir-gold-200 italic">
+        <p className="text-noir-gold-100 italic">
           {t("traderProfile.noItemsSearchingFor")}
         </p>
       </div>
