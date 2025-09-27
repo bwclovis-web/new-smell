@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client'
 
 import { prisma } from '~/db.server'
+import { createUrlSlug } from '~/utils/slug'
 
 const buildPerfumeOrderBy = (sortBy?: string): Prisma.PerfumeOrderByWithRelationInput => {
   if (sortBy) {
@@ -40,9 +41,9 @@ export const getAllPerfumesWithOptions = async (options?: {
   })
 }
 
-export const getPerfumeByName = async (name: string) => {
+export const getPerfumeBySlug = async (slug: string) => {
   const house = await prisma.perfume.findUnique({
-    where: { name },
+    where: { slug },
     include: {
       perfumeHouse: true,
       perfumeNotesOpen: true,
@@ -125,9 +126,11 @@ export const updatePerfume = async (id: string, data: FormData) => {
 }
 
 export const createPerfume = async (data: FormData) => {
+  const name = data.get('name') as string
   const newPerfume = await prisma.perfume.create({
     data: {
-      name: data.get('name') as string,
+      name,
+      slug: createUrlSlug(name),
       description: data.get('description') as string,
       image: data.get('image') as string,
       perfumeNotesOpen: {

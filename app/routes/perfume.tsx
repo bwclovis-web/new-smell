@@ -6,7 +6,7 @@ import { useOutletContext } from 'react-router-dom'
 import PerfumeIcons from '~/components/Containers/Perfume/PerfumeIcons'
 import PerfumeNotes from '~/components/Containers/Perfume/PerfumeNotes'
 import PerfumeRatingSystem from '~/components/Containers/Perfume/PerfumeRatingSystem'
-import { getPerfumeByName } from '~/models/perfume.server'
+import { getPerfumeBySlug } from '~/models/perfume.server'
 import { getPerfumeRatings, getUserPerfumeRating } from '~/models/perfumeRating.server'
 import { isInWishlist } from '~/models/wishlist.server'
 import { verifyAccessToken } from '~/utils/security/session-manager.server'
@@ -17,10 +17,10 @@ import { ROUTE_PATH as ALL_PERFUMES } from './the-vault'
 export const ROUTE_PATH = '/perfume'
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  if (!params.perfumeName) {
-    throw new Error('Perfume name is required')
+  if (!params.perfumeSlug) {
+    throw new Error('Perfume slug is required')
   }
-  const perfume = await getPerfumeByName(params.perfumeName)
+  const perfume = await getPerfumeBySlug(params.perfumeSlug)
   if (!perfume) {
     throw new Response('House not found', { status: 404 })
   }
@@ -202,7 +202,7 @@ const PerfumeHeader = ({
         <NavLink
           className="text-blue-200 hover:underline font-semibold underline"
           viewTransition
-          to={`${HOUSE_PATH}/${perfume?.perfumeHouse?.name}`}
+          to={`${HOUSE_PATH}/${perfume?.perfumeHouse?.slug}`}
         >
           {perfume?.perfumeHouse?.name}
         </NavLink>

@@ -1,6 +1,7 @@
-import { Prisma } from '@prisma/client'
+import { Prisma, HouseType } from '@prisma/client'
 
 import { prisma } from '~/db.server'
+import { createUrlSlug } from '~/utils/slug'
 const buildHouseOrderBy = (
   sortBy?: string,
   sortByType?: boolean
@@ -193,10 +194,10 @@ export const getHousesByLetterPaginated = async (letter: string, options: { skip
   }
 }
 
-export const getPerfumeHouseByName =
-  async (name: string, opts?: { skip?: number, take?: number }) => {
+export const getPerfumeHouseBySlug =
+  async (slug: string, opts?: { skip?: number, take?: number }) => {
     const house = await prisma.perfumeHouse.findUnique({
-      where: { name },
+      where: { slug },
       include: {
         perfumes: {
           skip: opts?.skip ?? 0,
@@ -282,9 +283,11 @@ export const updatePerfumeHouse = async (id: string, data: FormData) => {
 }
 export const createPerfumeHouse = async (data: FormData) => {
   try {
+    const name = data.get('name') as string
     const newHouse = await prisma.perfumeHouse.create({
       data: {
-        name: data.get('name') as string,
+        name,
+        slug: createUrlSlug(name),
         description: data.get('description') as string,
         image: data.get('image') as string,
         website: data.get('website') as string,

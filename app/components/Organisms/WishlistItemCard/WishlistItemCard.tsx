@@ -106,7 +106,7 @@ const WishlistItemCard = ({
           </span>
           <div className="flex items-center gap-2">
             <NavLink
-              to={`/perfume/${item.perfume.name}`}
+              to={`/perfume/${item.perfume.slug}`}
               className="text-noir-blue/90 hover:text-noir-blue text-sm font-medium"
             >
               View Details

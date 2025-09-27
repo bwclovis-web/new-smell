@@ -4,11 +4,10 @@ import { ROUTE_PATH as PERFUME_HOUSE } from '~/routes/perfume-house'
 const LinkCard = ({ data, type, children, selectedLetter, sourcePage }:
   { data: any; type: any; children?: any; selectedLetter?: string | null; sourcePage?: string }) => {
   const url = type === 'house' ? PERFUME_HOUSE : PERFUME_PATH
-
   return (
     <div className='relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out'>
       <NavLink
-        to={`${url}/${data.name}`}
+        to={`${url}/${data.slug}`}
         state={selectedLetter ? { selectedLetter, sourcePage } : { sourcePage }}
         viewTransition
         className="p-4 flex flex-col overflow-hidden justify-between items-center group  transition-all duration-300 ease-in-out"

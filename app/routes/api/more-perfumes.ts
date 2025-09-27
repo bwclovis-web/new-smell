@@ -1,24 +1,24 @@
 import type { LoaderFunctionArgs } from 'react-router'
 
-import { getPerfumeHouseByName } from '~/models/house.server'
+import { getPerfumeHouseBySlug } from '~/models/house.server'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
-  const houseId = url.searchParams.get('houseId')
+  const houseSlug = url.searchParams.get('houseSlug')
   const skip = parseInt(url.searchParams.get('skip') || '0', 10)
   const take = parseInt(url.searchParams.get('take') || '9', 10)
 
-  if (!houseId) {
+  if (!houseSlug) {
     return Response.json({
       success: false,
-      message: 'House ID is required',
+      message: 'House slug is required',
       perfumes: []
     }, { status: 400 })
   }
 
   try {
     // Fetch house with perfumes using pagination
-    const house = await getPerfumeHouseByName(houseId, { skip, take })
+    const house = await getPerfumeHouseBySlug(houseSlug, { skip, take })
 
     if (!house) {
       return Response.json({

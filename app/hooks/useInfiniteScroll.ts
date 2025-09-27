@@ -5,7 +5,7 @@ import { type RefObject, useEffect, useRef, useState } from 'react'
 import type { SafeUserPerfume } from '~/types'
 
 interface UseInfiniteScrollOptions {
-  houseName: string
+  houseSlug: string
   initialPerfumes: SafeUserPerfume[]
   scrollContainerRef: RefObject<HTMLDivElement | null>
   take?: number
@@ -21,15 +21,15 @@ interface UseInfiniteScrollReturn {
   loadMorePerfumes: () => Promise<void>
 }
 
-async function fetchPerfumes(houseName: string, skip: number, take: number) {
-  const url = `/api/more-perfumes?houseId=${encodeURIComponent(houseName)}&skip=${skip}&take=${take}`
+async function fetchPerfumes(houseSlug: string, skip: number, take: number) {
+  const url = `/api/more-perfumes?houseSlug=${encodeURIComponent(houseSlug)}&skip=${skip}&take=${take}`
   const response = await fetch(url)
   return response.json()
 }
 
 export function useInfiniteScroll(options: UseInfiniteScrollOptions): UseInfiniteScrollReturn {
   const {
-    houseName,
+    houseSlug,
     initialPerfumes,
     scrollContainerRef,
     take = 9,
@@ -50,7 +50,7 @@ export function useInfiniteScroll(options: UseInfiniteScrollOptions): UseInfinit
 
     setLoading(true)
     try {
-      const data = await fetchPerfumes(houseName, skip, take)
+      const data = await fetchPerfumes(houseSlug, skip, take)
       if (data.success && Array.isArray(data.perfumes)) {
         setPerfumes(prev => [...prev, ...data.perfumes])
         setSkip(prev => prev + data.perfumes.length)

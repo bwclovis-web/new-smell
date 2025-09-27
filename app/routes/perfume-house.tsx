@@ -16,18 +16,18 @@ import { useOutletContext } from 'react-router-dom'
 import { Button, VooDooLink } from '~/components/Atoms/Button/Button'
 import PerfumeHouseAddressBlock from '~/components/Containers/PerfumeHouse/AddressBlock/PerfumeHouseAddressBlock'
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
-import { getPerfumeHouseByName } from '~/models/house.server'
+import { getPerfumeHouseBySlug } from '~/models/house.server'
 
 import { ROUTE_PATH as ALL_HOUSES } from './behind-the-bottle'
 const BEHIND_THE_BOTTLE = '/behind-the-bottle'
 
 // Simple loader - get house with only first 9 perfumes
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  if (!params.houseName) {
-    throw new Error('House name is required')
+  if (!params.houseSlug) {
+    throw new Error('House slug is required')
   }
   const perfumeHouse =
-    await getPerfumeHouseByName(params.houseName, { skip: 0, take: 9 })
+    await getPerfumeHouseBySlug(params.houseSlug, { skip: 0, take: 9 })
   if (!perfumeHouse) {
     throw new Response('House not found', { status: 404 })
   }
@@ -70,8 +70,8 @@ const HouseDetailPage = () => {
     observerRef,
     loadMorePerfumes
   } = useInfiniteScroll({
-    houseName: perfumeHouse.name,
-    initialPerfumes: perfumeHouse.perfumes || [],
+    houseSlug: perfumeHouse.slug,
+    initialPerfumes: (perfumeHouse.perfumes || []) as any,
     scrollContainerRef
   })
 

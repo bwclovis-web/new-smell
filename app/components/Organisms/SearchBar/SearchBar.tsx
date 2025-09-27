@@ -75,8 +75,8 @@ const SearchBar =
     const RenderLink = ({ item }: { item: any }) => {
 
       const routePath = searchType === 'perfume-house'
-        ? `/perfume-house/${item.name}`
-        : `/perfume/${item.name}`
+        ? `/perfume-house/${item.slug}`
+        : `/perfume/${item.slug}`
 
       return (
         <NavLink viewTransition to={routePath} className="block w-full h-full">
