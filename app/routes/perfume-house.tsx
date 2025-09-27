@@ -166,7 +166,7 @@ const HouseDetailPage = () => {
                 <li key={perfume.id}>
                   <NavLink
                     viewTransition
-                    to={`/perfume/${perfume.name}`}
+                    to={`/perfume/${perfume.slug}`}
                     state={selectedLetter ? { selectedLetter } : {}}
                     className="block p-2 h-full noir-border relative w-full transition-colors duration-300 ease-in-out"
                   >
