@@ -127,7 +127,7 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
       {modalOpen && modalId === uniqueModalId && (
         <Modal
           innerType="dark"
-          animateStart="left"
+          animateStart="bottom"
         >
           <CommentsModal
             perfume={userPerfume}

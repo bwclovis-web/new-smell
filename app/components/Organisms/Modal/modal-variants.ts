@@ -23,7 +23,7 @@ export const modalBackgroundVariant = cva(
         true: 'opacity-100 transition-all'
       },
       animateStart: {
-        bottom: 'left-0',
+        bottom: 'bottom-0',
         left: 'right-0',
         top: 'top-0'
       },
@@ -53,12 +53,12 @@ export const modalContentVariant = cva(
       {
         animate: false,
         animateStart: 'bottom',
-        className: 'lg:translate-y-80 h-0'
+        className: 'lg:translate-y-0 h-0'
       },
       {
         animate: true,
         animateStart: 'bottom',
-        className: 'lg:translate-y-40 delay-200 top-3'
+        className: 'lg:translate-y-[150%] delay-200 top-[20%]'
       },
       {
         animate: false,
