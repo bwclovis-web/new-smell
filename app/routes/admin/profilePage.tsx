@@ -14,7 +14,7 @@ import { UpdateProfileSchema } from '~/utils/formValidationSchemas'
 import { sharedLoader } from '~/utils/sharedLoader'
 import { getUserDisplayName } from '~/utils/user'
 
-import banner from '../../images/home.webp'
+import banner from '../../images/profile.webp'
 import { getUserByUsername, updateUser } from './profile/queries.server'
 
 export const ROUTE_PATH = '/admin/profile'
