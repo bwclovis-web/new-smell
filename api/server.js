@@ -351,6 +351,12 @@ app.use((req, res, next) => {
   })
 })
 
+// Parse cookies for all requests
+app.use((req, res, next) => {
+  req.cookies = parseCookies(req)
+  next()
+})
+
 // Generate and set CSRF token for all requests
 app.use((req, res, next) => {
   if (!req.cookies?._csrf) {
@@ -360,27 +366,32 @@ app.use((req, res, next) => {
   next()
 })
 
+// Parse request bodies and apply CSRF protection for API routes only
+app.use('/api', (req, res, next) => {
+  // Parse request bodies for API routes
+  express.json({ limit: '10mb' })(req, res, () => {
+    express.urlencoded({ extended: true, limit: '10mb' })(req, res, () => {
+      // Skip CSRF for routes that don't need it
+      const excludedRoutes = [
+        '/log-out',           // Logout doesn't need CSRF
+        '/wishlist', 
+        '/rate-limit-stats',  // Monitoring endpoints
+        '/security-stats',
+        '/audit-logs',
+        '/audit-stats'
+      ]
+      
+      if (excludedRoutes.includes(req.path)) {
+        return next()
+      }
+      
+      return csrfMiddleware(req, res, next)
+    })
+  })
+})
+
 // CSRF protection middleware - only for specific routes that need it
 app.use('/auth', csrfMiddleware) // Apply CSRF to auth routes
-
-// Apply CSRF to API routes, but exclude certain routes
-app.use('/api', (req, res, next) => {
-  // Skip CSRF for routes that don't need it
-  const excludedRoutes = [
-    '/log-out',           // Logout doesn't need CSRF
-    '/wishlist', 
-    '/rate-limit-stats',  // Monitoring endpoints
-    '/security-stats',
-    '/audit-logs',
-    '/audit-stats'
-  ]
-  
-  if (excludedRoutes.includes(req.path)) {
-    return next()
-  }
-  
-  return csrfMiddleware(req, res, next)
-})
 
 app.use(i18nextMiddleware.handle(i18n))
 app.use((req, res, next) => {

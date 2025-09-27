@@ -37,11 +37,18 @@ export const createCommentFormData = (
     perfumeId: string
     userPerfumeId: string
     isPublic?: boolean
-  }
+  },
+  csrfToken?: string
 ) => {
   const formData = new FormData()
   appendCommentData(formData, params)
   formData.append('action', action)
+
+  // Add CSRF token if provided
+  if (csrfToken) {
+    formData.append('_csrf', csrfToken)
+  }
+
   return formData
 }
 

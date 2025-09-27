@@ -6,6 +6,7 @@ import { useFetcher } from "react-router"
 import { Button } from "~/components/Atoms/Button"
 import CheckBox from "~/components/Atoms/CheckBox"
 import Modal from "~/components/Organisms/Modal"
+import { useCSRF } from "~/hooks/useCSRF"
 import { useSessionStore } from '~/stores/sessionStore'
 import type { UserPerfumeI } from "~/types"
 import type { Comment } from "~/types/comments"
@@ -21,6 +22,7 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
   const { t } = useTranslation()
   const { toggleModal, modalId, modalOpen } = useSessionStore()
   const fetcher = useFetcher()
+  const { addToFormData } = useCSRF()
   const [comments, setComments] = useState<Comment[]>([])
   const uniqueModalId = `add-scent-${userPerfume.id}`
 
@@ -50,7 +52,10 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
       }
     )
 
-    fetcher.submit(formData, {
+    // Add CSRF token to form data
+    const protectedFormData = addToFormData(formData)
+
+    fetcher.submit(protectedFormData, {
       method: 'post',
       action: '/api/user-perfumes'
     })
@@ -71,7 +76,10 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
       userPerfumeId
     })
 
-    fetcher.submit(formData, {
+    // Add CSRF token to form data
+    const protectedFormData = addToFormData(formData)
+
+    fetcher.submit(protectedFormData, {
       method: 'post',
       action: '/api/user-perfumes'
     })

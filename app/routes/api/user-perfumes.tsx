@@ -39,7 +39,7 @@ type PerfumeActionParams = {
 const getTokenFromRequest = (request: Request) => {
   const cookieHeader = request.headers.get('cookie') || ''
   const cookies = parseCookies({ headers: { cookie: cookieHeader } })
-  return cookies.token
+  return cookies.accessToken || cookies.token
 }
 
 const validateToken = (token: string): { valid: boolean; userId?: string } => {

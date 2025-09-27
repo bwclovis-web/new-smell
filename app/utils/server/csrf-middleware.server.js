@@ -76,7 +76,7 @@ export function csrfMiddleware(req, res, next) {
 // Generate and set CSRF token cookie
 export function setCSRFCookie(res, token) {
   const csrfCookie = cookie.serialize(CSRF_COOKIE_KEY, token, {
-    httpOnly: true,
+    httpOnly: false, // Allow JavaScript access for CSRF tokens
     path: '/',
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',

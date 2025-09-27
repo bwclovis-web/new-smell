@@ -12,6 +12,7 @@ export function useCSRF() {
     // Get CSRF token from cookie (set by server)
     const getCSRFToken = () => {
       const cookies = document.cookie.split(';')
+
       const csrfCookie = cookies.find(cookie =>
         cookie.trim().startsWith('_csrf=')
       )

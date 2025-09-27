@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import { Form, useFetcher } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
+import { CSRFToken } from "~/components/Molecules/CSRFToken"
 import { useSessionStore } from '~/stores/sessionStore'
 import type { CommentsModalProps } from "~/types/comments"
 import { createCommentFormData, createTemporaryComment } from "~/utils/comment-utils"
@@ -28,45 +29,24 @@ const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
     }, 500)
   }
 
-  // Prepare form data for comment submission
-  const prepareCommentData = (form: HTMLFormElement) => {
-    const formData = new FormData(form)
-    const commentText = formData.get('comment') as string
-    const perfumeId = perfume.perfumeId || perfume.perfume?.id
-    const userPerfumeId = perfume.id
-
-    if (!perfumeId || !userPerfumeId) {
-      throw new Error('Missing required IDs for comment')
-    }
-
-    // Create and submit form data
-    return {
-      formData: createCommentFormData('add-comment', {
-        commentText,
-        perfumeId,
-        userPerfumeId,
-        isPublic
-      }),
-      commentText
-    }
-  }
-
   const handleSubmit = async (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
     setIsSubmitting(true)
 
     try {
       const form = evt.currentTarget as HTMLFormElement
-      const { formData: commentFormData, commentText } = prepareCommentData(form)
+      const formData = new FormData(form)
+      const commentText = formData.get('comment') as string
 
-      fetcher.submit(commentFormData, {
+      // Submit the form data (which includes CSRF token and all required fields)
+      fetcher.submit(formData, {
         method: 'post',
         action: '/api/user-perfumes'
       })
 
       handlePostSubmission(commentText)
-    } catch {
-      // Handle error silently
+    } catch (error) {
+      console.error('Form submission error:', error)
       setIsSubmitting(false)
     }
   }
@@ -75,7 +55,12 @@ const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
     <div className="p-4">
       <h2>{t('comments.title', 'Comments')}</h2>
       <p className="mb-4 text-xl text-noir-gold-100">{t('comments.description', 'This is where you can add your personal comments about the scents.')}</p>
-      <Form method="post" className="space-y-3" onSubmit={handleSubmit}>
+      <form className="space-y-3" onSubmit={handleSubmit}>
+        <CSRFToken />
+        <input type="hidden" name="action" value="add-comment" />
+        <input type="hidden" name="perfumeId" value={perfume.perfumeId || perfume.perfume?.id || ''} />
+        <input type="hidden" name="userPerfumeId" value={perfume.id} />
+        <input type="hidden" name="isPublic" value={isPublic.toString()} key={isPublic.toString()} />
         <label htmlFor="comment" className="block text-md font-medium text-noir-gold-500">
           {t('comments.addLabel', 'Add a comment:')}
         </label>
@@ -108,7 +93,7 @@ const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
         >
           {isSubmitting ? t('comments.submitting', 'Submitting...') : t('comments.submit', 'Submit')}
         </Button>
-      </Form>
+      </form>
     </div>
   )
 }
