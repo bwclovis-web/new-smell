@@ -2,6 +2,7 @@ import { useState } from "react"
 import { IoMdCloseCircle } from "react-icons/io"
 import { Form, NavLink } from "react-router"
 
+import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 import { useCSRF } from "~/hooks/useCSRF"
 import WishListAvailabilityInfo from "./WishlistAvbalibilityInfo"
 
@@ -120,21 +121,12 @@ const WishlistItemCard = ({
             <span className="text-sm text-noir-gold-100">
               Visibility:
             </span>
-            <div className="flex items-center gap-2">
-              <span className={`text-xs ${isPublic ? 'text-green-400' : 'text-gray-400'}`}>
-                {isPublic ? 'Public' : 'Private'}
-              </span>
-              <button
-                onClick={handleVisibilityToggle}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isPublic ? 'bg-green-600' : 'bg-gray-600'
-                  }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isPublic ? 'translate-x-6' : 'translate-x-1'
-                    }`}
-                />
-              </button>
-            </div>
+            <VooDooCheck
+              checked={isPublic}
+              onChange={handleVisibilityToggle}
+              labelChecked="Public"
+              labelUnchecked="Private"
+            />
           </div>
           <p className="text-xs text-noir-gold-200 mt-1">
             {isPublic

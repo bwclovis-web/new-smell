@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next"
 import { MdDeleteForever } from "react-icons/md"
 
 import { Button } from "~/components/Atoms/Button"
-import CheckBox from "~/components/Atoms/CheckBox"
 import Modal from "~/components/Organisms/Modal"
 import { useCSRF } from "~/hooks/useCSRF"
 import { useSessionStore } from '~/stores/sessionStore'
@@ -11,6 +10,7 @@ import type { UserPerfumeI } from "~/types"
 import type { Comment } from "~/types/comments"
 
 import CommentsModal from "../../CommentsModal/CommentsModal"
+import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 
 interface PerfumeCommentsProps {
   userPerfume: UserPerfumeI
@@ -52,14 +52,12 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
 
       if (!result.success) {
         console.error('Failed to toggle comment visibility:', result.error)
-        // Revert the UI change on error
         setComments(prevComments => prevComments.map(comment => comment.id === commentId
           ? { ...comment, isPublic: currentIsPublic }
           : comment))
       }
     } catch (error) {
       console.error('Error toggling comment visibility:', error)
-      // Revert the UI change on error
       setComments(prevComments => prevComments.map(comment => comment.id === commentId
         ? { ...comment, isPublic: currentIsPublic }
         : comment))
@@ -67,12 +65,8 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
   }
 
   const handleDeleteComment = async (commentId: string) => {
-    // Store original comments for potential rollback
     const originalComments = [...comments]
-
-    // Optimistically remove comment from UI
     setComments(prev => prev.filter(comment => comment.id !== commentId))
-
     const perfumeId = userPerfume.perfumeId || userPerfume.perfume?.id
     const userPerfumeId = userPerfume.id
 
@@ -130,9 +124,10 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
                 <span className="text-xs text-noir-gray font-bold tracking-wide">
                   Created on : {new Date(comment.createdAt).toLocaleDateString()}
                 </span>
-                <CheckBox
+                <VooDooCheck
                   checked={comment.isPublic}
-                  label="Public"
+                  labelChecked={t('comments.makePublic', 'Make this comment public')}
+                  labelUnchecked={t('comments.makePrivate', 'Make this comment private')}
                   onChange={() => handleTogglePublic(comment.id, comment.isPublic)}
                 />
                 <Button

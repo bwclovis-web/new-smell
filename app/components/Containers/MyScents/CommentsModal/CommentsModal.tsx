@@ -3,6 +3,7 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Button } from "~/components/Atoms/Button/Button"
+import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 import { useCSRF } from "~/hooks/useCSRF"
 import { useSessionStore } from '~/stores/sessionStore'
 import type { CommentsModalProps } from "~/types/comments"
@@ -94,16 +95,13 @@ const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
         />
 
         <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
+          <VooDooCheck
             id="isPublic"
             checked={isPublic}
             onChange={() => setIsPublic(!isPublic)}
-            className="h-6 w-6"
+            labelChecked={t('comments.makePublic', 'Make this comment public')}
+            labelUnchecked={t('comments.makePrivate', 'Make this comment private')}
           />
-          <label htmlFor="isPublic" className="text-md text-noir-gold-100">
-            {t('comments.makePublic', 'Make this comment public')}
-          </label>
         </div>
 
         <Button

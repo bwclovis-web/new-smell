@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from "react"
 
 import { Button } from "~/components/Atoms/Button"
-import CheckBox from "~/components/Atoms/CheckBox"
 import RadioSelect from "~/components/Atoms/RadioSelect"
+import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 import RangeSlider from "~/components/Atoms/RangeSlider"
 import { useFormState } from "~/hooks"
 import type { UserPerfumeI } from "~/types"
@@ -151,8 +151,9 @@ const DeStashForm = ({
 
         {parseFloat(values.deStashAmount) > 0 && values.tradePreference !== 'cash' && (
           <div>
-            <CheckBox
-              label="Only accept trades (no cash offers)"
+            <VooDooCheck
+              labelChecked="Only accept trades (no cash offers)"
+              labelUnchecked="Accept both cash and trade offers"
               checked={values.tradeOnly}
               onChange={() => setValue('tradeOnly', !values.tradeOnly)}
             />

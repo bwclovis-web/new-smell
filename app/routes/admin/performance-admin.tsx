@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { type MetaFunction } from 'react-router'
 import { useOutletContext } from 'react-router-dom'
+import VooDooCheck from '~/components/Atoms/VooDooCheck/VooDooCheck'
 
 import { ConditionalPerformanceLoader } from '~/components/Performance'
 
@@ -290,14 +291,14 @@ const PerformanceAdmin: React.FC = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-sm font-medium text-gray-700">Enable Monitoring</label>
               <p className="text-sm text-gray-500">Enable real-time performance monitoring</p>
             </div>
-            <input
-              type="checkbox"
+            <VooDooCheck
+              id="monitoring-enabled"
               checked={settings.monitoring.enabled}
-              onChange={e => updateSettings('monitoring', { enabled: e.target.checked })}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              onChange={() => updateSettings('monitoring', { enabled: !settings.monitoring.enabled })}
+              labelChecked="Enable Monitoring"
+              labelUnchecked="Disable Monitoring"
             />
           </div>
           <div>
@@ -316,11 +317,12 @@ const PerformanceAdmin: React.FC = () => {
               <label className="text-sm font-medium text-gray-700">Auto Start</label>
               <p className="text-sm text-gray-500">Automatically start monitoring on page load</p>
             </div>
-            <input
-              type="checkbox"
+            <VooDooCheck
+              id="monitoring-auto-start"
               checked={settings.monitoring.autoStart}
-              onChange={e => updateSettings('monitoring', { autoStart: e.target.checked })}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              onChange={() => updateSettings('monitoring', { autoStart: !settings.monitoring.autoStart })}
+              labelChecked="Enable Auto Start"
+              labelUnchecked="Disable Auto Start"
             />
           </div>
         </div>
@@ -332,26 +334,26 @@ const PerformanceAdmin: React.FC = () => {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-sm font-medium text-gray-700">Enable Alerts</label>
               <p className="text-sm text-gray-500">Enable performance alerting system</p>
             </div>
-            <input
-              type="checkbox"
+            <VooDooCheck
+              id="alerts-enabled"
               checked={settings.alerts.enabled}
-              onChange={e => updateSettings('alerts', { enabled: e.target.checked })}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              onChange={() => updateSettings('alerts', { enabled: !settings.alerts.enabled })}
+              labelChecked="Enable Alerts"
+              labelUnchecked="Disable Alerts"
             />
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <label className="text-sm font-medium text-gray-700">Auto Resolve</label>
               <p className="text-sm text-gray-500">Automatically resolve alerts after delay</p>
             </div>
-            <input
-              type="checkbox"
+            <VooDooCheck
+              id="alerts-auto-resolve"
               checked={settings.alerts.autoResolve}
-              onChange={e => updateSettings('alerts', { autoResolve: e.target.checked })}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              onChange={() => updateSettings('alerts', { autoResolve: !settings.alerts.autoResolve })}
+              labelChecked="Enable Auto Resolve"
+              labelUnchecked="Disable Auto Resolve"
             />
           </div>
           <div>

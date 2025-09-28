@@ -5,6 +5,7 @@ import { GrEdit } from 'react-icons/gr'
 import { MdDeleteForever } from 'react-icons/md'
 
 import { Button, VooDooLink } from '~/components/Atoms/Button'
+import VooDooCheck from '~/components/Atoms/VooDooCheck/VooDooCheck'
 import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal'
 import { useCSRF } from '~/hooks/useCSRF'
 
@@ -107,18 +108,15 @@ const PerfumeIcons: FC<PerfumeIconsProps>
               )}
           </Button>
         ) : (
-          <div className="space-y-2 p-3 bg-noir-dark/10 rounded-lg border">
+          <div className="space-y-2 p-3 bg-noir-dark/10 rounded-lg border border-noir-gold">
             <div className="flex items-center gap-2">
-              <input
-                type="checkbox"
+              <VooDooCheck
                 id={`public-${perfume.id}`}
                 checked={isPublic}
-                onChange={(e) => setIsPublic(e.target.checked)}
-                className="rounded"
+                onChange={() => setIsPublic(!isPublic)}
+                labelChecked="Make public (show on trader profile)"
+                labelUnchecked="Make private (hide from trader profile)"
               />
-              <label htmlFor={`public-${perfume.id}`} className="text-sm text-noir-gold">
-                Make public (show on trader profile)
-              </label>
             </div>
             <div className="flex gap-2">
               <Button
@@ -126,14 +124,13 @@ const PerfumeIcons: FC<PerfumeIconsProps>
                 variant='icon'
                 background='gold'
                 size={'sm'}
-                className="flex-1"
               >
                 Add to Wishlist
               </Button>
               <Button
                 onClick={() => setShowWishlistForm(false)}
                 variant='icon'
-                background='gray'
+                background='gold'
                 size={'sm'}
               >
                 Cancel
