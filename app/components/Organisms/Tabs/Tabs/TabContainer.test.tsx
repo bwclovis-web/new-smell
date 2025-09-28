@@ -34,11 +34,12 @@ describe('TabContainer', () => {
   })
 
   it('sets correct aria attributes for tabs and panels', () => {
-    render(<TabContainer>{getTabItems()}</TabContainer>)
-    const tab = screen.getByRole('tab', { name: 'Tab 1' })
-    expect(tab).toHaveAttribute('aria-selected', 'true')
-    expect(tab).toHaveAttribute('aria-controls', 'panel-0')
-    const panel = screen.getByRole('tabpanel')
+    const { container } = render(<TabContainer>{getTabItems()}</TabContainer>)
+    const tabs = container.querySelectorAll('[role="tab"]')
+    const firstTab = tabs[0]
+    expect(firstTab).toHaveAttribute('aria-selected', 'true')
+    expect(firstTab).toHaveAttribute('aria-controls', 'panel-0')
+    const panel = container.querySelector('[role="tabpanel"]')
     expect(panel).toHaveAttribute('aria-labelledby', 'tab-0')
   })
 

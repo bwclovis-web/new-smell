@@ -29,11 +29,26 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
 }))
 
 // Mock IntersectionObserver
-global.IntersectionObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}))
+global.IntersectionObserver = vi.fn().mockImplementation((callback, options) => {
+  const mockObserver = {
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+    root: options?.root || null,
+    rootMargin: options?.rootMargin || '0px',
+    thresholds: options?.threshold || [0],
+    takeRecords: vi.fn(() => []),
+  }
+
+  // Simulate intersection immediately for testing
+  setTimeout(() => {
+    if (callback) {
+      callback([{ isIntersecting: true, target: null }], mockObserver)
+    }
+  }, 0)
+
+  return mockObserver
+})
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {

@@ -3,7 +3,7 @@ import { type ActionFunctionArgs, type LoaderFunctionArgs, useActionData, useLoa
 
 import PerfumeForm from '~/components/Containers/Forms/PerfumeForm'
 import { getAllHouses } from '~/models/house.server'
-import { getPerfumeById, updatePerfume } from '~/models/perfume.server'
+import { getPerfumeBySlug, updatePerfume } from '~/models/perfume.server'
 import { FORM_TYPES } from '~/utils/constants'
 
 import type { CustomSubmit } from './EditPerfumeHousePage'
@@ -20,11 +20,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 }
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  if (!params.id) {
+  if (!params.perfumeSlug) {
     throw new Error('Perfume ID is required')
   }
-  const perfume = await getPerfumeById(params.id)
-  const allHouses = await getAllHouses({ selectFields: true, take: 1000 })
+  const perfume = await getPerfumeBySlug(params.perfumeSlug)
+  const allHouses = await getAllHouses({ selectFields: true, take: 7000 })
   if (!perfume) {
     throw new Response('Perfume not found', { status: 404 })
   }
@@ -38,7 +38,7 @@ const EditPerfumePage = () => {
   useEffect(
     () => {
       if (lastResult?.success && lastResult.data) {
-        navigate(`/perfume/${lastResult.data.name}`)
+        navigate(`/perfume/${lastResult.data.slug}`)
       }
     },
     [lastResult]

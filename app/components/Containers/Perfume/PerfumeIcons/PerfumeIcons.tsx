@@ -153,7 +153,7 @@ const PerfumeIcons: FC<PerfumeIconsProps>
                   background={'gold'}
                   size={'sm'}
                   className='flex items-center justify-between gap-2'
-                  url={`/admin/perfume/${perfume.name}/edit`}
+                  url={`/admin/perfume/${perfume.slug}/edit`}
                 >
                   <span>Edit Perfume</span>
                   <GrEdit size={22} />

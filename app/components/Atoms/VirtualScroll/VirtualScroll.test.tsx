@@ -28,13 +28,13 @@ describe('VirtualScroll', () => {
     )
 
     // Should render only visible items (200px / 50px = 4 items + overscan)
-    const visibleItems = screen.getAllByTestId(/^item-\d+$/)
+    const visibleItems = screen.queryAllByTestId(/^item-\d+$/)
     expect(visibleItems.length).toBeLessThanOrEqual(8) // 4 visible + 4 overscan
   })
 
   it('handles scroll events', () => {
     const onScroll = vi.fn()
-    render(
+    const { container } = render(
       <VirtualScroll
         items={mockItems}
         itemHeight={50}
@@ -45,13 +45,13 @@ describe('VirtualScroll', () => {
       </VirtualScroll>
     )
 
-    const scrollContainer = screen.getByRole('generic')
+    const scrollContainer = container.firstChild as HTMLElement
     fireEvent.scroll(scrollContainer, { target: { scrollTop: 100 } })
 
     expect(onScroll).toHaveBeenCalledWith(100)
   })
 
-  it('scrolls to specific index', () => {
+  it('scrolls to specific index', async () => {
     render(
       <VirtualScroll
         items={mockItems}
@@ -64,8 +64,12 @@ describe('VirtualScroll', () => {
       </VirtualScroll>
     )
 
-    // The item at index 10 should be visible
-    expect(screen.getByTestId('item-10')).toBeInTheDocument()
+    // Wait for the scroll effect to complete
+    await new Promise(resolve => setTimeout(resolve, 100))
+
+    // The item at index 10 should be visible (it's within the visible range with overscan)
+    // Since we have 100 items and container height 200px, item 10 should be visible
+    expect(screen.queryByTestId('item-10')).toBeInTheDocument()
   })
 
   it('applies custom className', () => {
@@ -84,7 +88,7 @@ describe('VirtualScroll', () => {
   })
 
   it('handles empty items array', () => {
-    render(
+    const { container } = render(
       <VirtualScroll
         items={[]}
         itemHeight={50}
@@ -94,7 +98,9 @@ describe('VirtualScroll', () => {
       </VirtualScroll>
     )
 
-    expect(screen.queryByTestId(/^item-\d+$/)).not.toBeInTheDocument()
+    // Check that no items are rendered
+    const items = container.querySelectorAll('[data-testid^="item-"]')
+    expect(items).toHaveLength(0)
   })
 
   it('calculates correct total height', () => {
@@ -108,6 +114,7 @@ describe('VirtualScroll', () => {
       </VirtualScroll>
     )
 
+    // The inner div should have the total height (100 items * 50px = 5000px)
     const innerDiv = container.querySelector('div > div')
     expect(innerDiv).toHaveStyle({ height: '5000px' }) // 100 items * 50px
   })

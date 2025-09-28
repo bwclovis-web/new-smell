@@ -162,7 +162,6 @@ export default defineConfig({
 
     // Test file patterns for different test types
     testNamePattern: undefined,
-    testTimeout: 15000,
 
     // Environment variables for testing
     env: {

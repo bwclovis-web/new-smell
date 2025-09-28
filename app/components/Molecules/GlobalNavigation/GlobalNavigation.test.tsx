@@ -1,16 +1,12 @@
 import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it } from 'vitest'
 
+import { renderWithProviders } from '../../../../test/utils/test-utils'
 import GlobalNavigation from './GlobalNavigation'
 
 describe('GlobalNavigation', () => {
   it('renders a globalnavigation', () => {
-    render(
-      <MemoryRouter>
-        <GlobalNavigation />
-      </MemoryRouter>
-    )
+    renderWithProviders(<GlobalNavigation />)
     expect(screen.getByText('Behind the Bottle')).toBeInTheDocument()
   })
 })

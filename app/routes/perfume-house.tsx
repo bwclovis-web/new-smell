@@ -20,8 +20,6 @@ import { getPerfumeHouseBySlug } from '~/models/house.server'
 
 import { ROUTE_PATH as ALL_HOUSES } from './behind-the-bottle'
 const BEHIND_THE_BOTTLE = '/behind-the-bottle'
-
-// Simple loader - get house with only first 9 perfumes
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!params.houseSlug) {
     throw new Error('House slug is required')

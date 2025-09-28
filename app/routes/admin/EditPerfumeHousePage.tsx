@@ -4,7 +4,7 @@ import { type ActionFunctionArgs, type LoaderFunctionArgs, useActionData, useLoa
 import { useNavigate } from 'react-router'
 
 import PerfumeHouseForm from '~/components/Containers/Forms/PerfumeHouseForm'
-import { getPerfumeHouseById, updatePerfumeHouse } from '~/models/house.server'
+import { getPerfumeHouseBySlug, updatePerfumeHouse } from '~/models/house.server'
 import { FORM_TYPES } from '~/utils/constants'
 export interface CustomSubmit extends SubmissionResult<string[]> {
   success: boolean
@@ -23,10 +23,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return res
 }
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  if (!params.houseId) {
+  if (!params.houseSlug) {
     throw new Error('House ID is required')
   }
-  const perfumeHouse = await getPerfumeHouseById(params.houseId)
+  const perfumeHouse = await getPerfumeHouseBySlug(params.houseSlug)
   if (!perfumeHouse) {
     throw new Response('House not found', { status: 404 })
   }

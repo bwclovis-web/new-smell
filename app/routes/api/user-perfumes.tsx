@@ -271,12 +271,8 @@ const handleActionError = (error: any) => {
 // Helper function to process form data
 const processFormData = async (request: Request) => {
   console.log('=== FORM DATA PROCESSING DEBUG ===')
-
-  // Always try FormData first since that's what React Router fetcher sends
   const formData = await request.formData()
   console.log('FormData keys:', Array.from(formData.keys()))
-
-  // Log all form data entries for debugging
   for (const [key, value] of formData.entries()) {
     console.log(`Form field ${key}:`, value)
   }
