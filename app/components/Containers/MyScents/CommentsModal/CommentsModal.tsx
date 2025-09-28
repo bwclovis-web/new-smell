@@ -1,52 +1,76 @@
 import type { FormEvent } from "react"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Form, useFetcher } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
-import { CSRFToken } from "~/components/Molecules/CSRFToken"
+import { useCSRF } from "~/hooks/useCSRF"
 import { useSessionStore } from '~/stores/sessionStore'
 import type { CommentsModalProps } from "~/types/comments"
-import { createCommentFormData, createTemporaryComment } from "~/utils/comment-utils"
+import { createTemporaryComment } from "~/utils/comment-utils"
 
 const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
   const { t } = useTranslation()
   const { toggleModal, modalId } = useSessionStore()
+  const { submitForm } = useCSRF()
   const [isPublic, setIsPublic] = useState(false)
-  const fetcher = useFetcher()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [comment, setComment] = useState('')
 
-  const handlePostSubmission = (commentText: string) => {
-    if (onCommentAdded) {
-      onCommentAdded(createTemporaryComment(commentText, isPublic, perfume.id))
-    }
-
-    // Close the modal after submission
-    setTimeout(() => {
-      const buttonRef = { current: document.createElement('button') }
-      toggleModal(buttonRef as any, modalId || 'add-scent')
-      setIsSubmitting(false)
-    }, 500)
+  const closeModal = () => {
+    const buttonRef = { current: document.createElement('button') }
+    toggleModal(buttonRef as any, modalId || 'add-scent')
+    setIsSubmitting(false)
+    setIsPublic(false)
+    setComment('')
   }
 
-  const handleSubmit = async (evt: FormEvent<HTMLFormElement>) => {
-    evt.preventDefault()
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+
+    if (!comment.trim()) {
+      alert('Please enter a comment')
+      return
+    }
+
     setIsSubmitting(true)
 
     try {
-      const form = evt.currentTarget as HTMLFormElement
-      const formData = new FormData(form)
-      const commentText = formData.get('comment') as string
+      // Add temporary comment to UI immediately
+      if (onCommentAdded) {
+        onCommentAdded(createTemporaryComment(comment, isPublic, perfume.id))
+      }
 
-      // Submit the form data (which includes CSRF token and all required fields)
-      fetcher.submit(formData, {
-        method: 'post',
-        action: '/api/user-perfumes'
-      })
+      // Create form data manually
+      const formData = new FormData()
+      formData.append('action', 'add-comment')
+      formData.append('perfumeId', perfume.perfumeId || perfume.perfume?.id || '')
+      formData.append('userPerfumeId', perfume.id)
+      formData.append('isPublic', isPublic.toString())
+      formData.append('comment', comment)
 
-      handlePostSubmission(commentText)
+      console.log('Submitting comment with data:')
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`)
+      }
+
+      // Use useCSRF's submitForm method which handles CSRF automatically
+      const response = await submitForm('/api/user-perfumes', formData)
+      const result = await response.json()
+      console.log('Server response:', result)
+
+      if (result.success) {
+        console.log('Comment added successfully!')
+        setTimeout(() => {
+          closeModal()
+        }, 1000)
+      } else {
+        console.error('Failed to add comment:', result.error)
+        alert(`Failed to add comment: ${result.error}`)
+        setIsSubmitting(false)
+      }
     } catch (error) {
-      console.error('Form submission error:', error)
+      console.error('Error submitting comment:', error)
+      alert('Error submitting comment')
       setIsSubmitting(false)
     }
   }
@@ -56,17 +80,13 @@ const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
       <h2>{t('comments.title', 'Comments')}</h2>
       <p className="mb-4 text-xl text-noir-gold-100">{t('comments.description', 'This is where you can add your personal comments about the scents.')}</p>
       <form className="space-y-3" onSubmit={handleSubmit}>
-        <CSRFToken />
-        <input type="hidden" name="action" value="add-comment" />
-        <input type="hidden" name="perfumeId" value={perfume.perfumeId || perfume.perfume?.id || ''} />
-        <input type="hidden" name="userPerfumeId" value={perfume.id} />
-        <input type="hidden" name="isPublic" value={isPublic.toString()} key={isPublic.toString()} />
         <label htmlFor="comment" className="block text-md font-medium text-noir-gold-500">
           {t('comments.addLabel', 'Add a comment:')}
         </label>
         <textarea
           id="comment"
-          name="comment"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
           rows={4}
           className="block w-full noir-border p-2 relative resize-none bg-noir-gold-500/10 text-noir-gold-100 
           focus:bg-noir-gold/40 focus:ring-noir-gold focus:border-noir-gold"

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { MdDeleteForever } from "react-icons/md"
-import { useFetcher } from "react-router"
 
 import { Button } from "~/components/Atoms/Button"
 import CheckBox from "~/components/Atoms/CheckBox"
@@ -10,8 +9,6 @@ import { useCSRF } from "~/hooks/useCSRF"
 import { useSessionStore } from '~/stores/sessionStore'
 import type { UserPerfumeI } from "~/types"
 import type { Comment } from "~/types/comments"
-import { createCommentFormData } from "~/utils/comment-utils"
-import { FORM_DATA_ACTIONS } from "~/utils/constants"
 
 import CommentsModal from "../../CommentsModal/CommentsModal"
 
@@ -21,8 +18,7 @@ interface PerfumeCommentsProps {
 const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
   const { t } = useTranslation()
   const { toggleModal, modalId, modalOpen } = useSessionStore()
-  const fetcher = useFetcher()
-  const { addToFormData } = useCSRF()
+  const { submitForm } = useCSRF()
   const [comments, setComments] = useState<Comment[]>([])
   const uniqueModalId = `add-scent-${userPerfume.id}`
 
@@ -31,10 +27,11 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
       setComments(userPerfume.comments)
     }
   }, [userPerfume.comments])
-  const handleTogglePublic = (commentId: string, currentIsPublic: boolean) => {
+  const handleTogglePublic = async (commentId: string, currentIsPublic: boolean) => {
     setComments(prevComments => prevComments.map(comment => comment.id === commentId
       ? { ...comment, isPublic: !currentIsPublic }
       : comment))
+
     const perfumeId = userPerfume.perfumeId || userPerfume.perfume?.id
     const userPerfumeId = userPerfume.id
 
@@ -42,27 +39,40 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
       return
     }
 
-    const formData = createCommentFormData(
-      FORM_DATA_ACTIONS.TOGGLE_COMMENT_VISIBILITY,
-      {
-        commentId,
-        perfumeId,
-        userPerfumeId,
-        isPublic: !currentIsPublic
+    try {
+      const formData = new FormData()
+      formData.append('action', 'toggle-comment-visibility')
+      formData.append('commentId', commentId)
+      formData.append('perfumeId', perfumeId)
+      formData.append('userPerfumeId', userPerfumeId)
+      formData.append('isPublic', (!currentIsPublic).toString())
+
+      const response = await submitForm('/api/user-perfumes', formData)
+      const result = await response.json()
+
+      if (!result.success) {
+        console.error('Failed to toggle comment visibility:', result.error)
+        // Revert the UI change on error
+        setComments(prevComments => prevComments.map(comment => comment.id === commentId
+          ? { ...comment, isPublic: currentIsPublic }
+          : comment))
       }
-    )
-
-    // Add CSRF token to form data
-    const protectedFormData = addToFormData(formData)
-
-    fetcher.submit(protectedFormData, {
-      method: 'post',
-      action: '/api/user-perfumes'
-    })
+    } catch (error) {
+      console.error('Error toggling comment visibility:', error)
+      // Revert the UI change on error
+      setComments(prevComments => prevComments.map(comment => comment.id === commentId
+        ? { ...comment, isPublic: currentIsPublic }
+        : comment))
+    }
   }
 
-  const handleDeleteComment = (commentId: string) => {
+  const handleDeleteComment = async (commentId: string) => {
+    // Store original comments for potential rollback
+    const originalComments = [...comments]
+
+    // Optimistically remove comment from UI
     setComments(prev => prev.filter(comment => comment.id !== commentId))
+
     const perfumeId = userPerfume.perfumeId || userPerfume.perfume?.id
     const userPerfumeId = userPerfume.id
 
@@ -70,19 +80,35 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
       return
     }
 
-    const formData = createCommentFormData(FORM_DATA_ACTIONS.DELETE_COMMENT, {
-      commentId,
-      perfumeId,
-      userPerfumeId
-    })
+    try {
+      const formData = new FormData()
+      formData.append('action', 'delete-comment')
+      formData.append('commentId', commentId)
+      formData.append('perfumeId', perfumeId)
+      formData.append('userPerfumeId', userPerfumeId)
 
-    // Add CSRF token to form data
-    const protectedFormData = addToFormData(formData)
+      console.log('Deleting comment with data:')
+      for (const [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`)
+      }
 
-    fetcher.submit(protectedFormData, {
-      method: 'post',
-      action: '/api/user-perfumes'
-    })
+      const response = await submitForm('/api/user-perfumes', formData)
+      const result = await response.json()
+
+      if (result.success) {
+        console.log('Comment deleted successfully')
+      } else {
+        console.error('Failed to delete comment:', result.error)
+        // Revert the UI change on error
+        setComments(originalComments)
+        alert(`Failed to delete comment: ${result.error}`)
+      }
+    } catch (error) {
+      console.error('Error deleting comment:', error)
+      // Revert the UI change on error
+      setComments(originalComments)
+      alert('Error deleting comment')
+    }
   }
 
   return (

@@ -258,7 +258,8 @@
     "tradePrice": "Trade Price",
     "preference": "Preference",
     "tradeOnly": "Trade Only Item",
-    "comments": "Traders Comments"
+    "comments": "Traders Comments",
+    "noPublicComments": "No public comments available for this item."
   },
   "wishlist": {
     "meta": {

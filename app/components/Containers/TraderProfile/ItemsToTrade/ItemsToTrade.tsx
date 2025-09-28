@@ -56,12 +56,21 @@ const TradeInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
 // Comments component
 const CommentsSection = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
   const { t } = useTranslation()
+  const publicComments = userPerfume?.comments?.filter(comment => comment.isPublic) || []
+
   return (
     <>
-      {(userPerfume?.comments?.length || 0) > 0 && (
-        <VooDooDetails summary={t("traderProfile.comments")} className="text-noir-gold mt-2">
-          <TradersComments comments={userPerfume.comments} />
+      {publicComments.length > 0 ? (
+        <VooDooDetails
+          summary={`${t("traderProfile.comments")} (${publicComments.length})`}
+          className="text-noir-gold mt-2"
+        >
+          <TradersComments comments={publicComments} />
         </VooDooDetails>
+      ) : (
+        <div className="mt-2 text-xs text-noir-gold-500 italic">
+          {t("traderProfile.noPublicComments", "No public comments available for this item.")}
+        </div>
       )}
     </>
   )

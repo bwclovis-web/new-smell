@@ -248,8 +248,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 }
 
 // Helper function to validate perfume ID
-const validatePerfumeId = (perfumeId: string | null) => {
-  if (!perfumeId) {
+const validatePerfumeId = (perfumeId: string | null | undefined) => {
+  if (!perfumeId || perfumeId.trim() === '') {
     return new Response(
       JSON.stringify({ success: false, error: 'Perfume ID is required' }),
       { status: 400, headers: { 'Content-Type': 'application/json' } }
@@ -270,8 +270,18 @@ const handleActionError = (error: any) => {
 
 // Helper function to process form data
 const processFormData = async (request: Request) => {
+  console.log('=== FORM DATA PROCESSING DEBUG ===')
+
+  // Always try FormData first since that's what React Router fetcher sends
   const formData = await request.formData()
-  return {
+  console.log('FormData keys:', Array.from(formData.keys()))
+
+  // Log all form data entries for debugging
+  for (const [key, value] of formData.entries()) {
+    console.log(`Form field ${key}:`, value)
+  }
+
+  const result = {
     perfumeId: formData.get('perfumeId') as string,
     actionType: formData.get('action') as string,
     amount: formData.get('amount') as string | undefined,
@@ -283,6 +293,10 @@ const processFormData = async (request: Request) => {
     tradePreference: formData.get('tradePreference') as string | undefined,
     tradeOnly: formData.get('tradeOnly') === 'true'
   }
+
+  console.log('Processed form data result:', result)
+  console.log('=== END FORM DATA PROCESSING DEBUG ===')
+  return result
 }
 
 // Helper function to prepare perfume action
@@ -336,7 +350,7 @@ const prepareAction = async (params: {
 // Helper function to process action request
 const processActionRequest = async (request: Request) => {
   const formData = await processFormData(request)
-  const { perfumeId } = formData
+  const { perfumeId, actionType } = formData
 
   const validationError = validatePerfumeId(perfumeId)
   if (validationError) {
@@ -348,9 +362,19 @@ const processActionRequest = async (request: Request) => {
     return handleAuthError(authResult)
   }
 
+  // At this point, we know perfumeId and actionType are not null due to validation
   return prepareAction({
     authResult,
-    ...formData
+    perfumeId: perfumeId!,
+    actionType: actionType!,
+    amount: formData.amount,
+    comment: formData.comment,
+    isPublic: formData.isPublic,
+    userPerfumeId: formData.userPerfumeId,
+    commentId: formData.commentId,
+    tradePrice: formData.tradePrice,
+    tradePreference: formData.tradePreference,
+    tradeOnly: formData.tradeOnly
   })
 }
 

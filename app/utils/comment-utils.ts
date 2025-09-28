@@ -59,13 +59,15 @@ export const createTemporaryComment = (
   commentText: string,
   isPublic: boolean,
   userPerfumeId?: string
-): Comment => ({
-  id: `temp-${userPerfumeId || 'unknown'}-${Date.now()}`, // More unique temporary ID
-  userId: 'temp-user', // Temporary userId
-  perfumeId: 'temp-perfume', // Temporary perfumeId
-  userPerfumeId: userPerfumeId || 'temp-user-perfume',
-  comment: commentText,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-  isPublic
-})
+): Comment => {
+  return ({
+    id: `temp-${userPerfumeId || 'unknown'}-${Date.now()}`, // More unique temporary ID
+    userId: 'temp-user', // Temporary userId
+    perfumeId: 'temp-perfume', // Temporary perfumeId
+    userPerfumeId: userPerfumeId || 'temp-user-perfume',
+    comment: commentText,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    isPublic
+  })
+}
