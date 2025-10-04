@@ -5,6 +5,7 @@ import { ROUTE_PATH as DATA_QUALITY } from '~/routes/admin/data-quality'
 import { ROUTE_PATH as MY_SCENTS } from '~/routes/admin/MyScents'
 import { ROUTE_PATH as SECURITY_MONITOR } from '~/routes/admin/security-monitor'
 import { ROUTE_PATH as PERFORMANCE_ADMIN } from '~/routes/admin/performance-admin'
+import { ROUTE_PATH as USERS } from '~/routes/admin/users'
 import { ROUTE_PATH as WISHLIST } from '~/routes/admin/WishlistPage'
 import { ROUTE_PATH as ALL_HOUSES } from '~/routes/behind-the-bottle'
 import { ROUTE_PATH as AVAILABLE_PERFUMES } from '~/routes/the-exchange'
@@ -49,11 +50,16 @@ export const adminNavigation = [
   },
   {
     id: '4',
+    label: 'user management',
+    path: USERS
+  },
+  {
+    id: '5',
     label: 'security monitor',
     path: SECURITY_MONITOR
   },
   {
-    id: '5',
+    id: '6',
     label: 'performance admin',
     path: PERFORMANCE_ADMIN
   }

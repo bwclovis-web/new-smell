@@ -1,3 +1,5 @@
+import { LuBadge, LuBadgeAlert, LuBadgeCheck } from 'react-icons/lu'
+
 import { usePasswordStrength } from '~/hooks'
 
 interface PasswordStrengthIndicatorProps {
@@ -37,12 +39,12 @@ export default function PasswordStrengthIndicator({
 
   const getStrengthIcon = (strength: string) => {
     switch (strength) {
-      case 'weak': return '🔴'
-      case 'fair': return '🟠'
-      case 'good': return '🟡'
-      case 'strong': return '🔵'
-      case 'very_strong': return '🟢'
-      default: return '⚪'
+      case 'weak': return <LuBadgeAlert size={25} fill='red' strokeWidth={1.5} stroke='white' />
+      case 'fair': return <LuBadge size={25} fill='orange' strokeWidth={1.5} stroke='white' />
+      case 'good': return <LuBadge size={25} fill='yellow' strokeWidth={1.5} stroke='white' />
+      case 'strong': return <LuBadgeCheck size={25} fill='blue' strokeWidth={1.5} stroke='white' />
+      case 'very_strong': return <LuBadgeCheck size={25} fill='green' strokeWidth={1.5} stroke='white' />
+      default: return <LuBadgeAlert size={25} fill='white' strokeWidth={1.5} stroke='white' />
     }
   }
 
@@ -56,7 +58,7 @@ export default function PasswordStrengthIndicator({
             style={{ width: `${Math.min(100, (strengthInfo.score / 8) * 100)}%` }}
           />
         </div>
-        <span className="text-sm font-medium text-gray-700 flex items-center space-x-1">
+        <span className="text-sm font-medium text-noir-white flex items-center space-x-1">
           <span>{getStrengthIcon(strengthInfo.strength)}</span>
           <span>{getStrengthText(strengthInfo.strength)}</span>
         </span>

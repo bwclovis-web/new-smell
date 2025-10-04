@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 export interface PasswordStrengthInfo {
   score: number
@@ -37,10 +37,30 @@ export const usePasswordStrength = (
   password: string,
   options: UsePasswordStrengthOptions = {}
 ) => {
-  const config = { ...DEFAULT_OPTIONS, ...options }
+  // Destructure options to use individual values as dependencies instead of the object
+  const {
+    minLength = DEFAULT_OPTIONS.minLength,
+    requireUppercase = DEFAULT_OPTIONS.requireUppercase,
+    requireLowercase = DEFAULT_OPTIONS.requireLowercase,
+    requireNumbers = DEFAULT_OPTIONS.requireNumbers,
+    requireSpecialChars = DEFAULT_OPTIONS.requireSpecialChars,
+    minScore = DEFAULT_OPTIONS.minScore
+  } = options
+
+  const config = useMemo(
+    () => ({
+      minLength,
+      requireUppercase,
+      requireLowercase,
+      requireNumbers,
+      requireSpecialChars,
+      minScore
+    }),
+    [minLength, requireUppercase, requireLowercase, requireNumbers, requireSpecialChars, minScore]
+  )
   const [strengthInfo, setStrengthInfo] = useState<PasswordStrengthInfo | null>(null)
 
-  const calculateStrength = (pwd: string): PasswordStrengthInfo => {
+  const calculateStrength = useCallback((pwd: string): PasswordStrengthInfo => {
     const feedback: string[] = []
     let score = 0
 
@@ -138,7 +158,7 @@ export const usePasswordStrength = (
       isValid,
       color
     }
-  }
+  }, [config])
 
   useEffect(() => {
     if (!password) {

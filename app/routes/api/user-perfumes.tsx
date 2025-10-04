@@ -12,6 +12,7 @@ import {
   updateAvailableAmount,
   updatePerfumeComment
 } from '~/models/user.server'
+import { processWishlistAvailabilityAlerts } from '~/utils/alert-processors'
 
 // Type definitions
 type AuthResult = {
@@ -89,11 +90,25 @@ const handleAddAction = async (
   user: any,
   perfumeId: string,
   amount?: string
-) => addUserPerfume({
-  userId: user.id,
-  perfumeId,
-  amount
-})
+) => {
+  const result = await addUserPerfume({
+    userId: user.id,
+    perfumeId,
+    amount
+  })
+  
+  // Process wishlist availability alerts when a perfume becomes available
+  if (amount && parseFloat(amount) > 0) {
+    try {
+      await processWishlistAvailabilityAlerts(perfumeId)
+    } catch (error) {
+      console.error('Error processing wishlist availability alerts:', error)
+      // Don't fail the operation if alert processing fails
+    }
+  }
+  
+  return result
+}
 
 const handleRemoveAction = async (
   user: any,
@@ -109,7 +124,7 @@ const handleDecantAction = async (params: {
   tradeOnly?: boolean;
 }) => {
   const { user, perfumeId, amount = '0', tradePrice, tradePreference, tradeOnly } = params
-  return updateAvailableAmount({
+  const result = await updateAvailableAmount({
     userId: user.id,
     perfumeId,
     availableAmount: amount,
@@ -117,6 +132,18 @@ const handleDecantAction = async (params: {
     tradePreference,
     tradeOnly
   })
+  
+  // Process wishlist availability alerts when a perfume becomes available
+  if (amount && parseFloat(amount) > 0) {
+    try {
+      await processWishlistAvailabilityAlerts(perfumeId)
+    } catch (error) {
+      console.error('Error processing wishlist availability alerts:', error)
+      // Don't fail the operation if alert processing fails
+    }
+  }
+  
+  return result
 }
 
 const handleAddCommentAction = async (params: {

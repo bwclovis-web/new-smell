@@ -5,6 +5,7 @@ import { authenticateUser } from '~/utils/auth.server'
 import { WishlistActionSchema } from '~/utils/formValidationSchemas'
 import { createErrorResponse, createJsonResponse } from '~/utils/response.server'
 import { validateFormData } from '~/utils/validation'
+import { processDecantInterestAlerts } from '~/utils/alert-processors'
 
 const processWishlistAction = async (
   userId: string,
@@ -13,7 +14,17 @@ const processWishlistAction = async (
   isPublic?: boolean
 ) => {
   if (actionType === 'add') {
-    return await addToWishlist(userId, perfumeId, isPublic || false)
+    const result = await addToWishlist(userId, perfumeId, isPublic || false)
+    
+    // Process decant interest alerts when someone adds to wishlist
+    try {
+      await processDecantInterestAlerts(perfumeId, userId)
+    } catch (error) {
+      console.error('Error processing decant interest alerts:', error)
+      // Don't fail the wishlist operation if alert processing fails
+    }
+    
+    return result
   }
   if (actionType === 'remove') {
     return await removeFromWishlist(userId, perfumeId)

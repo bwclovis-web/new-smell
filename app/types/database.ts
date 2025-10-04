@@ -7,7 +7,8 @@ import type {
   UserRole,
   HouseType,
   PerfumeType,
-  TradePreference
+  TradePreference,
+  AlertType
 } from '@prisma/client'
 
 // Base database models
@@ -27,6 +28,8 @@ export interface User {
   UserPerfumeReview: UserPerfumeReview[]
   UserPerfumeWishlist: UserPerfumeWishlist[]
   wishlistNotifications: WishlistNotification[]
+  userAlerts: UserAlert[]
+  alertPreferences?: UserAlertPreferences | null
 }
 
 export interface PerfumeHouse {
@@ -66,6 +69,7 @@ export interface Perfume {
   userPerfumeReview: UserPerfumeReview[]
   userPerfumeWishlist: UserPerfumeWishlist[]
   wishlistNotifications: WishlistNotification[]
+  userAlerts: UserAlert[]
 }
 
 export interface UserPerfume {
@@ -155,8 +159,36 @@ export interface WishlistNotification {
   user: User
 }
 
+export interface UserAlert {
+  id: string
+  userId: string
+  perfumeId: string
+  alertType: AlertType
+  title: string
+  message: string
+  isRead: boolean
+  isDismissed: boolean
+  metadata?: any
+  createdAt: Date
+  readAt?: Date | null
+  dismissedAt?: Date | null
+  user: User
+  perfume: Perfume
+}
+
+export interface UserAlertPreferences {
+  id: string
+  userId: string
+  wishlistAlertsEnabled: boolean
+  decantAlertsEnabled: boolean
+  emailWishlistAlerts: boolean
+  emailDecantAlerts: boolean
+  maxAlerts: number
+  user: User
+}
+
 // Re-export enums
-export type { UserRole, HouseType, PerfumeType, TradePreference }
+export type { UserRole, HouseType, PerfumeType, TradePreference, AlertType }
 
 // Utility types for common database operations
 export type CreateUserInput = Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'UserPerfume' | 'userPerfumeComments' | 'UserPerfumeRating' | 'UserPerfumeReview' | 'UserPerfumeWishlist' | 'wishlistNotifications'>

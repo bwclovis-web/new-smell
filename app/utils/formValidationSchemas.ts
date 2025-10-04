@@ -182,9 +182,15 @@ export const UserFormSchema = z.object({
     .regex(/^[a-zA-Z0-9_]+$/, { message: 'Username can only contain letters, numbers, and underscores' })
     .trim()
     .optional(),
-  acceptTerms: z.boolean().refine(val => val === true, {
-    message: 'You must accept the terms and conditions'
-  })
+  acceptTerms: z
+    .string()
+    .optional()
+    .transform(val => val === 'on' || val === 'true')
+    .pipe(
+      z.boolean().refine(val => val === true, {
+        message: 'You must accept the terms and conditions'
+      })
+    )
 }).refine(data => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword']

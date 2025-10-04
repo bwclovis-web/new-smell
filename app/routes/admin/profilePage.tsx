@@ -9,10 +9,12 @@ import { Button } from '~/components/Atoms/Button/Button'
 import Input from '~/components/Atoms/Input/Input'
 import { CSRFToken } from '~/components/Molecules/CSRFToken'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
+import UserAlerts from '~/components/Containers/UserAlerts/UserAlerts'
 import type { SafeUser } from '~/types'
 import { UpdateProfileSchema } from '~/utils/formValidationSchemas'
 import { sharedLoader } from '~/utils/sharedLoader'
 import { getUserDisplayName } from '~/utils/user'
+import { getUserAlerts, getUserAlertPreferences, getUnreadAlertCount } from '~/models/user-alerts.server'
 
 import banner from '../../images/myprofile.webp'
 import { getUserByUsername, updateUser } from './profile/queries.server'
@@ -25,7 +27,33 @@ type ActionData =
 
 export const loader = async ({ request }: { request: Request }) => {
   const user = await sharedLoader(request)
-  return { user }
+  
+  if (!user) {
+    return { user: null, alerts: [], preferences: null, unreadCount: 0 }
+  }
+
+  try {
+    const [alerts, preferences, unreadCount] = await Promise.all([
+      getUserAlerts(user.id),
+      getUserAlertPreferences(user.id),
+      getUnreadAlertCount(user.id)
+    ])
+
+    return { 
+      user, 
+      alerts, 
+      preferences, 
+      unreadCount 
+    }
+  } catch (error) {
+    console.error('Error loading user profile data:', error)
+    return { 
+      user, 
+      alerts: [], 
+      preferences: null, 
+      unreadCount: 0 
+    }
+  }
 }
 
 const validateProfileUpdate = async (formData: FormData) => {
@@ -152,7 +180,7 @@ const ProfileForm = ({ user }: { user: SafeUser }) => {
 
 const ProfilePage = () => {
   const { t } = useTranslation()
-  const { user } = useLoaderData<typeof loader>()
+  const { user, alerts, preferences, unreadCount } = useLoaderData<typeof loader>()
   const actionData = useActionData<ActionData>()
 
   if (!user) {
@@ -174,19 +202,34 @@ const ProfilePage = () => {
         </span>
       </TitleBanner>
 
-      <div className="max-w-2xl mx-auto p-6">
-        <h2 className="text-2xl font-bold mb-6 text-center text-noir-gold">Update Profile</h2>
-        {hasSuccess && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            Profile updated successfully!
+      <div className="max-w-4xl mx-auto p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Profile Form - Left Column */}
+          <div className="lg:col-span-2">
+            <h2 className="text-2xl font-bold mb-6 text-center text-noir-gold">Update Profile</h2>
+            {hasSuccess && (
+              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                Profile updated successfully!
+              </div>
+            )}
+            {hasErrors && actionData.errors.general && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                {actionData.errors.general[0]}
+              </div>
+            )}
+            <ProfileForm user={user} />
           </div>
-        )}
-        {hasErrors && actionData.errors.general && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {actionData.errors.general[0]}
+
+          {/* Alerts - Right Column */}
+          <div className="lg:col-span-1">
+            <UserAlerts
+              userId={user.id}
+              initialAlerts={alerts}
+              initialPreferences={preferences}
+              initialUnreadCount={unreadCount}
+            />
           </div>
-        )}
-        <ProfileForm user={user} />
+        </div>
       </div>
     </div>
   )

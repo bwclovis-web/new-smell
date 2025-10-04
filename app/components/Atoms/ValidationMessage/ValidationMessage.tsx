@@ -1,9 +1,3 @@
-/**
- * Validation message component
- * Displays validation errors and success messages with consistent styling
- */
-
-import React from 'react'
 
 export interface ValidationMessageProps {
   error?: string
@@ -15,7 +9,8 @@ export interface ValidationMessageProps {
   size?: 'sm' | 'md' | 'lg'
 }
 
-const ValidationMessage: React.FC<ValidationMessageProps> = ({
+//TODO: Update icons to react icons and update styles
+const ValidationMessage = ({
   error,
   success,
   warning,
@@ -23,7 +18,7 @@ const ValidationMessage: React.FC<ValidationMessageProps> = ({
   className = '',
   showIcon = true,
   size = 'md'
-}) => {
+}: ValidationMessageProps) => {
   const message = error || success || warning || info
   const type = error ? 'error' : success ? 'success' : warning ? 'warning' : 'info'
 

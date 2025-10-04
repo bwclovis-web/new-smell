@@ -31,6 +31,11 @@ export default [
     route('api/perfumes-by-letter', 'routes/api/perfumes-by-letter.ts'),
     route('api/update-house-info', 'routes/api/update-house-info.tsx'),
     route('api/ratings', 'routes/api.ratings.tsx'),
+    route('api/user-alerts/:userId', 'routes/api/user-alerts.$userId.tsx'),
+    route('api/user-alerts/:alertId/read', 'routes/api/user-alerts.$alertId.read.tsx'),
+    route('api/user-alerts/:alertId/dismiss', 'routes/api/user-alerts.$alertId.dismiss.tsx'),
+    route('api/user-alerts/:userId/dismiss-all', 'routes/api/user-alerts.$userId.dismiss-all.tsx'),
+    route('api/user-alerts/:userId/preferences', 'routes/api/user-alerts.$userId.preferences.tsx'),
 
     layout('routes/admin/AdminLayout.tsx', [
       route('admin/', 'routes/admin/adminIndex.tsx'),
@@ -42,6 +47,7 @@ export default [
       route('admin/wishlist', 'routes/admin/WishlistPage.tsx'),
       route('admin/my-scents', 'routes/admin/MyScents.tsx'),
       route('admin/data-quality', 'routes/admin/data-quality.tsx'),
+      route('admin/users', 'routes/admin/users.tsx'),
       route('admin/security-monitor', 'routes/admin/security-monitor.tsx'),
       route('admin/performance-admin', 'routes/admin/performance-admin.tsx'),
       route('admin/change-password', 'routes/admin/change-password.tsx')

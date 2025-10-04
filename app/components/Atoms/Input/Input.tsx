@@ -62,11 +62,11 @@ const Input = ({
         className={styleMerge(inputVariants({ shading }))}
         {...inputProps}
       />
-      {action?.errors && (
+      {/* {action?.errors && (
         <span className="text-sm text-destructive dark:text-destructive-foreground text-red-600 uppercase font-medium" id={`${inputId}-error`}>
           {action?.errors.join(' ')}
         </span>
-      )}
+      )} */}
     </div>
   )
 }
