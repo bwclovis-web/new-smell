@@ -11,6 +11,13 @@ export async function getUserAlerts(userId: string, limit: number = 10) {
       isDismissed: false
     },
     include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          email: true
+        }
+      },
       perfume: {
         include: {
           perfumeHouse: {
@@ -96,7 +103,8 @@ export async function markAlertAsRead(alertId: string, userId: string) {
  * Dismiss an alert (remove it from view)
  */
 export async function dismissAlert(alertId: string, userId: string) {
-  return await prisma.userAlert.updateMany({
+  console.log(`Dismissing alert ${alertId} for user ${userId}`)
+  const result = await prisma.userAlert.updateMany({
     where: {
       id: alertId,
       userId
@@ -106,6 +114,8 @@ export async function dismissAlert(alertId: string, userId: string) {
       dismissedAt: new Date()
     }
   })
+  console.log(`Dismissed ${result.count} alert(s)`)
+  return result
 }
 
 /**
@@ -137,7 +147,7 @@ export async function createUserAlert(
 ) {
   // Check user's preferences and alert limits
   const preferences = await getUserAlertPreferences(userId)
-  
+
   // Check if this alert type is enabled
   if (alertType === 'wishlist_available' && !preferences.wishlistAlertsEnabled) {
     return null
@@ -261,7 +271,8 @@ export async function checkWishlistAvailabilityAlerts(perfumeId: string) {
           id: true,
           firstName: true,
           lastName: true,
-          username: true
+          username: true,
+          email: true
         }
       }
     }
@@ -273,24 +284,29 @@ export async function checkWishlistAvailabilityAlerts(perfumeId: string) {
     const preferences = wishlistItem.user.alertPreferences
     if (!preferences?.wishlistAlertsEnabled) continue
 
-    // Check if we already created an alert for this user/perfume combination recently
+    // Check if we already created an active (non-dismissed) alert for this user/perfume combination recently
     const existingAlert = await prisma.userAlert.findFirst({
       where: {
         userId: wishlistItem.userId,
         perfumeId,
         alertType: 'wishlist_available',
+        isDismissed: false, // Only prevent duplicates for active alerts
         createdAt: {
           gte: new Date(Date.now() - 24 * 60 * 60 * 1000) // Within last 24 hours
         }
       }
     })
 
-    if (existingAlert) continue
+    if (existingAlert) {
+      console.log(`Skipping wishlist alert for user ${wishlistItem.userId} and perfume ${perfumeId} - active alert exists from ${existingAlert.createdAt}`)
+      continue
+    }
 
     // Create alert for this user
     const title = `${wishlistItem.perfume.name} is now available!`
     const message = `${wishlistItem.perfume.name} by ${wishlistItem.perfume.perfumeHouse?.name} is now available on the trading post from ${availableTraders.length} trader(s).`
-    
+
+    console.log(`Creating wishlist availability alert for user ${wishlistItem.userId} and perfume ${perfumeId}`)
     alertsToCreate.push({
       userId: wishlistItem.userId,
       perfumeId,
@@ -300,7 +316,13 @@ export async function checkWishlistAvailabilityAlerts(perfumeId: string) {
       metadata: {
         availableTraders: availableTraders.map(trader => ({
           userId: trader.user.id,
-          displayName: trader.user.username || `${trader.user.firstName} ${trader.user.lastName}`.trim() || trader.user.email
+          displayName: trader.user.username ||
+            (trader.user.firstName && trader.user.lastName ?
+              `${trader.user.firstName} ${trader.user.lastName}`.trim() :
+              null) ||
+            trader.user.email ||
+            'Unknown Trader',
+          email: trader.user.email
         }))
       }
     })
@@ -378,12 +400,13 @@ export async function checkDecantInterestAlerts(perfumeId: string, interestedUse
     const preferences = decanter.user.alertPreferences
     if (!preferences?.decantAlertsEnabled) continue
 
-    // Check if we already created an alert for this user/perfume/interested user combination recently
+    // Check if we already created an active (non-dismissed) alert for this user/perfume/interested user combination recently
     const existingAlert = await prisma.userAlert.findFirst({
       where: {
         userId: decanter.userId,
         perfumeId,
         alertType: 'decant_interest',
+        isDismissed: false, // Only prevent duplicates for active alerts
         metadata: {
           path: ['interestedUserId'],
           equals: interestedUserId
@@ -394,16 +417,45 @@ export async function checkDecantInterestAlerts(perfumeId: string, interestedUse
       }
     })
 
-    if (existingAlert) continue
+    // Also check for any existing alerts (including dismissed ones) for debugging
+    const allExistingAlerts = await prisma.userAlert.findMany({
+      where: {
+        userId: decanter.userId,
+        perfumeId,
+        alertType: 'decant_interest',
+        createdAt: {
+          gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
+        }
+      }
+    })
+    console.log(`Found ${allExistingAlerts.length} existing decant interest alerts for user ${decanter.userId} and perfume ${perfumeId} in last 24h (${allExistingAlerts.filter(a => !a.isDismissed).length} active)`)
+
+    if (existingAlert) {
+      console.log(`Skipping decant interest alert for user ${decanter.userId}, perfume ${perfumeId}, interested user ${interestedUserId} - active alert exists from ${existingAlert.createdAt}`)
+      continue
+    }
 
     // Create alert for this decanter
-    const interestedUserName = interestedUser.username || 
-                             `${interestedUser.firstName} ${interestedUser.lastName}`.trim() || 
-                             interestedUser.email
+    console.log(`User data for ${interestedUserId}:`, {
+      username: interestedUser.username,
+      firstName: interestedUser.firstName,
+      lastName: interestedUser.lastName,
+      email: interestedUser.email
+    })
+
+    const interestedUserName = interestedUser.username ||
+      (interestedUser.firstName && interestedUser.lastName ?
+        `${interestedUser.firstName} ${interestedUser.lastName}`.trim() :
+        null) ||
+      interestedUser.email ||
+      'Unknown User'
+
+    console.log(`Final interestedUserName: ${interestedUserName}`)
 
     const title = `Someone wants your ${decanter.perfume.name}!`
     const message = `${interestedUserName} added ${decanter.perfume.name} by ${decanter.perfume.perfumeHouse?.name} to their wishlist. They might be interested in trading with you!`
-    
+
+    console.log(`Creating decant interest alert for user ${decanter.userId}, perfume ${perfumeId}, interested user ${interestedUserId}`)
     alertsToCreate.push({
       userId: decanter.userId,
       perfumeId,
@@ -412,7 +464,8 @@ export async function checkDecantInterestAlerts(perfumeId: string, interestedUse
       message,
       metadata: {
         interestedUserId: interestedUserId,
-        interestedUserName
+        interestedUserName,
+        interestedUserEmail: interestedUser.email
       }
     })
   }

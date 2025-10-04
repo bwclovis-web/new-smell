@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
-import VooDooDetails from '~/components/Atoms/VooDooDetails/VooDooDetails'
 import { Button } from '~/components/Atoms/Button/Button'
+import VooDooDetails from '~/components/Atoms/VooDooDetails/VooDooDetails'
+import { useCSRF } from '~/hooks/useCSRF'
+import type { UserAlert, UserAlertPreferences } from '~/types/database'
+
 import { AlertBell } from './AlertBell'
 import { AlertItem } from './AlertItem'
 import { AlertPreferences } from './AlertPreferences'
-import type { UserAlert, UserAlertPreferences } from '~/types/database'
 
 interface UserAlertsProps {
   userId: string
@@ -16,23 +18,26 @@ interface UserAlertsProps {
   initialUnreadCount?: number
 }
 
-export const UserAlerts = ({ 
-  userId, 
-  initialAlerts = [], 
+export const UserAlerts = ({
+  userId,
+  initialAlerts = [],
   initialPreferences,
-  initialUnreadCount = 0 
+  initialUnreadCount = 0
 }: UserAlertsProps) => {
   const { t } = useTranslation()
   const [alerts, setAlerts] = useState<UserAlert[]>(initialAlerts)
   const [preferences, setPreferences] = useState<UserAlertPreferences | null>(initialPreferences || null)
   const [unreadCount, setUnreadCount] = useState(initialUnreadCount)
   const [isLoading, setIsLoading] = useState(false)
+  const { addToHeaders } = useCSRF()
 
   // Real-time updates using polling (you could replace this with WebSocket/SSE later)
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
-        const response = await fetch(`/api/user-alerts/${userId}`)
+        const response = await fetch(`/api/user-alerts/${userId}`, {
+          headers: addToHeaders()
+        })
         if (response.ok) {
           const data = await response.json()
           setAlerts(data.alerts || [])
@@ -49,15 +54,14 @@ export const UserAlerts = ({
   const handleMarkAsRead = async (alertId: string) => {
     try {
       const response = await fetch(`/api/user-alerts/${alertId}/read`, {
-        method: 'POST'
+        method: 'POST',
+        headers: addToHeaders()
       })
-      
+
       if (response.ok) {
-        setAlerts(prev => prev.map(alert => 
-          alert.id === alertId 
-            ? { ...alert, isRead: true, readAt: new Date() }
-            : alert
-        ))
+        setAlerts(prev => prev.map(alert => alert.id === alertId
+          ? { ...alert, isRead: true, readAt: new Date() }
+          : alert))
         setUnreadCount(prev => Math.max(0, prev - 1))
       }
     } catch (error) {
@@ -68,9 +72,10 @@ export const UserAlerts = ({
   const handleDismissAlert = async (alertId: string) => {
     try {
       const response = await fetch(`/api/user-alerts/${alertId}/dismiss`, {
-        method: 'POST'
+        method: 'POST',
+        headers: addToHeaders()
       })
-      
+
       if (response.ok) {
         setAlerts(prev => prev.filter(alert => alert.id !== alertId))
         setUnreadCount(prev => {
@@ -87,9 +92,10 @@ export const UserAlerts = ({
     try {
       setIsLoading(true)
       const response = await fetch(`/api/user-alerts/${userId}/dismiss-all`, {
-        method: 'POST'
+        method: 'POST',
+        headers: addToHeaders()
       })
-      
+
       if (response.ok) {
         setAlerts([])
         setUnreadCount(0)
@@ -105,12 +111,12 @@ export const UserAlerts = ({
     try {
       const response = await fetch(`/api/user-alerts/${userId}/preferences`, {
         method: 'PUT',
-        headers: {
+        headers: addToHeaders({
           'Content-Type': 'application/json'
-        },
+        }),
         body: JSON.stringify(newPreferences)
       })
-      
+
       if (response.ok) {
         const updatedPreferences = await response.json()
         setPreferences(updatedPreferences)
@@ -123,7 +129,7 @@ export const UserAlerts = ({
   return (
     <div className="space-y-4">
       {/* Alert Bell - Always visible */}
-      <AlertBell 
+      <AlertBell
         unreadCount={unreadCount}
         userId={userId}
         alerts={alerts}
@@ -132,7 +138,7 @@ export const UserAlerts = ({
       />
 
       {/* Alert Details Section */}
-      <VooDooDetails 
+      <VooDooDetails
         summary={`${t('alerts.heading', 'My Alerts')} ${unreadCount > 0 ? `(${unreadCount} new)` : ''}`}
         className="text-start"
         name="user-alerts"

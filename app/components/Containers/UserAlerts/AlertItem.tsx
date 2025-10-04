@@ -49,9 +49,10 @@ export const AlertItem = ({
     }
   }
 
-  const formatTimeAgo = (date: Date) => {
+  const formatTimeAgo = (date: Date | string) => {
     const now = new Date()
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60))
+    const dateObj = typeof date === 'string' ? new Date(date) : date
+    const diffInMinutes = Math.floor((now.getTime() - dateObj.getTime()) / (1000 * 60))
 
     if (diffInMinutes < 1) {
       return 'Just now'
@@ -70,7 +71,7 @@ export const AlertItem = ({
       return `${diffInDays}d ago`
     }
 
-    return date.toLocaleDateString()
+    return dateObj.toLocaleDateString()
   }
 
   const getPerfumeLink = () => `/perfume/${alert.perfume.slug}`
@@ -205,19 +206,27 @@ export const AlertItem = ({
                             to={`/trader/${trader.userId}`}
                             className="block text-blue-600 hover:text-blue-800"
                           >
-                            {trader.displayName}
+                            {trader.displayName || trader.email || 'Unknown Trader'}
                           </Link>
                         ))}
                       </div>
                     </div>
                   )}
 
-                  {alert.alertType === 'decant_interest' && alert.metadata.interestedUserName && (
+                  {alert.alertType === 'decant_interest' && (
                     <div>
                       <span className="font-medium text-gray-700">Interested user:</span>
                       <span className="ml-2 text-blue-600">
-                        {alert.metadata.interestedUserName}
+                        {alert.metadata?.interestedUserName ||
+                          alert.metadata?.interestedUserEmail ||
+                          'Unknown User'}
                       </span>
+                      {/* Debug info - remove this later */}
+                      {process.env.NODE_ENV === 'development' && (
+                        <div className="text-xs text-gray-400 mt-1">
+                          Debug: {JSON.stringify(alert.metadata)}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
