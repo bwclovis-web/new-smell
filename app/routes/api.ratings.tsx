@@ -1,59 +1,9 @@
 import type { ActionFunction } from 'react-router-dom'
 
 import { createPerfumeRating, getUserPerfumeRating, updatePerfumeRating } from '~/models/perfumeRating.server'
-import { CreateRatingSchema } from '~/utils/formValidationSchemas'
 import { createErrorResponse, createSuccessResponse } from '~/utils/response.server'
-import { validateFormData } from '~/utils/validation'
+import { authenticateUser } from '~/utils/auth.server'
 
-async function validateRatingData(formData: FormData): Promise<
-  | { error: string; errors?: any[] }
-  | { userId: string; perfumeId: string; category: string; rating: number }
-> {
-  // Extract the specific rating category and value from form data
-  const category = formData.get('category') as string
-  const rating = parseInt(formData.get('rating') as string, 10)
-  const perfumeId = formData.get('perfumeId') as string
-  const userId = formData.get('userId') as string
-
-  // Validate required fields
-  if (!userId || !perfumeId || !category || isNaN(rating)) {
-    return { error: 'Missing required fields' }
-  }
-
-  // Validate rating value
-  if (rating < 1 || rating > 5) {
-    return { error: 'Rating must be between 1 and 5' }
-  }
-
-  // Validate category
-  const validCategories = [
-    'longevity',
-    'sillage',
-    'gender',
-    'priceValue',
-    'overall'
-  ]
-  if (!validCategories.includes(category)) {
-    return { error: 'Invalid rating category' }
-  }
-
-  // Use comprehensive validation for the rating data
-  const ratingData = {
-    perfumeId,
-    [category]: rating
-  }
-
-  const validation = validateFormData(CreateRatingSchema, new FormData(Object.entries(ratingData).map(([key, value]) => [key, String(value)])))
-
-  if (!validation.success) {
-    return {
-      error: 'Validation failed',
-      errors: validation.errors
-    }
-  }
-
-  return { userId, perfumeId, category, rating }
-}
 
 async function saveRating(
   userId: string,
@@ -78,16 +28,37 @@ async function saveRating(
 
 export const action: ActionFunction = async ({ request }) => {
   try {
-    const formData = await request.formData()
-    const validation = await validateRatingData(formData)
+    // Authenticate user first (same pattern as wishlist)
+    const authResult = await authenticateUser(request)
 
-    if ('error' in validation) {
-      return createErrorResponse(validation.error, 400, validation.errors)
+    if (!authResult.success) {
+      return createErrorResponse(authResult.error!, authResult.status || 401)
     }
 
-    const { userId, perfumeId, category, rating } = validation
+    const formData = await request.formData()
 
-    await saveRating(userId, perfumeId, category, rating)
+    // Extract data from form (no need to validate userId since we get it from auth)
+    const category = formData.get('category') as string
+    const rating = parseInt(formData.get('rating') as string, 10)
+    const perfumeId = formData.get('perfumeId') as string
+
+    // Validate required fields (userId comes from auth)
+    if (!perfumeId || !category || isNaN(rating)) {
+      return createErrorResponse('Missing required fields', 400)
+    }
+
+    // Validate rating value
+    if (rating < 1 || rating > 5) {
+      return createErrorResponse('Rating must be between 1 and 5', 400)
+    }
+
+    // Validate category
+    const validCategories = ['longevity', 'sillage', 'gender', 'priceValue', 'overall']
+    if (!validCategories.includes(category)) {
+      return createErrorResponse('Invalid rating category', 400)
+    }
+
+    await saveRating(authResult.user.id, perfumeId, category, rating)
     return createSuccessResponse()
   } catch (error) {
     console.error('Rating action error:', error)

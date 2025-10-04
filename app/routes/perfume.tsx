@@ -1,14 +1,15 @@
 import cookie from 'cookie'
 import { useTranslation } from 'react-i18next'
 import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, useLocation, useNavigate } from 'react-router'
-import { useOutletContext } from 'react-router-dom'
 
 import PerfumeIcons from '~/components/Containers/Perfume/PerfumeIcons'
 import PerfumeNotes from '~/components/Containers/Perfume/PerfumeNotes'
 import PerfumeRatingSystem from '~/components/Containers/Perfume/PerfumeRatingSystem'
 import { getPerfumeBySlug } from '~/models/perfume.server'
 import { getPerfumeRatings, getUserPerfumeRating } from '~/models/perfumeRating.server'
+import { getUserById } from '~/models/user.server'
 import { isInWishlist } from '~/models/wishlist.server'
+import { createSafeUser } from '~/types'
 import { verifyAccessToken } from '~/utils/security/session-manager.server'
 
 import { ROUTE_PATH as BEHIND_THE_BOTTLE } from './behind-the-bottle'
@@ -16,19 +17,41 @@ import { ROUTE_PATH as HOUSE_PATH } from './perfume-house'
 import { ROUTE_PATH as ALL_PERFUMES } from './the-vault'
 export const ROUTE_PATH = '/perfume'
 
+const getUserFromRequest = async (request: Request) => {
+  const cookieHeader = request.headers.get('cookie') || ''
+  const cookies = cookie.parse(cookieHeader)
+
+  let accessToken = cookies.accessToken
+  if (!accessToken && cookies.token) {
+    accessToken = cookies.token
+  }
+
+  if (!accessToken) {
+    return null
+  }
+
+  const payload = verifyAccessToken(accessToken)
+  if (!payload?.userId) {
+    return null
+  }
+
+  const fullUser = await getUserById(payload.userId)
+  return fullUser ? createSafeUser(fullUser) : null
+}
+
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   if (!params.perfumeSlug) {
     throw new Error('Perfume slug is required')
   }
+
   const perfume = await getPerfumeBySlug(params.perfumeSlug)
   if (!perfume) {
     throw new Response('House not found', { status: 404 })
   }
 
-  // Check if user is logged in and if perfume is in their wishlist
+  const user = await getUserFromRequest(request)
   const isInUserWishlist = await checkWishlistStatus(request, perfume.id)
 
-  // Get user's current ratings and community averages
   const [userRatings, ratingsData] = await Promise.all([
     getUserRatingsForPerfume(request, perfume.id),
     getPerfumeRatings(perfume.id)
@@ -36,6 +59,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 
   return {
     perfume,
+    user,
     isInUserWishlist,
     userRatings,
     averageRatings: ratingsData.averageRatings
@@ -103,18 +127,18 @@ export const meta: MetaFunction = () => {
 const PerfumePage = () => {
   const {
     perfume,
+    user,
     isInUserWishlist,
     userRatings,
     averageRatings
   } = useLoaderData<typeof loader>()
-  type OutletContextType = { user: { role: string, id: string } | null }
-  const { user } = useOutletContext<OutletContextType>()
   const navigate = useNavigate()
   const location = useLocation()
   const { t } = useTranslation()
 
   // Get selectedLetter and sourcePage from navigation state
-  const selectedLetter = (location.state as { selectedLetter?: string })?.selectedLetter
+  const selectedLetter = (location.state as { selectedLetter?: string })
+    ?.selectedLetter
   const sourcePage = (location.state as { sourcePage?: string })?.sourcePage
 
   const handleDelete = async () => {
@@ -155,7 +179,12 @@ const PerfumePage = () => {
 
   return (
     <section className="relative z-10 min-h-screen">
-      <PerfumeHeader perfume={perfume} t={t} onBack={handleBack} selectedLetter={selectedLetter} />
+      <PerfumeHeader
+        perfume={perfume}
+        t={t}
+        onBack={handleBack}
+        selectedLetter={selectedLetter}
+      />
       <PerfumeContent
         perfume={perfume}
         user={user}
@@ -173,9 +202,7 @@ const PerfumePage = () => {
 
 const PerfumeHeader = ({
   perfume,
-  t,
-  onBack,
-  selectedLetter
+  t
 }: {
   perfume: any
   t: any

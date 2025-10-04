@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useFetcher } from 'react-router-dom'
 
 import { useErrorHandler } from './useErrorHandler'
 import { useCSRF } from './useCSRF'
@@ -45,68 +44,70 @@ export const useRatingSystem = ({
   onError,
   onSuccess
 }: UseRatingSystemOptions): UseRatingSystemReturn => {
-  const fetcher = useFetcher()
   const { handleError } = useErrorHandler()
-  const { addToFormData } = useCSRF()
+  const { addToHeaders } = useCSRF()
 
   const [currentRatings, setCurrentRatings] = useState<RatingData | null>(initialRatings)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const isLoggedIn = Boolean(userId) && userId !== 'anonymous'
   const isInteractive = isLoggedIn && !readonly
-  const isSubmitting = fetcher.state === 'submitting'
 
   // Update ratings when initial ratings change
   useEffect(() => {
     setCurrentRatings(initialRatings)
   }, [initialRatings])
 
-  // Handle fetcher errors by reverting optimistic updates
-  useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data?.error) {
-      // Revert to original ratings on error
-      setCurrentRatings(initialRatings)
-      const errorMessage = fetcher.data.error
-      onError?.(errorMessage)
-      handleError(new Error(errorMessage), { context: { perfumeId, userId } })
-    }
-  }, [fetcher.state, fetcher.data, initialRatings, onError, handleError, perfumeId, userId])
-
-  // Handle successful submission
-  useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data?.success && currentRatings) {
-      onSuccess?.(currentRatings)
-    }
-  }, [fetcher.state, fetcher.data, currentRatings, onSuccess])
-
-  const handleRatingChange = useCallback((
+  const handleRatingChange = useCallback(async (
     category: keyof RatingData,
     rating: number
   ) => {
-    if (!isInteractive) {
+    if (!isInteractive || !userId || userId === 'anonymous') {
+      console.log('Cannot submit rating:', { isInteractive, userId })
       return
     }
 
     // Optimistic update
+    const previousRatings = currentRatings
     setCurrentRatings(prev => ({
       ...prev,
       [category]: rating
     }))
 
-    // Submit to server
+    // Submit to server (same pattern as wishlist)
     const formData = new FormData()
-    formData.append('userId', userId!)
     formData.append('perfumeId', perfumeId)
     formData.append('category', category)
     formData.append('rating', rating.toString())
 
-    // Add CSRF protection
-    const protectedFormData = addToFormData(formData)
+    try {
+      setIsSubmitting(true)
+      const response = await fetch('/api/ratings', {
+        method: 'POST',
+        headers: addToHeaders(),
+        body: formData
+      })
 
-    fetcher.submit(protectedFormData, {
-      method: 'POST',
-      action: '/api/ratings'
-    })
-  }, [isInteractive, userId, perfumeId, fetcher, addToFormData])
+      if (!response.ok) {
+        // Revert on error
+        setCurrentRatings(previousRatings)
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        onError?.(errorData.error || 'Failed to save rating')
+        handleError(new Error(errorData.error || 'Failed to save rating'), {
+          context: { perfumeId, userId, category, rating }
+        })
+      } else {
+        onSuccess?.({ ...previousRatings, [category]: rating })
+      }
+    } catch (error) {
+      // Revert on error
+      setCurrentRatings(previousRatings)
+      onError?.('Failed to save rating')
+      handleError(error as Error, { context: { perfumeId, userId, category, rating } })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }, [isInteractive, userId, perfumeId, currentRatings, addToHeaders, onError, onSuccess, handleError])
 
   const resetRatings = useCallback(() => {
     setCurrentRatings(initialRatings)
