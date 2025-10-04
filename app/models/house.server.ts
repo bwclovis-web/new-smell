@@ -228,6 +228,19 @@ export const getPerfumeHouseById = async (id: string, opts?: { skip?: number, ta
   return house
 }
 
+export const getPerfumeHouseByName = async (name: string) => {
+  const house = await prisma.perfumeHouse.findFirst({
+    where: {
+      name: {
+        equals: name,
+        mode: 'insensitive'
+      }
+    }
+  })
+
+  return house
+}
+
 export const searchPerfumeHouseByName = async (name: string) => {
   const house = await prisma.perfumeHouse.findMany({
     where: {

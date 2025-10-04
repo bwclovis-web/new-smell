@@ -14,6 +14,13 @@
 
 # Generated images
 /public/images/
+
+# Database backups
+/backups/*.sql
+/backups/*.dump
+/backups/*.json
+!/backups/.gitkeep
+
 .env
 .env.local
 .env.development

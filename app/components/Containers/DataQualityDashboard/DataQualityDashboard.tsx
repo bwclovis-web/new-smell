@@ -12,8 +12,10 @@ import {
 import React, { type FC, useEffect, useRef, useState } from 'react'
 import { Bar, Line } from 'react-chartjs-2'
 
+import { useCSRFToken } from '~/components/Molecules/CSRFToken'
+
 import { handleDownloadCSV } from './bones/csvHandlers/csvDownload'
-import { handleUploadCSV } from './bones/csvHandlers/csvUploader'
+import { createHandleUploadCSV } from './bones/csvHandlers/csvUploader'
 
 ChartJS.register(
   CategoryScale,
@@ -52,14 +54,14 @@ const getMissingHouseInfoBreakdown =
     // This assumes backend returns missingHouseInfoByBrand as { houseName: number }
     // For a more detailed breakdown, backend should return { houseName: [fields] }
     // For now, we infer missing fields by showing count as array of 'Field missing'
-    return Object.fromEntries(Object.entries(stats.missingHouseInfoByBrand).map(([house, count]) => [house, Array(count).fill('Field missing')]))
+    return Object.fromEntries(Object.entries(stats.missingHouseInfoByBrand || {}).map(([house, count]) => [house, Array(count).fill('Field missing')]))
   }
 const prepareMissingChartData = (stats: DataQualityStats | null) => ({
-  labels: stats ? Object.keys(stats.missingByBrand).slice(0, 10) : [],
+  labels: stats?.missingByBrand ? Object.keys(stats.missingByBrand).slice(0, 10) : [],
   datasets: [
     {
       label: 'Missing Information',
-      data: stats ? Object.values(stats.missingByBrand).slice(0, 10) : [],
+      data: stats?.missingByBrand ? Object.values(stats.missingByBrand).slice(0, 10) : [],
       backgroundColor: 'rgba(255, 99, 132, 0.5)',
       borderColor: 'rgb(255, 99, 132)',
       borderWidth: 1,
@@ -86,11 +88,11 @@ const prepareMissingHouseInfoChartData = (stats: DataQualityStats | null) => ({
 })
 
 const prepareDuplicateChartData = (stats: DataQualityStats | null) => ({
-  labels: stats ? Object.keys(stats.duplicatesByBrand).slice(0, 10) : [],
+  labels: stats?.duplicatesByBrand ? Object.keys(stats.duplicatesByBrand).slice(0, 10) : [],
   datasets: [
     {
       label: 'Duplicate Entries',
-      data: stats ? Object.values(stats.duplicatesByBrand).slice(0, 10) : [],
+      data: stats?.duplicatesByBrand ? Object.values(stats.duplicatesByBrand).slice(0, 10) : [],
       backgroundColor: 'rgba(53, 162, 235, 0.5)',
       borderColor: 'rgb(53, 162, 235)',
       borderWidth: 1,
@@ -183,7 +185,7 @@ const renderChartVisualizations = ({
       {/* Breakdown Table for Missing House Info */}
       <>
         {missingHouseInfoBreakdown &&
-          Object.keys(missingHouseInfoBreakdown).length > 0 && (
+          Object.keys(missingHouseInfoBreakdown || {}).length > 0 && (
             <div className="mt-6">
               <h4 className="text-md font-semibold text-yellow-800 mb-2">Breakdown by House</h4>
               <table className="min-w-full text-sm border border-yellow-200 rounded">
@@ -194,7 +196,7 @@ const renderChartVisualizations = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {Object.entries(missingHouseInfoBreakdown)
+                  {Object.entries(missingHouseInfoBreakdown || {})
                     .map(([house, fields]) => (
                       <tr key={house} className="border-t border-yellow-100">
                         <td className="px-2 py-1 text-yellow-900">{house}</td>
@@ -474,6 +476,10 @@ const DataQualityDashboard: FC<DataQualityDashboardProps> = ({ user, isAdmin }) 
   const [timeframe, setTimeframe] = useState<'week' | 'month' | 'all'>('month')
   const { stats, loading, error, setLastFetch } = useFetchDataQualityStats(timeframe)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { csrfToken } = useCSRFToken()
+
+  // Create upload handler with CSRF token
+  const handleUploadCSV = createHandleUploadCSV(csrfToken)
 
   // Wrap the upload handler to refresh dashboard after upload
   const handleUploadAndRefresh: React.ChangeEventHandler<HTMLInputElement> = async e => {

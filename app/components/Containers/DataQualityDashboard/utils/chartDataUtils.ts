@@ -32,11 +32,11 @@ export const getMissingHouseInfoBreakdown = (
 }
 
 export const prepareMissingChartData = (stats: DataQualityStats | null) => ({
-  labels: stats ? Object.keys(stats.missingByBrand).slice(0, 10) : [],
+  labels: stats?.missingByBrand ? Object.keys(stats.missingByBrand).slice(0, 10) : [],
   datasets: [
     {
       label: 'Missing Information',
-      data: stats ? Object.values(stats.missingByBrand).slice(0, 10) : [],
+      data: stats?.missingByBrand ? Object.values(stats.missingByBrand).slice(0, 10) : [],
       backgroundColor: 'rgba(255, 99, 132, 0.5)',
       borderColor: 'rgb(255, 99, 132)',
       borderWidth: 1,
@@ -64,11 +64,11 @@ export const prepareMissingHouseInfoChartData = (stats: DataQualityStats | null)
 })
 
 export const prepareDuplicateChartData = (stats: DataQualityStats | null) => ({
-  labels: stats ? Object.keys(stats.duplicatesByBrand).slice(0, 10) : [],
+  labels: stats?.duplicatesByBrand ? Object.keys(stats.duplicatesByBrand).slice(0, 10) : [],
   datasets: [
     {
       label: 'Duplicate Entries',
-      data: stats ? Object.values(stats.duplicatesByBrand).slice(0, 10) : [],
+      data: stats?.duplicatesByBrand ? Object.values(stats.duplicatesByBrand).slice(0, 10) : [],
       backgroundColor: 'rgba(53, 162, 235, 0.5)',
       borderColor: 'rgb(53, 162, 235)',
       borderWidth: 1,

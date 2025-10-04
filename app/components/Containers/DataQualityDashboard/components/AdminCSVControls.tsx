@@ -1,7 +1,8 @@
 import { useRef, type FC } from 'react'
 
 import { handleDownloadCSV } from '../bones/csvHandlers/csvDownload'
-import { handleUploadCSV } from '../bones/csvHandlers/csvUploader'
+import { createHandleUploadCSV } from '../bones/csvHandlers/csvUploader'
+import { useCSRFToken } from '~/components/Molecules/CSRFToken'
 
 interface AdminCSVControlsProps {
   onUploadComplete: () => void
@@ -9,6 +10,10 @@ interface AdminCSVControlsProps {
 
 const AdminCSVControls: FC<AdminCSVControlsProps> = ({ onUploadComplete }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { csrfToken } = useCSRFToken()
+
+  // Create upload handler with CSRF token
+  const handleUploadCSV = createHandleUploadCSV(csrfToken)
 
   // Wrap the upload handler to refresh dashboard after upload
   const handleUploadAndRefresh: React.ChangeEventHandler<HTMLInputElement> = async e => {
