@@ -6,13 +6,13 @@ import type { UserPerfumeI } from "~/types"
 
 import TradersComments from "./TradersComments"
 
-// Helper function to get trade preference label
 const getTradeLabel = (preference: string) => {
+  const { t } = useTranslation()
   switch (preference) {
-    case 'cash': return 'Cash Only'
-    case 'trade': return 'Trade Only'
-    case 'both': return 'Cash or Trade'
-    default: return 'Cash Only'
+    case 'cash': return t('traderProfile.preferences.cash')
+    case 'trade': return t('traderProfile.preferences.trade')
+    case 'both': return t('traderProfile.preferences.both')
+    default: return t('traderProfile.preferences.cash')
   }
 }
 

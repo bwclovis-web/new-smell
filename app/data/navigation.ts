@@ -3,13 +3,14 @@ import { ROUTE_PATH as CREATE_HOUSE } from '~/routes/admin/CreatePerfumeHousePag
 import { ROUTE_PATH as CREATE_PERFUME } from '~/routes/admin/CreatePerfumePage'
 import { ROUTE_PATH as DATA_QUALITY } from '~/routes/admin/data-quality'
 import { ROUTE_PATH as MY_SCENTS } from '~/routes/admin/MyScents'
-import { ROUTE_PATH as SECURITY_MONITOR } from '~/routes/admin/security-monitor'
 import { ROUTE_PATH as PERFORMANCE_ADMIN } from '~/routes/admin/performance-admin'
+import { ROUTE_PATH as SECURITY_MONITOR } from '~/routes/admin/security-monitor'
 import { ROUTE_PATH as USERS } from '~/routes/admin/users'
 import { ROUTE_PATH as WISHLIST } from '~/routes/admin/WishlistPage'
 import { ROUTE_PATH as ALL_HOUSES } from '~/routes/behind-the-bottle'
 import { ROUTE_PATH as AVAILABLE_PERFUMES } from '~/routes/the-exchange'
 import { ROUTE_PATH as ALL_PERFUMES } from '~/routes/the-vault'
+
 
 export const mainNavigation = [
   {
@@ -36,31 +37,37 @@ export const adminNavigation = [
   {
     id: '1',
     label: 'create house',
+    key: 'createHouse',
     path: CREATE_HOUSE
   },
   {
     id: '2',
     label: 'create perfume',
+    key: 'createPerfume',
     path: CREATE_PERFUME
   },
   {
     id: '3',
     label: 'data quality',
+    key: 'dataQuality',
     path: DATA_QUALITY
   },
   {
     id: '4',
     label: 'user management',
+    key: 'userManagement',
     path: USERS
   },
   {
     id: '5',
     label: 'security monitor',
+    key: 'securityMonitor',
     path: SECURITY_MONITOR
   },
   {
     id: '6',
     label: 'performance admin',
+    key: 'performanceAdmin',
     path: PERFORMANCE_ADMIN
   }
 ]
@@ -69,16 +76,19 @@ export const profileNavigation = [
   {
     id: '1',
     label: 'My Wishlist',
+    key: 'wishlist',
     path: WISHLIST
   },
   {
     id: '2',
     label: 'My Scents',
+    key: 'myScents',
     path: MY_SCENTS
   },
   {
     id: '3',
     label: 'Change Password',
+    key: 'changePassword',
     path: CHANGE_PASSWORD
   }
 ]

@@ -11,7 +11,7 @@ interface VooDooDetailsProps extends HTMLProps<HTMLDetailsElement>,
 const VooDooDetails =
   ({ className, summary, name, children, ...props }: VooDooDetailsProps) => (
     <details name={name} className={styleMerge(voodoodetailsVariants({ className }))} data-cy="VooDooDetails"{...props}>
-      <summary className="cursor-pointer">
+      <summary className="cursor-pointer justify-around">
         <span className="text-lg font-semibold">{summary || "VooDoo Details"}</span>
       </summary>
       {children}

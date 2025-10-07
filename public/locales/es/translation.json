@@ -1,4 +1,14 @@
 {
+  "admin": {
+    "navigation": {
+      "createHouse": "Crear Casa",
+      "createPerfume": "Crear Perfume",
+      "dataQuality": "Calidad de Datos",
+      "userManagement": "Gestión de Usuarios",
+      "securityMonitor": "Monitor de Seguridad",
+      "performanceAdmin": "Administrador de Rendimiento"
+    }
+  },
   "allHouses": {
     "meta": {
       "title": "Tras el Frasco - Shadow and Sillage",
@@ -40,6 +50,10 @@
     "createAccount": "Haz clic aquí para crear"
   },
   "components": {
+    "dataDisplaySection": {
+      "heading": "Selecciona una letra para navegar {{itemName}}",
+      "subheading": "Haz clic en cualquier letra de arriba para ver {{itemName}} que comiencen con esa letra"
+    },
     "modal": {
       "close": "Cerrar Modal"
     },
@@ -48,7 +62,7 @@
       "button": "Buscar"
     },
     "filter": {
-      "heading": "Filtrar",
+      "heading": "Filtrar por Tipo",
       "clearFilters": "Limpiar Filtros",
       "applyFilters": "Aplicar Filtros"
     },
@@ -111,6 +125,10 @@
     "passwordMatch": "Confirmar Contraseña",
     "passwordMatchPlaceholder": "Confirma tu contraseña"
   },
+  "dataQuality": {
+    "heading": "Panel de Calidad de Datos",
+    "subheading": "Monitorea la calidad de los datos en nuestra base de datos."
+  },
   "home": {
     "meta": {
       "title": "Shadow and Sillage - Base de Datos de Perfumes",
@@ -123,6 +141,10 @@
     "heading": "Shadow & Sillage",
     "description": "Una base de datos completa de perfumes y sus casas.",
     "subheading": "Para coleccionistas de perfumes y secretos."
+  },
+  "securityMonitor": {
+    "heading": "Monitor de Seguridad",
+    "subheading": "Para que duermas tranquilo por la noche"
   },
   "myScents": {
     "meta": {
@@ -196,7 +218,14 @@
     "passwordPlaceholder": "Ingresa tu contraseña",
     "role": "Rol",
     "name": "Nombre",
-    "notFound": "Perfil de usuario no encontrado"
+    "notFound": "Perfil de usuario no encontrado",
+    "updateProfile": "Actualizar Perfil",
+    "profileUpdatedSuccessfully": "¡Perfil actualizado exitosamente!",
+    "navigation": {
+      "wishlist": "Mi Lista de Deseos",
+      "myScents": "Mis Fragancias",
+      "changePassword": "Cambiar Contraseña"
+    }
   },
   "singleHouse": {
     "meta": {
@@ -215,15 +244,18 @@
       "mid": "Notas Medias",
       "end": "Notas de Fondo",
       "general": "Notas Generales"
+    },
+    "rating": {
+      "selectRating": "Selecciona tu calificación"
     }
   },
   "tradingPost": {
     "meta": {
-      "title": "Perfumes Disponibles para Intercambio - Shadow and Sillage",
+      "title": "El Intercambio - Shadow and Sillage",
       "description": "Explora perfumes disponibles para intercambio de miembros de nuestra comunidad."
     },
-    "heading": "Perfumes para intercambio",
-    "subheading": "Estos perfumes están disponibles para intercambio de miembros de la comunidad.",
+    "heading": "El Intercambio",
+    "subheading": "Cada frasco tiene un pasado. Cada intercambio deja una huella.",
     "count": "perfumes disponibles",
     "empty": "No hay perfumes disponibles para intercambio actualmente.",
     "availableFrom": "Disponible de"
@@ -234,7 +266,22 @@
       "description": "Perfil del Intercambiador de {{traderName}}"
     },
     "heading": "Intercambiador {{traderName}}",
-    "subheading": "Perfil del Intercambiador de {{traderName}}"
+    "subheading": "Perfil del Intercambiador de {{traderName}}",
+    "itemsAvailable": "Artículos Disponibles",
+    "itemsSearchingFor": "Artículos que Busca",
+    "noItemsAvailable": "No hay artículos disponibles para intercambio.",
+    "noItemsSearchingFor": "No hay artículos que buscar.",
+    "amount": "Cantidad Disponible",
+    "tradePrice": "Precio de Intercambio",
+    "preference": "Preferencia",
+    "tradeOnly": "Solo Intercambio",
+    "comments": "Comentarios del Intercambiador",
+    "noPublicComments": "No hay comentarios públicos disponibles para este artículo.",
+    "preferences": {
+      "cash": "Solo Efectivo",
+      "trade": "Solo Intercambio",
+      "both": "Efectivo o Intercambio"
+    }
   },
   "wishlist": {
     "meta": {
@@ -249,7 +296,16 @@
     "subheading": "Gestiona tu lista de deseos de perfumes.",
     "itemsInWishlist": "artículos en la Lista de Deseos",
     "addButton": "Agregar a la Lista de Deseos",
-    "removeButton": "Eliminar de la Lista de Deseos"
+    "removeButton": "Eliminar de la Lista de Deseos",
+    "itemCard": {
+      "visibility": "Visibilidad",
+      "public": "Público",
+      "private": "Privado",
+      "available": "🎉 ¡DISPONIBLE EN EL INTERCAMBIO! 🎉",
+      "addedOn": "Agregado el",
+      "availableMessage": "Este artículo aparecerá en tu perfil de intercambiador",
+      "unavailableMessage": "Este artículo es privado y no aparecerá en tu perfil de intercambiador"
+    }
   },
   "404": {
     "heading": "Parece que estás perdido",

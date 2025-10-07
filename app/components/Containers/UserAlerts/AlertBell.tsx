@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { BsBell, BsX } from 'react-icons/bs'
 
 import { Button } from '~/components/Atoms/Button/Button'
-import { AlertItem } from './AlertItem'
 import type { UserAlert } from '~/types/database'
+
+import { AlertItem } from './AlertItem'
 
 interface AlertBellProps {
   unreadCount: number
@@ -13,27 +14,27 @@ interface AlertBellProps {
   onDismissAlert: (alertId: string) => void
 }
 
-export const AlertBell = ({ 
-  unreadCount, 
-  userId, 
-  alerts, 
-  onMarkAsRead, 
-  onDismissAlert 
+export const AlertBell = ({
+  unreadCount,
+  userId,
+  alerts,
+  onMarkAsRead,
+  onDismissAlert
 }: AlertBellProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const recentAlerts = alerts.slice(0, 5) // Show only 5 most recent
 
   return (
-    <div className="relative">
+    <div className="relative text-noir-gold">
       {/* Bell Icon */}
       <Button
-        variant="ghost"
-        size="sm"
+        variant="icon"
+        size="lg"
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2"
+        className="relative p-2 border-0"
         aria-label={`Notifications ${unreadCount > 0 ? `(${unreadCount} unread)` : ''}`}
       >
-        <BsBell className="h-5 w-5" />
+        <BsBell size={34} />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
             {unreadCount > 9 ? '9+' : unreadCount}
@@ -45,28 +46,35 @@ export const AlertBell = ({
       {isOpen && (
         <>
           {/* Backdrop */}
-          <div 
-            className="fixed inset-0 z-10" 
+          <div
+            className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={evt => {
+              if (evt.key === 'Enter' || evt.key === ' ') {
+                evt.preventDefault()
+                setIsOpen(false)
+              }
+            }}
           />
-          
+
           {/* Dropdown Content */}
-          <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-20 max-h-96 overflow-y-auto">
-            {/* Header */}
-            <div className="flex items-center justify-between p-3 border-b border-gray-200">
-              <h3 className="font-semibold text-gray-900">
+          <div className="absolute right-0 top-full mt-2 w-80 bg-noir-light rounded-lg shadow-lg border border-noir-gold z-20 max-h-96 overflow-y-auto">
+            <div className="flex items-center justify-between p-3 border-b border-noir-gray">
+              <h3 className="font-semibold text-noir-gold">
                 Notifications
                 {unreadCount > 0 && (
-                  <span className="ml-2 text-sm text-red-600">({unreadCount} new)</span>
+                  <span className="ml-2 text-sm text-noir-dark font-sans">({unreadCount} new)</span>
                 )}
               </h3>
               <Button
-                variant="ghost"
+                variant="icon"
                 size="sm"
                 onClick={() => setIsOpen(false)}
                 className="p-1"
               >
-                <BsX className="h-4 w-4" />
+                <BsX className="h-4 w-4 text-noir-dark" />
               </Button>
             </div>
 
@@ -114,7 +122,7 @@ export const AlertBell = ({
           </div>
         </>
       )}
-    </div>
+    </div >
   )
 }
 

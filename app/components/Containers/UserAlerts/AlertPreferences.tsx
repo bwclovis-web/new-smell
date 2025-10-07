@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BsGear, BsBell, BsEnvelope, BsX } from 'react-icons/bs'
+import { BsBell, BsEnvelope, BsGear, BsX } from 'react-icons/bs'
 
-import VooDooDetails from '~/components/Atoms/VooDooDetails/VooDooDetails'
 import { Button } from '~/components/Atoms/Button/Button'
+import VooDooDetails from '~/components/Atoms/VooDooDetails/VooDooDetails'
 import type { UserAlertPreferences } from '~/types/database'
 
 interface AlertPreferencesProps {
@@ -38,24 +38,16 @@ export const AlertPreferences = ({
 
   return (
     <VooDooDetails
-      summary={
-        <div className="flex items-center gap-2">
-          <BsGear className="h-4 w-4" />
-          {t('alerts.preferences', 'Alert Preferences')}
-        </div>
-      }
-      className="text-start"
+      summary={t('alerts.preferences', 'Alert Preferences')}
+      className="justify-around text-noir-gold"
       name="alert-preferences"
     >
       <div className="p-4 space-y-4">
         {isEditing ? (
-          // Edit Mode
           <div className="space-y-4">
-            <div className="text-sm text-gray-600 mb-4">
+            <div className="text-sm text-noir-gold-100 mb-4">
               {t('alerts.preferencesDescription', 'Configure how and when you receive alerts.')}
             </div>
-
-            {/* Alert Types */}
             <div className="space-y-3">
               <h4 className="font-medium text-gray-900 flex items-center gap-2">
                 <BsBell className="h-4 w-4" />
@@ -67,7 +59,7 @@ export const AlertPreferences = ({
                   <input
                     type="checkbox"
                     checked={tempPreferences.wishlistAlertsEnabled}
-                    onChange={(e) => updatePreference('wishlistAlertsEnabled', e.target.checked)}
+                    onChange={e => updatePreference('wishlistAlertsEnabled', e.target.checked)}
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <div>
@@ -84,7 +76,7 @@ export const AlertPreferences = ({
                   <input
                     type="checkbox"
                     checked={tempPreferences.decantAlertsEnabled}
-                    onChange={(e) => updatePreference('decantAlertsEnabled', e.target.checked)}
+                    onChange={e => updatePreference('decantAlertsEnabled', e.target.checked)}
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <div>
@@ -111,7 +103,7 @@ export const AlertPreferences = ({
                   <input
                     type="checkbox"
                     checked={tempPreferences.emailWishlistAlerts}
-                    onChange={(e) => updatePreference('emailWishlistAlerts', e.target.checked)}
+                    onChange={e => updatePreference('emailWishlistAlerts', e.target.checked)}
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <div>
@@ -128,7 +120,7 @@ export const AlertPreferences = ({
                   <input
                     type="checkbox"
                     checked={tempPreferences.emailDecantAlerts}
-                    onChange={(e) => updatePreference('emailDecantAlerts', e.target.checked)}
+                    onChange={e => updatePreference('emailDecantAlerts', e.target.checked)}
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <div>
@@ -159,7 +151,7 @@ export const AlertPreferences = ({
                   </div>
                   <select
                     value={tempPreferences.maxAlerts}
-                    onChange={(e) => updatePreference('maxAlerts', parseInt(e.target.value))}
+                    onChange={e => updatePreference('maxAlerts', parseInt(e.target.value))}
                     className="rounded border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value={5}>5 alerts</option>
@@ -224,8 +216,8 @@ export const AlertPreferences = ({
                       {t('alerts.wishlistAlerts', 'Wishlist Alerts')}
                     </span>
                     <span className={`text-xs px-2 py-1 rounded ${preferences.wishlistAlertsEnabled
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-gray-100 text-gray-800'
                       }`}>
                       {preferences.wishlistAlertsEnabled ? 'Enabled' : 'Disabled'}
                     </span>
@@ -236,8 +228,8 @@ export const AlertPreferences = ({
                       {t('alerts.decantAlerts', 'Decant Interest Alerts')}
                     </span>
                     <span className={`text-xs px-2 py-1 rounded ${preferences.decantAlertsEnabled
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-gray-100 text-gray-800'
                       }`}>
                       {preferences.decantAlertsEnabled ? 'Enabled' : 'Disabled'}
                     </span>
@@ -257,8 +249,8 @@ export const AlertPreferences = ({
                       {t('alerts.emailWishlistAlerts', 'Email Wishlist Alerts')}
                     </span>
                     <span className={`text-xs px-2 py-1 rounded ${preferences.emailWishlistAlerts
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-gray-100 text-gray-800'
                       }`}>
                       {preferences.emailWishlistAlerts ? 'Enabled' : 'Disabled'}
                     </span>
@@ -269,8 +261,8 @@ export const AlertPreferences = ({
                       {t('alerts.emailDecantAlerts', 'Email Decant Alerts')}
                     </span>
                     <span className={`text-xs px-2 py-1 rounded ${preferences.emailDecantAlerts
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-gray-100 text-gray-800'
                       }`}>
                       {preferences.emailDecantAlerts ? 'Enabled' : 'Disabled'}
                     </span>

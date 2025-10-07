@@ -34,7 +34,8 @@ const AllPerfumesPage = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // Get selectedLetter from navigation state
-  const initialSelectedLetter = (location.state as { selectedLetter?: string })?.selectedLetter
+  const initialSelectedLetter =
+    (location.state as { selectedLetter?: string })?.selectedLetter
 
   const sortOptions = getDefaultSortOptions(t)
   const data = useDataByLetter({ endpoint: '/api/perfumes-by-letter', itemName: 'perfumes' })

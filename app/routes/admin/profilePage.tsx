@@ -7,14 +7,14 @@ import type { ActionFunctionArgs } from 'react-router-dom'
 
 import { Button } from '~/components/Atoms/Button/Button'
 import Input from '~/components/Atoms/Input/Input'
+import UserAlerts from '~/components/Containers/UserAlerts/UserAlerts'
 import { CSRFToken } from '~/components/Molecules/CSRFToken'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
-import UserAlerts from '~/components/Containers/UserAlerts/UserAlerts'
+import { getUnreadAlertCount, getUserAlertPreferences, getUserAlerts } from '~/models/user-alerts.server'
 import type { SafeUser } from '~/types'
 import { UpdateProfileSchema } from '~/utils/formValidationSchemas'
 import { sharedLoader } from '~/utils/sharedLoader'
 import { getUserDisplayName } from '~/utils/user'
-import { getUserAlerts, getUserAlertPreferences, getUnreadAlertCount } from '~/models/user-alerts.server'
 
 import banner from '../../images/myprofile.webp'
 import { getUserByUsername, updateUser } from './profile/queries.server'
@@ -27,7 +27,7 @@ type ActionData =
 
 export const loader = async ({ request }: { request: Request }) => {
   const user = await sharedLoader(request)
-  
+
   if (!user) {
     return { user: null, alerts: [], preferences: null, unreadCount: 0 }
   }
@@ -39,19 +39,19 @@ export const loader = async ({ request }: { request: Request }) => {
       getUnreadAlertCount(user.id)
     ])
 
-    return { 
-      user, 
-      alerts, 
-      preferences, 
-      unreadCount 
+    return {
+      user,
+      alerts,
+      preferences,
+      unreadCount
     }
   } catch (error) {
     console.error('Error loading user profile data:', error)
-    return { 
-      user, 
-      alerts: [], 
-      preferences: null, 
-      unreadCount: 0 
+    return {
+      user,
+      alerts: [],
+      preferences: null,
+      unreadCount: 0
     }
   }
 }
@@ -105,6 +105,7 @@ export const action = async ({
 }
 
 const ProfileForm = ({ user }: { user: SafeUser }) => {
+  const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const [profileForm, { firstName, lastName, username, email }] = useForm({
@@ -124,7 +125,7 @@ const ProfileForm = ({ user }: { user: SafeUser }) => {
     <Form
       {...getFormProps(profileForm)}
       method="POST"
-      className="space-y-4 noir-border p-6"
+      className="space-y-4 noir-border p-6 relative"
     >
       <CSRFToken />
       <input type="hidden" name="userId" value={user.id} />
@@ -172,7 +173,7 @@ const ProfileForm = ({ user }: { user: SafeUser }) => {
         size={'xl'}
         className="w-full"
       >
-        Update Profile
+        {t('profile.updateProfile')}
       </Button>
     </Form>
   )
@@ -191,7 +192,7 @@ const ProfilePage = () => {
   const hasErrors = actionData && 'errors' in actionData
 
   return (
-    <div className="">
+    <>
       <TitleBanner
         image={banner}
         heading={t('profile.heading')}
@@ -201,37 +202,34 @@ const ProfilePage = () => {
           {getUserDisplayName(user)}
         </span>
       </TitleBanner>
-
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Profile Form - Left Column */}
-          <div className="lg:col-span-2">
-            <h2 className="text-2xl font-bold mb-6 text-center text-noir-gold">Update Profile</h2>
-            {hasSuccess && (
-              <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                Profile updated successfully!
-              </div>
-            )}
-            {hasErrors && actionData.errors.general && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                {actionData.errors.general[0]}
-              </div>
-            )}
-            <ProfileForm user={user} />
-          </div>
-
-          {/* Alerts - Right Column */}
-          <div className="lg:col-span-1">
-            <UserAlerts
-              userId={user.id}
-              initialAlerts={alerts}
-              initialPreferences={preferences}
-              initialUnreadCount={unreadCount}
-            />
-          </div>
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 inner-container">
+        {/* Profile Form - Left Column */}
+        <div className="lg:col-span-1">
+          <h2 className="text-2xl font-bold mb-6  text-noir-gold">{t('profile.updateProfile')}</h2>
+          {hasSuccess && (
+            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+              {t('profile.profileUpdatedSuccessfully')}
+            </div>
+          )}
+          {hasErrors && actionData.errors.general && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {actionData.errors.general[0]}
+            </div>
+          )}
+          <ProfileForm user={user} />
         </div>
-      </div>
-    </div>
+
+        {/* Alerts - Right Column */}
+        <div className="lg:col-span-1">
+          <UserAlerts
+            userId={user.id}
+            initialAlerts={alerts}
+            initialPreferences={preferences}
+            initialUnreadCount={unreadCount}
+          />
+        </div>
+      </section>
+    </>
   )
 }
 
