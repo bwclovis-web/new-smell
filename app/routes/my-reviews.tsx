@@ -1,6 +1,6 @@
-import { type LoaderFunctionArgs, type MetaFunction, useLoaderData } from 'react-router'
+import { type LoaderFunctionArgs, type MetaFunction, useLoaderData, redirect } from 'react-router'
 import { Link } from 'react-router'
-import { requireAuth } from '~/utils/auth.server'
+import { authenticateUser } from '~/utils/auth.server'
 import { getUserReviews } from '~/models/perfumeReview.server'
 
 export const ROUTE_PATH = '/my-reviews'
@@ -13,7 +13,13 @@ export const meta: MetaFunction = () => {
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await requireAuth(request)
+  const authResult = await authenticateUser(request)
+
+  if (!authResult.success || !authResult.user) {
+    throw redirect('/login')
+  }
+
+  const user = authResult.user
 
   const url = new URL(request.url)
   const page = parseInt(url.searchParams.get('page') || '1', 10)

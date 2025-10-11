@@ -42,28 +42,28 @@ const DataFilters = ({
           <SearchBar searchType={searchType} />
         </div>
 
-        <div className='flex  gap-6 w-full md:w-3/4 justify-start md:justify-end items-end md:items-center'>
+        <div className='flex gap-6 w-full md:w-3/4 justify-start md:justify-end items-end md:items-center'>
           {typeOptions && onTypeChange && (
             <div>
-              <h3 className="mb-2">{t('components.filter.heading')}</h3>
               <Select
                 selectData={typeOptions}
                 action={onTypeChange}
                 className="flex-wrap"
                 selectId={`${searchType}-type`}
                 defaultId={selectedType}
+                label={t('components.filter.heading')}
               />
             </div>
           )}
 
           <div>
-            <h3 className="mb-2">{t('components.sort.heading')}</h3>
             <Select
               selectData={sortOptions}
               action={onSortChange}
               className="flex-wrap"
               selectId={`${searchType}-sort`}
               defaultId={selectedSort}
+              label={t('components.sort.heading')}
             />
           </div>
         </div>

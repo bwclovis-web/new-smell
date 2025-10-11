@@ -1,5 +1,5 @@
 import { type VariantProps } from 'class-variance-authority'
-import { type ChangeEvent, type FC, type HTMLProps } from 'react'
+import { type ChangeEvent, type HTMLProps } from 'react'
 
 import { styleMerge } from '~/utils/styleUtils'
 
@@ -20,8 +20,9 @@ interface SelectProps extends Omit<HTMLProps<HTMLSelectElement>, 'action' | 'siz
   }>
 }
 
-const Select: FC<SelectProps> = ({
-  className, label, selectId, selectData, defaultId, action, ariaLabel, size }) => {
+const Select = ({
+  className, label, selectId, selectData, defaultId, action, ariaLabel, size }:
+  SelectProps) => {
   const handleChange = (evt: ChangeEvent<HTMLSelectElement>) => {
     if (action) {
       action(evt)

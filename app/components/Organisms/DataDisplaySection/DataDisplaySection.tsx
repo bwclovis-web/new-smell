@@ -1,8 +1,5 @@
 import type { RefObject } from 'react'
-import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { VirtualScrollList } from '~/components/Molecules/VirtualScrollList'
 
 import LinkCard from '../LinkCard/LinkCard'
 
