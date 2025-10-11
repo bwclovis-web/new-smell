@@ -1,4 +1,11 @@
 {
+  "common": {
+    "loading": "Cargando...",
+    "loadingMore": "Cargando más...",
+    "noMore": "No hay más {{itemName}} para cargar.",
+    "allLoaded": "Todos los {{itemName}} cargados.",
+    "loadMore": "Cargar Más {{itemName}}"
+  },
   "admin": {
     "navigation": {
       "createHouse": "Crear Casa",
@@ -47,7 +54,16 @@
   "auth": {
     "heading": "Bienvenido de nuevo",
     "subheading": "Inicia sesión en tu cuenta aquí. Si no tienes una,",
-    "createAccount": "Haz clic aquí para crear"
+    "createAccount": "Haz clic aquí para crear",
+    "passwordRequirements": "Requisitos de Contraseña:",
+    "passwordRequirementsList": {
+      "8characters": "Al menos 8 caracteres de longitud",
+      "uppercase": "Contiene letras mayúsculas y minúsculas",
+      "number": "Contiene al menos un número",
+      "special": "Contiene al menos un carácter especial",
+      "spaces": "No se permiten espacios",
+      "different": "Diferente de tu contraseña actual"
+    }
   },
   "components": {
     "dataDisplaySection": {
@@ -59,7 +75,8 @@
     },
     "search": {
       "placeholder": "Buscar perfumes o casas...",
-      "button": "Buscar"
+      "button": "Buscar",
+      "ariaLabel": "Seleccionar tipo de búsqueda"
     },
     "filter": {
       "heading": "Filtrar por Tipo",
@@ -123,7 +140,10 @@
     "password": "Contraseña",
     "passwordPlaceholder": "Ingresa tu contraseña",
     "passwordMatch": "Confirmar Contraseña",
-    "passwordMatchPlaceholder": "Confirma tu contraseña"
+    "passwordMatchPlaceholder": "Confirma tu contraseña",
+    "emailLabel": "Dirección de Correo Electrónico",
+    "passwordLabel": "Contraseña",
+    "passwordMatchLabel": "Confirmar Contraseña"
   },
   "dataQuality": {
     "heading": "Panel de Calidad de Datos",
@@ -140,7 +160,11 @@
     },
     "heading": "Shadow & Sillage",
     "description": "Una base de datos completa de perfumes y sus casas.",
-    "subheading": "Para coleccionistas de perfumes y secretos."
+    "subheading": "Para coleccionistas de perfumes y secretos.",
+    "searchType": {
+      "perfume-house": "Casas de Perfumes",
+      "perfume": "Perfumes"
+    }
   },
   "securityMonitor": {
     "heading": "Monitor de Seguridad",
@@ -206,7 +230,9 @@
     "houses": "Tras el Frasco",
     "perfumes": "La Bóveda",
     "available": "El Intercambio",
-    "admin": "El Perfil"
+    "admin": "El Perfil",
+    "logout": "Cerrar Sesión",
+    "signIn": "Iniciar Sesión"
   },
   "profile": {
     "heading": "El Perfil",
@@ -246,7 +272,76 @@
       "general": "Notas Generales"
     },
     "rating": {
-      "selectRating": "Selecciona tu calificación"
+      "RateThisPerfume": "Califica Este Perfume",
+      "CommunityRatings": "Calificaciones de la Comunidad",
+      "selectRating": "Selecciona tu calificación",
+      "loginToRate": "Por favor inicia sesión para calificar este perfume",
+      "communityAverage": "Promedio de la Comunidad",
+      "totalRatings": "{{count}} voto{{count !== 1 ? 's' : ''}}",
+      "notYetRated": "Aún no calificado",
+      "categories": {
+        "longevity": "Longevidad",
+        "sillage": "Sillage",
+        "gender": "Atractivo de Género",
+        "priceValue": "Valor del Precio",
+        "overall": "Calificación General"
+      },
+      "labels": {
+        "longevity": {
+          "1": "Sombra Fugaz",
+          "2": "Encuentro Breve",
+          "3": "Presencia Constante",
+          "4": "Misterio Persistente",
+          "5": "Obsesión Eterna"
+        },
+        "sillage": {
+          "1": "Secreto Susurrado",
+          "2": "Intriga Sutil",
+          "3": "Declaración Audaz",
+          "4": "Aura Dominante",
+          "5": "Dominación de Sala"
+        },
+        "gender": {
+          "1": "Claramente Femenino",
+          "2": "Elegancia Femenina",
+          "3": "Unisex Misterioso",
+          "4": "Mística Formal",
+          "5": "Claramente Masculino"
+        },
+        "priceValue": {
+          "1": "Robo a Mano Armada",
+          "2": "Precio Elevado",
+          "3": "Trato Justo",
+          "4": "Inversión Inteligente",
+          "5": "Tesoro Robado"
+        },
+        "overall": {
+          "1": "Desprecio",
+          "2": "Descartar",
+          "3": "Tolerable",
+          "4": "Admirar",
+          "5": "Obsesionado"
+        }
+      }
+    },
+    "review": {
+      "failedToCreateReview": "Falló la creación de la reseña",
+      "heading": "Reseñas",
+      "subheading": "Comparte tus pensamientos sobre {{perfumeName}}.",
+      "addReviewButton": "Agregar Reseña",
+      "noReviews": "Aún no hay reseñas. ¡Sé el primero en compartir tus pensamientos!",
+      "editFunctionalityWillBeImplemented": "La funcionalidad de edición será implementada",
+      "deleteReviewConfirmation": "¿Estás seguro de que deseas eliminar esta reseña?",
+      "failedToDeleteReview": "Falló la eliminación de la reseña",
+      "failedToModerateReview": "Falló la moderación de la reseña",
+      "writeReview": "Escribir Reseña",
+      "addReviewPlaceholder": "Comparte tus pensamientos sobre este perfume...",
+      "cancel": "Cancelar",
+      "submitting": "Enviando...",
+      "submitReview": "Enviar Reseña",
+      "writeYourReview": "Escribe Tu Reseña",
+      "yourReview": "Tu Reseña",
+      "loadMoreReviews": "Cargar Más Reseñas"
     }
   },
   "tradingPost": {

@@ -9,6 +9,7 @@ interface CheckBoxProps extends Omit<HTMLProps<HTMLDivElement>, 'onChange'>,
   VariantProps<typeof checkboxVariants> {
   inputType?: VariantProps<typeof checkboxInputVariants>['inputType']
   labelSize?: VariantProps<typeof checkboxLabelVariants>['labelSize']
+  htmlLabel?: string
   checked?: boolean
   onChange?: () => void
 }
@@ -19,6 +20,7 @@ const CheckBox = ({
   checked,
   onChange,
   label,
+  htmlLabel,
   labelPosition,
   labelSize,
   value,
@@ -29,7 +31,9 @@ const CheckBox = ({
     data-cy="CheckBox"
     {...props}
   >
-    <label className={styleMerge(checkboxLabelVariants({ labelSize }))} aria-label="group" htmlFor={label}>{label}</label>
+    <label className={styleMerge(checkboxLabelVariants({ labelSize }))} aria-label="group" htmlFor={label}>
+      {htmlLabel ? <div dangerouslySetInnerHTML={{ __html: htmlLabel }} /> : label}
+    </label>
     <input
       className={styleMerge(checkboxInputVariants({ inputType }))}
       type="checkbox"

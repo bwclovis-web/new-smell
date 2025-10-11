@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { FaUser } from "react-icons/fa6"
 import { NavLink } from 'react-router'
 
+import LanguageSwitcher from '~/components/Organisms/LanguageSwitcher/LanguageSwitcher'
 import { mainNavigation } from '~/data/navigation'
 import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/profilePage'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
@@ -32,6 +33,9 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
 
   return (
     <header className='fixed z-30  w-full h-auto bg-noir-dark/60 backdrop-blur-md'>
+      <div className="flex justify-end items-center px-30 bg-noir-black/60 backdrop-blur-md w-full">
+        <LanguageSwitcher />
+      </div>
       <nav className="hidden md:flex justify-between inner-container py-5" data-cy="GlobalNavigation">
         <NavLink to="/" className="text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400">
           {logoText}

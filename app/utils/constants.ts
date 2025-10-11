@@ -21,6 +21,9 @@ export const FORM_DATA_ACTIONS = {
   DELETE_COMMENT: 'delete-comment' as const
 }
 
+// DEPRECATED: Rating labels are now managed via i18n translations
+// See: public/locales/{en,es}/translation.json -> singlePerfume.rating.labels
+// This constant is kept for reference only and is no longer used in components
 export const RATING_LABELS = {
   longevity: {
     1: 'Fleeting Shadow',

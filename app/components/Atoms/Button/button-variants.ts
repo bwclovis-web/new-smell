@@ -2,7 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 export type ButtonVariants = VariantProps<typeof buttonVariants>
 
-export const buttonVariants = cva(['rounded-sm cursor-pointer '], {
+export const buttonVariants = cva(['rounded-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:cursor-not-allowed'], {
   compoundVariants: [{}],
   defaultVariants: {
     size: 'md',
@@ -17,7 +17,7 @@ export const buttonVariants = cva(['rounded-sm cursor-pointer '], {
     },
     variant: {
       primary: 'bg-noir-gold capitalize text-noir-black px-4 py-2 rounded-md font-semibold hover:bg-noir-gold/80 transition-all',
-      secondary: 'bg-btn-secondary hover:bg-btn-secondary-hover focus:bg-btn-secondary-focus disabled:bg-btn-secondary-disabled text-white',
+      secondary: 'bg-noir-dark hover:bg-noir-black focus:bg-noir-black disabled:bg-noir-black text-noir-gold-500 hover:text-noir-gold-100 border border-noir-gold hover:border-noir-gold-500',
       danger: 'bg-btn-danger hover:bg-btn-danger-hover focus:bg-btn-danger-focus disabled:bg-btn-danger-disabled text-white',
       link: 'bg-transparent text-blue-200 font-semibold hover:underline focus:bg-noir-gold/20 disabled:bg-transparent text-nowrap px-0',
       icon: 'block bg-transparent rounded-sm p-2.5 transition-all duration-300 ease-in-out  disabled:bg-transparent font-medium border gap-3',

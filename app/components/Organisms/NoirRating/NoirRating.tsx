@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react'
 
-import { RATING_LABELS } from '~/utils/constants'
-
 import RatingLabel from './RatingLabel'
 import StarRating from './StarRating'
 
@@ -25,7 +23,6 @@ const NoirRating = ({
 }: NoirRatingProps) => {
   const [hoverValue, setHoverValue] = useState<number | null>(null)
   const [displayValue, setDisplayValue] = useState(value || 0)
-  const labels = RATING_LABELS[category]
   const isInteractive = !readonly && Boolean(onChange)
 
   // Update display value when prop value changes
@@ -55,7 +52,7 @@ const NoirRating = ({
       <RatingLabel
         showLabel={showLabel}
         currentValue={currentValue}
-        labels={labels}
+        category={category}
       />
     </div>
   )

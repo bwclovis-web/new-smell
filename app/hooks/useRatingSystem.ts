@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useErrorHandler } from './useErrorHandler'
 import { useCSRF } from './useCSRF'
@@ -44,6 +45,7 @@ export const useRatingSystem = ({
   onError,
   onSuccess
 }: UseRatingSystemOptions): UseRatingSystemReturn => {
+  const { t } = useTranslation()
   const { handleError } = useErrorHandler()
   const { addToHeaders } = useCSRF()
 
@@ -114,11 +116,11 @@ export const useRatingSystem = ({
   }, [initialRatings])
 
   const categories: Array<{ key: keyof RatingData; label: string }> = [
-    { key: 'longevity', label: 'Longevity' },
-    { key: 'sillage', label: 'Sillage' },
-    { key: 'gender', label: 'Gender Appeal' },
-    { key: 'priceValue', label: 'Price Value' },
-    { key: 'overall', label: 'Overall Rating' }
+    { key: 'longevity', label: t('singlePerfume.rating.categories.longevity') },
+    { key: 'sillage', label: t('singlePerfume.rating.categories.sillage') },
+    { key: 'gender', label: t('singlePerfume.rating.categories.gender') },
+    { key: 'priceValue', label: t('singlePerfume.rating.categories.priceValue') },
+    { key: 'overall', label: t('singlePerfume.rating.categories.overall') }
   ]
 
   return {

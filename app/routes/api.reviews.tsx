@@ -26,7 +26,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     if (userId) {
       filters.userId = userId
     }
-    if (isApproved !== null) {
+    // Only apply isApproved filter if explicitly provided
+    if (isApproved !== null && isApproved !== undefined) {
       filters.isApproved = isApproved === 'true'
     }
 

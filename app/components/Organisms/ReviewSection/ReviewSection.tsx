@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react'
-import { useFetcher } from 'react-router'
-import ReviewCard from '~/components/Molecules/ReviewCard'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { Button } from '~/components/Atoms/Button'
 import RichTextEditor from '~/components/Atoms/RichTextEditor'
-import { styleMerge } from '~/utils/styleUtils'
+import ReviewCard from '~/components/Molecules/ReviewCard'
+import { useCSRF } from '~/hooks/useCSRF'
 
 interface Review {
   id: string
   review: string
   createdAt: string
+  isApproved: boolean
   user: {
     id: string
     username?: string | null
@@ -25,13 +28,15 @@ interface ReviewSectionProps {
   existingUserReview?: Review | null
 }
 
-const ReviewSection: React.FC<ReviewSectionProps> = ({
+const ReviewSection = ({
   perfumeId,
   currentUserId,
   currentUserRole,
   canCreateReview = false,
   existingUserReview
-}) => {
+}: ReviewSectionProps) => {
+  const { t } = useTranslation()
+  const { submitForm } = useCSRF()
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
@@ -40,12 +45,11 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
   const [reviewContent, setReviewContent] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const fetcher = useFetcher()
 
   // Load reviews
   const loadReviews = async (pageNum: number = 1, append: boolean = false) => {
     try {
-      const response = await fetch(`/api/reviews?perfumeId=${perfumeId}&page=${pageNum}&limit=5`)
+      const response = await fetch(`/api/reviews?perfumeId=${perfumeId}&page=${pageNum}&limit=5&isApproved=true`)
       const data = await response.json()
 
       if (data.reviews) {
@@ -74,7 +78,9 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
   }
 
   const handleCreateReview = async () => {
-    if (!reviewContent.trim()) return
+    if (!reviewContent.trim()) {
+      return
+    }
 
     setIsSubmitting(true)
     try {
@@ -83,47 +89,40 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
       formData.append('perfumeId', perfumeId)
       formData.append('review', reviewContent)
 
-      const response = await fetch('/api/reviews', {
-        method: 'POST',
-        body: formData
-      })
+      const response = await submitForm('/api/reviews', formData)
 
       const result = await response.json()
 
       if (result.success) {
         setReviewContent('')
         setShowReviewForm(false)
-        // Reload reviews to show the new one
         loadReviews()
       } else {
-        alert(result.error || 'Failed to create review')
+        alert(result.error || t('singlePerfume.review.failedToCreateReview'))
       }
     } catch (error) {
-      console.error('Error creating review:', error)
-      alert('Failed to create review')
+      console.error(t('singlePerfume.review.failedToCreateReview'), error)
+      alert(t('singlePerfume.review.failedToCreateReview'))
     } finally {
       setIsSubmitting(false)
     }
   }
 
   const handleEditReview = async (reviewId: string) => {
-    // This would open an edit modal or form
-    // For now, we'll just show an alert
-    alert('Edit functionality will be implemented')
+    alert(t('singlePerfume.review.editFunctionalityWillBeImplemented'))
   }
 
   const handleDeleteReview = async (reviewId: string) => {
-    if (!confirm('Are you sure you want to delete this review?')) return
+    if (!confirm(t('singlePerfume.review.deleteReviewConfirmation'))) {
+      return
+    }
 
     try {
       const formData = new FormData()
       formData.append('_action', 'delete')
       formData.append('reviewId', reviewId)
 
-      const response = await fetch('/api/reviews', {
-        method: 'POST',
-        body: formData
-      })
+      const response = await submitForm('/api/reviews', formData)
 
       const result = await response.json()
 
@@ -131,44 +130,52 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
         // Remove the review from the list
         setReviews(prev => prev.filter(review => review.id !== reviewId))
       } else {
-        alert(result.error || 'Failed to delete review')
+        alert(result.error || t('singlePerfume.review.failedToDeleteReview'))
       }
     } catch (error) {
-      console.error('Error deleting review:', error)
-      alert('Failed to delete review')
+      console.error(t('singlePerfume.review.failedToDeleteReview'), error)
+      alert(t('singlePerfume.review.failedToDeleteReview'))
     }
   }
 
   const handleModerateReview = async (reviewId: string, isApproved: boolean) => {
     try {
+      // Optimistically remove the review from the list for real-time feel
+      const originalReviews = [...reviews]
+      setReviews(prev => prev.filter(review => review.id !== reviewId))
+
       const formData = new FormData()
       formData.append('_action', 'moderate')
       formData.append('reviewId', reviewId)
       formData.append('isApproved', isApproved.toString())
 
-      const response = await fetch('/api/reviews', {
-        method: 'POST',
-        body: formData
-      })
+      const response = await submitForm('/api/reviews', formData)
 
       const result = await response.json()
 
       if (result.success) {
-        // Reload reviews to reflect changes
-        loadReviews()
+        // If viewing all reviews (not just approved), reload to show updated status
+        // Otherwise the optimistic removal is sufficient
+        if (!window.location.search.includes('isApproved=false')) {
+          // Review was removed optimistically and stays removed
+          // Optionally reload to ensure consistency
+          loadReviews()
+        }
       } else {
-        alert(result.error || 'Failed to moderate review')
+        // Revert the optimistic update on error
+        setReviews(originalReviews)
+        alert(result.error || t('singlePerfume.review.failedToModerateReview'))
       }
     } catch (error) {
-      console.error('Error moderating review:', error)
-      alert('Failed to moderate review')
+      console.error(t('singlePerfume.review.failedToModerateReview'), error)
+      alert(t('singlePerfume.review.failedToModerateReview'))
     }
   }
 
   if (loading) {
     return (
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-gray-900">Reviews</h2>
+      <div className="space-y-4 bg-noir-black/50 rounded-lg p-4">
+        <h2 className="text-xl font-semibold text-gray-900"> {t('singlePerfume.review.heading')}</h2>
         <div className="animate-pulse space-y-3">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="bg-gray-200 h-24 rounded-lg"></div>
@@ -180,44 +187,43 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-900">
-          Reviews ({reviews.length})
+      <div className="flex items-center justify-between bg-noir-dark rounded-lg p-4">
+        <h2 className="text-xl font-semibold">
+          {t('singlePerfume.review.heading')} ({reviews.length})
         </h2>
         {canCreateReview && !existingUserReview && (
-          <button
+          <Button
             onClick={() => setShowReviewForm(true)}
-            className="px-4 py-2 bg-noir-gold text-noir-black rounded-md hover:bg-noir-gold/90 transition-colors"
           >
-            Write Review
-          </button>
+            {t('singlePerfume.review.writeReview')}
+          </Button>
         )}
       </div>
 
       {/* Review Form */}
       {showReviewForm && (
-        <div className="bg-white/5 border border-gray-300 rounded-lg p-4 space-y-4">
-          <h3 className="text-lg font-medium text-gray-900">Write Your Review</h3>
+        <div className="border border-noir-gold bg-noir-dark rounded-lg p-4 space-y-4">
+          <h3 className="text-lg font-medium text-gray-900">{t('singlePerfume.review.writeYourReview')}</h3>
           <RichTextEditor
             value={reviewContent}
             onChange={setReviewContent}
-            placeholder="Share your thoughts about this perfume..."
+            placeholder={t('singlePerfume.review.addReviewPlaceholder')}
             maxLength={2000}
           />
           <div className="flex justify-end space-x-2">
-            <button
-              onClick={() => setShowReviewForm(false)}
-              className="px-4 py-2 text-gray-600 hover:text-gray-800"
-            >
-              Cancel
-            </button>
-            <button
+            <Button
               onClick={handleCreateReview}
               disabled={!reviewContent.trim() || isSubmitting}
               className="px-4 py-2 bg-noir-gold text-noir-black rounded-md hover:bg-noir-gold/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {isSubmitting ? 'Submitting...' : 'Submit Review'}
-            </button>
+              {isSubmitting ? t('singlePerfume.review.submitting') : t('singlePerfume.review.submitReview')}
+            </Button>
+            <Button
+              onClick={() => setShowReviewForm(false)}
+              variant="secondary"
+            >
+              {t('singlePerfume.review.cancel')}
+            </Button>
           </div>
         </div>
       )}
@@ -225,7 +231,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
       {/* Existing User Review */}
       {existingUserReview && (
         <div className="space-y-2">
-          <h3 className="text-lg font-medium text-gray-900">Your Review</h3>
+          <h3 className="text-lg font-medium text-gray-900">{t('singlePerfume.review.yourReview')}</h3>
           <ReviewCard
             review={existingUserReview}
             currentUserId={currentUserId}
@@ -239,7 +245,7 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
       {/* Reviews List */}
       {reviews.length > 0 ? (
         <div className="space-y-4">
-          {reviews.map((review) => (
+          {reviews.map(review => (
             <ReviewCard
               key={review.id}
               review={review}
@@ -259,14 +265,14 @@ const ReviewSection: React.FC<ReviewSectionProps> = ({
                 onClick={handleLoadMore}
                 className="px-4 py-2 text-noir-gold hover:text-noir-gold/80 transition-colors"
               >
-                Load More Reviews
+                {t('singlePerfume.review.loadMoreReviews')}
               </button>
             </div>
           )}
         </div>
       ) : (
-        <div className="text-center py-8 text-gray-500">
-          <p>No reviews yet. Be the first to share your thoughts!</p>
+        <div className="text-center text-lg py-8 text-noir-gold">
+          <p>{t('singlePerfume.review.noReviews')}</p>
         </div>
       )}
     </div>

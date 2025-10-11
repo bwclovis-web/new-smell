@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import SimpleNoirRating from '~/components/Organisms/SimpleNoirRating'
 import { useRatingSystem } from '~/hooks'
 
@@ -29,6 +31,7 @@ const PerfumeRatingSystem = ({
   averageRatings = null,
   readonly = false
 }: PerfumeRatingSystemProps) => {
+  const { t } = useTranslation()
   const {
     currentRatings,
     isLoggedIn,
@@ -45,12 +48,12 @@ const PerfumeRatingSystem = ({
   return (
     <div className="bg-noir-dark/20 rounded-lg p-6">
       <h2 className="text-xl font-bold text-noir-gold mb-1 text-center">
-        {isInteractive ? 'Rate This Perfume' : 'Community Ratings'}
+        {isInteractive ? t('singlePerfume.rating.RateThisPerfume') : t('singlePerfume.rating.CommunityRatings')}
       </h2>
 
       {!isLoggedIn && (
         <p className="text-sm text-noir-gold-500 mb-4 text-center">
-          Please log in to rate this perfume
+          {t('singlePerfume.rating.loginToRate')}
         </p>
       )}
 
@@ -73,15 +76,15 @@ const PerfumeRatingSystem = ({
               <div className="text-xs text-noir-gold-100 text-center">
                 {averageRatings && averageRatings[key] ? (
                   <>
-                    Community Average: {averageRatings[key]?.toFixed(1)}/5
+                    Community Average: {averageRatings[key]?.toFixed(1)}/5 {t('singlePerfume.rating.communityAverage')}
                     {averageRatings.totalRatings > 0 && (
                       <span className="ml-1">
-                        ({averageRatings.totalRatings} vote{averageRatings.totalRatings !== 1 ? 's' : ''})
+                        ({averageRatings.totalRatings} {t('singlePerfume.rating.totalRatings', { count: averageRatings.totalRatings })})
                       </span>
                     )}
                   </>
                 ) : (
-                  <span className="text-noir-gold-100">Not yet rated</span>
+                  <span className="text-noir-gold-100">{t('singlePerfume.rating.notYetRated')}</span>
                 )}
               </div>
             </div>

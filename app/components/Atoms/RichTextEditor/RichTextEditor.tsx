@@ -1,4 +1,7 @@
-import React, { useRef, useEffect, useState } from 'react'
+import { type FormEvent, useEffect, useRef, useState } from 'react'
+import { type KeyboardEvent } from 'react'
+import { type DetailedHTMLProps, type HTMLAttributes, type StyleHTMLAttributes } from 'react'
+
 import { styleMerge } from '~/utils/styleUtils'
 
 interface RichTextEditorProps {
@@ -10,14 +13,14 @@ interface RichTextEditorProps {
   maxLength?: number
 }
 
-const RichTextEditor: React.FC<RichTextEditorProps> = ({
+const RichTextEditor = ({
   value = '',
   onChange,
   placeholder = 'Write your review...',
   className,
   disabled = false,
   maxLength = 5000
-}) => {
+}: RichTextEditorProps) => {
   const editorRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
   const [currentLength, setCurrentLength] = useState(0)
@@ -35,7 +38,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     return temp.textContent?.length || 0
   }
 
-  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+  const handleInput = (evt: FormEvent<HTMLDivElement>) => {
     if (editorRef.current && onChange) {
       const content = editorRef.current.innerHTML
       const textLength = getTextLength(content)
@@ -45,19 +48,19 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         onChange(content)
       } else {
         // Prevent further input if over limit
-        e.preventDefault()
+        evt.preventDefault()
         // Revert to previous content
         editorRef.current.innerHTML = value
       }
     }
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (evt: KeyboardEvent<HTMLDivElement>) => {
     // Allow normal typing, but prevent if we're at the limit
     if (editorRef.current) {
       const currentLength = getTextLength(editorRef.current.innerHTML)
-      if (currentLength >= maxLength && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'ArrowUp' && e.key !== 'ArrowDown') {
-        e.preventDefault()
+      if (currentLength >= maxLength && evt.key !== 'Backspace' && evt.key !== 'Delete' && evt.key !== 'ArrowLeft' && evt.key !== 'ArrowRight' && evt.key !== 'ArrowUp' && evt.key !== 'ArrowDown') {
+        evt.preventDefault()
       }
     }
   }
@@ -85,13 +88,15 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   return (
     <div className={styleMerge('rich-text-editor', className)}>
       {/* Toolbar */}
-      <div className="flex flex-wrap gap-1 p-2 border-b border-gray-300 bg-gray-50 rounded-t-md">
-        {formatButtons.map((button) => (
+      <div className="flex flex-wrap gap-1 p-2 border-b border-gray-300 bg-noir-gold-100 rounded-t-md">
+        {formatButtons.map(button => (
           <button
             key={button.command}
             type="button"
             onClick={() => execCommand(button.command)}
-            className="px-2 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-2 py-1 text-sm font-medium text-noir-gold bg-noir-dark border cursor-pointer
+            border-noir-gold-500 rounded hover:bg-noir-gold-500 hover:text-noir-dark transition-colors 
+            focus:outline-none focus:ring-2 focus:ring-noir-gold disabled:opacity-50 disabled:cursor-not-allowed"
             title={button.title}
             disabled={disabled}
           >
@@ -102,6 +107,12 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
       {/* Editor */}
       <div
+        role="textbox"
+        aria-multiline="true"
+        aria-label="Rich text editor"
+        aria-describedby="rich-text-editor-description"
+        aria-invalid={currentLength > maxLength}
+        aria-required={true}
         ref={editorRef}
         contentEditable={!disabled}
         onInput={handleInput}
@@ -109,9 +120,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         className={styleMerge(
-          'min-h-[120px] p-3 border border-gray-300 rounded-b-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500',
+          'min-h-[120px] p-3 border border-noir-gold focus:outline-none focus:ring-2 focus:bg-noir-light/10',
+          ' focus:ring-noir-gold focus:border-noir-gold-500 text-noir-gold-500 transition-all',
           disabled && 'bg-gray-100 cursor-not-allowed',
-          isFocused && 'ring-2 ring-blue-500 border-blue-500'
+          isFocused && 'ring-2 ring-noir-gold border-noir-gold-500'
         )}
         style={{
           minHeight: '120px',
@@ -123,23 +135,24 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       />
 
       {/* Character count */}
-      <div className="flex justify-between items-center px-3 py-1 text-xs text-gray-500 bg-gray-50 rounded-b-md">
+      <div className="flex justify-between items-center px-3 py-1 text-xs text-noir-dark bg-noir-gold-500 rounded-b-md">
         <span>{currentLength} / {maxLength} characters</span>
         {currentLength > maxLength * 0.9 && (
-          <span className="text-orange-600">
+          <span className="text-noir-gray">
             {maxLength - currentLength} characters remaining
           </span>
         )}
       </div>
 
       {/* Placeholder styling */}
-      <style jsx>{`
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .rich-text-editor [contenteditable]:empty:before {
           content: attr(data-placeholder);
-          color: #9ca3af;
+          color: var(--color-noir-gold);
           pointer-events: none;
         }
-      `}</style>
+      ` }} />
     </div>
   )
 }

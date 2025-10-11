@@ -1,5 +1,6 @@
-import { prisma } from '~/db.server'
 import DOMPurify from 'isomorphic-dompurify'
+
+import { prisma } from '~/db.server'
 
 export interface CreateReviewData {
   userId: string
@@ -28,7 +29,9 @@ export interface PaginationOptions {
 export async function createPerfumeReview(data: CreateReviewData) {
   // Sanitize HTML content for security
   const sanitizedReview = DOMPurify.sanitize(data.review, {
-    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+    ALLOWED_TAGS: [
+      'p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
+    ],
     ALLOWED_ATTR: []
   })
 
@@ -37,7 +40,7 @@ export async function createPerfumeReview(data: CreateReviewData) {
       userId: data.userId,
       perfumeId: data.perfumeId,
       review: sanitizedReview,
-      isApproved: true // Auto-approve for now, can be changed to false for moderation
+      isApproved: false // Require moderation approval before showing publicly
     },
     include: {
       user: {
@@ -68,7 +71,9 @@ export async function createPerfumeReview(data: CreateReviewData) {
 export async function updatePerfumeReview(reviewId: string, data: UpdateReviewData, userId: string) {
   // Sanitize HTML content for security
   const sanitizedReview = DOMPurify.sanitize(data.review, {
-    ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+    ALLOWED_TAGS: [
+      'p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
+    ],
     ALLOWED_ATTR: []
   })
 

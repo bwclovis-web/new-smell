@@ -54,7 +54,16 @@
   "auth": {
     "heading": "Welcome Back",
     "subheading": "Log in to your account here. If you do not have one,",
-    "createAccount": "Click here to create"
+    "createAccount": "Click here to create",
+    "passwordRequirements": "Password Requirements:",
+    "passwordRequirementsList": {
+      "8characters": "At least 8 characters long",
+      "uppercase": "Contains uppercase and lowercase letters",
+      "number": "Contains at least one number",
+      "special": "Contains at least one special character",
+      "spaces": "No spaces allowed",
+      "different": "Different from your current password"
+    }
   },
   "components": {
     "dataDisplaySection": {
@@ -135,7 +144,10 @@
     "password": "Password",
     "passwordPlaceholder": "Enter your password",
     "passwordMatch": "Confirm Password",
-    "passwordMatchPlaceholder": "Confirm your password"
+    "passwordMatchPlaceholder": "Confirm your password",
+    "emailLabel": "Email Address",
+    "passwordLabel": "Password",
+    "passwordMatchLabel": "Confirm Password"
   },
   "home": {
     "meta": {
@@ -260,7 +272,76 @@
       "general": "General Notes"
     },
     "rating": {
-      "selectRating": "Select your rating"
+      "RateThisPerfume": "Rate This Perfume",
+      "CommunityRatings": "Community Ratings",
+      "selectRating": "Select your rating",
+      "loginToRate": "Please log in to rate this perfume",
+      "communityAverage": "Community Average",
+      "totalRatings": "{{count}} vote{{count !== 1 ? 's' : ''}}",
+      "notYetRated": "Not yet rated",
+      "categories": {
+        "longevity": "Longevity",
+        "sillage": "Sillage",
+        "gender": "Gender Appeal",
+        "priceValue": "Price Value",
+        "overall": "Overall Rating"
+      },
+      "labels": {
+        "longevity": {
+          "1": "Fleeting Shadow",
+          "2": "Brief Encounter",
+          "3": "Steady Presence",
+          "4": "Lingering Mystery",
+          "5": "Eternal Obsession"
+        },
+        "sillage": {
+          "1": "Whispered Secret",
+          "2": "Subtle Intrigue",
+          "3": "Bold Statement",
+          "4": "Commanding Aura",
+          "5": "Room Domination"
+        },
+        "gender": {
+          "1": "Distinctly Feminine",
+          "2": "Ladylike Edge",
+          "3": "Mysterious Unisex",
+          "4": "Suited Mystique",
+          "5": "Distinctly Masculine"
+        },
+        "priceValue": {
+          "1": "Highway Robbery",
+          "2": "Steep Price",
+          "3": "Fair Deal",
+          "4": "Smart Investment",
+          "5": "Stolen Treasure"
+        },
+        "overall": {
+          "1": "Despise",
+          "2": "Dismiss",
+          "3": "Tolerable",
+          "4": "Admire",
+          "5": "Obsessed"
+        }
+      }
+    },
+    "review": {
+      "failedToCreateReview": "Failed to create review",
+      "heading": "Reviews",
+      "subheading": "Share your thoughts about {{perfumeName}}.",
+      "addReviewButton": "Add Review",
+      "noReviews": "No reviews yet. Be the first to share your thoughts!",
+      "editFunctionalityWillBeImplemented": "Edit functionality will be implemented",
+      "deleteReviewConfirmation": "Are you sure you want to delete this review?",
+      "failedToDeleteReview": "Failed to delete review",
+      "failedToModerateReview": "Failed to moderate review",
+      "writeReview": "Write Review",
+      "addReviewPlaceholder": "Share your thoughts about this perfume...",
+      "cancel": "Cancel",
+      "submitting": "Submitting...",
+      "submitReview": "Submit Review",
+      "writeYourReview": "Write Your Review",
+      "yourReview": "Your Review",
+      "loadMoreReviews": "Load More Reviews"
     }
   },
   "tradingPost": {

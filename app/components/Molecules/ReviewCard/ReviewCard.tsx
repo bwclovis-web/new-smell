@@ -1,5 +1,6 @@
-import React from 'react'
 import { formatDistanceToNow } from 'date-fns'
+
+import { Button } from '~/components/Atoms/Button'
 import { styleMerge } from '~/utils/styleUtils'
 
 interface ReviewCardProps {
@@ -7,6 +8,7 @@ interface ReviewCardProps {
     id: string
     review: string
     createdAt: string
+    isApproved?: boolean
     user: {
       id: string
       username?: string | null
@@ -23,7 +25,7 @@ interface ReviewCardProps {
   showModerationActions?: boolean
 }
 
-const ReviewCard: React.FC<ReviewCardProps> = ({
+const ReviewCard = ({
   review,
   currentUserId,
   currentUserRole,
@@ -31,7 +33,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   onDelete,
   onModerate,
   showModerationActions = false
-}) => {
+}: ReviewCardProps) => {
   const isOwner = currentUserId === review.user.id
   const canModerate = currentUserRole === 'admin' || currentUserRole === 'editor'
   const canEdit = isOwner || canModerate
@@ -60,18 +62,18 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   }
 
   return (
-    <div className={styleMerge("bg-white/5 border border-gray-300 rounded-lg p-4 space-y-3")}>
+    <div className={styleMerge("bg-white/5 border border-noir-gold rounded-lg p-4 space-y-3")}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-noir-gold/20 rounded-full flex items-center justify-center">
-            <span className="text-noir-gold text-sm font-semibold">
+          <div className="w-8 h-8 bg-noir-gold rounded-full flex items-center justify-center border border-noir-light">
+            <span className="text-noir-dark text-sm font-semibold">
               {getDisplayName().charAt(0).toUpperCase()}
             </span>
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-900">{getDisplayName()}</p>
-            <p className="text-xs text-gray-500">{formatDate(review.createdAt)}</p>
+            <p className="text-sm font-medium text-noir-gold">{getDisplayName()}</p>
+            <p className="text-xs text-noir-gold-100">{formatDate(review.createdAt)}</p>
           </div>
         </div>
 
@@ -79,12 +81,13 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
         {canEdit && (
           <div className="flex items-center space-x-2">
             {isOwner && onEdit && (
-              <button
+              <Button
                 onClick={() => onEdit(review.id)}
-                className="text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                size="sm"
+
               >
                 Edit
-              </button>
+              </Button>
             )}
             {canDelete && onDelete && (
               <button
@@ -116,14 +119,19 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
 
       {/* Review Content */}
       <div
-        className="prose prose-sm max-w-none text-gray-700"
+        className="prose prose-sm max-w-none text-noir-light"
         dangerouslySetInnerHTML={{ __html: review.review }}
+
       />
 
       {/* Moderation Status */}
       {showModerationActions && (
-        <div className="text-xs text-gray-500">
-          Status: <span className="font-medium">Pending Review</span>
+        <div className="text-xs">
+          Status: {review.isApproved ? (
+            <span className="font-medium text-green-600">✓ Approved</span>
+          ) : (
+            <span className="font-medium text-orange-600">⏳ Pending Review</span>
+          )}
         </div>
       )}
     </div>

@@ -1,19 +1,29 @@
+import { type ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '~/components/Atoms/Button'
+import Select from '~/components/Atoms/Select'
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation()
 
-  const handleLanguageChange = (lng: string) => {
-    i18n.changeLanguage(lng)
+  const languageOptions = [
+    { id: 'en', label: 'English', name: 'en' },
+    { id: 'es', label: 'Español', name: 'es' },
+  ]
+
+  const handleLanguageChange = (evt: ChangeEvent<HTMLSelectElement>) => {
+    i18n.changeLanguage(evt.target.value)
   }
 
   return (
-    <div className="flex gap-4 justify-center items-center">
-      <Button variant="secondary" size="sm" onClick={() => handleLanguageChange('en')}>English</Button>
-      <Button variant="secondary" size="sm" onClick={() => handleLanguageChange('es')}>Español</Button>
-    </div>
+    <Select
+      selectId="language-switcher"
+      selectData={languageOptions}
+      defaultId={i18n.language}
+      action={handleLanguageChange}
+      ariaLabel="Select Language"
+      size="compact"
+    />
   )
 }
 

@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next"
 const RatingLabel = ({
   showLabel,
   currentValue,
-  labels
+  category
 }: {
   showLabel: boolean
   currentValue: number
-  labels: { [key: number]: string }
+  category: 'longevity' | 'sillage' | 'gender' | 'priceValue' | 'overall'
 }) => {
   const { t } = useTranslation()
   if (!showLabel) {
@@ -16,7 +16,10 @@ const RatingLabel = ({
 
   return (
     <span className="text-xs text-noir-gold-500 font-medium">
-      {labels[currentValue] ?? t('singlePerfume.rating.selectRating')}
+      {currentValue > 0
+        ? t(`singlePerfume.rating.labels.${category}.${currentValue}`)
+        : t('singlePerfume.rating.selectRating')
+      }
     </span>
   )
 }

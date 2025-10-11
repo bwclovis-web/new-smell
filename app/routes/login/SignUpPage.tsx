@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import type { ActionFunctionArgs } from 'react-router-dom'
 
 import { Button } from '~/components/Atoms/Button'
+import CheckBox from '~/components/Atoms/CheckBox'
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const formData = await request.formData()
@@ -61,11 +62,12 @@ const RegisterPage = () => {
     <section className="flex flex-col items-center px-4 w-full max-w-md mx-auto ">
       <Form {...getFormProps(signupForm)} method="POST" className="max-w-md mx-auto p-4 relative w-full flex flex-col gap-4 noir-border">
         <CSRFToken />
-        <Input shading={true} inputId={t('forms.email')} inputType="email" action={email} inputRef={inputRef} />
+        <Input shading={true} inputId="email" label={t('forms.emailLabel')} inputType="email" action={email} inputRef={inputRef} />
         <div>
           <Input
             shading={true}
-            inputId={t('forms.password')}
+            inputId="password"
+            label={t('forms.passwordLabel')}
             inputType="password"
             action={password}
             inputRef={inputRef}
@@ -79,33 +81,34 @@ const RegisterPage = () => {
             </div>
           )}
         </div>
-        <Input shading={true} inputId={t('forms.passwordMatch')} inputType="password" action={confirmPassword} inputRef={inputRef} />
+        <Input shading={true} inputId="passwordMatch" label={t('forms.passwordMatchLabel')} inputType="password" action={confirmPassword} inputRef={inputRef} />
 
         {/* Password Requirements */}
-        <div className="bg-blue-50 border border-blue-200 rounded-md p-3 text-xs text-blue-700">
-          <p className="font-medium mb-1">Password Requirements:</p>
+        <div className="bg-noir-dark border border-noir-gold rounded-md p-3 text-xs text-noir-gold">
+          <p className="font-medium mb-1">{t('auth.passwordRequirements')}</p>
           <ul className="space-y-1">
-            <li>• At least 8 characters long</li>
-            <li>• Contains uppercase and lowercase letters</li>
-            <li>• Contains at least one number</li>
-            <li>• Contains at least one special character</li>
-            <li>• No spaces allowed</li>
+            <li>• {t('auth.passwordRequirementsList.8characters')}</li>
+            <li>• {t('auth.passwordRequirementsList.uppercase')}</li>
+            <li>• {t('auth.passwordRequirementsList.number')}</li>
+            <li>• {t('auth.passwordRequirementsList.special')}</li>
+            <li>• {t('auth.passwordRequirementsList.spaces')}</li>
+            <li>• {t('auth.passwordRequirementsList.different')}</li>
           </ul>
         </div>
 
         {/* Terms and Conditions Checkbox */}
         <div className="flex items-start gap-2">
-          <input
-            type="checkbox"
+          <CheckBox
+            type="wild"
             id="acceptTerms"
             name="acceptTerms"
             value="on"
             required
             className="mt-1"
+            htmlLabel="I accept the <a href='/terms-and-conditions' class='text-noir-gold hover:text-noir-light'>terms and conditions</a>"
+            labelSize="sm"
+            labelPosition="right"
           />
-          <label htmlFor="acceptTerms" className="text-sm text-gray-700">
-            I accept the terms and conditions
-          </label>
         </div>
         {acceptTerms?.errors && (
           <p className="text-red-600 text-sm">{acceptTerms.errors.join(' ')}</p>
