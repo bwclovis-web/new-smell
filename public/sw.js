@@ -1,9 +1,9 @@
-const STATIC_CACHE = 'voodoo-static-v2'
-const DYNAMIC_CACHE = 'voodoo-dynamic-v2'
+const STATIC_CACHE = 'voodoo-static-v3'
+const DYNAMIC_CACHE = 'voodoo-dynamic-v3'
 
 // Only cache critical assets for faster initial load
+// Note: Do NOT cache HTML pages to avoid stale asset references
 const CRITICAL_ASSETS = [
-  '/',
   '/images/home.webp',
   '/images/scent.webp'
 ]
@@ -54,8 +54,11 @@ self.addEventListener('fetch', event => {
   // Handle other requests with network-first and cache on success
   event.respondWith(
     fetch(request).then(fetchResponse => {
-      // Cache successful responses
-      if (fetchResponse.status === 200) {
+      // Cache successful responses (but NOT HTML to avoid stale asset references)
+      const contentType = fetchResponse.headers.get('content-type')
+      const isHTML = contentType && contentType.includes('text/html')
+      
+      if (fetchResponse.status === 200 && !isHTML) {
         const responseClone = fetchResponse.clone()
         caches.open(DYNAMIC_CACHE).then(cache => {
           cache.put(request, responseClone)
@@ -63,7 +66,7 @@ self.addEventListener('fetch', event => {
       }
       return fetchResponse
     }).catch(() => 
-      // Fallback to cache
+      // Fallback to cache for offline support
       caches.match(request)
     )
   )
