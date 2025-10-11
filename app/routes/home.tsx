@@ -94,7 +94,7 @@ export default function Home() {
               selectId='search-type'
               selectData={data}
               defaultId={searchType}
-              ariaLabel="Select search type"
+              ariaLabel={t('components.search.ariaLabel')}
             />
             <SearchBar
               searchType={searchType}

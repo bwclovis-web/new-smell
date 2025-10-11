@@ -1,5 +1,5 @@
 export const ROUTE_PATH = '/behind-the-bottle'
-import { useEffect, useRef, useState } from 'react'
+import { type RefObject, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MetaFunction, useLocation } from 'react-router'
 
@@ -64,37 +64,32 @@ const AllHousesPage = () => {
   const [selectedSort, setSelectedSort] = useState<any>('created-desc')
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  // Get selectedLetter from navigation state
-  const initialSelectedLetter = (location.state as { selectedLetter?: string })?.selectedLetter
+  const initialSelectedLetter =
+    (location.state as { selectedLetter?: string })?.selectedLetter
 
   const filters = useHouseFilters(t)
   const data = useDataByLetter({ endpoint: '/api/houses-by-letter-paginated', itemName: 'houses', houseType: selectedHouseType })
   const handlers = useHouseHandlers(setSelectedHouseType, setSelectedSort)
 
-  // Track if we've already processed the initial letter selection
   const [hasProcessedInitialLetter, setHasProcessedInitialLetter] = useState(false)
-  // Track the current letter and house type to know when to reset
   const [lastResetLetter, setLastResetLetter] = useState<string | null>(null)
   const [lastResetHouseType, setLastResetHouseType] = useState<string>('all')
 
-  // Get letter selection first
   const { selectedLetter, handleLetterClick } = useLetterSelection({
     loadDataByLetter: data.loadDataByLetter,
     resetData: (houses, totalCount) => {
-      // This will be called when letter changes
       resetHouses(houses, totalCount)
     }
   })
 
-  // Handle initial letter selection from navigation state
   useEffect(() => {
-    if (initialSelectedLetter && initialSelectedLetter !== selectedLetter && !hasProcessedInitialLetter) {
+    if (initialSelectedLetter &&
+      initialSelectedLetter !== selectedLetter && !hasProcessedInitialLetter) {
       setHasProcessedInitialLetter(true)
       handleLetterClick(initialSelectedLetter)
     }
   }, [initialSelectedLetter, selectedLetter, hasProcessedInitialLetter])
 
-  // Infinite scroll hook for houses - now properly initialized with selected letter
   const {
     houses,
     loading: infiniteLoading,
@@ -111,16 +106,23 @@ const AllHousesPage = () => {
     houseType: selectedHouseType
   })
 
-  // Reset houses when data changes (e.g., when filter changes)
-  // Only reset when letter or house type actually changes
   useEffect(() => {
-    const shouldReset = (selectedLetter !== lastResetLetter) || (selectedHouseType !== lastResetHouseType)
+    const shouldReset = (selectedLetter !== lastResetLetter) ||
+      (selectedHouseType !== lastResetHouseType)
     if (data.initialData.length > 0 && shouldReset) {
       resetHouses(data.initialData, data.totalCount)
       setLastResetLetter(selectedLetter)
       setLastResetHouseType(selectedHouseType)
     }
-  }, [data.initialData, data.totalCount, resetHouses, selectedLetter, selectedHouseType, lastResetLetter, lastResetHouseType])
+  }, [
+    data.initialData,
+    data.totalCount,
+    resetHouses,
+    selectedLetter,
+    selectedHouseType,
+    lastResetLetter,
+    lastResetHouseType
+  ])
 
   if (data.error) {
     return <div>Error loading houses: {data.error}</div>
@@ -158,11 +160,11 @@ const AllHousesPage = () => {
         infiniteLoading={infiniteLoading}
         hasMore={hasMore}
         totalCount={totalCount}
-        observerRef={observerRef as React.RefObject<HTMLDivElement>}
+        observerRef={observerRef as RefObject<HTMLDivElement>}
         onLoadMore={loadMoreHouses}
         type="house"
         selectedLetter={selectedLetter}
-        scrollContainerRef={scrollContainerRef as React.RefObject<HTMLDivElement>}
+        scrollContainerRef={scrollContainerRef as RefObject<HTMLDivElement>}
         sourcePage="behind-the-bottle"
         useVirtualScrolling={true}
         virtualScrollThreshold={20}

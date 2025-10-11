@@ -59,7 +59,8 @@
     },
     "search": {
       "placeholder": "Search for perfumes or houses...",
-      "button": "Search"
+      "button": "Search",
+      "ariaLabel": "Select search type"
     },
     "filter": {
       "heading": "Filter By Type",
@@ -140,7 +141,11 @@
     },
     "heading": "Shadow & Sillage",
     "description": "A comprehensive database of perfumes and their houses.",
-    "subheading": "For Collectors of Perfume and Secrets."
+    "subheading": "For Collectors of Perfume and Secrets.",
+    "searchType": {
+      "perfume-house": "Perfume Houses",
+      "perfumes": "Perfumes"
+    }
   },
   "securityMonitor": {
     "heading": "Security Monitor",
@@ -206,7 +211,9 @@
     "houses": "Behind the Bottle",
     "perfumes": "The Vault",
     "available": "The Exchange",
-    "admin": "The Profile"
+    "admin": "The Profile",
+    "logout": "Log Out",
+    "signIn": "Sign In"
   },
   "profile": {
     "heading": "The Profile",

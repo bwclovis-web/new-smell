@@ -1,6 +1,7 @@
 import { type VariantProps } from 'class-variance-authority'
 import { type ChangeEvent, type HTMLProps, type KeyboardEvent, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
 
 import { styleMerge } from '~/utils/styleUtils'
@@ -19,7 +20,7 @@ const SearchBar =
     const [results, setResults] = useState<any[]>([])
     const [searchValue, setSearchValue] = useState('')
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 })
-
+    const { t } = useTranslation()
     const handleSearch = async (query: string) => {
       if (query.length < 2) {
         setResults([])
@@ -99,7 +100,7 @@ const SearchBar =
             autoComplete="off"
             onChange={handleChange}
             value={searchValue}
-            placeholder={placeholder || `Search ${searchType}`}
+            placeholder={placeholder || `Search ${t(`home.searchType.${searchType}`)}`}
             onKeyUp={handleKeyUp}
             className={styleMerge(searchbarVariants({ className, variant }))}
           />

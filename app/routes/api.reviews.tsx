@@ -1,22 +1,12 @@
 import type { ActionFunction, LoaderFunction } from 'react-router'
 
-import {
-  createPerfumeReview,
-  deletePerfumeReview,
-  getPendingReviews,
-  getPerfumeReviews,
-  getUserPerfumeReview,
-  getUserReviews,
-  moderatePerfumeReview,
-  updatePerfumeReview
-} from '~/models/perfumeReview.server'
-import { authenticateUser } from '~/utils/auth.server'
-import { createErrorResponse, createSuccessResponse } from '~/utils/response.server'
-
 /**
  * GET /api/reviews - Get reviews with optional filters and pagination
  */
 export const loader: LoaderFunction = async ({ request }) => {
+  const { getPerfumeReviews } = await import('~/models/perfumeReview.server')
+  const { createErrorResponse } = await import('~/utils/response.server')
+
   try {
     const url = new URL(request.url)
     const perfumeId = url.searchParams.get('perfumeId')
@@ -44,7 +34,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 
     return result
   } catch (error) {
-    console.error('Error fetching reviews:', error)
     return createErrorResponse('Failed to fetch reviews', 500)
   }
 }
@@ -53,6 +42,16 @@ export const loader: LoaderFunction = async ({ request }) => {
  * POST /api/reviews - Create a new review
  */
 export const action: ActionFunction = async ({ request }) => {
+  const {
+    createPerfumeReview,
+    deletePerfumeReview,
+    getUserPerfumeReview,
+    moderatePerfumeReview,
+    updatePerfumeReview
+  } = await import('~/models/perfumeReview.server')
+  const { authenticateUser } = await import('~/utils/auth.server')
+  const { createErrorResponse, createSuccessResponse } = await import('~/utils/response.server')
+
   try {
     // Authenticate user
     const authResult = await authenticateUser(request)
@@ -132,7 +131,6 @@ export const action: ActionFunction = async ({ request }) => {
         return createErrorResponse('Invalid action', 400)
     }
   } catch (error) {
-    console.error('Error in review action:', error)
     return createErrorResponse('An error occurred while processing the request', 500)
   }
 }

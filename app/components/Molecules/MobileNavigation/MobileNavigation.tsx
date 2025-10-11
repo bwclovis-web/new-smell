@@ -65,7 +65,7 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
           onClick={() => {
             toggleModal(menuButtonRef, MOBILE_MENU_ID)
           }}
-          className="text-noir-gold hover:text-noir-light p-3 transition-colors duration-200 mobile-touch-target rounded-lg hover:bg-noir-black/30"
+          className="text-noir-gold hover:text-noir-light p-3 transition-colors duration-200 mobile-touch-target rounded-lg hover:bg-noir-black/30 cursor-pointer"
           aria-label="Open menu"
           aria-expanded={modalOpen && modalId === MOBILE_MENU_ID}
         >
