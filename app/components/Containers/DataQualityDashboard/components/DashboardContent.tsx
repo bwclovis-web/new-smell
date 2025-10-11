@@ -1,13 +1,13 @@
 import { type FC } from 'react'
 
+import { createChartConfig } from '../utils/chartConfig'
+import { type DataQualityStats } from '../utils/chartDataUtils'
+import { prepareAllChartData } from '../utils/chartDataUtils'
 import ChartVisualizations from './ChartVisualizations'
 import HousesWithNoPerfumes from './HousesWithNoPerfumes'
 import SummaryStats from './SummaryStats'
 import TimeframeSelector from './TimeframeSelector'
 import TrendChart from './TrendChart'
-import { type DataQualityStats } from '../utils/chartDataUtils'
-import { createChartConfig } from '../utils/chartConfig'
-import { prepareAllChartData } from '../utils/chartDataUtils'
 
 interface DashboardContentProps {
   stats: DataQualityStats

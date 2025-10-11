@@ -422,9 +422,8 @@ export const loader = async ({ request }: { request: Request }) => {
       }
     })
   } catch (error) {
-    // Log the full error for debugging
-    console.error('[DATA QUALITY API] Error caught in loader:', error)
-    console.error('[DATA QUALITY API] Error stack:', error instanceof Error ? error.stack : 'No stack')
+    // Log the error
+    console.error('[DATA QUALITY API] Error:', error)
 
     // Return error response
     return new Response(
