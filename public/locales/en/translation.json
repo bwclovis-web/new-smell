@@ -1,4 +1,10 @@
 {
+  "common": {
+    "loading": "Loading...",
+    "loadingMore": "Loading more...",
+    "noMore": "No more {{itemName}} to load.",
+    "allLoaded": "All {{itemName}} loaded."
+  },
   "admin": {
     "navigation": {
       "createHouse": "Create House",
@@ -144,7 +150,7 @@
     "subheading": "For Collectors of Perfume and Secrets.",
     "searchType": {
       "perfume-house": "Perfume Houses",
-      "perfumes": "Perfumes"
+      "perfume": "Perfumes"
     }
   },
   "securityMonitor": {

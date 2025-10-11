@@ -59,7 +59,7 @@ const DataDisplaySection = ({
       <ul className="grid grid-cols-2 gap-6 md:grid-cols-2 2xl:grid-cols-4 auto-rows-fr">
         {isLoading ? (
           <div className="col-span-full text-center py-8">
-            <div className="text-noir-gold">Loading {itemName} for letter "{selectedLetter}"...</div>
+            <div className="text-noir-gold">{t('common.loading', { itemName })} for letter "{selectedLetter}"...</div>
           </div>
         ) : (
           data.map((item: any) => (
@@ -83,19 +83,19 @@ const DataDisplaySection = ({
         className="sticky bottom-0 w-full bg-gradient-to-t from-noir-black to-transparent flex flex-col items-center justify-center py-4 mt-6"
       >
         {infiniteLoading && (
-          <span className="text-noir-gold">Loading more {itemName}...</span>
+          <span className="text-noir-gold">{t('common.loadingMore', { itemName })}</span>
         )}
         {!infiniteLoading && hasMore && (
           <button
             onClick={onLoadMore}
             className="bg-noir-gold text-noir-black px-4 py-2 rounded-md font-semibold hover:bg-noir-gold/80 transition-all"
           >
-            Load More {itemName.charAt(0).toUpperCase() + itemName.slice(1)}
+            {t('common.loadMore', { itemName })}
           </button>
         )}
         {!hasMore && data.length > 0 && (
           <span className="text-noir-gold">
-            {totalCount > 0 ? `All ${totalCount} ${itemName} loaded.` : `No more ${itemName} to load.`}
+            {totalCount > 0 ? t('common.allLoaded', { itemName, count: totalCount }) : t('common.noMore', { itemName })}
           </span>
         )}
       </div>
