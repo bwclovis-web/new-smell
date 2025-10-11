@@ -27,6 +27,14 @@ const SummaryStats: FC<SummaryStatsProps> = ({ stats }) => (
       </p>
       <p className="text-sm text-yellow-700 mt-1">Houses missing contact information</p>
     </div>
+
+    <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+      <h3 className="text-lg font-medium text-purple-800">Empty Houses</h3>
+      <p className="text-3xl font-bold text-purple-600 mt-2">
+        {stats.totalHousesNoPerfumes || 0}
+      </p>
+      <p className="text-sm text-purple-700 mt-1">Houses with no perfumes listed</p>
+    </div>
   </div>
 )
 

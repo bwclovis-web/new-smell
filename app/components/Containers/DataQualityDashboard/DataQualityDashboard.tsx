@@ -316,6 +316,50 @@ const DashboardContent = ({
     {/* Trend Chart */}
     {renderTrendChart(trendChartData)}
 
+    {/* Houses with Data Issues */}
+    {stats.housesNoPerfumes && stats.housesNoPerfumes.length > 0 && (
+      <div className="mt-8 bg-purple-50 border border-purple-200 rounded-lg p-6">
+        <h3 className="text-xl font-semibold text-purple-900 mb-4">
+          Houses with No Perfumes ({stats.housesNoPerfumes.length})
+        </h3>
+        <p className="text-sm text-purple-700 mb-4">
+          These perfume houses exist in the database but have no perfumes listed.
+        </p>
+        <div className="max-h-96 overflow-y-auto">
+          <table className="min-w-full divide-y divide-purple-200">
+            <thead className="bg-purple-100 sticky top-0">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-medium text-purple-900 uppercase tracking-wider">
+                  House Name
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-purple-900 uppercase tracking-wider">
+                  Type
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-purple-900 uppercase tracking-wider">
+                  Created At
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-purple-100">
+              {stats.housesNoPerfumes.map((house) => (
+                <tr key={house.id} className="hover:bg-purple-50">
+                  <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                    {house.name}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-700 capitalize">
+                    {house.type}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-500">
+                    {new Date(house.createdAt).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    )}
+
     {/* Last Updated */}
     <div className="mt-8 text-right text-sm text-gray-500">
       Last updated: {stats.lastUpdated}
@@ -335,9 +379,13 @@ const performApiFetch = async (
   setStats: React.Dispatch<React.SetStateAction<DataQualityStats | null>>
 ) => {
   const response = await fetch(`/api/data-quality?timeframe=${timeframe}`)
+
   if (!response.ok) {
+    const errorText = await response.text()
+    console.error('[DATA QUALITY] Error response:', errorText)
     throw new Error(`HTTP error! Status: ${response.status}`)
   }
+
   const data = await response.json()
   setStats(data)
 }
@@ -345,14 +393,17 @@ const performApiFetch = async (
 // Fetch data function with debouncing and caching
 const useFetchDataQualityStats = (timeframe: 'week' | 'month' | 'all') => {
   const [stats, setStats] = useState<DataQualityStats | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true) // Start with loading true
   const [error, setError] = useState<string | null>(null)
   const [lastFetch, setLastFetch] = useState<number>(0)
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   useEffect(() => {
     const fetchStats = async () => {
       // Debouncing: Don't fetch if we just fetched within the last 5 seconds
-      if (shouldSkipFetch(lastFetch)) {
+      // BUT always fetch on first load (lastFetch === 0) or when manually triggered
+      if (lastFetch !== 0 && shouldSkipFetch(lastFetch) && refreshTrigger === 0) {
+        setLoading(false)
         return
       }
 
@@ -363,16 +414,19 @@ const useFetchDataQualityStats = (timeframe: 'week' | 'month' | 'all') => {
         setLastFetch(Date.now())
       } catch (err) {
         setError(`Failed to fetch data quality stats: ${err instanceof Error ? err.message : String(err)}`)
+        console.error('[DATA QUALITY] Fetch error:', err)
       } finally {
         setLoading(false)
       }
     }
 
     fetchStats()
-  }, [timeframe, lastFetch])
+  }, [timeframe, refreshTrigger]) // Only depend on timeframe and manual refresh trigger
 
-  // Expose setLastFetch so parent can force refresh
-  return { stats, loading, error, setLastFetch }
+  // Expose a function to force refresh
+  const forceRefresh = () => setRefreshTrigger(prev => prev + 1)
+
+  return { stats, loading, error, setLastFetch: forceRefresh }
 }
 
 // Loading indicator component

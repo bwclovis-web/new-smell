@@ -5,10 +5,12 @@ import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, use
 import PerfumeIcons from '~/components/Containers/Perfume/PerfumeIcons'
 import PerfumeNotes from '~/components/Containers/Perfume/PerfumeNotes'
 import PerfumeRatingSystem from '~/components/Containers/Perfume/PerfumeRatingSystem'
+import ReviewSection from '~/components/Organisms/ReviewSection'
 import { getPerfumeBySlug } from '~/models/perfume.server'
 import { getPerfumeRatings, getUserPerfumeRating } from '~/models/perfumeRating.server'
 import { getUserById } from '~/models/user.server'
 import { isInWishlist } from '~/models/wishlist.server'
+import { getUserPerfumeReview } from '~/models/perfumeReview.server'
 import { createSafeUser } from '~/types'
 import { verifyAccessToken } from '~/utils/security/session-manager.server'
 
@@ -52,9 +54,10 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   const user = await getUserFromRequest(request)
   const isInUserWishlist = await checkWishlistStatus(request, perfume.id)
 
-  const [userRatings, ratingsData] = await Promise.all([
+  const [userRatings, ratingsData, userReview] = await Promise.all([
     getUserRatingsForPerfume(request, perfume.id),
-    getPerfumeRatings(perfume.id)
+    getPerfumeRatings(perfume.id),
+    user ? getUserPerfumeReview(user.id, perfume.id) : null
   ])
 
   return {
@@ -62,7 +65,8 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     user,
     isInUserWishlist,
     userRatings,
-    averageRatings: ratingsData.averageRatings
+    averageRatings: ratingsData.averageRatings,
+    userReview
   }
 }
 
@@ -130,7 +134,8 @@ const PerfumePage = () => {
     user,
     isInUserWishlist,
     userRatings,
-    averageRatings
+    averageRatings,
+    userReview
   } = useLoaderData<typeof loader>()
   const navigate = useNavigate()
   const location = useLocation()
@@ -191,6 +196,7 @@ const PerfumePage = () => {
         isInUserWishlist={isInUserWishlist}
         userRatings={userRatings}
         averageRatings={averageRatings}
+        userReview={userReview}
         handleDelete={handleDelete}
         onBack={handleBack}
         selectedLetter={selectedLetter}
@@ -244,6 +250,7 @@ const PerfumeContent = ({
   isInUserWishlist,
   userRatings,
   averageRatings,
+  userReview,
   handleDelete,
   onBack,
   selectedLetter,
@@ -254,6 +261,7 @@ const PerfumeContent = ({
   isInUserWishlist: boolean
   userRatings: any
   averageRatings: any
+  userReview: any
   handleDelete: () => void
   onBack: () => void
   selectedLetter?: string | null
@@ -297,8 +305,14 @@ const PerfumeContent = ({
           averageRatings={averageRatings}
         />
       </aside>
-      <div className='noir-border relative w-full md:w-3/4'>
-        <h2>Reviews</h2>
+      <div className='noir-border relative w-full md:w-3/4 p-4'>
+        <ReviewSection
+          perfumeId={perfume.id}
+          currentUserId={user?.id}
+          currentUserRole={user?.role}
+          canCreateReview={user && (user.role === 'admin' || user.role === 'editor')}
+          existingUserReview={userReview}
+        />
       </div>
     </div>
   </div>

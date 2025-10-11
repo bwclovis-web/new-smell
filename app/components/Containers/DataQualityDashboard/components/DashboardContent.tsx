@@ -1,6 +1,7 @@
 import { type FC } from 'react'
 
 import ChartVisualizations from './ChartVisualizations'
+import HousesWithNoPerfumes from './HousesWithNoPerfumes'
 import SummaryStats from './SummaryStats'
 import TimeframeSelector from './TimeframeSelector'
 import TrendChart from './TrendChart'
@@ -44,6 +45,9 @@ const DashboardContent: FC<DashboardContentProps> = ({
 
       {/* Trend Chart */}
       <TrendChart trendChartData={chartData.trendChartData} />
+
+      {/* Houses with No Perfumes */}
+      <HousesWithNoPerfumes stats={stats} />
 
       {/* Last Updated */}
       <div className="mt-8 text-right text-sm text-gray-500">

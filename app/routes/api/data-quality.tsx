@@ -42,6 +42,7 @@ const shouldRegenerateReports = async (): Promise<boolean> => {
   const latestTimestamp = await getLatestReportTimestamp()
 
   if (!latestTimestamp) {
+    console.log('[DATA QUALITY API] No reports exist, should regenerate')
     return true // No reports exist, should generate
   }
 
@@ -50,7 +51,10 @@ const shouldRegenerateReports = async (): Promise<boolean> => {
   const now = new Date()
   const tenMinutesAgo = new Date(now.getTime() - 10 * 60 * 1000)
 
-  return latestDate < tenMinutesAgo
+  const shouldRegenerate = latestDate < tenMinutesAgo
+  console.log('[DATA QUALITY API] Latest report:', latestTimestamp, 'Should regenerate:', shouldRegenerate)
+
+  return shouldRegenerate
 }
 
 // Execute the actual script generation
@@ -182,11 +186,13 @@ const getLatestReportFiles = async (timeframe: string = 'all') => {
   return {
     missingJsonPath: path.join(reportsDir, `missing_info_${latestTimestamp}.json`),
     duplicatesPath: path.join(reportsDir, `duplicates_${latestTimestamp}.md`),
+    housesNoPerfsPath: path.join(reportsDir, `houses_no_perfumes_${latestTimestamp}.json`),
     historyDates: uniqueDates,
     allReports: filesToUse.map(file => ({
       date: file.date.toISOString().split('T')[0],
       missing: path.join(reportsDir, `missing_info_${file.timestamp}.json`),
-      duplicates: path.join(reportsDir, `duplicates_${file.timestamp}.md`)
+      duplicates: path.join(reportsDir, `duplicates_${file.timestamp}.md`),
+      housesNoPerfumes: path.join(reportsDir, `houses_no_perfumes_${file.timestamp}.json`)
     }))
   }
 }
@@ -284,6 +290,33 @@ const parseDuplicatesData = async (filePath: string) => {
   }
 }
 
+// Parse houses with no perfumes from JSON file
+const parseHousesNoPerfumesData = async (filePath: string) => {
+  try {
+    // Check if file exists first
+    if (!await fileExists(filePath)) {
+      return {
+        totalHousesNoPerfumes: 0,
+        housesNoPerfumes: []
+      }
+    }
+
+    const data = await fs.readFile(filePath, 'utf-8')
+    const housesData = JSON.parse(data)
+
+    return {
+      totalHousesNoPerfumes: housesData.length,
+      housesNoPerfumes: housesData
+    }
+  } catch (error) {
+    console.error('Error parsing houses with no perfumes:', error)
+    return {
+      totalHousesNoPerfumes: 0,
+      housesNoPerfumes: []
+    }
+  }
+}
+
 // Process history data to extract trends
 // Define types for the report data
 type TimestampedFile = {
@@ -296,6 +329,7 @@ interface ReportInfo {
   date: string
   missing: string
   duplicates: string
+  housesNoPerfumes: string
 }
 
 interface HistoryData {
@@ -380,20 +414,23 @@ export const loader = async ({ request }: { request: Request }) => {
     // Generate and process reports
     const reportData = await generateDataQualityReport(timeframe)
 
-    // Return the data - compression is handled by Express middleware
-    return Response.json(reportData, {
+    // Return the data using the pattern that works
+    return new Response(JSON.stringify(reportData), {
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'public, max-age=300', // 5 minute cache
-        'X-Data-Size': JSON.stringify(reportData).length.toString()
       }
     })
   } catch (error) {
-    // If this catch block is reached, something went wrong with Response.json
-    // Return a simpler fallback error response
+    // Log the full error for debugging
+    console.error('[DATA QUALITY API] Error caught in loader:', error)
+    console.error('[DATA QUALITY API] Error stack:', error instanceof Error ? error.stack : 'No stack')
+
+    // Return error response
     return new Response(
       JSON.stringify({
         error: `Critical error processing request: ${error instanceof Error ? error.message : String(error)}`,
+        stack: error instanceof Error ? error.stack : undefined,
         timestamp: new Date().toISOString()
       }),
       {
@@ -423,8 +460,10 @@ const validateReportFiles = async (
 const collectReportData = async (
   missingPath: string,
   duplicatesPath: string,
+  housesNoPerfsPath: string,
   allReports: ReportInfo[]
 ) => {
+  console.log('[DATA QUALITY API] Parsing missing data from:', missingPath)
   // Parse the report files
   const {
     totalMissing,
@@ -432,62 +471,101 @@ const collectReportData = async (
     totalMissingHouseInfo,
     missingHouseInfoByBrand
   } = await parseMissingData(missingPath)
+
+  console.log('[DATA QUALITY API] Missing data parsed:', { totalMissing, totalMissingHouseInfo })
+
+  console.log('[DATA QUALITY API] Parsing duplicates from:', duplicatesPath)
   const { totalDuplicates, duplicatesByBrand } =
     await parseDuplicatesData(duplicatesPath)
+
+  console.log('[DATA QUALITY API] Duplicates parsed:', { totalDuplicates })
+
+  console.log('[DATA QUALITY API] Parsing houses with no perfumes from:', housesNoPerfsPath)
+  const { totalHousesNoPerfumes, housesNoPerfumes } =
+    await parseHousesNoPerfumesData(housesNoPerfsPath)
+
+  console.log('[DATA QUALITY API] Houses with no perfumes parsed:', {
+    totalHousesNoPerfumes,
+    housesNoPerfumesArrayLength: housesNoPerfumes?.length || 0,
+    firstHouse: housesNoPerfumes?.[0]
+  })
 
   // Process historical data for trends
   const historyData = await processHistoryData(allReports)
 
-  return {
+  const result = {
     totalMissing,
     totalDuplicates,
+    totalHousesNoPerfumes,
     missingByBrand,
     duplicatesByBrand,
+    housesNoPerfumes,
     historyData,
     totalMissingHouseInfo,
     missingHouseInfoByBrand,
   }
+
+  console.log('[DATA QUALITY API] Final collected data:', {
+    totalMissing: result.totalMissing,
+    totalDuplicates: result.totalDuplicates,
+    totalHousesNoPerfumes: result.totalHousesNoPerfumes,
+    housesNoPerfumesInResult: result.housesNoPerfumes?.length || 0
+  })
+
+  return result
 }
 
 // Handle report generation and processing
 const generateDataQualityReport = async (timeframe: string) => {
   try {
+    console.log('[DATA QUALITY API] Step 1: Running data quality script...')
     // Run the data quality report generation script
     const scriptResult = await runDataQualityScript()
+    console.log('[DATA QUALITY API] Script result:', scriptResult)
 
     // If there was an error running the script
     if (scriptResult !== true) {
+      console.error('[DATA QUALITY API] Script failed:', scriptResult)
       throw new Error(`Failed to generate data quality reports: ${scriptResult}`)
     }
 
+    console.log('[DATA QUALITY API] Step 2: Getting latest report files...')
     // Get the paths to the latest report files based on timeframe
-    const { missingJsonPath, duplicatesPath, allReports } =
+    const { missingJsonPath, duplicatesPath, housesNoPerfsPath, allReports } =
       await getLatestReportFiles(timeframe)
 
+    console.log('[DATA QUALITY API] Report paths:', {
+      missingJsonPath,
+      duplicatesPath,
+      housesNoPerfsPath
+    })
+
+    console.log('[DATA QUALITY API] Step 3: Validating report files...')
     // Validate report files
     await validateReportFiles(missingJsonPath, duplicatesPath)
 
+    console.log('[DATA QUALITY API] Step 4: Collecting report data...')
     // Collect and process the report data
     const reportData = await collectReportData(
       missingJsonPath,
       duplicatesPath,
+      housesNoPerfsPath,
       allReports
     )
 
-    // Return the combined data
-    return Response.json({
+    console.log('[DATA QUALITY API] Step 5: Report data collected, keys:', Object.keys(reportData))
+
+    // Return the combined data object (not Response)
+    const result = {
       ...reportData,
       lastUpdated: new Date().toLocaleString(),
-    })
+    }
+
+    console.log('[DATA QUALITY API] Step 6: Returning result with keys:', Object.keys(result))
+    return result
   } catch (error) {
-    // Return a detailed error response
-    return Response.json(
-      {
-        error: `Error generating data quality report: ${(error as Error).message}`,
-        timestamp: new Date().toISOString()
-      },
-      { status: 500 }
-    )
+    console.error('[DATA QUALITY API] Error in generateDataQualityReport:', error)
+    throw error
   }
 }
 

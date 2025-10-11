@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router'
+
 import { ROUTE_PATH as PERFUME_PATH } from '~/routes/perfume'
 import { ROUTE_PATH as PERFUME_HOUSE } from '~/routes/perfume-house'
 const LinkCard = ({ data, type, children, selectedLetter, sourcePage }:
@@ -10,7 +11,7 @@ const LinkCard = ({ data, type, children, selectedLetter, sourcePage }:
         to={`${url}/${data.slug}`}
         state={selectedLetter ? { selectedLetter, sourcePage } : { sourcePage }}
         viewTransition
-        className="p-4 flex flex-col overflow-hidden justify-between items-center group  transition-all duration-300 ease-in-out"
+        className="p-4 flex flex-col overflow-hidden justify-between items-center group  transition-all duration-300 ease-in-out "
       >
         <div className='text-center'>
           <h2 className="text-wrap break-words">{data.name}</h2>
@@ -25,10 +26,10 @@ const LinkCard = ({ data, type, children, selectedLetter, sourcePage }:
           <img
             src={data.image}
             alt={data.name}
-            // height={300}
-            // width={300}
+            height={400}
+            width={300}
             className="w-full object-cover mask-radial-at-center mask-radial-from-10% mask-radial-to-75%                                                        
-            transition-all duration-500 ease-in-out scale-120
+            transition-all duration-500 ease-in-out scale-120 h-full
             filter grayscale-100 group-hover:grayscale-0 group-hover:scale-100 group-hover:mask-radial-from-30% group-hover:mask-radial-to-100%"
             style={{
               viewTransitionName: `perfume-image-${data.id}`,

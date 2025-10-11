@@ -105,13 +105,17 @@ model UserPerfumeRating {
 }
 
 model UserPerfumeReview {
-  id        String   @id @default(cuid())
-  userId    String
-  perfumeId String
-  review    String
-  createdAt DateTime @default(now())
-  perfume   Perfume  @relation(fields: [perfumeId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  id         String   @id @default(cuid())
+  userId     String
+  perfumeId  String
+  review     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  isApproved Boolean  @default(true)
+  perfume    Perfume  @relation(fields: [perfumeId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, perfumeId])
 }
 
 model UserPerfumeWishlist {

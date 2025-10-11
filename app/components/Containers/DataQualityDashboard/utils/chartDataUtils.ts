@@ -11,6 +11,13 @@ export type DataQualityStats = {
   }
   totalMissingHouseInfo?: number
   missingHouseInfoByBrand?: Record<string, number>
+  totalHousesNoPerfumes?: number
+  housesNoPerfumes?: Array<{
+    id: string
+    name: string
+    type: string
+    createdAt: string
+  }>
 }
 
 // Helper to generate breakdown for missing house info

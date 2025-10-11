@@ -1,4 +1,3 @@
-import type { FC } from 'react'
 import { useState } from 'react'
 import { BsHeartFill, BsHearts } from 'react-icons/bs'
 import { GrEdit } from 'react-icons/gr'
@@ -12,6 +11,7 @@ import { useCSRF } from '~/hooks/useCSRF'
 interface Perfume {
   id: string
   name: string
+  slug: string
 }
 
 interface PerfumeIconsProps {
@@ -21,8 +21,8 @@ interface PerfumeIconsProps {
   isInWishlist: boolean
 }
 
-const PerfumeIcons: FC<PerfumeIconsProps>
-  = ({ perfume, handleDelete, userRole, isInWishlist }) => {
+const PerfumeIcons =
+  ({ perfume, handleDelete, userRole, isInWishlist }: PerfumeIconsProps) => {
     const [inWishlist, setInWishlist] = useState(isInWishlist)
     const [isPublic, setIsPublic] = useState(false)
     const [showWishlistForm, setShowWishlistForm] = useState(false)

@@ -117,7 +117,7 @@ const HouseDetailPage = () => {
                   background={'gold'}
                   size={'sm'}
                   className='flex items-center justify-between gap-2'
-                  url={`/admin/perfume-house/${perfumeHouse.name}/edit`}
+                  url={`/admin/perfume-house/${perfumeHouse.slug}/edit`}
                 >
                   <span>Edit Perfume</span>
                   <GrEdit size={22} />

@@ -1,12 +1,8 @@
-[
-  {
-    "date": "2025-07-12",
-    "missing": 24,
-    "duplicates": 0
-  },
-  {
-    "date": "2025-07-13",
-    "missing": 24,
-    "duplicates": 0
-  }
-]
+{
+  "reports": [
+    {
+      "timestamp": "2025-10-10T12-33-10-862Z",
+      "generated": "2025-10-10T12:33:18.912Z"
+    }
+  ]
+}

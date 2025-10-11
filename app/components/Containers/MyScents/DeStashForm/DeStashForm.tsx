@@ -2,8 +2,8 @@ import { useCallback, useMemo } from "react"
 
 import { Button } from "~/components/Atoms/Button"
 import RadioSelect from "~/components/Atoms/RadioSelect"
-import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 import RangeSlider from "~/components/Atoms/RangeSlider"
+import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 import { useFormState } from "~/hooks"
 import type { UserPerfumeI } from "~/types"
 
@@ -25,13 +25,17 @@ const DeStashForm = ({
   handleDecantConfirm,
   userPerfume
 }: DeStashFormProps) => {
-  // Memoize initial values to prevent infinite re-renders
   const initialValues = useMemo(() => ({
-    deStashAmount: "0",
-    price: "",
-    tradePreference: 'cash' as 'cash' | 'trade' | 'both',
-    tradeOnly: false
-  }), [])
+    deStashAmount: userPerfume.available || "0",
+    price: userPerfume.tradePrice || "",
+    tradePreference: (userPerfume.tradePreference as 'cash' | 'trade' | 'both') || 'cash',
+    tradeOnly: userPerfume.tradeOnly || false
+  }), [
+    userPerfume.available,
+    userPerfume.tradePrice,
+    userPerfume.tradePreference,
+    userPerfume.tradeOnly
+  ])
 
   // Memoize validation function
   const validate = useCallback((values: typeof initialValues) => {
@@ -73,8 +77,7 @@ const DeStashForm = ({
     errors,
     isValid,
     setValue,
-    handleSubmit,
-    reset
+    handleSubmit
   } = useFormState({
     initialValues,
     validate,
