@@ -15,32 +15,15 @@ export default defineConfig({
     tailwindcss(),
     tsconfigPaths(),
     reactRouter(),
-    // Temporarily disabled React Compiler due to build issues
-    // babel({
-    //   filter: /\.[jt]sx?$/,
-    //   babelConfig: {
-    //     presets: ['@babel/preset-typescript'],
-    //     plugins: [['babel-plugin-react-compiler', ReactCompilerConfig],],
-    //   },
-    // }),
-    // Bundle analyzer for performance monitoring
-    visualizer({
+    // Bundle analyzer for performance monitoring (dev only)
+    process.env.ANALYZE === 'true' && visualizer({
       filename: 'dist/stats.html',
       open: false,
       gzipSize: true,
       brotliSize: true,
     }),
-    // Gzip compression
-    compression({
-      algorithms: ['gzip'],
-      exclude: [/\.(br)$/, /\.(gz)$/],
-    }),
-    // Brotli compression
-    compression({
-      algorithms: ['brotliCompress'],
-      exclude: [/\.(br)$/, /\.(gz)$/],
-    }),
-  ],
+    // Note: Compression is handled by Vercel in production
+  ].filter(Boolean),
   server: {
     hmr: {
       port: 24680,
@@ -60,37 +43,8 @@ export default defineConfig({
   },
   build: {
     target: 'es2022',
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
-    // Ensure consistent builds
-    rollupOptions: {
-      output: {
-        // Use deterministic chunk names for better caching
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js',
-        assetFileNames: assetInfo => {
-          const info = assetInfo.name?.split('.') || []
-          const ext = info[info.length - 1]
-          if (/png|jpe?g|svg|gif|tiff|bmp|ico|webp/i.test(ext || '')) {
-            return `assets/images/[name]-[hash][extname]`
-          }
-          return `assets/[name]-[hash][extname]`
-        },
-        manualChunks: id => {
-          // Simplified chunking strategy for Vercel compatibility
-          if (id.includes('node_modules')) {
-            // Group all vendor libraries together for stability
-            return 'vendor'
-          }
-        }
-      }
-    },
-    chunkSizeWarningLimit: 1000,
+    // Let React Router 7 handle build configuration when using vercelPreset
+    // Custom rollupOptions can conflict with React Router's build process
   },
   optimizeDeps: {
     esbuildOptions: {
