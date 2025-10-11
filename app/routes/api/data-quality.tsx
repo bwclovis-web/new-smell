@@ -46,12 +46,12 @@ const shouldRegenerateReports = async (): Promise<boolean> => {
     return true // No reports exist, should generate
   }
 
-  // Get the most recent timestamp and check if it's older than 10 minutes
+  // Get the most recent timestamp and check if it's older than 5 minutes
   const latestDate = new Date(latestTimestamp)
   const now = new Date()
-  const tenMinutesAgo = new Date(now.getTime() - 10 * 60 * 1000)
+  const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000)
 
-  const shouldRegenerate = latestDate < tenMinutesAgo
+  const shouldRegenerate = latestDate < fiveMinutesAgo
   console.log('[DATA QUALITY API] Latest report:', latestTimestamp, 'Should regenerate:', shouldRegenerate)
 
   return shouldRegenerate
@@ -418,7 +418,9 @@ export const loader = async ({ request }: { request: Request }) => {
     return new Response(JSON.stringify(reportData), {
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=300', // 5 minute cache
+        'Cache-Control': 'no-cache, no-store, must-revalidate', // No caching for data quality
+        'Pragma': 'no-cache',
+        'Expires': '0'
       }
     })
   } catch (error) {

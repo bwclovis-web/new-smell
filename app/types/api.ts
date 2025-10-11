@@ -295,6 +295,7 @@ export interface GetWishlistResponse {
 export interface DataQualityStats {
   totalMissing: number
   totalDuplicates: number
+  totalHousesNoPerfumes?: number
   missingByBrand: Record<string, number>
   duplicatesByBrand: Record<string, number>
   lastUpdated: string
@@ -305,6 +306,12 @@ export interface DataQualityStats {
   }
   totalMissingHouseInfo?: number
   missingHouseInfoByBrand?: Record<string, number>
+  housesNoPerfumes?: Array<{
+    id: string
+    name: string
+    type: string
+    createdAt: string
+  }>
 }
 
 export interface GetDataQualityResponse {

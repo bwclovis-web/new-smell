@@ -31,6 +31,7 @@ ChartJS.register(
 type DataQualityStats = {
   totalMissing: number
   totalDuplicates: number
+  totalHousesNoPerfumes?: number
   missingByBrand: Record<string, number>
   duplicatesByBrand: Record<string, number>
   lastUpdated: string
@@ -41,6 +42,12 @@ type DataQualityStats = {
   }
   totalMissingHouseInfo?: number
   missingHouseInfoByBrand?: Record<string, number>
+  housesNoPerfumes?: Array<{
+    id: string
+    name: string
+    type: string
+    createdAt: string
+  }>
 }
 
 // Helper functions for chart data preparation
@@ -135,7 +142,7 @@ const prepareTrendChartData = (stats: DataQualityStats | null) => {
 
 // Helper functions to render dashboard sections
 const renderSummaryStats = (stats: DataQualityStats) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <div className="bg-red-50 border border-red-200 rounded-lg p-4">
       <h3 className="text-lg font-medium text-red-800">Missing Information</h3>
       <p className="text-3xl font-bold text-red-600 mt-2">{stats.totalMissing}</p>
@@ -151,6 +158,11 @@ const renderSummaryStats = (stats: DataQualityStats) => (
       <h3 className="text-lg font-medium text-yellow-800">Missing House Info</h3>
       <p className="text-3xl font-bold text-yellow-600 mt-2">{stats.totalMissingHouseInfo ?? 0}</p>
       <p className="text-sm text-yellow-700 mt-1">Perfume houses missing contact info, descriptions, etc.</p>
+    </div>
+    <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+      <h3 className="text-lg font-medium text-purple-800">Houses With No Perfumes</h3>
+      <p className="text-3xl font-bold text-purple-600 mt-2">{stats.totalHousesNoPerfumes ?? 0}</p>
+      <p className="text-sm text-purple-700 mt-1">Houses with zero perfumes listed</p>
     </div>
   </div>
 )
@@ -378,7 +390,15 @@ const performApiFetch = async (
   timeframe: string,
   setStats: React.Dispatch<React.SetStateAction<DataQualityStats | null>>
 ) => {
-  const response = await fetch(`/api/data-quality?timeframe=${timeframe}`)
+  // Add cache-busting timestamp to ensure fresh data
+  const cacheBuster = Date.now()
+  const response = await fetch(`/api/data-quality?timeframe=${timeframe}&_=${cacheBuster}`, {
+    cache: 'no-store',
+    headers: {
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache'
+    }
+  })
 
   if (!response.ok) {
     const errorText = await response.text()

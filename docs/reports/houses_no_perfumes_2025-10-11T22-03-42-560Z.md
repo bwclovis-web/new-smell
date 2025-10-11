@@ -1,24 +1,17 @@
 # Houses With No Perfumes Report
 
-Generated: 10/10/2025, 8:33:18 AM
+Generated: 10/11/2025, 6:03:47 PM
 
-Total houses with no perfumes: **4915**
+Total houses with no perfumes: **4907**
 
 ## List of Houses
 
 | Name | Type | Created At |
 |------|------|------------|
-| Lazarus Douvos | niche | 8/29/2025 |
-| After Six | indie | 7/27/2025 |
 | Aaron Beauty Supply | drugstore | 8/29/2025 |
-| Belnu | niche | 8/29/2025 |
 | 1+1 | indie | 8/29/2025 |
-| Le Baron Baltique | niche | 8/29/2025 |
 | A Zaftig Woman | indie | 8/29/2025 |
-| A13 | niche | 8/29/2025 |
 | Abaco | niche | 8/29/2025 |
-| A:musé | niche | 8/29/2025 |
-| Abaton Bros. | niche | 8/29/2025 |
 | Aaron Terence Hughes | niche | 8/29/2025 |
 | Abbott | indie | 8/29/2025 |
 | Cinch | niche | 8/29/2025 |
@@ -310,7 +303,6 @@ Total houses with no perfumes: **4915**
 | Linen Tutu | niche | 8/29/2025 |
 | Anthony Hopkins | celebrity | 8/29/2025 |
 | AR457 | niche | 8/29/2025 |
-| Ariana & Evans | niche | 8/29/2025 |
 | Armando Cabral | niche | 8/29/2025 |
 | Aroma Air | indie | 8/29/2025 |
 | Ann Ringstrand | niche | 8/29/2025 |

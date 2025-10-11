@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { type ActionFunctionArgs, type LoaderFunctionArgs, useActionData, useLoaderData, useNavigate } from 'react-router'
 
 import PerfumeForm from '~/components/Containers/Forms/PerfumeForm'
-import { getAllHouses } from '~/models/house.server'
 import { getPerfumeBySlug, updatePerfume } from '~/models/perfume.server'
 import { FORM_TYPES } from '~/utils/constants'
 
@@ -14,7 +13,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (typeof formIdEntry !== 'string') {
     throw new Error('Form ID is required and must be a string')
   }
-  const res = updatePerfume(formIdEntry, formData)
+  const res = await updatePerfume(formIdEntry, formData)
 
   return res
 }
@@ -24,15 +23,14 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     throw new Error('Perfume ID is required')
   }
   const perfume = await getPerfumeBySlug(params.perfumeSlug)
-  const allHouses = await getAllHouses({ selectFields: true, take: 7000 })
   if (!perfume) {
     throw new Response('Perfume not found', { status: 404 })
   }
-  return { perfume, allHouses }
+  return { perfume }
 }
 
 const EditPerfumePage = () => {
-  const { perfume, allHouses } = useLoaderData<typeof loader>()
+  const { perfume } = useLoaderData<typeof loader>()
   const lastResult = useActionData<CustomSubmit>()
   const navigate = useNavigate()
   useEffect(
@@ -58,7 +56,6 @@ const EditPerfumePage = () => {
         formType={FORM_TYPES.EDIT_PERFUME_FORM}
         lastResult={lastResult}
         data={perfume}
-        allHouses={allHouses}
       />
     </section>
   )

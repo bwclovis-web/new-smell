@@ -10,6 +10,7 @@ export interface CustomSubmit extends SubmissionResult<string[]> {
   success: boolean
   data: {
     name: string
+    slug: string
   }
 }
 export const action = async ({ request }: ActionFunctionArgs) => {

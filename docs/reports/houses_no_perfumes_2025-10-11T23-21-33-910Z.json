@@ -1,27 +1,9 @@
 [
   {
-    "id": "cmex8yx4m02n6obzgy8ekukfd",
-    "name": "Lazarus Douvos",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:50:12.775Z"
-  },
-  {
-    "id": "cmdmd8p7x0001obpcgtyq7mwd",
-    "name": "After Six",
-    "type": "indie",
-    "createdAt": "2025-07-28T00:24:37.293Z"
-  },
-  {
     "id": "cmex8ylm30003obzg7worywn5",
     "name": "Aaron Beauty Supply",
     "type": "drugstore",
     "createdAt": "2025-08-29T19:49:57.830Z"
-  },
-  {
-    "id": "cmex8yon100mjobzgw1gtkzou",
-    "name": "Belnu",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:50:01.790Z"
   },
   {
     "id": "cmex8yll10000obzghae39jft",
@@ -30,38 +12,14 @@
     "createdAt": "2025-08-29T19:49:57.827Z"
   },
   {
-    "id": "cmex8yx4m02nbobzg3kjx3oiv",
-    "name": "Le Baron Baltique",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:50:12.776Z"
-  },
-  {
     "id": "cmex8ylme0007obzgmmthqu4b",
     "name": "A Zaftig Woman",
     "type": "indie",
     "createdAt": "2025-08-29T19:49:57.830Z"
   },
   {
-    "id": "cmex8ylmi0009obzgemc71a82",
-    "name": "A13",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.830Z"
-  },
-  {
     "id": "cmex8ylmq000cobzgo13cxw9o",
     "name": "Abaco",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.830Z"
-  },
-  {
-    "id": "cmex8ylml000aobzglzn81fpa",
-    "name": "A:musé",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.830Z"
-  },
-  {
-    "id": "cmex8ylmt000eobzgamnhvepo",
-    "name": "Abaton Bros.",
     "type": "niche",
     "createdAt": "2025-08-29T19:49:57.830Z"
   },
@@ -1810,12 +1768,6 @@
     "name": "AR457",
     "type": "niche",
     "createdAt": "2025-08-29T19:50:00.414Z"
-  },
-  {
-    "id": "cmex8ynx700dyobzgaxfzcltg",
-    "name": "Ariana & Evans",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:50:00.859Z"
   },
   {
     "id": "cmex8ynxl00ebobzg86uf4kpu",
