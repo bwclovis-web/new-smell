@@ -3,7 +3,8 @@
     "loading": "Loading...",
     "loadingMore": "Loading more...",
     "noMore": "No more {{itemName}} to load.",
-    "allLoaded": "All {{itemName}} loaded."
+    "allLoaded": "All {{itemName}} loaded.",
+    "loadMore": "Load More {{itemName}}"
   },
   "admin": {
     "navigation": {

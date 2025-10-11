@@ -16,7 +16,7 @@ export const buttonVariants = cva(['rounded-sm cursor-pointer '], {
       xl: 'text-2xl px-2 py-2'
     },
     variant: {
-      primary: 'bg-noir-blue border-2 border-noir-gold text-noir-light font-semibold tracking-wide',
+      primary: 'bg-noir-gold capitalize text-noir-black px-4 py-2 rounded-md font-semibold hover:bg-noir-gold/80 transition-all',
       secondary: 'bg-btn-secondary hover:bg-btn-secondary-hover focus:bg-btn-secondary-focus disabled:bg-btn-secondary-disabled text-white',
       danger: 'bg-btn-danger hover:bg-btn-danger-hover focus:bg-btn-danger-focus disabled:bg-btn-danger-disabled text-white',
       link: 'bg-transparent text-blue-200 font-semibold hover:underline focus:bg-noir-gold/20 disabled:bg-transparent text-nowrap px-0',

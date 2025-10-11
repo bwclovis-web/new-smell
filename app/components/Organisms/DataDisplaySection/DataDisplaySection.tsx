@@ -1,6 +1,8 @@
 import type { RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { Button } from '~/components/Atoms/Button'
+
 import LinkCard from '../LinkCard/LinkCard'
 
 interface DataDisplaySectionProps {
@@ -86,12 +88,11 @@ const DataDisplaySection = ({
           <span className="text-noir-gold">{t('common.loadingMore', { itemName })}</span>
         )}
         {!infiniteLoading && hasMore && (
-          <button
+          <Button
             onClick={onLoadMore}
-            className="bg-noir-gold text-noir-black px-4 py-2 rounded-md font-semibold hover:bg-noir-gold/80 transition-all"
           >
             {t('common.loadMore', { itemName })}
-          </button>
+          </Button>
         )}
         {!hasMore && data.length > 0 && (
           <span className="text-noir-gold">
