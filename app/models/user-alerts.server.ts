@@ -11,14 +11,14 @@ export async function getUserAlerts(userId: string, limit: number = 10) {
       isDismissed: false
     },
     include: {
-      user: {
+      User: {
         select: {
           id: true,
           username: true,
           email: true
         }
       },
-      perfume: {
+      Perfume: {
         include: {
           perfumeHouse: {
             select: {
@@ -204,7 +204,7 @@ export async function createUserAlert(
       metadata
     },
     include: {
-      perfume: {
+      Perfume: {
         include: {
           perfumeHouse: {
             select: {
