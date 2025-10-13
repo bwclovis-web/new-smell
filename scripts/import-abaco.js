@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Import Ariana & Evans perfumes from CSV
+ * Import Abaco perfumes from CSV
  * Maps CSV notes (openNotes, heartNotes, baseNotes) to Prisma schema
  */
 
@@ -114,10 +114,10 @@ async function createPerfumeNote(noteName, perfumeId, noteType) {
   }
 }
 
-async function importArianaEvansPerfumes() {
-  console.log('🚀 Starting Ariana & Evans import...\n')
+async function importAbacoPerfumes() {
+  console.log('🚀 Starting Abaco import...\n')
 
-  const csvPath = path.join(__dirname, '../csv/perfumes_arianaevans.csv')
+  const csvPath = path.join(__dirname, '../csv/perfumes_abaco.csv')
 
   if (!fs.existsSync(csvPath)) {
     console.error('❌ CSV file not found:', csvPath)
@@ -129,8 +129,8 @@ async function importArianaEvansPerfumes() {
 
   console.log(`Found ${records.length} perfumes to import\n`)
 
-  // Create or get the Ariana & Evans house
-  const house = await createOrGetPerfumeHouse('Ariana & Evans')
+  // Create or get the Abaco house
+  const house = await createOrGetPerfumeHouse('Abaco')
   console.log('')
 
   let imported = 0
@@ -214,7 +214,7 @@ async function importArianaEvansPerfumes() {
   console.log('\n✅ Import completed!')
 }
 
-importArianaEvansPerfumes()
+importAbacoPerfumes()
   .then(async () => {
     await prisma.$disconnect()
   })

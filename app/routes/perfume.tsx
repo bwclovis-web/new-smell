@@ -8,9 +8,9 @@ import PerfumeRatingSystem from '~/components/Containers/Perfume/PerfumeRatingSy
 import ReviewSection from '~/components/Organisms/ReviewSection'
 import { getPerfumeBySlug } from '~/models/perfume.server'
 import { getPerfumeRatings, getUserPerfumeRating } from '~/models/perfumeRating.server'
+import { getUserPerfumeReview } from '~/models/perfumeReview.server'
 import { getUserById } from '~/models/user.server'
 import { isInWishlist } from '~/models/wishlist.server'
-import { getUserPerfumeReview } from '~/models/perfumeReview.server'
 import { createSafeUser } from '~/types'
 import { verifyAccessToken } from '~/utils/security/session-manager.server'
 

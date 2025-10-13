@@ -344,6 +344,63 @@
       "loadMoreReviews": "Load More Reviews"
     }
   },
+  "termsAndConditions": {
+    "heading": "Terms and Conditions",
+    "subheading": "Shadow and Sillage",
+    "gist": {
+      "heading": "THE GIST",
+      "contentOne": "Shadow and Sillage is an independent platform devoted to perfume lovers — a place to share reviews, learn, and connect with other collectors. Users may list perfumes and samples for trade, but the dealings themselves are strictly between private individuals.",
+      "contentTwo": "We do not handle payments, do not verify authenticity, and will not mediate disputes. Think of us as the smoke-filled bar where introductions are made, not the broker of the deal."
+    },
+    "tradingAndListing": {
+      "heading": "TRADING AND LISTING",
+      "contentOne": "Trades and exchanges are entirely at your own risk.",
+      "contentTwo": "Counterfeit perfumes are strictly prohibited.",
+      "contentThree": "Split (decanted) perfumes are permitted, provided they are genuine and accurately described.",
+      "contentFour": "Any attempt to defraud, misrepresent, or sell stolen goods will result in permanent account removal and possible reporting to relevant authorities.",
+      "contentFive": "Users must describe items truthfully — if you’re listing a vintage bottle, say so; if the label’s half gone, that’s part of its story."
+    },
+    "accountsAndConduct": {
+      "heading": "ACCOUNTS AND USER CONDUCT",
+      "contentOne": "You’ll need an account to post reviews, notes, or trades. Browsing and searching are open to everyone.",
+      "contentTwo": "Keep it civil: no harassment, spam, political or religious debates, or illegal content.",
+      "contentThree": "This is a perfume community, not a soapbox or battleground. Treat others with the respect you’d show in a high-end fragrance boutique."
+    },
+    "reviewsAndNotes": {
+      "heading": "REVIEWS AND NOTES",
+      "contentOne": "Users may submit perfume reviews or leave notes on discussions to help others navigate their scent journeys.",
+      "contentTwo": "All content goes through a moderation process to ensure it’s relevant, fair, and on-topic. We reserve the right to remove or edit submissions that break these rules or drift into unrelated territory.",
+      "contentThree": "By posting, you grant Shadow and Sillage the non-exclusive right to display your words and images on the site and in related features (such as listings or community highlights). You retain full ownership of your work."
+    },
+    "noGuarantee": {
+      "heading": "NO GUARANTEES",
+      "contentOne": "We strive to keep the site polished and running, but we make no promises of uninterrupted service. We may suspend, modify, or remove features without warning — sometimes even good things must fade to make room for the new."
+    },
+    "liability": {
+      "heading": "LIMITATION OF LIABILITY",
+      "contentOne": "Shadow and Sillage and its operators are not responsible for any loss, damage, or dispute arising from user trades, communications, or listings.",
+      "contentTwo": "If a deal goes sour, it’s between the parties involved. The platform merely sets the stage — the drama belongs to you."
+    },
+    "privacy": {
+      "heading": "PRIVACY POLICY",
+      "contentOne": "We respect your privacy as much as a perfumer guards a secret formula. Here’s how we handle your data:",
+      "contentList": {
+        "one": "Information Collected: We may collect basic account information (such as username, email, and preferences) to help personalize your experience and improve the site.",
+        "two": "Use of Data: Data is used internally only — for recommendations, feature improvements, and fraud prevention. It is never sold, never shared with advertisers, and never used for resale or marketing beyond this site.",
+        "three": "Cookies: Like many websites, we use cookies to remember your session and keep you logged in.",
+        "four": "Security: We take reasonable steps to protect your data, but no system is impenetrable. Handle your account credentials as carefully as you’d handle your favorite perfume bottle.",
+        "five": "Contact: For questions, data requests, or to report suspicious activity, reach us at [INSERT CONTACT EMAIL HERE]."
+      }
+    },
+    "changes": {
+      "heading": "CHANGES TO THIS POLICY",
+      "contentOne": "We may revise these Terms and this Privacy Policy from time to time. Updates will be posted on this page with a new “last updated” date. Continuing to use the site after changes means you accept them — the way one accepts that the night always carries a hint of mystery."
+    },
+    "closing": {
+      "heading": "CLOSING WORDS",
+      "contentOne": "Shadow and Sillage exists to celebrate the art, science, and stories behind scent. Use it wisely, trade fairly, and remember — trust your nose, not a stranger’s promises."
+    }
+  },
   "tradingPost": {
     "meta": {
       "title": "The Exchange - Shadow and Sillage",

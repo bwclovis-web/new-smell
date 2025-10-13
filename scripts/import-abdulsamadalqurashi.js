@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Import Ariana & Evans perfumes from CSV
+ * Import Abdul Samad Al Qurashi perfumes from CSV
  * Maps CSV notes (openNotes, heartNotes, baseNotes) to Prisma schema
  */
 
@@ -61,7 +61,7 @@ async function createOrGetPerfumeHouse(houseName) {
     data: {
       name: houseName,
       slug: createSlug(houseName),
-      type: 'indie'
+      type: 'niche'
     }
   })
 }
@@ -114,10 +114,10 @@ async function createPerfumeNote(noteName, perfumeId, noteType) {
   }
 }
 
-async function importArianaEvansPerfumes() {
-  console.log('🚀 Starting Ariana & Evans import...\n')
+async function importAbdulSamadAlQurashiPerfumes() {
+  console.log('🚀 Starting Abdul Samad Al Qurashi import...\n')
 
-  const csvPath = path.join(__dirname, '../csv/perfumes_arianaevans.csv')
+  const csvPath = path.join(__dirname, '../csv/perfumes_abdulsamadalqurashi.csv')
 
   if (!fs.existsSync(csvPath)) {
     console.error('❌ CSV file not found:', csvPath)
@@ -129,8 +129,8 @@ async function importArianaEvansPerfumes() {
 
   console.log(`Found ${records.length} perfumes to import\n`)
 
-  // Create or get the Ariana & Evans house
-  const house = await createOrGetPerfumeHouse('Ariana & Evans')
+  // Create or get the Abdul Samad Al Qurashi house
+  const house = await createOrGetPerfumeHouse('Abdul Samad Al Qurashi')
   console.log('')
 
   let imported = 0
@@ -214,7 +214,7 @@ async function importArianaEvansPerfumes() {
   console.log('\n✅ Import completed!')
 }
 
-importArianaEvansPerfumes()
+importAbdulSamadAlQurashiPerfumes()
   .then(async () => {
     await prisma.$disconnect()
   })

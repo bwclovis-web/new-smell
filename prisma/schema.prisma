@@ -22,6 +22,8 @@ model User {
   updatedAt             DateTime               @updatedAt
   role                  UserRole               @default(user)
   SecurityAuditLog      SecurityAuditLog[]
+  UserAlert             UserAlert[]
+  alertPreferences      UserAlertPreferences?
   UserPerfume           UserPerfume[]
   userPerfumeComments   UserPerfumeComment[]
   UserPerfumeRating     UserPerfumeRating[]
@@ -50,7 +52,7 @@ model PerfumeHouse {
 
 model Perfume {
   id                    String                 @id @default(cuid())
-  name                  String                 @unique
+  name                  String
   description           String?
   image                 String?
   perfumeHouseId        String?
@@ -61,6 +63,7 @@ model Perfume {
   perfumeNotesClose     PerfumeNotes[]         @relation("PerfumeNotesBase")
   perfumeNotesHeart     PerfumeNotes[]         @relation("PerfumeNotesHeart")
   perfumeNotesOpen      PerfumeNotes[]         @relation("PerfumeNotesOpen")
+  UserAlert             UserAlert[]
   userPerfume           UserPerfume[]
   userPerfumeComments   UserPerfumeComment[]
   userPerfumeRating     UserPerfumeRating[]
@@ -180,6 +183,37 @@ model SecurityAuditLog {
   User       User?                 @relation(fields: [userId], references: [id])
 }
 
+model UserAlert {
+  id          String    @id @default(cuid())
+  userId      String
+  perfumeId   String
+  alertType   AlertType
+  title       String
+  message     String
+  isRead      Boolean   @default(false)
+  isDismissed Boolean   @default(false)
+  metadata    Json?
+  createdAt   DateTime  @default(now())
+  readAt      DateTime?
+  dismissedAt DateTime?
+  Perfume     Perfume   @relation(fields: [perfumeId], references: [id])
+  User        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([userId, isRead, isDismissed])
+}
+
+model UserAlertPreferences {
+  id                    String  @id @default(cuid())
+  userId                String  @unique
+  wishlistAlertsEnabled Boolean @default(true)
+  decantAlertsEnabled   Boolean @default(true)
+  emailWishlistAlerts   Boolean @default(false)
+  emailDecantAlerts     Boolean @default(false)
+  maxAlerts             Int     @default(10)
+  User                  User    @relation(fields: [userId], references: [id])
+}
+
 enum UserRole {
   user
   admin
@@ -241,4 +275,9 @@ enum SecurityAuditSeverity {
   warning
   error
   critical
+}
+
+enum AlertType {
+  wishlist_available
+  decant_interest
 }

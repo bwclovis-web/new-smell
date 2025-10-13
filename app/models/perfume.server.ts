@@ -94,11 +94,13 @@ export const searchPerfumeByName = async (name: string) => {
 
 export const updatePerfume = async (id: string, data: FormData) => {
   try {
+    const name = sanitizeText(data.get('name') as string)
     const updatedPerfume = await prisma.perfume.update({
       where: { id },
       data: {
-        name: data.get('name') as string,
-        description: data.get('description') as string,
+        name,
+        slug: createUrlSlug(name),
+        description: sanitizeText(data.get('description') as string),
         image: data.get('image') as string,
         perfumeNotesOpen: {
           connect: (data.getAll('notesTop') as string[]).map(id => ({ id }))
@@ -128,14 +130,30 @@ export const updatePerfume = async (id: string, data: FormData) => {
   }
 }
 
+// Helper function to sanitize text input by normalizing Unicode characters
+const sanitizeText = (text: string | null): string => {
+  if (!text) return ''
+
+  return text
+    .normalize('NFD')  // Normalize Unicode
+    .replace(/[\u0300-\u036f]/g, '')  // Remove diacritics
+    .replace(/[\u2013\u2014]/g, '-')  // en dash, em dash → hyphen
+    .replace(/[\u2018\u2019]/g, "'")  // smart single quotes
+    .replace(/[\u201C\u201D]/g, '"')  // smart double quotes
+    .replace(/[\u2026]/g, '...')      // ellipsis
+}
+
 export const createPerfume = async (data: FormData) => {
-  const name = data.get('name') as string
+  const name = sanitizeText(data.get('name') as string)
+  const description = sanitizeText(data.get('description') as string)
+  const image = data.get('image') as string
+
   const newPerfume = await prisma.perfume.create({
     data: {
       name,
       slug: createUrlSlug(name),
-      description: data.get('description') as string,
-      image: data.get('image') as string,
+      description,
+      image,
       perfumeNotesOpen: {
         connect: (data.getAll('notesTop') as string[]).map(id => ({ id }))
       },
@@ -150,9 +168,6 @@ export const createPerfume = async (data: FormData) => {
           id: data.get('house') as string
         }
       }
-      // description: data.get('description') as string,
-      // image: data.get('imageUrl') as string,
-      // notes: data.get('notes') as string[]
     }
   })
   return newPerfume
