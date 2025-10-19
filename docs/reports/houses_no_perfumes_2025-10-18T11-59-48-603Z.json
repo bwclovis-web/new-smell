@@ -18,40 +18,10 @@
     "createdAt": "2025-08-29T19:49:57.830Z"
   },
   {
-    "id": "cmex8ylmq000cobzgo13cxw9o",
-    "name": "Abaco",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.830Z"
-  },
-  {
-    "id": "cmex8ylmg0008obzg9ia3q0vu",
-    "name": "Aaron Terence Hughes",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.830Z"
-  },
-  {
-    "id": "cmex8ylms000dobzgvfhkg0kl",
-    "name": "Abbott",
-    "type": "indie",
-    "createdAt": "2025-08-29T19:49:57.830Z"
-  },
-  {
-    "id": "cmex8ypze010nobzgm90yensb",
-    "name": "Cinch",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:50:03.522Z"
-  },
-  {
     "id": "cmex8yx4r02nmobzgs4520y07",
     "name": "Le Gazelle",
     "type": "niche",
     "createdAt": "2025-08-29T19:50:12.776Z"
-  },
-  {
-    "id": "cmex8yln6000jobzgo23zt1wk",
-    "name": "Abdul Samad Al Qurashi",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.831Z"
   },
   {
     "id": "cmex8ylna000lobzgtkmubpvc",
@@ -76,18 +46,6 @@
     "name": "Abietson",
     "type": "niche",
     "createdAt": "2025-08-29T19:49:57.831Z"
-  },
-  {
-    "id": "cmex8ylng000oobzgf8tcss54",
-    "name": "Absolument",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.831Z"
-  },
-  {
-    "id": "cmex8ylnp000sobzgarn2ovqs",
-    "name": "Abu Haashir",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.836Z"
   },
   {
     "id": "cmex8ylnr000tobzgktvioa9m",
@@ -29428,12 +29386,6 @@
     "name": "Jinx Smells",
     "type": "indie",
     "createdAt": "2025-08-29T19:50:11.006Z"
-  },
-  {
-    "id": "cmex8yvwn02faobzgz84pe2hh",
-    "name": "Kaatskill Meets NYC",
-    "type": "indie",
-    "createdAt": "2025-08-29T19:50:11.201Z"
   },
   {
     "id": "cmex8yvwf02e1obzget2bkymv",

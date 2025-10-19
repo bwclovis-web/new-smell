@@ -25,6 +25,7 @@
     "label": "Costa Rica",
     "code": "CR"
   },
+  { "id": "Denmark", "name": "Denmark", "label": "Denmark", "code": "DK" },
   { "id": "Egypt", "name": "Egypt", "label": "Egypt", "code": "EG" },
   { "id": "France", "name": "France", "label": "France", "code": "FR" },
   { "id": "Germany", "name": "Germany", "label": "Germany", "code": "DE" },
@@ -62,6 +63,13 @@
     "code": "MG"
   },
   { "id": "Mexico", "name": "Mexico", "label": "Mexico", "code": "MX" },
+  {
+    "id": "Netherlands",
+    "name": "Netherlands",
+    "label": "Netherlands",
+    "code": "NL"
+  },
+  { "id": "Pakistan", "name": "Pakistan", "label": "Pakistan", "code": "PK" },
   { "id": "Spain", "name": "Spain", "label": "Spain", "code": "ES" },
   { "id": "Sweden", "name": "Sweden", "label": "Sweden", "code": "SE" },
   {

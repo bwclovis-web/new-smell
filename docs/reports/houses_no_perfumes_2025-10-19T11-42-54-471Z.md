@@ -1,8 +1,8 @@
 # Houses With No Perfumes Report
 
-Generated: 10/11/2025, 7:21:37 PM
+Generated: 10/19/2025, 7:42:57 AM
 
-Total houses with no perfumes: **4907**
+Total houses with no perfumes: **4884**
 
 ## List of Houses
 
@@ -11,18 +11,11 @@ Total houses with no perfumes: **4907**
 | Aaron Beauty Supply | drugstore | 8/29/2025 |
 | 1+1 | indie | 8/29/2025 |
 | A Zaftig Woman | indie | 8/29/2025 |
-| Abaco | niche | 8/29/2025 |
-| Aaron Terence Hughes | niche | 8/29/2025 |
-| Abbott | indie | 8/29/2025 |
-| Cinch | niche | 8/29/2025 |
 | Le Gazelle | niche | 8/29/2025 |
-| Abdul Samad Al Qurashi | niche | 8/29/2025 |
 | Abraham & Straus | drugstore | 8/29/2025 |
 | J. R. Watkins | indie | 8/29/2025 |
 | Absentia Aromatics | niche | 8/29/2025 |
 | Abietson | niche | 8/29/2025 |
-| Absolument | niche | 8/29/2025 |
-| Abu Haashir | niche | 8/29/2025 |
 | Achilles | niche | 8/29/2025 |
 | Aceite | niche | 8/29/2025 |
 | Acousticjus | niche | 8/29/2025 |
@@ -61,27 +54,22 @@ Total houses with no perfumes: **4907**
 | 2787 | niche | 8/29/2025 |
 | 19-69 | niche | 8/29/2025 |
 | Andy Roddick | celebrity | 8/29/2025 |
-| Adamo Parfum | niche | 8/29/2025 |
-| Mystery Modern Mark | indie | 8/29/2025 |
 | 777 | niche | 8/29/2025 |
 | 4711 | drugstore | 8/29/2025 |
 | A Life with a View | indie | 8/29/2025 |
 | A La Lune | niche | 8/29/2025 |
 | A.H. Robins | indie | 8/29/2025 |
 | A.H.A. Bergmann | niche | 8/29/2025 |
-| Les Nobles Essences | niche | 8/29/2025 |
 | Agarthi | niche | 8/29/2025 |
 | Aggarwal Group | niche | 8/29/2025 |
 | Air Stocking | indie | 8/29/2025 |
 | Al Hashimi | niche | 8/29/2025 |
-| Al Shareef Oudh | niche | 8/29/2025 |
 | Sea Jewels | niche | 8/29/2025 |
 | Aoiro | niche | 8/29/2025 |
 | Lighthouse Beauty | niche | 8/29/2025 |
 | Lilyz | indie | 8/29/2025 |
 | Agnes | niche | 8/29/2025 |
 | Al-Shaya | designer | 8/29/2025 |
-| Alfred Ritchy | niche | 8/29/2025 |
 | Allan Cosmetic Co | indie | 8/29/2025 |
 | Perfumera Curandera | indie | 8/29/2025 |
 | Agarscents Bazaar | niche | 8/29/2025 |
@@ -109,13 +97,11 @@ Total houses with no perfumes: **4907**
 | Lorac | indie | 8/29/2025 |
 | Aid Laboratories | indie | 8/29/2025 |
 | Albin du Roy | niche | 8/29/2025 |
-| Alejandro Sanz | celebrity | 8/29/2025 |
 | All of Me | indie | 8/29/2025 |
 | Alpha Emu | niche | 8/29/2025 |
 | Altamoda | niche | 8/29/2025 |
 | Alfred D. McKelvy | niche | 8/29/2025 |
 | Afnan | niche | 8/29/2025 |
-| Lily Flame | indie | 8/29/2025 |
 | Lionel Richie | celebrity | 8/29/2025 |
 | Afrique Parfum | indie | 8/29/2025 |
 | Agatha Paris | designer | 8/29/2025 |
@@ -150,7 +136,6 @@ Total houses with no perfumes: **4907**
 | Alberto Allegretti | niche | 8/29/2025 |
 | Al Rehab | indie | 8/29/2025 |
 | Ahava | indie | 8/29/2025 |
-| Aladdin Fragrances | niche | 8/29/2025 |
 | Alcone | niche | 8/29/2025 |
 | Alfin Inc | niche | 8/29/2025 |
 | AllSaints | designer | 8/29/2025 |
@@ -171,7 +156,6 @@ Total houses with no perfumes: **4907**
 | Leona Lewis | celebrity | 8/29/2025 |
 | Alpy | niche | 8/29/2025 |
 | Alticor Inc | indie | 8/29/2025 |
-| Ambrosia | niche | 8/29/2025 |
 | America Products Company | indie | 8/29/2025 |
 | Ameriscent | indie | 8/29/2025 |
 | Amir Oud | niche | 8/29/2025 |
@@ -245,9 +229,7 @@ Total houses with no perfumes: **4907**
 | Louvre Groupe | niche | 8/29/2025 |
 | American Coastal | indie | 8/29/2025 |
 | Amerikai Porczellen Pouder Rexzvemy Tarsaag | niche | 8/29/2025 |
-| Amura Perfumes | niche | 8/29/2025 |
 | Amorvero | niche | 8/29/2025 |
-| Anaxus Perfumes | niche | 8/29/2025 |
 | Andreas Reichenberg | niche | 8/29/2025 |
 | American Designer Fragrances | designer | 8/29/2025 |
 | AMG Parfums | niche | 8/29/2025 |
@@ -4910,8 +4892,3 @@ Total houses with no perfumes: **4907**
 | Gabriela Hearst | designer | 8/29/2025 |
 | Gucci Group | designer | 8/29/2025 |
 | Glade | drugstore | 8/29/2025 |
-| Infiniment Coty Paris | designer | 8/29/2025 |
-| Initio | niche | 8/29/2025 |
-| Jinx Smells | indie | 8/29/2025 |
-| Kaatskill Meets NYC | indie | 8/29/2025 |
-| Jouer | indie | 8/29/2025 |

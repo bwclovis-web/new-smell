@@ -1,8 +1,8 @@
 # Houses With No Perfumes Report
 
-Generated: 10/11/2025, 6:03:47 PM
+Generated: 10/18/2025, 7:59:53 AM
 
-Total houses with no perfumes: **4907**
+Total houses with no perfumes: **4899**
 
 ## List of Houses
 
@@ -11,18 +11,11 @@ Total houses with no perfumes: **4907**
 | Aaron Beauty Supply | drugstore | 8/29/2025 |
 | 1+1 | indie | 8/29/2025 |
 | A Zaftig Woman | indie | 8/29/2025 |
-| Abaco | niche | 8/29/2025 |
-| Aaron Terence Hughes | niche | 8/29/2025 |
-| Abbott | indie | 8/29/2025 |
-| Cinch | niche | 8/29/2025 |
 | Le Gazelle | niche | 8/29/2025 |
-| Abdul Samad Al Qurashi | niche | 8/29/2025 |
 | Abraham & Straus | drugstore | 8/29/2025 |
 | J. R. Watkins | indie | 8/29/2025 |
 | Absentia Aromatics | niche | 8/29/2025 |
 | Abietson | niche | 8/29/2025 |
-| Absolument | niche | 8/29/2025 |
-| Abu Haashir | niche | 8/29/2025 |
 | Achilles | niche | 8/29/2025 |
 | Aceite | niche | 8/29/2025 |
 | Acousticjus | niche | 8/29/2025 |
@@ -4913,5 +4906,4 @@ Total houses with no perfumes: **4907**
 | Infiniment Coty Paris | designer | 8/29/2025 |
 | Initio | niche | 8/29/2025 |
 | Jinx Smells | indie | 8/29/2025 |
-| Kaatskill Meets NYC | indie | 8/29/2025 |
 | Jouer | indie | 8/29/2025 |

@@ -18,40 +18,10 @@
     "createdAt": "2025-08-29T19:49:57.830Z"
   },
   {
-    "id": "cmex8ylmq000cobzgo13cxw9o",
-    "name": "Abaco",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.830Z"
-  },
-  {
-    "id": "cmex8ylmg0008obzg9ia3q0vu",
-    "name": "Aaron Terence Hughes",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.830Z"
-  },
-  {
-    "id": "cmex8ylms000dobzgvfhkg0kl",
-    "name": "Abbott",
-    "type": "indie",
-    "createdAt": "2025-08-29T19:49:57.830Z"
-  },
-  {
-    "id": "cmex8ypze010nobzgm90yensb",
-    "name": "Cinch",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:50:03.522Z"
-  },
-  {
     "id": "cmex8yx4r02nmobzgs4520y07",
     "name": "Le Gazelle",
     "type": "niche",
     "createdAt": "2025-08-29T19:50:12.776Z"
-  },
-  {
-    "id": "cmex8yln6000jobzgo23zt1wk",
-    "name": "Abdul Samad Al Qurashi",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.831Z"
   },
   {
     "id": "cmex8ylna000lobzgtkmubpvc",
@@ -76,18 +46,6 @@
     "name": "Abietson",
     "type": "niche",
     "createdAt": "2025-08-29T19:49:57.831Z"
-  },
-  {
-    "id": "cmex8ylng000oobzgf8tcss54",
-    "name": "Absolument",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.831Z"
-  },
-  {
-    "id": "cmex8ylnp000sobzgarn2ovqs",
-    "name": "Abu Haashir",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.836Z"
   },
   {
     "id": "cmex8ylnr000tobzgktvioa9m",
@@ -318,18 +276,6 @@
     "createdAt": "2025-08-29T19:50:00.092Z"
   },
   {
-    "id": "cmex8ylqz0025obzg11ex6pge",
-    "name": "Adamo Parfum",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:57.839Z"
-  },
-  {
-    "id": "cmex8yyi30398obzggh840v8v",
-    "name": "Mystery Modern Mark",
-    "type": "indie",
-    "createdAt": "2025-08-29T19:50:14.564Z"
-  },
-  {
     "id": "cmex8ym6q002gobzgjfbqemug",
     "name": "777",
     "type": "niche",
@@ -366,12 +312,6 @@
     "createdAt": "2025-08-29T19:49:57.828Z"
   },
   {
-    "id": "cmex8yxa602peobzgge3noden",
-    "name": "Les Nobles Essences",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:50:12.987Z"
-  },
-  {
     "id": "cmex8ymvk003gobzgt4pawkye",
     "name": "Agarthi",
     "type": "niche",
@@ -394,12 +334,6 @@
     "name": "Al Hashimi",
     "type": "niche",
     "createdAt": "2025-08-29T19:49:59.500Z"
-  },
-  {
-    "id": "cmex8ymw6004uobzgubudz2ax",
-    "name": "Al Shareef Oudh",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:59.501Z"
   },
   {
     "id": "cmex8z14l047vobzgktxd7dpp",
@@ -436,12 +370,6 @@
     "name": "Al-Shaya",
     "type": "designer",
     "createdAt": "2025-08-29T19:49:59.501Z"
-  },
-  {
-    "id": "cmex8yn400068obzgorkzvn2f",
-    "name": "Alfred Ritchy",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:59.800Z"
   },
   {
     "id": "cmex8yn44006oobzg7czhu4he",
@@ -606,12 +534,6 @@
     "createdAt": "2025-08-29T19:49:59.502Z"
   },
   {
-    "id": "cmex8yn3p005nobzgyxud0r8s",
-    "name": "Alejandro Sanz",
-    "type": "celebrity",
-    "createdAt": "2025-08-29T19:49:59.797Z"
-  },
-  {
     "id": "cmex8yn43006mobzggeo5h3kx",
     "name": "All of Me",
     "type": "indie",
@@ -640,12 +562,6 @@
     "name": "Afnan",
     "type": "niche",
     "createdAt": "2025-08-29T19:49:59.497Z"
-  },
-  {
-    "id": "cmex8yxab02q9obzgtlc310wt",
-    "name": "Lily Flame",
-    "type": "indie",
-    "createdAt": "2025-08-29T19:50:12.989Z"
   },
   {
     "id": "cmex8yxah02qrobzgpdouak1b",
@@ -852,12 +768,6 @@
     "createdAt": "2025-08-29T19:49:59.499Z"
   },
   {
-    "id": "cmex8ymw7004wobzgee3vcruo",
-    "name": "Aladdin Fragrances",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:59.502Z"
-  },
-  {
     "id": "cmex8yn3o005lobzgals93nhs",
     "name": "Alcone",
     "type": "niche",
@@ -874,6 +784,12 @@
     "name": "AllSaints",
     "type": "designer",
     "createdAt": "2025-08-29T19:49:59.805Z"
+  },
+  {
+    "id": "cmex8ymw7004wobzgee3vcruo",
+    "name": "Aladdin Fragrances",
+    "type": "niche",
+    "createdAt": "2025-08-29T19:49:59.502Z"
   },
   {
     "id": "cmex8ymwh005cobzgwn637vf9",
@@ -976,12 +892,6 @@
     "name": "Alticor Inc",
     "type": "indie",
     "createdAt": "2025-08-29T19:49:59.807Z"
-  },
-  {
-    "id": "cmex8yn4s0088obzgux1i0jqo",
-    "name": "Ambrosia",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:49:59.808Z"
   },
   {
     "id": "cmex8ynbl008aobzgv2xoy16j",
@@ -1420,12 +1330,6 @@
     "name": "Amerikai Porczellen Pouder Rexzvemy Tarsaag",
     "type": "niche",
     "createdAt": "2025-08-29T19:50:00.086Z"
-  },
-  {
-    "id": "cmex8ync30097obzghu28qtba",
-    "name": "Amura Perfumes",
-    "type": "niche",
-    "createdAt": "2025-08-29T19:50:00.089Z"
   },
   {
     "id": "cmex8ync5009dobzgdd8dj230",
@@ -29422,23 +29326,5 @@
     "name": "Initio",
     "type": "niche",
     "createdAt": "2025-08-29T19:50:10.575Z"
-  },
-  {
-    "id": "cmex8yvr202byobzgrh20r19d",
-    "name": "Jinx Smells",
-    "type": "indie",
-    "createdAt": "2025-08-29T19:50:11.006Z"
-  },
-  {
-    "id": "cmex8yvwn02faobzgz84pe2hh",
-    "name": "Kaatskill Meets NYC",
-    "type": "indie",
-    "createdAt": "2025-08-29T19:50:11.201Z"
-  },
-  {
-    "id": "cmex8yvwf02e1obzget2bkymv",
-    "name": "Jouer",
-    "type": "indie",
-    "createdAt": "2025-08-29T19:50:11.197Z"
   }
 ]

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Import Abbott NYC perfumes from CSV
+ * Import Alejandro Sanz perfumes from CSV
  * Maps CSV notes (openNotes, heartNotes, baseNotes) to Prisma schema
  */
 
@@ -61,7 +61,7 @@ async function createOrGetPerfumeHouse(houseName) {
     data: {
       name: houseName,
       slug: createSlug(houseName),
-      type: 'indie'
+      type: 'celebrity'
     }
   })
 }
@@ -79,9 +79,30 @@ async function createPerfumeNote(noteName, perfumeId, noteType) {
   })
 
   if (existingNote) {
-    // Note already exists - just return it (notes are shared across perfumes)
-    // The schema has a unique constraint on name, so we can't create duplicates
-    return existingNote
+    // Note already exists - connect it to this perfume
+    const updateData = {}
+    switch (noteType) {
+      case 'open':
+        updateData.perfumeOpenId = perfumeId
+        break
+      case 'heart':
+        updateData.perfumeHeartId = perfumeId
+        break
+      case 'base':
+        updateData.perfumeCloseId = perfumeId
+        break
+    }
+
+    try {
+      return await prisma.perfumeNotes.update({
+        where: { id: existingNote.id },
+        data: updateData
+      })
+    } catch (error) {
+      // If update fails, the note is already connected, which is fine
+      console.log(`     Note "${normalizedName}" already connected`)
+      return existingNote
+    }
   }
 
   // Create new note with the perfume relationship
@@ -114,10 +135,10 @@ async function createPerfumeNote(noteName, perfumeId, noteType) {
   }
 }
 
-async function importAbbottPerfumes() {
-  console.log('🚀 Starting Abbott NYC import...\n')
+async function importAlejandroSanzPerfumes() {
+  console.log('🚀 Starting Alejandro Sanz import...\n')
 
-  const csvPath = path.join(__dirname, '../csv/perfumes_abbott.csv')
+  const csvPath = path.join(__dirname, '../csv/perfumes_alejandrosanz.csv')
 
   if (!fs.existsSync(csvPath)) {
     console.error('❌ CSV file not found:', csvPath)
@@ -129,8 +150,8 @@ async function importAbbottPerfumes() {
 
   console.log(`Found ${records.length} perfumes to import\n`)
 
-  // Create or get the Abbott house
-  const house = await createOrGetPerfumeHouse('Abbott')
+  // Create or get the Alejandro Sanz house
+  const house = await createOrGetPerfumeHouse('Alejandro Sanz')
   console.log('')
 
   let imported = 0
@@ -150,7 +171,7 @@ async function importAbbottPerfumes() {
 
       // Check if perfume already exists
       const existingPerfume = await prisma.perfume.findUnique({
-        where: { name: perfumeName }
+        where: { slug: createSlug(perfumeName) }
       })
 
       if (existingPerfume) {
@@ -177,7 +198,7 @@ async function importAbbottPerfumes() {
       const heartNotes = parseNotes(record.heartNotes || '')
       const baseNotes = parseNotes(record.baseNotes || '')
 
-      console.log(`   - Open notes: ${openNotes.length}`)
+      console.log(`   - Top notes: ${openNotes.length}`)
       console.log(`   - Heart notes: ${heartNotes.length}`)
       console.log(`   - Base notes: ${baseNotes.length}`)
 
@@ -214,11 +235,11 @@ async function importAbbottPerfumes() {
   console.log('\n✅ Import completed!')
 }
 
-importAbbottPerfumes()
+importAlejandroSanzPerfumes()
   .then(async () => {
     await prisma.$disconnect()
   })
-  .catch(async (e) => {
+  .catch(async e => {
     console.error('Fatal error:', e)
     await prisma.$disconnect()
     process.exit(1)
