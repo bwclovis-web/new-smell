@@ -11,12 +11,12 @@
  * Reports are saved to docs/reports/ directory
  */
 
+import { PrismaClient } from '@prisma/client'
 import { exec } from 'child_process'
 import * as fs from 'fs/promises'
 import * as path from 'path'
 import { fileURLToPath } from 'url'
 import { promisify } from 'util'
-import { PrismaClient } from '@prisma/client'
 
 const execAsync = promisify(exec)
 const prisma = new PrismaClient()
@@ -38,9 +38,7 @@ const ensureReportsDir = async () => {
 }
 
 // Generate timestamp for file naming
-const generateTimestamp = () => {
-  return new Date().toISOString().replace(/[:.]/g, '-')
-}
+const generateTimestamp = () => new Date().toISOString().replace(/[:.]/g, '-')
 
 // Analyze missing data in perfume records
 const analyzeMissingData = async () => {

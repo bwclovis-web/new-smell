@@ -38,11 +38,15 @@ const getLatestReportTimestamp = async (): Promise<string | null> => {
 }
 
 // Check if we need to regenerate reports (avoid too frequent generation)
-const shouldRegenerateReports = async (): Promise<boolean> => {
+const shouldRegenerateReports = async (force: boolean = false): Promise<boolean> => {
+  // If force flag is set, always regenerate
+  if (force) {
+    return true
+  }
+
   const latestTimestamp = await getLatestReportTimestamp()
 
   if (!latestTimestamp) {
-    console.log('[DATA QUALITY API] No reports exist, should regenerate')
     return true // No reports exist, should generate
   }
 
@@ -51,10 +55,7 @@ const shouldRegenerateReports = async (): Promise<boolean> => {
   const now = new Date()
   const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000)
 
-  const shouldRegenerate = latestDate < fiveMinutesAgo
-  console.log('[DATA QUALITY API] Latest report:', latestTimestamp, 'Should regenerate:', shouldRegenerate)
-
-  return shouldRegenerate
+  return latestDate < fiveMinutesAgo
 }
 
 // Execute the actual script generation
@@ -80,10 +81,10 @@ const executeScriptGeneration = async (lockFilePath: string) => {
 }
 
 // Run the data quality report generation script
-const runDataQualityScript = async () => {
+const runDataQualityScript = async (force: boolean = false) => {
   try {
     // Check if we should regenerate reports
-    if (!await shouldRegenerateReports()) {
+    if (!await shouldRegenerateReports(force)) {
       return true // Skip generation, use existing reports
     }
 
@@ -91,8 +92,13 @@ const runDataQualityScript = async () => {
     const lockFilePath = path.resolve(projectRoot, 'docs', 'reports', '.generating.lock')
 
     // Check if lock file exists (another generation is in progress)
+    // BUT if force=true, we should clean up any stale lock files
     if (await fileExists(lockFilePath)) {
-      return true // Skip generation, another process is running
+      if (force) {
+        await fs.unlink(lockFilePath).catch(() => { })
+      } else {
+        return true // Skip generation, another process is running
+      }
     }
 
     return await executeScriptGeneration(lockFilePath)
@@ -111,19 +117,20 @@ const getFilteredFiles = (
   const timestampedFiles = allFiles
     .filter(file => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
     .map(file => {
-      const match = file.match(/(\d{4}-\d{2}-\d{2})T\d{2}-\d{2}-\d{2}-\d{3}Z/)
+      const match = file.match(/(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z)/)
+      const timestamp = match ? match[1] : ''
+      // Convert timestamp format: 2025-10-18T11-59-48-603Z -> 2025-10-18T11:59:48.603Z
+      const isoTimestamp = timestamp.replace(/T(\d{2})-(\d{2})-(\d{2})-(\d{3})Z/, 'T$1:$2:$3.$4Z')
       return {
         filename: file,
-        timestamp: match ? match[0] : '',
-        date: match ? new Date(match[1]) : new Date(0)
+        timestamp,
+        date: isoTimestamp ? new Date(isoTimestamp) : new Date(0)
       }
     })
     .filter(file => file.timestamp)
     .sort((fileA, fileB) => {
-      // Split the sort to make it fit within line length limit
-      const dateA = new Date(fileA.timestamp).getTime()
-      const dateB = new Date(fileB.timestamp).getTime()
-      return dateB - dateA
+      // Sort by date (most recent first)
+      return fileB.date.getTime() - fileA.date.getTime()
     })
 
   // Apply timeframe filtering
@@ -153,23 +160,24 @@ const getLatestReportFiles = async (timeframe: string = 'all') => {
   // If no files match the timeframe, fall back to all files (most recent)
   let filesToUse = filteredFiles
   if (filteredFiles.length === 0) {
-    console.log(`No reports found for timeframe: ${timeframe}, falling back to most recent reports`)
     // Get all timestamped files and use the most recent ones
     const allTimestampedFiles = allFiles
       .filter(file => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
       .map(file => {
-        const match = file.match(/(\d{4}-\d{2}-\d{2})T\d{2}-\d{2}-\d{2}-\d{3}Z/)
+        const match = file.match(/(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z)/)
+        const timestamp = match ? match[1] : ''
+        // Convert timestamp format: 2025-10-18T11-59-48-603Z -> 2025-10-18T11:59:48.603Z
+        const isoTimestamp = timestamp.replace(/T(\d{2})-(\d{2})-(\d{2})-(\d{3})Z/, 'T$1:$2:$3.$4Z')
         return {
           filename: file,
-          timestamp: match ? match[0] : '',
-          date: match ? new Date(match[1]) : new Date(0)
+          timestamp,
+          date: isoTimestamp ? new Date(isoTimestamp) : new Date(0)
         }
       })
       .filter(file => file.timestamp)
       .sort((fileA, fileB) => {
-        const dateA = new Date(fileA.timestamp).getTime()
-        const dateB = new Date(fileB.timestamp).getTime()
-        return dateB - dateA
+        // Sort by date (most recent first)
+        return fileB.date.getTime() - fileA.date.getTime()
       })
 
     filesToUse = allTimestampedFiles
@@ -406,13 +414,14 @@ const processHistoryData = async (reports: ReportInfo[]): Promise<HistoryData> =
 }
 
 export const loader = async ({ request }: { request: Request }) => {
-  // Extract timeframe from request query parameters
+  // Extract timeframe and force from request query parameters
   const url = new URL(request.url)
   const timeframe = url.searchParams.get('timeframe') || 'month'
+  const force = url.searchParams.get('force') === 'true'
 
   try {
     // Generate and process reports
-    const reportData = await generateDataQualityReport(timeframe)
+    const reportData = await generateDataQualityReport(timeframe, force)
 
     // Return the data using the pattern that works
     return new Response(JSON.stringify(reportData), {
@@ -464,7 +473,6 @@ const collectReportData = async (
   housesNoPerfsPath: string,
   allReports: ReportInfo[]
 ) => {
-  console.log('[DATA QUALITY API] Parsing missing data from:', missingPath)
   // Parse the report files
   const {
     totalMissing,
@@ -473,28 +481,16 @@ const collectReportData = async (
     missingHouseInfoByBrand
   } = await parseMissingData(missingPath)
 
-  console.log('[DATA QUALITY API] Missing data parsed:', { totalMissing, totalMissingHouseInfo })
-
-  console.log('[DATA QUALITY API] Parsing duplicates from:', duplicatesPath)
   const { totalDuplicates, duplicatesByBrand } =
     await parseDuplicatesData(duplicatesPath)
 
-  console.log('[DATA QUALITY API] Duplicates parsed:', { totalDuplicates })
-
-  console.log('[DATA QUALITY API] Parsing houses with no perfumes from:', housesNoPerfsPath)
   const { totalHousesNoPerfumes, housesNoPerfumes } =
     await parseHousesNoPerfumesData(housesNoPerfsPath)
-
-  console.log('[DATA QUALITY API] Houses with no perfumes parsed:', {
-    totalHousesNoPerfumes,
-    housesNoPerfumesArrayLength: housesNoPerfumes?.length || 0,
-    firstHouse: housesNoPerfumes?.[0]
-  })
 
   // Process historical data for trends
   const historyData = await processHistoryData(allReports)
 
-  const result = {
+  return {
     totalMissing,
     totalDuplicates,
     totalHousesNoPerfumes,
@@ -505,24 +501,13 @@ const collectReportData = async (
     totalMissingHouseInfo,
     missingHouseInfoByBrand,
   }
-
-  console.log('[DATA QUALITY API] Final collected data:', {
-    totalMissing: result.totalMissing,
-    totalDuplicates: result.totalDuplicates,
-    totalHousesNoPerfumes: result.totalHousesNoPerfumes,
-    housesNoPerfumesInResult: result.housesNoPerfumes?.length || 0
-  })
-
-  return result
 }
 
 // Handle report generation and processing
-const generateDataQualityReport = async (timeframe: string) => {
+const generateDataQualityReport = async (timeframe: string, force: boolean = false) => {
   try {
-    console.log('[DATA QUALITY API] Step 1: Running data quality script...')
     // Run the data quality report generation script
-    const scriptResult = await runDataQualityScript()
-    console.log('[DATA QUALITY API] Script result:', scriptResult)
+    const scriptResult = await runDataQualityScript(force)
 
     // If there was an error running the script
     if (scriptResult !== true) {
@@ -530,22 +515,13 @@ const generateDataQualityReport = async (timeframe: string) => {
       throw new Error(`Failed to generate data quality reports: ${scriptResult}`)
     }
 
-    console.log('[DATA QUALITY API] Step 2: Getting latest report files...')
     // Get the paths to the latest report files based on timeframe
     const { missingJsonPath, duplicatesPath, housesNoPerfsPath, allReports } =
       await getLatestReportFiles(timeframe)
 
-    console.log('[DATA QUALITY API] Report paths:', {
-      missingJsonPath,
-      duplicatesPath,
-      housesNoPerfsPath
-    })
-
-    console.log('[DATA QUALITY API] Step 3: Validating report files...')
     // Validate report files
     await validateReportFiles(missingJsonPath, duplicatesPath)
 
-    console.log('[DATA QUALITY API] Step 4: Collecting report data...')
     // Collect and process the report data
     const reportData = await collectReportData(
       missingJsonPath,
@@ -554,16 +530,11 @@ const generateDataQualityReport = async (timeframe: string) => {
       allReports
     )
 
-    console.log('[DATA QUALITY API] Step 5: Report data collected, keys:', Object.keys(reportData))
-
     // Return the combined data object (not Response)
-    const result = {
+    return {
       ...reportData,
       lastUpdated: new Date().toLocaleString(),
     }
-
-    console.log('[DATA QUALITY API] Step 6: Returning result with keys:', Object.keys(result))
-    return result
   } catch (error) {
     console.error('[DATA QUALITY API] Error in generateDataQualityReport:', error)
     throw error

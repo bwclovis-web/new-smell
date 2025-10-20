@@ -41,7 +41,7 @@ const EditHousePage = () => {
   useEffect(
     () => {
       if (lastResult?.success && lastResult.data) {
-        navigate(`/perfume-house/${lastResult.data.name}`)
+        navigate(`/perfume-house/${lastResult.data.slug}`)
       }
     },
     [lastResult]

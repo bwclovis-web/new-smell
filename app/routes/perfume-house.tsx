@@ -170,7 +170,7 @@ const HouseDetailPage = () => {
                   >
                     <h3 className="
                       text-center block text-lg tracking-wide py-2
-                      font-semibold text-noir-gold  leading-6"
+                      font-semibold text-noir-gold  leading-6 capitalize"
                     >
                       {perfume.name}
                     </h3>

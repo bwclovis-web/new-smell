@@ -74,7 +74,7 @@ export const AlertItem = ({
     return dateObj.toLocaleDateString()
   }
 
-  const getPerfumeLink = () => `/perfume/${alert.perfume.slug}`
+  const getPerfumeLink = () => `/perfume/${alert.Perfume.slug}`
 
   if (compact) {
     return (
@@ -185,9 +185,9 @@ export const AlertItem = ({
                   to={getPerfumeLink()}
                   className="font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1"
                 >
-                  {alert.perfume.name}
-                  {alert.perfume.perfumeHouse && (
-                    <span className="text-gray-500">by {alert.perfume.perfumeHouse.name}</span>
+                  {alert.Perfume.name}
+                  {alert.Perfume.perfumeHouse && (
+                    <span className="text-gray-500">by {alert.Perfume.perfumeHouse.name}</span>
                   )}
                   <BsBoxArrowUpRight className="h-3 w-3" />
                 </Link>

@@ -7,18 +7,18 @@ import { checkWishlistAvailabilityAlerts, checkDecantInterestAlerts } from '~/mo
 export async function processWishlistAvailabilityAlerts(perfumeId: string) {
   try {
     const alerts = await checkWishlistAvailabilityAlerts(perfumeId)
-    
+
     if (alerts.length > 0) {
       console.log(`Generated ${alerts.length} wishlist availability alerts for perfume ${perfumeId}`)
-      
+
       // TODO: Send email notifications if users have email alerts enabled
       // for (const alert of alerts) {
-      //   if (alert.user.alertPreferences?.emailWishlistAlerts) {
-      //     await sendWishlistAlertEmail(alert.user.email, alert.perfume.name, alert.metadata.availableTraders)
+      //   if (alert.User.alertPreferences?.emailWishlistAlerts) {
+      //     await sendWishlistAlertEmail(alert.User.email, alert.Perfume.name, alert.metadata.availableTraders)
       //   }
       // }
     }
-    
+
     return alerts
   } catch (error) {
     console.error('Error processing wishlist availability alerts:', error)
@@ -33,18 +33,18 @@ export async function processWishlistAvailabilityAlerts(perfumeId: string) {
 export async function processDecantInterestAlerts(perfumeId: string, interestedUserId: string) {
   try {
     const alerts = await checkDecantInterestAlerts(perfumeId, interestedUserId)
-    
+
     if (alerts.length > 0) {
       console.log(`Generated ${alerts.length} decant interest alerts for perfume ${perfumeId} from user ${interestedUserId}`)
-      
+
       // TODO: Send email notifications if users have email alerts enabled
       // for (const alert of alerts) {
-      //   if (alert.user.alertPreferences?.emailDecantAlerts) {
-      //     await sendDecantInterestAlertEmail(alert.user.email, alert.perfume.name, alert.metadata.interestedUserName)
+      //   if (alert.User.alertPreferences?.emailDecantAlerts) {
+      //     await sendDecantInterestAlertEmail(alert.User.email, alert.Perfume.name, alert.metadata.interestedUserName)
       //   }
       // }
     }
-    
+
     return alerts
   } catch (error) {
     console.error('Error processing decant interest alerts:', error)
@@ -62,7 +62,7 @@ export async function processAllAlertsForPerfume(perfumeId: string, triggerUserI
       processWishlistAvailabilityAlerts(perfumeId),
       triggerUserId ? processDecantInterestAlerts(perfumeId, triggerUserId) : Promise.resolve([])
     ])
-    
+
     return {
       wishlistAlerts,
       decantAlerts,
@@ -87,18 +87,18 @@ export async function processBulkAlerts(perfumeIds: string[]) {
     const results = await Promise.allSettled(
       perfumeIds.map(perfumeId => processWishlistAvailabilityAlerts(perfumeId))
     )
-    
+
     const successful = results
       .filter((result): result is PromiseFulfilledResult<any[]> => result.status === 'fulfilled')
       .map(result => result.value)
       .flat()
-    
+
     const failed = results
       .filter((result): result is PromiseRejectedResult => result.status === 'rejected')
       .map(result => result.reason)
-    
+
     console.log(`Bulk alert processing completed: ${successful.length} alerts generated, ${failed.length} failed`)
-    
+
     return {
       successful,
       failed,

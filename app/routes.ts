@@ -10,6 +10,7 @@ export default [
     route('trader/:id', 'routes/trader-profile.tsx'),
     route('the-exchange', 'routes/the-exchange.tsx'),
     route('perfume/:perfumeSlug', 'routes/perfume.tsx'),
+    route('terms-and-conditions', 'routes/termsAndConditions.tsx'),
     // API ROUTES
     route('api/available-perfumes', 'routes/api/available-perfumes.ts'),
     route('api/perfume-houses', 'routes/api/houseLoader.ts'),

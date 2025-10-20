@@ -388,11 +388,15 @@ const shouldSkipFetch = (lastFetch: number): boolean => {
 // Perform the actual API fetch
 const performApiFetch = async (
   timeframe: string,
-  setStats: React.Dispatch<React.SetStateAction<DataQualityStats | null>>
+  setStats: React.Dispatch<React.SetStateAction<DataQualityStats | null>>,
+  force: boolean = false
 ) => {
   // Add cache-busting timestamp to ensure fresh data
   const cacheBuster = Date.now()
-  const response = await fetch(`/api/data-quality?timeframe=${timeframe}&_=${cacheBuster}`, {
+  const forceParam = force ? '&force=true' : ''
+  const url = `/api/data-quality?timeframe=${timeframe}${forceParam}&_=${cacheBuster}`
+
+  const response = await fetch(url, {
     cache: 'no-store',
     headers: {
       'Cache-Control': 'no-cache',
@@ -416,13 +420,14 @@ const useFetchDataQualityStats = (timeframe: 'week' | 'month' | 'all') => {
   const [loading, setLoading] = useState(true) // Start with loading true
   const [error, setError] = useState<string | null>(null)
   const [lastFetch, setLastFetch] = useState<number>(0)
-  const [refreshTrigger, setRefreshTrigger] = useState(0)
+  const [refreshTrigger, setRefreshTrigger] = useState<{ count: number; force: boolean }>({ count: 0, force: false })
 
   useEffect(() => {
     const fetchStats = async () => {
       // Debouncing: Don't fetch if we just fetched within the last 5 seconds
       // BUT always fetch on first load (lastFetch === 0) or when manually triggered
-      if (lastFetch !== 0 && shouldSkipFetch(lastFetch) && refreshTrigger === 0) {
+      const isManualRefresh = refreshTrigger.count > 0
+      if (lastFetch !== 0 && shouldSkipFetch(lastFetch) && !isManualRefresh) {
         setLoading(false)
         return
       }
@@ -430,7 +435,8 @@ const useFetchDataQualityStats = (timeframe: 'week' | 'month' | 'all') => {
       setLoading(true)
       setError(null)
       try {
-        await performApiFetch(timeframe, setStats)
+        // Use force flag when it's a manual refresh
+        await performApiFetch(timeframe, setStats, refreshTrigger.force)
         setLastFetch(Date.now())
       } catch (err) {
         setError(`Failed to fetch data quality stats: ${err instanceof Error ? err.message : String(err)}`)
@@ -444,9 +450,9 @@ const useFetchDataQualityStats = (timeframe: 'week' | 'month' | 'all') => {
   }, [timeframe, refreshTrigger]) // Only depend on timeframe and manual refresh trigger
 
   // Expose a function to force refresh
-  const forceRefresh = () => setRefreshTrigger(prev => prev + 1)
+  const forceRefresh = (force: boolean = false) => setRefreshTrigger(prev => ({ count: prev.count + 1, force }))
 
-  return { stats, loading, error, setLastFetch: forceRefresh }
+  return { stats, loading, error, forceRefresh }
 }
 
 // Loading indicator component
@@ -548,7 +554,7 @@ type DataQualityDashboardProps = {
 
 const DataQualityDashboard: FC<DataQualityDashboardProps> = ({ user, isAdmin }) => {
   const [timeframe, setTimeframe] = useState<'week' | 'month' | 'all'>('month')
-  const { stats, loading, error, setLastFetch } = useFetchDataQualityStats(timeframe)
+  const { stats, loading, error, forceRefresh } = useFetchDataQualityStats(timeframe)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { csrfToken } = useCSRFToken()
 
@@ -559,8 +565,8 @@ const DataQualityDashboard: FC<DataQualityDashboardProps> = ({ user, isAdmin }) 
   const handleUploadAndRefresh: React.ChangeEventHandler<HTMLInputElement> = async e => {
     try {
       await handleUploadCSV(e)
-      // Force refresh by updating lastFetch to 0 (or Date.now())
-      setLastFetch(0)
+      // Force refresh with force=true to regenerate reports immediately
+      forceRefresh(true)
     } catch (err) {
       // Optionally handle error
       // eslint-disable-next-line no-console
@@ -568,11 +574,16 @@ const DataQualityDashboard: FC<DataQualityDashboardProps> = ({ user, isAdmin }) 
     }
   }
 
+  // Handler for manual refresh button
+  const handleManualRefresh = () => {
+    forceRefresh(true)
+  }
+
   // Admin controls for CSV
   const renderAdminCSVControls = () => (
     <div className="mb-6 flex gap-4 items-center">
       <button
-        className="px-4 py-2 bg-green-600 text-white rounded shadow"
+        className="px-4 py-2 bg-green-600 text-white rounded shadow hover:bg-green-700 transition-colors"
         onClick={handleDownloadCSV}
       >
         Download House Info CSV
@@ -585,10 +596,17 @@ const DataQualityDashboard: FC<DataQualityDashboardProps> = ({ user, isAdmin }) 
         onChange={handleUploadAndRefresh}
       />
       <button
-        className="px-4 py-2 bg-blue-600 text-white rounded shadow"
+        className="px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700 transition-colors"
         onClick={() => fileInputRef.current?.click()}
       >
         Upload Edited CSV
+      </button>
+      <button
+        className="px-4 py-2 bg-purple-600 text-white rounded shadow hover:bg-purple-700 transition-colors"
+        onClick={handleManualRefresh}
+        disabled={loading}
+      >
+        {loading ? 'Refreshing...' : 'Refresh Data'}
       </button>
     </div>
   )

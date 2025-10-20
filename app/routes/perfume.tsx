@@ -8,9 +8,9 @@ import PerfumeRatingSystem from '~/components/Containers/Perfume/PerfumeRatingSy
 import ReviewSection from '~/components/Organisms/ReviewSection'
 import { getPerfumeBySlug } from '~/models/perfume.server'
 import { getPerfumeRatings, getUserPerfumeRating } from '~/models/perfumeRating.server'
+import { getUserPerfumeReview } from '~/models/perfumeReview.server'
 import { getUserById } from '~/models/user.server'
 import { isInWishlist } from '~/models/wishlist.server'
-import { getUserPerfumeReview } from '~/models/perfumeReview.server'
 import { createSafeUser } from '~/types'
 import { verifyAccessToken } from '~/utils/security/session-manager.server'
 
@@ -229,7 +229,7 @@ const PerfumeHeader = ({
       }}
     />
     <div className='relative z-10 px-8 text-center filter w-full rounded-lg py-4 text-shadow-lg text-shadow-noir-black/90'>
-      <h1>{perfume.name}</h1>
+      <h1 className='capitalize'>{perfume.name}</h1>
       <p className='text-lg tracking-wide mt-2 text-noir-gold-500'>
         {t('singlePerfume.subheading')}
         <NavLink

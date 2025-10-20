@@ -20,6 +20,16 @@
 /backups/*.dump
 /backups/*.json
 !/backups/.gitkeep
+/scripts/importers
+
+# Generated reports (timestamped snapshots)
+/docs/reports/duplicates_*.md
+/docs/reports/houses_no_perfumes_*.json
+/docs/reports/houses_no_perfumes_*.md
+/docs/reports/missing_info_*.csv
+/docs/reports/missing_info_*.json
+/docs/reports/missing_info_*.md
+
 
 .env
 .env.local

@@ -80,7 +80,7 @@ const SearchBar =
         : `/perfume/${item.slug}`
 
       return (
-        <NavLink viewTransition to={routePath} className="block w-full h-full">
+        <NavLink viewTransition to={routePath} className="block w-full h-full capitalize">
           {({ isTransitioning }) => (
             <span className={`contain-layout ${isTransitioning ? 'image-title' : 'none'}`}>
               {item.name}
@@ -117,7 +117,7 @@ const SearchBar =
             {results.map((item: any) => (
               <li key={item.id} className="p-2 text-noir-gold-100 hover:bg-noir-gold hover:text-noir-black font-semibold cursor-pointer last-of-type:rounded-b-md transition-colors">
                 {action ?
-                  <button className='block min-w-full text-left' onClick={() => handleAction(item)}>{item.name}</button> :
+                  <button className='block min-w-full text-left capitalize' onClick={() => handleAction(item)}>{item.name}</button> :
                   <RenderLink item={item} />}
               </li>
             ))}

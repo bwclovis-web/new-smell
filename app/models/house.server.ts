@@ -33,7 +33,12 @@ export const getAllHousesWithOptions = async (options?: {
 }) => {
   const { sortByType, houseType, sortBy, skip, take, selectFields } = options || {}
 
-  const where: Prisma.PerfumeHouseWhereInput = {}
+  const where: Prisma.PerfumeHouseWhereInput = {
+    // Only include houses that have at least one perfume
+    perfumes: {
+      some: {}
+    }
+  }
   if (houseType && houseType !== 'all') {
     where.type = houseType as HouseType
   }
@@ -80,7 +85,12 @@ export const getHousesPaginated = async (options?: {
 }) => {
   const { sortByType, houseType, sortBy, skip = 0, take = 50, selectFields } = options || {}
 
-  const where: Prisma.PerfumeHouseWhereInput = {}
+  const where: Prisma.PerfumeHouseWhereInput = {
+    // Only include houses that have at least one perfume
+    perfumes: {
+      some: {}
+    }
+  }
   if (houseType && houseType !== 'all') {
     where.type = houseType as HouseType
   }
@@ -127,8 +137,16 @@ export const getHousesPaginated = async (options?: {
 export const getAllHouses = async (options?: { skip?: number; take?: number; selectFields?: boolean }) => {
   const { skip, take, selectFields } = options || {}
 
+  const where: Prisma.PerfumeHouseWhereInput = {
+    // Only include houses that have at least one perfume
+    perfumes: {
+      some: {}
+    }
+  }
+
   if (selectFields) {
     return prisma.perfumeHouse.findMany({
+      where,
       orderBy: { createdAt: 'desc' },
       skip,
       take,
@@ -146,6 +164,7 @@ export const getAllHouses = async (options?: { skip?: number; take?: number; sel
   }
 
   return prisma.perfumeHouse.findMany({
+    where,
     orderBy: { createdAt: 'desc' },
     skip,
     take
@@ -158,6 +177,10 @@ export const getHousesByLetter = async (letter: string) => {
       name: {
         startsWith: letter,
         mode: 'insensitive'
+      },
+      // Only include houses that have at least one perfume
+      perfumes: {
+        some: {}
       }
     },
     orderBy: { name: 'asc' }
@@ -171,6 +194,10 @@ export const getHousesByLetterPaginated = async (letter: string, options: { skip
     name: {
       startsWith: letter,
       mode: 'insensitive'
+    },
+    // Only include houses that have at least one perfume
+    perfumes: {
+      some: {}
     }
   }
 
@@ -268,11 +295,13 @@ export const deletePerfumeHouse = async (id: string) => {
 //TODO: Add validation for FormData fields
 export const updatePerfumeHouse = async (id: string, data: FormData) => {
   try {
+    const name = sanitizeText(data.get('name') as string)
     const updatedHouse = await prisma.perfumeHouse.update({
       where: { id },
       data: {
-        name: data.get('name') as string,
-        description: data.get('description') as string,
+        name,
+        slug: createUrlSlug(name),
+        description: sanitizeText(data.get('description') as string),
         image: data.get('image') as string,
         website: data.get('website') as string,
         country: data.get('country') as string,
@@ -300,14 +329,27 @@ export const updatePerfumeHouse = async (id: string, data: FormData) => {
     }
   }
 }
+// Helper function to sanitize text input by normalizing Unicode characters
+const sanitizeText = (text: string | null): string => {
+  if (!text) return ''
+
+  return text
+    .normalize('NFD')  // Normalize Unicode
+    .replace(/[\u0300-\u036f]/g, '')  // Remove diacritics
+    .replace(/[\u2013\u2014]/g, '-')  // en dash, em dash → hyphen
+    .replace(/[\u2018\u2019]/g, "'")  // smart single quotes
+    .replace(/[\u201C\u201D]/g, '"')  // smart double quotes
+    .replace(/[\u2026]/g, '...')      // ellipsis
+}
+
 export const createPerfumeHouse = async (data: FormData) => {
   try {
-    const name = data.get('name') as string
+    const name = sanitizeText(data.get('name') as string)
     const newHouse = await prisma.perfumeHouse.create({
       data: {
         name,
         slug: createUrlSlug(name),
-        description: data.get('description') as string,
+        description: sanitizeText(data.get('description') as string),
         image: data.get('image') as string,
         website: data.get('website') as string,
         country: data.get('country') as string,

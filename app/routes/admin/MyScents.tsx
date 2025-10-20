@@ -1,13 +1,13 @@
-/* eslint-disable max-statements */
+
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from 'react-router'
 import { useLoaderData } from 'react-router-dom'
 
 import MyScentsListItem from '~/components/Containers/MyScents/MyScentListItem'
+import { VirtualScrollList } from '~/components/Molecules/VirtualScrollList'
 import AddToCollectionModal from '~/components/Organisms/AddToCollectionModal'
 import TitleBanner from '~/components/Organisms/TitleBanner'
-import { VirtualScrollList } from '~/components/Molecules/VirtualScrollList'
 import {
   addUserPerfume,
   getUserPerfumes,
@@ -21,12 +21,10 @@ import banner from '../../images/perfume.webp'
 
 export const ROUTE_PATH = '/admin/my-scents'
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: 'My Scents - Shadow and Sillage' },
-    { name: 'description', content: 'Manage your personal collection of perfumes.' }
-  ]
-}
+export const meta: MetaFunction = () => [
+  { title: 'My Scents - Shadow and Sillage' },
+  { name: 'description', content: 'Manage your personal collection of perfumes.' }
+]
 interface LoaderData {
   userPerfumes: UserPerfumeI[]
 }

@@ -172,8 +172,8 @@ export interface UserAlert {
   createdAt: Date
   readAt?: Date | null
   dismissedAt?: Date | null
-  user: User
-  perfume: Perfume
+  User: User
+  Perfume: Perfume
 }
 
 export interface UserAlertPreferences {
