@@ -78,6 +78,7 @@
     "label": "Switzerland",
     "code": "CH"
   },
+  { "id": "Turkey", "name": "Turkey", "label": "Turkey", "code": "TR" },
   {
     "id": "United Arab Emirates",
     "name": "United Arab Emirates",

@@ -6,7 +6,7 @@ const LinkCard = ({ data, type, children, selectedLetter, sourcePage }:
   { data: any; type: any; children?: any; selectedLetter?: string | null; sourcePage?: string }) => {
   const url = type === 'house' ? PERFUME_HOUSE : PERFUME_PATH
   return (
-    <div className='relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out'>
+    <div className='relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out bg-noir-dark/70 backdrop-blur-sm'>
       <NavLink
         to={`${url}/${data.slug}`}
         state={selectedLetter ? { selectedLetter, sourcePage } : { sourcePage }}

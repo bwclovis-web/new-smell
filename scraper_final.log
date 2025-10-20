@@ -1,0 +1,1016 @@
+============================================================
+SCRAPING ALL NOCTURNE ALCHEMY COLLECTIONS
+============================================================
+Starting Nocturne Alchemy scraping...
+
+============================================================
+Collection 1/4: PERMANENT-COLLECTION
+============================================================
+  Loading page 1: https://nocturnealchemy.com/collections/permanent-collection
+  Found 27 products on page 1
+  No more pages found
+  Total unique products found: 27
+
+============================================================
+Collection 2/4: LIMITED-COLLECTION
+============================================================
+  Loading page 1: https://nocturnealchemy.com/collections/limited-collection
+  Found 4 products on page 1
+  No more pages found
+  Total unique products found: 4
+
+============================================================
+Collection 3/4: COLLABORATIONS
+============================================================
+  Loading page 1: https://nocturnealchemy.com/collections/collaborations
+  Found 1 products on page 1
+  No more pages found
+  Total unique products found: 1
+
+============================================================
+Collection 4/4: STUDIO-LIMITED
+============================================================
+  Loading page 1: https://nocturnealchemy.com/collections/studio-limited
+  Found 8 products on page 1
+  No more pages found
+  Total unique products found: 8
+
+=== Total unique products found: 40 ===
+
+Processing 1/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/best-sellers
+  Found 23 gallery images
+  Found 20 variants
+    No notes found for "BEST Bastet’s Musk 6ml Cylindrical Bottle"
+    No notes found for "BEST Bourbon Vanille 5ml Slender Blue"
+    No notes found for "BEST Cardamom Musk 6ml Cylindrical Bottle"
+    No notes found for "BEST Coconut Moonstone 5ml Slender Blue"
+    No notes found for "BEST Crystalline-Santalum Deux 5ml Slender Blue"
+    No notes found for "BEST Eternal Ankh 5ml Slender Blue"
+    No notes found for "BEST Eternal Egypt 5ml Slender Blue"
+    No notes found for "BEST Eternal Goddess 5ml Slender Blue"
+    No notes found for "BEST Eternal Tut Ankh Amun 5ml Slender Blue"
+    No notes found for "BEST Gateau a la Vanille 5ml Slender Blue"
+    No notes found for "BEST Honeysuckle Crystalline 5ml Slender Blue"
+    No notes found for "BEST Kobalt 5ml Slender Blue"
+    No notes found for "BEST Lilac Kobalt 5ml Slender Blue"
+    No notes found for "BEST Magnolia Crystalline 5ml Slender Blue"
+    No notes found for "BEST Moonstone 5ml Slender Blue"
+    No notes found for "BEST Ozymandias 5ml Slender Blue"
+    No notes found for "BEST Peach Musk 6ml Cylindrical Bottle"
+    No notes found for "BEST Rice Milk Musk 6ml Cylindrical Bottle"
+    No notes found for "BEST Santalum 5ml Slender Blue"
+    No notes found for "BEST Vanilla Musk 6ml Cylindrical Bottle"
+    [OK] Best Bastet’s Musk 6ml Cylindrical Bottle (0 notes in description)
+    [OK] Best Bourbon Vanille 5ml Slender Blue (0 notes in description)
+    [OK] Best Cardamom Musk 6ml Cylindrical Bottle (0 notes in description)
+    [OK] Best Coconut Moonstone 5ml Slender Blue (0 notes in description)
+    [OK] Best Crystalline-santalum Deux 5ml Slender Blue (0 notes in description)
+    [OK] Best Eternal Ankh 5ml Slender Blue (0 notes in description)
+    [OK] Best Eternal Egypt 5ml Slender Blue (0 notes in description)
+    [OK] Best Eternal Goddess 5ml Slender Blue (0 notes in description)
+    [OK] Best Eternal Tut Ankh Amun 5ml Slender Blue (0 notes in description)
+    [OK] Best Gateau A La Vanille 5ml Slender Blue (0 notes in description)
+    [OK] Best Honeysuckle Crystalline 5ml Slender Blue (0 notes in description)
+    [OK] Best Kobalt 5ml Slender Blue (0 notes in description)
+    [OK] Best Lilac Kobalt 5ml Slender Blue (0 notes in description)
+    [OK] Best Magnolia Crystalline 5ml Slender Blue (0 notes in description)
+    [OK] Best Moonstone 5ml Slender Blue (0 notes in description)
+    [OK] Best Ozymandias 5ml Slender Blue (0 notes in description)
+    [OK] Best Peach Musk 6ml Cylindrical Bottle (0 notes in description)
+    [OK] Best Rice Milk Musk 6ml Cylindrical Bottle (0 notes in description)
+    [OK] Best Santalum 5ml Slender Blue (0 notes in description)
+    [OK] Best Vanilla Musk 6ml Cylindrical Bottle (0 notes in description)
+Processing 2/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/all-hallows-eve
+  Found 24 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2mL sample"
+    [SKIP] Bottle size variant: "5mL slender blue bottle"
+  [SKIP] No variants found
+Processing 3/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/anubis-garden
+  Found 13 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2ml sample"
+    [SKIP] Bottle size variant: "5ml slender blue bottle"
+  [SKIP] No variants found
+Processing 4/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/basytet
+  Found 28 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2ml sample"
+    [SKIP] Bottle size variant: "5ml slender blue bottle"
+  [SKIP] No variants found
+Processing 5/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/copy-of-new-bastets-garden
+  Found 19 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2ml sample"
+    [SKIP] Bottle size variant: "5ml slender blue bottle"
+  [SKIP] No variants found
+Processing 6/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/cities-of-the-dead-cotd
+  Found 13 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2 mL sample"
+    [SKIP] Bottle size variant: "5 mL slender blue bottle"
+  [SKIP] No variants found
+Processing 7/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/desecrated-tomb
+  Found 5 gallery images
+  Found 2 variants
+  [SKIP] No variants found
+Processing 8/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/dragons-gargoyles-mythology
+  Found 21 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2 mL sample"
+    [SKIP] Bottle size variant: "5 mL slender blue bottle"
+  [SKIP] No variants found
+Processing 9/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/new-egypt-her-wonders
+  Found 28 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2ml sample"
+    [SKIP] Bottle size variant: "5ml slender blue bottle"
+  [SKIP] No variants found
+Processing 10/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/new-egyptian-sweets-coffee-tea
+  Found 24 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2 mL sample"
+    [SKIP] Bottle size variant: "5 mL Slender Blue bottle"
+  [SKIP] No variants found
+Processing 11/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/egyptian-temples-cities
+  Found 14 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2 mL sample"
+    [SKIP] Bottle size variant: "5 mL Slender blue bottle"
+  [SKIP] No variants found
+Processing 12/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/elementals
+  Found 10 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2 mL sample"
+    [SKIP] Bottle size variant: "5 mL Slender blue bottle"
+  [SKIP] No variants found
+Processing 13/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/essential-temples
+  Found 11 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2 mL sample"
+    [SKIP] Bottle size variant: "5 mL Slender blue bottle"
+  [SKIP] No variants found
+Processing 14/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/eternals
+  Found 26 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2 mL sample"
+    [SKIP] Bottle size variant: "5 mL Slender blue bottle"
+  [SKIP] No variants found
+Processing 15/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/etherias
+  Found 21 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2 mL sample"
+    [SKIP] Bottle size variant: "5 mL slender blue bottle"
+  [SKIP] No variants found
+Processing 16/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/goblins
+  Found 27 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2 mL sample"
+    [SKIP] Bottle size variant: "5 mL Slender blue bottle"
+  [SKIP] No variants found
+Processing 17/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/immortals
+  Found 3 gallery images
+  Found 2 variants
+  [SKIP] No variants found
+Processing 18/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/lycan
+  Found 3 gallery images
+  Found 2 variants
+  [SKIP] No variants found
+Processing 19/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/meditations-with-the-gods-mwtg
+  Found 4 gallery images
+  Found 2 variants
+  [SKIP] No variants found
+Processing 20/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/om-na
+  Found 12 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2 mL sample"
+    [SKIP] Bottle size variant: "5 mL Slender blue bottle"
+  [SKIP] No variants found
+Processing 21/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/gods-goddess-deity
+  Found 4 gallery images
+  Found 2 variants
+  [SKIP] No variants found
+Processing 22/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/pharaohs-queens
+  Found 4 gallery images
+  Found 2 variants
+  [SKIP] No variants found
+Processing 23/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/royal-amber
+  Found 23 gallery images
+  Found 2 variants
+    [SKIP] Bottle size variant: "2 mL sample"
+    [SKIP] Bottle size variant: "5 mL Slender blue bottle"
+  [SKIP] No variants found
+Processing 24/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/7
+  Found 4 gallery images
+  Found 2 variants
+  [SKIP] No variants found
+Processing 25/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/techno-bastet
+  Found 16 gallery images
+  Found 2 variants
+  [SKIP] No variants found
+Processing 26/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/the-library
+  Found 3 gallery images
+  Found 2 variants
+  [SKIP] No variants found
+Processing 27/40
+
+  Loading product: https://nocturnealchemy.com/collections/permanent-collection/products/the-vapothecary
+  Found 4 gallery images
+  Found 2 variants
+  [SKIP] No variants found
+Processing 28/40
+
+  Loading product: https://nocturnealchemy.com/collections/limited-collection/products/new-na-anniversary-2025
+  Found 21 gallery images
+  Found 20 variants
+    No notes found for "Bastet’s Amber Ambre Blanc 5ml blue bottle"
+    No notes found for "Bastet’s Amber Ambre Noir 5ml blue bottle"
+    Found 9 notes for "Crystalline Oudh"
+    No notes found for "Bastet’s Ice Cream Bourbon Butter 5ml blue bottle"
+    No notes found for "Bastet’s Ice Cream Caramel Waffle 5ml blue bottle"
+    No notes found for "Bastet’s Ice Cream Pistachio Crème 5ml blue bottle"
+    No notes found for "Bastet’s Ice Cream Vanilla Cake 5ml blue bottle"
+    No notes found for "Bastet’s Amber 5ml blue bottle"
+    No notes found for "Bastet’s Amber Ambre Kulfi 5ml blue bottle"
+    No notes found for "Bastet’s Amber Belle Oudh 5ml blue bottle"
+    No notes found for "Bastet’s Amber Vanille Kulfi 5ml blue bottle"
+    No notes found for "Bastet’s Ice Cream 5ml blue bottle"
+    No notes found for "Bastet’s Ice Cream Almonde Calisson 5ml blue bottle"
+    No notes found for "Bastet’s Ice Cream Chocolat Blanc 5ml blue bottle"
+    No notes found for "Bastet’s Ice Cream Tonka Kulfi 5ml blue bottle"
+    Found 8 notes for "Crystalline"
+    No notes found for "14ml Bastet’s Ice Cream Original in Translucent Pink Bottle"
+    No notes found for "14ml Bastet’s Ice Cream Original in Translucent Sky Blue Bottle"
+    No notes found for "14ml Crystalline Original in Translucent Dark Blue Bottle"
+    No notes found for "14ml Bastet’s Amber Original in semi-Translucent Blood Red Bottle"
+    [OK] Bastet’s Amber Ambre Blanc 5ml Blue Bottle (0 notes in description)
+    [OK] Bastet’s Amber Ambre Noir 5ml Blue Bottle (0 notes in description)
+    [OK] Crystalline Oudh (9 notes in description)
+    [OK] Bastet’s Ice Cream Bourbon Butter 5ml Blue Bottle (0 notes in description)
+    [OK] Bastet’s Ice Cream Caramel Waffle 5ml Blue Bottle (0 notes in description)
+    [OK] Bastet’s Ice Cream Pistachio Crème 5ml Blue Bottle (0 notes in description)
+    [OK] Bastet’s Ice Cream Vanilla Cake 5ml Blue Bottle (0 notes in description)
+    [OK] Bastet’s Amber 5ml Blue Bottle (0 notes in description)
+    [OK] Bastet’s Amber Ambre Kulfi 5ml Blue Bottle (0 notes in description)
+    [OK] Bastet’s Amber Belle Oudh 5ml Blue Bottle (0 notes in description)
+    [OK] Bastet’s Amber Vanille Kulfi 5ml Blue Bottle (0 notes in description)
+    [OK] Bastet’s Ice Cream 5ml Blue Bottle (0 notes in description)
+    [OK] Bastet’s Ice Cream Almonde Calisson 5ml Blue Bottle (0 notes in description)
+    [OK] Bastet’s Ice Cream Chocolat Blanc 5ml Blue Bottle (0 notes in description)
+    [OK] Bastet’s Ice Cream Tonka Kulfi 5ml Blue Bottle (0 notes in description)
+    [OK] Crystalline (8 notes in description)
+    [OK] 14ml Bastet’s Ice Cream Original In Translucent Pink Bottle (0 notes in description)
+    [OK] 14ml Bastet’s Ice Cream Original In Translucent Sky Blue Bottle (0 notes in description)
+    [OK] 14ml Crystalline Original In Translucent Dark Blue Bottle (0 notes in description)
+    [OK] 14ml Bastet’s Amber Original In Semi-translucent Blood Red Bottle (0 notes in description)
+Processing 29/40
+
+  Loading product: https://nocturnealchemy.com/collections/limited-collection/products/new-club-monster-limited
+  Found 15 gallery images
+  Found 10 variants
+    Found 17 notes for "DJ Drax"
+    Found 17 notes for "Fiend Ishly"
+    Found 19 notes for "Ghoulmon"
+    Found 19 notes for "Jax"
+    Found 20 notes for "Kitty Hex"
+    Found 24 notes for "Miss Witchypoo"
+    Found 10 notes for "Pink Monster Sugar Musk"
+    Found 17 notes for "Siren Ness"
+    Found 19 notes for "Young Nick"
+    No notes found for "Club Monster 2025 Perfumes SET"
+    [OK] Dj Drax (17 notes in description)
+    [OK] Fiend Ishly (17 notes in description)
+    [OK] Ghoulmon (19 notes in description)
+    [OK] Jax (19 notes in description)
+    [OK] Kitty Hex (20 notes in description)
+    [OK] Miss Witchypoo (24 notes in description)
+    [OK] Pink Monster Sugar Musk (10 notes in description)
+    [OK] Siren Ness (17 notes in description)
+    [OK] Young Nick (19 notes in description)
+    [OK] Club Monster 2025 Perfumes Set (0 notes in description)
+Processing 30/40
+
+  Loading product: https://nocturnealchemy.com/collections/limited-collection/products/new-halloween-limited-2025
+  Found 57 gallery images
+  Found 55 variants
+    Found 19 notes for "Halloween 2026"
+    No notes found for "Halloween 2026 5ml Blue bottle"
+    No notes found for "Ghost Musk Special Edition 6ml Cylindrical Bottle"
+    No notes found for "Manor Musk Special Edition 6ml Cylindrical Bottle"
+    No notes found for "Underworld Musk Special Edition 6ml Cylindrical Bottle"
+    Found 73 notes for "Chat Noir"
+    Found 53 notes for "Jacques"
+    Found 33 notes for "La Momie"
+    Found 16 notes for "Monstre"
+    Found 10 notes for "Zodiac Libra 25"
+    Found 16 notes for "Zodiac Virgo 25"
+    Found 25 notes for "Cherry Horchata"
+    Found 34 notes for "Pumpkin Horchata"
+    Found 17 notes for "Raspberry Coconut Horchata"
+    Found 9 notes for "Vanilla Horchata"
+    Found 13 notes for "Blue Violet VANILLA 07"
+    Found 17 notes for "Yellow VANILLA 08"
+    Found 16 notes for "Red Orange VANILLA 09"
+    No notes found for "Eternal Ankh Pastel Candy Corn Special Edition 6ml Cylindrical Bottle"
+    No notes found for "Eternal Ankh Pastel Ghost Special Edition 6ml Cylindrical Bottle"
+    No notes found for "Eternal Ankh Pastel Pumpkin Special Edition 6ml Cylindrical Bottle"
+    Found 36 notes for "Aegisthus"
+    Found 24 notes for "Clytemnestra"
+    Found 14 notes for "Polyphemus"
+    Found 8 notes for "Telemachus"
+    Found 56 notes for "Black Vanilla Amber Incense"
+    Found 35 notes for "Red Pine Amber Incense"
+    Found 17 notes for "Red Sandalwood Amber Incense"
+    Found 35 notes for "Free These Spirits"
+    Found 20 notes for "Haunted Haunts"
+    Found 8 notes for "Scream Soda"
+    Found 48 notes for "Candied Cauldron"
+    Found 34 notes for "Candied Dandied Monster"
+    Found 17 notes for "Candied Kitty Cat Candy"
+    Found 32 notes for "Cotton Candy Caramel Pumpkin Popcorn Vanilla Musk"
+    Found 17 notes for "Cotton Candy Caramelized Spice Cake Vanilla Musk"
+    Found 10 notes for "Cotton Candy Salted Caramel Pumpkin & Fig Vanilla Musk"
+    Found 10 notes for "Black Vanilla Woods HONEY"
+    Found 11 notes for "Sandalwood Incense HONEY"
+    Found 35 notes for "Burgundy Dust Honey Tea"
+    Found 15 notes for "Lamia’s Honey Black Tea"
+    Found 9 notes for "Velvet Blood Honey Tea"
+    Found 17 notes for "Moon"
+    Found 9 notes for "Spellbound"
+    No notes found for "Dracula Rouge Special Edition Red 5ml Bottle"
+    No notes found for "Mina Rouge Special Edition Red 5ml Bottle"
+    Found 14 notes for "Bastet’s Ice Cream Candy Corn 25"
+    Found 14 notes for "Bastet’s Ice Cream Caramel Apple 25"
+    Found 17 notes for "Bastet’s Ice Cream Pumpkin Spice 25"
+    Found 12 notes for "Bastet’s Ice Cream Spiced Cider 25"
+    Found 33 notes for "Autumn Apple Milk Moon"
+    Found 27 notes for "Autumn Leaves Rice Milk Moon"
+    Found 13 notes for "Autumn Sandalwood Milk Moon"
+    Found 13 notes for "31 Bats Miss Lenore"
+    Found 16 notes for "31 Bats Mr. Nevermore"
+    [OK] Halloween 2026 (19 notes in description)
+    [OK] Halloween 2026 5ml Blue Bottle (0 notes in description)
+    [OK] Ghost Musk Special Edition 6ml Cylindrical Bottle (0 notes in description)
+    [OK] Manor Musk Special Edition 6ml Cylindrical Bottle (0 notes in description)
+    [OK] Underworld Musk Special Edition 6ml Cylindrical Bottle (0 notes in description)
+    [OK] Chat Noir (73 notes in description)
+    [OK] Jacques (53 notes in description)
+    [OK] La Momie (33 notes in description)
+    [OK] Monstre (16 notes in description)
+    [OK] Zodiac Libra 25 (10 notes in description)
+    [OK] Zodiac Virgo 25 (16 notes in description)
+    [OK] Cherry Horchata (25 notes in description)
+    [OK] Pumpkin Horchata (34 notes in description)
+    [OK] Raspberry Coconut Horchata (17 notes in description)
+    [OK] Vanilla Horchata (9 notes in description)
+    [OK] Blue Violet Vanilla 07 (13 notes in description)
+    [OK] Yellow Vanilla 08 (17 notes in description)
+    [OK] Red Orange Vanilla 09 (16 notes in description)
+    [OK] Eternal Ankh Pastel Candy Corn Special Edition 6ml Cylindrical Bottle (0 notes in description)
+    [OK] Eternal Ankh Pastel Ghost Special Edition 6ml Cylindrical Bottle (0 notes in description)
+    [OK] Eternal Ankh Pastel Pumpkin Special Edition 6ml Cylindrical Bottle (0 notes in description)
+    [OK] Aegisthus (36 notes in description)
+    [OK] Clytemnestra (24 notes in description)
+    [OK] Polyphemus (14 notes in description)
+    [OK] Telemachus (8 notes in description)
+    [OK] Black Vanilla Amber Incense (56 notes in description)
+    [OK] Red Pine Amber Incense (35 notes in description)
+    [OK] Red Sandalwood Amber Incense (17 notes in description)
+    [OK] Free These Spirits (35 notes in description)
+    [OK] Haunted Haunts (20 notes in description)
+    [OK] Scream Soda (8 notes in description)
+    [OK] Candied Cauldron (48 notes in description)
+    [OK] Candied Dandied Monster (34 notes in description)
+    [OK] Candied Kitty Cat Candy (17 notes in description)
+    [OK] Cotton Candy Caramel Pumpkin Popcorn Vanilla Musk (32 notes in description)
+    [OK] Cotton Candy Caramelized Spice Cake Vanilla Musk (17 notes in description)
+    [OK] Cotton Candy Salted Caramel Pumpkin & Fig Vanilla Musk (10 notes in description)
+    [OK] Black Vanilla Woods Honey (10 notes in description)
+    [OK] Sandalwood Incense Honey (11 notes in description)
+    [OK] Burgundy Dust Honey Tea (35 notes in description)
+    [OK] Lamia’s Honey Black Tea (15 notes in description)
+    [OK] Velvet Blood Honey Tea (9 notes in description)
+    [OK] Moon (17 notes in description)
+    [OK] Spellbound (9 notes in description)
+    [OK] Dracula Rouge Special Edition Red 5ml Bottle (0 notes in description)
+    [OK] Mina Rouge Special Edition Red 5ml Bottle (0 notes in description)
+    [OK] Bastet’s Ice Cream Candy Corn 25 (14 notes in description)
+    [OK] Bastet’s Ice Cream Caramel Apple 25 (14 notes in description)
+    [OK] Bastet’s Ice Cream Pumpkin Spice 25 (17 notes in description)
+    [OK] Bastet’s Ice Cream Spiced Cider 25 (12 notes in description)
+    [OK] Autumn Apple Milk Moon (33 notes in description)
+    [OK] Autumn Leaves Rice Milk Moon (27 notes in description)
+    [OK] Autumn Sandalwood Milk Moon (13 notes in description)
+    [OK] 31 Bats Miss Lenore (13 notes in description)
+    [OK] 31 Bats Mr. Nevermore (16 notes in description)
+Processing 31/40
+
+  Loading product: https://nocturnealchemy.com/collections/limited-collection/products/new8-halloween-resurgence-from-2024
+  Found 56 gallery images
+  Found 54 variants
+    Found 28 notes for "Shadow Crow"
+    Found 17 notes for "Shadow Eagle"
+    Found 10 notes for "Shadow Raven"
+    Found 41 notes for "Dino Skeleton"
+    Found 29 notes for "Dino Zombie"
+    Found 21 notes for "Dino Mummy"
+    Found 14 notes for "Dino Jack"
+    Found 18 notes for "After Dinner Ghost"
+    Found 12 notes for "Ghost Stories"
+    Found 8 notes for "Black Vanilla HONEY"
+    Found 5 notes for "Black Santalum HONEY"
+    Found 4 notes for "Kashmir HONEY"
+    Found 12 notes for "Eternal Necropolis Shabah"
+    Found 13 notes for "Eternal Netherworld Shabah"
+    Found 13 notes for "Eternal Underworld Shabah"
+    Found 12 notes for "Mango Custard Kulfi"
+    Found 13 notes for "Black Vanilla Kulfi"
+    Found 13 notes for "Spiced Vanilla Kulfi"
+    Found 24 notes for "Ghost Music"
+    Found 15 notes for "El Diablo"
+    Found 9 notes for "Bury My Lovely"
+    Found 8 notes for "The Halloween Tree"
+    Found 24 notes for "Candy Corn Wraith"
+    Found 18 notes for "Pumpkin Pie Banshee"
+    Found 10 notes for "Candied Apple Phantom"
+    Found 23 notes for "Vampire Wine Heart Chianti"
+    Found 16 notes for "Vampire Wine Blood Shiraz"
+    Found 7 notes for "Vampire Wine Vein Cabernet"
+    Found 32 notes for "Terror Tea"
+    Found 26 notes for "Ghastly Tea"
+    Found 20 notes for "Frightful Tea"
+    Found 12 notes for "Scaretastic Tea"
+    Found 28 notes for "Sacerdos"
+    Found 15 notes for "Cantatrix"
+    Found 8 notes for "Venefica"
+    Found 8 notes for "Secret Oktober"
+    Found 18 notes for "Black Moonlight"
+    Found 30 notes for "Masquerade Set"
+    Found 21 notes for "Masquerade Hathor"
+    Found 10 notes for "Masquerade Moon Thoth"
+    Found 5 notes for "Masquerade Khnum"
+    Found 45 notes for "Black Amber Incense"
+    Found 32 notes for "Black Patchouli Amber Incense"
+    Found 18 notes for "Black Rose Amber Incense"
+    Found 39 notes for "Percy"
+    Found 29 notes for "Mary"
+    Found 15 notes for "Polidori"
+    Found 9 notes for "Byron"
+    Found 13 notes for "Lunar Eclipse"
+    Found 13 notes for "Solar Eclipse"
+    Found 8 notes for "Blood Moon"
+    Found 5 notes for "31 Bats Pandora"
+    Found 7 notes for "31 Bats Morticia"
+    Found 5 notes for "31 Bats Mircalla"
+    [OK] Shadow Crow (28 notes in description)
+    [OK] Shadow Eagle (17 notes in description)
+    [OK] Shadow Raven (10 notes in description)
+    [OK] Dino Skeleton (41 notes in description)
+    [OK] Dino Zombie (29 notes in description)
+    [OK] Dino Mummy (21 notes in description)
+    [OK] Dino Jack (14 notes in description)
+    [OK] After Dinner Ghost (18 notes in description)
+    [OK] Ghost Stories (12 notes in description)
+    [OK] Black Vanilla Honey (8 notes in description)
+    [OK] Black Santalum Honey (5 notes in description)
+    [OK] Kashmir Honey (4 notes in description)
+    [OK] Eternal Necropolis Shabah (12 notes in description)
+    [OK] Eternal Netherworld Shabah (13 notes in description)
+    [OK] Eternal Underworld Shabah (13 notes in description)
+    [OK] Mango Custard Kulfi (12 notes in description)
+    [OK] Black Vanilla Kulfi (13 notes in description)
+    [OK] Spiced Vanilla Kulfi (13 notes in description)
+    [OK] Ghost Music (24 notes in description)
+    [OK] El Diablo (15 notes in description)
+    [OK] Bury My Lovely (9 notes in description)
+    [OK] The Halloween Tree (8 notes in description)
+    [OK] Candy Corn Wraith (24 notes in description)
+    [OK] Pumpkin Pie Banshee (18 notes in description)
+    [OK] Candied Apple Phantom (10 notes in description)
+    [OK] Vampire Wine Heart Chianti (23 notes in description)
+    [OK] Vampire Wine Blood Shiraz (16 notes in description)
+    [OK] Vampire Wine Vein Cabernet (7 notes in description)
+    [OK] Terror Tea (32 notes in description)
+    [OK] Ghastly Tea (26 notes in description)
+    [OK] Frightful Tea (20 notes in description)
+    [OK] Scaretastic Tea (12 notes in description)
+    [OK] Sacerdos (28 notes in description)
+    [OK] Cantatrix (15 notes in description)
+    [OK] Venefica (8 notes in description)
+    [OK] Secret Oktober (8 notes in description)
+    [OK] Black Moonlight (18 notes in description)
+    [OK] Masquerade Set (30 notes in description)
+    [OK] Masquerade Hathor (21 notes in description)
+    [OK] Masquerade Moon Thoth (10 notes in description)
+    [OK] Masquerade Khnum (5 notes in description)
+    [OK] Black Amber Incense (45 notes in description)
+    [OK] Black Patchouli Amber Incense (32 notes in description)
+    [OK] Black Rose Amber Incense (18 notes in description)
+    [OK] Percy (39 notes in description)
+    [OK] Mary (29 notes in description)
+    [OK] Polidori (15 notes in description)
+    [OK] Byron (9 notes in description)
+    [OK] Lunar Eclipse (13 notes in description)
+    [OK] Solar Eclipse (13 notes in description)
+    [OK] Blood Moon (8 notes in description)
+    [OK] 31 Bats Pandora (5 notes in description)
+    [OK] 31 Bats Morticia (7 notes in description)
+    [OK] 31 Bats Mircalla (5 notes in description)
+Processing 32/40
+
+  Loading product: https://nocturnealchemy.com/collections/collaborations/products/dan-breretons-nocturnals
+  Found 17 gallery images
+  Found 18 variants
+    Found 42 notes for "Judge Hemlock"
+    Found 36 notes for "Nyx"
+    Found 30 notes for "Ajax"
+    Found 25 notes for "Thorne"
+    Found 19 notes for "Keera"
+    Found 5 notes for "Annabel"
+    Found 11 notes for "Jammybottoms"
+    Found 9 notes for "Gunwitch"
+    Found 8 notes for "Evening"
+    Found 11 notes for "Doc Horror"
+    Found 8 notes for "Firelion"
+    Found 8 notes for "Starfish"
+    Found 9 notes for "Komodo"
+    Found 3 notes for "Polychrome"
+    Found 8 notes for "Raccoon"
+    No notes found for "Signed Collection One"
+    No notes found for "Signed Collection Two"
+    Found 2 notes for "Signed Complete Set"
+    [OK] Judge Hemlock (42 notes in description)
+    [OK] Nyx (36 notes in description)
+    [OK] Ajax (30 notes in description)
+    [OK] Thorne (25 notes in description)
+    [OK] Keera (19 notes in description)
+    [OK] Annabel (5 notes in description)
+    [OK] Jammybottoms (11 notes in description)
+    [OK] Gunwitch (9 notes in description)
+    [OK] Evening (8 notes in description)
+    [OK] Doc Horror (11 notes in description)
+    [OK] Firelion (8 notes in description)
+    [OK] Starfish (8 notes in description)
+    [OK] Komodo (9 notes in description)
+    [OK] Polychrome (3 notes in description)
+    [OK] Raccoon (8 notes in description)
+    [OK] Signed Collection One (0 notes in description)
+    [OK] Signed Collection Two (0 notes in description)
+    [OK] Signed Complete Set (2 notes in description)
+Processing 33/40
+
+  Loading product: https://nocturnealchemy.com/collections/studio-limited/products/new-studio-limited-musk-haven
+  Found 50 gallery images
+  Found 43 variants
+    Found 7 notes for "Satsuma Musk"
+    Found 10 notes for "Rain Musk"
+    Found 9 notes for "EM: Mallow Musk"
+    Found 33 notes for "Tibetan Incense Musk"
+    Found 23 notes for "Nag Champa Incense Musk"
+    Found 13 notes for "Sacred Sage Musk"
+    Found 6 notes for "Sweetgrass Musk"
+    Found 7 notes for "Dragon’s Blood Musk"
+    No notes found for "Himalayan Cedar Sage & Sweetgrass Musk"
+    Found 17 notes for "Cardamom Musk"
+    Found 9 notes for "Palo Santo Musk"
+    Found 2 notes for "EM: Sweet Musk"
+    Found 1 notes for "EM: Smoked Musk"
+    Found 1 notes for "EM: Cuir Musk"
+    Found 5 notes for "EM: Spice Musk"
+    Found 3 notes for "EM: Incense Musk"
+    Found 6 notes for "EM: Wood Musk"
+    Found 12 notes for "Amber Musk"
+    Found 5 notes for "Bastet's Musk"
+    Found 107 notes for "Black Currant Musk"
+    Found 78 notes for "Cherry Blossom Musk"
+    Found 69 notes for "Cherry Musk"
+    Found 4 notes for "Freesia Musk"
+    Found 58 notes for "Gardenia Musk"
+    Found 50 notes for "Heliotrope Musk"
+    Found 43 notes for "Honey Musk"
+    Found 8 notes for "Jasmine Musk"
+    Found 4 notes for "Lavender Musk"
+    Found 128 notes for "Lilac Musk"
+    Found 9 notes for "Lily of the Valley Musk"
+    Found 18 notes for "Neroli Musk"
+    Found 100 notes for "Passion Fruit Musk"
+    Found 10 notes for "Patchouli Musk"
+    Found 121 notes for "Plum Musk"
+    Found 3 notes for "Peach Musk"
+    Found 47 notes for "Rice Milk Musk"
+    Found 10 notes for "Rose Musk"
+    Found 9 notes for "Sandalwood Musk"
+    Found 9 notes for "Tea Musk"
+    Found 13 notes for "Tobacco Musk"
+    Found 5 notes for "Tuberose Musk"
+    Found 14 notes for "Vanilla Musk"
+    Found 4 notes for "White Lotus Musk"
+    [OK] Satsuma Musk (7 notes in description)
+    [OK] Rain Musk (10 notes in description)
+    [OK] Em: Mallow Musk (9 notes in description)
+    [OK] Tibetan Incense Musk (33 notes in description)
+    [OK] Nag Champa Incense Musk (23 notes in description)
+    [OK] Sacred Sage Musk (13 notes in description)
+    [OK] Sweetgrass Musk (6 notes in description)
+    [OK] Dragon’s Blood Musk (7 notes in description)
+    [OK] Himalayan Cedar Sage & Sweetgrass Musk (0 notes in description)
+    [OK] Cardamom Musk (17 notes in description)
+    [OK] Palo Santo Musk (9 notes in description)
+    [OK] Em: Sweet Musk (2 notes in description)
+    [OK] Em: Smoked Musk (1 notes in description)
+    [OK] Em: Cuir Musk (1 notes in description)
+    [OK] Em: Spice Musk (5 notes in description)
+    [OK] Em: Incense Musk (3 notes in description)
+    [OK] Em: Wood Musk (6 notes in description)
+    [OK] Amber Musk (12 notes in description)
+    [OK] Bastet's Musk (5 notes in description)
+    [OK] Black Currant Musk (107 notes in description)
+    [OK] Cherry Blossom Musk (78 notes in description)
+    [OK] Cherry Musk (69 notes in description)
+    [OK] Freesia Musk (4 notes in description)
+    [OK] Gardenia Musk (58 notes in description)
+    [OK] Heliotrope Musk (50 notes in description)
+    [OK] Honey Musk (43 notes in description)
+    [OK] Jasmine Musk (8 notes in description)
+    [OK] Lavender Musk (4 notes in description)
+    [OK] Lilac Musk (128 notes in description)
+    [OK] Lily Of The Valley Musk (9 notes in description)
+    [OK] Neroli Musk (18 notes in description)
+    [OK] Passion Fruit Musk (100 notes in description)
+    [OK] Patchouli Musk (10 notes in description)
+    [OK] Plum Musk (121 notes in description)
+    [OK] Peach Musk (3 notes in description)
+    [OK] Rice Milk Musk (47 notes in description)
+    [OK] Rose Musk (10 notes in description)
+    [OK] Sandalwood Musk (9 notes in description)
+    [OK] Tea Musk (9 notes in description)
+    [OK] Tobacco Musk (13 notes in description)
+    [OK] Tuberose Musk (5 notes in description)
+    [OK] Vanilla Musk (14 notes in description)
+    [OK] White Lotus Musk (4 notes in description)
+Processing 34/40
+
+  Loading product: https://nocturnealchemy.com/collections/studio-limited/products/new-studio-limited-ombre-collection
+  Found 24 gallery images
+  Found 19 variants
+    No notes found for "Ambre Ombré #2 Slender Blue Bottle"
+    No notes found for "Chocolat Ombré #7 Slender Blue Bottle"
+    No notes found for "Chypre Ombré #32 Slender Blue Bottle"
+    No notes found for "Fig Noir Ombré #6 Slender Blue Bottle"
+    No notes found for "Fougère Ombré #33 Slender Blue Bottle"
+    No notes found for "Frankincense Ombré #4 Slender Blue Bottle"
+    No notes found for "Jasmin Ombré #24 Slender Blue Bottle"
+    No notes found for "Musc Ombré #22 Slender Blue Bottle"
+    No notes found for "Myrrh Ombré #3 Slender Blue Bottle"
+    No notes found for "Oudh Ombré #23 Slender Blue Bottle"
+    No notes found for "Patchouli Ombré #19 Slender Blue Bottle"
+    No notes found for "Red Musc Ombré #29 Slender Blue Bottle"
+    No notes found for "Rose Ambre Ombré #13 Slender Blue Bottle"
+    No notes found for "Santal Ombré #5 Slender Blue Bottle"
+    No notes found for "Tabac Santal Ombré #31 Slender Blue Bottle"
+    No notes found for "Tonka Ombré #30 Slender Blue Bottle"
+    No notes found for "Vanille Ombré #1 Slender Blue Bottle"
+    No notes found for "White Ambre Ombré #12 Slender Blue Bottle"
+    No notes found for "White Santal Ombré #11 Slender Blue Bottle"
+    [OK] Ambre Ombré #2 Slender Blue Bottle (0 notes in description)
+    [OK] Chocolat Ombré #7 Slender Blue Bottle (0 notes in description)
+    [OK] Chypre Ombré #32 Slender Blue Bottle (0 notes in description)
+    [OK] Fig Noir Ombré #6 Slender Blue Bottle (0 notes in description)
+    [OK] Fougère Ombré #33 Slender Blue Bottle (0 notes in description)
+    [OK] Frankincense Ombré #4 Slender Blue Bottle (0 notes in description)
+    [OK] Jasmin Ombré #24 Slender Blue Bottle (0 notes in description)
+    [OK] Musc Ombré #22 Slender Blue Bottle (0 notes in description)
+    [OK] Myrrh Ombré #3 Slender Blue Bottle (0 notes in description)
+    [OK] Oudh Ombré #23 Slender Blue Bottle (0 notes in description)
+    [OK] Patchouli Ombré #19 Slender Blue Bottle (0 notes in description)
+    [OK] Red Musc Ombré #29 Slender Blue Bottle (0 notes in description)
+    [OK] Rose Ambre Ombré #13 Slender Blue Bottle (0 notes in description)
+    [OK] Santal Ombré #5 Slender Blue Bottle (0 notes in description)
+    [OK] Tabac Santal Ombré #31 Slender Blue Bottle (0 notes in description)
+    [OK] Tonka Ombré #30 Slender Blue Bottle (0 notes in description)
+    [OK] Vanille Ombré #1 Slender Blue Bottle (0 notes in description)
+    [OK] White Ambre Ombré #12 Slender Blue Bottle (0 notes in description)
+    [OK] White Santal Ombré #11 Slender Blue Bottle (0 notes in description)
+Processing 35/40
+
+  Loading product: https://nocturnealchemy.com/collections/studio-limited/products/copy-new-new-studio-limited-originals
+  Found 47 gallery images
+  Found 43 variants
+    Found 14 notes for "Moon Opal Vanilla"
+    Found 10 notes for "Gateau A La Vanille"
+    Found 14 notes for "Vanilla Haze"
+    Found 8 notes for "Opal Sandalwood"
+    Found 11 notes for "Pyramid Vanille 4"
+    Found 13 notes for "Silver Star"
+    Found 7 notes for "Amethyst"
+    Found 7 notes for "Black Diamond"
+    Found 5 notes for "Black Musk"
+    Found 6 notes for "Black Star"
+    Found 6 notes for "Bloodstone"
+    Found 6 notes for "Blue Topaz"
+    Found 6 notes for "Bourbon Vanille"
+    Found 19 notes for "Cinder Vanilla"
+    Found 15 notes for "Crimson"
+    Found 12 notes for "Crystal"
+    Found 10 notes for "Diamond"
+    Found 8 notes for "Egyptian Musk"
+    Found 8 notes for "Ember"
+    Found 9 notes for "Ember Vanilla"
+    Found 108 notes for "French Vanilla"
+    Found 106 notes for "Garnet"
+    Found 104 notes for "Indigo"
+    Found 100 notes for "Kashmir"
+    Found 99 notes for "Kobalt"
+    Found 93 notes for "Mexican Vanilla"
+    Found 88 notes for "Moonstone"
+    Found 2 notes for "N2"
+    Found 4 notes for "N4"
+    Found 1 notes for "N5"
+    Found 6 notes for "N8"
+    Found 70 notes for "Patchouli"
+    Found 58 notes for "Pink Quartz"
+    Found 54 notes for "Pyramid Santalum"
+    Found 50 notes for "Pyramid Vanille"
+    Found 11 notes for "Pyramid Vanille 2"
+    Found 4 notes for "Pyramid Vanille 3"
+    Found 34 notes for "Santalum"
+    Found 29 notes for "Santalum White"
+    Found 29 notes for "Tahitian Vanilla"
+    Found 27 notes for "Tibetan Crystalline"
+    Found 21 notes for "Tibetan Santalum"
+    Found 9 notes for "West Indian Vanilla"
+    [OK] Moon Opal Vanilla (14 notes in description)
+    [OK] Gateau A La Vanille (10 notes in description)
+    [OK] Vanilla Haze (14 notes in description)
+    [OK] Opal Sandalwood (8 notes in description)
+    [OK] Pyramid Vanille 4 (11 notes in description)
+    [OK] Silver Star (13 notes in description)
+    [OK] Amethyst (7 notes in description)
+    [OK] Black Diamond (7 notes in description)
+    [OK] Black Musk (5 notes in description)
+    [OK] Black Star (6 notes in description)
+    [OK] Bloodstone (6 notes in description)
+    [OK] Blue Topaz (6 notes in description)
+    [OK] Bourbon Vanille (6 notes in description)
+    [OK] Cinder Vanilla (19 notes in description)
+    [OK] Crimson (15 notes in description)
+    [OK] Crystal (12 notes in description)
+    [OK] Diamond (10 notes in description)
+    [OK] Egyptian Musk (8 notes in description)
+    [OK] Ember (8 notes in description)
+    [OK] Ember Vanilla (9 notes in description)
+    [OK] French Vanilla (108 notes in description)
+    [OK] Garnet (106 notes in description)
+    [OK] Indigo (104 notes in description)
+    [OK] Kashmir (100 notes in description)
+    [OK] Kobalt (99 notes in description)
+    [OK] Mexican Vanilla (93 notes in description)
+    [OK] Moonstone (88 notes in description)
+    [OK] N2 (2 notes in description)
+    [OK] N4 (4 notes in description)
+    [OK] N5 (1 notes in description)
+    [OK] N8 (6 notes in description)
+    [OK] Patchouli (70 notes in description)
+    [OK] Pink Quartz (58 notes in description)
+    [OK] Pyramid Santalum (54 notes in description)
+    [OK] Pyramid Vanille (50 notes in description)
+    [OK] Pyramid Vanille 2 (11 notes in description)
+    [OK] Pyramid Vanille 3 (4 notes in description)
+    [OK] Santalum (34 notes in description)
+    [OK] Santalum White (29 notes in description)
+    [OK] Tahitian Vanilla (29 notes in description)
+    [OK] Tibetan Crystalline (27 notes in description)
+    [OK] Tibetan Santalum (21 notes in description)
+    [OK] West Indian Vanilla (9 notes in description)
+Processing 36/40
+
+  Loading product: https://nocturnealchemy.com/collections/studio-limited/products/copy-of-studio-limited-deux
+  Found 20 gallery images
+  Found 1 variants
+    [SKIP] Bottle size variant: "5ml Slender Blue Bottle"
+  [SKIP] No variants found
+Processing 37/40
+
+  Loading product: https://nocturnealchemy.com/collections/studio-limited/products/new-the-observatory-studio-limited
+  Found 12 gallery images
+  Found 8 variants
+    Found 13 notes for "Callisto - OB"
+    Found 12 notes for "Dark Matter - OB"
+    Found 13 notes for "La Meduse Bleue - OB"
+    Found 10 notes for "Nibiru - OB"
+    Found 6 notes for "Proteus - OB"
+    Found 5 notes for "Veil - OB"
+    Found 7 notes for "Voyageur - OB"
+    Found 16 notes for "Zenith - OB"
+    [OK] Callisto - Ob (13 notes in description)
+    [OK] Dark Matter - Ob (12 notes in description)
+    [OK] La Meduse Bleue - Ob (13 notes in description)
+    [OK] Nibiru - Ob (10 notes in description)
+    [OK] Proteus - Ob (6 notes in description)
+    [OK] Veil - Ob (5 notes in description)
+    [OK] Voyageur - Ob (7 notes in description)
+    [OK] Zenith - Ob (16 notes in description)
+Processing 38/40
+
+  Loading product: https://nocturnealchemy.com/collections/studio-limited/products/gift-card
+  Found 2 gallery images
+  Found 10 variants
+    [SKIP] Price detected: "$10.00 USD"
+    [SKIP] Price detected: "$25.00 USD"
+    [SKIP] Price detected: "$50.00 USD"
+    [SKIP] Price detected: "$75.00 USD"
+    [SKIP] Price detected: "$100.00 USD"
+    [SKIP] Price detected: "$150.00 USD"
+    [SKIP] Price detected: "$250.00 USD"
+    [SKIP] Price detected: "$350.00 USD"
+    [SKIP] Price detected: "$500.00 USD"
+    [SKIP] Price detected: "$1000.00 USD"
+  [SKIP] No variants found
+Processing 39/40
+
+  Loading product: https://nocturnealchemy.com/collections/studio-limited/products/vanilla-haven
+  Found 4 gallery images
+  Found 41 variants
+    Found 19 notes for "Etherian Vanilla"
+    Found 14 notes for "Moon Opal Vanilla"
+    Found 10 notes for "Gateau A La Vanille"
+    Found 14 notes for "Vanilla Haze"
+    Found 8 notes for "OPAL Sandalwood"
+    Found 11 notes for "Pyramid Vanille 4"
+    Found 13 notes for "Silver Star"
+    Found 8 notes for "Vanille Ombré #1"
+    Found 3 notes for "Pyramid Vanille 3"
+    Found 5 notes for "Cinder Vanilla"
+    Found 6 notes for "Kobalt"
+    Found 3 notes for "Crystal"
+    Found 4 notes for "Bourbon Vanille"
+    Found 5 notes for "Pink Quartz"
+    No notes found for "Black Vanilla Embalming Spice"
+    Found 6 notes for "Ember Vanilla"
+    Found 6 notes for "Mexican Vanilla"
+    Found 3 notes for "French Vanilla"
+    Found 2 notes for "Tahitian Vanilla"
+    Found 2 notes for "Moonstone"
+    Found 5 notes for "West Indian Vanilla"
+    Found 7 notes for "Tibetan Crystalline"
+    Found 5 notes for "Vanilla Pumpkin Pie"
+    Found 5 notes for "Vanilla Sugar Skull"
+    Found 1 notes for "Day of the Dead"
+    Found 4 notes for "Pyramid Vanille"
+    Found 10 notes for "Pyramid Vanille 2"
+    Found 4 notes for "Eternal Ankh"
+    Found 3 notes for "Spooktacular"
+    Found 2 notes for "OP Pakhet"
+    Found 12 notes for "Sky Amber"
+    Found 6 notes for "ORB"
+    Found 6 notes for "Anti-Venom"
+    Found 5 notes for "Eternal Tut Ankh Amun"
+    No notes found for "Crystalline Patchouli"
+    No notes found for "Indigo Crystalline"
+    No notes found for "Crimson Kobalt"
+    No notes found for "Kobalt Moonstone"
+    No notes found for "Crystalline Santalum"
+    No notes found for "Bourbon Vanille/Santalum"
+    Found 14 notes for "Vanilla Musk"
+    [OK] Etherian Vanilla (19 notes in description)
+    [OK] Moon Opal Vanilla (14 notes in description)
+    [OK] Gateau A La Vanille (10 notes in description)
+    [OK] Vanilla Haze (14 notes in description)
+    [OK] Opal Sandalwood (8 notes in description)
+    [OK] Pyramid Vanille 4 (11 notes in description)
+    [OK] Silver Star (13 notes in description)
+    [OK] Vanille Ombré #1 (8 notes in description)
+    [OK] Pyramid Vanille 3 (3 notes in description)
+    [OK] Cinder Vanilla (5 notes in description)
+    [OK] Kobalt (6 notes in description)
+    [OK] Crystal (3 notes in description)
+    [OK] Bourbon Vanille (4 notes in description)
+    [OK] Pink Quartz (5 notes in description)
+    [OK] Black Vanilla Embalming Spice (0 notes in description)
+    [OK] Ember Vanilla (6 notes in description)
+    [OK] Mexican Vanilla (6 notes in description)
+    [OK] French Vanilla (3 notes in description)
+    [OK] Tahitian Vanilla (2 notes in description)
+    [OK] Moonstone (2 notes in description)
+    [OK] West Indian Vanilla (5 notes in description)
+    [OK] Tibetan Crystalline (7 notes in description)
+    [OK] Vanilla Pumpkin Pie (5 notes in description)
+    [OK] Vanilla Sugar Skull (5 notes in description)
+    [OK] Day Of The Dead (1 notes in description)
+    [OK] Pyramid Vanille (4 notes in description)
+    [OK] Pyramid Vanille 2 (10 notes in description)
+    [OK] Eternal Ankh (4 notes in description)
+    [OK] Spooktacular (3 notes in description)
+    [OK] Op Pakhet (2 notes in description)
+    [OK] Sky Amber (12 notes in description)
+    [OK] Orb (6 notes in description)
+    [OK] Anti-venom (6 notes in description)
+    [OK] Eternal Tut Ankh Amun (5 notes in description)
+    [OK] Crystalline Patchouli (0 notes in description)
+    [OK] Indigo Crystalline (0 notes in description)
+    [OK] Crimson Kobalt (0 notes in description)
+    [OK] Kobalt Moonstone (0 notes in description)
+    [OK] Crystalline Santalum (0 notes in description)
+    [OK] Bourbon Vanille/santalum (0 notes in description)
+    [OK] Vanilla Musk (14 notes in description)
+Processing 40/40
+
+  Loading product: https://nocturnealchemy.com/collections/studio-limited/products/studio-limited-osirian-purnima
+  Found 6 gallery images
+  Found 18 variants
+    Found 9 notes for "OP Maahes"
+    Found 10 notes for "OP Serqet"
+    Found 3 notes for "OP Ammut"
+    Found 3 notes for "OP Anubis"
+    Found 1 notes for "OP Baba"
+    Found 3 notes for "OP Bastet"
+    Found 4 notes for "OP Hathor"
+    Found 2 notes for "OP Horus"
+    No notes found for "OP GODDESS"
+    Found 2 notes for "OP Khepri"
+    Found 2 notes for "OP Khnum"
+    Found 3 notes for "OP Osiris"
+    Found 2 notes for "OP Pakhet"
+    Found 4 notes for "OP Sekhmet"
+    Found 3 notes for "OP Set"
+    Found 2 notes for "OP Sobek"
+    Found 2 notes for "OP Tawaret"
+    Found 1 notes for "OP Thoth"
+    [OK] Op Maahes (9 notes in description)
+    [OK] Op Serqet (10 notes in description)
+    [OK] Op Ammut (3 notes in description)
+    [OK] Op Anubis (3 notes in description)
+    [OK] Op Baba (1 notes in description)
+    [OK] Op Bastet (3 notes in description)
+    [OK] Op Hathor (4 notes in description)
+    [OK] Op Horus (2 notes in description)
+    [OK] Op Goddess (0 notes in description)
+    [OK] Op Khepri (2 notes in description)
+    [OK] Op Khnum (2 notes in description)
+    [OK] Op Osiris (3 notes in description)
+    [OK] Op Pakhet (2 notes in description)
+    [OK] Op Sekhmet (4 notes in description)
+    [OK] Op Set (3 notes in description)
+    [OK] Op Sobek (2 notes in description)
+    [OK] Op Tawaret (2 notes in description)
+    [OK] Op Thoth (1 notes in description)
+
+=== Generating CSV ===
+
+=== SCRAPING COMPLETE ===
+Total perfumes scraped: 349
+Errors: 28
+CSV saved to: C:\Repos\new-smell\csv\perfumes_nocturnealchemy.csv
+Report saved to: C:\Repos\new-smell\scraper\nocturnealchemy-scraping-report.md
