@@ -61,7 +61,9 @@ function analyzeBundle() {
           jsFiles.push(asset)
         } else if (ext === '.css') {
           cssFiles.push(asset)
-        } else if (['.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif'].includes(ext)) {
+        } else if ([
+'.png', '.jpg', '.jpeg', '.webp', '.svg', '.gif'
+].includes(ext)) {
           imageFiles.push(asset)
         }
       }

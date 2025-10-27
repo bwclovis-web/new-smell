@@ -180,7 +180,9 @@ module.exports = {
 
   // Test reporting
   reporting: {
-    formats: ['json', 'html', 'junit', 'lcov'],
+    formats: [
+'json', 'html', 'junit', 'lcov'
+],
     outputDir: './test-results',
     coverageDir: './coverage',
     artifacts: {
@@ -221,4 +223,4 @@ module.exports = {
       path: './test/utils'
     }
   }
-};
+}

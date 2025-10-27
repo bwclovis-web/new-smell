@@ -164,7 +164,7 @@ export const WishlistActionSchema = z.object({
   action: z.enum(['add', 'remove', 'updateVisibility'], {
     errorMap: () => ({ message: 'Action must be add, remove, or updateVisibility' })
   }),
-  isPublic: z.string().optional().default('false').transform((val) => val === 'true')
+  isPublic: z.string().optional().default('false').transform(val => val === 'true')
 })
 
 // User Authentication Schemas
@@ -192,11 +192,9 @@ export const UserFormSchema = z.object({
     .string()
     .optional()
     .transform(val => val === 'on' || val === 'true')
-    .pipe(
-      z.boolean().refine(val => val === true, {
+    .pipe(z.boolean().refine(val => val === true, {
         message: 'You must accept the terms and conditions'
-      })
-    )
+      }))
 }).refine(data => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword']

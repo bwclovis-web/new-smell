@@ -40,24 +40,43 @@ export function calculatePasswordStrength(password: string): {
   let score = 0
 
   // Length scoring
-  if (password.length >= 8) score += 1
-  else feedback.push('Use at least 8 characters')
+  if (password.length >= 8) {
+ score += 1 
+} else {
+ feedback.push('Use at least 8 characters') 
+}
 
-  if (password.length >= 12) score += 1
-  if (password.length >= 16) score += 1
+  if (password.length >= 12) {
+ score += 1 
+}
+  if (password.length >= 16) {
+ score += 1 
+}
 
   // Character variety scoring
-  if (/[a-z]/.test(password)) score += 1
-  else feedback.push('Add lowercase letters')
+  if (/[a-z]/.test(password)) {
+ score += 1 
+} else {
+ feedback.push('Add lowercase letters') 
+}
 
-  if (/[A-Z]/.test(password)) score += 1
-  else feedback.push('Add uppercase letters')
+  if (/[A-Z]/.test(password)) {
+ score += 1 
+} else {
+ feedback.push('Add uppercase letters') 
+}
 
-  if (/[0-9]/.test(password)) score += 1
-  else feedback.push('Add numbers')
+  if (/[0-9]/.test(password)) {
+ score += 1 
+} else {
+ feedback.push('Add numbers') 
+}
 
-  if (/[^a-zA-Z0-9]/.test(password)) score += 1
-  else feedback.push('Add special characters (!@#$%^&*)')
+  if (/[^a-zA-Z0-9]/.test(password)) {
+ score += 1 
+} else {
+ feedback.push('Add special characters (!@#$%^&*)') 
+}
 
   // Pattern penalties
   if (/(.)\1{2,}/.test(password)) {
@@ -72,8 +91,16 @@ export function calculatePasswordStrength(password: string): {
 
   // Common password check
   const commonPasswords = [
-    'password', '123456', '123456789', 'qwerty', 'abc123',
-    'password123', 'admin', 'letmein', 'welcome', 'monkey'
+    'password',
+'123456',
+'123456789',
+'qwerty',
+'abc123',
+    'password123',
+'admin',
+'letmein',
+'welcome',
+'monkey'
   ]
 
   if (commonPasswords.some(common => password.toLowerCase().includes(common))) {
@@ -83,11 +110,17 @@ export function calculatePasswordStrength(password: string): {
 
   // Determine strength level
   let strength: PasswordStrength
-  if (score <= 2) strength = PasswordStrength.WEAK
-  else if (score <= 4) strength = PasswordStrength.FAIR
-  else if (score <= 6) strength = PasswordStrength.GOOD
-  else if (score <= 8) strength = PasswordStrength.STRONG
-  else strength = PasswordStrength.VERY_STRONG
+  if (score <= 2) {
+ strength = PasswordStrength.WEAK 
+} else if (score <= 4) {
+ strength = PasswordStrength.FAIR 
+} else if (score <= 6) {
+ strength = PasswordStrength.GOOD 
+} else if (score <= 8) {
+ strength = PasswordStrength.STRONG 
+} else {
+ strength = PasswordStrength.VERY_STRONG 
+}
 
   return { score, strength, feedback }
 }
@@ -189,7 +222,9 @@ export function generateSecurePassword(length: number = 16): string {
 
 // Check if password is expired
 export function isPasswordExpired(lastPasswordChange: Date): boolean {
-  if (PASSWORD_CONFIG.PASSWORD_EXPIRY_DAYS === 0) return false
+  if (PASSWORD_CONFIG.PASSWORD_EXPIRY_DAYS === 0) {
+ return false 
+}
 
   const expiryDate = new Date(lastPasswordChange)
   expiryDate.setDate(expiryDate.getDate() + PASSWORD_CONFIG.PASSWORD_EXPIRY_DAYS)
@@ -199,7 +234,9 @@ export function isPasswordExpired(lastPasswordChange: Date): boolean {
 
 // Calculate days until password expires
 export function getDaysUntilPasswordExpiry(lastPasswordChange: Date): number {
-  if (PASSWORD_CONFIG.PASSWORD_EXPIRY_DAYS === 0) return Infinity
+  if (PASSWORD_CONFIG.PASSWORD_EXPIRY_DAYS === 0) {
+ return Infinity 
+}
 
   const expiryDate = new Date(lastPasswordChange)
   expiryDate.setDate(expiryDate.getDate() + PASSWORD_CONFIG.PASSWORD_EXPIRY_DAYS)

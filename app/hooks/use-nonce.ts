@@ -1,8 +1,6 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext } from 'react'
 
-export const NonceContext = createContext<string | undefined>(undefined);
-export const NonceProvider = NonceContext.Provider;
+export const NonceContext = createContext<string | undefined>(undefined)
+export const NonceProvider = NonceContext.Provider
 
-export const useNonce = () => {
-    return useContext(NonceContext);
-}
+export const useNonce = () => useContext(NonceContext)

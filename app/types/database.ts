@@ -4,12 +4,11 @@
  */
 
 import type {
-  UserRole,
+  AlertType,
   HouseType,
   PerfumeType,
   TradePreference,
-  AlertType
-} from '@prisma/client'
+  UserRole} from '@prisma/client'
 
 // Base database models
 export interface User {
@@ -188,7 +187,7 @@ export interface UserAlertPreferences {
 }
 
 // Re-export enums
-export type { UserRole, HouseType, PerfumeType, TradePreference, AlertType }
+export type { AlertType, HouseType, PerfumeType, TradePreference, UserRole }
 
 // Utility types for common database operations
 export type CreateUserInput = Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'UserPerfume' | 'userPerfumeComments' | 'UserPerfumeRating' | 'UserPerfumeReview' | 'UserPerfumeWishlist' | 'wishlistNotifications'>

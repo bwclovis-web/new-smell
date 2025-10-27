@@ -1,4 +1,4 @@
-import { checkWishlistAvailabilityAlerts, checkDecantInterestAlerts } from '~/models/user-alerts.server'
+import { checkDecantInterestAlerts, checkWishlistAvailabilityAlerts } from '~/models/user-alerts.server'
 
 /**
  * Process alerts when a perfume becomes available for trade
@@ -84,9 +84,7 @@ export async function processAllAlertsForPerfume(perfumeId: string, triggerUserI
  */
 export async function processBulkAlerts(perfumeIds: string[]) {
   try {
-    const results = await Promise.allSettled(
-      perfumeIds.map(perfumeId => processWishlistAvailabilityAlerts(perfumeId))
-    )
+    const results = await Promise.allSettled(perfumeIds.map(perfumeId => processWishlistAvailabilityAlerts(perfumeId)))
 
     const successful = results
       .filter((result): result is PromiseFulfilledResult<any[]> => result.status === 'fulfilled')

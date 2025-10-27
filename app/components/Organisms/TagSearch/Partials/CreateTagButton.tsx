@@ -6,10 +6,33 @@ const CreateTagButton = ({ action, setOpenDropdown }) => {
   const [tagValue, setTagValue] = useState('')
 
   const handleCreateTag = async () => {
-    const url = '/api/createTag'
-    const res = await (await (fetch(`${url}?tag=${encodeURIComponent(tagValue)}`))).json()
-    setOpenDropdown(false)
-    action(res)
+    if (!tagValue.trim()) {
+      console.warn('Cannot create tag with empty value')
+      return
+    }
+
+    try {
+      const url = '/api/createTag'
+      const response = await fetch(`${url}?tag=${encodeURIComponent(tagValue)}`)
+
+      if (!response.ok) {
+        console.error('Failed to create tag, status:', response.status)
+        return
+      }
+
+      const res = await response.json()
+      console.log('Created tag:', res)
+
+      if (!res || !res.id) {
+        console.error('Invalid tag response:', res)
+        return
+      }
+
+      setOpenDropdown(false)
+      action(res)
+    } catch (error) {
+      console.error('Error creating tag:', error)
+    }
   }
 
   return (

@@ -9,12 +9,10 @@ import { sharedLoader } from '~/utils/sharedLoader'
 
 import banner from '../../images/wishlist.webp'
 export const ROUTE_PATH = 'admin/wishlist'
-export const meta: MetaFunction = () => {
-  return [
+export const meta: MetaFunction = () => [
     { title: 'Wishlist - Shadow and Sillage' },
     { name: 'description', content: 'Manage your wishlist of perfumes.' }
   ]
-}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await sharedLoader(request)

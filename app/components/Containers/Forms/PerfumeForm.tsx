@@ -68,40 +68,61 @@ const PerfumeForm
 
     // Dynamically update hidden inputs when note states change
     useEffect(() => {
-      const form = document.querySelector('form')
-      if (!form) return
+      const formElement = document.getElementById(formType)
+      if (!formElement) {
+        console.error('Form element not found with id:', formType)
+        return
+      }
 
       // Remove existing note inputs
-      const existingInputs = form.querySelectorAll('input[name^="notes"]')
+      const existingInputs = formElement.querySelectorAll('input[name^="notes"]')
       existingInputs.forEach(input => input.remove())
 
       // Add current note states as hidden inputs
       topNotes.forEach(note => {
+        if (!note.id) {
+          console.warn('Note missing id:', note)
+          return
+        }
         const input = document.createElement('input')
         input.type = 'hidden'
         input.name = 'notesTop'
         input.value = note.id
-        form.appendChild(input)
+        formElement.appendChild(input)
       })
 
       heartNotes.forEach(note => {
+        if (!note.id) {
+          console.warn('Note missing id:', note)
+          return
+        }
         const input = document.createElement('input')
         input.type = 'hidden'
         input.name = 'notesHeart'
         input.value = note.id
-        form.appendChild(input)
+        formElement.appendChild(input)
       })
 
       baseNotes.forEach(note => {
+        if (!note.id) {
+          console.warn('Note missing id:', note)
+          return
+        }
         const input = document.createElement('input')
         input.type = 'hidden'
         input.name = 'notesBase'
         input.value = note.id
-        form.appendChild(input)
+        formElement.appendChild(input)
       })
 
-      console.log('Updated hidden inputs in DOM')
-    }, [topNotes, heartNotes, baseNotes])
+      console.log('Updated hidden inputs in DOM:', {
+        topNotesCount: topNotes.length,
+        heartNotesCount: heartNotes.length,
+        baseNotesCount: baseNotes.length
+      })
+    }, [
+topNotes, heartNotes, baseNotes, formType
+])
 
     const [form, { name, description, image, house }] = useForm({
       id: formType,

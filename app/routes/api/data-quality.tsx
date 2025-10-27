@@ -128,10 +128,9 @@ const getFilteredFiles = (
       }
     })
     .filter(file => file.timestamp)
-    .sort((fileA, fileB) => {
+    .sort((fileA, fileB) => 
       // Sort by date (most recent first)
-      return fileB.date.getTime() - fileA.date.getTime()
-    })
+       fileB.date.getTime() - fileA.date.getTime())
 
   // Apply timeframe filtering
   if (timeframe === 'week') {
@@ -175,10 +174,9 @@ const getLatestReportFiles = async (timeframe: string = 'all') => {
         }
       })
       .filter(file => file.timestamp)
-      .sort((fileA, fileB) => {
+      .sort((fileA, fileB) => 
         // Sort by date (most recent first)
-        return fileB.date.getTime() - fileA.date.getTime()
-      })
+         fileB.date.getTime() - fileA.date.getTime())
 
     filesToUse = allTimestampedFiles
   }

@@ -1,18 +1,18 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import {
-  renderWithProviders,
-  testComponentWithProps,
-  testLoadingStates,
-  testErrorStates,
-  testAccessibility,
-  testFormValidation,
-  testLoginFlow,
-  testNavigation,
-  mockFetchResponse,
-  runA11yTestSuite,
+  createMockPerfume,
   createMockUser,
-  createMockPerfume
-} from '../utils/test-utils'
+  mockFetchResponse,
+  renderWithProviders,
+  runA11yTestSuite,
+  testAccessibility,
+  testComponentWithProps,
+  testErrorStates,
+  testFormValidation,
+  testLoadingStates,
+  testLoginFlow,
+  testNavigation} from '../utils/test-utils'
 
 // Example comprehensive component test
 describe('Comprehensive Component Testing Examples', () => {
@@ -190,7 +190,7 @@ describe('Comprehensive Component Testing Examples', () => {
     await testComponentWithProps(
       FlexibleComponent,
       propVariations,
-      (props) => {
+      props => {
         const button = screen.getByRole('button')
         expect(button).toHaveClass(`btn-${props.theme}`)
         expect(button).toHaveClass(`btn-${props.size}`)
@@ -234,9 +234,15 @@ describe('Comprehensive Component Testing Examples', () => {
   it('demonstrates data state testing', async () => {
     // Mock data component
     const DataComponent = ({ data, loading, error }: any) => {
-      if (loading) return <div>Loading...</div>
-      if (error) return <div>Error: {error}</div>
-      if (!data || data.length === 0) return <div>No data</div>
+      if (loading) {
+ return <div>Loading...</div> 
+}
+      if (error) {
+ return <div>Error: {error}</div> 
+}
+      if (!data || data.length === 0) {
+ return <div>No data</div> 
+}
 
       return (
         <ul>
@@ -305,25 +311,21 @@ describe('Comprehensive Component Testing Examples', () => {
     const mockLogin = vi.fn()
     const mockLogout = vi.fn()
 
-    renderWithProviders(
-      <PageComponent
+    renderWithProviders(<PageComponent
         user={null}
         onLogin={mockLogin}
         onLogout={mockLogout}
-      />
-    )
+      />)
 
     expect(screen.getByText('Please log in')).toBeInTheDocument()
     expect(screen.getByText('Login')).toBeInTheDocument()
 
     // Test logged in state
-    const { rerender } = renderWithProviders(
-      <PageComponent
+    const { rerender } = renderWithProviders(<PageComponent
         user={createMockUser()}
         onLogin={mockLogin}
         onLogout={mockLogout}
-      />
-    )
+      />)
 
     expect(screen.getByText('Welcome, Test User')).toBeInTheDocument()
     expect(screen.getByText('Dashboard Content')).toBeInTheDocument()

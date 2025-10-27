@@ -4,9 +4,9 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
 import { Form, useActionData, useLoaderData, useNavigation } from 'react-router'
 
 import { Button } from '~/components/Atoms/Button/Button'
-import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import { CSRFToken } from '~/components/Molecules/CSRFToken'
-import { getAllUsersWithCounts, deleteUserSafely, softDeleteUser } from '~/models/admin.server'
+import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
+import { deleteUserSafely, getAllUsersWithCounts, softDeleteUser } from '~/models/admin.server'
 import { sharedLoader } from '~/utils/sharedLoader'
 import { getUserDisplayName } from '~/utils/user'
 
@@ -241,13 +241,13 @@ const UsersPage = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {users.map((user) => (
+                {users.map(user => (
                   <UserRow
                     key={user.id}
                     user={user}
                     currentUserId={currentUser.id}
-                    onDelete={(userId) => handleDelete(userId, 'delete')}
-                    onSoftDelete={(userId) => handleDelete(userId, 'soft-delete')}
+                    onDelete={userId => handleDelete(userId, 'delete')}
+                    onSoftDelete={userId => handleDelete(userId, 'soft-delete')}
                   />
                 ))}
               </tbody>
@@ -263,7 +263,7 @@ const UsersPage = () => {
           >
             <div
               className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6"
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               <div className="text-center">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">

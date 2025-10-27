@@ -4,7 +4,7 @@ export { default as useLetterSelection } from './useLetterSelection'
 
 // New extracted hooks
 export { default as useDebounce } from './useDebounce'
-export { useErrorHandler, useAsyncErrorHandler, useFormErrorHandler, useApiErrorHandler } from './useErrorHandler'
+export { useApiErrorHandler, useAsyncErrorHandler, useErrorHandler, useFormErrorHandler } from './useErrorHandler'
 export { default as useFormState } from './useFormState'
 export { default as useLocalStorage } from './useLocalStorage'
 export { default as useOptimisticUpdate } from './useOptimisticUpdate'

@@ -1,6 +1,6 @@
 import React, { Component, type ErrorInfo, type ReactNode } from 'react'
 
-import { AppError, ErrorHandler, type ErrorBoundaryProps, type ErrorBoundaryState } from '~/utils/errorHandling'
+import { AppError, type ErrorBoundaryProps, type ErrorBoundaryState, ErrorHandler } from '~/utils/errorHandling'
 
 interface ErrorBoundaryState {
   hasError: boolean
@@ -17,6 +17,7 @@ interface ErrorBoundaryProps {
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   private retryCount = 0
+
   private maxRetries = 3
 
   constructor(props: ErrorBoundaryProps) {

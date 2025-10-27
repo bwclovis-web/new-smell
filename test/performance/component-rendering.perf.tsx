@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
-import { performanceTestSetup, performanceTestCleanup } from '../setup-performance'
+import { describe, expect, it } from 'vitest'
+
+import { performanceTestCleanup, performanceTestSetup } from '../setup-performance'
 
 // Example performance test for component rendering
 describe('Component Rendering Performance', () => {

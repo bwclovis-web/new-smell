@@ -123,9 +123,15 @@ async function createSlug(name) {
 
 function calculateDataScore(perfume) {
   let score = 0
-  if (perfume.description && perfume.description.trim() !== '') score += 1
-  if (perfume.image && perfume.image.trim() !== '') score += 1
-  if (perfume.detailURL && perfume.detailURL.trim() !== '') score += 1
+  if (perfume.description && perfume.description.trim() !== '') {
+ score += 1 
+}
+  if (perfume.image && perfume.image.trim() !== '') {
+ score += 1 
+}
+  if (perfume.detailURL && perfume.detailURL.trim() !== '') {
+ score += 1 
+}
   
   // Count notes
   const openNotes = parseNotes(perfume.openNotes || '')
@@ -190,9 +196,7 @@ async function importAlkemiaPerfumesData() {
       // If multiple variants of the same name, keep the one with most data
       let bestPerfume = perfumeVariants[0]
       if (perfumeVariants.length > 1) {
-        bestPerfume = perfumeVariants.reduce((best, current) => 
-          current.score > best.score ? current : best
-        )
+        bestPerfume = perfumeVariants.reduce((best, current) => current.score > best.score ? current : best)
         console.log(`🔄 Found ${perfumeVariants.length} variants of "${perfumeName}", keeping the one with most data (score: ${bestPerfume.score})`)
         sameHouseDuplicates += perfumeVariants.length - 1
       }

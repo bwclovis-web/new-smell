@@ -45,7 +45,9 @@ export function useInfiniteScrollPerfumes(options: UseInfiniteScrollPerfumesOpti
   const lastTriggerTime = useRef(0)
 
   const loadMorePerfumes = async () => {
-    if (loading || !hasMore) return
+    if (loading || !hasMore) {
+ return 
+}
 
     setLoading(true)
     try {
@@ -77,14 +79,20 @@ export function useInfiniteScrollPerfumes(options: UseInfiniteScrollPerfumesOpti
       return
     }
 
-    if (!scrollContainerRef.current) return
+    if (!scrollContainerRef.current) {
+ return 
+}
 
     const scrollContainer = scrollContainerRef.current
     const handleScroll = () => {
-      if (loading || !hasMore) return
+      if (loading || !hasMore) {
+ return 
+}
 
       const now = Date.now()
-      if (now - lastTriggerTime.current < debounceTime) return
+      if (now - lastTriggerTime.current < debounceTime) {
+ return 
+}
 
       const { scrollTop, scrollHeight, clientHeight } = scrollContainer
       if (scrollTop + clientHeight >= scrollHeight - threshold) {
@@ -95,7 +103,9 @@ export function useInfiniteScrollPerfumes(options: UseInfiniteScrollPerfumesOpti
 
     scrollContainer.addEventListener('scroll', handleScroll)
     return () => scrollContainer.removeEventListener('scroll', handleScroll)
-  }, [loading, hasMore, skip, scrollContainerRef.current, debounceTime, threshold, letter])
+  }, [
+loading, hasMore, skip, scrollContainerRef.current, debounceTime, threshold, letter
+])
 
   return { perfumes, loading, hasMore, totalCount, observerRef, loadMorePerfumes, resetPerfumes }
 }

@@ -1,12 +1,12 @@
 import { type VariantProps } from 'class-variance-authority'
-import { type ChangeEvent, type HTMLProps, type KeyboardEvent, useState, useCallback, useEffect } from 'react'
+import { type ChangeEvent, type HTMLProps, type KeyboardEvent, useCallback, useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
 
-import { styleMerge } from '~/utils/styleUtils'
 import { useDebouncedSearch } from '~/hooks/useDebouncedSearch'
 import { highlightSearchTerm } from '~/utils/highlightSearchTerm'
+import { styleMerge } from '~/utils/styleUtils'
 
 import { searchbarVariants } from './searchbar-variants'
 

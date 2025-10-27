@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from 'react-router'
 
-import { getUserAlerts, getUnreadAlertCount } from '~/models/user-alerts.server'
+import { getUnreadAlertCount, getUserAlerts } from '~/models/user-alerts.server'
 import { authenticateUser } from '~/utils/auth.server'
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {

@@ -73,7 +73,7 @@ const TabContainer: FC<TabsProps> = ({ className, children, background, size = '
                 onKeyDown={onKeyDown}
                 onClick={() => handleClick(idx)}
                 role="tab"
-                ref={(ele) => (tabRefs.current[idx] = ele)}
+                ref={ele => (tabRefs.current[idx] = ele)}
                 aria-selected={activeTab === idx}
                 aria-controls={`panel-${idx}`}
                 className={tabClasses}

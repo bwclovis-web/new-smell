@@ -56,7 +56,9 @@ export const usePasswordStrength = (
       requireSpecialChars,
       minScore
     }),
-    [minLength, requireUppercase, requireLowercase, requireNumbers, requireSpecialChars, minScore]
+    [
+minLength, requireUppercase, requireLowercase, requireNumbers, requireSpecialChars, minScore
+]
   )
   const [strengthInfo, setStrengthInfo] = useState<PasswordStrengthInfo | null>(null)
 
@@ -71,8 +73,12 @@ export const usePasswordStrength = (
       feedback.push(`Use at least ${config.minLength} characters`)
     }
 
-    if (pwd.length >= 12) score += 1
-    if (pwd.length >= 16) score += 1
+    if (pwd.length >= 12) {
+ score += 1 
+}
+    if (pwd.length >= 16) {
+ score += 1 
+}
 
     // Character variety scoring
     if (config.requireLowercase) {
@@ -119,7 +125,9 @@ export const usePasswordStrength = (
     }
 
     // Common password check (simplified)
-    const commonPasswords = ['password', '123456', 'qwerty', 'admin', 'letmein']
+    const commonPasswords = [
+'password', '123456', 'qwerty', 'admin', 'letmein'
+]
     if (commonPasswords.some(common => pwd.toLowerCase().includes(common))) {
       score -= 2
       feedback.push('Avoid common passwords')

@@ -1,6 +1,7 @@
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi } from 'vitest'
+
 import { renderWithProviders } from './test-utils'
 
 // Accessibility Testing Utilities
@@ -14,9 +15,7 @@ export const testKeyboardNavigation = async (
   const user = userEvent.setup()
 
   // Get all focusable elements
-  const focusableElements = container.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  )
+  const focusableElements = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
 
   expect(focusableElements.length).toBeGreaterThan(0)
 

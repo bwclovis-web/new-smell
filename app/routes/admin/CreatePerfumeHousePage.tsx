@@ -11,12 +11,10 @@ import { CreatePerfumeHouseSchema } from '~/utils/formValidationSchemas'
 
 import banner from '../../images/createHouse.webp'
 export const ROUTE_PATH = '/admin/create-perfume-house' as const
-export const meta: MetaFunction = () => {
-  return [
+export const meta: MetaFunction = () => [
     { title: 'Create Perfume House - Shadow and Sillage' },
     { name: 'description', content: 'Create a new perfume house in our database.' }
   ]
-}
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const test = parseWithZod(formData, { schema: CreatePerfumeHouseSchema })

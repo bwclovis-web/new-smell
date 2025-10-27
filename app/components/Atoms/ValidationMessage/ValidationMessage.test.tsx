@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+
 import ValidationMessage from './ValidationMessage'
 
 describe('ValidationMessage', () => {
@@ -43,14 +44,12 @@ describe('ValidationMessage', () => {
     })
 
     it('should prioritize error over other message types', () => {
-      render(
-        <ValidationMessage
+      render(<ValidationMessage
           error="Error message"
           success="Success message"
           warning="Warning message"
           info="Info message"
-        />
-      )
+        />)
 
       expect(screen.getByText('Error message')).toBeInTheDocument()
       expect(screen.queryByText('Success message')).not.toBeInTheDocument()
@@ -59,13 +58,11 @@ describe('ValidationMessage', () => {
     })
 
     it('should prioritize success over warning and info', () => {
-      render(
-        <ValidationMessage
+      render(<ValidationMessage
           success="Success message"
           warning="Warning message"
           info="Info message"
-        />
-      )
+        />)
 
       expect(screen.getByText('Success message')).toBeInTheDocument()
       expect(screen.queryByText('Warning message')).not.toBeInTheDocument()
@@ -73,12 +70,10 @@ describe('ValidationMessage', () => {
     })
 
     it('should prioritize warning over info', () => {
-      render(
-        <ValidationMessage
+      render(<ValidationMessage
           warning="Warning message"
           info="Info message"
-        />
-      )
+        />)
 
       expect(screen.getByText('Warning message')).toBeInTheDocument()
       expect(screen.queryByText('Info message')).not.toBeInTheDocument()

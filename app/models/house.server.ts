@@ -1,4 +1,4 @@
-import { Prisma, HouseType } from '@prisma/client'
+import { HouseType, Prisma } from '@prisma/client'
 
 import { prisma } from '~/db.server'
 import { createUrlSlug } from '~/utils/slug'
@@ -171,8 +171,7 @@ export const getAllHouses = async (options?: { skip?: number; take?: number; sel
   })
 }
 
-export const getHousesByLetter = async (letter: string) => {
-  return prisma.perfumeHouse.findMany({
+export const getHousesByLetter = async (letter: string) => prisma.perfumeHouse.findMany({
     where: {
       name: {
         startsWith: letter,
@@ -185,7 +184,6 @@ export const getHousesByLetter = async (letter: string) => {
     },
     orderBy: { name: 'asc' }
   })
-}
 
 export const getHousesByLetterPaginated = async (letter: string, options: { skip: number; take: number; houseType?: string }) => {
   const { skip, take, houseType = 'all' } = options
@@ -402,7 +400,9 @@ export const updatePerfumeHouse = async (id: string, data: FormData) => {
 }
 // Helper function to sanitize text input by normalizing Unicode characters
 const sanitizeText = (text: string | null): string => {
-  if (!text) return ''
+  if (!text) {
+ return '' 
+}
 
   return text
     .normalize('NFD')  // Normalize Unicode

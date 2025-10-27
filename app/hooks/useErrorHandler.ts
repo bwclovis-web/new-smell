@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { AppError, ErrorHandler, createError, type ErrorType, type ErrorSeverity } from '~/utils/errorHandling'
+import { AppError, createError, ErrorHandler, type ErrorSeverity, type ErrorType } from '~/utils/errorHandling'
 
 interface UseErrorHandlerReturn {
   error: AppError | null

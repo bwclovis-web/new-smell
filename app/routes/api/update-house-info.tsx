@@ -19,7 +19,9 @@ export const action = async ({ request }: { request: Request }) => {
   const { getPerfumeHouseByName, createPerfumeHouse, updatePerfumeHouse } = await import('~/models/house.server')
 
   // Valid HouseType values
-  const validHouseTypes = ['niche', 'designer', 'indie', 'celebrity', 'drugstore']
+  const validHouseTypes = [
+'niche', 'designer', 'indie', 'celebrity', 'drugstore'
+]
 
   // Helper function to validate and clean row data
   const validateRow = (row: Record<string, string>) => {

@@ -196,7 +196,9 @@ function checkSuspiciousPatterns(ipAddress, activities) {
  * Check for data breach attempts
  */
 function checkDataBreachAttempts(ipAddress, activities) {
-  const sensitivePaths = ['/admin', '/api/users', '/api/auth', '/api/ratings']
+  const sensitivePaths = [
+'/admin', '/api/users', '/api/auth', '/api/ratings'
+]
   const recentSensitiveAccess = activities.filter(activity => {
     const activityTime = new Date(activity.timestamp)
     return sensitivePaths.some(path => activity.path.startsWith(path)) &&
@@ -298,9 +300,7 @@ export function cleanupOldEvents() {
   const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
   
   for (const [key, events] of securityEvents) {
-    const recentEvents = events.filter(event => 
-      new Date(event.timestamp) > oneDayAgo
-    )
+    const recentEvents = events.filter(event => new Date(event.timestamp) > oneDayAgo)
     
     if (recentEvents.length === 0) {
       securityEvents.delete(key)

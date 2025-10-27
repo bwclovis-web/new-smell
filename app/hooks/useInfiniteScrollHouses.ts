@@ -48,7 +48,9 @@ export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions)
   const previousHouseType = useRef(houseType)
 
   const loadMoreHouses = async () => {
-    if (loading || !hasMore) return
+    if (loading || !hasMore) {
+ return 
+}
 
     setLoading(true)
     try {
@@ -89,14 +91,20 @@ export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions)
       return
     }
 
-    if (!scrollContainerRef.current) return
+    if (!scrollContainerRef.current) {
+ return 
+}
 
     const scrollContainer = scrollContainerRef.current
     const handleScroll = () => {
-      if (loading || !hasMore) return
+      if (loading || !hasMore) {
+ return 
+}
 
       const now = Date.now()
-      if (now - lastTriggerTime.current < debounceTime) return
+      if (now - lastTriggerTime.current < debounceTime) {
+ return 
+}
 
       const { scrollTop, scrollHeight, clientHeight } = scrollContainer
       if (scrollTop + clientHeight >= scrollHeight - threshold) {
@@ -107,7 +115,9 @@ export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions)
 
     scrollContainer.addEventListener('scroll', handleScroll)
     return () => scrollContainer.removeEventListener('scroll', handleScroll)
-  }, [loading, hasMore, skip, scrollContainerRef.current, debounceTime, threshold, letter, houseType])
+  }, [
+loading, hasMore, skip, scrollContainerRef.current, debounceTime, threshold, letter, houseType
+])
 
   return { houses, loading, hasMore, totalCount, observerRef, loadMoreHouses, resetHouses }
 }

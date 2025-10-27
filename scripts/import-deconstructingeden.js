@@ -35,8 +35,12 @@ function parseNotes(notesString) {
 
 function calculateDataScore(perfume) {
   let score = 0
-  if (perfume.description && perfume.description.trim() !== '') score += 1
-  if (perfume.image && perfume.image.trim() !== '') score += 1
+  if (perfume.description && perfume.description.trim() !== '') {
+ score += 1 
+}
+  if (perfume.image && perfume.image.trim() !== '') {
+ score += 1 
+}
   // Add score for notes (we'll calculate this when we have the notes data)
   return score
 }

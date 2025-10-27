@@ -1,2 +1,2 @@
+export type { AlertRule, PerformanceAlert, PerformanceAlertsProps } from './PerformanceAlerts'
 export { default } from './PerformanceAlerts'
-export type { PerformanceAlertsProps, AlertRule, PerformanceAlert } from './PerformanceAlerts'

@@ -7,6 +7,7 @@
  */
 
 import 'dotenv/config'
+
 import { validateCoreSecurityEnv, validateExtendedEnv } from '../app/utils/security/env.server.js'
 import { generateSecureSecret } from '../app/utils/security/startup-validation.server.js'
 

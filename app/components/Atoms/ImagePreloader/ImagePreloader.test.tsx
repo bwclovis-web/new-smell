@@ -1,5 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import ImagePreloader from './ImagePreloader'
 
 // Mock DOM APIs
@@ -45,7 +46,7 @@ describe('ImagePreloader', () => {
     })
 
     // Mock IntersectionObserver
-    mockIntersectionObserver.mockImplementation((callback) => ({
+    mockIntersectionObserver.mockImplementation(callback => ({
       observe: vi.fn(),
       unobserve: vi.fn(),
       disconnect: vi.fn(),
@@ -135,7 +136,7 @@ describe('ImagePreloader', () => {
     it('should create preload links with low priority', () => {
       const images = ['image1.jpg']
       const callback = vi.fn()
-      mockRequestIdleCallback.mockImplementation((fn) => {
+      mockRequestIdleCallback.mockImplementation(fn => {
         callback.mockImplementation(fn)
         fn() // Execute immediately for testing
       })
@@ -241,7 +242,7 @@ describe('ImagePreloader', () => {
       const images = ['image1.jpg']
       let observerCallback: any
 
-      mockIntersectionObserver.mockImplementation((callback) => {
+      mockIntersectionObserver.mockImplementation(callback => {
         observerCallback = callback
         return {
           observe: vi.fn(),
@@ -271,7 +272,7 @@ describe('ImagePreloader', () => {
       const images = ['image1.jpg']
       let observerCallback: any
 
-      mockIntersectionObserver.mockImplementation((callback) => {
+      mockIntersectionObserver.mockImplementation(callback => {
         observerCallback = callback
         return {
           observe: vi.fn(),

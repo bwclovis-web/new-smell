@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+
 import { styleMerge } from '~/utils/styleUtils'
 
 interface AlertRule {
@@ -140,8 +141,7 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
     }
   }, [])
 
-  const createAlert = useCallback((rule: AlertRule, value: number): PerformanceAlert => {
-    return {
+  const createAlert = useCallback((rule: AlertRule, value: number): PerformanceAlert => ({
       id: `${rule.id}-${Date.now()}`,
       ruleId: rule.id,
       message: `${rule.name}: ${value.toFixed(2)} ${rule.operator} ${rule.threshold}`,
@@ -150,11 +150,12 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
       resolved: false,
       value,
       threshold: rule.threshold
-    }
-  }, [])
+    }), [])
 
   const collectMetrics = useCallback(() => {
-    if (!enabled || typeof window === 'undefined') return
+    if (!enabled || typeof window === 'undefined') {
+ return 
+}
 
     const newAlerts: PerformanceAlert[] = []
 
@@ -172,7 +173,9 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
 
         // Check each rule
         rules.forEach(rule => {
-          if (!rule.enabled) return
+          if (!rule.enabled) {
+ return 
+}
 
           let value = 0
           switch (rule.metric) {
@@ -206,9 +209,7 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
 
           if (checkRule(rule, value)) {
             // Check if alert already exists and is not resolved
-            const existingAlert = alerts.find(alert =>
-              alert.ruleId === rule.id && !alert.resolved
-            )
+            const existingAlert = alerts.find(alert => alert.ruleId === rule.id && !alert.resolved)
 
             if (!existingAlert) {
               newAlerts.push(createAlert(rule, value))
@@ -224,20 +225,16 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
     } catch (error) {
       console.error('Error collecting performance metrics for alerts:', error)
     }
-  }, [enabled, rules, checkRule, createAlert, maxAlerts])
+  }, [
+enabled, rules, checkRule, createAlert, maxAlerts
+])
 
   const resolveAlert = useCallback((alertId: string) => {
-    setAlerts(prev =>
-      prev.map(alert =>
-        alert.id === alertId ? { ...alert, resolved: true } : alert
-      )
-    )
+    setAlerts(prev => prev.map(alert => alert.id === alertId ? { ...alert, resolved: true } : alert))
   }, [])
 
   const resolveAllAlerts = useCallback(() => {
-    setAlerts(prev =>
-      prev.map(alert => ({ ...alert, resolved: true }))
-    )
+    setAlerts(prev => prev.map(alert => ({ ...alert, resolved: true })))
   }, [])
 
   const clearResolvedAlerts = useCallback(() => {
@@ -245,15 +242,13 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
   }, [])
 
   const toggleRule = useCallback((ruleId: string) => {
-    setRules(prev =>
-      prev.map(rule =>
-        rule.id === ruleId ? { ...rule, enabled: !rule.enabled } : rule
-      )
-    )
+    setRules(prev => prev.map(rule => rule.id === ruleId ? { ...rule, enabled: !rule.enabled } : rule))
   }, [])
 
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) {
+ return 
+}
 
     setIsMonitoring(true)
     const interval = setInterval(collectMetrics, 5000) // Check every 5 seconds
@@ -266,16 +261,14 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
 
   // Auto-resolve alerts
   useEffect(() => {
-    if (!autoResolve) return
+    if (!autoResolve) {
+ return 
+}
 
     const timer = setTimeout(() => {
-      setAlerts(prev =>
-        prev.map(alert =>
-          Date.now() - alert.timestamp > autoResolveDelay
+      setAlerts(prev => prev.map(alert => Date.now() - alert.timestamp > autoResolveDelay
             ? { ...alert, resolved: true }
-            : alert
-        )
-      )
+            : alert))
     }, autoResolveDelay)
 
     return () => clearTimeout(timer)
@@ -304,7 +297,9 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
   const activeAlerts = alerts.filter(alert => !alert.resolved)
   const resolvedAlerts = alerts.filter(alert => alert.resolved)
 
-  if (!enabled || !showUI) return null
+  if (!enabled || !showUI) {
+ return null 
+}
 
   return (
     <div className={styleMerge('bg-white border border-gray-200 rounded-lg shadow-lg p-6', className)}>

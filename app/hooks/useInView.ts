@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 interface UseInViewOptions {
   threshold?: number | number[]
@@ -25,7 +25,9 @@ export function useInView<T extends Element = Element>(
 
   useEffect(() => {
     const element = ref.current
-    if (!element) return
+    if (!element) {
+ return 
+}
 
     // Create observer if it doesn't exist
     if (!observerRef.current) {
@@ -46,7 +48,9 @@ export function useInView<T extends Element = Element>(
         observerRef.current = null
       }
     }
-  }, [ref, callback, threshold, rootMargin, root])
+  }, [
+ref, callback, threshold, rootMargin, root
+])
 
   return isInView
 }

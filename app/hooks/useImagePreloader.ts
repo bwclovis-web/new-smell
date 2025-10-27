@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface UseImagePreloaderOptions {
   images: string[]
@@ -22,10 +22,11 @@ export const useImagePreloader = ({
   const [failedImages, setFailedImages] = useState<Set<string>>(new Set())
 
   useEffect(() => {
-    if (images.length === 0) return
+    if (images.length === 0) {
+ return 
+}
 
-    const loadImage = (src: string): Promise<void> => {
-      return new Promise((resolve, reject) => {
+    const loadImage = (src: string): Promise<void> => new Promise((resolve, reject) => {
         const img = new Image()
 
         img.onload = () => {
@@ -51,7 +52,6 @@ export const useImagePreloader = ({
         setLoadingImages(prev => new Set([...prev, src]))
         img.src = src
       })
-    }
 
     const loadImages = async () => {
       try {

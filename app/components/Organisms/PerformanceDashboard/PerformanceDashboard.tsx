@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { styleMerge } from '~/utils/styleUtils'
+import React, { useCallback, useEffect, useState } from 'react'
+
 import type { CoreWebVitals, PerformanceMetrics } from '~/types/performance'
+import { styleMerge } from '~/utils/styleUtils'
 
 interface PerformanceDashboardProps {
   enabled?: boolean
@@ -50,7 +51,9 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
   const [alerts, setAlerts] = useState<string[]>([])
 
   const collectPerformanceData = useCallback(() => {
-    if (!enabled || typeof window === 'undefined') return
+    if (!enabled || typeof window === 'undefined') {
+ return 
+}
 
     setIsCollecting(true)
 
@@ -121,7 +124,9 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
   }, [enabled, thresholds])
 
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) {
+ return 
+}
 
     // Initial collection
     collectPerformanceData()
@@ -134,9 +139,15 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
 
   const getPerformanceScore = (value: number, threshold: number, reverse = false) => {
     const ratio = reverse ? threshold / value : value / threshold
-    if (ratio <= 0.5) return 'excellent'
-    if (ratio <= 0.75) return 'good'
-    if (ratio <= 1) return 'needs-improvement'
+    if (ratio <= 0.5) {
+ return 'excellent' 
+}
+    if (ratio <= 0.75) {
+ return 'good' 
+}
+    if (ratio <= 1) {
+ return 'needs-improvement' 
+}
     return 'poor'
   }
 
@@ -151,14 +162,20 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
   }
 
   const formatBytes = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes'
+    if (bytes === 0) {
+ return '0 Bytes' 
+}
     const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const sizes = [
+'Bytes', 'KB', 'MB', 'GB'
+]
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
 
-  if (!enabled || !showUI || !performanceData) return null
+  if (!enabled || !showUI || !performanceData) {
+ return null 
+}
 
   return (
     <div className={styleMerge('bg-white border border-gray-200 rounded-lg shadow-lg p-6 max-w-4xl', className)}>

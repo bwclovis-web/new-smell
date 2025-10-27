@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+
 import { styleMerge } from '~/utils/styleUtils'
 
 interface SimpleImageProps {

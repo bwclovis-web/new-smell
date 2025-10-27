@@ -213,7 +213,9 @@ export const updatePerfume = async (id: string, data: FormData) => {
 
 // Helper function to sanitize text input by normalizing Unicode characters
 const sanitizeText = (text: string | null): string => {
-  if (!text) return ''
+  if (!text) {
+ return '' 
+}
 
   return text
     .normalize('NFD')  // Normalize Unicode

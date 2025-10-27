@@ -1,8 +1,8 @@
 import type { ActionFunction } from 'react-router-dom'
 
 import { createPerfumeRating, getUserPerfumeRating, updatePerfumeRating } from '~/models/perfumeRating.server'
-import { createErrorResponse, createSuccessResponse } from '~/utils/response.server'
 import { authenticateUser } from '~/utils/auth.server'
+import { createErrorResponse, createSuccessResponse } from '~/utils/response.server'
 
 
 async function saveRating(
@@ -53,7 +53,9 @@ export const action: ActionFunction = async ({ request }) => {
     }
 
     // Validate category
-    const validCategories = ['longevity', 'sillage', 'gender', 'priceValue', 'overall']
+    const validCategories = [
+'longevity', 'sillage', 'gender', 'priceValue', 'overall'
+]
     if (!validCategories.includes(category)) {
       return createErrorResponse('Invalid rating category', 400)
     }

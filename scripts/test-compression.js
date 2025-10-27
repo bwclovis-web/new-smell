@@ -6,8 +6,8 @@
  */
 
 import fetch from 'node-fetch'
-import { gzip, gunzip } from 'zlib'
 import { promisify } from 'util'
+import { gunzip, gzip } from 'zlib'
 
 const gzipAsync = promisify(gzip)
 const gunzipAsync = promisify(gunzip)

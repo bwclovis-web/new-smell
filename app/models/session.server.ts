@@ -2,17 +2,15 @@
 import cookie from 'cookie'
 import { redirect } from 'react-router-dom'
 
-import {
-  createSession,
-  refreshAccessToken,
-  verifyAccessToken,
-  invalidateSession,
-  invalidateAllUserSessions,
-  getActiveSession
-} from '~/utils/security/session-manager.server'
-
 import { ROUTE_PATH as ADMIN_PROFILE } from '~/routes/admin/profilePage'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
+import {
+  createSession,
+  getActiveSession,
+  invalidateAllUserSessions,
+  invalidateSession,
+  refreshAccessToken,
+  verifyAccessToken} from '~/utils/security/session-manager.server'
 
 import { getUserById } from './user.server'
 export async function getUser(context: { userSession: any }) {

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+
 import { styleMerge } from '~/utils/styleUtils'
 
 interface TraceEvent {
@@ -27,7 +28,9 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
   showUI = true,
   className = '',
   maxEvents = 1000,
-  categories = ['navigation', 'resource', 'paint', 'measure', 'mark'],
+  categories = [
+'navigation', 'resource', 'paint', 'measure', 'mark'
+],
   autoStart = true
 }) => {
   const [events, setEvents] = useState<TraceEvent[]>([])
@@ -43,14 +46,16 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
 
 
   const startTracing = useCallback(() => {
-    if (!enabled || typeof window === 'undefined' || !('PerformanceObserver' in window)) return
+    if (!enabled || typeof window === 'undefined' || !('PerformanceObserver' in window)) {
+ return 
+}
 
     setIsTracing(true)
     setEvents([])
     eventCounterRef.current = 0
 
     try {
-      observerRef.current = new PerformanceObserver((list) => {
+      observerRef.current = new PerformanceObserver(list => {
         const newEvents = list.getEntries()
           .filter(entry => categories.includes(entry.entryType))
           .map((entry: PerformanceEntry): TraceEvent => {
@@ -134,7 +139,9 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
   }, [])
 
   const addCustomMark = useCallback((name: string, data?: Record<string, any>) => {
-    if (!enabled || typeof window === 'undefined') return
+    if (!enabled || typeof window === 'undefined') {
+ return 
+}
 
     performance.mark(name)
 
@@ -150,7 +157,9 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
   }, [enabled, maxEvents])
 
   const addCustomMeasure = useCallback((name: string, startMark: string, endMark?: string, data?: Record<string, any>) => {
-    if (!enabled || typeof window === 'undefined') return
+    if (!enabled || typeof window === 'undefined') {
+ return 
+}
 
     try {
       performance.measure(name, startMark, endMark)
@@ -170,9 +179,15 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
   }, [enabled, maxEvents])
 
   const filteredEvents = events.filter(event => {
-    if (filters.category && event.category !== filters.category) return false
-    if (filters.minDuration > 0 && (event.duration || 0) < filters.minDuration) return false
-    if (filters.search && !event.name.toLowerCase().includes(filters.search.toLowerCase())) return false
+    if (filters.category && event.category !== filters.category) {
+ return false 
+}
+    if (filters.minDuration > 0 && (event.duration || 0) < filters.minDuration) {
+ return false 
+}
+    if (filters.search && !event.name.toLowerCase().includes(filters.search.toLowerCase())) {
+ return false 
+}
     return true
   })
 
@@ -199,20 +214,22 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
   }
 
   const formatDuration = (duration: number) => {
-    if (duration < 1) return `${(duration * 1000).toFixed(1)}μs`
-    if (duration < 1000) return `${duration.toFixed(1)}ms`
+    if (duration < 1) {
+ return `${(duration * 1000).toFixed(1)}μs` 
+}
+    if (duration < 1000) {
+ return `${duration.toFixed(1)}ms` 
+}
     return `${(duration / 1000).toFixed(1)}s`
   }
 
-  const formatTime = (time: number) => {
-    return new Date(time).toLocaleTimeString('en-US', {
+  const formatTime = (time: number) => new Date(time).toLocaleTimeString('en-US', {
       hour12: false,
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
       fractionalSecondDigits: 3
     })
-  }
 
   useEffect(() => {
     if (enabled && autoStart) {
@@ -235,9 +252,13 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
         clear: clearEvents
       }
     }
-  }, [enabled, addCustomMark, addCustomMeasure, startTracing, stopTracing, clearEvents])
+  }, [
+enabled, addCustomMark, addCustomMeasure, startTracing, stopTracing, clearEvents
+])
 
-  if (!enabled || !showUI) return null
+  if (!enabled || !showUI) {
+ return null 
+}
 
   return (
     <div className={styleMerge('bg-white border border-gray-200 rounded-lg shadow-lg p-6', className)}>
@@ -282,7 +303,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
           <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
           <select
             value={filters.category}
-            onChange={(e) => setFilters(prev => ({ ...prev, category: e.target.value }))}
+            onChange={e => setFilters(prev => ({ ...prev, category: e.target.value }))}
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
           >
             <option value="">All Categories</option>
@@ -298,7 +319,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
           <input
             type="number"
             value={filters.minDuration}
-            onChange={(e) => setFilters(prev => ({ ...prev, minDuration: Number(e.target.value) }))}
+            onChange={e => setFilters(prev => ({ ...prev, minDuration: Number(e.target.value) }))}
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
             min="0"
             step="0.1"
@@ -309,7 +330,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
           <input
             type="text"
             value={filters.search}
-            onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+            onChange={e => setFilters(prev => ({ ...prev, search: e.target.value }))}
             placeholder="Search events..."
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
           />

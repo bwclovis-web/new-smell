@@ -18,17 +18,17 @@ export default defineConfig([
       'import/no-unresolved': 0
     } },
   { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'], languageOptions: { parser: tseslint.parser, globals: { ...globals.browser, ...globals.node } } },
-  tseslint.config({
+  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'], plugins: { '@typescript-eslint': tseslint.plugin },
     rules: {
       '@typescript-eslint/no-require-imports': ['error', { allowAsImport: true }],
       '@typescript-eslint/no-var-requires': 'off'
     }
-  }),
-  jsxA11y.flatConfigs.recommended,
-  pluginReact.configs.flat.recommended,
-  stylistic.configs['disable-legacy'],
+  },
+  { files: ['**/*.{jsx,tsx}'], ...jsxA11y.flatConfigs.recommended },
+  { files: ['**/*.{jsx,tsx}'], ...pluginReact.configs.flat.recommended, settings: { react: { version: 'detect' } } },
+  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'], ...stylistic.configs['disable-legacy'] },
   { files: ['**/*.css'], plugins: { css }, language: 'css/css', extends: ['css/recommended'] },
-  { rules: {
+  { files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'], plugins: { react: pluginReact }, rules: {
     'arrow-body-style': ['error', 'as-needed'],
     'camelcase': ['error', { properties: 'always', ignoreDestructuring: true }],
     'complexity': ['error', 16],

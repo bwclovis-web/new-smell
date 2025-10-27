@@ -29,31 +29,26 @@ self.addEventListener('fetch', event => {
   const { request } = event
   
   // Skip non-GET requests
-  if (request.method !== 'GET') return
+  if (request.method !== 'GET') {
+ return 
+}
   
   const url = new URL(request.url)
   
   // Handle API requests with network-first strategy
   if (url.pathname.startsWith('/api/')) {
-    event.respondWith(
-      fetch(request).catch(() => caches.match(request))
-    )
+    event.respondWith(fetch(request).catch(() => caches.match(request)))
     return
   }
   
   // Handle critical assets with cache-first strategy
   if (CRITICAL_ASSETS.includes(url.pathname)) {
-    event.respondWith(
-      caches.match(request).then(response => 
-        response || fetch(request)
-      )
-    )
+    event.respondWith(caches.match(request).then(response => response || fetch(request)))
     return
   }
   
   // Handle other requests with network-first and cache on success
-  event.respondWith(
-    fetch(request).then(fetchResponse => {
+  event.respondWith(fetch(request).then(fetchResponse => {
       // Cache successful responses (but NOT HTML to avoid stale asset references)
       const contentType = fetchResponse.headers.get('content-type')
       const isHTML = contentType && contentType.includes('text/html')
@@ -67,9 +62,7 @@ self.addEventListener('fetch', event => {
       return fetchResponse
     }).catch(() => 
       // Fallback to cache for offline support
-      caches.match(request)
-    )
-  )
+      caches.match(request)))
 })
 
 // Removed unused background sync functionality to reduce bundle size

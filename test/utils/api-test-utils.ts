@@ -3,8 +3,7 @@ import { vi } from 'vitest'
 // API Testing Utilities
 
 // Mock fetch responses
-export const mockFetchResponse = (data: any, status = 200, headers = {}) => {
-  return vi.fn().mockResolvedValue({
+export const mockFetchResponse = (data: any, status = 200, headers = {}) => vi.fn().mockResolvedValue({
     ok: status >= 200 && status < 300,
     status,
     statusText: status === 200 ? 'OK' : 'Error',
@@ -13,14 +12,9 @@ export const mockFetchResponse = (data: any, status = 200, headers = {}) => {
     text: () => Promise.resolve(JSON.stringify(data)),
     blob: () => Promise.resolve(new Blob([JSON.stringify(data)])),
   })
-}
 
 // Mock fetch error
-export const mockFetchError = (message = 'Network error', status = 500) => {
-  return vi.fn().mockRejectedValue(
-    Object.assign(new Error(message), { status })
-  )
-}
+export const mockFetchError = (message = 'Network error', status = 500) => vi.fn().mockRejectedValue(Object.assign(new Error(message), { status }))
 
 // Mock API endpoints
 export const mockAPIEndpoints = {
@@ -226,15 +220,13 @@ export const testAPILoadingStates = async (
   apiFunction: () => Promise<any>,
   getLoadingState: () => boolean
 ) => {
-  const slowMockResponse = vi.fn().mockImplementation(() =>
-    new Promise(resolve => {
+  const slowMockResponse = vi.fn().mockImplementation(() => new Promise(resolve => {
       setTimeout(() => resolve({
         ok: true,
         status: 200,
         json: () => Promise.resolve({ data: 'success' })
       }), 100)
-    })
-  )
+    }))
 
   global.fetch = slowMockResponse
 
@@ -250,8 +242,7 @@ export const testAPILoadingStates = async (
 }
 
 // Create mock server responses
-export const createMockServer = (responses: Record<string, any>) => {
-  return vi.fn().mockImplementation((url: string, options: any = {}) => {
+export const createMockServer = (responses: Record<string, any>) => vi.fn().mockImplementation((url: string, options: any = {}) => {
     const method = options.method || 'GET'
     const key = `${method} ${url}`
 
@@ -265,7 +256,6 @@ export const createMockServer = (responses: Record<string, any>) => {
 
     return Promise.reject(new Error(`No mock response for ${key}`))
   })
-}
 
 // Test API with different content types
 export const testAPIContentTypes = async (

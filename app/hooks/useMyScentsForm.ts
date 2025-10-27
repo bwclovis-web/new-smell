@@ -11,7 +11,7 @@ function getInitialPerfumeState(initialPerfume?: UserPerfumeI) {
   return initialPerfume || null
 }
 
-// eslint-disable-next-line complexity
+ 
 const getInitialPerfumeData = (initialPerfume?: UserPerfumeI) => ({
   amount: initialPerfume?.amount || "",
   price: initialPerfume?.price || "",

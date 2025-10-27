@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import { describe, expect, it } from 'vitest'
+
 import ImagePlaceholder from './ImagePlaceholder'
 
 describe('ImagePlaceholder', () => {
@@ -77,9 +78,7 @@ describe('ImagePlaceholder', () => {
   describe('Icon variant', () => {
     it('should render icon variant with custom icon', () => {
       const customIcon = <span data-testid="custom-icon">📷</span>
-      render(
-        <ImagePlaceholder variant="icon" icon={customIcon} />
-      )
+      render(<ImagePlaceholder variant="icon" icon={customIcon} />)
 
       expect(screen.getByTestId('custom-icon')).toBeInTheDocument()
       expect(screen.getByTestId('custom-icon')).toHaveTextContent('📷')
@@ -87,9 +86,7 @@ describe('ImagePlaceholder', () => {
 
     it('should render icon with proper styling', () => {
       const customIcon = <span data-testid="custom-icon">📷</span>
-      render(
-        <ImagePlaceholder variant="icon" icon={customIcon} />
-      )
+      render(<ImagePlaceholder variant="icon" icon={customIcon} />)
 
       const iconContainer = screen.getByTestId('custom-icon').parentElement
       expect(iconContainer).toHaveClass('text-gray-400', 'dark:text-gray-500', 'text-4xl')
@@ -106,9 +103,7 @@ describe('ImagePlaceholder', () => {
 
     it('should have animation by default in icon variant', () => {
       const customIcon = <span data-testid="custom-icon">📷</span>
-      render(
-        <ImagePlaceholder variant="icon" icon={customIcon} />
-      )
+      render(<ImagePlaceholder variant="icon" icon={customIcon} />)
 
       const placeholder = screen.getByTestId('custom-icon').closest('div')
       expect(placeholder).toHaveClass('animate-pulse')
@@ -116,9 +111,7 @@ describe('ImagePlaceholder', () => {
 
     it('should not have animation when animate is false in icon variant', () => {
       const customIcon = <span data-testid="custom-icon">📷</span>
-      render(
-        <ImagePlaceholder variant="icon" icon={customIcon} animate={false} />
-      )
+      render(<ImagePlaceholder variant="icon" icon={customIcon} animate={false} />)
 
       const placeholder = screen.getByTestId('custom-icon').closest('div')
       expect(placeholder).not.toHaveClass('animate-pulse')
@@ -196,16 +189,14 @@ describe('ImagePlaceholder', () => {
   describe('Combined props', () => {
     it('should handle all props together', () => {
       const customIcon = <span data-testid="custom-icon">📷</span>
-      render(
-        <ImagePlaceholder
+      render(<ImagePlaceholder
           width={300}
           height={200}
           variant="icon"
           icon={customIcon}
           className="custom-class"
           animate={false}
-        />
-      )
+        />)
 
       const placeholder = screen.getByTestId('custom-icon').closest('div')
       expect(placeholder).toHaveStyle('width: 300px')
@@ -216,15 +207,13 @@ describe('ImagePlaceholder', () => {
     })
 
     it('should handle gradient variant with custom dimensions and className', () => {
-      render(
-        <ImagePlaceholder
+      render(<ImagePlaceholder
           width="50%"
           height="100px"
           variant="gradient"
           className="custom-gradient"
           animate={true}
-        />
-      )
+        />)
 
       const placeholder = screen.getByRole('generic')
       expect(placeholder).toHaveStyle('width: 50%')
@@ -268,9 +257,7 @@ describe('ImagePlaceholder', () => {
         </div>
       )
 
-      render(
-        <ImagePlaceholder variant="icon" icon={complexIcon} />
-      )
+      render(<ImagePlaceholder variant="icon" icon={complexIcon} />)
 
       expect(screen.getByTestId('complex-icon')).toBeInTheDocument()
       expect(screen.getByTestId('complex-icon').querySelector('svg')).toBeInTheDocument()

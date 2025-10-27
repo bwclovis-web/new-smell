@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { createRef } from 'react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { CSRFProtectedForm } from './CSRFProtectedForm'
 
 // Mock the useCSRF hook
@@ -25,11 +26,9 @@ describe('CSRFProtectedForm', () => {
 
   describe('Rendering', () => {
     it('should render a form element', () => {
-      const { container } = render(
-        <CSRFProtectedForm>
+      const { container } = render(<CSRFProtectedForm>
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const form = container.querySelector('form')
       expect(form).toBeInTheDocument()
@@ -37,23 +36,19 @@ describe('CSRFProtectedForm', () => {
     })
 
     it('should render children', () => {
-      render(
-        <CSRFProtectedForm>
+      render(<CSRFProtectedForm>
           <input type="text" name="username" placeholder="Username" />
           <button type="submit">Submit</button>
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       expect(screen.getByPlaceholderText('Username')).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Submit' })).toBeInTheDocument()
     })
 
     it('should include CSRFToken component with default name', () => {
-      const { container } = render(
-        <CSRFProtectedForm>
+      const { container } = render(<CSRFProtectedForm>
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const csrfInput = container.querySelector('input[name="_csrf"]')
       expect(csrfInput).toBeInTheDocument()
@@ -62,11 +57,9 @@ describe('CSRFProtectedForm', () => {
     })
 
     it('should include CSRFToken with custom name', () => {
-      const { container } = render(
-        <CSRFProtectedForm csrfName="custom_token">
+      const { container } = render(<CSRFProtectedForm csrfName="custom_token">
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const csrfInput = container.querySelector('input[name="custom_token"]')
       expect(csrfInput).toBeInTheDocument()
@@ -80,66 +73,54 @@ describe('CSRFProtectedForm', () => {
 
   describe('Form Attributes', () => {
     it('should forward method attribute', () => {
-      const { container } = render(
-        <CSRFProtectedForm method="POST">
+      const { container } = render(<CSRFProtectedForm method="POST">
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const form = container.querySelector('form')
       expect(form).toHaveAttribute('method', 'POST')
     })
 
     it('should forward action attribute', () => {
-      const { container } = render(
-        <CSRFProtectedForm action="/api/submit">
+      const { container } = render(<CSRFProtectedForm action="/api/submit">
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const form = container.querySelector('form')
       expect(form).toHaveAttribute('action', '/api/submit')
     })
 
     it('should forward encType attribute', () => {
-      const { container } = render(
-        <CSRFProtectedForm encType="multipart/form-data">
+      const { container } = render(<CSRFProtectedForm encType="multipart/form-data">
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const form = container.querySelector('form')
       expect(form).toHaveAttribute('encType', 'multipart/form-data')
     })
 
     it('should forward className attribute', () => {
-      const { container } = render(
-        <CSRFProtectedForm className="custom-form-class">
+      const { container } = render(<CSRFProtectedForm className="custom-form-class">
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const form = container.querySelector('form')
       expect(form).toHaveClass('custom-form-class')
     })
 
     it('should forward data attributes', () => {
-      render(
-        <CSRFProtectedForm data-testid="protected-form" data-tracking="form-submit">
+      render(<CSRFProtectedForm data-testid="protected-form" data-tracking="form-submit">
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const form = screen.getByTestId('protected-form')
       expect(form).toHaveAttribute('data-tracking', 'form-submit')
     })
 
     it('should forward aria attributes', () => {
-      const { container } = render(
-        <CSRFProtectedForm aria-label="Login form" aria-describedby="form-description">
+      const { container } = render(<CSRFProtectedForm aria-label="Login form" aria-describedby="form-description">
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const form = container.querySelector('form')
       expect(form).toHaveAttribute('aria-label', 'Login form')
@@ -151,11 +132,9 @@ describe('CSRFProtectedForm', () => {
     it('should forward ref to form element', () => {
       const formRef = createRef<HTMLFormElement>()
 
-      render(
-        <CSRFProtectedForm ref={formRef}>
+      render(<CSRFProtectedForm ref={formRef}>
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       expect(formRef.current).toBeInstanceOf(HTMLFormElement)
       expect(formRef.current?.tagName).toBe('FORM')
@@ -164,11 +143,9 @@ describe('CSRFProtectedForm', () => {
     it('should allow form methods to be called via ref', () => {
       const formRef = createRef<HTMLFormElement>()
 
-      render(
-        <CSRFProtectedForm ref={formRef}>
+      render(<CSRFProtectedForm ref={formRef}>
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       expect(formRef.current?.reset).toBeDefined()
       expect(formRef.current?.submit).toBeDefined()
@@ -178,13 +155,11 @@ describe('CSRFProtectedForm', () => {
 
   describe('Event Handlers', () => {
     it('should handle onSubmit event', () => {
-      const handleSubmit = vi.fn((e) => e.preventDefault())
+      const handleSubmit = vi.fn(e => e.preventDefault())
 
-      render(
-        <CSRFProtectedForm onSubmit={handleSubmit}>
+      render(<CSRFProtectedForm onSubmit={handleSubmit}>
           <button type="submit">Submit</button>
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const submitButton = screen.getByRole('button', { name: 'Submit' })
       submitButton.click()
@@ -195,11 +170,9 @@ describe('CSRFProtectedForm', () => {
     it('should forward onChange event handler', () => {
       const handleChange = vi.fn()
 
-      const { container } = render(
-        <CSRFProtectedForm onChange={handleChange}>
+      const { container } = render(<CSRFProtectedForm onChange={handleChange}>
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const form = container.querySelector('form')
       expect(form).toBeDefined()
@@ -211,12 +184,10 @@ describe('CSRFProtectedForm', () => {
 
   describe('Security - CSRF Protection', () => {
     it('should always include CSRF token in form', () => {
-      const { container } = render(
-        <CSRFProtectedForm>
+      const { container } = render(<CSRFProtectedForm>
           <input type="text" name="username" />
           <input type="password" name="password" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const csrfInput = container.querySelector('input[type="hidden"][name="_csrf"]')
       expect(csrfInput).toBeInTheDocument()
@@ -232,11 +203,9 @@ describe('CSRFProtectedForm', () => {
         submitForm: vi.fn()
       })
 
-      const { container } = render(
-        <CSRFProtectedForm>
+      const { container } = render(<CSRFProtectedForm>
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       // CSRF token component should not render when token is null
       const csrfInput = container.querySelector('input[name="_csrf"]')
@@ -253,23 +222,19 @@ describe('CSRFProtectedForm', () => {
         submitForm: vi.fn()
       })
 
-      const { container } = render(
-        <CSRFProtectedForm>
+      const { container } = render(<CSRFProtectedForm>
           <input type="text" name="test" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const csrfInput = container.querySelector('input[name="_csrf"]')
       expect(csrfInput).not.toBeInTheDocument()
     })
 
     it('should position CSRF token before other inputs', () => {
-      const { container } = render(
-        <CSRFProtectedForm>
+      const { container } = render(<CSRFProtectedForm>
           <input type="text" name="field1" />
           <input type="text" name="field2" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const inputs = container.querySelectorAll('input')
       expect(inputs[0]).toHaveAttribute('name', '_csrf')
@@ -280,13 +245,11 @@ describe('CSRFProtectedForm', () => {
 
   describe('Form Types', () => {
     it('should work with login forms', () => {
-      const { container } = render(
-        <CSRFProtectedForm method="POST" action="/login">
+      const { container } = render(<CSRFProtectedForm method="POST" action="/login">
           <input type="email" name="email" />
           <input type="password" name="password" />
           <button type="submit">Login</button>
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       expect(container.querySelector('input[name="_csrf"]')).toBeInTheDocument()
       expect(container.querySelector('input[name="email"]')).toBeInTheDocument()
@@ -294,20 +257,17 @@ describe('CSRFProtectedForm', () => {
     })
 
     it('should work with multipart forms', () => {
-      const { container } = render(
-        <CSRFProtectedForm method="POST" encType="multipart/form-data">
+      const { container } = render(<CSRFProtectedForm method="POST" encType="multipart/form-data">
           <input type="file" name="avatar" />
           <button type="submit">Upload</button>
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const form = container.querySelector('form')
       expect(form).toHaveAttribute('encType', 'multipart/form-data')
     })
 
     it('should work with complex nested structures', () => {
-      const { container } = render(
-        <CSRFProtectedForm>
+      const { container } = render(<CSRFProtectedForm>
           <div>
             <fieldset>
               <legend>User Details</legend>
@@ -315,8 +275,7 @@ describe('CSRFProtectedForm', () => {
               <input type="email" name="email" />
             </fieldset>
           </div>
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       expect(container.querySelector('input[name="_csrf"]')).toBeInTheDocument()
       expect(container.querySelector('input[name="name"]')).toBeInTheDocument()
@@ -334,26 +293,22 @@ describe('CSRFProtectedForm', () => {
     })
 
     it('should handle multiple children of different types', () => {
-      const { container } = render(
-        <CSRFProtectedForm>
+      const { container } = render(<CSRFProtectedForm>
           <input type="text" name="field1" />
           <div>
             <input type="text" name="field2" />
           </div>
           <button type="submit">Submit</button>
           Some text node
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       expect(container.querySelector('form')).toBeInTheDocument()
     })
 
     it('should handle form with no submit button', () => {
-      const { container } = render(
-        <CSRFProtectedForm>
+      const { container } = render(<CSRFProtectedForm>
           <input type="text" name="search" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       expect(container.querySelector('form')).toBeInTheDocument()
       expect(container.querySelector('input[name="_csrf"]')).toBeInTheDocument()
@@ -362,23 +317,19 @@ describe('CSRFProtectedForm', () => {
 
   describe('Accessibility', () => {
     it('should maintain form accessibility with ARIA labels', () => {
-      const { container } = render(
-        <CSRFProtectedForm aria-label="Contact form">
+      const { container } = render(<CSRFProtectedForm aria-label="Contact form">
           <input type="text" name="name" aria-label="Your name" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const form = container.querySelector('form')
       expect(form).toHaveAttribute('aria-label', 'Contact form')
     })
 
     it('should not interfere with form validation', () => {
-      render(
-        <CSRFProtectedForm>
+      render(<CSRFProtectedForm>
           <input type="email" name="email" required />
           <button type="submit">Submit</button>
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const emailInput = screen.getByRole('textbox')
       expect(emailInput).toHaveAttribute('required')
@@ -386,12 +337,10 @@ describe('CSRFProtectedForm', () => {
     })
 
     it('should maintain proper form semantics', () => {
-      render(
-        <CSRFProtectedForm>
+      render(<CSRFProtectedForm>
           <label htmlFor="username">Username</label>
           <input id="username" type="text" name="username" />
-        </CSRFProtectedForm>
-      )
+        </CSRFProtectedForm>)
 
       const input = screen.getByLabelText('Username')
       expect(input).toBeInTheDocument()

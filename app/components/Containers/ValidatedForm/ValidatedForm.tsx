@@ -4,8 +4,9 @@
  */
 
 import React, { useCallback, useEffect } from 'react'
-import { useValidation } from '~/hooks/useValidation'
 import type { ZodSchema } from 'zod'
+
+import { useValidation } from '~/hooks/useValidation'
 
 export interface ValidatedFormProps<T extends Record<string, unknown>> {
   schema: ZodSchema<T>
@@ -96,7 +97,9 @@ function ValidatedForm<T extends Record<string, unknown>>({
         form.setSubmitting(false)
       }
     },
-    [form, validateOnSubmit, onSubmit, onReset]
+    [
+form, validateOnSubmit, onSubmit, onReset
+]
   )
 
   return (

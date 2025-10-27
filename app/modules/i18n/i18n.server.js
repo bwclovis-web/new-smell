@@ -1,11 +1,11 @@
-import i18n from 'i18next';
-import Backend from 'i18next-fs-backend';
-import { initReactI18next } from 'react-i18next';
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
+import i18n from 'i18next'
+import Backend from 'i18next-fs-backend'
+import { dirname, resolve } from 'path'
+import { initReactI18next } from 'react-i18next'
+import { fileURLToPath } from 'url'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 if (!i18n.isInitialized) {
   i18n
@@ -25,7 +25,7 @@ if (!i18n.isInitialized) {
       react: {
         useSuspense: false, // Disable Suspense for SSR to prevent hydration issues
       },
-    });
+    })
 }
 
-export default i18n;
+export default i18n

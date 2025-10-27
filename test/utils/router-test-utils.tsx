@@ -1,12 +1,11 @@
-import { render, RenderOptions, screen, waitFor } from '@testing-library/react'
-import { ReactElement } from 'react'
-import { MemoryRouter, Router, createMemoryHistory } from 'history'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { render, RenderOptions, screen, waitFor } from '@testing-library/react'
+import { createMemoryHistory, MemoryRouter, Router } from 'history'
+import { ReactElement } from 'react'
 import { vi } from 'vitest'
 
 // Mock providers for router testing
-const createTestQueryClient = () =>
-  new QueryClient({
+const createTestQueryClient = () => new QueryClient({
     defaultOptions: {
       queries: {
         retry: false,

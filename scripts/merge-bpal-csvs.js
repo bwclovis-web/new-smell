@@ -21,7 +21,7 @@ function parseNotes(openNotes, heartNotes, baseNotes) {
   const notes = []
   
   // Helper to parse and add notes
-  const addNotes = (notesString) => {
+  const addNotes = notesString => {
     if (!notesString || notesString.trim() === '' || notesString === '[]') {
       return
     }
@@ -123,8 +123,10 @@ async function mergeBpalCsvs() {
   console.log('💾 Writing merged data...')
   
   // Manually create CSV output
-  const escapeCSV = (value) => {
-    if (value === null || value === undefined) return ''
+  const escapeCSV = value => {
+    if (value === null || value === undefined) {
+ return '' 
+}
     const str = String(value)
     if (str.includes('"') || str.includes(',') || str.includes('\n')) {
       return '"' + str.replace(/"/g, '""') + '"'
@@ -132,7 +134,9 @@ async function mergeBpalCsvs() {
     return str
   }
   
-  const columns = ['name', 'description', 'image', 'perfumeHouse', 'notes', 'detailURL']
+  const columns = [
+'name', 'description', 'image', 'perfumeHouse', 'notes', 'detailURL'
+]
   const csvLines = [columns.join(',')]
   
   for (const record of mergedRecords) {

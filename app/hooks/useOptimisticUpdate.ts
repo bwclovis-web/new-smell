@@ -42,7 +42,9 @@ export const useOptimisticUpdate = <T>({
   }, [initialData])
 
   const updateData = useCallback(async (newData: T) => {
-    if (isUpdating) return
+    if (isUpdating) {
+ return 
+}
 
     const previousData = data
     setOriginalData(previousData)
@@ -65,7 +67,9 @@ export const useOptimisticUpdate = <T>({
     } finally {
       setIsUpdating(false)
     }
-  }, [data, isUpdating, onUpdate, onSuccess, onError, revertOnError])
+  }, [
+data, isUpdating, onUpdate, onSuccess, onError, revertOnError
+])
 
   const revertData = useCallback(() => {
     setData(originalData)

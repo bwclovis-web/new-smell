@@ -131,7 +131,7 @@ export async function deleteUserSafely(userId: string, adminId: string): Promise
       userWithCounts._count.SecurityAuditLog : 0
 
     // Delete user and all related data in a transaction
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async tx => {
       // Delete all related records first
       await tx.userPerfumeComment.deleteMany({ where: { userId } })
       await tx.userPerfumeRating.deleteMany({ where: { userId } })

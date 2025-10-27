@@ -6,7 +6,7 @@
  */
 
 import { copyFileSync, mkdirSync, readdirSync, statSync } from 'fs'
-import { join, dirname } from 'path'
+import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -34,9 +34,7 @@ async function copyImages() {
 
     // Process PNG files first if conversion is enabled
     const pngFiles = files.filter(file => file.toLowerCase().endsWith('.png'))
-    const otherFiles = files.filter(file => 
-      file.match(/\.(webp|jpg|jpeg|svg|gif|ico)$/i)
-    )
+    const otherFiles = files.filter(file => file.match(/\.(webp|jpg|jpeg|svg|gif|ico)$/i))
 
     if (CONVERT_PNG_TO_WEBP && pngFiles.length > 0) {
       console.log(`🔄 Converting ${pngFiles.length} PNG files to WebP...`)

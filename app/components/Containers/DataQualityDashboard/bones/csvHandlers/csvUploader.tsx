@@ -3,15 +3,12 @@ import type { ChangeEvent } from "react"
 // Helper function to get CSRF token from cookies (fallback method)
 const getCSRFTokenFromCookies = (): string | null => {
   const cookies = document.cookie.split(';')
-  const csrfCookie = cookies.find(cookie =>
-    cookie.trim().startsWith('_csrf=')
-  )
+  const csrfCookie = cookies.find(cookie => cookie.trim().startsWith('_csrf='))
   return csrfCookie ? csrfCookie.split('=')[1] : null
 }
 
 // Create a function that can be called with CSRF token from the component
-export const createHandleUploadCSV = (csrfToken: string | null) => {
-  return async (event: ChangeEvent<HTMLInputElement>) => {
+export const createHandleUploadCSV = (csrfToken: string | null) => async (event: ChangeEvent<HTMLInputElement>) => {
     try {
       const file = event.target.files?.[0]
       if (!file) {
@@ -82,7 +79,6 @@ export const createHandleUploadCSV = (csrfToken: string | null) => {
       alert('Failed to upload CSV: ' + errorMessage)
     }
   }
-}
 
 // Legacy export for backward compatibility (will try to get token from cookies)
 export const handleUploadCSV = createHandleUploadCSV(null)

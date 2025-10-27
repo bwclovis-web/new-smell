@@ -13,9 +13,7 @@ export function useCSRF() {
     const getCSRFToken = () => {
       const cookies = document.cookie.split(';')
 
-      const csrfCookie = cookies.find(cookie =>
-        cookie.trim().startsWith('_csrf=')
-      )
+      const csrfCookie = cookies.find(cookie => cookie.trim().startsWith('_csrf='))
 
       if (csrfCookie) {
         const token = csrfCookie.split('=')[1]
@@ -30,9 +28,7 @@ export function useCSRF() {
   /**
    * Get CSRF token for form submission
    */
-  const getToken = (): string | null => {
-    return csrfToken
-  }
+  const getToken = (): string | null => csrfToken
 
   /**
    * Add CSRF token to form data

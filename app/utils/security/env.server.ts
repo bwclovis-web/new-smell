@@ -5,7 +5,7 @@ const coreSecuritySchema = z.object({
   JWT_SECRET: z.string().min(32, "JWT_SECRET must be at least 32 characters long"),
   SESSION_SECRET: z.string().min(32, "SESSION_SECRET must be at least 32 characters long"),
   DATABASE_URL: z.string().refine(
-    (url) => {
+    url => {
       // Check if it's a valid URL format or a Prisma Accelerate URL with prisma+postgres prefix
       if (url.startsWith('prisma+postgres://')) {
         return true // Skip URL validation for this special format
@@ -19,7 +19,7 @@ const coreSecuritySchema = z.object({
     },
     "DATABASE_URL must be a valid URL"
   ).refine(
-    (url) => url.startsWith('postgresql://') || url.startsWith('prisma://') || url.startsWith('prisma+postgres://'),
+    url => url.startsWith('postgresql://') || url.startsWith('prisma://') || url.startsWith('prisma+postgres://'),
     "DATABASE_URL must be either a PostgreSQL connection string (postgresql://), a Prisma Accelerate URL (prisma://), or a Prisma Accelerate URL with prisma+postgres prefix"
   ),
   NODE_ENV: z.enum(["development", "production", "test"]),
@@ -31,7 +31,7 @@ const extendedSchema = z.object({
   JWT_SECRET: z.string().min(32, "JWT_SECRET must be at least 32 characters long"),
   SESSION_SECRET: z.string().min(32, "SESSION_SECRET must be at least 32 characters long"),
   DATABASE_URL: z.string().refine(
-    (url) => {
+    url => {
       // Check if it's a valid URL format or a Prisma Accelerate URL with prisma+postgres prefix
       if (url.startsWith('prisma+postgres://')) {
         return true // Skip URL validation for this special format
@@ -45,7 +45,7 @@ const extendedSchema = z.object({
     },
     "DATABASE_URL must be a valid URL"
   ).refine(
-    (url) => url.startsWith('postgresql://') || url.startsWith('prisma://') || url.startsWith('prisma+postgres://'),
+    url => url.startsWith('postgresql://') || url.startsWith('prisma://') || url.startsWith('prisma+postgres://'),
     "DATABASE_URL must be either a PostgreSQL connection string (postgresql://), a Prisma Accelerate URL (prisma://), or a Prisma Accelerate URL with prisma+postgres prefix"
   ),
   NODE_ENV: z.enum(["development", "production", "test"]),
@@ -79,7 +79,9 @@ const extendedSchema = z.object({
   // Cerewai configuration
   MIN_REQUEST_DELAY: z.string().regex(/^\d+$/, "MIN_REQUEST_DELAY must be a number").optional(),
   OUTPUT_DIR: z.string().optional(),
-  LOG_LEVEL: z.enum(["DEBUG", "INFO", "WARN", "ERROR"]).optional(),
+  LOG_LEVEL: z.enum([
+"DEBUG", "INFO", "WARN", "ERROR"
+]).optional(),
   MAX_RETRIES: z.string().regex(/^\d+$/, "MAX_RETRIES must be a number").optional(),
   TIMEOUT: z.string().regex(/^\d+$/, "TIMEOUT must be a number").optional(),
 })

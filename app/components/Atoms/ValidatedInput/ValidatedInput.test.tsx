@@ -1,7 +1,8 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { createRef } from 'react'
+import { describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
+
 import ValidatedInput from './ValidatedInput'
 
 // Mock useFieldValidation hook
@@ -116,14 +117,12 @@ describe('ValidatedInput', () => {
   describe('Validation', () => {
     it('should use field validation hook', () => {
       const schema = z.string().min(3)
-      render(
-        <ValidatedInput
+      render(<ValidatedInput
           {...defaultProps}
           validationSchema={schema}
           validateOnChange={true}
           debounceMs={500}
-        />
-      )
+        />)
 
       expect(mockUseFieldValidation).toHaveBeenCalledWith(
         schema,
@@ -287,11 +286,7 @@ describe('ValidatedInput', () => {
       render(<ValidatedInput {...defaultProps} />)
 
       const input = screen.getByRole('textbox')
-      expect(input).toHaveClass(
-        'block', 'w-full', 'px-3', 'py-2', 'border', 'rounded-md', 'shadow-sm',
-        'focus:outline-none', 'focus:ring-1', 'focus:ring-opacity-50',
-        'disabled:bg-gray-50', 'disabled:cursor-not-allowed'
-      )
+      expect(input).toHaveClass('block', 'w-full', 'px-3', 'py-2', 'border', 'rounded-md', 'shadow-sm', 'focus:outline-none', 'focus:ring-1', 'focus:ring-opacity-50', 'disabled:bg-gray-50', 'disabled:cursor-not-allowed')
     })
 
     it('should apply animation when validating', () => {

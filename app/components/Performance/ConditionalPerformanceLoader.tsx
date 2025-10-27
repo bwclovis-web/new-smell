@@ -1,8 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 
-const LazyPerformanceComponents = lazy(() =>
-  import('~/components/Performance/LazyPerformanceComponents')
-)
+const LazyPerformanceComponents = lazy(() => import('~/components/Performance/LazyPerformanceComponents'))
 
 export interface ConditionalPerformanceLoaderProps {
   userRole?: string
@@ -27,7 +25,9 @@ export const ConditionalPerformanceLoader = ({
     }
   }, [userRole, enabled, isClient])
 
-  if (!shouldLoad || !isClient) return null
+  if (!shouldLoad || !isClient) {
+ return null 
+}
 
   return (
     <Suspense fallback={

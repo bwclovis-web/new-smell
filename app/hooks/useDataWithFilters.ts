@@ -1,5 +1,6 @@
-import { useState, useMemo, useCallback } from 'react'
-import { type SortOption, sortItems, filterByType, filterBySearchQuery } from '~/utils/sortUtils'
+import { useCallback, useMemo, useState } from 'react'
+
+import { filterBySearchQuery, filterByType, sortItems, type SortOption } from '~/utils/sortUtils'
 
 interface UseDataWithFiltersOptions<T> {
   initialData: T[]
@@ -48,7 +49,9 @@ export function useDataWithFilters<T extends { id: string; name: string; created
     filtered = sortItems(filtered, selectedSort)
 
     return filtered
-  }, [initialData, selectedSort, selectedType, searchQuery])
+  }, [
+initialData, selectedSort, selectedType, searchQuery
+])
 
   const resetFilters = useCallback(() => {
     setSelectedSort(defaultSort)

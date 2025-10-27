@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from 'react'
-import { NavLink } from 'react-router'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FaChevronDown } from 'react-icons/fa'
+import { NavLink } from 'react-router'
 
 import { styleMerge } from '~/utils/styleUtils'
 
@@ -82,7 +82,7 @@ const AboutDropdown = ({ className, variant = 'desktop', onNavClick }: AboutDrop
       {isOpen && (
         <div className={dropdownClasses}>
           <ul className="py-2">
-            {aboutItems.map((item) => (
+            {aboutItems.map(item => (
               <li key={item.id}>
                 <NavLink
                   to={item.path}

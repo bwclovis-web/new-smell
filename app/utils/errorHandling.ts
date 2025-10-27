@@ -28,11 +28,17 @@ export enum ErrorSeverity {
 // Custom Error Classes
 export class AppError extends Error {
   public readonly type: ErrorType
+
   public readonly severity: ErrorSeverity
+
   public readonly code: string
+
   public readonly userMessage: string
+
   public readonly context?: Record<string, any>
+
   public readonly timestamp: Date
+
   public readonly isOperational: boolean
 
   constructor(
@@ -93,37 +99,29 @@ export class AppError extends Error {
 
 // Error Factory Functions
 export const createError = {
-  validation: (message: string, context?: Record<string, any>) =>
-    new AppError(message, ErrorType.VALIDATION, ErrorSeverity.LOW, 'VALIDATION_ERROR', undefined, context),
+  validation: (message: string, context?: Record<string, any>) => new AppError(message, ErrorType.VALIDATION, ErrorSeverity.LOW, 'VALIDATION_ERROR', undefined, context),
 
-  authentication: (message: string = 'Authentication failed', context?: Record<string, any>) =>
-    new AppError(message, ErrorType.AUTHENTICATION, ErrorSeverity.MEDIUM, 'AUTH_ERROR', undefined, context),
+  authentication: (message: string = 'Authentication failed', context?: Record<string, any>) => new AppError(message, ErrorType.AUTHENTICATION, ErrorSeverity.MEDIUM, 'AUTH_ERROR', undefined, context),
 
-  authorization: (message: string = 'Access denied', context?: Record<string, any>) =>
-    new AppError(message, ErrorType.AUTHORIZATION, ErrorSeverity.MEDIUM, 'AUTHZ_ERROR', undefined, context),
+  authorization: (message: string = 'Access denied', context?: Record<string, any>) => new AppError(message, ErrorType.AUTHORIZATION, ErrorSeverity.MEDIUM, 'AUTHZ_ERROR', undefined, context),
 
-  notFound: (resource: string = 'Resource', context?: Record<string, any>) =>
-    new AppError(`${resource} not found`, ErrorType.NOT_FOUND, ErrorSeverity.LOW, 'NOT_FOUND_ERROR', undefined, context),
+  notFound: (resource: string = 'Resource', context?: Record<string, any>) => new AppError(`${resource} not found`, ErrorType.NOT_FOUND, ErrorSeverity.LOW, 'NOT_FOUND_ERROR', undefined, context),
 
-  network: (message: string = 'Network error', context?: Record<string, any>) =>
-    new AppError(message, ErrorType.NETWORK, ErrorSeverity.MEDIUM, 'NETWORK_ERROR', undefined, context),
+  network: (message: string = 'Network error', context?: Record<string, any>) => new AppError(message, ErrorType.NETWORK, ErrorSeverity.MEDIUM, 'NETWORK_ERROR', undefined, context),
 
-  database: (message: string = 'Database error', context?: Record<string, any>) =>
-    new AppError(message, ErrorType.DATABASE, ErrorSeverity.HIGH, 'DB_ERROR', undefined, context),
+  database: (message: string = 'Database error', context?: Record<string, any>) => new AppError(message, ErrorType.DATABASE, ErrorSeverity.HIGH, 'DB_ERROR', undefined, context),
 
-  server: (message: string = 'Server error', context?: Record<string, any>) =>
-    new AppError(message, ErrorType.SERVER, ErrorSeverity.HIGH, 'SERVER_ERROR', undefined, context),
+  server: (message: string = 'Server error', context?: Record<string, any>) => new AppError(message, ErrorType.SERVER, ErrorSeverity.HIGH, 'SERVER_ERROR', undefined, context),
 
-  client: (message: string = 'Client error', context?: Record<string, any>) =>
-    new AppError(message, ErrorType.CLIENT, ErrorSeverity.MEDIUM, 'CLIENT_ERROR', undefined, context),
+  client: (message: string = 'Client error', context?: Record<string, any>) => new AppError(message, ErrorType.CLIENT, ErrorSeverity.MEDIUM, 'CLIENT_ERROR', undefined, context),
 
-  unknown: (message: string = 'Unknown error', context?: Record<string, any>) =>
-    new AppError(message, ErrorType.UNKNOWN, ErrorSeverity.MEDIUM, 'UNKNOWN_ERROR', undefined, context)
+  unknown: (message: string = 'Unknown error', context?: Record<string, any>) => new AppError(message, ErrorType.UNKNOWN, ErrorSeverity.MEDIUM, 'UNKNOWN_ERROR', undefined, context)
 }
 
 // Error Logger
 export class ErrorLogger {
   private static instance: ErrorLogger
+
   private logs: Array<{ error: AppError; timestamp: Date; userId?: string }> = []
 
   private constructor() { }
@@ -279,9 +277,7 @@ export interface ErrorBoundaryProps {
 }
 
 // Utility Functions
-export const isAppError = (error: unknown): error is AppError => {
-  return error instanceof AppError
-}
+export const isAppError = (error: unknown): error is AppError => error instanceof AppError
 
 export const getErrorMessage = (error: unknown): string => {
   if (isAppError(error)) {
@@ -311,26 +307,22 @@ export const getErrorType = (error: unknown): ErrorType => {
 export const asyncErrorHandler = <T extends any[], R>(
   fn: (...args: T) => Promise<R>,
   context?: Record<string, any>
-) => {
-  return async (...args: T): Promise<R> => {
+) => async (...args: T): Promise<R> => {
     try {
       return await fn(...args)
     } catch (error) {
       throw ErrorHandler.handle(error, context)
     }
   }
-}
 
 // Sync Error Wrapper
 export const syncErrorHandler = <T extends any[], R>(
   fn: (...args: T) => R,
   context?: Record<string, any>
-) => {
-  return (...args: T): R => {
+) => (...args: T): R => {
     try {
       return fn(...args)
     } catch (error) {
       throw ErrorHandler.handle(error, context)
     }
   }
-}

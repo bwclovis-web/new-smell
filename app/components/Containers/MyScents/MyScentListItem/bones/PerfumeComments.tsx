@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { MdDeleteForever } from "react-icons/md"
 
 import { Button } from "~/components/Atoms/Button"
+import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 import Modal from "~/components/Organisms/Modal"
 import { useCSRF } from "~/hooks/useCSRF"
 import { useSessionStore } from '~/stores/sessionStore'
@@ -10,7 +11,6 @@ import type { UserPerfumeI } from "~/types"
 import type { Comment } from "~/types/comments"
 
 import CommentsModal from "../../CommentsModal/CommentsModal"
-import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 
 interface PerfumeCommentsProps {
   userPerfume: UserPerfumeI

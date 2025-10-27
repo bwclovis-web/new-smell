@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-/* eslint-disable max-statements */
+ 
 import path from 'path'
 import pColor from 'picocolors'
 

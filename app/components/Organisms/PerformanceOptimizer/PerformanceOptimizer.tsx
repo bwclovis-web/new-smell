@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+
 import { styleMerge } from '~/utils/styleUtils'
 
 interface OptimizationRule {
@@ -137,9 +138,7 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
         // This would typically be done at build time
         console.log('CSS minification would be applied at build time')
       },
-      condition: () => {
-        return process.env.NODE_ENV === 'development'
-      },
+      condition: () => process.env.NODE_ENV === 'development',
       impact: 'low'
     },
     {
@@ -153,9 +152,8 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
         // This would be configured server-side
         console.log('Gzip compression would be enabled server-side')
       },
-      condition: () => {
-        return true // Always applicable
-      },
+      condition: () => true // Always applicable
+      ,
       impact: 'high'
     },
     {
@@ -186,9 +184,8 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
         // This would involve cleaning up event listeners
         console.log('Memory cleanup would be performed')
       },
-      condition: () => {
-        return true // Always applicable
-      },
+      condition: () => true // Always applicable
+      ,
       impact: 'low'
     }
   ]
@@ -219,7 +216,9 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
   }, [])
 
   const runAllOptimizations = useCallback(async () => {
-    if (!enabled) return
+    if (!enabled) {
+ return 
+}
 
     setIsRunning(true)
     const results: OptimizationResult[] = []
@@ -237,7 +236,9 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
 
   const runOptimizationById = useCallback(async (ruleId: string) => {
     const rule = rules.find(r => r.id === ruleId)
-    if (!rule) return
+    if (!rule) {
+ return 
+}
 
     const result = await runOptimization(rule)
     setOptimizations(prev => [result, ...prev])
@@ -288,7 +289,9 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
     }
   }
 
-  if (!enabled || !showUI) return null
+  if (!enabled || !showUI) {
+ return null 
+}
 
   return (
     <div className={styleMerge('bg-white border border-gray-200 rounded-lg shadow-lg p-6', className)}>

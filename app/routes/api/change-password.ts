@@ -1,7 +1,7 @@
 import { type ActionFunctionArgs } from 'react-router-dom'
 
-import { changePassword } from '~/models/user.server'
 import { requireUser } from '~/models/session.server'
+import { changePassword } from '~/models/user.server'
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {

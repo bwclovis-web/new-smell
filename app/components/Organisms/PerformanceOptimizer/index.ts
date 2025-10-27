@@ -1,2 +1,2 @@
+export type { OptimizationResult, OptimizationRule, PerformanceOptimizerProps } from './PerformanceOptimizer'
 export { default } from './PerformanceOptimizer'
-export type { PerformanceOptimizerProps, OptimizationRule, OptimizationResult } from './PerformanceOptimizer'

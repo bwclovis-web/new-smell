@@ -5,7 +5,7 @@ import { PrismaClient } from '@prisma/client'
 import { Client } from 'pg'
 
 // Define the slug utility function inline
-const createUrlSlug = (name) => {
+const createUrlSlug = name => {
   if (!name || typeof name !== 'string') {
     return ''
   }

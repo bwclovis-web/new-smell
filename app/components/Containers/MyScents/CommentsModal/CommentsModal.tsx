@@ -87,7 +87,7 @@ const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
         <textarea
           id="comment"
           value={comment}
-          onChange={(e) => setComment(e.target.value)}
+          onChange={e => setComment(e.target.value)}
           rows={4}
           className="block w-full noir-border p-2 relative resize-none bg-noir-gold-500/10 text-noir-gold-100 
           focus:bg-noir-gold/40 focus:ring-noir-gold focus:border-noir-gold"

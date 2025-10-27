@@ -1,11 +1,11 @@
 import type { ActionFunctionArgs } from 'react-router'
 
 import { addToWishlist, removeFromWishlist, updateWishlistVisibility } from '~/models/wishlist.server'
+import { processDecantInterestAlerts } from '~/utils/alert-processors'
 import { authenticateUser } from '~/utils/auth.server'
 import { WishlistActionSchema } from '~/utils/formValidationSchemas'
 import { createErrorResponse, createJsonResponse } from '~/utils/response.server'
 import { validateFormData } from '~/utils/validation'
-import { processDecantInterestAlerts } from '~/utils/alert-processors'
 
 const processWishlistAction = async (
   userId: string,

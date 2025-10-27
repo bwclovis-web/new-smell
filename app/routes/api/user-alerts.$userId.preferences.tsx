@@ -4,8 +4,8 @@ import {
   getUserAlertPreferences,
   updateUserAlertPreferences
 } from '~/models/user-alerts.server'
-import { authenticateUser } from '~/utils/auth.server'
 import type { UserAlertPreferences } from '~/types/database'
+import { authenticateUser } from '~/utils/auth.server'
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const userId = params.userId as string

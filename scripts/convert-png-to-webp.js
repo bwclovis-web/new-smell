@@ -15,10 +15,11 @@
  *   --dry-run          Show what would be converted without actually converting
  */
 
-import { convertPngToWebP, convertMultiplePngToWebP, findPngFiles, getOptimizedOptions, generateConversionReport, validateWebPSupport } from '../app/utils/imageConversion.ts'
 import { promises as fs } from 'fs'
-import { join, dirname, basename } from 'path'
+import { basename, dirname, join } from 'path'
 import { fileURLToPath } from 'url'
+
+import { convertMultiplePngToWebP, convertPngToWebP, findPngFiles, generateConversionReport, getOptimizedOptions, validateWebPSupport } from '../app/utils/imageConversion.ts'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)

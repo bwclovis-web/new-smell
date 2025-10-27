@@ -36,7 +36,9 @@ export default defineConfig({
     // Comprehensive coverage for CI
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html', 'lcov', 'clover'],
+      reporter: [
+'text', 'json', 'html', 'lcov', 'clover'
+],
       reportsDirectory: './coverage/ci',
       include: [
         'app/**/*.{js,ts,jsx,tsx}',

@@ -353,7 +353,7 @@ const DashboardContent = ({
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-purple-100">
-              {stats.housesNoPerfumes.map((house) => (
+              {stats.housesNoPerfumes.map(house => (
                 <tr key={house.id} className="hover:bg-purple-50">
                   <td className="px-4 py-3 text-sm font-medium text-gray-900">
                     {house.name}

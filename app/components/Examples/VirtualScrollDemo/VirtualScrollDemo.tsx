@@ -1,10 +1,10 @@
-import React, { useState, useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
+
 import { VirtualScroll } from '~/components/Atoms/VirtualScroll'
 import { VirtualScrollList } from '~/components/Molecules/VirtualScrollList'
 
 // Generate demo data
-const generateDemoData = (count: number) =>
-  Array.from({ length: count }, (_, i) => ({
+const generateDemoData = (count: number) => Array.from({ length: count }, (_, i) => ({
     id: i,
     name: `Demo Item ${i + 1}`,
     description: `This is a demo item with index ${i + 1}`,
@@ -58,7 +58,7 @@ const VirtualScrollDemo: React.FC = () => {
               max="10000"
               step="100"
               value={itemCount}
-              onChange={(e) => setItemCount(Number(e.target.value))}
+              onChange={e => setItemCount(Number(e.target.value))}
               className="w-full"
             />
           </div>
@@ -73,7 +73,7 @@ const VirtualScrollDemo: React.FC = () => {
               max="800"
               step="50"
               value={containerHeight}
-              onChange={(e) => setContainerHeight(Number(e.target.value))}
+              onChange={e => setContainerHeight(Number(e.target.value))}
               className="w-full"
             />
           </div>
@@ -88,7 +88,7 @@ const VirtualScrollDemo: React.FC = () => {
               max="200"
               step="10"
               value={itemHeight}
-              onChange={(e) => setItemHeight(Number(e.target.value))}
+              onChange={e => setItemHeight(Number(e.target.value))}
               className="w-full"
             />
           </div>
@@ -98,7 +98,7 @@ const VirtualScrollDemo: React.FC = () => {
               type="checkbox"
               id="virtual-scrolling"
               checked={useVirtualScrolling}
-              onChange={(e) => setUseVirtualScrolling(e.target.checked)}
+              onChange={e => setUseVirtualScrolling(e.target.checked)}
               className="mr-2"
             />
             <label htmlFor="virtual-scrolling" className="text-sm font-medium text-gray-700">

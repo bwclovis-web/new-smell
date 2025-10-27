@@ -32,7 +32,9 @@ export default defineConfig({
     // Coverage configuration
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html', 'lcov', 'text-summary', 'clover'],
+      reporter: [
+'text', 'json', 'html', 'lcov', 'text-summary', 'clover'
+],
       reportsDirectory: './coverage',
       include: [
         'app/**/*.{js,ts,jsx,tsx}',

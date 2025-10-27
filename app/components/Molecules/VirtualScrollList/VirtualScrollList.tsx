@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+
 import { VirtualScroll } from '~/components/Atoms/VirtualScroll'
 import type { VirtualScrollProps } from '~/components/Atoms/VirtualScroll/types'
 import { styleMerge } from '~/utils/styleUtils'
@@ -30,16 +31,14 @@ const VirtualScrollList: React.FC<VirtualScrollListProps> = ({
 }) => {
   const hasItems = items.length > 0
 
-  const renderItemWithWrapper = useMemo(() => {
-    return (item: any, index: number) => (
+  const renderItemWithWrapper = useMemo(() => (item: any, index: number) => (
       <div
         key={`${item.id || index}`}
         className={styleMerge('w-full', itemClassName)}
       >
         {renderItem(item, index)}
       </div>
-    )
-  }, [renderItem, itemClassName])
+    ), [renderItem, itemClassName])
 
   if (isLoading && loadingState) {
     return <div className={styleMerge('flex items-center justify-center h-full', className)}>{loadingState}</div>

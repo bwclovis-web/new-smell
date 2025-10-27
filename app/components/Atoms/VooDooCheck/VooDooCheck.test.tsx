@@ -1,5 +1,6 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+
 import VooDooCheck from './VooDooCheck'
 
 describe('VooDooCheck', () => {
@@ -106,11 +107,7 @@ describe('VooDooCheck', () => {
       const checkbox = screen.getByRole('checkbox')
       const toggleButton = checkbox.parentElement?.querySelector('.absolute')
 
-      expect(toggleButton).toHaveClass(
-        'absolute', 'left-1', 'top-1', 'flex', 'h-6', 'w-6',
-        'items-center', 'justify-center', 'rounded-full',
-        'transition-transform', 'duration-300', 'ease-in-out'
-      )
+      expect(toggleButton).toHaveClass('absolute', 'left-1', 'top-1', 'flex', 'h-6', 'w-6', 'items-center', 'justify-center', 'rounded-full', 'transition-transform', 'duration-300', 'ease-in-out')
     })
   })
 
@@ -192,13 +189,11 @@ describe('VooDooCheck', () => {
     })
 
     it('should handle custom label text', () => {
-      render(
-        <VooDooCheck
+      render(<VooDooCheck
           {...defaultProps}
           labelChecked="Enabled"
           labelUnchecked="Disabled"
-        />
-      )
+        />)
 
       expect(screen.getByText('Disabled')).toBeInTheDocument()
       expect(screen.queryByText('Enabled')).not.toBeInTheDocument()
@@ -246,13 +241,11 @@ describe('VooDooCheck', () => {
 
   describe('Edge cases', () => {
     it('should handle empty label text', () => {
-      render(
-        <VooDooCheck
+      render(<VooDooCheck
           {...defaultProps}
           labelChecked=""
           labelUnchecked=""
-        />
-      )
+        />)
 
       const checkbox = screen.getByRole('checkbox')
       expect(checkbox).toBeInTheDocument()
@@ -260,26 +253,22 @@ describe('VooDooCheck', () => {
 
     it('should handle very long label text', () => {
       const longLabel = 'This is a very long label text that might wrap or overflow'
-      render(
-        <VooDooCheck
+      render(<VooDooCheck
           {...defaultProps}
           labelChecked={longLabel}
           labelUnchecked={longLabel}
-        />
-      )
+        />)
 
       expect(screen.getByText(longLabel)).toBeInTheDocument()
     })
 
     it('should handle special characters in label text', () => {
       const specialLabel = 'On/Off & More!'
-      render(
-        <VooDooCheck
+      render(<VooDooCheck
           {...defaultProps}
           labelChecked={specialLabel}
           labelUnchecked={specialLabel}
-        />
-      )
+        />)
 
       expect(screen.getByText(specialLabel)).toBeInTheDocument()
     })

@@ -1,8 +1,8 @@
 import { useActionData, useNavigation } from 'react-router-dom'
 
+import ChangePasswordForm from '~/components/Molecules/ChangePasswordForm/ChangePasswordForm'
 import { changePassword } from '~/models/user.server'
 import { sharedLoader } from '~/utils/sharedLoader'
-import ChangePasswordForm from '~/components/Molecules/ChangePasswordForm/ChangePasswordForm'
 
 export const ROUTE_PATH = '/admin/change-password' as const
 

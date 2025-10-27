@@ -1,8 +1,6 @@
 import { type AppError } from '~/utils/errorHandling'
 
-export const generateErrorId = (): string => {
-  return `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-}
+export const generateErrorId = (): string => `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
 
 export const reportError = (error: AppError, errorId: string): void => {
   // In a real app, you would send this to your error reporting service

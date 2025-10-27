@@ -12,7 +12,6 @@ import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 import { styleMerge } from '~/utils/styleUtils'
 
 import AboutDropdown from '../AboutDropdown/AboutDropdown'
-
 import LogoutButton from '../LogoutButton/LogoutButton'
 import { globalNavigationVariants } from './globalNavigation-variants'
 

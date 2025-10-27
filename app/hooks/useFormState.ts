@@ -103,7 +103,9 @@ export const useFormState = <T extends Record<string, any>>({
 
   // Validate form
   const validateForm = (): boolean => {
-    if (!validate) return true
+    if (!validate) {
+ return true 
+}
 
     const validationErrors = validate(values)
     const hasErrors = Object.keys(validationErrors).length > 0
@@ -127,7 +129,9 @@ export const useFormState = <T extends Record<string, any>>({
       return
     }
 
-    if (!onSubmit) return
+    if (!onSubmit) {
+ return 
+}
 
     setIsSubmitting(true)
     try {

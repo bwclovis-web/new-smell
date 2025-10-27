@@ -4,12 +4,12 @@
  */
 
 // Re-export all types from specialized modules
-export * from './database'
 export * from './api'
-export * from './forms'
-export * from './components'
-export * from './utils'
 export * from './comments'
+export * from './components'
+export * from './database'
+export * from './forms'
+export * from './utils'
 
 // Legacy types for backward compatibility
 import type { UserRole } from '@prisma/client'

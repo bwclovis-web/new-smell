@@ -1,5 +1,6 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+
 import SimpleImage from './SimpleImage'
 
 // Mock styleMerge utility
@@ -19,14 +20,12 @@ describe('SimpleImage', () => {
     })
 
     it('should render with width and height attributes', () => {
-      render(
-        <SimpleImage
+      render(<SimpleImage
           src="test-image.jpg"
           alt="Test image"
           width={200}
           height={150}
-        />
-      )
+        />)
 
       const img = screen.getByRole('img')
       expect(img).toHaveAttribute('width', '200')
@@ -34,13 +33,11 @@ describe('SimpleImage', () => {
     })
 
     it('should apply custom className', () => {
-      render(
-        <SimpleImage
+      render(<SimpleImage
           src="test-image.jpg"
           alt="Test image"
           className="custom-class"
-        />
-      )
+        />)
 
       const img = screen.getByRole('img')
       expect(img).toHaveClass('custom-class')
@@ -48,13 +45,11 @@ describe('SimpleImage', () => {
 
     it('should apply custom style', () => {
       const customStyle = { border: '1px solid red' }
-      render(
-        <SimpleImage
+      render(<SimpleImage
           src="test-image.jpg"
           alt="Test image"
           style={customStyle}
-        />
-      )
+        />)
 
       const container = screen.getByRole('img').closest('div')
       expect(container).toHaveStyle('border: 1px solid red')
@@ -130,13 +125,11 @@ describe('SimpleImage', () => {
     })
 
     it('should apply custom className to error state', async () => {
-      render(
-        <SimpleImage
+      render(<SimpleImage
           src="invalid-image.jpg"
           alt="Test image"
           className="custom-error-class"
-        />
-      )
+        />)
 
       const img = screen.getByRole('img')
       fireEvent.error(img)
@@ -149,13 +142,11 @@ describe('SimpleImage', () => {
 
     it('should apply custom style to error state', async () => {
       const customStyle = { backgroundColor: 'red' }
-      render(
-        <SimpleImage
+      render(<SimpleImage
           src="invalid-image.jpg"
           alt="Test image"
           style={customStyle}
-        />
-      )
+        />)
 
       const img = screen.getByRole('img')
       fireEvent.error(img)
@@ -169,26 +160,22 @@ describe('SimpleImage', () => {
 
   describe('Priority loading', () => {
     it('should set eager loading when priority is true', () => {
-      render(
-        <SimpleImage
+      render(<SimpleImage
           src="test-image.jpg"
           alt="Test image"
           priority
-        />
-      )
+        />)
 
       const img = screen.getByRole('img')
       expect(img).toHaveAttribute('loading', 'eager')
     })
 
     it('should set lazy loading when priority is false', () => {
-      render(
-        <SimpleImage
+      render(<SimpleImage
           src="test-image.jpg"
           alt="Test image"
           priority={false}
-        />
-      )
+        />)
 
       const img = screen.getByRole('img')
       expect(img).toHaveAttribute('loading', 'lazy')
@@ -205,13 +192,11 @@ describe('SimpleImage', () => {
   describe('Event handlers', () => {
     it('should call onLoad when image loads', () => {
       const onLoad = vi.fn()
-      render(
-        <SimpleImage
+      render(<SimpleImage
           src="test-image.jpg"
           alt="Test image"
           onLoad={onLoad}
-        />
-      )
+        />)
 
       const img = screen.getByRole('img')
       fireEvent.load(img)
@@ -221,13 +206,11 @@ describe('SimpleImage', () => {
 
     it('should call onError when image fails to load', () => {
       const onError = vi.fn()
-      render(
-        <SimpleImage
+      render(<SimpleImage
           src="invalid-image.jpg"
           alt="Test image"
           onError={onError}
-        />
-      )
+        />)
 
       const img = screen.getByRole('img')
       fireEvent.error(img)
@@ -287,13 +270,11 @@ describe('SimpleImage', () => {
 
     it('should apply custom style to container', () => {
       const customStyle = { border: '1px solid blue' }
-      render(
-        <SimpleImage
+      render(<SimpleImage
           src="test-image.jpg"
           alt="Test image"
           style={customStyle}
-        />
-      )
+        />)
 
       const container = screen.getByRole('img').closest('div')
       expect(container).toHaveStyle('border: 1px solid blue')
@@ -316,28 +297,24 @@ describe('SimpleImage', () => {
     })
 
     it('should handle zero width and height', () => {
-      render(
-        <SimpleImage
+      render(<SimpleImage
           src="test-image.jpg"
           alt="Test image"
           width={0}
           height={0}
-        />
-      )
+        />)
 
       const img = screen.getByRole('img')
       expect(img).toBeInTheDocument()
     })
 
     it('should handle undefined width and height', () => {
-      render(
-        <SimpleImage
+      render(<SimpleImage
           src="test-image.jpg"
           alt="Test image"
           width={undefined}
           height={undefined}
-        />
-      )
+        />)
 
       const img = screen.getByRole('img')
       expect(img).not.toHaveAttribute('width')

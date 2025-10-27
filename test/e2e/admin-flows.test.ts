@@ -1,6 +1,7 @@
-import { test, expect } from '@playwright/test'
-import { LoginPage } from './pages/LoginPage'
+import { expect, test } from '@playwright/test'
+
 import { AdminPage } from './pages/AdminPage'
+import { LoginPage } from './pages/LoginPage'
 import { VaultPage } from './pages/VaultPage'
 
 test.describe('Admin Flows', () => {

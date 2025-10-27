@@ -1,4 +1,5 @@
 import { vi } from 'vitest'
+
 import { createTestQueryClient } from './utils/test-utils'
 
 // Integration test specific setup

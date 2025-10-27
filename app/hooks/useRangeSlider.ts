@@ -1,4 +1,4 @@
-/* eslint-disable max-statements */
+ 
 import { useGSAP } from '@gsap/react'
 import React, {
   type KeyboardEvent as ReactKeyboardEvent,

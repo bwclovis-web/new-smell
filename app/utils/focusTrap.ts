@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable max-statements */
+ 
 type FocusTrapFunction = (
   root: HTMLDivElement | HTMLUListElement | null,
   trigger: HTMLButtonElement | null,

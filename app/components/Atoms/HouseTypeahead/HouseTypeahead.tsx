@@ -1,4 +1,4 @@
-import { type ChangeEvent, type KeyboardEvent, useState, useEffect, useRef } from 'react'
+import { type ChangeEvent, type KeyboardEvent, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { styleMerge } from '~/utils/styleUtils'
@@ -144,7 +144,7 @@ const HouseTypeahead = ({ label, name, defaultId, defaultName, className }: Hous
               <button
                 type="button"
                 className='block min-w-full text-left'
-                onMouseDown={(e) => {
+                onMouseDown={e => {
                   e.preventDefault()
                   handleSelect(item)
                 }}

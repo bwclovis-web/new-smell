@@ -5,13 +5,11 @@ import TitleBanner from './TitleBanner'
 
 describe('TitleBanner', () => {
   it('renders a titlebanner', () => {
-    render(
-      <TitleBanner
+    render(<TitleBanner
         image="/test-image.jpg"
         heading="Test Heading"
         subheading="Test Subheading"
-      />
-    )
+      />)
     expect(screen.getByText('Test Heading')).toBeInTheDocument()
   })
 })

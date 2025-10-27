@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+
 import { analyzeBundle, getOptimizationRecommendations } from '~/utils/bundleSplitting'
 
 interface PerformanceMonitorProps {
@@ -18,7 +19,9 @@ const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
   const [recommendations, setRecommendations] = useState<any[]>([])
 
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) {
+ return 
+}
 
     const collectMetrics = () => {
       const bundleAnalysis = analyzeBundle()
@@ -52,7 +55,9 @@ const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
     return () => clearTimeout(timer)
   }, [enabled, showInConsole])
 
-  if (!enabled || !showUI || !metrics) return null
+  if (!enabled || !showUI || !metrics) {
+ return null 
+}
 
   return (
     <div className={`fixed bottom-4 right-4 bg-white border border-gray-300 rounded-lg shadow-lg p-4 max-w-sm z-50 ${className}`}>

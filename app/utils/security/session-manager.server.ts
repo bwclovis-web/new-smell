@@ -1,6 +1,7 @@
 import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
-import { SESSION_CONFIG, getSessionConfig } from './session-config.server'
+
+import { getSessionConfig, SESSION_CONFIG } from './session-config.server'
 
 // Validate JWT secret
 function validateJwtSecret() {

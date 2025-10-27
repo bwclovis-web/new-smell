@@ -1,4 +1,4 @@
-/* eslint-disable max-statements, max-len, curly, array-bracket-newline */
+/* eslint-disable max-len, curly, array-bracket-newline */
 //
 import { type RefObject, useEffect, useRef, useState } from 'react'
 

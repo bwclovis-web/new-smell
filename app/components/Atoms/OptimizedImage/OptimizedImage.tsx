@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+
 import { styleMerge } from '~/utils/styleUtils'
 
 export interface OptimizedImageProps {
@@ -39,7 +40,9 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   // Intersection Observer for lazy loading
   useEffect(() => {
-    if (priority || isInView) return
+    if (priority || isInView) {
+ return 
+}
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -73,7 +76,9 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   // Generate responsive srcSet for different screen sizes
   const generateSrcSet = (baseSrc: string) => {
-    if (!baseSrc || hasError) return undefined
+    if (!baseSrc || hasError) {
+ return undefined 
+}
 
     // For now, don't generate srcSet since we don't have multiple image sizes
     // This can be enabled when we have optimized images with different sizes
@@ -82,7 +87,9 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   // Generate optimized src with quality parameter
   const getOptimizedSrc = (baseSrc: string) => {
-    if (!baseSrc || hasError) return baseSrc
+    if (!baseSrc || hasError) {
+ return baseSrc 
+}
 
     // If it's a local image, return as is
     if (baseSrc.startsWith('/') || baseSrc.startsWith('./')) {

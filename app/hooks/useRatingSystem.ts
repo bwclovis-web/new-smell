@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { useErrorHandler } from './useErrorHandler'
 import { useCSRF } from './useCSRF'
+import { useErrorHandler } from './useErrorHandler'
 
 export interface RatingData {
   longevity?: number | null
@@ -109,7 +109,9 @@ export const useRatingSystem = ({
     } finally {
       setIsSubmitting(false)
     }
-  }, [isInteractive, userId, perfumeId, currentRatings, addToHeaders, onError, onSuccess, handleError])
+  }, [
+isInteractive, userId, perfumeId, currentRatings, addToHeaders, onError, onSuccess, handleError
+])
 
   const resetRatings = useCallback(() => {
     setCurrentRatings(initialRatings)

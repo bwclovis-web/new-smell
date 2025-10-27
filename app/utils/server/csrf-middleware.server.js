@@ -1,5 +1,5 @@
-import crypto from 'crypto'
 import cookie from 'cookie'
+import crypto from 'crypto'
 
 const CSRF_COOKIE_KEY = '_csrf'
 const CSRF_HEADER_KEY = 'x-csrf-token'

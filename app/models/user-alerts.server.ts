@@ -282,7 +282,9 @@ export async function checkWishlistAvailabilityAlerts(perfumeId: string) {
 
   for (const wishlistItem of wishlistUsers) {
     const preferences = wishlistItem.user.alertPreferences
-    if (!preferences?.wishlistAlertsEnabled) continue
+    if (!preferences?.wishlistAlertsEnabled) {
+ continue 
+}
 
     // Check if we already created an active (non-dismissed) alert for this user/perfume combination recently
     const existingAlert = await prisma.userAlert.findFirst({
@@ -392,13 +394,17 @@ export async function checkDecantInterestAlerts(perfumeId: string, interestedUse
     }
   })
 
-  if (!interestedUser) return []
+  if (!interestedUser) {
+ return [] 
+}
 
   const alertsToCreate = []
 
   for (const decanter of decanters) {
     const preferences = decanter.user.alertPreferences
-    if (!preferences?.decantAlertsEnabled) continue
+    if (!preferences?.decantAlertsEnabled) {
+ continue 
+}
 
     // Check if we already created an active (non-dismissed) alert for this user/perfume/interested user combination recently
     const existingAlert = await prisma.userAlert.findFirst({

@@ -24,20 +24,17 @@ export const performanceTestSetup = () => {
   })
 
   // Mock requestIdleCallback
-  global.requestIdleCallback = vi.fn((callback) => {
-    return setTimeout(callback, 0)
-  })
+  global.requestIdleCallback = vi.fn(callback => setTimeout(callback, 0))
 
-  global.cancelIdleCallback = vi.fn((id) => {
+  global.cancelIdleCallback = vi.fn(id => {
     clearTimeout(id)
   })
 
   // Mock requestAnimationFrame
-  global.requestAnimationFrame = vi.fn((callback) => {
-    return setTimeout(callback, 16) // ~60fps
-  })
+  global.requestAnimationFrame = vi.fn(callback => setTimeout(callback, 16) // ~60fps
+  )
 
-  global.cancelAnimationFrame = vi.fn((id) => {
+  global.cancelAnimationFrame = vi.fn(id => {
     clearTimeout(id)
   })
 

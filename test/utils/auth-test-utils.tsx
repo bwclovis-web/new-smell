@@ -1,6 +1,7 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi } from 'vitest'
+
 import { renderWithProviders } from './test-utils'
 
 // Authentication Testing Utilities
@@ -31,7 +32,9 @@ export const mockAuthStates = {
   },
   admin: createMockAuthUser({
     role: 'admin',
-    permissions: ['read', 'write', 'delete', 'admin'],
+    permissions: [
+'read', 'write', 'delete', 'admin'
+],
   }),
   guest: createMockAuthUser({
     role: 'guest',
@@ -40,8 +43,7 @@ export const mockAuthStates = {
 }
 
 // Mock authentication context
-export const mockAuthContext = (authState = mockAuthStates.authenticated) => {
-  return {
+export const mockAuthContext = (authState = mockAuthStates.authenticated) => ({
     user: authState,
     login: vi.fn().mockResolvedValue(authState),
     logout: vi.fn().mockResolvedValue(undefined),
@@ -51,8 +53,7 @@ export const mockAuthContext = (authState = mockAuthStates.authenticated) => {
     resetPassword: vi.fn().mockResolvedValue(undefined),
     isLoading: false,
     error: null,
-  }
-}
+  })
 
 // Test login flow
 export const testLoginFlow = async (
@@ -128,13 +129,11 @@ export const testRegistrationFlow = async (
   await user.click(screen.getByRole('button', { name: /register/i }))
 
   // Verify registration was called
-  expect(mockRegister).toHaveBeenCalledWith(
-    expect.objectContaining({
+  expect(mockRegister).toHaveBeenCalledWith(expect.objectContaining({
       name: userData.name,
       email: userData.email,
       password: userData.password,
-    })
-  )
+    }))
 }
 
 // Test authentication guards
@@ -148,9 +147,7 @@ export const testAuthGuards = async (
   }>
 ) => {
   for (const test of guardTests) {
-    const { history } = renderWithProviders(
-      <Component authState={test.authState} />
-    )
+    const { history } = renderWithProviders(<Component authState={test.authState} />)
 
     switch (test.expectedBehavior) {
       case 'allow':
@@ -355,9 +352,7 @@ export const mockJWT = {
 }
 
 // Test token refresh
-export const testTokenRefresh = async (
-  Component: React.ComponentType<any>
-) => {
+export const testTokenRefresh = async (Component: React.ComponentType<any>) => {
   const mockRefreshToken = vi.fn().mockResolvedValue({
     token: 'new-mock-token',
     refreshToken: 'new-refresh-token',

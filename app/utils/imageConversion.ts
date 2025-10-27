@@ -1,7 +1,7 @@
 // Image conversion utilities using Sharp
-import sharp from 'sharp'
 import { promises as fs } from 'fs'
-import { join, dirname, basename, extname } from 'path'
+import { basename, dirname, extname, join } from 'path'
+import sharp from 'sharp'
 
 export interface ConversionOptions {
   quality?: number // 1-100, default 80
@@ -256,10 +256,14 @@ ${failed.map(f => `   - ${f.inputPath}: ${f.error}`).join('\n')}
  * Format bytes to human readable format
  */
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 Bytes'
+  if (bytes === 0) {
+ return '0 Bytes' 
+}
 
   const k = 1024
-  const sizes = ['Bytes', 'KB', 'MB', 'GB']
+  const sizes = [
+'Bytes', 'KB', 'MB', 'GB'
+]
   const i = Math.floor(Math.log(bytes) / Math.log(k))
 
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]

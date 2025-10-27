@@ -5,16 +5,12 @@ import jwt from 'jsonwebtoken'
 function validateJwtSecret() {
   const jwtSecret = process.env.JWT_SECRET
   if (!jwtSecret) {
-    throw new Error(
-      'JWT_SECRET environment variable is required but not set. ' +
-      'Please set a secure JWT secret (minimum 32 characters) in your environment variables.'
-    )
+    throw new Error('JWT_SECRET environment variable is required but not set. ' +
+      'Please set a secure JWT secret (minimum 32 characters) in your environment variables.')
   }
   if (jwtSecret.length < 32) {
-    throw new Error(
-      'JWT_SECRET must be at least 32 characters long for security. ' +
-      'Current length: ' + jwtSecret.length
-    )
+    throw new Error('JWT_SECRET must be at least 32 characters long for security. ' +
+      'Current length: ' + jwtSecret.length)
   }
   return jwtSecret
 }

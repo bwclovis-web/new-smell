@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+
 import VirtualScroll from './VirtualScroll'
 
 const mockItems = Array.from({ length: 100 }, (_, i) => ({
@@ -16,16 +17,14 @@ const MockItem = ({ item, index }: { item: any; index: number }) => (
 
 describe('VirtualScroll', () => {
   it('renders visible items only', () => {
-    render(
-      <VirtualScroll
+    render(<VirtualScroll
         items={mockItems}
         itemHeight={50}
         containerHeight={200}
         overscan={2}
       >
         {(item, index) => <MockItem item={item} index={index} />}
-      </VirtualScroll>
-    )
+      </VirtualScroll>)
 
     // Should render only visible items (200px / 50px = 4 items + overscan)
     const visibleItems = screen.queryAllByTestId(/^item-\d+$/)
@@ -34,16 +33,14 @@ describe('VirtualScroll', () => {
 
   it('handles scroll events', () => {
     const onScroll = vi.fn()
-    const { container } = render(
-      <VirtualScroll
+    const { container } = render(<VirtualScroll
         items={mockItems}
         itemHeight={50}
         containerHeight={200}
         onScroll={onScroll}
       >
         {(item, index) => <MockItem item={item} index={index} />}
-      </VirtualScroll>
-    )
+      </VirtualScroll>)
 
     const scrollContainer = container.firstChild as HTMLElement
     fireEvent.scroll(scrollContainer, { target: { scrollTop: 100 } })
@@ -52,8 +49,7 @@ describe('VirtualScroll', () => {
   })
 
   it('scrolls to specific index', async () => {
-    render(
-      <VirtualScroll
+    render(<VirtualScroll
         items={mockItems}
         itemHeight={50}
         containerHeight={200}
@@ -61,8 +57,7 @@ describe('VirtualScroll', () => {
         scrollToAlignment="start"
       >
         {(item, index) => <MockItem item={item} index={index} />}
-      </VirtualScroll>
-    )
+      </VirtualScroll>)
 
     // Wait for the scroll effect to complete
     await new Promise(resolve => setTimeout(resolve, 100))
@@ -73,30 +68,26 @@ describe('VirtualScroll', () => {
   })
 
   it('applies custom className', () => {
-    const { container } = render(
-      <VirtualScroll
+    const { container } = render(<VirtualScroll
         items={mockItems}
         itemHeight={50}
         containerHeight={200}
         className="custom-class"
       >
         {(item, index) => <MockItem item={item} index={index} />}
-      </VirtualScroll>
-    )
+      </VirtualScroll>)
 
     expect(container.firstChild).toHaveClass('custom-class')
   })
 
   it('handles empty items array', () => {
-    const { container } = render(
-      <VirtualScroll
+    const { container } = render(<VirtualScroll
         items={[]}
         itemHeight={50}
         containerHeight={200}
       >
         {(item, index) => <MockItem item={item} index={index} />}
-      </VirtualScroll>
-    )
+      </VirtualScroll>)
 
     // Check that no items are rendered
     const items = container.querySelectorAll('[data-testid^="item-"]')
@@ -104,15 +95,13 @@ describe('VirtualScroll', () => {
   })
 
   it('calculates correct total height', () => {
-    const { container } = render(
-      <VirtualScroll
+    const { container } = render(<VirtualScroll
         items={mockItems}
         itemHeight={50}
         containerHeight={200}
       >
         {(item, index) => <MockItem item={item} index={index} />}
-      </VirtualScroll>
-    )
+      </VirtualScroll>)
 
     // The inner div should have the total height (100 items * 50px = 5000px)
     const innerDiv = container.querySelector('div > div')

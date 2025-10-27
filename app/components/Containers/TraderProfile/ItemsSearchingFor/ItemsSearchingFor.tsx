@@ -44,8 +44,7 @@ const ItemsSearchingFor = ({ wishlistItems }: ItemsSearchingForProps) => {
   return (
     <div className="mt-6">
       <ul className="space-y-4">
-        {wishlistItems.map((item) => {
-          return (
+        {wishlistItems.map(item => (
             <li
               key={item.id}
               className="border bg-noir-gold/10 border-noir-gold rounded p-3 flex items-center gap-3"
@@ -80,8 +79,7 @@ const ItemsSearchingFor = ({ wishlistItems }: ItemsSearchingForProps) => {
                 </span>
               </div>
             </li>
-          )
-        })}
+          ))}
       </ul>
     </div>
   )

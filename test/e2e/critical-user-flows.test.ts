@@ -1,9 +1,10 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
+import { PerfumePage } from './pages/PerfumePage'
 import { SignUpPage } from './pages/SignUpPage'
 import { VaultPage } from './pages/VaultPage'
-import { PerfumePage } from './pages/PerfumePage'
 
 test.describe('Critical User Flows', () => {
   test.describe('Authentication Flows', () => {

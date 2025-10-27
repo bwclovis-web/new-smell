@@ -1,16 +1,15 @@
-import { type LoaderFunctionArgs, type MetaFunction, useLoaderData, redirect } from 'react-router'
+import { type LoaderFunctionArgs, type MetaFunction, redirect, useLoaderData } from 'react-router'
 import { Link } from 'react-router'
-import { authenticateUser } from '~/utils/auth.server'
+
 import { getUserReviews } from '~/models/perfumeReview.server'
+import { authenticateUser } from '~/utils/auth.server'
 
 export const ROUTE_PATH = '/my-reviews'
 
-export const meta: MetaFunction = () => {
-  return [
+export const meta: MetaFunction = () => [
     { title: 'My Reviews - New Smell' },
     { name: 'description', content: 'View and manage your perfume reviews' }
   ]
-}
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const authResult = await authenticateUser(request)
@@ -52,7 +51,7 @@ const MyReviewsPage = () => {
           {/* Reviews List */}
           {reviews.length > 0 ? (
             <div className="space-y-6">
-              {reviews.map((review) => (
+              {reviews.map(review => (
                 <div key={review.id} className="bg-white/5 border border-gray-300 rounded-lg p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div>

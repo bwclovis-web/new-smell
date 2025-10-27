@@ -48,9 +48,13 @@ export const getOptimizedImageUrl = (
  */
 export const generateResponsiveSrcSet = (
   baseSrc: string,
-  sizes: number[] = [320, 640, 768, 1024, 1280, 1536, 1920]
+  sizes: number[] = [
+320, 640, 768, 1024, 1280, 1536, 1920
+]
 ): string => {
-  if (!baseSrc) return ''
+  if (!baseSrc) {
+ return '' 
+}
 
   const baseUrl = baseSrc.replace(/\.[^/.]+$/, '')
   const extension = baseSrc.split('.').pop() || 'jpg'
@@ -63,18 +67,14 @@ export const generateResponsiveSrcSet = (
 /**
  * Generates appropriate sizes attribute for responsive images
  */
-export const generateSizesAttribute = (
-  breakpoints: { maxWidth: number; size: string }[] = [
+export const generateSizesAttribute = (breakpoints: { maxWidth: number; size: string }[] = [
     { maxWidth: 640, size: '100vw' },
     { maxWidth: 768, size: '50vw' },
     { maxWidth: 1024, size: '33vw' },
     { maxWidth: 1280, size: '25vw' }
-  ]
-): string => {
-  return breakpoints
+  ]): string => breakpoints
     .map(bp => `(max-width: ${bp.maxWidth}px) ${bp.size}`)
     .join(', ') + ', 20vw'
-}
 
 /**
  * Determines if an image should be loaded with priority
@@ -82,9 +82,7 @@ export const generateSizesAttribute = (
 export const shouldLoadWithPriority = (
   src: string,
   context: 'hero' | 'above-fold' | 'below-fold' | 'lazy' = 'lazy'
-): boolean => {
-  return context === 'hero' || context === 'above-fold'
-}
+): boolean => context === 'hero' || context === 'above-fold'
 
 /**
  * Generates a blur data URL for placeholder images
@@ -95,7 +93,9 @@ export const generateBlurDataURL = (width: number = 10, height: number = 10): st
   canvas.height = height
 
   const ctx = canvas.getContext('2d')
-  if (!ctx) return ''
+  if (!ctx) {
+ return '' 
+}
 
   // Create a simple gradient blur
   const gradient = ctx.createLinearGradient(0, 0, width, height)
@@ -111,14 +111,12 @@ export const generateBlurDataURL = (width: number = 10, height: number = 10): st
 /**
  * Preloads critical images
  */
-export const preloadImage = (src: string): Promise<void> => {
-  return new Promise((resolve, reject) => {
+export const preloadImage = (src: string): Promise<void> => new Promise((resolve, reject) => {
     const img = new Image()
     img.onload = () => resolve()
     img.onerror = () => reject(new Error(`Failed to preload image: ${src}`))
     img.src = src
   })
-}
 
 /**
  * Preloads multiple images
@@ -167,9 +165,7 @@ export const calculateOptimalDimensions = (
   containerWidth: number,
   containerHeight: number,
   devicePixelRatio: number = 1
-): { width: number; height: number } => {
-  return {
+): { width: number; height: number } => ({
     width: Math.ceil(containerWidth * devicePixelRatio),
     height: Math.ceil(containerHeight * devicePixelRatio)
-  }
-}
+  })

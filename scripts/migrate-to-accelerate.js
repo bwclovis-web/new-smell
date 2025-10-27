@@ -3,7 +3,7 @@
 
 import { PrismaClient } from '@prisma/client'
 // Define the slug utility function inline since we can't import TypeScript directly
-const createUrlSlug = (name) => {
+const createUrlSlug = name => {
   if (!name || typeof name !== 'string') {
     return ''
   }

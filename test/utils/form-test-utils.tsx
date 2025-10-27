@@ -1,6 +1,7 @@
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi } from 'vitest'
+
 import { renderWithProviders } from './test-utils'
 
 // Form Testing Utilities
@@ -80,13 +81,11 @@ export const testFormSuccess = async (
 }
 
 // Test form field types
-export const testFieldTypes = async (
-  fieldTests: Array<{
+export const testFieldTypes = async (fieldTests: Array<{
     label: string
     type: string
     value: string
-  }>
-) => {
+  }>) => {
   for (const test of fieldTests) {
     const field = screen.getByLabelText(test.label) as HTMLInputElement
     expect(field.type).toBe(test.type)
@@ -136,9 +135,7 @@ export const mockFormSubmission = (
   success = true,
   response = { message: 'Success' },
   delay = 100
-) => {
-  return vi.fn().mockImplementation(() =>
-    new Promise((resolve, reject) => {
+) => vi.fn().mockImplementation(() => new Promise((resolve, reject) => {
       setTimeout(() => {
         if (success) {
           resolve(response)
@@ -146,9 +143,7 @@ export const mockFormSubmission = (
           reject(new Error(response.message || 'Form submission failed'))
         }
       }, delay)
-    })
-  )
-}
+    }))
 
 // Test form with file upload
 export const testFileUpload = async (
@@ -213,9 +208,7 @@ export const createTestFile = (
   name: string = 'test.txt',
   content: string = 'test content',
   type: string = 'text/plain'
-) => {
-  return new File([content], name, { type })
-}
+) => new File([content], name, { type })
 
 export const createTestImageFile = (
   name: string = 'test.jpg',
@@ -225,8 +218,8 @@ export const createTestImageFile = (
   canvas.width = 100
   canvas.height = 100
 
-  return new Promise<File>((resolve) => {
-    canvas.toBlob((blob) => {
+  return new Promise<File>(resolve => {
+    canvas.toBlob(blob => {
       resolve(new File([blob!], name, { type: 'image/jpeg' }))
     }, 'image/jpeg')
   })

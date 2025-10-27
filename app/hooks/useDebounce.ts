@@ -64,7 +64,9 @@ export const useDebounce = <T>(
     }
 
     return cancel
-  }, [value, delay, leading, trailing, debouncedValue, cancel])
+  }, [
+value, delay, leading, trailing, debouncedValue, cancel
+])
 
   return {
     debouncedValue,

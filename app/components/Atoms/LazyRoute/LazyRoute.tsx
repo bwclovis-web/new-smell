@@ -1,4 +1,5 @@
-import React, { Suspense, lazy, ComponentType } from 'react'
+import React, { ComponentType, lazy, Suspense } from 'react'
+
 import { styleMerge } from '~/utils/styleUtils'
 
 interface LazyRouteProps {
