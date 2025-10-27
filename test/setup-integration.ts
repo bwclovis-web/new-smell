@@ -1,12 +1,7 @@
 import { vi } from 'vitest'
 
-import { createTestQueryClient } from './utils/test-utils'
-
 // Integration test specific setup
 export const integrationTestSetup = () => {
-  // Create a fresh query client for each integration test
-  const queryClient = createTestQueryClient()
-
   // Mock database connections
   vi.mock('@prisma/client', () => ({
     PrismaClient: vi.fn().mockImplementation(() => ({
@@ -50,8 +45,6 @@ export const integrationTestSetup = () => {
   process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test_db'
   process.env.JWT_SECRET = 'test-jwt-secret-minimum-32-characters-long-for-testing'
   process.env.SESSION_SECRET = 'test-session-secret-minimum-32-characters-long-for-testing'
-
-  return { queryClient }
 }
 
 // Cleanup after each integration test
