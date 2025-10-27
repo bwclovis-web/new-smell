@@ -11,6 +11,8 @@ export default [
     route('the-exchange', 'routes/the-exchange.tsx'),
     route('perfume/:perfumeSlug', 'routes/perfume.tsx'),
     route('terms-and-conditions', 'routes/termsAndConditions.tsx'),
+    route('about-us', 'routes/about-us.tsx'),
+    route('how-we-work', 'routes/how-we-work.tsx'),
     // API ROUTES
     route('api/available-perfumes', 'routes/api/available-perfumes.ts'),
     route('api/perfume-houses', 'routes/api/houseLoader.ts'),

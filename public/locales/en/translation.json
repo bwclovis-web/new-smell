@@ -16,6 +16,22 @@
       "performanceAdmin": "Performance Admin"
     }
   },
+  "aboutUs": {
+    "meta": {
+      "title": "About Us - Shadow and Sillage",
+      "description": "Learn about the story behind Shadow and Sillage."
+    },
+    "heading": "About Us",
+    "subheading": "About the founders of Shadow And Sillage",
+    "content": {
+      "subheading": "Two collectors chasing the scent of something rare",
+      "one": "The city sleeps, but somewhere in the dark, a couple sits beneath the warm hum of a desk lamp. Bottles line the shelves like suspects waiting to be questioned — amber glass, faded labels, whispers of other lives. That’s where you’ll find us: Brian and Amanda, the husband-and-wife team behind Shadow and Sillage.",
+      "two": "It started simply enough - one perfume too many to remember, one story too good to lose. We began keeping notes, first on scraps of paper, then in a ledger, and finally in this growing archive. What began as a way to track our collection became something larger: a gathering place for others who chase memories through scent.",
+      "three": "This little speakeasy of fragrance runs on curiosity. Every new listing is a lead, every review a clue. The database grows quietly in the background, one house and one scent at a time, as we piece together the strange and beautiful puzzle of perfume. You might call it obsession; we call it devotion.",
+      "four": "We built this place for the romantics and the detectives of scent — the ones who can find memory in a base note or joy in a single spark of aldehyde. If you notice a bottle missing from our shelves, you can send word through the forms scattered around the site. We’ll take the tip, follow the trail, and add it to the case file.",
+      "five": "The door’s always open. Step in from the rain, hang your coat, and stay awhile. In Shadow and Sillage, every scent has a story, and every story deserves to be found."
+    }
+  },
   "allHouses": {
     "meta": {
       "title": "Behind the Bottle - Shadow and Sillage",
@@ -232,7 +248,11 @@
     "available": "The Exchange",
     "admin": "The Profile",
     "logout": "Log Out",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "about": "About",
+    "aboutUs": "About Us",
+    "howWeWork": "How We Work",
+    "contactUs": "Contact Us"
   },
   "profile": {
     "heading": "The Profile",

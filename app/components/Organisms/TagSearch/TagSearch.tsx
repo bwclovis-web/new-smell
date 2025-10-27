@@ -1,9 +1,11 @@
 import { type VariantProps } from 'class-variance-authority'
-import { type FC, type HTMLProps, useState } from 'react'
+import { type FC, type HTMLProps, useState, useCallback, useEffect } from 'react'
 
 import { Button } from '~/components/Atoms/Button/Button'
 import Input from '~/components/Atoms/Input/Input'
 import { styleMerge } from '~/utils/styleUtils'
+import { useDebouncedSearch } from '~/hooks/useDebouncedSearch'
+import { highlightSearchTerm } from '~/utils/highlightSearchTerm'
 
 import CreateTagButton from './Partials/CreateTagButton'
 import TagList from './Partials/TagList'
@@ -13,20 +15,36 @@ interface TagSearchProps extends HTMLProps<HTMLDivElement>,
   VariantProps<typeof tagSearchVariants> { }
 
 const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => {
-  const [inputValue, setInputValue] = useState('')
-  const [results, setResults] = useState([])
-  const [openDropdown, setOpenDropdown] = useState(!!results.length)
-  const [selectedTags, setSelectedTags]
-    = useState<any[]>(Array.isArray(data) ? data : [])
+  const [selectedTags, setSelectedTags] = useState<any[]>(Array.isArray(data) ? data : [])
 
-  const handleKeyUp = async evt => {
-    const query = (evt.target as HTMLInputElement).value
-    setInputValue(query)
+  // Sync internal state with parent data when it changes
+  useEffect(() => {
+    if (Array.isArray(data)) {
+      setSelectedTags(data)
+    }
+  }, [data])
+
+  // Create search function for the debounced hook
+  const searchFunction = useCallback(async (query: string) => {
     const url = '/api/getTag'
-    const res = await (await (fetch(`${url}?tag=${encodeURIComponent(query)}`))).json()
-    setResults(res)
-    setOpenDropdown(!!res.length)
-  }
+    const res = await fetch(`${url}?tag=${encodeURIComponent(query)}`)
+    if (!res.ok) {
+      throw new Error('Tag search request failed')
+    }
+    return await res.json()
+  }, [])
+
+  // Use debounced search hook
+  const {
+    searchValue: inputValue,
+    setSearchValue: setInputValue,
+    results,
+    isLoading,
+    error,
+    clearResults
+  } = useDebouncedSearch(searchFunction, { delay: 300, minLength: 1 })
+
+  const openDropdown = results.length > 0 || isLoading || error || (inputValue.length >= 1 && results.length === 0)
 
   const handleItemClick = (item: any) => {
     if (!selectedTags.find(t => t.id === item.id)) {
@@ -34,6 +52,15 @@ const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => 
       setSelectedTags(newTags)
       onChange?.(newTags)
     }
+    clearResults()
+  }
+
+  const handleRemoveTag = (tagId: string) => {
+    console.log('Removing tag:', tagId, 'from:', selectedTags)
+    const newTags = selectedTags.filter(tag => tag.id !== tagId)
+    console.log('New tags after removal:', newTags)
+    setSelectedTags(newTags)
+    onChange?.(newTags)
   }
 
   return (
@@ -48,37 +75,46 @@ const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => 
           type="text"
           autoComplete="off"
           id="tag-search"
-          onKeyUp={handleKeyUp}
           value={inputValue}
           onChange={evt => setInputValue(evt.target.value)} inputType={''} inputRef={undefined} />
         {openDropdown && (
           <ul className="bg-white rounded-b-md w-full absolute z-10">
-            {results.map((item: any) => (
+            {isLoading && (
+              <li className="p-2 text-center">
+                <span className="animate-pulse">Searching...</span>
+              </li>
+            )}
+            {error && (
+              <li className="p-2 text-red-500 text-center">
+                <span>Search error: {error}</span>
+              </li>
+            )}
+            {!isLoading && !error && results.map((item: any) => (
               <li key={item.id} className="p-2 hover:bg-noir-gray hover:text-noir-light cursor-pointer last-of-type:rounded-b-md">
                 <Button
                   className="block w-full h-full"
                   type="button"
-                  onClick={() => {
-                    handleItemClick(item)
-                    setOpenDropdown(false)
-                    setResults([])
-                    setInputValue('')
-                  }}
+                  onClick={() => handleItemClick(item)}
                 >
-                  {item.name}
+                  {highlightSearchTerm(item.name, inputValue)}
                 </Button>
               </li>
             ))}
+            {!isLoading && !error && results.length === 0 && inputValue.length >= 1 && (
+              <li className="p-2 text-center text-gray-500">
+                <span>No tags found</span>
+              </li>
+            )}
             <li className="p-2 hover:bg-noir-gray hover:text-noir-light cursor-pointer last-of-type:rounded-b-md">
               <CreateTagButton
                 action={handleItemClick}
-                setOpenDropdown={setOpenDropdown}
+                setOpenDropdown={() => clearResults()}
               />
             </li>
           </ul>
         )}
       </div>
-      <TagList selectedTags={selectedTags} label={label} />
+      <TagList selectedTags={selectedTags} label={label} onRemoveTag={handleRemoveTag} />
     </div>
   )
 }

@@ -1,10 +1,12 @@
 import { type VariantProps } from 'class-variance-authority'
-import { type ChangeEvent, type HTMLProps, type KeyboardEvent, useState } from 'react'
+import { type ChangeEvent, type HTMLProps, type KeyboardEvent, useState, useCallback, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router'
 
 import { styleMerge } from '~/utils/styleUtils'
+import { useDebouncedSearch } from '~/hooks/useDebouncedSearch'
+import { highlightSearchTerm } from '~/utils/highlightSearchTerm'
 
 import { searchbarVariants } from './searchbar-variants'
 
@@ -17,64 +19,62 @@ interface SearchBarProps extends HTMLProps<HTMLDivElement>,
 
 const SearchBar =
   ({ className, searchType, action, placeholder, variant }: SearchBarProps) => {
-    const [results, setResults] = useState<any[]>([])
-    const [searchValue, setSearchValue] = useState('')
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0, width: 0 })
     const { t } = useTranslation()
-    const handleSearch = async (query: string) => {
-      if (query.length < 2) {
-        setResults([])
-        return
+
+    // Create search function for the debounced hook
+    const searchFunction = useCallback(async (query: string) => {
+      const url = searchType === 'perfume-house' ? '/api/perfume-houses' : '/api/perfume'
+      const res = await fetch(`${url}?name=${encodeURIComponent(query)}`)
+      if (!res.ok) {
+        throw new Error('Search request failed')
       }
+      return await res.json()
+    }, [searchType])
 
-      try {
-        const url = searchType === 'perfume-house' ? '/api/perfume-houses' : '/api/perfume'
-        const res = await fetch(`${url}?name=${encodeURIComponent(query)}`)
-        const data = await res.json()
-        setResults(data)
+    // Use debounced search hook
+    const {
+      searchValue,
+      setSearchValue,
+      results,
+      isLoading,
+      error,
+      clearResults
+    } = useDebouncedSearch(searchFunction, { delay: 300, minLength: 2 })
 
-        if (data.length > 0) {
-          const input = document.getElementById('search') as HTMLInputElement
-          if (input) {
-            const rect = input.getBoundingClientRect()
-            setDropdownPosition({
-              top: rect.bottom + window.scrollY,
-              left: rect.left + window.scrollX,
-              width: rect.width
-            })
-          }
-        } else {
-          console.log('No search results for query:', query)
+    // Update dropdown position when results change
+    useEffect(() => {
+      if (results.length > 0) {
+        const input = document.getElementById('search') as HTMLInputElement
+        if (input) {
+          const rect = input.getBoundingClientRect()
+          setDropdownPosition({
+            top: rect.bottom + window.scrollY,
+            left: rect.left + window.scrollX,
+            width: rect.width
+          })
         }
-      } catch (error) {
-        console.error('Search error:', error)
-        setResults([])
       }
+    }, [results])
+
+    const handleChange = (evt: ChangeEvent<HTMLInputElement>) => {
+      setSearchValue(evt.target.value)
     }
 
-    const handleKeyUp = async (evt: KeyboardEvent<HTMLInputElement>) => {
-      const query = (evt.target as HTMLInputElement).value
-      await handleSearch(query)
-    }
-
-    const handleChange = async (evt: ChangeEvent<HTMLInputElement>) => {
-      const query = evt.target.value
-      setSearchValue(query)
-      await handleSearch(query)
+    const handleKeyUp = (evt: KeyboardEvent<HTMLInputElement>) => {
+      // Debounced search handles this automatically
     }
 
     const handleAction = (item: any) => {
       if (action) {
         action(item)
-        setResults([])
-        setSearchValue('')
+        clearResults()
       } else {
         console.warn('No action provided for SearchBar')
       }
     }
 
     const RenderLink = ({ item }: { item: any }) => {
-
       const routePath = searchType === 'perfume-house'
         ? `/perfume-house/${item.slug}`
         : `/perfume/${item.slug}`
@@ -83,7 +83,7 @@ const SearchBar =
         <NavLink viewTransition to={routePath} className="block w-full h-full capitalize">
           {({ isTransitioning }) => (
             <span className={`contain-layout ${isTransitioning ? 'image-title' : 'none'}`}>
-              {item.name}
+              {highlightSearchTerm(item.name, searchValue)}
             </span>
           )}
         </NavLink>
@@ -105,7 +105,7 @@ const SearchBar =
             className={styleMerge(searchbarVariants({ className, variant }))}
           />
         </form>
-        {results.length > 0 && createPortal(
+        {(results.length > 0 || isLoading || error) && createPortal(
           <ul
             className="bg-noir-dark rounded-b-md fixed border-l-8 border-b-8 border-r-8 border-noir-gold/80 border-double z-[99999] max-h-52 overflow-y-auto shadow-2xl"
             style={{
@@ -114,13 +114,28 @@ const SearchBar =
               width: dropdownPosition.width
             }}
           >
-            {results.map((item: any) => (
+            {isLoading && (
+              <li className="p-2 text-noir-gold-100 text-center">
+                <span className="animate-pulse">Searching...</span>
+              </li>
+            )}
+            {error && (
+              <li className="p-2 text-red-400 text-center">
+                <span>Search error: {error}</span>
+              </li>
+            )}
+            {!isLoading && !error && results.map((item: any) => (
               <li key={item.id} className="p-2 text-noir-gold-100 hover:bg-noir-gold hover:text-noir-black font-semibold cursor-pointer last-of-type:rounded-b-md transition-colors">
                 {action ?
-                  <button className='block min-w-full text-left capitalize' onClick={() => handleAction(item)}>{item.name}</button> :
+                  <button className='block min-w-full text-left capitalize' onClick={() => handleAction(item)}>{highlightSearchTerm(item.name, searchValue)}</button> :
                   <RenderLink item={item} />}
               </li>
             ))}
+            {!isLoading && !error && results.length === 0 && searchValue.length >= 2 && (
+              <li className="p-2 text-noir-gold-100 text-center">
+                <span>No results found</span>
+              </li>
+            )}
           </ul>,
           document.body
         )}

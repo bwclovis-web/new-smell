@@ -18,6 +18,7 @@
     "code": "AU"
   },
   { "id": "Austria", "name": "Austria", "label": "Austria", "code": "AT" },
+  { "id": "Canada", "name": "Canada", "label": "Canada", "code": "CA" },
   { "id": "China", "name": "China", "label": "China", "code": "CN" },
   {
     "id": "Costa Rica",

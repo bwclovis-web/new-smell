@@ -1,4 +1,3 @@
-export const ROUTE_PATH = '/behind-the-bottle'
 import { type RefObject, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type MetaFunction, useLocation } from 'react-router'
@@ -14,6 +13,8 @@ import { getDefaultSortOptions } from '~/utils/sortUtils'
 
 // No server imports needed for client component
 import banner from '../images/behind.webp'
+
+export const ROUTE_PATH = '/behind-the-bottle'
 
 export const loader = async () =>
   // Don't load all houses upfront - we'll load by letter on demand

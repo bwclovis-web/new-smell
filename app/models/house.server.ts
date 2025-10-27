@@ -269,19 +269,90 @@ export const getPerfumeHouseByName = async (name: string) => {
 }
 
 export const searchPerfumeHouseByName = async (name: string) => {
-  const house = await prisma.perfumeHouse.findMany({
+  const searchTerm = name.trim()
+
+  if (!searchTerm) {
+    return []
+  }
+
+  // First, try exact matches and starts-with matches (highest priority)
+  const exactMatches = await prisma.perfumeHouse.findMany({
     where: {
-      name: {
-        contains: name,
-        mode: 'insensitive'
-      }
+      AND: [
+        {
+          OR: [
+            { name: { equals: searchTerm, mode: 'insensitive' } },
+            { name: { startsWith: searchTerm, mode: 'insensitive' } }
+          ]
+        },
+        // Only include houses that have at least one perfume
+        { perfumes: { some: {} } }
+      ]
     },
-    orderBy: {
-      name: 'asc'
-    },
-    take: 10
+    orderBy: { name: 'asc' },
+    take: 5
   })
-  return house
+
+  // Then, try contains matches (lower priority)
+  const containsMatches = await prisma.perfumeHouse.findMany({
+    where: {
+      AND: [
+        { name: { contains: searchTerm, mode: 'insensitive' } },
+        // Exclude items already found in exact matches
+        { id: { notIn: exactMatches.map(h => h.id) } },
+        // Only include houses that have at least one perfume
+        { perfumes: { some: {} } }
+      ]
+    },
+    orderBy: { name: 'asc' },
+    take: 5
+  })
+
+  // Combine and rank results
+  const allResults = [...exactMatches, ...containsMatches]
+
+  // Sort by relevance score
+  const rankedResults = allResults
+    .map(house => ({
+      ...house,
+      relevanceScore: calculateHouseRelevanceScore(house.name, searchTerm)
+    }))
+    .sort((a, b) => b.relevanceScore - a.relevanceScore)
+    .slice(0, 10)
+
+  return rankedResults
+}
+
+// Helper function to calculate relevance score for houses
+const calculateHouseRelevanceScore = (houseName: string, searchTerm: string): number => {
+  const name = houseName.toLowerCase()
+  const term = searchTerm.toLowerCase()
+
+  let score = 0
+
+  // Exact match gets highest score
+  if (name === term) {
+    score += 100
+  }
+  // Starts with gets high score
+  else if (name.startsWith(term)) {
+    score += 80
+  }
+  // Contains gets medium score
+  else if (name.includes(term)) {
+    score += 40
+  }
+
+  // Bonus for shorter names (more specific matches)
+  score += Math.max(0, 20 - name.length)
+
+  // Bonus for matches at word boundaries
+  const wordBoundaryRegex = new RegExp(`\\b${term}`, 'i')
+  if (wordBoundaryRegex.test(name)) {
+    score += 20
+  }
+
+  return score
 }
 
 export const deletePerfumeHouse = async (id: string) => {

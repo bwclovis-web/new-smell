@@ -14,7 +14,6 @@ import { isInWishlist } from '~/models/wishlist.server'
 import { createSafeUser } from '~/types'
 import { verifyAccessToken } from '~/utils/security/session-manager.server'
 
-import { ROUTE_PATH as BEHIND_THE_BOTTLE } from './behind-the-bottle'
 import { ROUTE_PATH as HOUSE_PATH } from './perfume-house'
 import { ROUTE_PATH as ALL_PERFUMES } from './the-vault'
 export const ROUTE_PATH = '/perfume'
@@ -168,12 +167,12 @@ const PerfumePage = () => {
     } else {
       // Default to behind-the-bottle (for houses or fallback)
       if (selectedLetter) {
-        navigate(BEHIND_THE_BOTTLE, {
+        navigate('/behind-the-bottle', {
           state: { selectedLetter },
           replace: false
         })
       } else {
-        navigate(BEHIND_THE_BOTTLE)
+        navigate('/behind-the-bottle')
       }
     }
   }

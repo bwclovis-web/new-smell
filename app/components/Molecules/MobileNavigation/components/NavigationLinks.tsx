@@ -6,6 +6,8 @@ import { mainNavigation } from '~/data/navigation'
 import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/profilePage'
 import { styleMerge } from '~/utils/styleUtils'
 
+import AboutDropdown from '../../AboutDropdown/AboutDropdown'
+
 interface NavigationLinksProps {
   user?: {
     id?: string
@@ -40,6 +42,10 @@ const NavigationLinks: FC<NavigationLinksProps> = ({
             </NavLink>
           </li>
         ))}
+
+        <li>
+          <AboutDropdown variant="mobile" onNavClick={onNavClick} />
+        </li>
 
         {user && (
           <li>

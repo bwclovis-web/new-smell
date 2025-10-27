@@ -72,8 +72,15 @@ async function createPerfumeNote(noteName: string, perfumeId: string, noteType: 
     return null
   }
 
+  const trimmedNoteName = noteName.trim().toLowerCase()
+
+  // Check if note already exists
+  const existingNote = await prisma.perfumeNotes.findUnique({
+    where: { name: trimmedNoteName }
+  })
+
   const noteData: any = {
-    name: noteName.trim().toLowerCase()
+    name: trimmedNoteName
   }
 
   // Set the appropriate perfume relationship based on note type
@@ -91,6 +98,15 @@ async function createPerfumeNote(noteName: string, perfumeId: string, noteType: 
       return null
   }
 
+  // If note exists, just update the relationship
+  if (existingNote) {
+    return await prisma.perfumeNotes.update({
+      where: { id: existingNote.id },
+      data: noteData
+    })
+  }
+
+  // Create new note
   return await prisma.perfumeNotes.create({
     data: noteData
   })
@@ -118,19 +134,32 @@ async function importPerfumeData(csvFiles: string[]) {
       }
 
       // Check if perfume already exists
+      let perfumeName = data.name.trim()
       const existingPerfume = await prisma.perfume.findUnique({
-        where: { name: data.name.trim() }
+        where: { name: perfumeName }
       })
 
       if (existingPerfume) {
-        console.log(`Perfume "${data.name}" already exists, skipping...`)
-        return
+        // If duplicate found, append house name
+        const houseName = data.perfumeHouse ? data.perfumeHouse.trim() : 'Unknown'
+        perfumeName = `${perfumeName} - ${houseName}`
+        console.log(`Perfume "${data.name}" already exists, renaming to "${perfumeName}"`)
+        
+        // Check if the renamed version also exists
+        const renamedExists = await prisma.perfume.findUnique({
+          where: { name: perfumeName }
+        })
+        
+        if (renamedExists) {
+          console.log(`Renamed perfume "${perfumeName}" also exists, skipping...`)
+          return
+        }
       }
 
       // Create the perfume
       const perfume = await prisma.perfume.create({
         data: {
-          name: data.name.trim(),
+          name: perfumeName,
           description: data.description || null,
           image: data.image || null,
           perfumeHouseId: perfumeHouse?.id || null
@@ -168,6 +197,8 @@ async function main() {
     'perfumes_4160tuesdays_updated.csv',
     'perfumes_akro_updated.csv',
     'perfumes_blackcliff.csv',
+    'perfumes_cocoapink.csv',
+    'perfumes_lucky9.csv',
     'perfumes_luvmilk.csv',
     'perfumes_navitus_updated.csv',
     'perfumes_pnicolai.csv',

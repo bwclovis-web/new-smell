@@ -12,6 +12,7 @@ import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 import { useSessionStore } from '~/stores/sessionStore'
 import { styleMerge } from '~/utils/styleUtils'
 
+import AboutDropdown from '../AboutDropdown/AboutDropdown'
 import LogoutButton from '../LogoutButton/LogoutButton'
 
 interface MobileNavigationProps extends HTMLProps<HTMLDivElement> {
@@ -104,6 +105,10 @@ const MobileNavigation: FC<MobileNavigationProps> = ({
                     </NavLink>
                   </li>
                 ))}
+
+                <li>
+                  <AboutDropdown variant="mobile" onNavClick={handleNavClick} />
+                </li>
 
                 {user && (
                   <li>

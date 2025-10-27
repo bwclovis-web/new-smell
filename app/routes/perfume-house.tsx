@@ -18,7 +18,7 @@ import PerfumeHouseAddressBlock from '~/components/Containers/PerfumeHouse/Addre
 import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
 import { getPerfumeHouseBySlug } from '~/models/house.server'
 
-import { ROUTE_PATH as ALL_HOUSES } from './behind-the-bottle'
+const ALL_HOUSES = '/behind-the-bottle'
 const BEHIND_THE_BOTTLE = '/behind-the-bottle'
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!params.houseSlug) {

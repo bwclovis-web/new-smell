@@ -70,7 +70,10 @@ export const CreatePerfumeSchema = z.object({
     .max(1000, { message: 'Description must be less than 1000 characters' }),
   house: z.string().min(1, { message: 'Perfume house is required' }),
   image: urlSchema,
-  perfumeId: z.string().optional()
+  perfumeId: z.string().optional(),
+  notesTop: z.array(z.string()).optional(),
+  notesHeart: z.array(z.string()).optional(),
+  notesBase: z.array(z.string()).optional()
 })
 
 export const UpdatePerfumeSchema = z.object({
@@ -85,7 +88,10 @@ export const UpdatePerfumeSchema = z.object({
     .max(1000, { message: 'Description must be less than 1000 characters' })
     .optional(),
   image: urlSchema,
-  house: z.string().min(1, { message: 'Perfume house is required' }).optional()
+  house: z.string().min(1, { message: 'Perfume house is required' }).optional(),
+  notesTop: z.array(z.string()).optional(),
+  notesHeart: z.array(z.string()).optional(),
+  notesBase: z.array(z.string()).optional()
 })
 
 // User Perfume Schemas

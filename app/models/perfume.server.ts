@@ -77,24 +77,105 @@ export const deletePerfume = async (id: string) => {
 }
 
 export const searchPerfumeByName = async (name: string) => {
-  const perfume = await prisma.perfume.findMany({
+  const searchTerm = name.trim()
+
+  if (!searchTerm) {
+    return []
+  }
+
+  // First, try exact matches and starts-with matches (highest priority)
+  const exactMatches = await prisma.perfume.findMany({
     where: {
-      name: {
-        contains: name,
-        mode: 'insensitive'
-      }
+      OR: [
+        { name: { equals: searchTerm, mode: 'insensitive' } },
+        { name: { startsWith: searchTerm, mode: 'insensitive' } }
+      ]
     },
-    orderBy: {
-      name: 'asc'
+    include: {
+      perfumeHouse: true
     },
-    take: 10
+    orderBy: { name: 'asc' },
+    take: 5
   })
-  return perfume
+
+  // Then, try contains matches (lower priority)
+  const containsMatches = await prisma.perfume.findMany({
+    where: {
+      AND: [
+        { name: { contains: searchTerm, mode: 'insensitive' } },
+        // Exclude items already found in exact matches
+        { id: { notIn: exactMatches.map(p => p.id) } }
+      ]
+    },
+    include: {
+      perfumeHouse: true
+    },
+    orderBy: { name: 'asc' },
+    take: 5
+  })
+
+  // Combine and rank results
+  const allResults = [...exactMatches, ...containsMatches]
+
+  // Sort by relevance score
+  const rankedResults = allResults
+    .map(perfume => ({
+      ...perfume,
+      relevanceScore: calculateRelevanceScore(perfume.name, searchTerm)
+    }))
+    .sort((a, b) => b.relevanceScore - a.relevanceScore)
+    .slice(0, 10)
+
+  return rankedResults
+}
+
+// Helper function to calculate relevance score
+const calculateRelevanceScore = (perfumeName: string, searchTerm: string): number => {
+  const name = perfumeName.toLowerCase()
+  const term = searchTerm.toLowerCase()
+
+  let score = 0
+
+  // Exact match gets highest score
+  if (name === term) {
+    score += 100
+  }
+  // Starts with gets high score
+  else if (name.startsWith(term)) {
+    score += 80
+  }
+  // Contains gets medium score
+  else if (name.includes(term)) {
+    score += 40
+  }
+
+  // Bonus for shorter names (more specific matches)
+  score += Math.max(0, 20 - name.length)
+
+  // Bonus for matches at word boundaries
+  const wordBoundaryRegex = new RegExp(`\\b${term}`, 'i')
+  if (wordBoundaryRegex.test(name)) {
+    score += 20
+  }
+
+  return score
 }
 
 export const updatePerfume = async (id: string, data: FormData) => {
   try {
     const name = sanitizeText(data.get('name') as string)
+
+    // Debug logging
+    const topNotes = data.getAll('notesTop') as string[]
+    const heartNotes = data.getAll('notesHeart') as string[]
+    const baseNotes = data.getAll('notesBase') as string[]
+
+    console.log('UpdatePerfume - Received note data:', {
+      topNotes,
+      heartNotes,
+      baseNotes
+    })
+
     const updatedPerfume = await prisma.perfume.update({
       where: { id },
       data: {
@@ -103,13 +184,13 @@ export const updatePerfume = async (id: string, data: FormData) => {
         description: sanitizeText(data.get('description') as string),
         image: data.get('image') as string,
         perfumeNotesOpen: {
-          connect: (data.getAll('notesTop') as string[]).map(id => ({ id }))
+          set: topNotes.map(id => ({ id }))
         },
         perfumeNotesHeart: {
-          connect: (data.getAll('notesHeart') as string[]).map(id => ({ id }))
+          set: heartNotes.map(id => ({ id }))
         },
         perfumeNotesClose: {
-          connect: (data.getAll('notesBase') as string[]).map(id => ({ id }))
+          set: baseNotes.map(id => ({ id }))
         },
         perfumeHouse: {
           connect: {

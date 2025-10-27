@@ -11,6 +11,8 @@ import { ROUTE_PATH as ADMIN_PATH } from '~/routes/admin/profilePage'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 import { styleMerge } from '~/utils/styleUtils'
 
+import AboutDropdown from '../AboutDropdown/AboutDropdown'
+
 import LogoutButton from '../LogoutButton/LogoutButton'
 import { globalNavigationVariants } from './globalNavigation-variants'
 
@@ -55,6 +57,9 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
               </NavLink>
             </li>
           ))}
+          <li>
+            <AboutDropdown variant="desktop" />
+          </li>
           {user && (
             <li>
               <NavLink

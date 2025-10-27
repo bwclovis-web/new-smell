@@ -1,14 +1,14 @@
 import { getFormProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useEffect, useRef, useState } from 'react'
-import { Form } from 'react-router'
+import { Form, useSubmit } from 'react-router'
 
 import { Button } from '~/components/Atoms/Button/Button'
 import HouseTypeahead from '~/components/Atoms/HouseTypeahead/HouseTypeahead'
 import Input from '~/components/Atoms/Input/Input'
 import { CSRFToken } from '~/components/Molecules/CSRFToken'
 import TagSearch from '~/components/Organisms/TagSearch/TagSearch'
-import type { FORM_TYPES } from '~/utils/constants'
+import { FORM_TYPES } from '~/utils/constants'
 import { CreatePerfumeSchema } from '~/utils/formValidationSchemas'
 
 // Type for perfume data used in the form
@@ -36,15 +36,72 @@ interface PerfumeFormProps {
 const PerfumeForm
   = ({ formType, lastResult, data }: PerfumeFormProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null)
-    const [topNotes, setTopNotes] = useState<any[]>([])
-    const [heartNotes, setHeartNotes] = useState<any[]>([])
-    const [baseNotes, setBaseNotes] = useState<any[]>([])
+    const submit = useSubmit()
+    const [topNotes, setTopNotes] = useState<any[]>(data?.perfumeNotesOpen || [])
+    const [heartNotes, setHeartNotes] = useState<any[]>(data?.perfumeNotesHeart || [])
+    const [baseNotes, setBaseNotes] = useState<any[]>(data?.perfumeNotesClose || [])
     const [serverError, setServerError] = useState<string | null>(null)
+
     useEffect(() => {
       if (lastResult && !lastResult.success) {
         setServerError(lastResult.error as unknown as string)
       }
     }, [lastResult])
+
+    // Update state when data changes (e.g., when editing an existing perfume)
+    useEffect(() => {
+      if (data?.perfumeNotesOpen) {
+        setTopNotes(data.perfumeNotesOpen)
+      }
+      if (data?.perfumeNotesHeart) {
+        setHeartNotes(data.perfumeNotesHeart)
+      }
+      if (data?.perfumeNotesClose) {
+        setBaseNotes(data.perfumeNotesClose)
+      }
+    }, [data])
+
+    // Debug logging for note state changes
+    useEffect(() => {
+      console.log('Note states updated:', { topNotes, heartNotes, baseNotes })
+    }, [topNotes, heartNotes, baseNotes])
+
+    // Dynamically update hidden inputs when note states change
+    useEffect(() => {
+      const form = document.querySelector('form')
+      if (!form) return
+
+      // Remove existing note inputs
+      const existingInputs = form.querySelectorAll('input[name^="notes"]')
+      existingInputs.forEach(input => input.remove())
+
+      // Add current note states as hidden inputs
+      topNotes.forEach(note => {
+        const input = document.createElement('input')
+        input.type = 'hidden'
+        input.name = 'notesTop'
+        input.value = note.id
+        form.appendChild(input)
+      })
+
+      heartNotes.forEach(note => {
+        const input = document.createElement('input')
+        input.type = 'hidden'
+        input.name = 'notesHeart'
+        input.value = note.id
+        form.appendChild(input)
+      })
+
+      baseNotes.forEach(note => {
+        const input = document.createElement('input')
+        input.type = 'hidden'
+        input.name = 'notesBase'
+        input.value = note.id
+        form.appendChild(input)
+      })
+
+      console.log('Updated hidden inputs in DOM')
+    }, [topNotes, heartNotes, baseNotes])
 
     const [form, { name, description, image, house }] = useForm({
       id: formType,
@@ -59,12 +116,7 @@ const PerfumeForm
       <Form
         method="POST"
         {...getFormProps(form)}
-        className="p-6 rounded-md noir-border max-w-6xl mx-auto bg-noir-dark/10 flex flex-col gap-3 h-[100000px]"
-        onSubmit={evt => {
-          const formData = new FormData(evt.currentTarget)
-          // eslint-disable-next-line no-console
-          console.log('Submitting form data:', Object.fromEntries(formData))
-        }}
+        className="p-6 rounded-md noir-border max-w-6xl mx-auto bg-noir-dark/10 flex flex-col gap-3"
       >
         <Input
           inputType="text"
@@ -124,24 +176,15 @@ const PerfumeForm
             data={data?.perfumeNotesClose as any}
           />
         </div>
-        {topNotes.map(tag => (
-          <input key={tag.id} type="hidden" name="notesTop" value={tag.id} />
-        ))}
-        {heartNotes.map(tag => (
-          <input key={tag.id} type="hidden" name="notesHeart" value={tag.id} />
-        ))}
-        {baseNotes.map(tag => (
-          <input key={tag.id} type="hidden" name="notesBase" value={tag.id} />
-        ))}
         <CSRFToken />
+        {data?.id && <input type="hidden" name="perfumeId" value={data.id} />}
         {serverError && (
           <div className="bg-red-500 text-lg font-semibold px-3 py-2 max-w-max rounded-2xl border-2 text-white">
             {serverError}
           </div>
         )}
-        {data?.id && <input type="hidden" name="perfumeId" value={data.id} />}
         <Button type="submit" className="max-w-max">
-          Create Perfume
+          {formType === FORM_TYPES.CREATE_PERFUME_FORM ? 'Create Perfume' : 'Update Perfume'}
         </Button>
       </Form>
     )

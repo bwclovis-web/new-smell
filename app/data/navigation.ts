@@ -1,3 +1,4 @@
+import { ROUTE_PATH as ABOUT_US } from '~/routes/about-us'
 import { ROUTE_PATH as CHANGE_PASSWORD } from '~/routes/admin/change-password'
 import { ROUTE_PATH as CREATE_HOUSE } from '~/routes/admin/CreatePerfumeHousePage'
 import { ROUTE_PATH as CREATE_PERFUME } from '~/routes/admin/CreatePerfumePage'
@@ -7,9 +8,11 @@ import { ROUTE_PATH as PERFORMANCE_ADMIN } from '~/routes/admin/performance-admi
 import { ROUTE_PATH as SECURITY_MONITOR } from '~/routes/admin/security-monitor'
 import { ROUTE_PATH as USERS } from '~/routes/admin/users'
 import { ROUTE_PATH as WISHLIST } from '~/routes/admin/WishlistPage'
-import { ROUTE_PATH as ALL_HOUSES } from '~/routes/behind-the-bottle'
+import { ROUTE_PATH as HOW_WE_WORK } from '~/routes/how-we-work'
 import { ROUTE_PATH as AVAILABLE_PERFUMES } from '~/routes/the-exchange'
 import { ROUTE_PATH as ALL_PERFUMES } from '~/routes/the-vault'
+
+const ALL_HOUSES = '/behind-the-bottle'
 
 
 export const mainNavigation = [
@@ -30,6 +33,21 @@ export const mainNavigation = [
     key: 'available',
     label: 'Available for Decanting',
     path: AVAILABLE_PERFUMES
+  }
+]
+
+export const aboutNavigation = [
+  {
+    id: '1',
+    key: 'aboutUs',
+    label: 'About Us',
+    path: ABOUT_US
+  },
+  {
+    id: '2',
+    key: 'howWeWork',
+    label: 'How We Work',
+    path: HOW_WE_WORK
   }
 ]
 
