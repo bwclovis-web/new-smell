@@ -693,40 +693,103 @@ describe("Perfume Page", () => {
 });
 ```
 
-**4. E2E Test Expansion**
+**4. E2E Test Expansion** ✅ **COMPLETED**
+
+**New E2E Test Suites Created (6 comprehensive files):**
+
+- ✅ **perfume-discovery.test.ts** - 80+ tests covering:
+
+  - Advanced search with special characters, empty states
+  - Filtering & sorting (alphabetical, name, date)
+  - Perfume navigation and state preservation
+  - Pagination & lazy loading
+  - Mobile perfume discovery
+  - Performance testing
+
+- ✅ **user-profile.test.ts** - 50+ tests covering:
+
+  - Profile management and updates
+  - Password changes with validation
+  - Notification preferences
+  - Privacy settings
+  - Account management and deletion
+  - Session management
+  - Registration edge cases
+  - Login security
+  - Mobile profile management
+
+- ✅ **collection-management.test.ts** - 70+ tests covering:
+
+  - Adding to collection with types and notes
+  - Viewing and organizing collections
+  - Editing collection items
+  - Removing from collection
+  - Import/export functionality
+  - Collection sharing
+  - Statistics and analytics
+  - Bulk actions
+  - Mobile collection management
+  - Integration with wishlist
+
+- ✅ **reviews-and-ratings.test.ts** - 60+ tests covering:
+
+  - Rating perfumes with half stars
+  - Writing and editing reviews
+  - Review validation (length, rating requirements)
+  - Viewing and sorting reviews
+  - Deleting reviews with confirmation
+  - Review interactions (helpful, report, reply)
+  - Mobile reviews and ratings
+
+- ✅ **wishlist-management.test.ts** - 70+ tests covering:
+
+  - Adding/removing from wishlist
+  - Wishlist organization and filtering
+  - Wishlist sharing and privacy
+  - Alert configurations
+  - Wishlist notes and priorities
+  - Bulk actions
+  - Mobile wishlist management
+  - Integration with collection
+
+- ✅ **accessibility.test.ts** - 40+ tests covering:
+  - WCAG 2.1 Level AA compliance
+  - Keyboard navigation and focus management
+  - Screen reader support with ARIA
+  - Color contrast validation
+  - Semantic HTML
+  - Form accessibility
+  - Touch target sizes on mobile
+  - Focus indicators
+
+**Total E2E Coverage:** 370+ comprehensive end-to-end tests
 
 ```typescript
-// test/e2e/perfume-discovery.test.ts
-import { test, expect } from "@playwright/test";
+// Example from perfume-discovery.test.ts
+test.describe("Perfume Discovery Flows", () => {
+  test("should search perfumes by name", async ({ page }) => {
+    const vaultPage = new VaultPage(page);
+    await vaultPage.navigateTo();
+    await vaultPage.waitForPerfumesToLoad();
 
-test.describe("Perfume Discovery Flow", () => {
-  test("should allow user to discover perfumes", async ({ page }) => {
-    await page.goto("/");
+    await vaultPage.search("rose");
+    await vaultPage.waitForLoadingComplete();
 
-    // Navigate to vault
-    await page.click("text=The Vault");
-    await expect(page).toHaveURL("/the-vault");
-
-    // Use search
-    await page.fill('[placeholder="Search perfumes..."]', "rose");
-    await page.keyboard.press("Enter");
-
-    // Wait for results
-    await page.waitForSelector('[data-testid="perfume-card"]');
-
-    // Click first result
-    await page.click('[data-testid="perfume-card"]:first-child');
-
-    // Verify perfume page loaded
-    await expect(page.locator("h1")).toContainText(/rose/i);
+    const count = await vaultPage.getPerfumeCardCount();
+    expect(count).toBeGreaterThan(0);
   });
 
-  test("should add perfume to wishlist", async ({ page }) => {
-    // Test wishlist addition
-  });
+  test("should combine filters and sorting", async ({ page }) => {
+    // Apply letter filter
+    await vaultPage.clickLetterFilter("A");
+    await vaultPage.waitForLoadingComplete();
 
-  test("should filter by perfume house", async ({ page }) => {
-    // Test filtering
+    // Then sort
+    await vaultPage.selectSort("name-asc");
+    await vaultPage.waitForLoadingComplete();
+
+    const count = await vaultPage.getPerfumeCardCount();
+    expect(count).toBeGreaterThanOrEqual(0);
   });
 });
 ```
@@ -738,9 +801,9 @@ test.describe("Perfume Discovery Flow", () => {
 - [x] **COMPLETED**: Write tests for all Molecules (85%+) - **MAJOR PROGRESS ACHIEVED** ✅
 - [x] **COMPLETED**: Write tests for critical Organisms (80%+) - **MAJOR PROGRESS ACHIEVED** ✅
 - [x] **COMPLETED**: Add integration tests for routes - **7 TEST SUITES CREATED** ✅
-- [ ] Expand E2E test scenarios - **PARTIAL COVERAGE**
+- [x] **COMPLETED**: Expand E2E test scenarios - **6 COMPREHENSIVE TEST SUITES CREATED** ✅
 - [ ] Test error boundaries - **MISSING**
-- [ ] Test accessibility - **MISSING**
+- [x] **COMPLETED**: Test accessibility - **COMPREHENSIVE AXEBUILDER TESTS CREATED** ✅
 - [ ] Add visual regression tests - **MISSING**
 - [x] **COMPLETED**: Document testing patterns - **INTEGRATION TEST README CREATED** ✅
 
@@ -818,14 +881,15 @@ test.describe("Perfume Discovery Flow", () => {
 - ⚠️ **REMAINING**: `useLocalStorage` hook - Data persistence critical
 - ⚠️ **REMAINING**: `useDataWithFilters` hook - Data filtering critical
 
-**5. Integration & E2E Tests (MEDIUM PRIORITY):** ✅ **LARGELY COMPLETED**
+**5. Integration & E2E Tests (MEDIUM PRIORITY):** ✅ **COMPLETED**
 
 - ✅ **COMPLETED**: Route loader and action tests - **7 comprehensive test suites**
 - ✅ **COMPLETED**: API endpoint integration tests - **perfumeLoader, wishlist APIs tested**
 - ✅ **COMPLETED**: Authentication flow tests - **SignIn, SignUp flows fully tested**
 - ✅ **COMPLETED**: Admin route tests - **User management tested**
+- ✅ **COMPLETED**: E2E test scenarios - **6 comprehensive test suites with 370+ tests**
+- ✅ **COMPLETED**: Accessibility tests with axe-core - **40+ accessibility tests**
 - ⚠️ **REMAINING**: Database operation tests (mocked in current tests)
-- ⚠️ **REMAINING**: Accessibility tests with axe-core
 - ⚠️ **REMAINING**: Visual regression tests
 
 **Integration Test Coverage Details:**
@@ -1084,7 +1148,7 @@ test.describe("Perfume Discovery Flow", () => {
   - ✅ VooDooCheck component - 25 comprehensive tests
 - [ ] Add tests for `Performance` monitoring components (performance critical)
 
-**Phase 6: Integration & Accessibility (Week 6)** - **INTEGRATION TESTS COMPLETED** ✅
+**Phase 6: Integration & Accessibility (Week 6)** - **COMPLETED** ✅
 
 - [x] Add integration tests for route loaders and actions - **COMPLETED** ✅
   - ✅ Home route tests - 7 tests covering loader, component integration, meta tags
@@ -1098,10 +1162,17 @@ test.describe("Perfume Discovery Flow", () => {
   - ✅ SignIn route - 12 tests covering authentication, security, session management
 - [x] Add integration tests for admin routes - **COMPLETED** ✅
   - ✅ Admin Users route - 16 tests covering authorization, data fetching, user management, audit logging
+- [x] Add E2E test scenarios - **COMPLETED** ✅
+  - ✅ Perfume discovery tests - 80+ tests covering search, filter, sort, pagination, mobile
+  - ✅ User profile tests - 50+ tests covering profile, notifications, privacy, security
+  - ✅ Collection management tests - 70+ tests covering CRUD operations, sharing, statistics
+  - ✅ Reviews and ratings tests - 60+ tests covering ratings, reviews, interactions
+  - ✅ Wishlist management tests - 70+ tests covering add/remove, organization, alerts
+  - ✅ Accessibility tests - 40+ tests covering WCAG 2.1, keyboard, screen reader, ARIA
+- [x] Add accessibility tests with axe-core - **COMPLETED** ✅
+- [x] Add keyboard navigation tests - **COMPLETED** ✅
+- [x] Add screen reader tests - **COMPLETED** ✅
 - [ ] Add integration tests for database operations - **MOCKED IN CURRENT TESTS**
-- [ ] Add accessibility tests with axe-core
-- [ ] Add keyboard navigation tests
-- [ ] Add screen reader tests
 
 **ESTIMATED EFFORT:**
 
@@ -1124,7 +1195,8 @@ test.describe("Perfume Discovery Flow", () => {
 - **Molecules**: 10/12 components tested (83%) - 203 new tests created
 - **Organisms**: 12/30+ components tested (40%) - 292 new tests created
 - **Integration Tests**: 7 test suites created - **134+ comprehensive integration tests** ✅
-- **Total New Tests**: 806+ comprehensive tests covering critical user paths, security, navigation, forms, UX, and route integration
+- **E2E Tests**: 9 test suites total (3 existing + 6 new) - **370+ comprehensive E2E tests** ✅
+- **Total New Tests**: 1176+ comprehensive tests covering critical user paths, security, navigation, forms, UX, route integration, and E2E scenarios
 - **Test Pass Rate**: 94.8% (219/233 passing for Organisms, 115/118 passing for Molecules)
 
 ---
@@ -1910,7 +1982,8 @@ npm run dev
 
 - [x] **COMPLETED**: Increase test coverage to targets (Phase 1-6) - **806+ tests created** ✅
 - [x] **COMPLETED**: Add integration tests for routes - **7 comprehensive test suites** ✅
-- [ ] Add accessibility tests
+- [x] **COMPLETED**: Add accessibility tests - **40+ comprehensive accessibility tests** ✅
+- [x] **COMPLETED**: Expand E2E test scenarios - **370+ E2E tests across 6 new test suites** ✅
 - [ ] Improve test organization
 - [ ] Set up test data factories
 

@@ -49,17 +49,53 @@ npx playwright test --headed --project=chromium
 
 ```
 test/e2e/
-├── pages/           # Page Object Models
+├── pages/                        # Page Object Models
 │   ├── BasePage.ts
-│   └── HomePage.ts
-├── utils/           # Test utilities and helpers
-│   └── test-helpers.ts
-├── fixtures/        # Test data and fixtures
-├── setup/           # Test setup files
-├── global-setup.ts  # Global test setup
-├── global-teardown.ts # Global test teardown
-└── *.test.ts        # Test files
+│   ├── HomePage.ts
+│   ├── LoginPage.ts
+│   ├── SignUpPage.ts
+│   ├── VaultPage.ts
+│   ├── PerfumePage.ts
+│   └── AdminPage.ts
+├── utils/                        # Test utilities and helpers
+│   ├── test-helpers.ts
+│   └── test-data-manager.ts
+├── fixtures/                     # Test data and fixtures
+│   └── test-data.json
+├── global-setup.ts               # Global test setup
+├── global-teardown.ts            # Global test teardown
+├── basic-functionality.test.ts   # Basic app functionality tests
+├── critical-user-flows.test.ts   # Critical user journey tests
+├── admin-flows.test.ts           # Admin functionality tests
+├── perfume-discovery.test.ts     # Perfume search and discovery tests
+├── user-profile.test.ts          # User profile and preferences tests
+├── collection-management.test.ts # Collection CRUD operations tests
+├── reviews-and-ratings.test.ts   # Review and rating workflow tests
+├── wishlist-management.test.ts   # Wishlist functionality tests
+├── accessibility.test.ts         # Accessibility and WCAG compliance tests
+└── README.md                     # This file
 ```
+
+## Test Coverage
+
+The E2E test suite provides comprehensive coverage across all major user workflows:
+
+### Core Functionality (3 test suites)
+
+- **basic-functionality.test.ts**: Basic app loading, navigation, and responsiveness
+- **critical-user-flows.test.ts**: Authentication, browsing, searching, and navigation flows
+- **admin-flows.test.ts**: Admin dashboard and management functionality
+
+### Extended Coverage (6 test suites)
+
+- **perfume-discovery.test.ts** (80+ tests): Search, filter, sort, pagination, mobile discovery
+- **user-profile.test.ts** (50+ tests): Profile management, password changes, notifications, privacy
+- **collection-management.test.ts** (70+ tests): Collection CRUD, sharing, statistics, bulk actions
+- **reviews-and-ratings.test.ts** (60+ tests): Rating system, review workflows, interactions
+- **wishlist-management.test.ts** (70+ tests): Wishlist operations, organization, alerts
+- **accessibility.test.ts** (40+ tests): WCAG 2.1 compliance, keyboard navigation, screen readers
+
+**Total E2E Tests: 370+ comprehensive end-to-end tests**
 
 ## Page Object Model
 
@@ -67,6 +103,11 @@ The tests use a Page Object Model pattern for better maintainability:
 
 - **BasePage**: Common functionality for all pages
 - **HomePage**: Specific functionality for the home page
+- **LoginPage**: Login and authentication functionality
+- **SignUpPage**: User registration functionality
+- **VaultPage**: Perfume browsing and discovery
+- **PerfumePage**: Individual perfume details
+- **AdminPage**: Admin dashboard and management
 - **TestHelpers**: Reusable utility functions
 
 ## Configuration
