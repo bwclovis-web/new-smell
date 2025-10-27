@@ -1,5 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { useCSRF } from './useCSRF'
 
 // Helper to mock document.cookie getter
@@ -385,9 +386,7 @@ describe('useCSRF', () => {
 
       const formData = new FormData()
 
-      await expect(
-        result.current.submitForm('/api/submit', formData)
-      ).rejects.toThrow('Network error')
+      await expect(result.current.submitForm('/api/submit', formData)).rejects.toThrow('Network error')
     })
   })
 
