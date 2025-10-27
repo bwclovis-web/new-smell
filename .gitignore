@@ -41,3 +41,21 @@
 .env.test.production.env
 .env.*
 nul
+
+# Testing
+## Test results and reports
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/.nyc_output/
+/coverage/
+
+## Visual regression test artifacts (exclude all including baselines)
+*-actual.png
+*-diff.png
+*-expected.png
+*-snapshots/
+# Note: Baseline snapshots are excluded. Commit them manually after review if needed.
+
+## Vitest
+/vitest.config.*.timestamp-*
