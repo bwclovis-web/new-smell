@@ -62,7 +62,8 @@ model PerfumeHouse {
   type        HouseType @default(indie)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  Perfume     Perfume[]
+  slug        String    @unique
+  perfumes    Perfume[]
 
   @@map("PerfumeHouse")
 }
@@ -75,6 +76,7 @@ model Perfume {
   perfumeHouseId                                    String?
   createdAt                                         DateTime               @default(now())
   updatedAt                                         DateTime               @updatedAt
+  slug                                              String                 @unique
   PerfumeHouse                                      PerfumeHouse?          @relation(fields: [perfumeHouseId], references: [id])
   PerfumeNotes_PerfumeNotes_perfumeCloseIdToPerfume PerfumeNotes[]         @relation("PerfumeNotes_perfumeCloseIdToPerfume")
   PerfumeNotes_PerfumeNotes_perfumeHeartIdToPerfume PerfumeNotes[]         @relation("PerfumeNotes_perfumeHeartIdToPerfume")

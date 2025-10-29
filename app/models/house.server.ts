@@ -30,15 +30,19 @@ export const getAllHousesWithOptions = async (options?: {
   skip?: number
   take?: number
   selectFields?: boolean // If true, only return essential fields
+  includeEmpty?: boolean // If true, include houses without perfumes (default: false for backward compatibility)
 }) => {
-  const { sortByType, houseType, sortBy, skip, take, selectFields } = options || {}
+  const { sortByType, houseType, sortBy, skip, take, selectFields, includeEmpty = false } = options || {}
 
-  const where: Prisma.PerfumeHouseWhereInput = {
-    // Only include houses that have at least one perfume
-    perfumes: {
+  const where: Prisma.PerfumeHouseWhereInput = {}
+
+  // Only include houses that have at least one perfume (unless includeEmpty is true)
+  if (!includeEmpty) {
+    where.perfumes = {
       some: {}
     }
   }
+
   if (houseType && houseType !== 'all') {
     where.type = houseType as HouseType
   }
@@ -82,15 +86,19 @@ export const getHousesPaginated = async (options?: {
   skip?: number
   take?: number
   selectFields?: boolean
+  includeEmpty?: boolean // If true, include houses without perfumes
 }) => {
-  const { sortByType, houseType, sortBy, skip = 0, take = 50, selectFields } = options || {}
+  const { sortByType, houseType, sortBy, skip = 0, take = 50, selectFields, includeEmpty = false } = options || {}
 
-  const where: Prisma.PerfumeHouseWhereInput = {
-    // Only include houses that have at least one perfume
-    perfumes: {
+  const where: Prisma.PerfumeHouseWhereInput = {}
+
+  // Only include houses that have at least one perfume (unless includeEmpty is true)
+  if (!includeEmpty) {
+    where.perfumes = {
       some: {}
     }
   }
+
   if (houseType && houseType !== 'all') {
     where.type = houseType as HouseType
   }
@@ -134,12 +142,14 @@ export const getHousesPaginated = async (options?: {
 }
 
 // Simple getAllHouses for backward compatibility - now with pagination
-export const getAllHouses = async (options?: { skip?: number; take?: number; selectFields?: boolean }) => {
-  const { skip, take, selectFields } = options || {}
+export const getAllHouses = async (options?: { skip?: number; take?: number; selectFields?: boolean; includeEmpty?: boolean }) => {
+  const { skip, take, selectFields, includeEmpty = false } = options || {}
 
-  const where: Prisma.PerfumeHouseWhereInput = {
-    // Only include houses that have at least one perfume
-    perfumes: {
+  const where: Prisma.PerfumeHouseWhereInput = {}
+
+  // Only include houses that have at least one perfume (unless includeEmpty is true)
+  if (!includeEmpty) {
+    where.perfumes = {
       some: {}
     }
   }
@@ -171,30 +181,35 @@ export const getAllHouses = async (options?: { skip?: number; take?: number; sel
   })
 }
 
-export const getHousesByLetter = async (letter: string) => prisma.perfumeHouse.findMany({
-    where: {
-      name: {
-        startsWith: letter,
-        mode: 'insensitive'
-      },
-      // Only include houses that have at least one perfume
+export const getHousesByLetter = async (letter: string, includeEmpty = false) => prisma.perfumeHouse.findMany({
+  where: {
+    name: {
+      startsWith: letter,
+      mode: 'insensitive'
+    },
+    // Only include houses that have at least one perfume (unless includeEmpty is true)
+    ...(includeEmpty ? {} : {
       perfumes: {
         some: {}
       }
-    },
-    orderBy: { name: 'asc' }
-  })
+    })
+  },
+  orderBy: { name: 'asc' }
+})
 
-export const getHousesByLetterPaginated = async (letter: string, options: { skip: number; take: number; houseType?: string }) => {
-  const { skip, take, houseType = 'all' } = options
+export const getHousesByLetterPaginated = async (letter: string, options: { skip: number; take: number; houseType?: string; includeEmpty?: boolean }) => {
+  const { skip, take, houseType = 'all', includeEmpty = false } = options
 
   const where: Prisma.PerfumeHouseWhereInput = {
     name: {
       startsWith: letter,
       mode: 'insensitive'
-    },
-    // Only include houses that have at least one perfume
-    perfumes: {
+    }
+  }
+
+  // Only include houses that have at least one perfume (unless includeEmpty is true)
+  if (!includeEmpty) {
+    where.perfumes = {
       some: {}
     }
   }
@@ -266,12 +281,15 @@ export const getPerfumeHouseByName = async (name: string) => {
   return house
 }
 
-export const searchPerfumeHouseByName = async (name: string) => {
+export const searchPerfumeHouseByName = async (name: string, includeEmpty = true) => {
   const searchTerm = name.trim()
 
   if (!searchTerm) {
     return []
   }
+
+  // Build the perfume filter condition based on includeEmpty flag
+  const perfumeFilter = includeEmpty ? {} : { perfumes: { some: {} } }
 
   // First, try exact matches and starts-with matches (highest priority)
   const exactMatches = await prisma.perfumeHouse.findMany({
@@ -283,12 +301,16 @@ export const searchPerfumeHouseByName = async (name: string) => {
             { name: { startsWith: searchTerm, mode: 'insensitive' } }
           ]
         },
-        // Only include houses that have at least one perfume
-        { perfumes: { some: {} } }
+        perfumeFilter
       ]
     },
     orderBy: { name: 'asc' },
-    take: 5
+    take: 5,
+    include: {
+      _count: {
+        select: { perfumes: true }
+      }
+    }
   })
 
   // Then, try contains matches (lower priority)
@@ -298,12 +320,16 @@ export const searchPerfumeHouseByName = async (name: string) => {
         { name: { contains: searchTerm, mode: 'insensitive' } },
         // Exclude items already found in exact matches
         { id: { notIn: exactMatches.map(h => h.id) } },
-        // Only include houses that have at least one perfume
-        { perfumes: { some: {} } }
+        perfumeFilter
       ]
     },
     orderBy: { name: 'asc' },
-    take: 5
+    take: 5,
+    include: {
+      _count: {
+        select: { perfumes: true }
+      }
+    }
   })
 
   // Combine and rank results
@@ -401,8 +427,8 @@ export const updatePerfumeHouse = async (id: string, data: FormData) => {
 // Helper function to sanitize text input by normalizing Unicode characters
 const sanitizeText = (text: string | null): string => {
   if (!text) {
- return '' 
-}
+    return ''
+  }
 
   return text
     .normalize('NFD')  // Normalize Unicode
@@ -416,10 +442,12 @@ const sanitizeText = (text: string | null): string => {
 export const createPerfumeHouse = async (data: FormData) => {
   try {
     const name = sanitizeText(data.get('name') as string)
+    const slug = createUrlSlug(name)
+
     const newHouse = await prisma.perfumeHouse.create({
       data: {
         name,
-        slug: createUrlSlug(name),
+        slug,
         description: sanitizeText(data.get('description') as string),
         image: data.get('image') as string,
         website: data.get('website') as string,
@@ -437,16 +465,19 @@ export const createPerfumeHouse = async (data: FormData) => {
       err instanceof Prisma.PrismaClientKnownRequestError
       && err.code === 'P2002'
     ) {
+      const target = err.meta?.target
+      const fieldName = Array.isArray(target) ? target[0] : 'value'
+
       return {
         success: false,
-        error: `A perfume house with that ${Array.isArray(err.meta?.target) ? err.meta.target[0] : 'value'} already exists.`
+        error: `A perfume house with that ${fieldName} already exists. ${fieldName === 'slug' ? `(Generated from name: "${sanitizeText(data.get('name') as string)}")` : ''}`
       }
     }
 
     // Other errors (optional)
     return {
       success: false,
-      error: 'An unexpected error occurred.'
+      error: `An unexpected error occurred: ${err instanceof Error ? err.message : 'Unknown error'}`
     }
   }
 }

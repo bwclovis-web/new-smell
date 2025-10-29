@@ -54,8 +54,8 @@ export const action: ActionFunction = async ({ request }) => {
 
     // Validate category
     const validCategories = [
-'longevity', 'sillage', 'gender', 'priceValue', 'overall'
-]
+      'longevity', 'sillage', 'gender', 'priceValue', 'overall'
+    ]
     if (!validCategories.includes(category)) {
       return createErrorResponse('Invalid rating category', 400)
     }

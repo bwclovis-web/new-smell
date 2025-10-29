@@ -7,9 +7,9 @@ import { authenticateUser } from '~/utils/auth.server'
 export const ROUTE_PATH = '/my-reviews'
 
 export const meta: MetaFunction = () => [
-    { title: 'My Reviews - New Smell' },
-    { name: 'description', content: 'View and manage your perfume reviews' }
-  ]
+  { title: 'My Reviews - New Smell' },
+  { name: 'description', content: 'View and manage your perfume reviews' }
+]
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const authResult = await authenticateUser(request)

@@ -8,6 +8,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!name) {
     return []
   }
-  const result = await searchPerfumeHouseByName(name)
+  // Explicitly include houses without perfumes
+  const result = await searchPerfumeHouseByName(name, true)
   return result ? result : []
 }

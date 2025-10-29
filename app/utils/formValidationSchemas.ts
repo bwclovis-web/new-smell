@@ -49,6 +49,7 @@ export const CreatePerfumeHouseSchema = z.object({
     .max(50, { message: 'Country must be less than 50 characters' })
     .optional(),
   founded: yearSchema,
+  type: z.enum(['niche', 'designer', 'indie', 'celebrity', 'drugstore']).optional(),
   email: emailSchema.optional(),
   phone: phoneSchema,
   address: z.string()
@@ -193,8 +194,8 @@ export const UserFormSchema = z.object({
     .optional()
     .transform(val => val === 'on' || val === 'true')
     .pipe(z.boolean().refine(val => val === true, {
-        message: 'You must accept the terms and conditions'
-      }))
+      message: 'You must accept the terms and conditions'
+    }))
 }).refine(data => data.password === data.confirmPassword, {
   message: 'Passwords do not match',
   path: ['confirmPassword']
