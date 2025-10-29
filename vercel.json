@@ -1,4 +1,11 @@
 {
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "functions": {
+    "**/*.func/**": {
+      "includeFiles": "node_modules/@mjackson/node-fetch-server/**"
+    }
+  },
   "headers": [
     {
       "source": "/build/(.*)",

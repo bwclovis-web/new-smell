@@ -47,7 +47,7 @@ export default defineConfig({
     // Custom rollupOptions can conflict with React Router's build process
   },
   ssr: {
-    noExternal: ['@mjackson/node-fetch-server'],
+    noExternal: ['@mjackson/node-fetch-server', '@react-router/node'],
   },
   optimizeDeps: {
     esbuildOptions: {
