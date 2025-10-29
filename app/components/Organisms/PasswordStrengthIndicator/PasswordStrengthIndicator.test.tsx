@@ -34,9 +34,7 @@ describe('PasswordStrengthIndicator', () => {
 
   describe('Rendering', () => {
     it('renders password strength indicator with strength bar', () => {
-      const { container } = render(
-        <PasswordStrengthIndicator password="Password123!" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="Password123!" />)
 
       expect(container.querySelector('.bg-gray-200')).toBeInTheDocument()
       expect(container.querySelector('.h-2.rounded-full')).toBeInTheDocument()
@@ -48,9 +46,7 @@ describe('PasswordStrengthIndicator', () => {
     })
 
     it('returns null when password is empty', () => {
-      const { container } = render(
-        <PasswordStrengthIndicator password="" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="" />)
       expect(container.firstChild).toBeNull()
     })
 
@@ -60,19 +56,15 @@ describe('PasswordStrengthIndicator', () => {
         strengthInfo: null
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="test" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="test" />)
       expect(container.firstChild).toBeNull()
     })
 
     it('applies custom className', () => {
-      const { container } = render(
-        <PasswordStrengthIndicator
+      const { container } = render(<PasswordStrengthIndicator
           password="Password123!"
           className="custom-class"
-        />
-      )
+        />)
       expect(container.firstChild).toHaveClass('custom-class')
     })
   })
@@ -86,9 +78,7 @@ describe('PasswordStrengthIndicator', () => {
         getStrengthText: vi.fn(() => 'Weak')
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="weak" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="weak" />)
 
       expect(screen.getByText('Weak')).toBeInTheDocument()
       const icon = container.querySelector('svg')
@@ -153,9 +143,7 @@ describe('PasswordStrengthIndicator', () => {
         strengthInfo: { score: 4, strength: 'good', feedback: [] }
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="test" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="test" />)
 
       const strengthBar = container.querySelector('.transition-all')
       expect(strengthBar).toHaveStyle({ width: '50%' }) // (4/8) * 100%
@@ -167,9 +155,7 @@ describe('PasswordStrengthIndicator', () => {
         strengthInfo: { score: 10, strength: 'very_strong', feedback: [] }
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="test" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="test" />)
 
       const strengthBar = container.querySelector('.transition-all')
       expect(strengthBar).toHaveStyle({ width: '100%' })
@@ -181,9 +167,7 @@ describe('PasswordStrengthIndicator', () => {
         strengthInfo: { score: 0, strength: 'weak', feedback: ['Too short'] }
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="a" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="a" />)
 
       const strengthBar = container.querySelector('.transition-all')
       expect(strengthBar).toHaveStyle({ width: '0%' })
@@ -218,9 +202,7 @@ describe('PasswordStrengthIndicator', () => {
         strengthInfo: { score: 8, strength: 'very_strong', feedback: [] }
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="VeryStrong123!@#" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="VeryStrong123!@#" />)
 
       expect(container.querySelector('.space-y-1')).not.toBeInTheDocument()
     })
@@ -235,9 +217,7 @@ describe('PasswordStrengthIndicator', () => {
         }
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="weak" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="weak" />)
 
       const bullets = container.querySelectorAll('.text-red-500')
       expect(bullets.length).toBe(2)
@@ -283,12 +263,10 @@ describe('PasswordStrengthIndicator', () => {
 
   describe('Custom Configuration', () => {
     it('passes custom minLength to hook', () => {
-      render(
-        <PasswordStrengthIndicator
+      render(<PasswordStrengthIndicator
           password="test"
           minLength={12}
-        />
-      )
+        />)
 
       expect(mockUsePasswordStrength).toHaveBeenCalledWith('test', expect.objectContaining({
         minLength: 12
@@ -296,15 +274,13 @@ describe('PasswordStrengthIndicator', () => {
     })
 
     it('passes custom requirement flags to hook', () => {
-      render(
-        <PasswordStrengthIndicator
+      render(<PasswordStrengthIndicator
           password="test"
           requireUppercase={false}
           requireLowercase={true}
           requireNumbers={false}
           requireSpecialChars={true}
-        />
-      )
+        />)
 
       expect(mockUsePasswordStrength).toHaveBeenCalledWith('test', expect.objectContaining({
         requireUppercase: false,
@@ -315,12 +291,10 @@ describe('PasswordStrengthIndicator', () => {
     })
 
     it('passes custom minScore to hook', () => {
-      render(
-        <PasswordStrengthIndicator
+      render(<PasswordStrengthIndicator
           password="test"
           minScore={5}
-        />
-      )
+        />)
 
       expect(mockUsePasswordStrength).toHaveBeenCalledWith('test', expect.objectContaining({
         minScore: 5
@@ -349,9 +323,7 @@ describe('PasswordStrengthIndicator', () => {
         getStrengthColor: mockGetStrengthColor
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="test" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="test" />)
 
       expect(mockGetStrengthColor).toHaveBeenCalledWith('good')
       const strengthBar = container.querySelector('.bg-green-500')
@@ -359,18 +331,14 @@ describe('PasswordStrengthIndicator', () => {
     })
 
     it('applies transition classes to strength bar', () => {
-      const { container } = render(
-        <PasswordStrengthIndicator password="test" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="test" />)
 
       const strengthBar = container.querySelector('.transition-all')
       expect(strengthBar).toHaveClass('duration-300')
     })
 
     it('uses space-y-2 for component spacing', () => {
-      const { container } = render(
-        <PasswordStrengthIndicator password="test" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="test" />)
 
       expect(container.firstChild).toHaveClass('space-y-2')
     })
@@ -384,9 +352,7 @@ describe('PasswordStrengthIndicator', () => {
         getStrengthText: vi.fn(() => 'Weak')
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="weak" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="weak" />)
 
       const icon = container.querySelector('svg')
       expect(icon).toBeInTheDocument()
@@ -399,9 +365,7 @@ describe('PasswordStrengthIndicator', () => {
         getStrengthText: vi.fn(() => 'Strong')
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="Strong123!" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="Strong123!" />)
 
       const icon = container.querySelector('svg')
       expect(icon).toBeInTheDocument()
@@ -414,9 +378,7 @@ describe('PasswordStrengthIndicator', () => {
         getStrengthText: vi.fn(() => 'Unknown')
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="???" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="???" />)
 
       const icon = container.querySelector('svg')
       expect(icon).toBeInTheDocument()
@@ -430,9 +392,7 @@ describe('PasswordStrengthIndicator', () => {
         strengthInfo: { score: 8, strength: 'very_strong', feedback: [] }
       })
 
-      expect(() => render(
-        <PasswordStrengthIndicator password="test" />
-      )).not.toThrow()
+      expect(() => render(<PasswordStrengthIndicator password="test" />)).not.toThrow()
     })
 
     it('handles very long feedback messages', () => {
@@ -485,9 +445,7 @@ describe('PasswordStrengthIndicator', () => {
 
   describe('Accessibility', () => {
     it('uses semantic HTML structure', () => {
-      const { container } = render(
-        <PasswordStrengthIndicator password="test" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="test" />)
 
       expect(container.querySelector('div')).toBeInTheDocument()
     })
@@ -509,9 +467,7 @@ describe('PasswordStrengthIndicator', () => {
         }
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="weak" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="weak" />)
 
       const bullet = container.querySelector('.text-red-500')
       expect(bullet).toBeInTheDocument()
@@ -530,9 +486,7 @@ describe('PasswordStrengthIndicator', () => {
     })
 
     it('updates when password changes', () => {
-      const { rerender } = render(
-        <PasswordStrengthIndicator password="weak" />
-      )
+      const { rerender } = render(<PasswordStrengthIndicator password="weak" />)
 
       rerender(<PasswordStrengthIndicator password="StrongPassword123!" />)
 

@@ -1,5 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import PerformanceDashboard from './PerformanceDashboard'
 
 describe('PerformanceDashboard (Organism)', () => {
@@ -261,13 +262,11 @@ describe('PerformanceDashboard (Organism)', () => {
 
   describe('Performance Scoring', () => {
     it('should show excellent score for good LCP', async () => {
-      render(
-        <PerformanceDashboard
+      render(<PerformanceDashboard
           enabled={true}
           showUI={true}
           thresholds={{ lcp: 5000, fid: 100, cls: 0.1, fcp: 1800, tti: 3800 }}
-        />
-      )
+        />)
 
       await vi.advanceTimersByTimeAsync(100)
 
@@ -278,13 +277,11 @@ describe('PerformanceDashboard (Organism)', () => {
     })
 
     it('should show poor score for bad LCP', async () => {
-      render(
-        <PerformanceDashboard
+      render(<PerformanceDashboard
           enabled={true}
           showUI={true}
           thresholds={{ lcp: 2000, fid: 100, cls: 0.1, fcp: 1800, tti: 3800 }}
-        />
-      )
+        />)
 
       await vi.advanceTimersByTimeAsync(100)
 
@@ -441,13 +438,11 @@ describe('PerformanceDashboard (Organism)', () => {
 
   describe('Performance Alerts', () => {
     it('should show alert for slow page load', async () => {
-      render(
-        <PerformanceDashboard
+      render(<PerformanceDashboard
           enabled={true}
           showUI={true}
           thresholds={{ lcp: 2000, fid: 100, cls: 0.1, fcp: 1800, tti: 3800 }}
-        />
-      )
+        />)
 
       await vi.advanceTimersByTimeAsync(100)
 
@@ -500,13 +495,11 @@ describe('PerformanceDashboard (Organism)', () => {
     })
 
     it('should not show alerts section when no alerts', async () => {
-      render(
-        <PerformanceDashboard
+      render(<PerformanceDashboard
           enabled={true}
           showUI={true}
           thresholds={{ lcp: 10000, fid: 1000, cls: 1, fcp: 10000, tti: 10000 }}
-        />
-      )
+        />)
 
       await vi.advanceTimersByTimeAsync(100)
 
@@ -586,9 +579,7 @@ describe('PerformanceDashboard (Organism)', () => {
     })
 
     it('should apply custom className', async () => {
-      const { container } = render(
-        <PerformanceDashboard enabled={true} showUI={true} className="custom-class" />
-      )
+      const { container } = render(<PerformanceDashboard enabled={true} showUI={true} className="custom-class" />)
 
       await vi.advanceTimersByTimeAsync(100)
 
@@ -601,9 +592,7 @@ describe('PerformanceDashboard (Organism)', () => {
 
   describe('Cleanup', () => {
     it('should clear interval on unmount', async () => {
-      const { unmount } = render(
-        <PerformanceDashboard enabled={true} showUI={true} refreshInterval={1000} />
-      )
+      const { unmount } = render(<PerformanceDashboard enabled={true} showUI={true} refreshInterval={1000} />)
 
       // Wait for initial collection
       await vi.advanceTimersByTimeAsync(100)

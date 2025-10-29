@@ -1,7 +1,9 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { AppError, ErrorSeverity, ErrorType } from '~/utils/errorHandling'
+
 import { ErrorBoundary } from './ErrorBoundary'
-import { AppError, ErrorType, ErrorSeverity } from '~/utils/errorHandling'
 
 // Test component that throws an error
 const ThrowError = ({ shouldThrow = true, error }: { shouldThrow?: boolean; error?: Error }) => {
@@ -29,31 +31,25 @@ describe('ErrorBoundary', () => {
 
   describe('Rendering', () => {
     it('should render children when there is no error', () => {
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <div>Child content</div>
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Child content')).toBeInTheDocument()
     })
 
     it('should catch errors thrown by child components', () => {
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Component Error')).toBeInTheDocument()
     })
 
     it('should render error boundary when error occurs', () => {
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.queryByText('No error')).not.toBeInTheDocument()
       expect(screen.getByText('Component Error')).toBeInTheDocument()
@@ -62,33 +58,27 @@ describe('ErrorBoundary', () => {
 
   describe('Error Levels', () => {
     it('should render component level error by default', () => {
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Component Error')).toBeInTheDocument()
       expect(screen.getByText('Retry')).toBeInTheDocument()
     })
 
     it('should render component level error when level is "component"', () => {
-      render(
-        <ErrorBoundary level="component">
+      render(<ErrorBoundary level="component">
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Component Error')).toBeInTheDocument()
       expect(screen.getByText(/Server error/i)).toBeInTheDocument()
     })
 
     it('should render page level error when level is "page"', () => {
-      render(
-        <ErrorBoundary level="page">
+      render(<ErrorBoundary level="page">
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Something went wrong')).toBeInTheDocument()
       expect(screen.getByText('Try Again')).toBeInTheDocument()
@@ -96,11 +86,9 @@ describe('ErrorBoundary', () => {
     })
 
     it('should render critical level error when level is "critical"', () => {
-      render(
-        <ErrorBoundary level="critical">
+      render(<ErrorBoundary level="critical">
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Critical Error')).toBeInTheDocument()
       expect(screen.getByText('Refresh Page')).toBeInTheDocument()
@@ -117,42 +105,34 @@ describe('ErrorBoundary', () => {
         'Please check your input'
       )
 
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError error={appError} />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText(/Please check your input|Something went wrong/i)).toBeInTheDocument()
     })
 
     it('should display error ID', () => {
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       const errorIdElement = screen.getByText(/Error ID:/i)
       expect(errorIdElement).toBeInTheDocument()
     })
 
     it('should generate unique error IDs for different errors', () => {
-      const { unmount } = render(
-        <ErrorBoundary>
+      const { unmount } = render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       const firstErrorId = screen.getByText(/Error ID:/i).textContent
 
       unmount()
 
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       const secondErrorId = screen.getByText(/Error ID:/i).textContent
 
@@ -162,30 +142,24 @@ describe('ErrorBoundary', () => {
 
   describe('Retry Functionality', () => {
     it('should have a retry button', () => {
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Retry')).toBeInTheDocument()
     })
 
     it('should reset error state when retry is clicked', () => {
-      const { rerender } = render(
-        <ErrorBoundary>
+      const { rerender } = render(<ErrorBoundary>
           <ThrowError shouldThrow={true} />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Component Error')).toBeInTheDocument()
 
       // Rerender with no error
-      rerender(
-        <ErrorBoundary>
+      rerender(<ErrorBoundary>
           <ThrowError shouldThrow={false} />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       // Note: In a real scenario, clicking retry would re-render children
       // But since we can't easily test the internal state change,
@@ -197,11 +171,9 @@ describe('ErrorBoundary', () => {
 
     it('should allow multiple retry attempts', () => {
       // Test that the retry button can be clicked without crashing
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       // Initially should show error
       expect(screen.getByText('Component Error')).toBeInTheDocument()
@@ -219,11 +191,9 @@ describe('ErrorBoundary', () => {
 
   describe('Report Error Functionality', () => {
     it('should have a report error button', () => {
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Report')).toBeInTheDocument()
     })
@@ -231,11 +201,9 @@ describe('ErrorBoundary', () => {
     it('should call console.error when report is clicked', () => {
       const consoleErrorSpy = vi.spyOn(console, 'error')
 
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       const reportButton = screen.getByText('Report')
       fireEvent.click(reportButton)
@@ -246,11 +214,9 @@ describe('ErrorBoundary', () => {
     it('should show alert when report error is clicked', () => {
       const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => { })
 
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       const reportButton = screen.getByText('Report')
       fireEvent.click(reportButton)
@@ -271,11 +237,9 @@ describe('ErrorBoundary', () => {
         </div>
       )
 
-      render(
-        <ErrorBoundary fallback={customFallback}>
+      render(<ErrorBoundary fallback={customFallback}>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Custom Error')).toBeInTheDocument()
       expect(screen.getByText(/Error:/i)).toBeInTheDocument()
@@ -286,11 +250,9 @@ describe('ErrorBoundary', () => {
         <div>Custom fallback</div>
       ))
 
-      render(
-        <ErrorBoundary fallback={fallbackSpy}>
+      render(<ErrorBoundary fallback={fallbackSpy}>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(fallbackSpy).toHaveBeenCalled()
       expect(fallbackSpy.mock.calls[0][0]).toHaveProperty('message')
@@ -300,11 +262,9 @@ describe('ErrorBoundary', () => {
     it('should prioritize custom fallback over level-based fallback', () => {
       const customFallback = () => <div>Custom Critical Fallback</div>
 
-      render(
-        <ErrorBoundary level="critical" fallback={customFallback}>
+      render(<ErrorBoundary level="critical" fallback={customFallback}>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Custom Critical Fallback')).toBeInTheDocument()
       expect(screen.queryByText('Critical Error')).not.toBeInTheDocument()
@@ -315,11 +275,9 @@ describe('ErrorBoundary', () => {
     it('should call onError callback when error occurs', () => {
       const onErrorSpy = vi.fn()
 
-      render(
-        <ErrorBoundary onError={onErrorSpy}>
+      render(<ErrorBoundary onError={onErrorSpy}>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(onErrorSpy).toHaveBeenCalled()
     })
@@ -327,11 +285,9 @@ describe('ErrorBoundary', () => {
     it('should pass AppError and ErrorInfo to onError callback', () => {
       const onErrorSpy = vi.fn()
 
-      render(
-        <ErrorBoundary onError={onErrorSpy}>
+      render(<ErrorBoundary onError={onErrorSpy}>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(onErrorSpy).toHaveBeenCalledWith(
         expect.any(Object),
@@ -352,11 +308,9 @@ describe('ErrorBoundary', () => {
       })
 
       // The error boundary should still work even if onError has issues
-      render(
-        <ErrorBoundary onError={onErrorSpy}>
+      render(<ErrorBoundary onError={onErrorSpy}>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       // Should still render error UI
       expect(screen.getByText('Component Error')).toBeInTheDocument()
@@ -366,11 +320,9 @@ describe('ErrorBoundary', () => {
 
   describe('Page Level Error Specific', () => {
     it('should render page level UI with proper styling', () => {
-      render(
-        <ErrorBoundary level="page">
+      render(<ErrorBoundary level="page">
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Something went wrong')).toBeInTheDocument()
       expect(screen.getByText('Try Again')).toBeInTheDocument()
@@ -382,11 +334,9 @@ describe('ErrorBoundary', () => {
       const historyBackSpy = vi.fn()
       window.history.back = historyBackSpy
 
-      render(
-        <ErrorBoundary level="page">
+      render(<ErrorBoundary level="page">
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       const goBackButton = screen.getByText('Go Back')
       fireEvent.click(goBackButton)
@@ -397,26 +347,20 @@ describe('ErrorBoundary', () => {
 
   describe('Critical Level Error Specific', () => {
     it('should render critical level UI with proper styling', () => {
-      render(
-        <ErrorBoundary level="critical">
+      render(<ErrorBoundary level="critical">
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Critical Error')).toBeInTheDocument()
-      expect(
-        screen.getByText(/A critical error has occurred. Please refresh the page or contact support./)
-      ).toBeInTheDocument()
+      expect(screen.getByText(/A critical error has occurred. Please refresh the page or contact support./)).toBeInTheDocument()
       expect(screen.getByText('Refresh Page')).toBeInTheDocument()
       expect(screen.getByText('Report Error')).toBeInTheDocument()
     })
 
     it('should have critical styling classes', () => {
-      const { container } = render(
-        <ErrorBoundary level="critical">
+      const { container } = render(<ErrorBoundary level="critical">
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(container.querySelector('.text-6xl')).toBeInTheDocument()
       expect(screen.getByText('🚨')).toBeInTheDocument()
@@ -433,11 +377,9 @@ describe('ErrorBoundary', () => {
         'Database connection failed'
       )
 
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError error={appError} />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText(/Database connection failed|Something went wrong/i)).toBeInTheDocument()
     })
@@ -445,11 +387,9 @@ describe('ErrorBoundary', () => {
     it('should handle regular Error instances', () => {
       const regularError = new Error('Regular error message')
 
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError error={regularError} />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Component Error')).toBeInTheDocument()
     })
@@ -459,11 +399,9 @@ describe('ErrorBoundary', () => {
         throw new Error('Render error')
       }
 
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ErrorComponent />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Component Error')).toBeInTheDocument()
     })
@@ -471,44 +409,36 @@ describe('ErrorBoundary', () => {
 
   describe('Accessibility', () => {
     it('should have proper semantic HTML for component error', () => {
-      const { container } = render(
-        <ErrorBoundary>
+      const { container } = render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       const heading = container.querySelector('h3')
       expect(heading).toHaveTextContent('Component Error')
     })
 
     it('should have proper semantic HTML for page error', () => {
-      const { container } = render(
-        <ErrorBoundary level="page">
+      const { container } = render(<ErrorBoundary level="page">
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       const heading = container.querySelector('h1')
       expect(heading).toHaveTextContent('Something went wrong')
     })
 
     it('should have proper semantic HTML for critical error', () => {
-      const { container } = render(
-        <ErrorBoundary level="critical">
+      const { container } = render(<ErrorBoundary level="critical">
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       const heading = container.querySelector('h1')
       expect(heading).toHaveTextContent('Critical Error')
     })
 
     it('should have clickable buttons', () => {
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       const retryButton = screen.getByText('Retry')
       const reportButton = screen.getByText('Report')
@@ -520,15 +450,13 @@ describe('ErrorBoundary', () => {
 
   describe('Component Integration', () => {
     it('should work with nested error boundaries', () => {
-      render(
-        <ErrorBoundary level="page">
+      render(<ErrorBoundary level="page">
           <div>
             <ErrorBoundary level="component">
               <ThrowError />
             </ErrorBoundary>
           </div>
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       // Inner boundary should catch the error
       expect(screen.getByText('Component Error')).toBeInTheDocument()
@@ -536,13 +464,11 @@ describe('ErrorBoundary', () => {
     })
 
     it('should work with multiple children', () => {
-      render(
-        <ErrorBoundary>
+      render(<ErrorBoundary>
           <div>Child 1</div>
           <div>Child 2</div>
           <div>Child 3</div>
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Child 1')).toBeInTheDocument()
       expect(screen.getByText('Child 2')).toBeInTheDocument()
@@ -550,14 +476,12 @@ describe('ErrorBoundary', () => {
     })
 
     it('should isolate errors to the boundary scope', () => {
-      render(
-        <div>
+      render(<div>
           <ErrorBoundary>
             <ThrowError />
           </ErrorBoundary>
           <div>Sibling content</div>
-        </div>
-      )
+        </div>)
 
       expect(screen.getByText('Component Error')).toBeInTheDocument()
       expect(screen.getByText('Sibling content')).toBeInTheDocument()
@@ -566,33 +490,27 @@ describe('ErrorBoundary', () => {
 
   describe('Styling', () => {
     it('should apply correct styling classes for component error', () => {
-      const { container } = render(
-        <ErrorBoundary>
+      const { container } = render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(container.querySelector('.bg-red-50')).toBeInTheDocument()
       expect(container.querySelector('.border-red-200')).toBeInTheDocument()
     })
 
     it('should apply correct styling classes for page error', () => {
-      const { container } = render(
-        <ErrorBoundary level="page">
+      const { container } = render(<ErrorBoundary level="page">
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(container.querySelector('.min-h-screen')).toBeInTheDocument()
       expect(container.querySelector('.bg-gray-50')).toBeInTheDocument()
     })
 
     it('should apply correct styling classes for critical error', () => {
-      const { container } = render(
-        <ErrorBoundary level="critical">
+      const { container } = render(<ErrorBoundary level="critical">
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(container.querySelector('.min-h-screen')).toBeInTheDocument()
       expect(container.querySelector('.bg-red-600')).toBeInTheDocument()
@@ -602,20 +520,16 @@ describe('ErrorBoundary', () => {
   describe('Error State Management', () => {
     it('should clear error state when retry succeeds', () => {
       let shouldThrow = true
-      const { rerender } = render(
-        <ErrorBoundary>
+      const { rerender } = render(<ErrorBoundary>
           <ThrowError shouldThrow={shouldThrow} />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Component Error')).toBeInTheDocument()
 
       shouldThrow = false
-      rerender(
-        <ErrorBoundary>
+      rerender(<ErrorBoundary>
           <ThrowError shouldThrow={shouldThrow} />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       // Click retry button
       const retryButton = screen.getByText('Retry')
@@ -623,19 +537,15 @@ describe('ErrorBoundary', () => {
     })
 
     it('should maintain error state between renders', () => {
-      const { rerender } = render(
-        <ErrorBoundary>
+      const { rerender } = render(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Component Error')).toBeInTheDocument()
 
-      rerender(
-        <ErrorBoundary>
+      rerender(<ErrorBoundary>
           <ThrowError />
-        </ErrorBoundary>
-      )
+        </ErrorBoundary>)
 
       expect(screen.getByText('Component Error')).toBeInTheDocument()
     })

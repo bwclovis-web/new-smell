@@ -41,10 +41,11 @@ const DashboardContent: FC<DashboardContentProps> = ({
         missingHouseInfoChartData={chartData.missingHouseInfoChartData}
         chartOptions={chartOptions}
         missingHouseInfoBreakdown={chartData.missingHouseInfoBreakdown}
+        timeframe={timeframe}
       />
 
       {/* Trend Chart */}
-      <TrendChart trendChartData={chartData.trendChartData} />
+      <TrendChart trendChartData={chartData.trendChartData} timeframe={timeframe} />
 
       {/* Houses with No Perfumes */}
       <HousesWithNoPerfumes stats={stats} />

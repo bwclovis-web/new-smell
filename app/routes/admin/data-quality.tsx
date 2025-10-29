@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useLoaderData } from 'react-router'
 
-import DataQualityDashboard from '~/components/Containers/DataQualityDashboard/DataQualityDashboard'
+import DataQualityDashboard from '~/components/Containers/DataQualityDashboard'
 import TitleBanner from '~/components/Organisms/TitleBanner'
 import banner from '~/images/quality.webp'
 import { sharedLoader } from '~/utils/sharedLoader'

@@ -6,10 +6,11 @@ import {
   validatePasswordComplexity,
   verifyPassword
 } from '~/utils/security/password-security.server'
-import { getUserByName, getUserByEmail } from './user.query'
+
+import { getUserByEmail, getUserByName } from './user.query'
 
 // Re-export query functions from user.query to maintain backwards compatibility
-export { getUserById, getUserByName, getUserByEmail, getAllUsers } from './user.query'
+export { getAllUsers, getUserByEmail, getUserById, getUserByName } from './user.query'
 
 
 

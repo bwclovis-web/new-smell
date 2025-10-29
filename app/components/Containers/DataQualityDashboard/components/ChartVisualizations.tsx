@@ -1,3 +1,4 @@
+import React from 'react'
 import { Bar } from 'react-chartjs-2'
 
 interface ChartVisualizationsProps {
@@ -6,6 +7,7 @@ interface ChartVisualizationsProps {
   missingHouseInfoChartData: any
   chartOptions: any
   missingHouseInfoBreakdown?: Record<string, string[]>
+  timeframe: 'week' | 'month' | 'all'
 }
 
 const ChartVisualizations: React.FC<ChartVisualizationsProps> = ({
@@ -13,22 +15,44 @@ const ChartVisualizations: React.FC<ChartVisualizationsProps> = ({
   duplicateChartData,
   missingHouseInfoChartData,
   chartOptions,
-  missingHouseInfoBreakdown
-}) => (
-  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-    <div className="bg-gray-50 rounded-lg p-4">
-      <h3 className="text-lg font-medium text-gray-800 mb-4">Top Brands with Missing Data</h3>
-      <Bar options={chartOptions} data={missingChartData} />
-    </div>
+  missingHouseInfoBreakdown,
+  timeframe
+}) => {
+  // Generate unique IDs for each chart canvas based on timeframe
+  const missingChartId = `missing-data-chart-${timeframe}`
+  const duplicatesChartId = `duplicates-chart-${timeframe}`
+  const houseInfoChartId = `missing-house-info-chart-${timeframe}`
 
-    <div className="bg-gray-50 rounded-lg p-4">
-      <h3 className="text-lg font-medium text-gray-800 mb-4">Top Brands with Duplicates</h3>
-      <Bar options={chartOptions} data={duplicateChartData} />
-    </div>
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+      <div className="bg-gray-50 rounded-lg p-4">
+        <h3 className="text-lg font-medium text-gray-800 mb-4">Top Brands with Missing Data</h3>
+        <Bar 
+          key={missingChartId}
+          id={missingChartId}
+          options={{ ...chartOptions, maintainAspectRatio: true }}
+          data={missingChartData}
+        />
+      </div>
 
-    <div className="bg-gray-50 rounded-lg p-4">
-      <h3 className="text-lg font-medium text-gray-800 mb-4">Top Houses Missing Info</h3>
-      <Bar options={chartOptions} data={missingHouseInfoChartData} />
+      <div className="bg-gray-50 rounded-lg p-4">
+        <h3 className="text-lg font-medium text-gray-800 mb-4">Top Brands with Duplicates</h3>
+        <Bar 
+          key={duplicatesChartId}
+          id={duplicatesChartId}
+          options={{ ...chartOptions, maintainAspectRatio: true }}
+          data={duplicateChartData}
+        />
+      </div>
+
+      <div className="bg-gray-50 rounded-lg p-4">
+        <h3 className="text-lg font-medium text-gray-800 mb-4">Top Houses Missing Info</h3>
+        <Bar 
+          key={houseInfoChartId}
+          id={houseInfoChartId}
+          options={{ ...chartOptions, maintainAspectRatio: true }}
+          data={missingHouseInfoChartData}
+        />
       {/* Breakdown Table for Missing House Info */}
       <>
         {missingHouseInfoBreakdown &&
@@ -57,6 +81,7 @@ const ChartVisualizations: React.FC<ChartVisualizationsProps> = ({
       </>
     </div>
   </div>
-)
+  )
+}
 
 export default ChartVisualizations

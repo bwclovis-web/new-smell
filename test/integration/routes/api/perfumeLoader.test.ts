@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import type { LoaderFunctionArgs } from 'react-router'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { loader } from '~/routes/api/perfumeLoader'
 import * as perfumeServer from '~/models/perfume.server'
+import { loader } from '~/routes/api/perfumeLoader'
 
 vi.mock('~/models/perfume.server')
 
@@ -119,9 +119,7 @@ describe('Perfume Loader API Integration Tests', () => {
     })
 
     it('should handle database errors', async () => {
-      vi.mocked(perfumeServer.searchPerfumeByName).mockRejectedValue(
-        new Error('Database connection error')
-      )
+      vi.mocked(perfumeServer.searchPerfumeByName).mockRejectedValue(new Error('Database connection error'))
 
       const request = new Request('https://example.com/api/perfumeLoader?name=test')
       const args: LoaderFunctionArgs = {

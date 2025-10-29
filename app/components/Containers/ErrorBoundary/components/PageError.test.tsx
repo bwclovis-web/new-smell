@@ -1,7 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { AppError, ErrorSeverity, ErrorType } from '~/utils/errorHandling'
+
 import PageError from './PageError'
-import { AppError, ErrorType, ErrorSeverity } from '~/utils/errorHandling'
 
 describe('PageError', () => {
   const mockError = new AppError(
@@ -103,13 +105,11 @@ describe('PageError', () => {
       const onRetrySpy = vi.fn()
       const onReportErrorSpy = vi.fn()
 
-      render(
-        <PageError
+      render(<PageError
           {...mockProps}
           onRetry={onRetrySpy}
           onReportError={onReportErrorSpy}
-        />
-      )
+        />)
 
       const tryAgainButton = screen.getByText('Try Again')
       const reportButton = screen.getByText('Report Issue')
@@ -133,12 +133,10 @@ describe('PageError', () => {
         'Server error. Please try again later.'
       )
 
-      render(
-        <PageError
+      render(<PageError
           {...mockProps}
           error={serverError}
-        />
-      )
+        />)
 
       expect(screen.getByText('Server error. Please try again later.')).toBeInTheDocument()
     })
@@ -152,12 +150,10 @@ describe('PageError', () => {
         'The requested resource was not found.'
       )
 
-      render(
-        <PageError
+      render(<PageError
           {...mockProps}
           error={notFoundError}
-        />
-      )
+        />)
 
       expect(screen.getByText('The requested resource was not found.')).toBeInTheDocument()
     })
@@ -171,12 +167,10 @@ describe('PageError', () => {
         'You do not have permission to perform this action.'
       )
 
-      render(
-        <PageError
+      render(<PageError
           {...mockProps}
           error={authzError}
-        />
-      )
+        />)
 
       expect(screen.getByText('You do not have permission to perform this action.')).toBeInTheDocument()
     })
@@ -339,12 +333,10 @@ describe('PageError', () => {
         'This is a very long error message that contains multiple sentences and should wrap properly without breaking the layout or causing horizontal scroll. The error message should remain readable and accessible even when it spans multiple lines.'
       )
 
-      render(
-        <PageError
+      render(<PageError
           {...mockProps}
           error={longError}
-        />
-      )
+        />)
 
       expect(screen.getByText(/This is a very long error message/i)).toBeInTheDocument()
     })
@@ -358,12 +350,10 @@ describe('PageError', () => {
         'Error: <Component> failed with "quotes" & ampersands'
       )
 
-      render(
-        <PageError
+      render(<PageError
           {...mockProps}
           error={specialError}
-        />
-      )
+        />)
 
       expect(screen.getByText(/Error: <Component> failed with "quotes" & ampersands/i)).toBeInTheDocument()
     })
@@ -383,12 +373,10 @@ describe('PageError', () => {
     })
 
     it('should handle long error IDs', () => {
-      render(
-        <PageError
+      render(<PageError
           {...mockProps}
           errorId="error_page_1234567890_abcdefghijklmnopqrstuvwxyz"
-        />
-      )
+        />)
 
       expect(screen.getByText(/Error ID: error_page_1234567890/i)).toBeInTheDocument()
     })
@@ -413,12 +401,10 @@ describe('PageError', () => {
           `${type} error message`
         )
 
-        const { unmount } = render(
-          <PageError
+        const { unmount } = render(<PageError
             {...mockProps}
             error={error}
-          />
-        )
+          />)
 
         expect(screen.getByText(`${type} error message`)).toBeInTheDocument()
         unmount()
@@ -427,9 +413,7 @@ describe('PageError', () => {
 
     it('should maintain state across re-renders', () => {
       const onRetrySpy = vi.fn()
-      const { rerender } = render(
-        <PageError {...mockProps} onRetry={onRetrySpy} />
-      )
+      const { rerender } = render(<PageError {...mockProps} onRetry={onRetrySpy} />)
 
       const tryAgainButton = screen.getByText('Try Again')
       fireEvent.click(tryAgainButton)

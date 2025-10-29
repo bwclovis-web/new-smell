@@ -1,7 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { AppError, ErrorSeverity, ErrorType } from '~/utils/errorHandling'
+
 import CriticalError from './CriticalError'
-import { AppError, ErrorType, ErrorSeverity } from '~/utils/errorHandling'
 
 describe('CriticalError', () => {
   const mockError = new AppError(
@@ -33,9 +35,7 @@ describe('CriticalError', () => {
     it('should display critical error message', () => {
       render(<CriticalError {...mockProps} />)
 
-      expect(
-        screen.getByText(/A critical error has occurred. Please refresh the page or contact support./i)
-      ).toBeInTheDocument()
+      expect(screen.getByText(/A critical error has occurred. Please refresh the page or contact support./i)).toBeInTheDocument()
     })
 
     it('should display error ID', () => {
@@ -111,13 +111,11 @@ describe('CriticalError', () => {
       const onRetrySpy = vi.fn()
       const onReportErrorSpy = vi.fn()
 
-      render(
-        <CriticalError
+      render(<CriticalError
           {...mockProps}
           onRetry={onRetrySpy}
           onReportError={onReportErrorSpy}
-        />
-      )
+        />)
 
       const refreshButton = screen.getByText('Refresh Page')
       const reportButton = screen.getByText('Report Error')
@@ -141,17 +139,13 @@ describe('CriticalError', () => {
         'Critical database error occurred.'
       )
 
-      render(
-        <CriticalError
+      render(<CriticalError
           {...mockProps}
           error={dbError}
-        />
-      )
+        />)
 
       // Should still show the standard critical error message
-      expect(
-        screen.getByText(/A critical error has occurred. Please refresh the page or contact support./i)
-      ).toBeInTheDocument()
+      expect(screen.getByText(/A critical error has occurred. Please refresh the page or contact support./i)).toBeInTheDocument()
     })
 
     it('should display server critical error', () => {
@@ -163,16 +157,12 @@ describe('CriticalError', () => {
         'Critical server error occurred.'
       )
 
-      render(
-        <CriticalError
+      render(<CriticalError
           {...mockProps}
           error={serverError}
-        />
-      )
+        />)
 
-      expect(
-        screen.getByText(/A critical error has occurred. Please refresh the page or contact support./i)
-      ).toBeInTheDocument()
+      expect(screen.getByText(/A critical error has occurred. Please refresh the page or contact support./i)).toBeInTheDocument()
     })
   })
 
@@ -353,12 +343,10 @@ describe('CriticalError', () => {
       ]
 
       errorIds.forEach(errorId => {
-        const { unmount } = render(
-          <CriticalError
+        const { unmount } = render(<CriticalError
             {...mockProps}
             errorId={errorId}
-          />
-        )
+          />)
 
         expect(screen.getByText(`Error ID: ${errorId}`)).toBeInTheDocument()
         unmount()
@@ -380,12 +368,10 @@ describe('CriticalError', () => {
     })
 
     it('should handle long error IDs', () => {
-      render(
-        <CriticalError
+      render(<CriticalError
           {...mockProps}
           errorId="error_critical_1234567890_abcdefghijklmnopqrstuvwxyz_very_long_id"
-        />
-      )
+        />)
 
       expect(screen.getByText(/Error ID: error_critical_1234567890/i)).toBeInTheDocument()
     })
@@ -408,12 +394,10 @@ describe('CriticalError', () => {
           `Critical ${type} error message`
         )
 
-        const { unmount } = render(
-          <CriticalError
+        const { unmount } = render(<CriticalError
             {...mockProps}
             error={error}
-          />
-        )
+          />)
 
         expect(screen.getByText('Critical Error')).toBeInTheDocument()
         unmount()
@@ -422,9 +406,7 @@ describe('CriticalError', () => {
 
     it('should maintain functionality across re-renders', () => {
       const onRetrySpy = vi.fn()
-      const { rerender } = render(
-        <CriticalError {...mockProps} onRetry={onRetrySpy} />
-      )
+      const { rerender } = render(<CriticalError {...mockProps} onRetry={onRetrySpy} />)
 
       const refreshButton = screen.getByText('Refresh Page')
       fireEvent.click(refreshButton)
@@ -492,9 +474,7 @@ describe('CriticalError', () => {
     it('should provide clear action instructions', () => {
       render(<CriticalError {...mockProps} />)
 
-      expect(
-        screen.getByText(/A critical error has occurred. Please refresh the page or contact support./i)
-      ).toBeInTheDocument()
+      expect(screen.getByText(/A critical error has occurred. Please refresh the page or contact support./i)).toBeInTheDocument()
     })
 
     it('should suggest both refresh and contact support', () => {

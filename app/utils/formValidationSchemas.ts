@@ -49,7 +49,9 @@ export const CreatePerfumeHouseSchema = z.object({
     .max(50, { message: 'Country must be less than 50 characters' })
     .optional(),
   founded: yearSchema,
-  type: z.enum(['niche', 'designer', 'indie', 'celebrity', 'drugstore']).optional(),
+  type: z.enum([
+'niche', 'designer', 'indie', 'celebrity', 'drugstore'
+]).optional(),
   email: emailSchema.optional(),
   phone: phoneSchema,
   address: z.string()

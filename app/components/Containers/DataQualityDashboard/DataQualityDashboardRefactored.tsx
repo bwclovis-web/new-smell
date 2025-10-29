@@ -1,34 +1,26 @@
+// Import to ensure Chart.js is registered
+import './utils/chartSetup'
+
 import React, { type FC } from 'react'
 
 import AdminCSVControls from './components/AdminCSVControls'
 import DashboardContent from './components/DashboardContent'
 import ErrorDisplay from './components/ErrorDisplay'
 import LoadingIndicator from './components/LoadingIndicator'
-import { type DataQualityStats } from './utils/chartDataUtils'
+import { useFetchDataQualityStats } from './hooks'
 
 interface DataQualityDashboardProps {
   user?: any
   isAdmin?: boolean
 }
 
-// Mock hook for now - this should be replaced with the actual hook
-const useFetchDataQualityStats = (timeframe: 'week' | 'month' | 'all') =>
-// This is a placeholder - replace with actual implementation
-({
-  stats: null as DataQualityStats | null,
-  loading: false,
-  error: null as string | null,
-  setLastFetch: (value: number) => { }
-})
-
-
 const DataQualityDashboard: FC<DataQualityDashboardProps> = ({ user, isAdmin }) => {
   const [timeframe, setTimeframe] = React.useState<'week' | 'month' | 'all'>('month')
-  const { stats, loading, error, setLastFetch } = useFetchDataQualityStats(timeframe)
+  const { stats, loading, error, forceRefresh } = useFetchDataQualityStats(timeframe)
 
   const handleUploadComplete = () => {
-    // Force refresh by updating lastFetch to 0
-    setLastFetch(0)
+    // Force refresh with force=true to regenerate reports immediately
+    forceRefresh(true)
   }
 
   // Render component based on loading/error state

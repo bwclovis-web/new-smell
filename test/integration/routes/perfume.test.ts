@@ -1,12 +1,12 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import type { LoaderFunctionArgs } from 'react-router'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { loader as perfumeLoader } from '~/routes/perfume'
 import * as perfumeServer from '~/models/perfume.server'
 import * as perfumeRatingServer from '~/models/perfumeRating.server'
 import * as perfumeReviewServer from '~/models/perfumeReview.server'
 import * as userServer from '~/models/user.server'
 import * as wishlistServer from '~/models/wishlist.server'
+import { loader as perfumeLoader } from '~/routes/perfume'
 import * as sessionManager from '~/utils/security/session-manager.server'
 
 vi.mock('~/models/perfume.server')
@@ -17,7 +17,7 @@ vi.mock('~/models/wishlist.server')
 vi.mock('~/utils/security/session-manager.server')
 vi.mock('cookie', () => ({
   default: {
-    parse: vi.fn((str) => {
+    parse: vi.fn(str => {
       const obj: Record<string, string> = {}
       if (str) {
         str.split(';').forEach((cookie: string) => {
@@ -116,9 +116,7 @@ describe('Perfume Route Integration Tests', () => {
     it('should handle database errors gracefully', async () => {
       const mockRequest = new Request('https://example.com/perfume/test-perfume')
 
-      vi.mocked(perfumeServer.getPerfumeBySlug).mockRejectedValue(
-        new Error('Database connection failed')
-      )
+      vi.mocked(perfumeServer.getPerfumeBySlug).mockRejectedValue(new Error('Database connection failed'))
 
       const args: LoaderFunctionArgs = {
         request: mockRequest,

@@ -50,9 +50,7 @@ export const bundleStrategies = {
 
   // Vendor splitting
   vendor: {
-    react: [
-      'react', 'react-dom', 'react-router'
-    ],
+    react: ['react', 'react-dom', 'react-router'],
     ui: [
       '@gsap/react', 'gsap', 'zustand', 'react-i18next', 'i18next'
     ],
@@ -206,9 +204,7 @@ export const viteBundleConfig = {
     output: {
       manualChunks: {
         // Core React libraries
-        'react-vendor': [
-          'react', 'react-dom', 'react-router'
-        ],
+        'react-vendor': ['react', 'react-dom', 'react-router'],
 
         // UI and animation libraries
         'ui-vendor': [

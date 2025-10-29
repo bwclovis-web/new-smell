@@ -1,5 +1,6 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render } from '@testing-library/react'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
 import PerformanceMonitor from './PerformanceMonitor'
 
 describe('PerformanceMonitor (Container)', () => {

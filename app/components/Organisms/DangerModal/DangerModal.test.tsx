@@ -1,5 +1,5 @@
-import { render, screen, cleanup } from '@testing-library/react'
-import { describe, expect, it, afterEach } from 'vitest'
+import { cleanup, render, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it } from 'vitest'
 
 import DangerModal from './DangerModal'
 
@@ -28,12 +28,10 @@ describe('DangerModal', () => {
 
   describe('Children', () => {
     it('renders children when provided', () => {
-      render(
-        <DangerModal>
+      render(<DangerModal>
           <button>Cancel</button>
           <button>Confirm</button>
-        </DangerModal>
-      )
+        </DangerModal>)
 
       expect(screen.getByText('Cancel')).toBeInTheDocument()
       expect(screen.getByText('Confirm')).toBeInTheDocument()
@@ -44,25 +42,21 @@ describe('DangerModal', () => {
     })
 
     it('renders complex children', () => {
-      render(
-        <DangerModal>
+      render(<DangerModal>
           <div className="flex gap-2">
             <button className="btn-primary">Confirm Delete</button>
             <button className="btn-secondary">Cancel</button>
           </div>
-        </DangerModal>
-      )
+        </DangerModal>)
 
       expect(screen.getByText('Confirm Delete')).toBeInTheDocument()
       expect(screen.getByText('Cancel')).toBeInTheDocument()
     })
 
     it('renders text children', () => {
-      render(
-        <DangerModal>
+      render(<DangerModal>
           Additional warning text
-        </DangerModal>
-      )
+        </DangerModal>)
 
       expect(screen.getByText('Additional warning text')).toBeInTheDocument()
     })
@@ -104,11 +98,9 @@ describe('DangerModal', () => {
     })
 
     it('applies mt-4 to children container', () => {
-      const { container } = render(
-        <DangerModal>
+      const { container } = render(<DangerModal>
           <button>Test</button>
-        </DangerModal>
-      )
+        </DangerModal>)
 
       const childrenContainer = container.querySelector('.mt-4')
       expect(childrenContainer).toBeInTheDocument()
@@ -130,11 +122,9 @@ describe('DangerModal', () => {
     })
 
     it('wraps children in a div with mt-4', () => {
-      const { container } = render(
-        <DangerModal>
+      const { container } = render(<DangerModal>
           <button>Test Button</button>
-        </DangerModal>
-      )
+        </DangerModal>)
 
       const button = screen.getByText('Test Button')
       const parent = button.parentElement
@@ -142,11 +132,9 @@ describe('DangerModal', () => {
     })
 
     it('maintains proper order: title, warning, children', () => {
-      const { container } = render(
-        <DangerModal>
+      const { container } = render(<DangerModal>
           <button>Action</button>
-        </DangerModal>
-      )
+        </DangerModal>)
 
       const elements = container.querySelectorAll('h2, p, .mt-4')
       expect(elements.length).toBe(3)
@@ -214,28 +202,24 @@ describe('DangerModal', () => {
     })
 
     it('renders with array of children', () => {
-      render(
-        <DangerModal>
+      render(<DangerModal>
           {[
             <button key="1">Button 1</button>,
             <button key="2">Button 2</button>
           ]}
-        </DangerModal>
-      )
+        </DangerModal>)
 
       expect(screen.getByText('Button 1')).toBeInTheDocument()
       expect(screen.getByText('Button 2')).toBeInTheDocument()
     })
 
     it('renders with fragment children', () => {
-      render(
-        <DangerModal>
+      render(<DangerModal>
           <>
             <span>First</span>
             <span>Second</span>
           </>
-        </DangerModal>
-      )
+        </DangerModal>)
 
       expect(screen.getByText('First')).toBeInTheDocument()
       expect(screen.getByText('Second')).toBeInTheDocument()
@@ -249,11 +233,9 @@ describe('DangerModal', () => {
         </div>
       )
 
-      render(
-        <DangerModal>
+      render(<DangerModal>
           <NestedComponent />
-        </DangerModal>
-      )
+        </DangerModal>)
 
       expect(screen.getByText('Nested content')).toBeInTheDocument()
       expect(screen.getByText('Nested button')).toBeInTheDocument()
@@ -262,29 +244,25 @@ describe('DangerModal', () => {
 
   describe('Use Cases', () => {
     it('renders with action buttons', () => {
-      render(
-        <DangerModal>
+      render(<DangerModal>
           <div className="flex gap-2">
             <button className="bg-red-600 text-white px-4 py-2">Delete</button>
             <button className="bg-gray-600 text-white px-4 py-2">Cancel</button>
           </div>
-        </DangerModal>
-      )
+        </DangerModal>)
 
       expect(screen.getByText('Delete')).toBeInTheDocument()
       expect(screen.getByText('Cancel')).toBeInTheDocument()
     })
 
     it('renders with form elements', () => {
-      render(
-        <DangerModal>
+      render(<DangerModal>
           <form>
             <input type="checkbox" id="confirm" />
             <label htmlFor="confirm">I understand</label>
             <button type="submit">Proceed</button>
           </form>
-        </DangerModal>
-      )
+        </DangerModal>)
 
       expect(screen.getByRole('checkbox')).toBeInTheDocument()
       expect(screen.getByText('I understand')).toBeInTheDocument()
@@ -292,14 +270,12 @@ describe('DangerModal', () => {
     })
 
     it('renders with additional warning text', () => {
-      render(
-        <DangerModal>
+      render(<DangerModal>
           <p className="text-red-500 font-bold">
             This action cannot be undone!
           </p>
           <button>I Understand</button>
-        </DangerModal>
-      )
+        </DangerModal>)
 
       expect(screen.getByText('This action cannot be undone!')).toBeInTheDocument()
       expect(screen.getByText('I Understand')).toBeInTheDocument()
@@ -316,11 +292,9 @@ describe('DangerModal', () => {
     })
 
     it('maintains consistent spacing between elements', () => {
-      const { container } = render(
-        <DangerModal>
+      const { container } = render(<DangerModal>
           <button>Test</button>
-        </DangerModal>
-      )
+        </DangerModal>)
 
       const childrenContainer = container.querySelector('.mt-4')
       expect(childrenContainer).toBeInTheDocument()
@@ -355,14 +329,12 @@ describe('DangerModal', () => {
 
   describe('Component Integration', () => {
     it('works as part of a modal system', () => {
-      render(
-        <div className="modal">
+      render(<div className="modal">
           <DangerModal>
             <button>Confirm</button>
             <button>Cancel</button>
           </DangerModal>
-        </div>
-      )
+        </div>)
 
       expect(screen.getByText('Are you sure you want to Remove?')).toBeInTheDocument()
       expect(screen.getByText('Confirm')).toBeInTheDocument()
@@ -370,12 +342,10 @@ describe('DangerModal', () => {
     })
 
     it('integrates with button components', () => {
-      render(
-        <DangerModal>
+      render(<DangerModal>
           <button data-testid="confirm-btn">Confirm</button>
           <button data-testid="cancel-btn">Cancel</button>
-        </DangerModal>
-      )
+        </DangerModal>)
 
       expect(screen.getByTestId('confirm-btn')).toBeInTheDocument()
       expect(screen.getByTestId('cancel-btn')).toBeInTheDocument()

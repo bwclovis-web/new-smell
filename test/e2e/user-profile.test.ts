@@ -41,9 +41,7 @@ test.describe('User Profile & Preferences', () => {
       await page.click('button[type="submit"]')
 
       // Should show success message
-      await expect(
-        page.locator('text=/updated|success/i')
-      ).toBeVisible()
+      await expect(page.locator('text=/updated|success/i')).toBeVisible()
     })
 
     test('should change password', async ({ page }) => {
@@ -61,9 +59,7 @@ test.describe('User Profile & Preferences', () => {
       await page.click('button:has-text("Change Password")')
 
       // Should show success
-      await expect(
-        page.locator('text=/password changed|success/i')
-      ).toBeVisible()
+      await expect(page.locator('text=/password changed|success/i')).toBeVisible()
     })
 
     test('should validate password strength when changing password', async ({
@@ -95,9 +91,7 @@ test.describe('User Profile & Preferences', () => {
       await page.click('button:has-text("Change Password")')
 
       // Should show error
-      await expect(
-        page.locator('text=/current password|required/i')
-      ).toBeVisible()
+      await expect(page.locator('text=/current password|required/i')).toBeVisible()
     })
   })
 
@@ -134,9 +128,7 @@ test.describe('User Profile & Preferences', () => {
       await page.goto('/profile/notifications')
 
       // Find wishlist notification toggle
-      const wishlistToggle = page.locator(
-        '[data-testid="wishlist-notifications"]'
-      )
+      const wishlistToggle = page.locator('[data-testid="wishlist-notifications"]')
 
       // Toggle it
       await wishlistToggle.click()
@@ -194,9 +186,7 @@ test.describe('User Profile & Preferences', () => {
       await page.goto('/profile/privacy')
 
       // Find collection visibility toggle
-      const collectionToggle = page.locator(
-        '[data-testid="collection-visibility"]'
-      )
+      const collectionToggle = page.locator('[data-testid="collection-visibility"]')
 
       if (await collectionToggle.isVisible()) {
         await collectionToggle.click()
@@ -223,9 +213,7 @@ test.describe('User Profile & Preferences', () => {
       await page.goto('/profile/account')
 
       // Should display when account was created
-      await expect(
-        page.locator('text=/member since|joined/i')
-      ).toBeVisible()
+      await expect(page.locator('text=/member since|joined/i')).toBeVisible()
     })
 
     test('should access delete account option', async ({ page }) => {
@@ -314,9 +302,7 @@ test.describe('User Profile & Preferences', () => {
       await signUpPage.submit()
 
       // Should show error
-      await expect(
-        page.locator('text=/already exists|email taken/i')
-      ).toBeVisible()
+      await expect(page.locator('text=/already exists|email taken/i')).toBeVisible()
     })
 
     test('should validate email format', async ({ page }) => {
@@ -344,9 +330,7 @@ test.describe('User Profile & Preferences', () => {
       })
 
       // Should show error about password mismatch
-      await expect(
-        page.locator('text=/passwords.*match|match.*password/i')
-      ).toBeVisible()
+      await expect(page.locator('text=/passwords.*match|match.*password/i')).toBeVisible()
     })
 
     test('should enforce minimum password length', async ({ page }) => {
@@ -357,9 +341,7 @@ test.describe('User Profile & Preferences', () => {
       await page.blur('[name="password"]')
 
       // Should show error
-      await expect(
-        page.locator('text=/password.*short|minimum.*characters/i')
-      ).toBeVisible()
+      await expect(page.locator('text=/password.*short|minimum.*characters/i')).toBeVisible()
     })
   })
 

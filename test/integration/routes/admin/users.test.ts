@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import type { LoaderFunctionArgs, ActionFunctionArgs } from 'react-router'
+import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { loader as usersLoader, action as usersAction } from '~/routes/admin/users'
 import * as adminServer from '~/models/admin.server'
+import { action as usersAction, loader as usersLoader } from '~/routes/admin/users'
 import * as sharedLoader from '~/utils/sharedLoader'
 
 vi.mock('~/models/admin.server')
@@ -91,9 +91,7 @@ describe('Admin Users Route Integration Tests', () => {
 
     it('should handle database errors gracefully', async () => {
       vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(mockAdminUser as any)
-      vi.mocked(adminServer.getAllUsersWithCounts).mockRejectedValue(
-        new Error('Database error')
-      )
+      vi.mocked(adminServer.getAllUsersWithCounts).mockRejectedValue(new Error('Database error'))
 
       const request = new Request('https://example.com/admin/users')
 
@@ -240,9 +238,7 @@ describe('Admin Users Route Integration Tests', () => {
 
     it('should handle database errors during deletion', async () => {
       vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(mockAdminUser as any)
-      vi.mocked(adminServer.deleteUserSafely).mockRejectedValue(
-        new Error('Database error')
-      )
+      vi.mocked(adminServer.deleteUserSafely).mockRejectedValue(new Error('Database error'))
 
       const formData = new FormData()
       formData.append('userId', 'user-1')

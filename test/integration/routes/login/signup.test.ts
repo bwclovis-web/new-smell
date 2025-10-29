@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import type { ActionFunctionArgs } from 'react-router'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { action as signUpAction } from '~/routes/login/SignUpPage'
-import * as userServer from '~/models/user.server'
 import * as sessionServer from '~/models/session.server'
+import * as userServer from '~/models/user.server'
+import { action as signUpAction } from '~/routes/login/SignUpPage'
 
 vi.mock('~/models/user.server')
 vi.mock('~/models/session.server')

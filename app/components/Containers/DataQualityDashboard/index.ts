@@ -1,1 +1,1 @@
-export { default } from './DataQualityDashboard'
+export { default } from './DataQualityDashboardRefactored'

@@ -1,9 +1,9 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import type { ActionFunctionArgs } from 'react-router'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { action as signInAction } from '~/routes/login/SignInPage'
-import * as userServer from '~/models/user.server'
 import * as sessionServer from '~/models/session.server'
+import * as userServer from '~/models/user.server'
+import { action as signInAction } from '~/routes/login/SignInPage'
 
 vi.mock('~/models/user.server')
 vi.mock('~/models/session.server')
@@ -90,9 +90,7 @@ describe('SignIn Route Integration Tests', () => {
     })
 
     it('should handle authentication errors gracefully', async () => {
-      vi.mocked(userServer.signInCustomer).mockRejectedValue(
-        new Error('Authentication failed')
-      )
+      vi.mocked(userServer.signInCustomer).mockRejectedValue(new Error('Authentication failed'))
 
       const formData = new FormData()
       formData.append('email', 'user@example.com')

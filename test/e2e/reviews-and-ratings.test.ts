@@ -82,9 +82,7 @@ test.describe('Reviews and Ratings', () => {
       await perfumePage.waitForPerfumeData()
 
       // Should show average rating from all users
-      await expect(
-        page.locator('[data-testid="average-rating"]')
-      ).toBeVisible()
+      await expect(page.locator('[data-testid="average-rating"]')).toBeVisible()
     })
 
     test('should show rating count', async ({ page }) => {
@@ -144,9 +142,7 @@ test.describe('Reviews and Ratings', () => {
       await page.click('button:has-text("Submit")')
 
       // Should show success
-      await expect(
-        page.locator('text=/review.*submitted|thank you/i')
-      ).toBeVisible()
+      await expect(page.locator('text=/review.*submitted|thank you/i')).toBeVisible()
     })
 
     test('should rate while writing review', async ({ page }) => {
@@ -196,9 +192,7 @@ test.describe('Reviews and Ratings', () => {
       await page.click('button:has-text("Submit")')
 
       // Should show error
-      await expect(
-        page.locator('text=/minimum|too short|more characters/i')
-      ).toBeVisible()
+      await expect(page.locator('text=/minimum|too short|more characters/i')).toBeVisible()
     })
 
     test('should require rating with review', async ({ page }) => {
@@ -222,9 +216,7 @@ test.describe('Reviews and Ratings', () => {
       await page.click('button:has-text("Submit")')
 
       // Should show error about missing rating
-      await expect(
-        page.locator('text=/rating.*required|please.*rate/i')
-      ).toBeVisible()
+      await expect(page.locator('text=/rating.*required|please.*rate/i')).toBeVisible()
     })
 
     test('should save draft review', async ({ page }) => {
@@ -499,9 +491,7 @@ test.describe('Reviews and Ratings', () => {
         await deleteButton.click()
 
         // Should show confirmation
-        await expect(
-          page.locator('text=/confirm|sure|delete/i')
-        ).toBeVisible()
+        await expect(page.locator('text=/confirm|sure|delete/i')).toBeVisible()
       }
     })
 

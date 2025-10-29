@@ -1,8 +1,8 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
 import type { ActionFunctionArgs } from 'react-router'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { action } from '~/routes/api/wishlist'
 import * as wishlistServer from '~/models/wishlist.server'
+import { action } from '~/routes/api/wishlist'
 import * as auth from '~/utils/auth.server'
 
 vi.mock('~/models/wishlist.server')
@@ -177,9 +177,7 @@ describe('Wishlist API Integration Tests', () => {
         user: { id: 'user-123' } as any
       })
 
-      vi.mocked(wishlistServer.addToWishlist).mockRejectedValue(
-        new Error('Database error')
-      )
+      vi.mocked(wishlistServer.addToWishlist).mockRejectedValue(new Error('Database error'))
 
       const formData = new FormData()
       formData.append('perfumeId', 'perfume-456')

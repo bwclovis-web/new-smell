@@ -147,9 +147,7 @@ test.describe('Wishlist Management', () => {
       await page.goto('/wishlist')
 
       // Should show empty state
-      await expect(
-        page.locator('text=/no.*wishlist|empty wishlist|start adding/i')
-      ).toBeVisible()
+      await expect(page.locator('text=/no.*wishlist|empty wishlist|start adding/i')).toBeVisible()
     })
 
     test('should navigate to perfume from wishlist', async ({ page }) => {

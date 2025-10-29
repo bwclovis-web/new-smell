@@ -1,7 +1,9 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+
+import { AppError, ErrorSeverity, ErrorType } from '~/utils/errorHandling'
+
 import ComponentError from './ComponentError'
-import { AppError, ErrorType, ErrorSeverity } from '~/utils/errorHandling'
 
 describe('ComponentError', () => {
   const mockError = new AppError(
@@ -112,12 +114,10 @@ describe('ComponentError', () => {
         'Please check your input and try again.'
       )
 
-      render(
-        <ComponentError
+      render(<ComponentError
           {...mockProps}
           error={validationError}
-        />
-      )
+        />)
 
       expect(screen.getByText('Please check your input and try again.')).toBeInTheDocument()
     })
@@ -131,12 +131,10 @@ describe('ComponentError', () => {
         'Please sign in to continue.'
       )
 
-      render(
-        <ComponentError
+      render(<ComponentError
           {...mockProps}
           error={authError}
-        />
-      )
+        />)
 
       expect(screen.getByText('Please sign in to continue.')).toBeInTheDocument()
     })
@@ -150,12 +148,10 @@ describe('ComponentError', () => {
         'Database error. Please try again later.'
       )
 
-      render(
-        <ComponentError
+      render(<ComponentError
           {...mockProps}
           error={dbError}
-        />
-      )
+        />)
 
       expect(screen.getByText('Database error. Please try again later.')).toBeInTheDocument()
     })
@@ -169,12 +165,10 @@ describe('ComponentError', () => {
         'Network error. Please check your connection and try again.'
       )
 
-      render(
-        <ComponentError
+      render(<ComponentError
           {...mockProps}
           error={networkError}
-        />
-      )
+        />)
 
       expect(screen.getByText('Network error. Please check your connection and try again.')).toBeInTheDocument()
     })
@@ -274,23 +268,19 @@ describe('ComponentError', () => {
         'This is a very long error message that might wrap to multiple lines and should still be displayed correctly without breaking the layout or causing issues.'
       )
 
-      render(
-        <ComponentError
+      render(<ComponentError
           {...mockProps}
           error={longError}
-        />
-      )
+        />)
 
       expect(screen.getByText(/This is a very long error message/i)).toBeInTheDocument()
     })
 
     it('should handle long error IDs', () => {
-      render(
-        <ComponentError
+      render(<ComponentError
           {...mockProps}
           errorId="error_1234567890_abcdefghijklmnop"
-        />
-      )
+        />)
 
       expect(screen.getByText('Error ID: error_1234567890_abcdefghijklmnop')).toBeInTheDocument()
     })
@@ -304,12 +294,10 @@ describe('ComponentError', () => {
         'Error message with <special> & "characters"'
       )
 
-      render(
-        <ComponentError
+      render(<ComponentError
           {...mockProps}
           error={specialCharError}
-        />
-      )
+        />)
 
       expect(screen.getByText('Error message with <special> & "characters"')).toBeInTheDocument()
     })
@@ -363,12 +351,10 @@ describe('ComponentError', () => {
       ]
 
       errorIds.forEach(errorId => {
-        const { unmount } = render(
-          <ComponentError
+        const { unmount } = render(<ComponentError
             {...mockProps}
             errorId={errorId}
-          />
-        )
+          />)
 
         expect(screen.getByText(`Error ID: ${errorId}`)).toBeInTheDocument()
         unmount()
@@ -377,9 +363,7 @@ describe('ComponentError', () => {
 
     it('should maintain functionality across re-renders', () => {
       const onRetrySpy = vi.fn()
-      const { rerender } = render(
-        <ComponentError {...mockProps} onRetry={onRetrySpy} />
-      )
+      const { rerender } = render(<ComponentError {...mockProps} onRetry={onRetrySpy} />)
 
       const retryButton = screen.getByText('Retry')
       fireEvent.click(retryButton)

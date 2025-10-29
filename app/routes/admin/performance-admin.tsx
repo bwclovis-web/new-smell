@@ -43,6 +43,7 @@ export const meta: MetaFunction = () => [
 ]
 
 const PerformanceAdmin: React.FC = () => {
+  const { user } = useOutletContext<{ user: any }>()
   const [activeTab, setActiveTab] = useState<'overview' | 'dashboard' | 'alerts' | 'optimizer' | 'tracer' | 'settings' | 'reports'>('overview')
   const [settings, setSettings] = useState<PerformanceSettings>({
     monitoring: {

@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { loader as homeLoader } from '~/routes/home'
 import * as featureServer from '~/models/feature.server'
+import { loader as homeLoader } from '~/routes/home'
 
 vi.mock('~/models/feature.server')
 
@@ -50,9 +50,7 @@ describe('Home Route Integration Tests', () => {
     })
 
     it('should handle errors gracefully', async () => {
-      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(
-        new Error('Database error')
-      )
+      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(new Error('Database error'))
 
       await expect(homeLoader()).rejects.toThrow('Database error')
     })
@@ -81,17 +79,13 @@ describe('Home Route Integration Tests', () => {
 
   describe('Error Handling', () => {
     it('should propagate network errors', async () => {
-      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(
-        new Error('Network error')
-      )
+      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(new Error('Network error'))
 
       await expect(homeLoader()).rejects.toThrow('Network error')
     })
 
     it('should propagate database connection errors', async () => {
-      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(
-        new Error('Database connection failed')
-      )
+      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(new Error('Database connection failed'))
 
       await expect(homeLoader()).rejects.toThrow('Database connection failed')
     })
