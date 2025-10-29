@@ -87,16 +87,16 @@ describe('VooDooCheck', () => {
       render(<VooDooCheck {...defaultProps} />)
 
       const checkbox = screen.getByRole('checkbox')
-      const container = checkbox.parentElement
+      const label = checkbox.closest('label')
 
-      expect(container).toHaveClass('flex', 'cursor-pointer', 'select-none', 'items-center')
+      expect(label).toHaveClass('flex', 'cursor-pointer', 'select-none', 'items-center')
     })
 
     it('should have proper toggle container styling', () => {
       render(<VooDooCheck {...defaultProps} />)
 
       const checkbox = screen.getByRole('checkbox')
-      const toggleContainer = checkbox.parentElement?.querySelector('.relative')
+      const toggleContainer = checkbox.parentElement
 
       expect(toggleContainer).toHaveClass('relative', 'rounded-full', 'border-noir-gold-100', 'border-2')
     })
@@ -137,7 +137,7 @@ describe('VooDooCheck', () => {
       render(<VooDooCheck {...defaultProps} onChange={onChange} />)
 
       const checkbox = screen.getByRole('checkbox')
-      const toggleContainer = checkbox.parentElement?.querySelector('.relative')
+      const toggleContainer = checkbox.parentElement
 
       fireEvent.click(toggleContainer!)
 
@@ -167,9 +167,9 @@ describe('VooDooCheck', () => {
       render(<VooDooCheck {...defaultProps} />)
 
       const checkbox = screen.getByRole('checkbox')
-      const container = checkbox.parentElement
+      const label = checkbox.closest('label')
 
-      expect(container).toHaveClass('cursor-pointer')
+      expect(label).toHaveClass('cursor-pointer')
     })
   })
 
@@ -190,10 +190,10 @@ describe('VooDooCheck', () => {
 
     it('should handle custom label text', () => {
       render(<VooDooCheck
-          {...defaultProps}
-          labelChecked="Enabled"
-          labelUnchecked="Disabled"
-        />)
+        {...defaultProps}
+        labelChecked="Enabled"
+        labelUnchecked="Disabled"
+      />)
 
       expect(screen.getByText('Disabled')).toBeInTheDocument()
       expect(screen.queryByText('Enabled')).not.toBeInTheDocument()
@@ -242,10 +242,10 @@ describe('VooDooCheck', () => {
   describe('Edge cases', () => {
     it('should handle empty label text', () => {
       render(<VooDooCheck
-          {...defaultProps}
-          labelChecked=""
-          labelUnchecked=""
-        />)
+        {...defaultProps}
+        labelChecked=""
+        labelUnchecked=""
+      />)
 
       const checkbox = screen.getByRole('checkbox')
       expect(checkbox).toBeInTheDocument()
@@ -254,10 +254,10 @@ describe('VooDooCheck', () => {
     it('should handle very long label text', () => {
       const longLabel = 'This is a very long label text that might wrap or overflow'
       render(<VooDooCheck
-          {...defaultProps}
-          labelChecked={longLabel}
-          labelUnchecked={longLabel}
-        />)
+        {...defaultProps}
+        labelChecked={longLabel}
+        labelUnchecked={longLabel}
+      />)
 
       expect(screen.getByText(longLabel)).toBeInTheDocument()
     })
@@ -265,10 +265,10 @@ describe('VooDooCheck', () => {
     it('should handle special characters in label text', () => {
       const specialLabel = 'On/Off & More!'
       render(<VooDooCheck
-          {...defaultProps}
-          labelChecked={specialLabel}
-          labelUnchecked={specialLabel}
-        />)
+        {...defaultProps}
+        labelChecked={specialLabel}
+        labelUnchecked={specialLabel}
+      />)
 
       expect(screen.getByText(specialLabel)).toBeInTheDocument()
     })

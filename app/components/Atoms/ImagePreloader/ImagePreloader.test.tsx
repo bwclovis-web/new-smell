@@ -6,23 +6,7 @@ import ImagePreloader from './ImagePreloader'
 // Mock DOM APIs
 const mockIntersectionObserver = vi.fn()
 const mockRequestIdleCallback = vi.fn()
-const mockSetTimeout = vi.fn()
-
-// Mock global objects
-Object.defineProperty(window, 'IntersectionObserver', {
-  writable: true,
-  value: mockIntersectionObserver
-})
-
-Object.defineProperty(window, 'requestIdleCallback', {
-  writable: true,
-  value: mockRequestIdleCallback
-})
-
-Object.defineProperty(global, 'setTimeout', {
-  writable: true,
-  value: mockSetTimeout
-})
+const mockImage = vi.fn()
 
 describe('ImagePreloader', () => {
   let mockDocumentHead: HTMLElement
@@ -35,14 +19,16 @@ describe('ImagePreloader', () => {
     mockDocumentHead = document.createElement('head')
     Object.defineProperty(document, 'head', {
       value: mockDocumentHead,
-      writable: true
+      writable: true,
+      configurable: true
     })
 
     // Mock document.querySelectorAll
     mockDocumentQuerySelectorAll = vi.fn().mockReturnValue([])
     Object.defineProperty(document, 'querySelectorAll', {
       value: mockDocumentQuerySelectorAll,
-      writable: true
+      writable: true,
+      configurable: true
     })
 
     // Mock IntersectionObserver
@@ -50,8 +36,33 @@ describe('ImagePreloader', () => {
       observe: vi.fn(),
       unobserve: vi.fn(),
       disconnect: vi.fn(),
+      root: null,
+      rootMargin: '',
+      thresholds: [],
+      takeRecords: vi.fn(() => []),
       callback
     }))
+    Object.defineProperty(window, 'IntersectionObserver', {
+      writable: true,
+      configurable: true,
+      value: mockIntersectionObserver
+    })
+
+    // Mock requestIdleCallback
+    Object.defineProperty(window, 'requestIdleCallback', {
+      writable: true,
+      configurable: true,
+      value: mockRequestIdleCallback
+    })
+
+    // Mock Image constructor
+    mockImage.mockImplementation(() => ({
+      src: '',
+      loading: '',
+      decoding: '',
+      dataset: {}
+    }))
+    global.Image = mockImage as any
   })
 
   afterEach(() => {
@@ -68,9 +79,9 @@ describe('ImagePreloader', () => {
       expect(preloadLinks).toHaveLength(2)
 
       expect(preloadLinks[0]).toHaveAttribute('href', 'image1.jpg')
-      expect(preloadLinks[0]).toHaveAttribute('fetchPriority', 'high')
+      expect(preloadLinks[0]).toHaveAttribute('fetchpriority', 'high')
       expect(preloadLinks[1]).toHaveAttribute('href', 'image2.jpg')
-      expect(preloadLinks[1]).toHaveAttribute('fetchPriority', 'high')
+      expect(preloadLinks[1]).toHaveAttribute('fetchpriority', 'high')
     })
 
     it('should handle empty images array for high priority', () => {
@@ -97,11 +108,10 @@ describe('ImagePreloader', () => {
 
     it('should create Image objects for lazy loading', () => {
       const images = ['image1.jpg', 'image2.jpg']
-      const ImageSpy = vi.spyOn(global, 'Image')
 
       render(<ImagePreloader images={images} priority="low" lazy />)
 
-      expect(ImageSpy).toHaveBeenCalledTimes(2)
+      expect(mockImage).toHaveBeenCalledTimes(2)
     })
 
     it('should not use IntersectionObserver when lazy is false', () => {
@@ -122,33 +132,33 @@ describe('ImagePreloader', () => {
 
     it('should fallback to setTimeout when requestIdleCallback is not available', () => {
       // Remove requestIdleCallback
-      Object.defineProperty(window, 'requestIdleCallback', {
-        value: undefined,
-        writable: true
-      })
+      delete (window as any).requestIdleCallback
 
+      vi.useFakeTimers()
       const images = ['image1.jpg']
       render(<ImagePreloader images={images} priority="low" lazy={false} />)
 
-      expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 1000)
+      expect(vi.getTimerCount()).toBeGreaterThan(0)
+      vi.runAllTimers()
+
+      const preloadLinks = mockDocumentHead.querySelectorAll('link[rel="preload"][as="image"]')
+      expect(preloadLinks).toHaveLength(1)
+
+      vi.useRealTimers()
     })
 
     it('should create preload links with low priority', () => {
       const images = ['image1.jpg']
-      const callback = vi.fn()
       mockRequestIdleCallback.mockImplementation(fn => {
-        callback.mockImplementation(fn)
         fn() // Execute immediately for testing
       })
 
       render(<ImagePreloader images={images} priority="low" lazy={false} />)
 
-      callback()
-
       const preloadLinks = mockDocumentHead.querySelectorAll('link[rel="preload"][as="image"]')
       expect(preloadLinks).toHaveLength(1)
       expect(preloadLinks[0]).toHaveAttribute('href', 'image1.jpg')
-      expect(preloadLinks[0]).toHaveAttribute('fetchPriority', 'low')
+      expect(preloadLinks[0]).toHaveAttribute('fetchpriority', 'low')
     })
   })
 
@@ -192,7 +202,7 @@ describe('ImagePreloader', () => {
   describe('Default behavior', () => {
     it('should use low priority by default', () => {
       const images = ['image1.jpg']
-      render(<ImagePreloader images={images} />)
+      render(<ImagePreloader images={images} lazy={false} />)
 
       expect(mockRequestIdleCallback).toHaveBeenCalled()
     })
@@ -215,17 +225,19 @@ describe('ImagePreloader', () => {
 
   describe('Edge cases', () => {
     it('should handle empty images array', () => {
-      render(<ImagePreloader images={[]} />)
+      const { container } = render(<ImagePreloader images={[]} />)
 
       expect(mockIntersectionObserver).not.toHaveBeenCalled()
       expect(mockRequestIdleCallback).not.toHaveBeenCalled()
+      expect(container.firstChild).toBeNull()
     })
 
     it('should handle undefined images', () => {
-      render(<ImagePreloader images={undefined as any} />)
+      const { container } = render(<ImagePreloader images={undefined as any} />)
 
-      // Should not throw error
-      expect(true).toBe(true)
+      // Should not throw error and should not render
+      expect(container.firstChild).toBeNull()
+      expect(mockIntersectionObserver).not.toHaveBeenCalled()
     })
 
     it('should handle images with special characters', () => {

@@ -10,6 +10,11 @@ const ImagePreloader = ({ images, priority = 'low', lazy = true }: ImagePreloade
   const observerRef = useRef<IntersectionObserver | null>(null)
 
   useEffect(() => {
+    // Early return if images is empty or undefined
+    if (!images || images.length === 0) {
+      return
+    }
+
     if (priority === 'high') {
       // High priority: preload immediately
       images.forEach(src => {
@@ -17,7 +22,7 @@ const ImagePreloader = ({ images, priority = 'low', lazy = true }: ImagePreloade
         link.rel = 'preload'
         link.as = 'image'
         link.href = src
-        link.fetchPriority = 'high'
+        link.setAttribute('fetchpriority', 'high')
         document.head.appendChild(link)
       })
     } else if (lazy && 'IntersectionObserver' in window) {
@@ -50,14 +55,14 @@ const ImagePreloader = ({ images, priority = 'low', lazy = true }: ImagePreloade
       })
     } else {
       // Low priority: preload when idle
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(() => {
+      if ('requestIdleCallback' in window && typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(() => {
           images.forEach(src => {
             const link = document.createElement('link')
             link.rel = 'preload'
             link.as = 'image'
             link.href = src
-            link.fetchPriority = 'low'
+            link.setAttribute('fetchpriority', 'low')
             document.head.appendChild(link)
           })
         })
@@ -69,7 +74,7 @@ const ImagePreloader = ({ images, priority = 'low', lazy = true }: ImagePreloade
             link.rel = 'preload'
             link.as = 'image'
             link.href = src
-            link.fetchPriority = 'low'
+            link.setAttribute('fetchpriority', 'low')
             document.head.appendChild(link)
           })
         }, 1000)
