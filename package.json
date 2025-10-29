@@ -62,7 +62,7 @@
     "test:update-snapshots": "vitest run --update-snapshots",
     "test:clean": "rm -rf test-results coverage .nyc_output",
     "typecheck": "react-router typegen && tsc",
-    "postinstall": "prisma generate --no-engine"
+    "postinstall": "node scripts/postinstall.cjs"
   },
   "dependencies": {
     "@conform-to/react": "^1.6.1",
