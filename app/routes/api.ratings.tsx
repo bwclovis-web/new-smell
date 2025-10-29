@@ -1,4 +1,4 @@
-import type { ActionFunction } from 'react-router-dom'
+import type { ActionFunction } from 'react-router'
 
 import { createPerfumeRating, getUserPerfumeRating, updatePerfumeRating } from '~/models/perfumeRating.server'
 import { authenticateUser } from '~/utils/auth.server'

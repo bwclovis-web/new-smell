@@ -9,9 +9,9 @@ import {
   NavLink,
   useLoaderData,
   useLocation,
-  useNavigate
+  useNavigate,
+  useOutletContext
 } from 'react-router'
-import { useOutletContext } from 'react-router-dom'
 
 import { Button, VooDooLink } from '~/components/Atoms/Button/Button'
 import PerfumeHouseAddressBlock from '~/components/Containers/PerfumeHouse/AddressBlock/PerfumeHouseAddressBlock'

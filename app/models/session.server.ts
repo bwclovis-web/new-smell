@@ -1,6 +1,6 @@
 // app/models/session.server.ts
 import cookie from 'cookie'
-import { redirect } from 'react-router-dom'
+import { redirect } from 'react-router'
 
 import { ROUTE_PATH as ADMIN_PROFILE } from '~/routes/admin/profilePage'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
@@ -10,9 +10,10 @@ import {
   invalidateAllUserSessions,
   invalidateSession,
   refreshAccessToken,
-  verifyAccessToken} from '~/utils/security/session-manager.server'
+  verifyAccessToken
+} from '~/utils/security/session-manager.server'
 
-import { getUserById } from './user.server'
+import { getUserById } from './user.query'
 export async function getUser(context: { userSession: any }) {
   const userId = context?.userSession?.userId
   if (!userId) {

@@ -1,4 +1,4 @@
-import { useActionData, useNavigation } from 'react-router-dom'
+import { useActionData, useNavigation } from 'react-router'
 
 import ChangePasswordForm from '~/components/Molecules/ChangePasswordForm/ChangePasswordForm'
 import { changePassword } from '~/models/user.server'

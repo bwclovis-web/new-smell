@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from 'react-router'
-import { useLoaderData } from 'react-router-dom'
+import { useLoaderData } from 'react-router'
 
 import MyScentsListItem from '~/components/Containers/MyScents/MyScentListItem'
 import { VirtualScrollList } from '~/components/Molecules/VirtualScrollList'

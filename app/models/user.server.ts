@@ -7,6 +7,9 @@ import {
   verifyPassword
 } from '~/utils/security/password-security.server'
 
+// Re-export query functions from user.query to maintain backwards compatibility
+export { getUserById, getUserByName, getUserByEmail, getAllUsers } from './user.query'
+
 
 
 export const createUser = async (data: FormData) => {
@@ -32,23 +35,6 @@ export const createUser = async (data: FormData) => {
     }
   })
   return user
-}
-
-export const getUserByName = async (email: string) => {
-  const user = await prisma.user.findUnique({
-    where: { email },
-    select: {
-      id: true,
-      email: true,
-      password: true,
-      role: true
-    }
-  })
-  return user
-}
-
-export async function getUserById(id: string) {
-  return prisma.user.findUnique({ where: { id } })
 }
 
 export const getTraderById = async (id: string) => {

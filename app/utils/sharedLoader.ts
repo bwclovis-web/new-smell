@@ -2,7 +2,7 @@
 import cookie from 'cookie'
 import { redirect } from 'react-router'
 
-import { getUserById } from '~/models/user.server'
+import { getUserById } from '~/models/user.query'
 import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
 import { createSafeUser } from '~/types'
 import { refreshAccessToken, verifyAccessToken } from '~/utils/security/session-manager.server'

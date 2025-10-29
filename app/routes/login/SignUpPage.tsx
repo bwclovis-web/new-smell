@@ -14,7 +14,7 @@ import { UserFormSchema } from '~/utils/formValidationSchemas'
 export const ROUTE_PATH = '/sign-up'
 
 import { useTranslation } from 'react-i18next'
-import type { ActionFunctionArgs } from 'react-router-dom'
+import type { ActionFunctionArgs } from 'react-router'
 
 import { Button } from '~/components/Atoms/Button'
 import CheckBox from '~/components/Atoms/CheckBox'

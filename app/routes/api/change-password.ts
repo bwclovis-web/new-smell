@@ -1,4 +1,4 @@
-import { type ActionFunctionArgs } from 'react-router-dom'
+import { type ActionFunctionArgs } from 'react-router'
 
 import { requireUser } from '~/models/session.server'
 import { changePassword } from '~/models/user.server'

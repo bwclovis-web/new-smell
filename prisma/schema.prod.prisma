@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "@prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNjAyM2MyMjMtNzc1YS00MTA1LWExMmYtZWZjNzg1MjJlOWJmIiwidGVuYW50X2lkIjoiYTk4Nzc2ZTVmNzEzNWVlZWNiMzIwYTMwMjc3ZWFiNzk1ZjkxYjlmZDM3ODNlNzJmMzNlZDgwZDM2YzU0YzNjMSIsImludGVybmFsX3NlY3JldCI6IjU0NTQyODg0LTY0ZDItNGEyNS04YTgxLTY1ODgwOTUwYzFmNyJ9.kd6Lq7bADQ59I_7Kj0sKC_Co1-19NFpNx-5cMSKOG6o"
+  url      = env("DATABASE_URL")
 }
 
 model User {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { type MetaFunction } from 'react-router'
-import { useOutletContext } from 'react-router-dom'
+import { type MetaFunction, useOutletContext } from 'react-router'
 
 import VooDooCheck from '~/components/Atoms/VooDooCheck/VooDooCheck'
 import { ConditionalPerformanceLoader } from '~/components/Performance'

@@ -3,7 +3,7 @@ import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Form, useActionData, useLoaderData } from 'react-router'
-import type { ActionFunctionArgs } from 'react-router-dom'
+import type { ActionFunctionArgs } from 'react-router'
 
 import { Button } from '~/components/Atoms/Button/Button'
 import Input from '~/components/Atoms/Input/Input'
