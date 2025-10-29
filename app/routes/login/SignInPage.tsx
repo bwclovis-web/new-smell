@@ -18,24 +18,26 @@ import { UserLogInSchema } from '~/utils/formValidationSchemas'
 export const ROUTE_PATH = '/sign-in'
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
+  let formData: FormData
   try {
-    const formData = await request.formData()
+    formData = await request.formData()
 
     const existingUser = await signInCustomer(formData)
     if (!existingUser) {
       return { error: 'Invalid email or password' }
     }
 
-    await login({ context, userId: existingUser.id, redirectTo: ADMIN_PATH })
+    await login({ context: {} as any, userId: existingUser.id, redirectTo: ADMIN_PATH })
     return { success: true }
   } catch (error) {
-    if (error instanceof Response && error.status === 302) {
+    // Re-throw redirects (302 or 303 status codes)
+    if (error instanceof Response && (error.status === 302 || error.status === 303)) {
       throw error
     }
 
     // Use centralized error handling
     const appError = AuthErrorHandler.handle(error, {
-      formData: Object.fromEntries(await request.formData()),
+      formData: formData ? Object.fromEntries(formData) : {},
       action: 'signIn'
     })
 

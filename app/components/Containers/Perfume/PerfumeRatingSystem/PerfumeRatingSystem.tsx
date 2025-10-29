@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import SimpleNoirRating from '~/components/Organisms/SimpleNoirRating'
+import NoirRating from '~/components/Organisms/NoirRating'
 import { useRatingSystem } from '~/hooks'
 
 interface PerfumeRatingSystemProps {
@@ -65,7 +65,7 @@ const PerfumeRatingSystem = ({
             </h4>
 
             <div className="flex flex-col items-center gap-2">
-              <SimpleNoirRating
+              <NoirRating
                 category={key}
                 value={currentRatings?.[key]}
                 onChange={(rating: number) => handleRatingChange(key, rating)}
@@ -76,10 +76,10 @@ const PerfumeRatingSystem = ({
               <div className="text-xs text-noir-gold-100 text-center">
                 {averageRatings && averageRatings[key] ? (
                   <>
-                    Community Average: {averageRatings[key]?.toFixed(1)}/5 {t('singlePerfume.rating.communityAverage')}
+                    {t('singlePerfume.rating.communityAverage')}: {averageRatings[key]?.toFixed(1)}/5
                     {averageRatings.totalRatings > 0 && (
                       <span className="ml-1">
-                        ({averageRatings.totalRatings} {t('singlePerfume.rating.totalRatings', { count: averageRatings.totalRatings })})
+                        ({averageRatings.totalRatings} {averageRatings.totalRatings === 1 ? t('singlePerfume.rating.vote') : t('singlePerfume.rating.votes')})
                       </span>
                     )}
                   </>

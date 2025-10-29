@@ -6,6 +6,7 @@ import {
   validatePasswordComplexity,
   verifyPassword
 } from '~/utils/security/password-security.server'
+import { getUserByName, getUserByEmail } from './user.query'
 
 // Re-export query functions from user.query to maintain backwards compatibility
 export { getUserById, getUserByName, getUserByEmail, getAllUsers } from './user.query'
@@ -139,7 +140,7 @@ export const getTraderById = async (id: string) => {
 export const signInCustomer = async (data: FormData) => {
   const password = data.get('password') as string
   const email = data.get('email') as string
-  const user = await getUserByName(email)
+  const user = await getUserByEmail(email)
   if (!user) {
     return null
   }

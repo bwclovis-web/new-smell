@@ -40,7 +40,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
 
   // Create user and log them in
   const user = await createUser(formData)
-  return await login({ context, userId: user.id })
+  return await login({ context: {} as any, userId: user.id })
 }
 
 const RegisterPage = () => {
