@@ -46,6 +46,9 @@ export default defineConfig({
     // Let React Router 7 handle build configuration when using vercelPreset
     // Custom rollupOptions can conflict with React Router's build process
   },
+  ssr: {
+    noExternal: ['@mjackson/node-fetch-server'],
+  },
   optimizeDeps: {
     esbuildOptions: {
       target: 'es2022'
