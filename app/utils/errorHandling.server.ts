@@ -387,7 +387,7 @@ export function withLoaderErrorHandling<T extends LoaderFunction>(
         path: args.request.url
       })
 
-      // Log the error
+      // Log the error (with correlation ID if available)
       ErrorLogger.getInstance().log(appError)
 
       // Handle authentication errors
@@ -442,7 +442,7 @@ export function withActionErrorHandling<T extends ActionFunction>(
         path: args.request.url
       })
 
-      // Log the error
+      // Log the error (with correlation ID if available)
       ErrorLogger.getInstance().log(appError)
 
       // Return user-friendly error

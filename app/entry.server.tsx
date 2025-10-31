@@ -10,6 +10,8 @@ import { ServerRouter } from 'react-router'
 
 import { NonceProvider } from '~/hooks/use-nonce'
 import i18n from '~/modules/i18n/i18n.server'
+import { generateCorrelationId, setCorrelationId } from '~/utils/correlationId.server'
+
 export const streamTimeout = 5_000
 
 // eslint-disable-next-line max-params
@@ -20,6 +22,15 @@ export default function handleRequest(
   routerContext: EntryContext,
   loadContext: AppLoadContext
 ) {
+  // Generate and set correlation ID for request tracing
+  // If the request already has a correlation ID (e.g., from a previous service),
+  // use it to maintain the trace. Otherwise, generate a new one.
+  const correlationId = request.headers.get('X-Correlation-ID') || generateCorrelationId()
+  setCorrelationId(correlationId)
+
+  // Add correlation ID to response headers so clients can reference it
+  responseHeaders.set('X-Correlation-ID', correlationId)
+
   return new Promise((resolve, reject) => {
     const language = (loadContext as any).i18n?.language ?? 'en'
     const cspNonce = (loadContext as any).cspNonce

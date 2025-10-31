@@ -13,7 +13,8 @@
       "dataQuality": "Calidad de Datos",
       "userManagement": "Gestión de Usuarios",
       "securityMonitor": "Monitor de Seguridad",
-      "performanceAdmin": "Administración de Rendimiento"
+      "performanceAdmin": "Administración de Rendimiento",
+      "errorAnalytics": "Análisis de Errores"
     }
   },
   "allHouses": {

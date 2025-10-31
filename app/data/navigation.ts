@@ -3,6 +3,7 @@ import { ROUTE_PATH as CHANGE_PASSWORD } from '~/routes/admin/change-password'
 import { ROUTE_PATH as CREATE_HOUSE } from '~/routes/admin/CreatePerfumeHousePage'
 import { ROUTE_PATH as CREATE_PERFUME } from '~/routes/admin/CreatePerfumePage'
 import { ROUTE_PATH as DATA_QUALITY } from '~/routes/admin/data-quality'
+import { ROUTE_PATH as ERROR_ANALYTICS } from '~/routes/admin.error-analytics'
 import { ROUTE_PATH as MY_SCENTS } from '~/routes/admin/MyScents'
 import { ROUTE_PATH as PERFORMANCE_ADMIN } from '~/routes/admin/performance-admin'
 import { ROUTE_PATH as SECURITY_MONITOR } from '~/routes/admin/security-monitor'
@@ -87,6 +88,12 @@ export const adminNavigation = [
     label: 'performance admin',
     key: 'performanceAdmin',
     path: PERFORMANCE_ADMIN
+  },
+  {
+    id: '7',
+    label: 'error analytics',
+    key: 'errorAnalytics',
+    path: ERROR_ANALYTICS
   }
 ]
 

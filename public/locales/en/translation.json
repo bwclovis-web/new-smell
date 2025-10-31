@@ -13,7 +13,8 @@
       "dataQuality": "Data Quality",
       "userManagement": "User Management",
       "securityMonitor": "Security Monitor",
-      "performanceAdmin": "Performance Admin"
+      "performanceAdmin": "Performance Admin",
+      "errorAnalytics": "Error Analytics"
     }
   },
   "aboutUs": {

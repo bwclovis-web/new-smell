@@ -182,11 +182,37 @@ export const createError = {
   unknown: (message: string = 'Unknown error', context?: Record<string, any>) => new AppError(message, ErrorType.UNKNOWN, ErrorSeverity.MEDIUM, 'UNKNOWN_ERROR', undefined, context)
 }
 
+// Import correlation ID utilities (only available on server)
+// We use a function to safely get the correlation ID without breaking client-side code
+function getCorrelationId(): string | undefined {
+  // Check if we're on the client side
+  if (typeof window !== 'undefined') {
+    return undefined
+  }
+  
+  // Server-side: try to get correlation ID from AsyncLocalStorage
+  try {
+    // Use require for conditional server-only import
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { getCorrelationId: getCorrelationIdFunc } = require('./correlationId.server')
+    return getCorrelationIdFunc()
+  } catch {
+    // If import fails (e.g., during build), return undefined
+    return undefined
+  }
+}
+
 // Error Logger
 export class ErrorLogger {
   private static instance: ErrorLogger
 
-  private logs: Array<{ id: string; error: AppError; timestamp: Date; userId?: string }> = []
+  private logs: Array<{ 
+    id: string
+    correlationId?: string
+    error: AppError
+    timestamp: Date
+    userId?: string 
+  }> = []
 
   private readonly MAX_LOGS = 1000 // Prevent memory leaks
 
@@ -200,8 +226,12 @@ export class ErrorLogger {
   }
 
   log(error: AppError, userId?: string): void {
+    // Get correlation ID if available (server-side only)
+    const correlationId = getCorrelationId()
+    
     const logEntry = {
       id: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      correlationId,
       error,
       timestamp: new Date(),
       userId
@@ -218,6 +248,7 @@ export class ErrorLogger {
     if (process.env.NODE_ENV === 'development') {
       console.error('[ErrorLogger]', {
         id: logEntry.id,
+        correlationId: logEntry.correlationId,
         error: error.toJSON(true), // Include stack in development
         userId: userId,
         timestamp: logEntry.timestamp.toISOString()
@@ -226,16 +257,17 @@ export class ErrorLogger {
 
     // In production, you might want to send to external logging service
     if (process.env.NODE_ENV === 'production') {
-      this.sendToExternalLogger(error, userId)
+      this.sendToExternalLogger(error, userId, correlationId)
     }
   }
 
-  private sendToExternalLogger(error: AppError, userId?: string): void {
+  private sendToExternalLogger(error: AppError, userId?: string, correlationId?: string): void {
     // TODO: Implement external logging service integration
     // Examples: Sentry, LogRocket, DataDog, etc.
     // Note: Always use sanitized context for external logging
     const sanitizedLog = {
       ...error.toJSON(false), // Never include stack in production external logs
+      correlationId,
       userId: userId,
       timestamp: new Date().toISOString()
     }
@@ -244,7 +276,13 @@ export class ErrorLogger {
     console.error('[Production Error]', sanitizedLog)
   }
 
-  getLogs(limit?: number): Array<{ id: string; error: AppError; timestamp: Date; userId?: string }> {
+  getLogs(limit?: number): Array<{ 
+    id: string
+    correlationId?: string
+    error: AppError
+    timestamp: Date
+    userId?: string 
+  }> {
     return limit ? this.logs.slice(-limit) : this.logs
   }
 

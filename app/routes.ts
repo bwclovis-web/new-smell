@@ -42,6 +42,7 @@ export default [
     route('api/user-alerts/:alertId/dismiss', 'routes/api/user-alerts.$alertId.dismiss.tsx'),
     route('api/user-alerts/:userId/dismiss-all', 'routes/api/user-alerts.$userId.dismiss-all.tsx'),
     route('api/user-alerts/:userId/preferences', 'routes/api/user-alerts.$userId.preferences.tsx'),
+    route('api/error-analytics', 'routes/api/error-analytics.tsx'),
 
     layout('routes/admin/AdminLayout.tsx', [
       route('admin/', 'routes/admin/adminIndex.tsx'),
@@ -56,6 +57,7 @@ export default [
       route('admin/users', 'routes/admin/users.tsx'),
       route('admin/security-monitor', 'routes/admin/security-monitor.tsx'),
       route('admin/performance-admin', 'routes/admin/performance-admin.tsx'),
+      route('admin/error-analytics', 'routes/admin.error-analytics.tsx'),
       route('admin/change-password', 'routes/admin/change-password.tsx')
     ]),
 
