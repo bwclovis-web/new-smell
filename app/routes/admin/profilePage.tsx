@@ -13,6 +13,7 @@ import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import { getUnreadAlertCount, getUserAlertPreferences, getUserAlerts } from '~/models/user-alerts.server'
 import type { SafeUser } from '~/types'
 import { UpdateProfileSchema } from '~/utils/formValidationSchemas'
+import { withActionErrorHandling, withLoaderErrorHandling } from '~/utils/errorHandling.server'
 import { sharedLoader } from '~/utils/sharedLoader'
 import { getUserDisplayName } from '~/utils/user'
 
@@ -25,14 +26,14 @@ type ActionData =
   | { success: true }
   | { errors: Record<string, string[] | null> }
 
-export const loader = async ({ request }: { request: Request }) => {
-  const user = await sharedLoader(request)
+export const loader = withLoaderErrorHandling(
+  async ({ request }: { request: Request }) => {
+    const user = await sharedLoader(request)
 
-  if (!user) {
-    return { user: null, alerts: [], preferences: null, unreadCount: 0 }
-  }
+    if (!user) {
+      return { user: null, alerts: [], preferences: null, unreadCount: 0 }
+    }
 
-  try {
     const [alerts, preferences, unreadCount] = await Promise.all([
       getUserAlerts(user.id),
       getUserAlertPreferences(user.id),
@@ -45,16 +46,11 @@ export const loader = async ({ request }: { request: Request }) => {
       preferences,
       unreadCount
     }
-  } catch (error) {
-    console.error('Error loading user profile data:', error)
-    return {
-      user,
-      alerts: [],
-      preferences: null,
-      unreadCount: 0
-    }
+  },
+  {
+    context: { page: 'profile' }
   }
-}
+)
 
 const validateProfileUpdate = async (formData: FormData) => {
   const submission = parseWithZod(formData, { schema: UpdateProfileSchema })
@@ -79,30 +75,27 @@ const validateProfileUpdate = async (formData: FormData) => {
   return { submission }
 }
 
-export const action = async ({
-  request
-}: ActionFunctionArgs): Promise<ActionData> => {
-  const formData = await request.formData()
+export const action = withActionErrorHandling(
+  async ({
+    request
+  }: ActionFunctionArgs): Promise<ActionData> => {
+    const formData = await request.formData()
 
-  const validation = await validateProfileUpdate(formData)
-  if (validation.errors) {
-    return { errors: validation.errors }
-  }
+    const validation = await validateProfileUpdate(formData)
+    if (validation.errors) {
+      return { errors: validation.errors }
+    }
 
-  const { firstName, lastName, username, email } = validation.submission!.value
-  const userId = formData.get('userId') as string
+    const { firstName, lastName, username, email } = validation.submission!.value
+    const userId = formData.get('userId') as string
 
-  try {
     await updateUser(userId, { firstName, lastName, username, email })
     return { success: true }
-  } catch {
-    return {
-      errors: {
-        general: ['Failed to update profile. Please try again.']
-      }
-    }
+  },
+  {
+    context: { page: 'profile', action: 'update-profile' }
   }
-}
+)
 
 const ProfileForm = ({ user }: { user: SafeUser }) => {
   const { t } = useTranslation()

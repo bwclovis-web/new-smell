@@ -5,6 +5,7 @@ import { useLoaderData } from 'react-router'
 import { Button } from '~/components/Atoms/Button'
 import TitleBanner from '~/components/Organisms/TitleBanner'
 import banner from '~/images/security.webp'
+import { withLoaderErrorHandling } from '~/utils/errorHandling.server'
 import { sharedLoader } from '~/utils/sharedLoader'
 
 interface SecurityStats {
@@ -56,24 +57,33 @@ interface AuditStats {
 
 export const ROUTE_PATH = '/admin/security-monitor' as const
 
-export const loader = async ({ request }: { request: Request }) => {
-  const user = await sharedLoader(request)
+export const loader = withLoaderErrorHandling(
+  async ({ request }: { request: Request }) => {
+    const user = await sharedLoader(request)
 
-  try {
     // Get the base URL from the request
     const url = new URL(request.url)
     const baseUrl = `${url.protocol}//${url.host}`
 
     // Fetch security statistics
     const securityResponse = await fetch(`${baseUrl}/admin/security-stats`)
+    if (!securityResponse.ok) {
+      throw new Error(`Failed to fetch security stats: ${securityResponse.statusText}`)
+    }
     const securityData = await securityResponse.json()
 
     // Fetch rate limit statistics
     const rateLimitResponse = await fetch(`${baseUrl}/admin/rate-limit-stats`)
+    if (!rateLimitResponse.ok) {
+      throw new Error(`Failed to fetch rate limit stats: ${rateLimitResponse.statusText}`)
+    }
     const rateLimitData = await rateLimitResponse.json()
 
     // Fetch audit statistics
     const auditResponse = await fetch(`${baseUrl}/admin/audit-stats`)
+    if (!auditResponse.ok) {
+      throw new Error(`Failed to fetch audit stats: ${auditResponse.statusText}`)
+    }
     const auditData = await auditResponse.json()
 
     // Ensure data is properly serialized and structured
@@ -110,38 +120,11 @@ export const loader = async ({ request }: { request: Request }) => {
       rateLimit,
       audit
     }
-  } catch (error) {
-    console.error('Failed to fetch security monitoring data:', error)
-    return {
-      user,
-      security: {
-        totalEvents: 0,
-        eventsByType: {},
-        eventsBySeverity: {},
-        uniqueIPs: 0,
-        recentEvents: [],
-        activeAlerts: 0,
-        suspiciousIPs: 0
-      },
-      rateLimit: {
-        totalViolations: 0,
-        uniqueIPs: 0,
-        violationsByPath: {},
-        recentViolations: []
-      },
-      audit: {
-        totalLogs: 0,
-        logsByLevel: {},
-        logsByCategory: {},
-        logsByOutcome: {},
-        recentLogs: [],
-        uniqueUsers: 0,
-        uniqueIPs: 0
-      },
-      error: 'Failed to load security monitoring data'
-    }
+  },
+  {
+    context: { page: 'security-monitor' }
   }
-}
+)
 
 const SecurityMonitor = () => {
   const loaderData = useLoaderData<typeof loader>()

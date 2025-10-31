@@ -7,6 +7,8 @@ import { Button } from '~/components/Atoms/Button/Button'
 import { CSRFToken } from '~/components/Molecules/CSRFToken'
 import TitleBanner from '~/components/Organisms/TitleBanner/TitleBanner'
 import { deleteUserSafely, getAllUsersWithCounts, softDeleteUser } from '~/models/admin.server'
+import { createError } from '~/utils/errorHandling'
+import { withActionErrorHandling, withLoaderErrorHandling } from '~/utils/errorHandling.server'
 import { sharedLoader } from '~/utils/sharedLoader'
 import { getUserDisplayName } from '~/utils/user'
 
@@ -20,52 +22,53 @@ type ActionData = {
   userId?: string
 }
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await sharedLoader(request)
+export const loader = withLoaderErrorHandling(
+  async ({ request }: LoaderFunctionArgs) => {
+    const user = await sharedLoader(request)
 
-  if (!user || user.role !== 'admin') {
-    throw new Response('Unauthorized', { status: 403 })
-  }
+    if (!user || user.role !== 'admin') {
+      throw createError.authorization('Admin access required')
+    }
 
-  try {
     const users = await getAllUsersWithCounts()
     return { users, currentUser: user }
-  } catch (error) {
-    console.error('Error loading users:', error)
-    return { users: [], currentUser: user }
+  },
+  {
+    context: { page: 'admin-users' },
+    redirectOnAuthz: '/unauthorized'
   }
-}
+)
 
-export const action = async ({ request }: ActionFunctionArgs): Promise<ActionData> => {
-  const user = await sharedLoader(request)
+export const action = withActionErrorHandling(
+  async ({ request }: ActionFunctionArgs): Promise<ActionData> => {
+    const user = await sharedLoader(request)
 
-  if (!user || user.role !== 'admin') {
-    return { success: false, message: 'Unauthorized' }
-  }
+    if (!user || user.role !== 'admin') {
+      return { success: false, message: 'Unauthorized' }
+    }
 
-  const formData = await request.formData()
-  const action = formData.get('action') as string
-  const userId = formData.get('userId') as string
+    const formData = await request.formData()
+    const actionType = formData.get('action') as string
+    const userId = formData.get('userId') as string
 
-  if (!userId) {
-    return { success: false, message: 'User ID is required' }
-  }
+    if (!userId) {
+      return { success: false, message: 'User ID is required' }
+    }
 
-  try {
-    if (action === 'delete') {
+    if (actionType === 'delete') {
       const result = await deleteUserSafely(userId, user.id)
       return result
-    } else if (action === 'soft-delete') {
+    } else if (actionType === 'soft-delete') {
       const result = await softDeleteUser(userId, user.id)
       return result
     } else {
       return { success: false, message: 'Invalid action' }
     }
-  } catch (error) {
-    console.error('Error in user action:', error)
-    return { success: false, message: 'An error occurred. Please try again.' }
+  },
+  {
+    context: { page: 'admin-users', action: 'user-management' }
   }
-}
+)
 
 const UserRow = ({
   user,

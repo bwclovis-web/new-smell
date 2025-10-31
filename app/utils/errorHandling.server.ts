@@ -5,9 +5,10 @@
  * loaders, and actions in the Voodoo Perfumes application.
  */
 
+import type { ActionFunction, ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs } from 'react-router'
 import { redirect } from 'react-router'
 
-import { AppError, createError, createErrorResponse, ErrorHandler, type ErrorType } from './errorHandling'
+import { AppError, createError, createErrorResponse, ErrorHandler, ErrorLogger, type ErrorType } from './errorHandling'
 
 // Server Error Response Types
 export interface ServerErrorResponse {
@@ -350,4 +351,106 @@ export const redirectToLogin = (message?: string) => {
 
 export const redirectToUnauthorized = () => {
   throw redirect('/unauthorized')
+}
+
+// Error Handling Wrappers for Loaders and Actions
+
+/**
+ * Standardized error handler wrapper for route loaders
+ * 
+ * Usage:
+ * export const loader = withLoaderErrorHandling(async ({ request }) => {
+ *   const data = await fetchData()
+ *   return { data }
+ * })
+ */
+export function withLoaderErrorHandling<T extends LoaderFunction>(
+  loaderFn: T,
+  options?: {
+    context?: Record<string, any>
+    redirectOnAuth?: string
+    redirectOnAuthz?: string
+  }
+): T {
+  return (async (args: LoaderFunctionArgs) => {
+    try {
+      return await loaderFn(args)
+    } catch (error) {
+      // Handle redirects (don't catch them)
+      if (error instanceof Response && [302, 303].includes(error.status)) {
+        throw error
+      }
+
+      const appError = ServerErrorHandler.handle(error, {
+        ...options?.context,
+        loader: true,
+        path: args.request.url
+      })
+
+      // Log the error
+      ErrorLogger.getInstance().log(appError)
+
+      // Handle authentication errors
+      if (appError.type === 'AUTHENTICATION') {
+        throw redirect(options?.redirectOnAuth || '/sign-in?error=auth_required')
+      }
+
+      // Handle authorization errors
+      if (appError.type === 'AUTHORIZATION') {
+        throw redirect(options?.redirectOnAuthz || '/unauthorized')
+      }
+
+      // For critical errors, redirect to error page
+      if (appError.severity === 'CRITICAL') {
+        throw redirect('/error?type=critical')
+      }
+
+      // For other errors, throw to be caught by error boundary
+      throw appError
+    }
+  }) as T
+}
+
+/**
+ * Standardized error handler wrapper for route actions
+ * 
+ * Usage:
+ * export const action = withActionErrorHandling(async ({ request }) => {
+ *   const formData = await request.formData()
+ *   // ... process form
+ *   return { success: true }
+ * })
+ */
+export function withActionErrorHandling<T extends ActionFunction>(
+  actionFn: T,
+  options?: {
+    context?: Record<string, any>
+  }
+): T {
+  return (async (args: ActionFunctionArgs) => {
+    try {
+      return await actionFn(args)
+    } catch (error) {
+      // Handle redirects (don't catch them)
+      if (error instanceof Response && [302, 303].includes(error.status)) {
+        throw error
+      }
+
+      const appError = ServerErrorHandler.handle(error, {
+        ...options?.context,
+        action: true,
+        path: args.request.url
+      })
+
+      // Log the error
+      ErrorLogger.getInstance().log(appError)
+
+      // Return user-friendly error
+      return {
+        success: false,
+        error: appError.userMessage,
+        code: appError.code
+      }
+    }
+  }) as T
 }
