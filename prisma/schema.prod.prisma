@@ -8,22 +8,22 @@ datasource db {
 }
 
 model User {
-  id                   String                 @id @default(cuid())
-  email                String                 @unique
-  password             String
-  firstName            String?
-  lastName             String?
-  username             String?                @unique
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-  role                 UserRole               @default(user)
-  sessions             Session[]
-  UserPerfume          UserPerfume[]
-  UserPerfumeComment   UserPerfumeComment[]
-  UserPerfumeRating    UserPerfumeRating[]
-  UserPerfumeReview    UserPerfumeReview[]
-  UserPerfumeWishlist  UserPerfumeWishlist[]
-  WishlistNotification WishlistNotification[]
+  id                    String                 @id @default(cuid())
+  email                 String                 @unique
+  password              String
+  firstName             String?
+  lastName              String?
+  username              String?                @unique
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  role                  UserRole               @default(user)
+  sessions              Session[]
+  userPerfume           UserPerfume[]
+  userPerfumeComments   UserPerfumeComment[]
+  userPerfumeRating     UserPerfumeRating[]
+  userPerfumeReview     UserPerfumeReview[]
+  userPerfumeWishlist   UserPerfumeWishlist[]
+  wishlistNotifications WishlistNotification[]
 
   @@map("User")
 }
@@ -69,56 +69,56 @@ model PerfumeHouse {
 }
 
 model Perfume {
-  id                                                String                 @id @default(cuid())
-  name                                              String                 @unique
-  description                                       String?
-  image                                             String?
-  perfumeHouseId                                    String?
-  createdAt                                         DateTime               @default(now())
-  updatedAt                                         DateTime               @updatedAt
-  slug                                              String                 @unique
-  PerfumeHouse                                      PerfumeHouse?          @relation(fields: [perfumeHouseId], references: [id])
-  PerfumeNotes_PerfumeNotes_perfumeCloseIdToPerfume PerfumeNotes[]         @relation("PerfumeNotes_perfumeCloseIdToPerfume")
-  PerfumeNotes_PerfumeNotes_perfumeHeartIdToPerfume PerfumeNotes[]         @relation("PerfumeNotes_perfumeHeartIdToPerfume")
-  PerfumeNotes_PerfumeNotes_perfumeOpenIdToPerfume  PerfumeNotes[]         @relation("PerfumeNotes_perfumeOpenIdToPerfume")
-  UserPerfume                                       UserPerfume[]
-  UserPerfumeComment                                UserPerfumeComment[]
-  UserPerfumeRating                                 UserPerfumeRating[]
-  UserPerfumeReview                                 UserPerfumeReview[]
-  UserPerfumeWishlist                               UserPerfumeWishlist[]
-  WishlistNotification                              WishlistNotification[]
+  id                   String                 @id @default(cuid())
+  name                 String                 @unique
+  description          String?
+  image                String?
+  perfumeHouseId       String?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  slug                 String                 @unique
+  perfumeHouse         PerfumeHouse?          @relation(fields: [perfumeHouseId], references: [id])
+  perfumeNotesClose    PerfumeNotes[]         @relation("PerfumeNotes_perfumeCloseIdToPerfume")
+  perfumeNotesHeart    PerfumeNotes[]         @relation("PerfumeNotes_perfumeHeartIdToPerfume")
+  perfumeNotesOpen     PerfumeNotes[]         @relation("PerfumeNotes_perfumeOpenIdToPerfume")
+  UserPerfume          UserPerfume[]
+  UserPerfumeComment   UserPerfumeComment[]
+  UserPerfumeRating    UserPerfumeRating[]
+  UserPerfumeReview    UserPerfumeReview[]
+  UserPerfumeWishlist  UserPerfumeWishlist[]
+  WishlistNotification WishlistNotification[]
 
   @@map("Perfume")
 }
 
 model PerfumeNotes {
-  id                                           String   @id
-  name                                         String   @unique
-  createdAt                                    DateTime @default(now())
-  perfumeOpenId                                String?
-  perfumeHeartId                               String?
-  perfumeCloseId                               String?
-  Perfume_PerfumeNotes_perfumeCloseIdToPerfume Perfume? @relation("PerfumeNotes_perfumeCloseIdToPerfume", fields: [perfumeCloseId], references: [id])
-  Perfume_PerfumeNotes_perfumeHeartIdToPerfume Perfume? @relation("PerfumeNotes_perfumeHeartIdToPerfume", fields: [perfumeHeartId], references: [id])
-  Perfume_PerfumeNotes_perfumeOpenIdToPerfume  Perfume? @relation("PerfumeNotes_perfumeOpenIdToPerfume", fields: [perfumeOpenId], references: [id])
+  id             String   @id
+  name           String   @unique
+  createdAt      DateTime @default(now())
+  perfumeOpenId  String?
+  perfumeHeartId String?
+  perfumeCloseId String?
+  perfumeClose   Perfume? @relation("PerfumeNotes_perfumeCloseIdToPerfume", fields: [perfumeCloseId], references: [id])
+  perfumeHeart   Perfume? @relation("PerfumeNotes_perfumeHeartIdToPerfume", fields: [perfumeHeartId], references: [id])
+  perfumeOpen    Perfume? @relation("PerfumeNotes_perfumeOpenIdToPerfume", fields: [perfumeOpenId], references: [id])
 }
 
 model UserPerfume {
-  id                 String               @id
-  userId             String
-  perfumeId          String
-  amount             String               @default("0")
-  available          String               @default("0")
-  price              String?
-  placeOfPurchase    String?
-  tradePrice         String?
-  tradePreference    TradePreference      @default(cash)
-  tradeOnly          Boolean              @default(false)
-  createdAt          DateTime             @default(now())
-  type               PerfumeType          @default(eauDeParfum)
-  Perfume            Perfume              @relation(fields: [perfumeId], references: [id])
-  User               User                 @relation(fields: [userId], references: [id])
-  UserPerfumeComment UserPerfumeComment[]
+  id              String               @id
+  userId          String
+  perfumeId       String
+  amount          String               @default("0")
+  available       String               @default("0")
+  price           String?
+  placeOfPurchase String?
+  tradePrice      String?
+  tradePreference TradePreference      @default(cash)
+  tradeOnly       Boolean              @default(false)
+  createdAt       DateTime             @default(now())
+  type            PerfumeType          @default(eauDeParfum)
+  perfume         Perfume              @relation(fields: [perfumeId], references: [id])
+  user            User                 @relation(fields: [userId], references: [id])
+  comments        UserPerfumeComment[]
 }
 
 model UserPerfumeComment {
@@ -130,9 +130,9 @@ model UserPerfumeComment {
   isPublic      Boolean     @default(false)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime
-  Perfume       Perfume     @relation(fields: [perfumeId], references: [id])
-  User          User        @relation(fields: [userId], references: [id])
-  UserPerfume   UserPerfume @relation(fields: [userPerfumeId], references: [id])
+  perfume       Perfume     @relation(fields: [perfumeId], references: [id])
+  user          User        @relation(fields: [userId], references: [id])
+  userPerfume   UserPerfume @relation(fields: [userPerfumeId], references: [id])
 }
 
 model UserPerfumeRating {
@@ -146,8 +146,8 @@ model UserPerfumeRating {
   priceValue Int?
   sillage    Int?
   updatedAt  DateTime
-  Perfume    Perfume  @relation(fields: [perfumeId], references: [id])
-  User       User     @relation(fields: [userId], references: [id])
+  perfume    Perfume  @relation(fields: [perfumeId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, perfumeId])
 }
@@ -158,8 +158,8 @@ model UserPerfumeReview {
   perfumeId String
   review    String
   createdAt DateTime @default(now())
-  Perfume   Perfume  @relation(fields: [perfumeId], references: [id])
-  User      User     @relation(fields: [userId], references: [id])
+  perfume   Perfume  @relation(fields: [perfumeId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model UserPerfumeWishlist {
@@ -168,8 +168,8 @@ model UserPerfumeWishlist {
   isPublic  Boolean  @default(false)
   perfumeId String
   createdAt DateTime @default(now())
-  Perfume   Perfume  @relation(fields: [perfumeId], references: [id])
-  User      User     @relation(fields: [userId], references: [id])
+  perfume   Perfume  @relation(fields: [perfumeId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model WishlistNotification {
@@ -177,8 +177,8 @@ model WishlistNotification {
   userId     String
   perfumeId  String
   notifiedAt DateTime @default(now())
-  Perfume    Perfume  @relation(fields: [perfumeId], references: [id])
-  User       User     @relation(fields: [userId], references: [id])
+  perfume    Perfume  @relation(fields: [perfumeId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, perfumeId])
 }
