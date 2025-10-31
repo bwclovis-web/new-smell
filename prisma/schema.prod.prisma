@@ -18,6 +18,8 @@ model User {
   updatedAt             DateTime               @updatedAt
   role                  UserRole               @default(user)
   sessions              Session[]
+  UserAlert             UserAlert[]
+  alertPreferences      UserAlertPreferences?
   userPerfume           UserPerfume[]
   userPerfumeComments   UserPerfumeComment[]
   userPerfumeRating     UserPerfumeRating[]
@@ -81,6 +83,7 @@ model Perfume {
   perfumeNotesClose    PerfumeNotes[]         @relation("PerfumeNotes_perfumeCloseIdToPerfume")
   perfumeNotesHeart    PerfumeNotes[]         @relation("PerfumeNotes_perfumeHeartIdToPerfume")
   perfumeNotesOpen     PerfumeNotes[]         @relation("PerfumeNotes_perfumeOpenIdToPerfume")
+  UserAlert            UserAlert[]
   UserPerfume          UserPerfume[]
   UserPerfumeComment   UserPerfumeComment[]
   UserPerfumeRating    UserPerfumeRating[]
@@ -183,6 +186,37 @@ model WishlistNotification {
   @@unique([userId, perfumeId])
 }
 
+model UserAlert {
+  id          String    @id @default(cuid())
+  userId      String
+  perfumeId   String
+  alertType   AlertType
+  title       String
+  message     String
+  isRead      Boolean   @default(false)
+  isDismissed Boolean   @default(false)
+  metadata    Json?
+  createdAt   DateTime  @default(now())
+  readAt      DateTime?
+  dismissedAt DateTime?
+  Perfume     Perfume   @relation(fields: [perfumeId], references: [id])
+  User        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@index([userId, isRead, isDismissed])
+}
+
+model UserAlertPreferences {
+  id                    String  @id @default(cuid())
+  userId                String  @unique
+  wishlistAlertsEnabled Boolean @default(true)
+  decantAlertsEnabled   Boolean @default(true)
+  emailWishlistAlerts   Boolean @default(false)
+  emailDecantAlerts     Boolean @default(false)
+  maxAlerts             Int     @default(10)
+  User                  User    @relation(fields: [userId], references: [id])
+}
+
 enum HouseType {
   niche
   designer
@@ -213,4 +247,9 @@ enum UserRole {
   user
   admin
   editor
+}
+
+enum AlertType {
+  wishlist_available
+  decant_interest
 }
