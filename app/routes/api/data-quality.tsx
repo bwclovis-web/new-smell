@@ -128,9 +128,9 @@ const getFilteredFiles = (
       }
     })
     .filter(file => file.timestamp)
-    .sort((fileA, fileB) => 
+    .sort((fileA, fileB) =>
       // Sort by date (most recent first)
-       fileB.date.getTime() - fileA.date.getTime())
+      fileB.date.getTime() - fileA.date.getTime())
 
   // Apply timeframe filtering
   if (timeframe === 'week') {
@@ -174,9 +174,9 @@ const getLatestReportFiles = async (timeframe: string = 'all') => {
         }
       })
       .filter(file => file.timestamp)
-      .sort((fileA, fileB) => 
+      .sort((fileA, fileB) =>
         // Sort by date (most recent first)
-         fileB.date.getTime() - fileA.date.getTime())
+        fileB.date.getTime() - fileA.date.getTime())
 
     filesToUse = allTimestampedFiles
   }
@@ -434,7 +434,7 @@ export const loader = async ({ request }: { request: Request }) => {
   } catch (error) {
     // Log and handle the error
     const { ErrorHandler } = await import('~/utils/errorHandling')
-    const appError = ErrorHandler.handle(error, { 
+    const appError = ErrorHandler.handle(error, {
       api: 'data-quality',
       timeframe,
       force
