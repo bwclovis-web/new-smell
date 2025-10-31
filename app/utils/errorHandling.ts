@@ -25,6 +25,67 @@ export enum ErrorSeverity {
   CRITICAL = 'CRITICAL'
 }
 
+// Sensitive keys that should be redacted from error context
+const SENSITIVE_KEYS = [
+  'password',
+  'token',
+  'secret',
+  'apikey',
+  'api_key',
+  'authorization',
+  'cookie',
+  'sessionid',
+  'session_id',
+  'csrftoken',
+  'csrf_token',
+  'creditcard',
+  'credit_card',
+  'ssn',
+  'privatekey',
+  'private_key',
+  'accesstoken',
+  'access_token',
+  'refreshtoken',
+  'refresh_token',
+  'bearer'
+]
+
+/**
+ * Sanitize context by redacting sensitive information
+ * This prevents sensitive data from being logged or exposed in error responses
+ */
+export function sanitizeContext(context?: Record<string, any>): Record<string, any> | undefined {
+  if (!context) return undefined
+
+  const sanitized: Record<string, any> = {}
+
+  Object.keys(context).forEach(key => {
+    const lowerKey = key.toLowerCase()
+    
+    // Check if key contains any sensitive keywords
+    const isSensitive = SENSITIVE_KEYS.some(sensitive => 
+      lowerKey.includes(sensitive.toLowerCase())
+    )
+
+    if (isSensitive) {
+      sanitized[key] = '[REDACTED]'
+    } else if (typeof context[key] === 'object' && context[key] !== null) {
+      // Recursively sanitize nested objects
+      if (Array.isArray(context[key])) {
+        sanitized[key] = context[key].map((item: any) => 
+          typeof item === 'object' ? sanitizeContext(item) : item
+        )
+      } else {
+        sanitized[key] = sanitizeContext(context[key] as Record<string, any>)
+      }
+    } else {
+      sanitized[key] = context[key]
+    }
+  })
+
+  return sanitized
+}
+
 // Custom Error Classes
 export class AppError extends Error {
   public readonly type: ErrorType
@@ -81,7 +142,9 @@ export class AppError extends Error {
     return messages[type] || messages[ErrorType.UNKNOWN]
   }
 
-  toJSON() {
+  toJSON(includeStack: boolean = false) {
+    const isProduction = process.env.NODE_ENV === 'production'
+    
     return {
       name: this.name,
       message: this.message,
@@ -89,10 +152,11 @@ export class AppError extends Error {
       severity: this.severity,
       code: this.code,
       userMessage: this.userMessage,
-      context: this.context,
+      context: sanitizeContext(this.context),
       timestamp: this.timestamp.toISOString(),
       isOperational: this.isOperational,
-      stack: this.stack
+      // Only include stack trace in development or when explicitly requested
+      ...((!isProduction && includeStack) ? { stack: this.stack } : {})
     }
   }
 }
@@ -122,7 +186,9 @@ export const createError = {
 export class ErrorLogger {
   private static instance: ErrorLogger
 
-  private logs: Array<{ error: AppError; timestamp: Date; userId?: string }> = []
+  private logs: Array<{ id: string; error: AppError; timestamp: Date; userId?: string }> = []
+
+  private readonly MAX_LOGS = 1000 // Prevent memory leaks
 
   private constructor() { }
 
@@ -134,12 +200,28 @@ export class ErrorLogger {
   }
 
   log(error: AppError, userId?: string): void {
-    const logEntry = { error, timestamp: new Date(), userId }
+    const logEntry = {
+      id: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      error,
+      timestamp: new Date(),
+      userId
+    }
+    
     this.logs.push(logEntry)
 
-    // Log to console in development
+    // Keep only the most recent logs to prevent memory leaks
+    if (this.logs.length > this.MAX_LOGS) {
+      this.logs.shift()
+    }
+
+    // Log to console in development with sanitized context
     if (process.env.NODE_ENV === 'development') {
-      console.error('Error logged:', error.toJSON())
+      console.error('[ErrorLogger]', {
+        id: logEntry.id,
+        error: error.toJSON(true), // Include stack in development
+        userId: userId,
+        timestamp: logEntry.timestamp.toISOString()
+      })
     }
 
     // In production, you might want to send to external logging service
@@ -151,15 +233,27 @@ export class ErrorLogger {
   private sendToExternalLogger(error: AppError, userId?: string): void {
     // TODO: Implement external logging service integration
     // Examples: Sentry, LogRocket, DataDog, etc.
-    console.error('Production error:', error.toJSON())
+    // Note: Always use sanitized context for external logging
+    const sanitizedLog = {
+      ...error.toJSON(false), // Never include stack in production external logs
+      userId: userId,
+      timestamp: new Date().toISOString()
+    }
+    
+    // For now, log without stack trace in production
+    console.error('[Production Error]', sanitizedLog)
   }
 
-  getLogs(limit?: number): Array<{ error: AppError; timestamp: Date; userId?: string }> {
+  getLogs(limit?: number): Array<{ id: string; error: AppError; timestamp: Date; userId?: string }> {
     return limit ? this.logs.slice(-limit) : this.logs
   }
 
   clearLogs(): void {
     this.logs = []
+  }
+
+  getLogCount(): number {
+    return this.logs.length
   }
 }
 
@@ -226,23 +320,35 @@ export class ErrorHandler {
 }
 
 // Error Response Utilities
-export const createErrorResponse = (error: AppError, status?: number) => {
+export const createErrorResponse = (error: AppError, status?: number, options?: { headers?: HeadersInit }) => {
   const statusCode = status || getStatusCodeForErrorType(error.type)
+  const isProduction = process.env.NODE_ENV === 'production'
+
+  const errorResponse = {
+    success: false,
+    error: {
+      code: error.code,
+      message: error.userMessage,
+      type: error.type,
+      severity: error.severity,
+      // Only include technical details in development
+      ...(isProduction ? {} : {
+        technicalMessage: error.message,
+        context: sanitizeContext(error.context)
+      })
+    }
+  }
 
   return new Response(
-    JSON.stringify({
-      success: false,
-      error: {
-        code: error.code,
-        message: error.userMessage,
-        type: error.type,
-        severity: error.severity
-      }
-    }),
+    JSON.stringify(errorResponse),
     {
       status: statusCode,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        ...options?.headers
       }
     }
   )

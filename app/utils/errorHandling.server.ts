@@ -40,24 +40,26 @@ export class ServerErrorHandler {
   /**
    * Create a standardized error response for API routes
    */
-  static createErrorResponse(error: AppError, status?: number): Response {
-    return createErrorResponse(error, status)
+  static createErrorResponse(error: AppError, status?: number, options?: { headers?: HeadersInit }): Response {
+    return createErrorResponse(error, status, options)
   }
 
   /**
    * Create a success response for API routes
    */
-  static createSuccessResponse<T>(data?: T, message?: string): Response {
+  static createSuccessResponse<T>(data?: T, options?: { message?: string; headers?: HeadersInit }): Response {
     return new Response(
       JSON.stringify({
         success: true,
         data,
-        message
+        message: options?.message
       }),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Cache-Control': 'private, max-age=0',
+          ...options?.headers
         }
       }
     )
