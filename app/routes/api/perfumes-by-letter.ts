@@ -32,10 +32,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
       }
     })
   } catch (error) {
-    console.error('Error fetching perfumes by letter:', error)
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { api: 'perfumes-by-letter', letter, skip, take })
     return Response.json({
       success: false,
-      message: 'Failed to fetch perfumes',
+      message: appError.userMessage,
       perfumes: []
     }, { status: 500 })
   }

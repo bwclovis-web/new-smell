@@ -20,7 +20,8 @@ const processWishlistAction = async (
     try {
       await processDecantInterestAlerts(perfumeId, userId)
     } catch (error) {
-      console.error('Error processing decant interest alerts:', error)
+      const { ErrorHandler } = await import('~/utils/errorHandling')
+      ErrorHandler.handle(error, { api: 'wishlist', action: 'processDecantAlerts', perfumeId, userId })
       // Don't fail the wishlist operation if alert processing fails
     }
     
@@ -82,9 +83,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     return await processRequest(request)
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Wishlist operation error:', error)
-    return createErrorResponse('Failed to update wishlist', 500)
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { api: 'wishlist', action: 'action' })
+    return createErrorResponse(appError.userMessage, 500)
   }
 }
 

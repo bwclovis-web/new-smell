@@ -93,13 +93,21 @@ export const action = async ({ request }: { request: Request }) => {
         if (createResult.success) {
           results.push({ name: formData.get('name'), status: 'created' })
         } else {
-          // eslint-disable-next-line no-console
-          console.error('CREATE FAILED', formData.get('name'), createResult.error)
+          const { ErrorHandler } = await import('~/utils/errorHandling')
+          ErrorHandler.handle(new Error(createResult.error), { 
+            api: 'update-house-info', 
+            action: 'create-failed',
+            houseName: formData.get('name') 
+          })
           results.push({ name: formData.get('name'), status: 'error', error: createResult.error })
         }
       } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error('CREATE ERROR', formData.get('name'), err)
+        const { ErrorHandler } = await import('~/utils/errorHandling')
+        ErrorHandler.handle(err, { 
+          api: 'update-house-info', 
+          action: 'create-error',
+          houseName: formData.get('name') 
+        })
         results.push({ name: formData.get('name'), status: 'error', error: String(err) })
       }
       continue
@@ -110,8 +118,13 @@ export const action = async ({ request }: { request: Request }) => {
       console.log('UPDATE', formData.get('name'), houseId)
       results.push({ name: formData.get('name'), status: 'updated' })
     } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error('UPDATE ERROR', formData.get('name'), houseId, err)
+      const { ErrorHandler } = await import('~/utils/errorHandling')
+      ErrorHandler.handle(err, { 
+        api: 'update-house-info', 
+        action: 'update-error',
+        houseName: formData.get('name'),
+        houseId 
+      })
       results.push({ name: formData.get('name'), status: 'error', error: String(err) })
     }
   }

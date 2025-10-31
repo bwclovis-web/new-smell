@@ -16,11 +16,11 @@ export async function loader() {
       }
     })
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error fetching available perfumes for decanting:', error)
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { api: 'available-perfumes' })
     return Response.json({
       success: false,
-      error: 'Failed to fetch available perfumes',
+      error: appError.userMessage,
       perfumes: []
     }, { status: 500 })
   }

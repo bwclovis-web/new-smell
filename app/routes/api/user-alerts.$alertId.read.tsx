@@ -24,7 +24,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
     return Response.json({ success: true })
   } catch (error) {
-    console.error('Error marking alert as read:', error)
-    throw new Response('Internal Server Error', { status: 500 })
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { api: 'user-alerts', action: 'mark-read', alertId, userId: authResult.user.id })
+    throw new Response(appError.userMessage, { status: 500 })
   }
 }

@@ -102,7 +102,8 @@ const handleAddAction = async (
     try {
       await processWishlistAvailabilityAlerts(perfumeId)
     } catch (error) {
-      console.error('Error processing wishlist availability alerts:', error)
+      const { ErrorHandler } = await import('~/utils/errorHandling')
+      ErrorHandler.handle(error, { api: 'user-perfumes', action: 'processWishlistAlerts-add', perfumeId })
       // Don't fail the operation if alert processing fails
     }
   }
@@ -138,7 +139,8 @@ const handleDecantAction = async (params: {
     try {
       await processWishlistAvailabilityAlerts(perfumeId)
     } catch (error) {
-      console.error('Error processing wishlist availability alerts:', error)
+      const { ErrorHandler } = await import('~/utils/errorHandling')
+      ErrorHandler.handle(error, { api: 'user-perfumes', action: 'processWishlistAlerts-decant', perfumeId })
       // Don't fail the operation if alert processing fails
     }
   }
@@ -265,10 +267,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
     return handleAuthSuccess(authResult.user)
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error fetching user perfumes:', error)
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { api: 'user-perfumes', action: 'loader' })
     return new Response(
-      JSON.stringify({ success: false, error: 'Failed to fetch perfumes' }),
+      JSON.stringify({ success: false, error: appError.userMessage }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     )
   }
@@ -286,11 +288,11 @@ const validatePerfumeId = (perfumeId: string | null | undefined) => {
 }
 
 // Helper function to handle errors in action
-const handleActionError = (error: any) => {
-  // eslint-disable-next-line no-console
-  console.error('User perfume operation error:', error)
+const handleActionError = async (error: any) => {
+  const { ErrorHandler } = await import('~/utils/errorHandling')
+  const appError = ErrorHandler.handle(error, { api: 'user-perfumes', action: 'action' })
   return new Response(
-    JSON.stringify({ success: false, error: 'Failed to update user perfumes' }),
+    JSON.stringify({ success: false, error: appError.userMessage }),
     { status: 500, headers: { 'Content-Type': 'application/json' } }
   )
 }
@@ -406,6 +408,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     return await processActionRequest(request)
   } catch (error) {
-    return handleActionError(error)
+    return await handleActionError(error)
   }
 }

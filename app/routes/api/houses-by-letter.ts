@@ -23,10 +23,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
       count: houses.length
     })
   } catch (error) {
-    console.error('Error fetching houses by letter:', error)
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { api: 'houses-by-letter', letter })
     return Response.json({
       success: false,
-      message: 'Failed to fetch houses',
+      message: appError.userMessage,
       houses: []
     }, { status: 500 })
   }

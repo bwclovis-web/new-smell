@@ -27,7 +27,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       unreadCount
     })
   } catch (error) {
-    console.error('Error fetching user alerts:', error)
-    throw new Response('Internal Server Error', { status: 500 })
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { api: 'user-alerts', action: 'loader', userId })
+    throw new Response(appError.userMessage, { status: 500 })
   }
 }

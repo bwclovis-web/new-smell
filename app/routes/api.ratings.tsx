@@ -63,7 +63,8 @@ export const action: ActionFunction = async ({ request }) => {
     await saveRating(authResult.user.id, perfumeId, category, rating)
     return createSuccessResponse()
   } catch (error) {
-    console.error('Rating action error:', error)
-    return createErrorResponse('Failed to save rating', 500)
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { api: 'ratings', perfumeId, category, userId: authResult.user.id })
+    return createErrorResponse(appError.userMessage, 500)
   }
 }

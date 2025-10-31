@@ -35,10 +35,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     return result
   } catch (error) {
-    console.error('Password change API error:', error)
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { api: 'change-password', userId: user?.id })
     return {
       success: false,
-      error: 'An error occurred while changing your password'
+      error: appError.userMessage
     }
   }
 }

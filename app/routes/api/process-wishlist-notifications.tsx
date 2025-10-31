@@ -22,13 +22,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     )
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error processing wishlist notifications:', error)
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { api: 'process-wishlist-notifications' })
 
     return new Response(
       JSON.stringify({
         success: false,
-        error: 'Failed to process notifications'
+        error: appError.userMessage
       }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     )

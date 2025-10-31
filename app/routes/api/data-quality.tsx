@@ -315,7 +315,8 @@ const parseHousesNoPerfumesData = async (filePath: string) => {
       housesNoPerfumes: housesData
     }
   } catch (error) {
-    console.error('Error parsing houses with no perfumes:', error)
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    ErrorHandler.handle(error, { api: 'data-quality', function: 'parseHousesNoPerfumesData' })
     return {
       totalHousesNoPerfumes: 0,
       housesNoPerfumes: []
@@ -431,14 +432,19 @@ export const loader = async ({ request }: { request: Request }) => {
       }
     })
   } catch (error) {
-    // Log the error
-    console.error('[DATA QUALITY API] Error:', error)
+    // Log and handle the error
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { 
+      api: 'data-quality',
+      timeframe,
+      force
+    })
 
     // Return error response
     return new Response(
       JSON.stringify({
-        error: `Critical error processing request: ${error instanceof Error ? error.message : String(error)}`,
-        stack: error instanceof Error ? error.stack : undefined,
+        error: appError.userMessage,
+        code: appError.code,
         timestamp: new Date().toISOString()
       }),
       {
@@ -509,7 +515,8 @@ const generateDataQualityReport = async (timeframe: string, force: boolean = fal
 
     // If there was an error running the script
     if (scriptResult !== true) {
-      console.error('[DATA QUALITY API] Script failed:', scriptResult)
+      const { ErrorHandler } = await import('~/utils/errorHandling')
+      ErrorHandler.handle(scriptResult, { api: 'data-quality', step: 'script-execution' })
       throw new Error(`Failed to generate data quality reports: ${scriptResult}`)
     }
 
@@ -534,7 +541,8 @@ const generateDataQualityReport = async (timeframe: string, force: boolean = fal
       lastUpdated: new Date().toLocaleString(),
     }
   } catch (error) {
-    console.error('[DATA QUALITY API] Error in generateDataQualityReport:', error)
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    ErrorHandler.handle(error, { api: 'data-quality', function: 'generateDataQualityReport' })
     throw error
   }
 }

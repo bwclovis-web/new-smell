@@ -24,8 +24,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     const preferences = await getUserAlertPreferences(userId)
     return Response.json(preferences)
   } catch (error) {
-    console.error('Error fetching alert preferences:', error)
-    throw new Response('Internal Server Error', { status: 500 })
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { api: 'user-alerts-preferences', action: 'loader', userId })
+    throw new Response(appError.userMessage, { status: 500 })
   }
 }
 
@@ -76,7 +77,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     const updatedPreferences = await updateUserAlertPreferences(userId, validPreferences)
     return Response.json(updatedPreferences)
   } catch (error) {
-    console.error('Error updating alert preferences:', error)
-    throw new Response('Internal Server Error', { status: 500 })
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { api: 'user-alerts-preferences', action: 'update', userId })
+    throw new Response(appError.userMessage, { status: 500 })
   }
 }

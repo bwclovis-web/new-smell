@@ -24,7 +24,8 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     await dismissAllAlerts(userId)
     return Response.json({ success: true })
   } catch (error) {
-    console.error('Error dismissing all alerts:', error)
-    throw new Response('Internal Server Error', { status: 500 })
+    const { ErrorHandler } = await import('~/utils/errorHandling')
+    const appError = ErrorHandler.handle(error, { api: 'user-alerts', action: 'dismiss-all', userId })
+    throw new Response(appError.userMessage, { status: 500 })
   }
 }
