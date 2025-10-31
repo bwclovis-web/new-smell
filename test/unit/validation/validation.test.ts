@@ -20,7 +20,7 @@ import {
   UserFormSchema,
   UserLogInSchema,
   WishlistActionSchema
-} from '~/utils/formValidationSchemas'
+} from '../../../app/utils/formValidationSchemas'
 import {
   validateAmount,
   validateAndSanitize,
@@ -38,7 +38,7 @@ import {
   validateSearchParams,
   validateUrl,
   validateYear
-} from '~/utils/validation'
+} from '../../../app/utils/validation'
 
 describe('Validation Utilities', () => {
   describe('validateData', () => {

@@ -51,9 +51,99 @@ Contains analysis reports, metrics, and data exports including:
 
 ### Working on Specific Areas
 - **Performance Issues**: See [PERFORMANCE_OPTIMIZATION_GUIDE.md](./developer/PERFORMANCE_OPTIMIZATION_GUIDE.md)
-- **Error Handling**: See [ERROR_HANDLING_IMPROVEMENT_PLAN.md](./developer/ERROR_HANDLING_IMPROVEMENT_PLAN.md)
+- **Error Handling**: See [Error Handling Documentation](#error-handling-documentation) below
 - **Security**: See [SECURITY_HARDENING_SUMMARY.md](./developer/SECURITY_HARDENING_SUMMARY.md)
 - **Infrastructure**: See [INFRASTRUCTURE_IMPROVEMENTS.md](./developer/INFRASTRUCTURE_IMPROVEMENTS.md)
+
+## Error Handling Documentation
+
+The project has a comprehensive error handling system with complete documentation:
+
+### Quick Start
+- **[Developer Guide](./developer/ERROR_HANDLING_DEVELOPER_GUIDE.md)** - Complete guide to using the error handling system
+- **[Common Scenarios](./developer/ERROR_HANDLING_COMMON_SCENARIOS.md)** - Ready-to-use code examples for common situations
+- **[Troubleshooting](./developer/ERROR_HANDLING_TROUBLESHOOTING.md)** - Solutions to common issues
+
+### System Overview
+The error handling system provides:
+- ✅ Type-safe error creation and handling
+- ✅ Automatic retry for transient failures
+- ✅ User-friendly error messages
+- ✅ Security (no sensitive data exposure)
+- ✅ Performance optimized (< 100ms overhead)
+- ✅ Correlation IDs for request tracking
+- ✅ Comprehensive logging
+
+### Key Features
+
+**Client-Side:**
+- React hooks for error handling (`useApiErrorHandler`, `useApiWithRetry`)
+- Error boundaries for component tree errors
+- Automatic retry with configurable strategies
+- User-friendly error displays
+
+**Server-Side:**
+- Route handler wrappers (`withLoaderErrorHandling`, `withActionErrorHandling`)
+- Specialized handlers (Database, Auth, Validation)
+- Automatic error logging with correlation IDs
+- Security-first approach (sensitive data sanitization)
+
+**Performance:**
+- All operations complete in < 100ms
+- Memory-efficient logging (circular buffer)
+- No memory leaks detected
+- Comprehensive performance test suite
+
+### Documentation Structure
+
+```
+docs/developer/
+├── ERROR_HANDLING_DEVELOPER_GUIDE.md      # Complete developer guide
+├── ERROR_HANDLING_COMMON_SCENARIOS.md     # Code examples for common cases
+├── ERROR_HANDLING_TROUBLESHOOTING.md      # Troubleshooting & debugging
+├── ERROR_HANDLING_IMPROVEMENT_PLAN.md     # Implementation plan & architecture
+└── PERFORMANCE_TESTING_SUMMARY.md         # Performance metrics & benchmarks
+```
+
+### Quick Examples
+
+**Client-Side API Call:**
+```tsx
+import { useApiWithRetry } from '~/hooks/useApiWithRetry'
+
+function MyComponent() {
+  const { fetchWithRetry, error, isLoading } = useApiWithRetry()
+
+  const loadData = () => fetchWithRetry(
+    () => fetch('/api/data').then(r => r.json()),
+    { endpoint: '/api/data', method: 'GET' }
+  )
+
+  return isLoading ? <Spinner /> : <Data />
+}
+```
+
+**Server-Side Route:**
+```typescript
+import { withLoaderErrorHandling } from '~/utils/errorHandling.server'
+import { createError } from '~/utils/errorHandling'
+
+export const loader = withLoaderErrorHandling(async ({ params }) => {
+  const data = await db.getData(params.id)
+  if (!data) {
+    throw createError.notFound('Data not found', { id: params.id })
+  }
+  return json({ data })
+})
+```
+
+### Testing
+- 356+ unit tests for error handling components
+- 105+ integration tests
+- 17 E2E tests for error UX
+- 19 performance tests
+
+For complete documentation, start with the **[Developer Guide](./developer/ERROR_HANDLING_DEVELOPER_GUIDE.md)**.
 
 ## 📝 Documentation Standards
 

@@ -7,7 +7,7 @@ import { act, renderHook } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 
-import { useFieldValidation, useValidation } from '~/hooks/useValidation'
+import { useFieldValidation, useValidation } from '../../../app/hooks/useValidation'
 
 describe('useValidation Hook', () => {
   const schema = z.object({

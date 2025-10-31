@@ -30,6 +30,7 @@ export function generateCorrelationId(): string {
 /**
  * Set the correlation ID for the current async context
  * This should be called at the start of request handling
+ * Note: For proper async context isolation, prefer using withCorrelationId() or runWithCorrelationId()
  */
 export function setCorrelationId(id: string): void {
   correlationIdStorage.enterWith(id)
@@ -41,6 +42,25 @@ export function setCorrelationId(id: string): void {
  */
 export function getCorrelationId(): string | undefined {
   return correlationIdStorage.getStore()
+}
+
+/**
+ * Run a function with a specific correlation ID
+ * This creates a proper async context that will be maintained across all async operations
+ * 
+ * Usage:
+ * ```typescript
+ * await runWithCorrelationId(correlationId, async () => {
+ *   // Your code here
+ *   // getCorrelationId() will return the provided ID
+ * })
+ * ```
+ */
+export function runWithCorrelationId<T>(
+  correlationId: string,
+  fn: () => T | Promise<T>
+): Promise<T> {
+  return correlationIdStorage.run(correlationId, async () => fn())
 }
 
 /**
@@ -56,12 +76,10 @@ export function getCorrelationId(): string | undefined {
  * ```
  */
 export function withCorrelationId<T extends (...args: any[]) => Promise<any>>(
-  handler: T
-): T {
+  handler: T): T {
   return (async (...args: any[]) => {
     const correlationId = generateCorrelationId()
-    setCorrelationId(correlationId)
-    return handler(...args)
+    return correlationIdStorage.run(correlationId, async () => handler(...args))
   }) as T
 }
 

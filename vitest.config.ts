@@ -33,8 +33,8 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: [
-'text', 'json', 'html', 'lcov', 'text-summary', 'clover'
-],
+        'text', 'json', 'html', 'lcov', 'text-summary', 'clover'
+      ],
       reportsDirectory: './coverage',
       include: [
         'app/**/*.{js,ts,jsx,tsx}',
@@ -106,16 +106,9 @@ export default defineConfig({
 
     // Watch mode configuration
     watch: false,
-    // Enable file watching for development
-    watchExclude: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/build/**',
-      '**/coverage/**'
-    ],
 
     // Reporter configuration
-    reporter: [
+    reporters: [
       'verbose',
       'json',
       'html',
