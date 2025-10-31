@@ -22,7 +22,23 @@ export const loader = withLoaderErrorHandling(
       throw new Response('Forbidden', { status: 403 })
     }
 
-    const preferences = await getUserAlertPreferences(userId)
+    // Try to fetch preferences, but gracefully handle if table doesn't exist
+    let preferences = null
+    try {
+      preferences = await getUserAlertPreferences(userId)
+    } catch (error) {
+      // UserAlertPreferences table doesn't exist in production yet - return empty object
+      console.warn('UserAlertPreferences table not available:', error)
+      preferences = {
+        userId,
+        wishlistAlertsEnabled: true,
+        decantAlertsEnabled: true,
+        emailWishlistAlerts: false,
+        emailDecantAlerts: false,
+        maxAlerts: 10
+      }
+    }
+
     return Response.json(preferences)
   },
   {
@@ -74,8 +90,15 @@ export const action = withActionErrorHandling(
       validPreferences.maxAlerts = preferences.maxAlerts
     }
 
-    const updatedPreferences = await updateUserAlertPreferences(userId, validPreferences)
-    return Response.json(updatedPreferences)
+    // Try to update preferences, but gracefully handle if table doesn't exist
+    try {
+      const updatedPreferences = await updateUserAlertPreferences(userId, validPreferences)
+      return Response.json(updatedPreferences)
+    } catch (error) {
+      // UserAlertPreferences table doesn't exist in production yet
+      console.warn('UserAlertPreferences table not available:', error)
+      return Response.json({ ...validPreferences, userId }, { status: 200 })
+    }
   },
   {
     context: { api: 'user-alerts-preferences', action: 'update' }

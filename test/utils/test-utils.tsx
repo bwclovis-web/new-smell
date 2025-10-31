@@ -123,6 +123,10 @@ export const renderWithMemoryRouter = (
 // MOCK DATA GENERATORS
 // ============================================================================
 
+/**
+ * @deprecated Use createMockUser from test/factories instead
+ * Legacy mock user generator - kept for backward compatibility
+ */
 export const createMockUser = (overrides: Partial<MockUser> = {}): MockUser => ({
   id: '1',
   email: 'test@example.com',
@@ -132,6 +136,10 @@ export const createMockUser = (overrides: Partial<MockUser> = {}): MockUser => (
   ...overrides,
 })
 
+/**
+ * @deprecated Use createMockPerfume from test/factories instead
+ * Legacy mock perfume generator - kept for backward compatibility
+ */
 export const createMockPerfume = (overrides: Partial<MockPerfume> = {}): MockPerfume => ({
   id: '1',
   name: 'Test Perfume',
@@ -144,6 +152,10 @@ export const createMockPerfume = (overrides: Partial<MockPerfume> = {}): MockPer
   ...overrides,
 })
 
+/**
+ * @deprecated Use createMockHouse from test/factories instead
+ * Legacy mock house generator - kept for backward compatibility
+ */
 export const createMockHouse = (overrides: Partial<MockHouse> = {}): MockHouse => ({
   id: '1',
   name: 'Test House',
@@ -247,11 +259,22 @@ export const mockScrollTo = () => {
 // TEST DATA FACTORIES
 // ============================================================================
 
+/**
+ * @deprecated Use factories from test/factories instead
+ * Legacy test data factories - kept for backward compatibility
+ * 
+ * For new tests, use:
+ * - import { createMockUser, createMockPerfume, createMockHouse } from 'test/factories'
+ * - import { batchGeneration, generateBulkTestData } from 'test/factories'
+ */
 export const createTestData = {
   users: (count: number) => Array.from({ length: count }, (_, i) => createMockUser({ id: `${i + 1}` })),
   perfumes: (count: number) => Array.from({ length: count }, (_, i) => createMockPerfume({ id: `${i + 1}` })),
   houses: (count: number) => Array.from({ length: count }, (_, i) => createMockHouse({ id: `${i + 1}` })),
 }
+
+// Re-export new factories for convenience
+export * from '../factories'
 
 // ============================================================================
 // UTILITY FUNCTIONS

@@ -18,10 +18,21 @@ export const loader = withLoaderErrorHandling(
       throw new Response('Forbidden', { status: 403 })
     }
 
-    const [alerts, unreadCount] = await Promise.all([
-      getUserAlerts(userId),
-      getUnreadAlertCount(userId)
-    ])
+    // Try to fetch alerts, but gracefully handle if tables don't exist
+    let alerts = []
+    let unreadCount = 0
+
+    try {
+      const results = await Promise.all([
+        getUserAlerts(userId),
+        getUnreadAlertCount(userId)
+      ])
+      alerts = results[0]
+      unreadCount = results[1]
+    } catch (error) {
+      // UserAlert tables don't exist in production yet - return empty defaults
+      console.warn('UserAlert tables not available:', error)
+    }
 
     return Response.json({
       alerts,

@@ -34,11 +34,24 @@ export const loader = withLoaderErrorHandling(
       return { user: null, alerts: [], preferences: null, unreadCount: 0 }
     }
 
-    const [alerts, preferences, unreadCount] = await Promise.all([
-      getUserAlerts(user.id),
-      getUserAlertPreferences(user.id),
-      getUnreadAlertCount(user.id)
-    ])
+    // Try to fetch user alerts, but gracefully handle if tables don't exist
+    let alerts = []
+    let preferences = null
+    let unreadCount = 0
+
+    try {
+      const results = await Promise.all([
+        getUserAlerts(user.id),
+        getUserAlertPreferences(user.id),
+        getUnreadAlertCount(user.id)
+      ])
+      alerts = results[0]
+      preferences = results[1]
+      unreadCount = results[2]
+    } catch (error) {
+      // UserAlert tables don't exist in production yet - return empty defaults
+      console.warn('UserAlert tables not available:', error)
+    }
 
     return {
       user,

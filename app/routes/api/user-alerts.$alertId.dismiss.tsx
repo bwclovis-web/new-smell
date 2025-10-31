@@ -24,6 +24,11 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
 
     return Response.json({ success: true })
   } catch (error) {
+    // If UserAlert table doesn't exist, silently succeed
+    if (error instanceof Error && error.message.includes('does not exist in the current database')) {
+      console.warn('UserAlert table not available:', error)
+      return Response.json({ success: true })
+    }
     const { ErrorHandler } = await import('~/utils/errorHandling')
     const appError = ErrorHandler.handle(error, { api: 'user-alerts', action: 'dismiss', alertId, userId: authResult.user.id })
     throw new Response(appError.userMessage, { status: 500 })

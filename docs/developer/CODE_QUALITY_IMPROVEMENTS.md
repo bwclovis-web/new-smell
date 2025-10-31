@@ -1301,38 +1301,80 @@ describe("Button", () => {
 });
 ```
 
-#### Test Data Factories
+#### Test Data Factories ✅ **COMPLETED** (October 31, 2025)
+
+**Implementation Summary:**
+
+- ✅ Comprehensive factories created using @faker-js/faker
+- ✅ 5 factory modules: user, house, perfume, related-entities, bulk-data
+- ✅ 177 test cases created covering all factories
+- ✅ Preset scenarios for common testing patterns
+- ✅ Backward-compatible integration with existing test-utils
+- ✅ Bulk data generation for performance testing
+
+**Files Created:**
+
+```
+test/factories/
+├── index.ts                        # Central export point
+├── user.factory.ts                 # User data generation (148 lines)
+├── house.factory.ts                # Perfume house data (153 lines)
+├── perfume.factory.ts              # Perfume data (280 lines)
+├── related-entities.factory.ts     # Ratings, reviews, wishlist (271 lines)
+└── bulk-data.factory.ts            # Bulk data generation (227 lines)
+
+test/unit/factories/
+├── user.factory.test.ts            # 50+ tests
+├── house.factory.test.ts           # 43+ tests
+├── perfume.factory.test.ts         # 44+ tests
+└── bulk-data.factory.test.ts       # 40+ tests
+```
+
+**Example Usage:**
 
 ```typescript
-// test/factories/perfume.factory.ts
-import { faker } from "@faker-js/faker";
+// Import from test/factories
+import {
+  createMockPerfume,
+  createMockUser,
+  createMockHouse,
+} from "test/factories";
 
-export function createMockPerfume(overrides = {}) {
-  return {
-    id: faker.string.uuid(),
-    name: faker.commerce.productName(),
-    slug: faker.helpers.slugify(faker.commerce.productName()),
-    description: faker.commerce.productDescription(),
-    image: faker.image.url(),
-    createdAt: faker.date.past(),
-    updatedAt: faker.date.recent(),
-    perfumeHouse: {
-      id: faker.string.uuid(),
-      name: faker.company.name(),
-      slug: faker.helpers.slugify(faker.company.name()),
-    },
-    ...overrides,
-  };
-}
-
-// Usage
+// Create single entity
 const perfume = createMockPerfume({
   name: "Santal 33",
-  perfumeHouse: {
-    name: "Le Labo",
-  },
+  perfumeHouse: createMockHouse({ type: "niche" }),
 });
+
+// Create batch data
+import { batchGeneration } from "test/factories";
+const users = batchGeneration.users(100);
+
+// Generate complete datasets
+import { generateBulkTestData } from "test/factories";
+const testData = generateBulkTestData({
+  users: 50,
+  houses: 10,
+  perfumesPerHouse: 20,
+  ratingsPerPerfume: 5,
+  reviewsPerPerfume: 3,
+});
+
+// Use presets for common scenarios
+import { perfumeFactoryPresets, userFactoryPresets } from "test/factories";
+const nichePerfume = perfumeFactoryPresets.nichePerfume();
+const adminUser = userFactoryPresets.newUser();
 ```
+
+**Key Features:**
+
+- **Type-safe**: Full TypeScript support with proper types
+- **Flexible**: Override any field with custom values
+- **Realistic**: Uses faker.js for realistic data generation
+- **Presets**: Common scenarios (niche perfumes, admin users, etc.)
+- **Bulk generation**: Generate large datasets efficiently
+- **Relationships**: Maintains referential integrity
+- **Backward compatible**: Legacy functions still work
 
 #### Custom Test Utilities
 
@@ -1360,7 +1402,7 @@ renderWithRouter(<PerfumePage />, { route: "/perfume/santal-33" });
 #### Checklist
 
 - [x] Organize tests by functionality **✅ COMPLETED**
-- [ ] Create test data factories
+- [x] Create test data factories **✅ COMPLETED** (October 31, 2025)
 - [ ] Add custom test utilities
 - [ ] Implement beforeEach/afterEach properly
 - [ ] Add test descriptions

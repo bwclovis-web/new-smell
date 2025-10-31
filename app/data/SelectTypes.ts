@@ -3,7 +3,8 @@ export const houseTypes = [
   { id: 'designer', name: 'designer', label: 'Designer' },
   { id: 'celebrity', name: 'celebrity', label: 'Celebrity' },
   { id: 'indie', name: 'indie', label: 'Indie' },
-  { id: 'drugstore', name: 'drugstore', label: 'Drugstore' }
+  { id: 'middle-eastern', name: 'middle-eastern', label: 'Middle Eastern' },
+  { id: 'drugstore', name: 'drugstore', label: 'Mainstream/Mass Market' }
 ]
 
 export const perfumeTypes = [
