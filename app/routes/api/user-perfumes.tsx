@@ -13,6 +13,7 @@ import {
   updatePerfumeComment
 } from '~/models/user.server'
 import { processWishlistAvailabilityAlerts } from '~/utils/alert-processors'
+import { withActionErrorHandling, withLoaderErrorHandling } from '~/utils/errorHandling.server'
 
 // Type definitions
 type AuthResult = {
@@ -257,8 +258,8 @@ const handleAuthError = (result: AuthResult) => new Response(
   { status: result.status, headers: { 'Content-Type': 'application/json' } }
 )
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  try {
+export const loader = withLoaderErrorHandling(
+  async ({ request }: LoaderFunctionArgs) => {
     const authResult = await authenticateUser(request)
 
     if (!authResult.success) {
@@ -266,15 +267,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
 
     return handleAuthSuccess(authResult.user)
-  } catch (error) {
-    const { ErrorHandler } = await import('~/utils/errorHandling')
-    const appError = ErrorHandler.handle(error, { api: 'user-perfumes', action: 'loader' })
-    return new Response(
-      JSON.stringify({ success: false, error: appError.userMessage }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    )
+  },
+  {
+    context: { api: 'user-perfumes', action: 'loader' }
   }
-}
+)
 
 // Helper function to validate perfume ID
 const validatePerfumeId = (perfumeId: string | null | undefined) => {
@@ -404,10 +401,11 @@ const processActionRequest = async (request: Request) => {
 }
 
 // Action function to add or remove user perfumes
-export const action = async ({ request }: ActionFunctionArgs) => {
-  try {
+export const action = withActionErrorHandling(
+  async ({ request }: ActionFunctionArgs) => {
     return await processActionRequest(request)
-  } catch (error) {
-    return await handleActionError(error)
+  },
+  {
+    context: { api: 'user-perfumes', action: 'action' }
   }
-}
+)

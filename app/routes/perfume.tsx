@@ -12,6 +12,7 @@ import { getUserPerfumeReview } from '~/models/perfumeReview.server'
 import { getUserById } from '~/models/user.server'
 import { isInWishlist } from '~/models/wishlist.server'
 import { createSafeUser } from '~/types'
+import { withLoaderErrorHandling } from '~/utils/errorHandling.server'
 import { verifyAccessToken } from '~/utils/security/session-manager.server'
 
 import { ROUTE_PATH as HOUSE_PATH } from './perfume-house'
@@ -40,34 +41,39 @@ const getUserFromRequest = async (request: Request) => {
   return fullUser ? createSafeUser(fullUser) : null
 }
 
-export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  if (!params.perfumeSlug) {
-    throw new Error('Perfume slug is required')
+export const loader = withLoaderErrorHandling(
+  async ({ params, request }: LoaderFunctionArgs) => {
+    if (!params.perfumeSlug) {
+      throw new Error('Perfume slug is required')
+    }
+
+    const perfume = await getPerfumeBySlug(params.perfumeSlug)
+    if (!perfume) {
+      throw new Response('House not found', { status: 404 })
+    }
+
+    const user = await getUserFromRequest(request)
+    const isInUserWishlist = await checkWishlistStatus(request, perfume.id)
+
+    const [userRatings, ratingsData, userReview] = await Promise.all([
+      getUserRatingsForPerfume(request, perfume.id),
+      getPerfumeRatings(perfume.id),
+      user ? getUserPerfumeReview(user.id, perfume.id) : null
+    ])
+
+    return {
+      perfume,
+      user,
+      isInUserWishlist,
+      userRatings,
+      averageRatings: ratingsData.averageRatings,
+      userReview
+    }
+  },
+  {
+    context: { route: 'perfume', page: 'detail' }
   }
-
-  const perfume = await getPerfumeBySlug(params.perfumeSlug)
-  if (!perfume) {
-    throw new Response('House not found', { status: 404 })
-  }
-
-  const user = await getUserFromRequest(request)
-  const isInUserWishlist = await checkWishlistStatus(request, perfume.id)
-
-  const [userRatings, ratingsData, userReview] = await Promise.all([
-    getUserRatingsForPerfume(request, perfume.id),
-    getPerfumeRatings(perfume.id),
-    user ? getUserPerfumeReview(user.id, perfume.id) : null
-  ])
-
-  return {
-    perfume,
-    user,
-    isInUserWishlist,
-    userRatings,
-    averageRatings: ratingsData.averageRatings,
-    userReview
-  }
-}
+)
 
 const getUserIdFromRequest = async (request: Request): Promise<string | null> => {
   try {

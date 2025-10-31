@@ -4,6 +4,8 @@ import * as path from 'path'
 import { fileURLToPath } from 'url'
 import { promisify } from 'util'
 
+import { withLoaderErrorHandling } from '~/utils/errorHandling.server'
+
 // Note: Compression is handled by Express middleware
 // The compression utility is for future use with native Response objects
 
@@ -412,13 +414,13 @@ const processHistoryData = async (reports: ReportInfo[]): Promise<HistoryData> =
   return historyData
 }
 
-export const loader = async ({ request }: { request: Request }) => {
-  // Extract timeframe and force from request query parameters
-  const url = new URL(request.url)
-  const timeframe = url.searchParams.get('timeframe') || 'month'
-  const force = url.searchParams.get('force') === 'true'
+export const loader = withLoaderErrorHandling(
+  async ({ request }: { request: Request }) => {
+    // Extract timeframe and force from request query parameters
+    const url = new URL(request.url)
+    const timeframe = url.searchParams.get('timeframe') || 'month'
+    const force = url.searchParams.get('force') === 'true'
 
-  try {
     // Generate and process reports
     const reportData = await generateDataQualityReport(timeframe, force)
 
@@ -431,29 +433,11 @@ export const loader = async ({ request }: { request: Request }) => {
         'Expires': '0'
       }
     })
-  } catch (error) {
-    // Log and handle the error
-    const { ErrorHandler } = await import('~/utils/errorHandling')
-    const appError = ErrorHandler.handle(error, {
-      api: 'data-quality',
-      timeframe,
-      force
-    })
-
-    // Return error response
-    return new Response(
-      JSON.stringify({
-        error: appError.userMessage,
-        code: appError.code,
-        timestamp: new Date().toISOString()
-      }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' }
-      }
-    )
+  },
+  {
+    context: { api: 'data-quality', route: 'api/data-quality' }
   }
-}
+)
 
 // Function to validate report files exist
 const validateReportFiles = async (
