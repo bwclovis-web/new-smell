@@ -9,6 +9,8 @@ import { useCSRF } from "~/hooks/useCSRF"
 import { useSessionStore } from '~/stores/sessionStore'
 import type { UserPerfumeI } from "~/types"
 import type { Comment } from "~/types/comments"
+import { safeAsync } from "~/utils/errorHandling.patterns"
+import { assertExists } from "~/utils/errorHandling.patterns"
 
 import CommentsModal from "../../CommentsModal/CommentsModal"
 
@@ -28,36 +30,47 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
     }
   }, [userPerfume.comments])
   const handleTogglePublic = async (commentId: string, currentIsPublic: boolean) => {
+    // Optimistically update UI
     setComments(prevComments => prevComments.map(comment => comment.id === commentId
       ? { ...comment, isPublic: !currentIsPublic }
       : comment))
 
-    const perfumeId = userPerfume.perfumeId || userPerfume.perfume?.id
-    const userPerfumeId = userPerfume.id
+    // Validate required IDs exist
+    const perfumeId = assertExists(
+      userPerfume.perfumeId || userPerfume.perfume?.id,
+      'Perfume ID',
+      { userPerfumeId: userPerfume.id }
+    )
+    const userPerfumeId = assertExists(
+      userPerfume.id,
+      'User Perfume ID',
+      { perfumeId }
+    )
 
-    if (!perfumeId || !userPerfumeId) {
+    const formData = new FormData()
+    formData.append('action', 'toggle-comment-visibility')
+    formData.append('commentId', commentId)
+    formData.append('perfumeId', perfumeId)
+    formData.append('userPerfumeId', userPerfumeId)
+    formData.append('isPublic', (!currentIsPublic).toString())
+
+    // Use safeAsync for error handling
+    const [error, response] = await safeAsync(() => submitForm('/api/user-perfumes', formData))
+    
+    if (error) {
+      console.error('Error toggling comment visibility:', error)
+      // Revert the UI change on error
+      setComments(prevComments => prevComments.map(comment => comment.id === commentId
+        ? { ...comment, isPublic: currentIsPublic }
+        : comment))
       return
     }
 
-    try {
-      const formData = new FormData()
-      formData.append('action', 'toggle-comment-visibility')
-      formData.append('commentId', commentId)
-      formData.append('perfumeId', perfumeId)
-      formData.append('userPerfumeId', userPerfumeId)
-      formData.append('isPublic', (!currentIsPublic).toString())
-
-      const response = await submitForm('/api/user-perfumes', formData)
-      const result = await response.json()
-
-      if (!result.success) {
-        console.error('Failed to toggle comment visibility:', result.error)
-        setComments(prevComments => prevComments.map(comment => comment.id === commentId
-          ? { ...comment, isPublic: currentIsPublic }
-          : comment))
-      }
-    } catch (error) {
-      console.error('Error toggling comment visibility:', error)
+    const [jsonError, result] = await safeAsync(() => response.json())
+    
+    if (jsonError || !result.success) {
+      console.error('Failed to toggle comment visibility:', jsonError || result.error)
+      // Revert the UI change on error
       setComments(prevComments => prevComments.map(comment => comment.id === commentId
         ? { ...comment, isPublic: currentIsPublic }
         : comment))
@@ -66,42 +79,50 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
 
   const handleDeleteComment = async (commentId: string) => {
     const originalComments = [...comments]
+    // Optimistically remove from UI
     setComments(prev => prev.filter(comment => comment.id !== commentId))
-    const perfumeId = userPerfume.perfumeId || userPerfume.perfume?.id
-    const userPerfumeId = userPerfume.id
+    
+    // Validate required IDs exist
+    const perfumeId = assertExists(
+      userPerfume.perfumeId || userPerfume.perfume?.id,
+      'Perfume ID',
+      { userPerfumeId: userPerfume.id }
+    )
+    const userPerfumeId = assertExists(
+      userPerfume.id,
+      'User Perfume ID',
+      { perfumeId }
+    )
 
-    if (!perfumeId || !userPerfumeId) {
+    const formData = new FormData()
+    formData.append('action', 'delete-comment')
+    formData.append('commentId', commentId)
+    formData.append('perfumeId', perfumeId)
+    formData.append('userPerfumeId', userPerfumeId)
+
+    console.log('Deleting comment with data:')
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`)
+    }
+
+    // Use safeAsync for error handling
+    const [error, response] = await safeAsync(() => submitForm('/api/user-perfumes', formData))
+    
+    if (error) {
+      console.error('Error deleting comment:', error)
+      setComments(originalComments)
+      alert(t('comments.deleteError', 'Error deleting comment'))
       return
     }
 
-    try {
-      const formData = new FormData()
-      formData.append('action', 'delete-comment')
-      formData.append('commentId', commentId)
-      formData.append('perfumeId', perfumeId)
-      formData.append('userPerfumeId', userPerfumeId)
-
-      console.log('Deleting comment with data:')
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`)
-      }
-
-      const response = await submitForm('/api/user-perfumes', formData)
-      const result = await response.json()
-
-      if (result.success) {
-        console.log('Comment deleted successfully')
-      } else {
-        console.error('Failed to delete comment:', result.error)
-        // Revert the UI change on error
-        setComments(originalComments)
-        alert(`Failed to delete comment: ${result.error}`)
-      }
-    } catch (error) {
-      console.error('Error deleting comment:', error)
-      // Revert the UI change on error
+    const [jsonError, result] = await safeAsync(() => response.json())
+    
+    if (jsonError || !result.success) {
+      console.error('Failed to delete comment:', jsonError || result.error)
       setComments(originalComments)
-      alert('Error deleting comment')
+      alert(`${t('comments.deleteFailed', 'Failed to delete comment')}: ${result?.error || 'Unknown error'}`)
+    } else {
+      console.log('Comment deleted successfully')
     }
   }
 

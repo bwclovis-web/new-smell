@@ -8,6 +8,8 @@ import { useCSRF } from "~/hooks/useCSRF"
 import { useSessionStore } from '~/stores/sessionStore'
 import type { CommentsModalProps } from "~/types/comments"
 import { createTemporaryComment } from "~/utils/comment-utils"
+import { safeAsync } from "~/utils/errorHandling.patterns"
+import { commentSchemas, sanitizeString } from "~/utils/validation"
 
 const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
   const { t } = useTranslation()
@@ -28,50 +30,75 @@ const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
 
-    if (!comment.trim()) {
-      alert('Please enter a comment')
+    setIsSubmitting(true)
+
+    // Sanitize input
+    const sanitizedComment = sanitizeString(comment)
+
+    // Validate comment data
+    const validationData = {
+      perfumeId: perfume.perfumeId || perfume.perfume?.id || '',
+      userPerfumeId: perfume.id,
+      comment: sanitizedComment,
+      isPublic
+    }
+
+    const validationResult = commentSchemas.create.safeParse(validationData)
+    
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.errors[0]?.message || 'Invalid comment data'
+      alert(errorMessage)
+      setIsSubmitting(false)
       return
     }
 
-    setIsSubmitting(true)
+    // Add temporary comment to UI immediately
+    if (onCommentAdded) {
+      onCommentAdded(createTemporaryComment(sanitizedComment, isPublic, perfume.id))
+    }
 
-    try {
-      // Add temporary comment to UI immediately
-      if (onCommentAdded) {
-        onCommentAdded(createTemporaryComment(comment, isPublic, perfume.id))
-      }
+    // Create form data with validated data
+    const formData = new FormData()
+    formData.append('action', 'add-comment')
+    formData.append('perfumeId', validationResult.data.perfumeId)
+    formData.append('userPerfumeId', validationResult.data.userPerfumeId)
+    formData.append('isPublic', validationResult.data.isPublic?.toString() || 'false')
+    formData.append('comment', validationResult.data.comment)
 
-      // Create form data manually
-      const formData = new FormData()
-      formData.append('action', 'add-comment')
-      formData.append('perfumeId', perfume.perfumeId || perfume.perfume?.id || '')
-      formData.append('userPerfumeId', perfume.id)
-      formData.append('isPublic', isPublic.toString())
-      formData.append('comment', comment)
+    console.log('Submitting comment with validated data:')
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`)
+    }
 
-      console.log('Submitting comment with data:')
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`)
-      }
-
-      // Use useCSRF's submitForm method which handles CSRF automatically
-      const response = await submitForm('/api/user-perfumes', formData)
-      const result = await response.json()
-      console.log('Server response:', result)
-
-      if (result.success) {
-        console.log('Comment added successfully!')
-        setTimeout(() => {
-          closeModal()
-        }, 1000)
-      } else {
-        console.error('Failed to add comment:', result.error)
-        alert(`Failed to add comment: ${result.error}`)
-        setIsSubmitting(false)
-      }
-    } catch (error) {
+    // Use safeAsync for error handling
+    const [error, response] = await safeAsync(() => submitForm('/api/user-perfumes', formData))
+    
+    if (error) {
       console.error('Error submitting comment:', error)
-      alert('Error submitting comment')
+      alert(t('comments.error', 'Error submitting comment. Please try again.'))
+      setIsSubmitting(false)
+      return
+    }
+
+    const [jsonError, result] = await safeAsync(() => response.json())
+    
+    if (jsonError) {
+      console.error('Error parsing response:', jsonError)
+      alert(t('comments.error', 'Error processing response. Please try again.'))
+      setIsSubmitting(false)
+      return
+    }
+
+    console.log('Server response:', result)
+
+    if (result.success) {
+      console.log('Comment added successfully!')
+      setTimeout(() => {
+        closeModal()
+      }, 1000)
+    } else {
+      console.error('Failed to add comment:', result.error)
+      alert(`${t('comments.failed', 'Failed to add comment')}: ${result.error}`)
       setIsSubmitting(false)
     }
   }

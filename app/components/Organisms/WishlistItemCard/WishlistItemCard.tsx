@@ -6,6 +6,7 @@ import { Form, NavLink } from "react-router"
 import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 import { useCSRF } from "~/hooks/useCSRF"
 import { styleMerge } from "~/utils/styleUtils"
+import { safeAsync } from "~/utils/errorHandling.patterns"
 
 import { wishlistAddedVariants, wishlistHouseVariants, wishlistVariants, wishlistVisibilityVariants } from "./wishlist-variants"
 import WishListAvailabilityInfo from "./WishlistAvbalibilityInfo"
@@ -27,24 +28,25 @@ const WishlistItemCard = ({
 
   const handleVisibilityToggle = async () => {
     const newVisibility = !isPublic
+    // Optimistically update UI
     setIsPublic(newVisibility)
 
-    try {
-      const formData = new FormData()
-      formData.append('perfumeId', item.perfume.id)
-      formData.append('action', 'updateVisibility')
-      formData.append('isPublic', newVisibility.toString())
+    const formData = new FormData()
+    formData.append('perfumeId', item.perfume.id)
+    formData.append('action', 'updateVisibility')
+    formData.append('isPublic', newVisibility.toString())
 
-      const response = await fetch('/api/wishlist', {
+    const [error, response] = await safeAsync(() => 
+      fetch('/api/wishlist', {
         method: 'POST',
         headers: addToHeaders(),
         body: formData
       })
+    )
 
-      if (!response.ok) {
-        setIsPublic(!newVisibility)
-      }
-    } catch {
+    if (error || !response.ok) {
+      // Revert on error
+      console.error('Error updating wishlist visibility:', error)
       setIsPublic(!newVisibility)
     }
   }

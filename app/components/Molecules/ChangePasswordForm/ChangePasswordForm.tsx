@@ -1,9 +1,10 @@
-import { type ChangeEvent, useState } from 'react'
+import { type ChangeEvent, useState, useEffect } from 'react'
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs"
 import { Form } from 'react-router'
 
 import { Button } from '~/components/Atoms/Button'
 import PasswordStrengthIndicator from '~/components/Organisms/PasswordStrengthIndicator'
+import { authSchemas } from '~/utils/validation'
 
 interface ChangePasswordFormProps {
   actionData?: any
@@ -22,19 +23,36 @@ export const ChangePasswordForm = ({ actionData, isSubmitting = false, className
     new: false,
     confirm: false
   })
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
+  // Validate form on change
+  useEffect(() => {
+    const result = authSchemas.changePassword.safeParse(formData)
+    if (!result.success) {
+      const errors: Record<string, string> = {}
+      result.error.errors.forEach(err => {
+        if (err.path[0]) {
+          errors[err.path[0] as string] = err.message
+        }
+      })
+      setValidationErrors(errors)
+    } else {
+      setValidationErrors({})
+    }
+  }, [formData])
 
   const togglePasswordVisibility = (field: 'current' | 'new' | 'confirm') => {
     setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }))
   }
 
   const passwordsMatch = formData.newPassword === formData.confirmNewPassword
-  const isFormValid = formData.currentPassword && formData.newPassword && formData.confirmNewPassword && passwordsMatch
+  const isFormValid = Object.keys(validationErrors).length === 0 && 
+    formData.currentPassword && formData.newPassword && formData.confirmNewPassword
 
   return (
     <Form method="post" className={`space-y-6 ${className}`}>
@@ -54,7 +72,9 @@ export const ChangePasswordForm = ({ actionData, isSubmitting = false, className
             name="currentPassword"
             value={formData.currentPassword}
             onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+              validationErrors.currentPassword ? 'border-red-300' : 'border-gray-300'
+            }`}
             placeholder="Enter your current password"
             required
           />
@@ -66,6 +86,9 @@ export const ChangePasswordForm = ({ actionData, isSubmitting = false, className
             {showPasswords.current ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
           </button>
         </div>
+        {validationErrors.currentPassword && (
+          <p className="mt-1 text-sm text-red-600">{validationErrors.currentPassword}</p>
+        )}
       </div>
 
       <div>
@@ -79,7 +102,9 @@ export const ChangePasswordForm = ({ actionData, isSubmitting = false, className
             name="newPassword"
             value={formData.newPassword}
             onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+              validationErrors.newPassword ? 'border-red-300' : 'border-gray-300'
+            }`}
             placeholder="Enter your new password"
             required
           />
@@ -91,6 +116,10 @@ export const ChangePasswordForm = ({ actionData, isSubmitting = false, className
             {showPasswords.new ? <BsFillEyeSlashFill /> : <BsFillEyeFill />}
           </button>
         </div>
+
+        {validationErrors.newPassword && (
+          <p className="mt-1 text-sm text-red-600">{validationErrors.newPassword}</p>
+        )}
 
         {formData.newPassword && (
           <div className="mt-2">
@@ -110,9 +139,10 @@ export const ChangePasswordForm = ({ actionData, isSubmitting = false, className
             name="confirmNewPassword"
             value={formData.confirmNewPassword}
             onChange={handleInputChange}
-            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${formData.confirmNewPassword && !passwordsMatch
-              ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-              : 'border-gray-300'
+            className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+              validationErrors.confirmNewPassword || (formData.confirmNewPassword && !passwordsMatch)
+                ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
+                : 'border-gray-300'
               }`}
             placeholder="Confirm your new password"
             required
@@ -126,7 +156,11 @@ export const ChangePasswordForm = ({ actionData, isSubmitting = false, className
           </button>
         </div>
 
-        {formData.confirmNewPassword && (
+        {validationErrors.confirmNewPassword && (
+          <p className="mt-1 text-sm text-red-600">{validationErrors.confirmNewPassword}</p>
+        )}
+
+        {formData.confirmNewPassword && !validationErrors.confirmNewPassword && (
           <div className="mt-1 text-sm">
             {passwordsMatch ? (
               <span className="text-green-600 flex items-center space-x-1">

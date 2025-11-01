@@ -5,6 +5,8 @@ import { Button } from '~/components/Atoms/Button'
 import RichTextEditor from '~/components/Atoms/RichTextEditor'
 import ReviewCard from '~/components/Molecules/ReviewCard'
 import { useCSRF } from '~/hooks/useCSRF'
+import { safeAsync } from '~/utils/errorHandling.patterns'
+import { sanitizeString } from '~/utils/validation'
 
 interface Review {
   id: string
@@ -48,23 +50,34 @@ const ReviewSection = ({
 
   // Load reviews
   const loadReviews = async (pageNum: number = 1, append: boolean = false) => {
-    try {
-      const response = await fetch(`/api/reviews?perfumeId=${perfumeId}&page=${pageNum}&limit=5&isApproved=true`)
-      const data = await response.json()
-
-      if (data.reviews) {
-        if (append) {
-          setReviews(prev => [...prev, ...data.reviews])
-        } else {
-          setReviews(data.reviews)
-        }
-        setHasMore(data.pagination.hasNextPage)
-      }
-    } catch (error) {
+    const [error, response] = await safeAsync(() => 
+      fetch(`/api/reviews?perfumeId=${perfumeId}&page=${pageNum}&limit=5&isApproved=true`)
+    )
+    
+    if (error) {
       console.error('Error loading reviews:', error)
-    } finally {
       setLoading(false)
+      return
     }
+
+    const [jsonError, data] = await safeAsync(() => response.json())
+    
+    if (jsonError) {
+      console.error('Error parsing reviews:', jsonError)
+      setLoading(false)
+      return
+    }
+
+    if (data.reviews) {
+      if (append) {
+        setReviews(prev => [...prev, ...data.reviews])
+      } else {
+        setReviews(data.reviews)
+      }
+      setHasMore(data.pagination.hasNextPage)
+    }
+    
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -78,34 +91,46 @@ const ReviewSection = ({
   }
 
   const handleCreateReview = async () => {
-    if (!reviewContent.trim()) {
+    const sanitizedReview = sanitizeString(reviewContent)
+    
+    if (!sanitizedReview.trim()) {
       return
     }
 
     setIsSubmitting(true)
-    try {
-      const formData = new FormData()
-      formData.append('_action', 'create')
-      formData.append('perfumeId', perfumeId)
-      formData.append('review', reviewContent)
 
-      const response = await submitForm('/api/reviews', formData)
+    const formData = new FormData()
+    formData.append('_action', 'create')
+    formData.append('perfumeId', perfumeId)
+    formData.append('review', sanitizedReview)
 
-      const result = await response.json()
-
-      if (result.success) {
-        setReviewContent('')
-        setShowReviewForm(false)
-        loadReviews()
-      } else {
-        alert(result.error || t('singlePerfume.review.failedToCreateReview'))
-      }
-    } catch (error) {
+    const [error, response] = await safeAsync(() => submitForm('/api/reviews', formData))
+    
+    if (error) {
       console.error(t('singlePerfume.review.failedToCreateReview'), error)
       alert(t('singlePerfume.review.failedToCreateReview'))
-    } finally {
       setIsSubmitting(false)
+      return
     }
+
+    const [jsonError, result] = await safeAsync(() => response.json())
+    
+    if (jsonError) {
+      console.error(t('singlePerfume.review.failedToCreateReview'), jsonError)
+      alert(t('singlePerfume.review.failedToCreateReview'))
+      setIsSubmitting(false)
+      return
+    }
+
+    if (result.success) {
+      setReviewContent('')
+      setShowReviewForm(false)
+      loadReviews()
+    } else {
+      alert(result.error || t('singlePerfume.review.failedToCreateReview'))
+    }
+    
+    setIsSubmitting(false)
   }
 
   const handleEditReview = async (reviewId: string) => {
@@ -117,58 +142,68 @@ const ReviewSection = ({
       return
     }
 
-    try {
-      const formData = new FormData()
-      formData.append('_action', 'delete')
-      formData.append('reviewId', reviewId)
+    const formData = new FormData()
+    formData.append('_action', 'delete')
+    formData.append('reviewId', reviewId)
 
-      const response = await submitForm('/api/reviews', formData)
-
-      const result = await response.json()
-
-      if (result.success) {
-        // Remove the review from the list
-        setReviews(prev => prev.filter(review => review.id !== reviewId))
-      } else {
-        alert(result.error || t('singlePerfume.review.failedToDeleteReview'))
-      }
-    } catch (error) {
+    const [error, response] = await safeAsync(() => submitForm('/api/reviews', formData))
+    
+    if (error) {
       console.error(t('singlePerfume.review.failedToDeleteReview'), error)
       alert(t('singlePerfume.review.failedToDeleteReview'))
+      return
+    }
+
+    const [jsonError, result] = await safeAsync(() => response.json())
+    
+    if (jsonError) {
+      console.error(t('singlePerfume.review.failedToDeleteReview'), jsonError)
+      alert(t('singlePerfume.review.failedToDeleteReview'))
+      return
+    }
+
+    if (result.success) {
+      // Remove the review from the list
+      setReviews(prev => prev.filter(review => review.id !== reviewId))
+    } else {
+      alert(result.error || t('singlePerfume.review.failedToDeleteReview'))
     }
   }
 
   const handleModerateReview = async (reviewId: string, isApproved: boolean) => {
-    try {
-      // Optimistically remove the review from the list for real-time feel
-      const originalReviews = [...reviews]
-      setReviews(prev => prev.filter(review => review.id !== reviewId))
+    // Optimistically remove the review from the list for real-time feel
+    const originalReviews = [...reviews]
+    setReviews(prev => prev.filter(review => review.id !== reviewId))
 
-      const formData = new FormData()
-      formData.append('_action', 'moderate')
-      formData.append('reviewId', reviewId)
-      formData.append('isApproved', isApproved.toString())
+    const formData = new FormData()
+    formData.append('_action', 'moderate')
+    formData.append('reviewId', reviewId)
+    formData.append('isApproved', isApproved.toString())
 
-      const response = await submitForm('/api/reviews', formData)
-
-      const result = await response.json()
-
-      if (result.success) {
-        // If viewing all reviews (not just approved), reload to show updated status
-        // Otherwise the optimistic removal is sufficient
-        if (!window.location.search.includes('isApproved=false')) {
-          // Review was removed optimistically and stays removed
-          // Optionally reload to ensure consistency
-          loadReviews()
-        }
-      } else {
-        // Revert the optimistic update on error
-        setReviews(originalReviews)
-        alert(result.error || t('singlePerfume.review.failedToModerateReview'))
-      }
-    } catch (error) {
+    const [error, response] = await safeAsync(() => submitForm('/api/reviews', formData))
+    
+    if (error) {
       console.error(t('singlePerfume.review.failedToModerateReview'), error)
+      setReviews(originalReviews)
       alert(t('singlePerfume.review.failedToModerateReview'))
+      return
+    }
+
+    const [jsonError, result] = await safeAsync(() => response.json())
+    
+    if (jsonError || !result.success) {
+      console.error(t('singlePerfume.review.failedToModerateReview'), jsonError)
+      setReviews(originalReviews)
+      alert(result?.error || t('singlePerfume.review.failedToModerateReview'))
+      return
+    }
+
+    // If viewing all reviews (not just approved), reload to show updated status
+    // Otherwise the optimistic removal is sufficient
+    if (!window.location.search.includes('isApproved=false')) {
+      // Review was removed optimistically and stays removed
+      // Optionally reload to ensure consistency
+      loadReviews()
     }
   }
 
