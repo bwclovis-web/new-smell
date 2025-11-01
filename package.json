@@ -62,7 +62,10 @@
     "test:update-snapshots": "vitest run --update-snapshots",
     "test:clean": "rm -rf test-results coverage .nyc_output",
     "typecheck": "react-router typegen && tsc",
-    "postinstall": "node scripts/postinstall.cjs"
+    "postinstall": "node scripts/postinstall.cjs",
+    "crews:setup": "cd crews && python -m venv venv && .\\venv\\Scripts\\activate && pip install -r requirements.txt",
+    "crews:enrich": "cd crews && .\\venv\\Scripts\\python scripts/run_research_crew.py",
+    "ai:enrich": "npm run crews:enrich --"
   },
   "dependencies": {
     "@conform-to/react": "^1.6.1",

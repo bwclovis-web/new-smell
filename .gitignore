@@ -59,3 +59,17 @@ nul
 
 ## Vitest
 /vitest.config.*.timestamp-*html/
+/html/
+
+# CrewAI Python Environment
+/crews/
+crews/venv/
+crews/.env.crews
+crews/__pycache__/
+crews/**/__pycache__/
+crews/**/*.pyc
+
+# CrewAI Output
+csv_noir/*.csv
+csv_noir/*.json
+!csv_noir/.gitkeep

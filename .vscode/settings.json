@@ -26,6 +26,7 @@
     "languagedetector",
     "Parfum",
     "Pipeable",
+    "pycache",
     "Sillage"
   ],
   "github.copilot.chat.codeGeneration.instructions": [

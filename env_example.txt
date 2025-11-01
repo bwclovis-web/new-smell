@@ -49,8 +49,15 @@ OPENAI_API_KEY=your_openai_api_key_here
 # CI=false
 
 # CrewAI Configuration - OPTIONAL
-# MIN_REQUEST_DELAY=2000
-# OUTPUT_DIR=enriched_data
-# LOG_LEVEL=INFO
-# MAX_RETRIES=3
-# TIMEOUT=30000
+# CrewAI API Server
+# CREWAI_API_PORT=8888
+# CREWAI_API_HOST=localhost
+
+# Research Crew Configuration
+# RESEARCH_OUTPUT_DIR=csv_noir
+# RESEARCH_MAX_RETRIES=3
+# RESEARCH_DELAY_MS=2000
+
+# Fragrance Research Sources
+# FRAGRANTICA_BASE_URL=https://www.fragrantica.com
+# BASENOTES_BASE_URL=https://basenotes.com

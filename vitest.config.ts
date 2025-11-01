@@ -116,7 +116,8 @@ export default defineConfig({
     ],
     outputFile: {
       json: './test-results/results.json',
-      junit: './test-results/junit.xml'
+      junit: './test-results/junit.xml',
+      html: './test-results/index.html'
     },
 
     // Pool configuration for parallel testing
