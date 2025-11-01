@@ -533,24 +533,69 @@ export default defineConfig([
       // Enforce naming conventions
       "@typescript-eslint/naming-convention": [
         "error",
+        // Variables and function parameters: camelCase
+        {
+          selector: "variable",
+          format: ["camelCase", "PascalCase", "UPPER_CASE"],
+          filter: { regex: "^_", match: false },
+        },
+        // Functions: camelCase or PascalCase (for React components)
+        {
+          selector: "function",
+          format: ["camelCase", "PascalCase"],
+        },
+        // Classes: PascalCase
+        {
+          selector: "class",
+          format: ["PascalCase"],
+        },
+        // Interfaces: PascalCase (modern TypeScript style, no "I" prefix)
         {
           selector: "interface",
           format: ["PascalCase"],
-          prefix: ["I"],
         },
+        // Type aliases: PascalCase
         {
           selector: "typeAlias",
           format: ["PascalCase"],
         },
+        // Enums: PascalCase
         {
           selector: "enum",
           format: ["PascalCase"],
+        },
+        // Enum members: PascalCase or UPPER_CASE
+        {
+          selector: "enumMember",
+          format: ["PascalCase", "UPPER_CASE"],
+        },
+        // Private class members: allow leading underscore
+        {
+          selector: "classProperty",
+          modifiers: ["private"],
+          format: ["camelCase", "UPPER_CASE"],
+          leadingUnderscore: "allow",
+        },
+        // Readonly class properties: allow UPPER_CASE for constants
+        {
+          selector: "classProperty",
+          modifiers: ["readonly"],
+          format: ["camelCase", "UPPER_CASE"],
         },
       ],
     },
   },
 ])
 ```
+
+✅ **COMPLETED**: Naming conventions enforced via ESLint
+
+**Implementation Details:**
+
+- Added comprehensive `@typescript-eslint/naming-convention` rules to `eslint.config.js`
+- Rules enforce consistent naming across all TypeScript/JavaScript code
+- All naming convention rules tested and verified working
+- No naming convention violations found in existing codebase
 
 #### Prettier Integration
 
@@ -658,7 +703,18 @@ export default Button
   - Standardized function declaration syntax (removed FC usage)
   - Documented component structure patterns
   - Established consistent naming conventions
-- [ ] Enforce naming conventions
+- [x] **COMPLETED**: Enforce naming conventions ✅
+  - Added `@typescript-eslint/naming-convention` rules to ESLint configuration
+  - Variables and function parameters: camelCase (or PascalCase/UPPER_CASE for constants)
+  - Functions: camelCase or PascalCase (for React components)
+  - Classes: PascalCase
+  - Interfaces: PascalCase (modern TypeScript style, no "I" prefix)
+  - Type aliases: PascalCase
+  - Enums: PascalCase
+  - Enum members: PascalCase or UPPER_CASE
+  - Private class members: camelCase or UPPER_CASE (allow leading underscore)
+  - Readonly class properties: camelCase or UPPER_CASE (for constants)
+  - All naming convention rules tested and verified working
 - [ ] Update file organization
 - [ ] Add EditorConfig
 - [ ] Document code style guide

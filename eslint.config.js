@@ -134,8 +134,14 @@ export default defineConfig([
         {
           selector: "classProperty",
           modifiers: ["private"],
-          format: ["camelCase"],
+          format: ["camelCase", "UPPER_CASE"],
           leadingUnderscore: "allow",
+        },
+        // Readonly class properties: allow UPPER_CASE for constants
+        {
+          selector: "classProperty",
+          modifiers: ["readonly"],
+          format: ["camelCase", "UPPER_CASE"],
         },
         {
           selector: "classMethod",
