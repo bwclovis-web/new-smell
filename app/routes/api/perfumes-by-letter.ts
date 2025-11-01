@@ -1,23 +1,22 @@
 import type { LoaderFunctionArgs } from 'react-router'
 
 import { getPerfumesByLetterPaginated } from '~/models/perfume.server'
+import { assertValid, withLoaderErrorHandling } from '~/utils/errorHandling.patterns'
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url)
-  const letter = url.searchParams.get('letter')
-  const skip = parseInt(url.searchParams.get('skip') || '0', 10)
-  const take = parseInt(url.searchParams.get('take') || '12', 10)
+export const loader = withLoaderErrorHandling(
+  async ({ request }: LoaderFunctionArgs) => {
+    const url = new URL(request.url)
+    const letter = url.searchParams.get('letter')
+    const skip = parseInt(url.searchParams.get('skip') || '0', 10)
+    const take = parseInt(url.searchParams.get('take') || '12', 10)
 
-  if (!letter || !/^[A-Za-z]$/.test(letter)) {
-    return Response.json({
-      success: false,
-      message: 'Valid letter parameter is required',
-      perfumes: []
-    }, { status: 400 })
-  }
+    assertValid(
+      !!letter && /^[A-Za-z]$/.test(letter),
+      'Valid letter parameter is required',
+      { letter, field: 'letter' }
+    )
 
-  try {
-    const perfumes = await getPerfumesByLetterPaginated(letter.toUpperCase(), { skip, take })
+    const perfumes = await getPerfumesByLetterPaginated(letter!.toUpperCase(), { skip, take })
 
     return Response.json({
       success: true,
@@ -31,13 +30,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
         totalCount: perfumes.count
       }
     })
-  } catch (error) {
-    const { ErrorHandler } = await import('~/utils/errorHandling')
-    const appError = ErrorHandler.handle(error, { api: 'perfumes-by-letter', letter, skip, take })
-    return Response.json({
-      success: false,
-      message: appError.userMessage,
-      perfumes: []
-    }, { status: 500 })
+  },
+  {
+    context: { api: 'perfumes-by-letter', route: 'api/perfumes-by-letter' }
   }
-}
+)

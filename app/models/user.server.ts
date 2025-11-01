@@ -1,5 +1,6 @@
 import { prisma } from '~/db.server'
 import { invalidateAllSessions } from '~/models/session.server'
+import { assertValid, validationError } from '~/utils/errorHandling.patterns'
 import {
   calculatePasswordStrength,
   hashPassword,
@@ -16,14 +17,19 @@ export { getAllUsers, getUserByEmail, getUserById, getUserByName } from './user.
 
 export const createUser = async (data: FormData) => {
   const password = data.get('password')
-  if (typeof password !== 'string') {
-    throw new Error('Password is required and must be a string')
-  }
+  assertValid(
+    typeof password === 'string',
+    'Password is required and must be a string',
+    { field: 'password' }
+  )
 
   // Validate password complexity
   const passwordValidation = validatePasswordComplexity(password)
   if (!passwordValidation.isValid) {
-    throw new Error(`Password validation failed: ${passwordValidation.errors.join(', ')}`)
+    throw validationError(
+      `Password validation failed: ${passwordValidation.errors.join(', ')}`,
+      { field: 'password', errors: passwordValidation.errors }
+    )
   }
 
   // Calculate password strength for logging

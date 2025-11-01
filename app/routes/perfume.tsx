@@ -13,7 +13,7 @@ import { getUserPerfumeReview } from '~/models/perfumeReview.server'
 import { getUserById } from '~/models/user.server'
 import { isInWishlist } from '~/models/wishlist.server'
 import { createSafeUser } from '~/types'
-import { withLoaderErrorHandling } from '~/utils/errorHandling.server'
+import { assertExists, withLoaderErrorHandling } from '~/utils/errorHandling.patterns'
 import { verifyAccessToken } from '~/utils/security/session-manager.server'
 
 import { ROUTE_PATH as HOUSE_PATH } from './perfume-house'
@@ -44,14 +44,17 @@ const getUserFromRequest = async (request: Request) => {
 
 export const loader = withLoaderErrorHandling(
   async ({ params, request }: LoaderFunctionArgs) => {
-    if (!params.perfumeSlug) {
-      throw new Error('Perfume slug is required')
-    }
+    const perfumeSlug = assertExists(
+      params.perfumeSlug,
+      'Perfume slug',
+      { route: 'perfume', params }
+    )
 
-    const perfume = await getPerfumeBySlug(params.perfumeSlug)
-    if (!perfume) {
-      throw new Response('House not found', { status: 404 })
-    }
+    const perfume = assertExists(
+      await getPerfumeBySlug(perfumeSlug),
+      'Perfume',
+      { perfumeSlug }
+    )
 
     const user = await getUserFromRequest(request)
     const isInUserWishlist = await checkWishlistStatus(request, perfume.id)

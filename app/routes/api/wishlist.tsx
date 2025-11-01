@@ -3,6 +3,7 @@ import type { ActionFunctionArgs } from 'react-router'
 import { addToWishlist, removeFromWishlist, updateWishlistVisibility } from '~/models/wishlist.server'
 import { processDecantInterestAlerts } from '~/utils/alert-processors'
 import { authenticateUser } from '~/utils/auth.server'
+import { validationError, withActionErrorHandling } from '~/utils/errorHandling.patterns'
 import { WishlistActionSchema } from '~/utils/formValidationSchemas'
 import { createErrorResponse, createJsonResponse } from '~/utils/response.server'
 import { validateFormData } from '~/utils/validation'
@@ -32,11 +33,14 @@ const processWishlistAction = async (
   }
   if (actionType === 'updateVisibility') {
     if (isPublic === undefined) {
-      throw new Error('isPublic is required for updateVisibility action')
+      throw validationError('isPublic is required for updateVisibility action', {
+        field: 'isPublic',
+        action: 'updateVisibility'
+      })
     }
     return await updateWishlistVisibility(userId, perfumeId, isPublic)
   }
-  throw new Error('Invalid action type')
+  throw validationError('Invalid action type', { actionType, validActions: ['add', 'remove', 'updateVisibility'] })
 }
 
 
@@ -79,13 +83,12 @@ const processRequest = async (request: Request) => {
   return await processAuthenticatedRequest(request, perfumeId, actionType, isPublic)
 }
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  try {
+export const action = withActionErrorHandling(
+  async ({ request }: ActionFunctionArgs) => {
     return await processRequest(request)
-  } catch (error) {
-    const { ErrorHandler } = await import('~/utils/errorHandling')
-    const appError = ErrorHandler.handle(error, { api: 'wishlist', action: 'action' })
-    return createErrorResponse(appError.userMessage, 500)
+  },
+  {
+    context: { api: 'wishlist', route: 'api/wishlist' }
   }
-}
+)
 

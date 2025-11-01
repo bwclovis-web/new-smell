@@ -1,7 +1,8 @@
 import { getAvailablePerfumesForDecanting } from '~/models/perfume.server'
+import { withLoaderErrorHandling } from '~/utils/errorHandling.patterns'
 
-export async function loader() {
-  try {
+export const loader = withLoaderErrorHandling(
+  async () => {
     const availablePerfumes = await getAvailablePerfumesForDecanting()
 
     return Response.json({
@@ -15,13 +16,8 @@ export async function loader() {
         'X-Data-Size': JSON.stringify(availablePerfumes).length.toString()
       }
     })
-  } catch (error) {
-    const { ErrorHandler } = await import('~/utils/errorHandling')
-    const appError = ErrorHandler.handle(error, { api: 'available-perfumes' })
-    return Response.json({
-      success: false,
-      error: appError.userMessage,
-      perfumes: []
-    }, { status: 500 })
+  },
+  {
+    context: { api: 'available-perfumes', route: 'api/available-perfumes' }
   }
-}
+)

@@ -1,6 +1,7 @@
 import { HouseType, Prisma } from '@prisma/client'
 
 import { prisma } from '~/db.server'
+import { assertValid, validationError } from '~/utils/errorHandling.patterns'
 import { createUrlSlug } from '~/utils/slug'
 const buildHouseOrderBy = (
   sortBy?: string,
@@ -397,35 +398,45 @@ function validateHouseFormData(data: FormData): void {
   const type = data.get('type')
 
   // Validate required fields
-  if (!name || typeof name !== 'string' || name.trim().length === 0) {
-    throw new Error('House name is required and must be a non-empty string')
-  }
+  assertValid(
+    !!name && typeof name === 'string' && name.trim().length > 0,
+    'House name is required and must be a non-empty string',
+    { field: 'name', value: name }
+  )
 
-  if (name.trim().length < 2) {
-    throw new Error('House name must be at least 2 characters long')
-  }
+  assertValid(
+    name.trim().length >= 2,
+    'House name must be at least 2 characters long',
+    { field: 'name', length: name.trim().length }
+  )
 
-  if (name.trim().length > 200) {
-    throw new Error('House name must be no more than 200 characters long')
-  }
+  assertValid(
+    name.trim().length <= 200,
+    'House name must be no more than 200 characters long',
+    { field: 'name', length: name.trim().length }
+  )
 
   // Validate type if provided
   if (type && typeof type === 'string') {
     const validTypes: HouseType[] = [
       'niche', 'designer', 'indie', 'mainstream'
     ]
-    if (!validTypes.includes(type as HouseType)) {
-      throw new Error(`Invalid house type. Must be one of: ${validTypes.join(', ')}`)
-    }
+    assertValid(
+      validTypes.includes(type as HouseType),
+      `Invalid house type. Must be one of: ${validTypes.join(', ')}`,
+      { field: 'type', value: type, validTypes }
+    )
   }
 
   // Validate email format if provided
   const email = data.get('email')
   if (email && typeof email === 'string' && email.trim().length > 0) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
-      throw new Error('Invalid email format')
-    }
+    assertValid(
+      emailRegex.test(email),
+      'Invalid email format',
+      { field: 'email' }
+    )
   }
 
   // Validate website URL if provided
@@ -434,7 +445,7 @@ function validateHouseFormData(data: FormData): void {
     try {
       new URL(website)
     } catch {
-      throw new Error('Invalid website URL format')
+      throw validationError('Invalid website URL format', { field: 'website', value: website })
     }
   }
 }
