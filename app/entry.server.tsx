@@ -66,8 +66,14 @@ export default function handleRequest(
         onError(error: unknown) {
           responseStatusCode = 500
           if (shellRendered) {
-            // eslint-disable-next-line no-console
-            console.error(error) // TODO: Handle error
+            // Log error with context for production monitoring
+            // In production, this should integrate with your error logging service
+            // (e.g., Sentry, LogRocket, DataDog)
+            console.error('[React Render Error]', {
+              message: error instanceof Error ? error.message : 'Unknown error',
+              stack: error instanceof Error ? error.stack : undefined,
+              timestamp: new Date().toISOString()
+            })
           }
         }
       }

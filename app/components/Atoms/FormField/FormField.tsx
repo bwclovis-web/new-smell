@@ -17,7 +17,7 @@ export interface FormFieldProps {
   helpText?: string
   showValidationIcon?: boolean
 }
-//TODO: Clean up to standards
+
 const FormField = forwardRef<HTMLDivElement, FormFieldProps>((
   {
     label,

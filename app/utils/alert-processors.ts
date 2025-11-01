@@ -11,7 +11,8 @@ export async function processWishlistAvailabilityAlerts(perfumeId: string) {
     if (alerts.length > 0) {
       console.log(`Generated ${alerts.length} wishlist availability alerts for perfume ${perfumeId}`)
 
-      // TODO: Send email notifications if users have email alerts enabled
+      // NOTE: Email notifications are not yet implemented
+      // When implementing, enable this code and integrate with your email service:
       // for (const alert of alerts) {
       //   if (alert.User.alertPreferences?.emailWishlistAlerts) {
       //     await sendWishlistAlertEmail(alert.User.email, alert.Perfume.name, alert.metadata.availableTraders)
@@ -37,7 +38,8 @@ export async function processDecantInterestAlerts(perfumeId: string, interestedU
     if (alerts.length > 0) {
       console.log(`Generated ${alerts.length} decant interest alerts for perfume ${perfumeId} from user ${interestedUserId}`)
 
-      // TODO: Send email notifications if users have email alerts enabled
+      // NOTE: Email notifications are not yet implemented
+      // When implementing, enable this code and integrate with your email service:
       // for (const alert of alerts) {
       //   if (alert.User.alertPreferences?.emailDecantAlerts) {
       //     await sendDecantInterestAlertEmail(alert.User.email, alert.Perfume.name, alert.metadata.interestedUserName)
@@ -114,15 +116,32 @@ export async function processBulkAlerts(perfumeIds: string[]) {
 
 /**
  * Placeholder for email notification functions
- * These would be implemented with your email service of choice
+ * These will be implemented when email service integration is added
+ * 
+ * Recommended services:
+ * - SendGrid
+ * - Mailgun
+ * - AWS SES
+ * - Postmark
+ * 
+ * Implementation checklist:
+ * 1. Choose and configure email service
+ * 2. Create email templates
+ * 3. Add email service credentials to environment variables
+ * 4. Implement sendEmail utility
+ * 5. Add rate limiting to prevent spam
+ * 6. Add user email preferences management
+ * 7. Test email delivery
  */
 export async function sendWishlistAlertEmail(
   userEmail: string,
   perfumeName: string,
   availableTraders: Array<{ userId: string; displayName: string }>
 ) {
-  // TODO: Implement email sending logic
-  console.log(`Would send wishlist alert email to ${userEmail} for ${perfumeName}`)
+  // NOTE: Email sending not yet implemented
+  // This is a placeholder that logs the intended action
+  console.log(`[Email Placeholder] Would send wishlist alert email to ${userEmail} for ${perfumeName}`)
+  console.log(`Available traders:`, availableTraders)
 }
 
 export async function sendDecantInterestAlertEmail(
@@ -130,6 +149,8 @@ export async function sendDecantInterestAlertEmail(
   perfumeName: string,
   interestedUserName: string
 ) {
-  // TODO: Implement email sending logic
-  console.log(`Would send decant interest alert email to ${userEmail} for ${perfumeName}`)
+  // NOTE: Email sending not yet implemented
+  // This is a placeholder that logs the intended action
+  console.log(`[Email Placeholder] Would send decant interest alert email to ${userEmail} for ${perfumeName}`)
+  console.log(`Interested user: ${interestedUserName}`)
 }

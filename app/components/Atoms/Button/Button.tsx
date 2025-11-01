@@ -6,7 +6,6 @@ import { styleMerge } from '~/utils/styleUtils'
 
 import { buttonVariants } from './button-variants'
 
-//TODO: MERGE THIS
 interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'style'>,
   VariantProps<typeof buttonVariants> {
   variant?: 'primary' | 'secondary' | 'danger' | 'icon' | null

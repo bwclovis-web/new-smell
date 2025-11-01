@@ -1,176 +1,180 @@
 # Documentation
 
-Welcome to the New Smell project documentation. This directory contains all project documentation organized by audience and purpose.
+Welcome to the New Smell project documentation. This directory contains all project documentation organized by purpose and audience.
 
 ## 📁 Directory Structure
 
 ```
 docs/
-├── developer/          # Technical documentation for developers
-│   ├── README.md      # Developer documentation index
-│   ├── AI_INTEGRATION_ROADMAP.md
-│   ├── CODE_QUALITY_IMPROVEMENTS.md
-│   ├── DUPLICATE_COMPONENTS_ANALYSIS.md
-│   ├── ERROR_HANDLING_IMPROVEMENT_PLAN.md
-│   ├── IMPLEMENTATION_CHECKLIST.md
-│   ├── INFRASTRUCTURE_IMPROVEMENTS.md
-│   ├── PERFORMANCE_COMPONENTS_AUDIT.md
-│   ├── PERFORMANCE_OPTIMIZATION_GUIDE.md
-│   └── SECURITY_HARDENING_SUMMARY.md
-└── reports/           # Analysis reports and data exports
+├── guides/                  # Active developer guides and best practices
+├── error-handling/          # Error handling system documentation
+├── roadmap/                 # Future features and AI integration plans
+├── audits/                  # Performance and code quality audits
+├── reports/                 # Data quality reports and metrics
+└── archive/                 # Historical documentation and completed work
 ```
 
 ## 🎯 Quick Navigation
 
 ### For Developers
-👉 **[Developer Documentation](./developer/README.md)**
 
-Comprehensive technical documentation covering:
-- Code quality standards and best practices
-- Performance optimization guidelines
-- Security hardening measures
-- Error handling patterns
-- Infrastructure setup
-- Implementation checklists
+#### Getting Started
+👉 **[Developer Guides](./guides/)** - Start here for coding standards and best practices
 
-### For Data Analysis
-📊 **[Reports Directory](./reports/)**
+Essential guides for all developers:
+- [Code Quality](./guides/code-quality.md) - Standards and patterns
+- [Implementation Checklist](./guides/implementation-checklist.md) - Feature development workflow
+- [Security](./guides/security.md) - Security requirements
+- [Performance](./guides/performance.md) - Optimization guidelines
+- [Infrastructure](./guides/infrastructure.md) - Deployment and operations
 
-Contains analysis reports, metrics, and data exports including:
-- Performance audits
-- Code quality reports
-- Security scans
-- Component analysis data
+#### Error Handling
+📛 **[Error Handling System](./error-handling/)** - Comprehensive error management
 
-## 🚀 Getting Started
+Quick access:
+- [Developer Guide](./error-handling/developer-guide.md) ⭐ **START HERE**
+- [Common Scenarios](./error-handling/common-scenarios.md) - Copy-paste examples
+- [Troubleshooting](./error-handling/troubleshooting.md) - Debug issues
+- [Architecture](./error-handling/architecture.md) - System design
+- [Performance Metrics](./error-handling/performance-metrics.md) - Benchmarks
 
-### New Developers
-1. Start with [Developer Documentation](./developer/README.md)
-2. Review [CODE_QUALITY_IMPROVEMENTS.md](./developer/CODE_QUALITY_IMPROVEMENTS.md)
-3. Check [IMPLEMENTATION_CHECKLIST.md](./developer/IMPLEMENTATION_CHECKLIST.md)
+### For Product & Planning
 
-### Working on Specific Areas
-- **Performance Issues**: See [PERFORMANCE_OPTIMIZATION_GUIDE.md](./developer/PERFORMANCE_OPTIMIZATION_GUIDE.md)
-- **Error Handling**: See [Error Handling Documentation](#error-handling-documentation) below
-- **Security**: See [SECURITY_HARDENING_SUMMARY.md](./developer/SECURITY_HARDENING_SUMMARY.md)
-- **Infrastructure**: See [INFRASTRUCTURE_IMPROVEMENTS.md](./developer/INFRASTRUCTURE_IMPROVEMENTS.md)
+#### Roadmap
+🗺️ **[Project Roadmap](./roadmap/)** - Future features and initiatives
 
-## Error Handling Documentation
+- [AI Integration Roadmap](./roadmap/ai-integration.md) - AI features plan
+- [User Interaction Tracking](./roadmap/user-interaction-tracking/) - Data collection strategy
 
-The project has a comprehensive error handling system with complete documentation:
+### For Analysis & Reference
 
-### Quick Start
-- **[Developer Guide](./developer/ERROR_HANDLING_DEVELOPER_GUIDE.md)** - Complete guide to using the error handling system
-- **[Common Scenarios](./developer/ERROR_HANDLING_COMMON_SCENARIOS.md)** - Ready-to-use code examples for common situations
-- **[Troubleshooting](./developer/ERROR_HANDLING_TROUBLESHOOTING.md)** - Solutions to common issues
+#### Audits
+🔍 **[Audits & Analysis](./audits/)** - Code and performance audits
 
-### System Overview
-The error handling system provides:
-- ✅ Type-safe error creation and handling
-- ✅ Automatic retry for transient failures
-- ✅ User-friendly error messages
-- ✅ Security (no sensitive data exposure)
-- ✅ Performance optimized (< 100ms overhead)
-- ✅ Correlation IDs for request tracking
-- ✅ Comprehensive logging
+- [Performance Components Audit](./audits/performance-components.md) - Component analysis
 
-### Key Features
+#### Data Reports
+📊 **[Data Quality Reports](./reports/)** - Latest data quality metrics
 
-**Client-Side:**
-- React hooks for error handling (`useApiErrorHandler`, `useApiWithRetry`)
-- Error boundaries for component tree errors
-- Automatic retry with configurable strategies
-- User-friendly error displays
+- [Latest Reports](./reports/latest/) - Current data quality analysis
 
-**Server-Side:**
-- Route handler wrappers (`withLoaderErrorHandling`, `withActionErrorHandling`)
-- Specialized handlers (Database, Auth, Validation)
-- Automatic error logging with correlation IDs
-- Security-first approach (sensitive data sanitization)
+#### Archive
+📦 **[Documentation Archive](./archive/)** - Historical documentation
 
-**Performance:**
-- All operations complete in < 100ms
-- Memory-efficient logging (circular buffer)
-- No memory leaks detected
-- Comprehensive performance test suite
+- Completed refactoring summaries
+- Implementation milestones
+- Project approval records
 
-### Documentation Structure
+## 🚀 Common Tasks
 
-```
-docs/developer/
-├── ERROR_HANDLING_DEVELOPER_GUIDE.md      # Complete developer guide
-├── ERROR_HANDLING_COMMON_SCENARIOS.md     # Code examples for common cases
-├── ERROR_HANDLING_TROUBLESHOOTING.md      # Troubleshooting & debugging
-├── ERROR_HANDLING_IMPROVEMENT_PLAN.md     # Implementation plan & architecture
-└── PERFORMANCE_TESTING_SUMMARY.md         # Performance metrics & benchmarks
-```
+### Starting a New Feature
+1. Review [Implementation Checklist](./guides/implementation-checklist.md)
+2. Check [Code Quality](./guides/code-quality.md) standards
+3. Reference [Security](./guides/security.md) requirements
 
-### Quick Examples
+### Working with Errors
+1. Read [Error Handling Developer Guide](./error-handling/developer-guide.md)
+2. Find your scenario in [Common Scenarios](./error-handling/common-scenarios.md)
+3. Copy and adapt the example code
 
-**Client-Side API Call:**
-```tsx
-import { useApiWithRetry } from '~/hooks/useApiWithRetry'
+### Optimizing Performance
+1. Review [Performance Guide](./guides/performance.md)
+2. Check [Performance Components Audit](./audits/performance-components.md)
+3. Apply recommended optimizations
 
-function MyComponent() {
-  const { fetchWithRetry, error, isLoading } = useApiWithRetry()
-
-  const loadData = () => fetchWithRetry(
-    () => fetch('/api/data').then(r => r.json()),
-    { endpoint: '/api/data', method: 'GET' }
-  )
-
-  return isLoading ? <Spinner /> : <Data />
-}
-```
-
-**Server-Side Route:**
-```typescript
-import { withLoaderErrorHandling } from '~/utils/errorHandling.server'
-import { createError } from '~/utils/errorHandling'
-
-export const loader = withLoaderErrorHandling(async ({ params }) => {
-  const data = await db.getData(params.id)
-  if (!data) {
-    throw createError.notFound('Data not found', { id: params.id })
-  }
-  return json({ data })
-})
-```
-
-### Testing
-- 356+ unit tests for error handling components
-- 105+ integration tests
-- 17 E2E tests for error UX
-- 19 performance tests
-
-For complete documentation, start with the **[Developer Guide](./developer/ERROR_HANDLING_DEVELOPER_GUIDE.md)**.
+### Planning AI Features
+1. Review [AI Integration Roadmap](./roadmap/ai-integration.md)
+2. Read [User Interaction Tracking](./roadmap/user-interaction-tracking/) plan
+3. Understand data requirements
 
 ## 📝 Documentation Standards
 
-All documentation in this project follows these principles:
-- **Clear and Concise**: Easy to understand and navigate
-- **Actionable**: Provides specific guidance and examples
-- **Current**: Regularly updated to reflect codebase changes
-- **Comprehensive**: Covers all aspects of development
+All documentation follows these principles:
+- **Clear and Concise** - Easy to understand and navigate
+- **Actionable** - Provides specific guidance and examples
+- **Current** - Regularly updated to reflect codebase changes
+- **Organized** - Logical structure with clear navigation
+- **Searchable** - Descriptive filenames and headers
 
 ## 🔄 Contributing to Documentation
 
-When adding or updating documentation:
-1. Place technical/developer docs in `developer/`
-2. Place reports and analysis in `reports/`
-3. Update relevant README files
-4. Use clear, descriptive filenames
-5. Include a table of contents for long documents
-6. Add cross-references to related documentation
+### Adding New Documentation
 
-## 📞 Questions?
+1. **Active guides** → Place in `guides/`
+2. **Error handling** → Place in `error-handling/`
+3. **Future plans** → Place in `roadmap/`
+4. **Analysis/audits** → Place in `audits/`
+5. **Data reports** → Place in `reports/latest/`
+6. **Historical** → Place in `archive/`
 
-If you can't find what you're looking for:
-1. Check the [Developer Documentation Index](./developer/README.md)
-2. Search across all documentation files
-3. Reach out to the development team
+### Documentation Guidelines
+
+- Use clear, descriptive filenames
+- Include a table of contents for long documents
+- Add cross-references to related documentation
+- Update relevant README files
+- Include code examples where applicable
+- Add date stamps for time-sensitive content
+
+## 📞 Getting Help
+
+### Can't Find What You Need?
+
+1. Search across all documentation files
+2. Check the [Archive](./archive/) for historical context
+3. Review the [Roadmap](./roadmap/) for planned features
+4. Reach out to the development team
+
+### Common Questions
+
+**Q: Where do I find coding standards?**
+A: See [Code Quality Guide](./guides/code-quality.md)
+
+**Q: How do I handle errors in my code?**
+A: Start with [Error Handling Developer Guide](./error-handling/developer-guide.md)
+
+**Q: What security measures should I implement?**
+A: Review [Security Guide](./guides/security.md)
+
+**Q: How do I optimize component performance?**
+A: Check [Performance Guide](./guides/performance.md) and [Performance Audit](./audits/performance-components.md)
+
+**Q: What AI features are planned?**
+A: See [AI Integration Roadmap](./roadmap/ai-integration.md)
+
+## 📊 Documentation Statistics
+
+| Section | Documents | Status |
+|---------|-----------|--------|
+| Guides | 5 | ✅ Current |
+| Error Handling | 5 | ✅ Current |
+| Roadmap | 2+ | 📋 Planning |
+| Audits | 1 | ✅ Current |
+| Archive | 8 | 📦 Historical |
+
+## 🎓 Learning Path
+
+### New Team Members
+1. Read [Code Quality](./guides/code-quality.md)
+2. Review [Implementation Checklist](./guides/implementation-checklist.md)
+3. Study [Error Handling Developer Guide](./error-handling/developer-guide.md)
+4. Understand [Security](./guides/security.md) requirements
+
+### Experienced Developers
+1. Quick reference: [Common Scenarios](./error-handling/common-scenarios.md)
+2. Performance: [Performance Guide](./guides/performance.md)
+3. Future features: [Roadmap](./roadmap/)
+
+### Tech Leads / Architects
+1. System design: [Error Handling Architecture](./error-handling/architecture.md)
+2. Quality standards: [Code Quality](./guides/code-quality.md)
+3. Infrastructure: [Infrastructure Guide](./guides/infrastructure.md)
+4. Planning: [Roadmap](./roadmap/)
 
 ---
 
-*Documentation Structure Last Updated: October 31, 2025*
+**Documentation Structure Last Updated:** November 1, 2025  
+**Maintained By:** Development Team  
+**Next Review:** December 1, 2025
 
+For questions or suggestions about documentation, please reach out to the development team.

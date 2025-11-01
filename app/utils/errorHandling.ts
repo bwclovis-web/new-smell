@@ -56,14 +56,14 @@ const SENSITIVE_KEYS = [
  */
 export function sanitizeContext(context?: Record<string, any>): Record<string, any> | undefined {
   if (!context) {
- return undefined 
-}
+    return undefined
+  }
 
   const sanitized: Record<string, any> = {}
 
   Object.keys(context).forEach(key => {
     const lowerKey = key.toLowerCase()
-    
+
     // Check if key contains any sensitive keywords
     const isSensitive = SENSITIVE_KEYS.some(sensitive => lowerKey.includes(sensitive.toLowerCase()))
 
@@ -142,7 +142,7 @@ export class AppError extends Error {
 
   toJSON(includeStack: boolean = false) {
     const isProduction = process.env.NODE_ENV === 'production'
-    
+
     return {
       name: this.name,
       message: this.message,
@@ -187,11 +187,11 @@ function getCorrelationId(): string | undefined {
   if (typeof window !== 'undefined') {
     return undefined
   }
-  
+
   // Server-side: try to get correlation ID from AsyncLocalStorage
   try {
     // Use require for conditional server-only import
-     
+
     const { getCorrelationId: getCorrelationIdFunc } = require('./correlationId.server')
     return getCorrelationIdFunc()
   } catch {
@@ -204,12 +204,12 @@ function getCorrelationId(): string | undefined {
 export class ErrorLogger {
   private static instance: ErrorLogger
 
-  private logs: Array<{ 
+  private logs: Array<{
     id: string
     correlationId?: string
     error: AppError
     timestamp: Date
-    userId?: string 
+    userId?: string
   }> = []
 
   private readonly MAX_LOGS = 1000 // Prevent memory leaks
@@ -226,7 +226,7 @@ export class ErrorLogger {
   log(error: AppError, userId?: string): void {
     // Get correlation ID if available (server-side only)
     const correlationId = getCorrelationId()
-    
+
     const logEntry = {
       id: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       correlationId,
@@ -234,7 +234,7 @@ export class ErrorLogger {
       timestamp: new Date(),
       userId
     }
-    
+
     this.logs.push(logEntry)
 
     // Keep only the most recent logs to prevent memory leaks
@@ -260,26 +260,34 @@ export class ErrorLogger {
   }
 
   private sendToExternalLogger(error: AppError, userId?: string, correlationId?: string): void {
-    // TODO: Implement external logging service integration
-    // Examples: Sentry, LogRocket, DataDog, etc.
-    // Note: Always use sanitized context for external logging
+    // NOTE: External logging service integration placeholder
+    // 
+    // When implementing, integrate with your chosen service:
+    // - Sentry: Sentry.captureException(error, { user: { id: userId }, tags: { correlationId } })
+    // - LogRocket: LogRocket.captureException(error, { extra: { userId, correlationId } })
+    // - DataDog: DD.logger.error(error.message, { userId, correlationId, ...error.toJSON(false) })
+    // - Custom: await fetch('/api/logs', { method: 'POST', body: JSON.stringify(sanitizedLog) })
+    //
+    // Important: Always use sanitized context for external logging
+    // Never include sensitive data (passwords, tokens, PII) in logs
+
     const sanitizedLog = {
       ...error.toJSON(false), // Never include stack in production external logs
       correlationId,
       userId: userId,
       timestamp: new Date().toISOString()
     }
-    
+
     // For now, log without stack trace in production
     console.error('[Production Error]', sanitizedLog)
   }
 
-  getLogs(limit?: number): Array<{ 
+  getLogs(limit?: number): Array<{
     id: string
     correlationId?: string
     error: AppError
     timestamp: Date
-    userId?: string 
+    userId?: string
   }> {
     return limit ? this.logs.slice(-limit) : this.logs
   }
@@ -450,21 +458,21 @@ export const asyncErrorHandler = <T extends any[], R>(
   fn: (...args: T) => Promise<R>,
   context?: Record<string, any>
 ) => async (...args: T): Promise<R> => {
-    try {
-      return await fn(...args)
-    } catch (error) {
-      throw ErrorHandler.handle(error, context)
-    }
+  try {
+    return await fn(...args)
+  } catch (error) {
+    throw ErrorHandler.handle(error, context)
   }
+}
 
 // Sync Error Wrapper
 export const syncErrorHandler = <T extends any[], R>(
   fn: (...args: T) => R,
   context?: Record<string, any>
 ) => (...args: T): R => {
-    try {
-      return fn(...args)
-    } catch (error) {
-      throw ErrorHandler.handle(error, context)
-    }
+  try {
+    return fn(...args)
+  } catch (error) {
+    throw ErrorHandler.handle(error, context)
   }
+}

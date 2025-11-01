@@ -1,4 +1,6 @@
 
+import { FiAlertCircle, FiCheckCircle, FiInfo } from 'react-icons/fi'
+
 export interface ValidationMessageProps {
   error?: string
   success?: string
@@ -9,7 +11,6 @@ export interface ValidationMessageProps {
   size?: 'sm' | 'md' | 'lg'
 }
 
-//TODO: Update icons to react icons and update styles
 const ValidationMessage = ({
   error,
   success,
@@ -32,6 +33,12 @@ const ValidationMessage = ({
     lg: 'text-base px-4 py-3'
   }
 
+  const iconSizeClasses = {
+    sm: 'w-3.5 h-3.5',
+    md: 'w-4 h-4',
+    lg: 'w-5 h-5'
+  }
+
   const typeClasses = {
     error: 'bg-red-50 border-red-200 text-red-800',
     success: 'bg-green-50 border-green-200 text-green-800',
@@ -46,12 +53,12 @@ const ValidationMessage = ({
     info: 'text-blue-500'
   }
 
-  const icons = {
-    error: '⚠️',
-    success: '✓',
-    warning: '⚠️',
-    info: 'ℹ️'
-  }
+  const IconComponent = {
+    error: FiAlertCircle,
+    success: FiCheckCircle,
+    warning: FiAlertCircle,
+    info: FiInfo
+  }[type]
 
   return (
     <div
@@ -65,15 +72,14 @@ const ValidationMessage = ({
       aria-live="polite"
     >
       {showIcon && (
-        <span
+        <IconComponent
           className={`
-            flex-shrink-0 text-sm
+            flex-shrink-0
+            ${iconSizeClasses[size]}
             ${iconClasses[type]}
           `}
           aria-hidden="true"
-        >
-          {icons[type]}
-        </span>
+        />
       )}
       <span className="flex-1">{message}</span>
     </div>

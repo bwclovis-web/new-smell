@@ -387,9 +387,63 @@ export const deletePerfumeHouse = async (id: string) => {
   })
   return deletedHouse
 }
-//TODO: Add validation for FormData fields
+
+/**
+ * Validates FormData fields for perfume house update
+ * @throws {Error} if required fields are missing or invalid
+ */
+function validateHouseFormData(data: FormData): void {
+  const name = data.get('name')
+  const type = data.get('type')
+
+  // Validate required fields
+  if (!name || typeof name !== 'string' || name.trim().length === 0) {
+    throw new Error('House name is required and must be a non-empty string')
+  }
+
+  if (name.trim().length < 2) {
+    throw new Error('House name must be at least 2 characters long')
+  }
+
+  if (name.trim().length > 200) {
+    throw new Error('House name must be no more than 200 characters long')
+  }
+
+  // Validate type if provided
+  if (type && typeof type === 'string') {
+    const validTypes: HouseType[] = [
+      'niche', 'designer', 'indie', 'mainstream'
+    ]
+    if (!validTypes.includes(type as HouseType)) {
+      throw new Error(`Invalid house type. Must be one of: ${validTypes.join(', ')}`)
+    }
+  }
+
+  // Validate email format if provided
+  const email = data.get('email')
+  if (email && typeof email === 'string' && email.trim().length > 0) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      throw new Error('Invalid email format')
+    }
+  }
+
+  // Validate website URL if provided
+  const website = data.get('website')
+  if (website && typeof website === 'string' && website.trim().length > 0) {
+    try {
+      new URL(website)
+    } catch {
+      throw new Error('Invalid website URL format')
+    }
+  }
+}
+
 export const updatePerfumeHouse = async (id: string, data: FormData) => {
   try {
+    // Validate FormData fields before processing
+    validateHouseFormData(data)
+
     const name = sanitizeText(data.get('name') as string)
     const updatedHouse = await prisma.perfumeHouse.update({
       where: { id },
@@ -418,9 +472,10 @@ export const updatePerfumeHouse = async (id: string, data: FormData) => {
         error: `A perfume house with that ${Array.isArray(err.meta?.target) ? err.meta.target[0] : 'value'} already exists.`
       }
     }
+    // Return validation errors or unexpected errors
     return {
       success: false,
-      error: 'An unexpected error occurred.'
+      error: err instanceof Error ? err.message : 'An unexpected error occurred.'
     }
   }
 }

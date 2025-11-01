@@ -6,35 +6,39 @@ import ValidationMessage from './ValidationMessage'
 describe('ValidationMessage', () => {
   describe('Rendering', () => {
     it('should render error message', () => {
-      render(<ValidationMessage error="This is an error" />)
+      const { container } = render(<ValidationMessage error="This is an error" />)
 
       expect(screen.getByText('This is an error')).toBeInTheDocument()
-      expect(screen.getByRole('alert')).toBeInTheDocument()
-      expect(screen.getByText('⚠️')).toBeInTheDocument()
+      expect(container.querySelector('[role="alert"]')).toBeInTheDocument()
+      // Check for SVG icon (react-icons render as SVG)
+      expect(container.querySelector('svg')).toBeInTheDocument()
     })
 
     it('should render success message', () => {
-      render(<ValidationMessage success="This is a success" />)
+      const { container } = render(<ValidationMessage success="This is a success" />)
 
       expect(screen.getByText('This is a success')).toBeInTheDocument()
-      expect(screen.getByRole('alert')).toBeInTheDocument()
-      expect(screen.getByText('✓')).toBeInTheDocument()
+      expect(container.querySelector('[role="alert"]')).toBeInTheDocument()
+      // Check for SVG icon
+      expect(container.querySelector('svg')).toBeInTheDocument()
     })
 
     it('should render warning message', () => {
-      render(<ValidationMessage warning="This is a warning" />)
+      const { container } = render(<ValidationMessage warning="This is a warning" />)
 
       expect(screen.getByText('This is a warning')).toBeInTheDocument()
-      expect(screen.getByRole('alert')).toBeInTheDocument()
-      expect(screen.getByText('⚠️')).toBeInTheDocument()
+      expect(container.querySelector('[role="alert"]')).toBeInTheDocument()
+      // Check for SVG icon
+      expect(container.querySelector('svg')).toBeInTheDocument()
     })
 
     it('should render info message', () => {
-      render(<ValidationMessage info="This is info" />)
+      const { container } = render(<ValidationMessage info="This is info" />)
 
       expect(screen.getByText('This is info')).toBeInTheDocument()
-      expect(screen.getByRole('alert')).toBeInTheDocument()
-      expect(screen.getByText('ℹ️')).toBeInTheDocument()
+      expect(container.querySelector('[role="alert"]')).toBeInTheDocument()
+      // Check for SVG icon
+      expect(container.querySelector('svg')).toBeInTheDocument()
     })
 
     it('should not render when no message provided', () => {
@@ -45,11 +49,11 @@ describe('ValidationMessage', () => {
 
     it('should prioritize error over other message types', () => {
       render(<ValidationMessage
-          error="Error message"
-          success="Success message"
-          warning="Warning message"
-          info="Info message"
-        />)
+        error="Error message"
+        success="Success message"
+        warning="Warning message"
+        info="Info message"
+      />)
 
       expect(screen.getByText('Error message')).toBeInTheDocument()
       expect(screen.queryByText('Success message')).not.toBeInTheDocument()
@@ -59,10 +63,10 @@ describe('ValidationMessage', () => {
 
     it('should prioritize success over warning and info', () => {
       render(<ValidationMessage
-          success="Success message"
-          warning="Warning message"
-          info="Info message"
-        />)
+        success="Success message"
+        warning="Warning message"
+        info="Info message"
+      />)
 
       expect(screen.getByText('Success message')).toBeInTheDocument()
       expect(screen.queryByText('Warning message')).not.toBeInTheDocument()
@@ -71,9 +75,9 @@ describe('ValidationMessage', () => {
 
     it('should prioritize warning over info', () => {
       render(<ValidationMessage
-          warning="Warning message"
-          info="Info message"
-        />)
+        warning="Warning message"
+        info="Info message"
+      />)
 
       expect(screen.getByText('Warning message')).toBeInTheDocument()
       expect(screen.queryByText('Info message')).not.toBeInTheDocument()
@@ -82,113 +86,126 @@ describe('ValidationMessage', () => {
 
   describe('Styling', () => {
     it('should apply error styling', () => {
-      render(<ValidationMessage error="Error message" />)
+      const { container } = render(<ValidationMessage error="Error message" />)
 
-      const alert = screen.getByRole('alert')
+      const alert = container.querySelector('[role="alert"]')
       expect(alert).toHaveClass('bg-red-50', 'border-red-200', 'text-red-800')
     })
 
     it('should apply success styling', () => {
-      render(<ValidationMessage success="Success message" />)
+      const { container } = render(<ValidationMessage success="Success message" />)
 
-      const alert = screen.getByRole('alert')
+      const alert = container.querySelector('[role="alert"]')
       expect(alert).toHaveClass('bg-green-50', 'border-green-200', 'text-green-800')
     })
 
     it('should apply warning styling', () => {
-      render(<ValidationMessage warning="Warning message" />)
+      const { container } = render(<ValidationMessage warning="Warning message" />)
 
-      const alert = screen.getByRole('alert')
+      const alert = container.querySelector('[role="alert"]')
       expect(alert).toHaveClass('bg-yellow-50', 'border-yellow-200', 'text-yellow-800')
     })
 
     it('should apply info styling', () => {
-      render(<ValidationMessage info="Info message" />)
+      const { container } = render(<ValidationMessage info="Info message" />)
 
-      const alert = screen.getByRole('alert')
+      const alert = container.querySelector('[role="alert"]')
       expect(alert).toHaveClass('bg-blue-50', 'border-blue-200', 'text-blue-800')
     })
 
     it('should apply custom className', () => {
-      render(<ValidationMessage error="Error message" className="custom-class" />)
+      const { container } = render(<ValidationMessage error="Error message" className="custom-class" />)
 
-      const alert = screen.getByRole('alert')
+      const alert = container.querySelector('[role="alert"]')
       expect(alert).toHaveClass('custom-class')
     })
   })
 
   describe('Size variants', () => {
     it('should apply small size styling', () => {
-      render(<ValidationMessage error="Error message" size="sm" />)
+      const { container } = render(<ValidationMessage error="Error message" size="sm" />)
 
-      const alert = screen.getByRole('alert')
+      const alert = container.querySelector('[role="alert"]')
       expect(alert).toHaveClass('text-xs', 'px-2', 'py-1')
     })
 
     it('should apply medium size styling (default)', () => {
-      render(<ValidationMessage error="Error message" />)
+      const { container } = render(<ValidationMessage error="Error message" />)
 
-      const alert = screen.getByRole('alert')
+      const alert = container.querySelector('[role="alert"]')
       expect(alert).toHaveClass('text-sm', 'px-3', 'py-2')
     })
 
     it('should apply large size styling', () => {
-      render(<ValidationMessage error="Error message" size="lg" />)
+      const { container } = render(<ValidationMessage error="Error message" size="lg" />)
 
-      const alert = screen.getByRole('alert')
+      const alert = container.querySelector('[role="alert"]')
       expect(alert).toHaveClass('text-base', 'px-4', 'py-3')
     })
   })
 
   describe('Icon display', () => {
     it('should show icon by default', () => {
-      render(<ValidationMessage error="Error message" />)
+      const { container } = render(<ValidationMessage error="Error message" />)
 
-      expect(screen.getByText('⚠️')).toBeInTheDocument()
-      expect(screen.getByText('⚠️')).toHaveAttribute('aria-hidden', 'true')
+      // Check for SVG icon (react-icons render as SVG elements)
+      const svg = container.querySelector('svg')
+      expect(svg).toBeInTheDocument()
+      expect(svg).toHaveAttribute('aria-hidden', 'true')
     })
 
     it('should hide icon when showIcon is false', () => {
-      render(<ValidationMessage error="Error message" showIcon={false} />)
+      const { container } = render(<ValidationMessage error="Error message" showIcon={false} />)
 
-      expect(screen.queryByText('⚠️')).not.toBeInTheDocument()
+      // SVG icon should not be present
+      const svg = container.querySelector('svg')
+      expect(svg).not.toBeInTheDocument()
     })
 
     it('should apply correct icon color classes', () => {
-      render(<ValidationMessage error="Error message" />)
+      const { container } = render(<ValidationMessage error="Error message" />)
 
-      const icon = screen.getByText('⚠️')
-      expect(icon).toHaveClass('text-red-500')
+      const svg = container.querySelector('svg')
+      expect(svg).toHaveClass('text-red-500')
     })
 
     it('should show correct icons for each type', () => {
-      const { rerender } = render(<ValidationMessage error="Error" />)
-      expect(screen.getByText('⚠️')).toBeInTheDocument()
+      const { rerender, container } = render(<ValidationMessage error="Error" />)
+      let svg = container.querySelector('svg')
+      expect(svg).toBeInTheDocument()
+      expect(svg).toHaveClass('text-red-500')
 
       rerender(<ValidationMessage success="Success" />)
-      expect(screen.getByText('✓')).toBeInTheDocument()
+      svg = container.querySelector('svg')
+      expect(svg).toBeInTheDocument()
+      expect(svg).toHaveClass('text-green-500')
 
       rerender(<ValidationMessage warning="Warning" />)
-      expect(screen.getByText('⚠️')).toBeInTheDocument()
+      svg = container.querySelector('svg')
+      expect(svg).toBeInTheDocument()
+      expect(svg).toHaveClass('text-yellow-500')
 
       rerender(<ValidationMessage info="Info" />)
-      expect(screen.getByText('ℹ️')).toBeInTheDocument()
+      svg = container.querySelector('svg')
+      expect(svg).toBeInTheDocument()
+      expect(svg).toHaveClass('text-blue-500')
     })
   })
 
   describe('Accessibility', () => {
     it('should have proper ARIA attributes', () => {
-      render(<ValidationMessage error="Error message" />)
+      const { container } = render(<ValidationMessage error="Error message" />)
 
-      const alert = screen.getByRole('alert')
+      const alert = container.querySelector('[role="alert"]')
       expect(alert).toHaveAttribute('aria-live', 'polite')
     })
 
     it('should have proper icon accessibility', () => {
-      render(<ValidationMessage error="Error message" />)
+      const { container } = render(<ValidationMessage error="Error message" />)
 
-      const icon = screen.getByText('⚠️')
-      expect(icon).toHaveAttribute('aria-hidden', 'true')
+      // SVG icons should have aria-hidden attribute
+      const svg = container.querySelector('svg')
+      expect(svg).toHaveAttribute('aria-hidden', 'true')
     })
   })
 

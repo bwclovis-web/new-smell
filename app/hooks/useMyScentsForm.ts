@@ -1,4 +1,11 @@
-//TODO refactor this file to use a more structured approach for managing form state
+// NOTE: This hook could be refactored to use a more structured approach
+// Potential improvements:
+// 1. Use useReducer instead of multiple useState calls for better state management
+// 2. Extract form validation logic into a separate utility
+// 3. Add TypeScript strict types for form data
+// 4. Consider using a form library like react-hook-form or formik for complex validation
+// 5. Add error handling and loading states
+// Current implementation is functional but could be more maintainable for larger forms
 
 import React from "react"
 import { useCallback, useEffect, useState } from "react"
@@ -11,7 +18,7 @@ function getInitialPerfumeState(initialPerfume?: UserPerfumeI) {
   return initialPerfume || null
 }
 
- 
+
 const getInitialPerfumeData = (initialPerfume?: UserPerfumeI) => ({
   amount: initialPerfume?.amount || "",
   price: initialPerfume?.price || "",
