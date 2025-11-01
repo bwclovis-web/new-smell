@@ -8,10 +8,12 @@
  * - Error boundary rendering impact
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { performanceTestSetup, performanceTestCleanup } from '../setup-performance'
-import { AppError, createError, ErrorLogger, asyncErrorHandler } from '~/utils/errorHandling'
-import { withRetry, retryPresets } from '~/utils/retry'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+import { AppError, asyncErrorHandler, createError, ErrorLogger } from '~/utils/errorHandling'
+import { retryPresets, withRetry } from '~/utils/retry'
+
+import { performanceTestCleanup, performanceTestSetup } from '../setup-performance'
 
 describe('Error Handling Performance', () => {
   beforeEach(() => {
@@ -185,9 +187,7 @@ describe('Error Handling Performance', () => {
       
       for (let i = 0; i < 50; i++) {
         const fn = retryFn(i)
-        promises.push(
-          withRetry(fn, { maxRetries: 2, delay: 10 }).catch(() => {})
-        )
+        promises.push(withRetry(fn, { maxRetries: 2, delay: 10 }).catch(() => {}))
       }
 
       await vi.runAllTimersAsync()
@@ -212,9 +212,7 @@ describe('Error Handling Performance', () => {
         const fn = vi.fn(async () => {
           throw createError.network('Network error')
         })
-        promises.push(
-          withRetry(fn, { maxRetries: 3, delay: 10 }).catch(() => {})
-        )
+        promises.push(withRetry(fn, { maxRetries: 3, delay: 10 }).catch(() => {}))
       }
 
       await vi.runAllTimersAsync()

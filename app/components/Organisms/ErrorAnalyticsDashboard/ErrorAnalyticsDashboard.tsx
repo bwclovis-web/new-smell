@@ -5,9 +5,10 @@
  * Provides insights into error patterns, trends, and affected users.
  */
 
-import React, { useState } from 'react';
-import { useFetcher } from 'react-router';
-import type { ErrorAnalyticsReport } from '~/utils/errorAnalytics.server';
+import React, { useState } from 'react'
+import { useFetcher } from 'react-router'
+
+import type { ErrorAnalyticsReport } from '~/utils/errorAnalytics.server'
 
 export interface ErrorAnalyticsDashboardProps {
   initialData?: ErrorAnalyticsReport;
@@ -18,27 +19,27 @@ type TimeRange = 'hour' | 'day' | 'week' | 'month' | 'all';
 export function ErrorAnalyticsDashboard({ 
   initialData 
 }: ErrorAnalyticsDashboardProps) {
-  const fetcher = useFetcher<{ success: boolean; data: ErrorAnalyticsReport }>();
-  const [timeRange, setTimeRange] = useState<TimeRange>('day');
+  const fetcher = useFetcher<{ success: boolean; data: ErrorAnalyticsReport }>()
+  const [timeRange, setTimeRange] = useState<TimeRange>('day')
   
-  const data = fetcher.data?.data || initialData;
-  const isLoading = fetcher.state === 'loading';
+  const data = fetcher.data?.data || initialData
+  const isLoading = fetcher.state === 'loading'
   
   const handleTimeRangeChange = (newRange: TimeRange) => {
-    setTimeRange(newRange);
-    fetcher.load(`/api/error-analytics?timeRange=${newRange}`);
-  };
+    setTimeRange(newRange)
+    fetcher.load(`/api/error-analytics?timeRange=${newRange}`)
+  }
   
   const handleExport = () => {
-    window.open(`/api/error-analytics?timeRange=${timeRange}&format=export`, '_blank');
-  };
+    window.open(`/api/error-analytics?timeRange=${timeRange}&format=export`, '_blank')
+  }
   
   if (!data) {
     return (
       <div className="p-8 text-center">
         <p className="text-gray-500">Loading error analytics...</p>
       </div>
-    );
+    )
   }
   
   return (
@@ -56,7 +57,7 @@ export function ErrorAnalyticsDashboard({
           {/* Time Range Selector */}
           <select
             value={timeRange}
-            onChange={(e) => handleTimeRangeChange(e.target.value as TimeRange)}
+            onChange={e => handleTimeRangeChange(e.target.value as TimeRange)}
             className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-noir-black"
             disabled={isLoading}
           >
@@ -110,7 +111,7 @@ export function ErrorAnalyticsDashboard({
           Error Severity Breakdown
         </h2>
         <div className="space-y-3">
-          {data.errorsBySeverity.map((item) => (
+          {data.errorsBySeverity.map(item => (
             <div key={item.severity} className="flex items-center gap-4">
               <div className="w-24 text-sm font-medium text-gray-700">
                 {item.severity}
@@ -154,7 +155,7 @@ export function ErrorAnalyticsDashboard({
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {data.errorsByType.map((item) => (
+              {data.errorsByType.map(item => (
                 <tr key={item.type}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {item.type}
@@ -225,7 +226,7 @@ export function ErrorAnalyticsDashboard({
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {data.mostAffectedUsers.map((user) => (
+                {data.mostAffectedUsers.map(user => (
                   <tr key={user.userId}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {user.userId}
@@ -247,7 +248,7 @@ export function ErrorAnalyticsDashboard({
           Hourly Error Trend
         </h2>
         <div className="space-y-2">
-          {data.hourlyTrend.slice(-24).map((trend) => (
+          {data.hourlyTrend.slice(-24).map(trend => (
             <div key={trend.period} className="flex items-center gap-4">
               <div className="w-32 text-sm text-gray-600">
                 {new Date(trend.period).toLocaleTimeString()}
@@ -274,7 +275,7 @@ export function ErrorAnalyticsDashboard({
             Recent Correlation IDs
           </h2>
           <div className="flex flex-wrap gap-2">
-            {data.recentCorrelationIds.map((id) => (
+            {data.recentCorrelationIds.map(id => (
               <code
                 key={id}
                 className="px-3 py-1 bg-gray-100 text-gray-800 rounded text-sm font-mono"
@@ -298,7 +299,7 @@ export function ErrorAnalyticsDashboard({
         </div>
       )}
     </div>
-  );
+  )
 }
 
 // Helper Components
@@ -317,9 +318,9 @@ function MetricCard({ title, value, icon, trend, color }: MetricCardProps) {
     orange: 'from-orange-500 to-orange-600',
     blue: 'from-blue-500 to-blue-600',
     green: 'from-green-500 to-green-600',
-  };
+  }
   
-  const bgGradient = color ? colorClasses[color] : 'from-gray-700 to-gray-800';
+  const bgGradient = color ? colorClasses[color] : 'from-gray-700 to-gray-800'
   
   return (
     <div className={`bg-gradient-to-br ${bgGradient} rounded-lg shadow p-6 text-white`}>
@@ -332,7 +333,7 @@ function MetricCard({ title, value, icon, trend, color }: MetricCardProps) {
         <p className="text-sm opacity-75">{trend}</p>
       )}
     </div>
-  );
+  )
 }
 
 function getSeverityColor(severity: string): string {
@@ -341,7 +342,7 @@ function getSeverityColor(severity: string): string {
     HIGH: 'bg-orange-500',
     MEDIUM: 'bg-yellow-500',
     LOW: 'bg-blue-500',
-  };
-  return colors[severity] || 'bg-gray-500';
+  }
+  return colors[severity] || 'bg-gray-500'
 }
 

@@ -6,10 +6,13 @@
  */
 
 import { useCallback, useState } from 'react'
+
+import { RetryOptions, retryPresets, withRetry } from '~/utils/retry'
+
 import { useApiErrorHandler } from './useErrorHandler'
-import { withRetry, RetryOptions, retryPresets } from '~/utils/retry'
 
 export interface UseApiWithRetryOptions {
+
   /**
    * User ID for error logging
    */
@@ -32,6 +35,7 @@ export interface UseApiWithRetryOptions {
 }
 
 export interface UseApiWithRetryReturn {
+
   /**
    * Current error state
    */
@@ -117,9 +121,7 @@ export interface UseApiWithRetryReturn {
  * )
  * ```
  */
-export const useApiWithRetry = (
-  options: UseApiWithRetryOptions = {}
-): UseApiWithRetryReturn => {
+export const useApiWithRetry = (options: UseApiWithRetryOptions = {}): UseApiWithRetryReturn => {
   const {
     userId,
     defaultRetryOptions = retryPresets.standard,
@@ -201,13 +203,11 @@ export const useApiWithRetry = (
       preset: keyof typeof retryPresets,
       endpoint?: string,
       method?: string
-    ): Promise<T | null> => {
-      return fetchWithRetry(apiFn, {
+    ): Promise<T | null> => fetchWithRetry(apiFn, {
         retryOptions: retryPresets[preset],
         endpoint,
         method
-      })
-    },
+      }),
     [fetchWithRetry]
   )
 

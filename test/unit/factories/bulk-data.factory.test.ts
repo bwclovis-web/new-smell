@@ -4,12 +4,13 @@
  */
 
 import { describe, expect, it } from 'vitest'
+
 import {
+  batchGeneration,
   generateBulkTestData,
   generateLargeDataset,
-  generateSmallDataset,
   generateMediumDataset,
-  batchGeneration,
+  generateSmallDataset,
   seedDataPresets,
 } from '../../factories/bulk-data.factory'
 

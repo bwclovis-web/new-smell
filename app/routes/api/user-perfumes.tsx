@@ -402,9 +402,7 @@ const processActionRequest = async (request: Request) => {
 
 // Action function to add or remove user perfumes
 export const action = withActionErrorHandling(
-  async ({ request }: ActionFunctionArgs) => {
-    return await processActionRequest(request)
-  },
+  async ({ request }: ActionFunctionArgs) => await processActionRequest(request),
   {
     context: { api: 'user-perfumes', action: 'action' }
   }

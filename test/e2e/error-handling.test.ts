@@ -15,7 +15,7 @@ test.describe('Error Handling UX', () => {
   test.describe('Network Errors', () => {
     test('should show user-friendly error message on API failure', async ({ page }) => {
       // Simulate API failure with 500 error instead of abort to avoid timeout
-      await page.route('**/api/available-perfumes*', (route) => {
+      await page.route('**/api/available-perfumes*', route => {
         route.fulfill({
           status: 500,
           contentType: 'application/json',
@@ -57,7 +57,7 @@ test.describe('Error Handling UX', () => {
 
     test('should show retry button on network failure', async ({ page }) => {
       // Simulate network failure with 503 Service Unavailable
-      await page.route('**/api/reviews*', (route) => {
+      await page.route('**/api/reviews*', route => {
         route.fulfill({
           status: 503,
           contentType: 'application/json',
@@ -97,7 +97,7 @@ test.describe('Error Handling UX', () => {
       let requestCount = 0
 
       // First request fails, second succeeds
-      await page.route('**/api/available-perfumes*', (route) => {
+      await page.route('**/api/available-perfumes*', route => {
         requestCount++
         if (requestCount === 1) {
           route.fulfill({
@@ -135,7 +135,7 @@ test.describe('Error Handling UX', () => {
     test('should not expose technical details to users', async ({ page }) => {
       // Capture console errors
       const consoleErrors: string[] = []
-      page.on('console', (msg) => {
+      page.on('console', msg => {
         if (msg.type() === 'error') {
           consoleErrors.push(msg.text())
         }
@@ -178,7 +178,7 @@ test.describe('Error Handling UX', () => {
 
     test('should show user-friendly error messages', async ({ page }) => {
       // Simulate various error scenarios and check messages
-      await page.route('**/api/available-perfumes*', (route) => {
+      await page.route('**/api/available-perfumes*', route => {
         route.fulfill({
           status: 500,
           contentType: 'application/json',
@@ -220,7 +220,7 @@ test.describe('Error Handling UX', () => {
   test.describe('Error Recovery Actions', () => {
     test('should provide navigation options on error', async ({ page }) => {
       // Simulate error with 500 response
-      await page.route('**/api/available-perfumes*', (route) => {
+      await page.route('**/api/available-perfumes*', route => {
         route.fulfill({
           status: 500,
           contentType: 'application/json',
@@ -315,7 +315,7 @@ test.describe('Error Handling UX', () => {
   test.describe('Error Accessibility', () => {
     test('should announce errors to screen readers', async ({ page }) => {
       // Simulate error with 500 response
-      await page.route('**/api/available-perfumes*', (route) => {
+      await page.route('**/api/available-perfumes*', route => {
         route.fulfill({
           status: 500,
           contentType: 'application/json',
@@ -340,7 +340,7 @@ test.describe('Error Handling UX', () => {
 
     test('should have focusable error recovery actions', async ({ page }) => {
       // Navigate to error-prone page with 500 error
-      await page.route('**/api/available-perfumes*', (route) => {
+      await page.route('**/api/available-perfumes*', route => {
         route.fulfill({
           status: 500,
           contentType: 'application/json',
@@ -366,7 +366,7 @@ test.describe('Error Handling UX', () => {
 
     test('should have sufficient color contrast on error messages', async ({ page }) => {
       // This is a visual test - we can check if error elements exist and are styled
-      await page.route('**/api/available-perfumes*', (route) => {
+      await page.route('**/api/available-perfumes*', route => {
         route.fulfill({
           status: 500,
           contentType: 'application/json',
@@ -393,7 +393,7 @@ test.describe('Error Handling UX', () => {
     test('should catch and display React errors gracefully', async ({ page }) => {
       // Monitor console errors
       const consoleErrors: string[] = []
-      page.on('console', (msg) => {
+      page.on('console', msg => {
         if (msg.type() === 'error') {
           consoleErrors.push(msg.text())
         }
@@ -444,7 +444,7 @@ test.describe('Error Handling UX', () => {
   test.describe('Loading States', () => {
     test('should show loading state before error', async ({ page }) => {
       // Slow down network to see loading state
-      await page.route('**/api/available-perfumes*', async (route) => {
+      await page.route('**/api/available-perfumes*', async route => {
         await new Promise(resolve => setTimeout(resolve, 500))
         route.fulfill({
           status: 500,
@@ -479,7 +479,7 @@ test.describe('Error Handling UX', () => {
       let attemptCount = 0
 
       // First two attempts fail, third succeeds
-      await page.route('**/api/available-perfumes*', (route) => {
+      await page.route('**/api/available-perfumes*', route => {
         attemptCount++
         if (attemptCount <= 2) {
           route.fulfill({
@@ -511,7 +511,7 @@ test.describe('Error Handling UX', () => {
 
     test('should handle intermittent failures gracefully', async ({ page }) => {
       // Random failures with 500 errors instead of abort
-      await page.route('**/api/**', (route) => {
+      await page.route('**/api/**', route => {
         if (Math.random() > 0.7) {
           route.fulfill({
             status: 500,

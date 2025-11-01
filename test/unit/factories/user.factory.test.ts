@@ -4,11 +4,12 @@
  */
 
 import { describe, expect, it } from 'vitest'
+
 import {
-  createMockUser,
-  createMockSafeUser,
   createMockAdminUser,
   createMockEditorUser,
+  createMockSafeUser,
+  createMockUser,
   createMockUsers,
   userFactoryPresets,
 } from '../../factories/user.factory'

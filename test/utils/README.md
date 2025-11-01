@@ -5,15 +5,16 @@ Comprehensive test utilities for the New Smell project. These utilities simplify
 ## Table of Contents
 
 1. [Main Test Utilities](#main-test-utilities)
-2. [Router Testing](#router-testing)
-3. [Form Testing](#form-testing)
-4. [Authentication Testing](#authentication-testing)
-5. [API Testing](#api-testing)
-6. [Accessibility Testing](#accessibility-testing)
-7. [Viewport Testing](#viewport-testing)
-8. [Modal Testing](#modal-testing)
-9. [Async Testing](#async-testing)
-10. [Data Display Testing](#data-display-testing)
+2. [Test Lifecycle Management](#test-lifecycle-management)
+3. [Router Testing](#router-testing)
+4. [Form Testing](#form-testing)
+5. [Authentication Testing](#authentication-testing)
+6. [API Testing](#api-testing)
+7. [Accessibility Testing](#accessibility-testing)
+8. [Viewport Testing](#viewport-testing)
+9. [Modal Testing](#modal-testing)
+10. [Async Testing](#async-testing)
+11. [Data Display Testing](#data-display-testing)
 
 ---
 
@@ -87,6 +88,122 @@ expect(storage.getItem('key')).toBe('value')
 - `mockResizeObserver()`
 - `mockMatchMedia(matches)`
 - `mockScrollTo()`
+
+---
+
+## Test Lifecycle Management
+
+**File:** `test/utils/test-lifecycle-utils.ts`
+
+Utilities for managing test setup and cleanup with `beforeEach` and `afterEach`. Provides standardized patterns for test initialization and teardown.
+
+### Quick Start
+
+```typescript
+import { setupTestLifecycle, registerCleanup } from 'test/utils'
+
+describe('MyComponent', () => {
+  // Setup standard lifecycle
+  setupTestLifecycle()
+
+  it('should render correctly', () => {
+    const resource = createResource()
+    
+    // Register cleanup for this specific test
+    registerCleanup(() => resource.dispose())
+    
+    // Test code...
+  })
+})
+```
+
+### Composite Lifecycle Setup
+
+For common testing scenarios, use pre-configured lifecycle setups:
+
+```typescript
+import { setupCompositeLifecycle } from 'test/utils'
+
+describe('Component Tests', () => {
+  // Sets up: mock clearing, proper cleanup
+  setupCompositeLifecycle('component')
+})
+
+describe('Integration Tests', () => {
+  // Sets up: mocks, DOM reset, storage clearing, proper cleanup
+  setupCompositeLifecycle('integration')
+})
+
+describe('API Tests', () => {
+  // Sets up: API mocking, fetch restoration
+  setupCompositeLifecycle('api')
+})
+
+describe('E2E Tests', () => {
+  // Sets up: minimal interference, cleanup only
+  setupCompositeLifecycle('e2e')
+})
+```
+
+### Cleanup Registry
+
+Register cleanup functions to be executed after each test:
+
+```typescript
+import { registerCleanup } from 'test/utils'
+
+it('should cleanup resources', async () => {
+  const connection = await openConnection()
+  
+  // Register cleanup - will be called automatically
+  registerCleanup(async () => {
+    await connection.close()
+  })
+  
+  // Test code...
+})
+```
+
+### Test Context Pattern
+
+Create a test context that persists across `beforeEach`/`afterEach`:
+
+```typescript
+import { createTestContext } from 'test/utils'
+
+describe('Stateful Tests', () => {
+  type TestContext = {
+    user: User
+    posts: Post[]
+  }
+  
+  const ctx = createTestContext<TestContext>()
+  
+  beforeEach(() => {
+    ctx.set({
+      user: createMockUser(),
+      posts: []
+    })
+  })
+  
+  it('should have access to context', () => {
+    const { user } = ctx.get()
+    expect(user).toBeDefined()
+  })
+})
+```
+
+### Specialized Lifecycle Utilities
+
+- **`setupTimerLifecycle()`** - Manages fake/real timers
+- **`setupStorageLifecycle()`** - Clears localStorage/sessionStorage
+- **`setupAsyncLifecycle()`** - Tracks promises and abort controllers
+- **`setupConsoleLifecycle()`** - Mocks console methods
+- **`setupEventListenerLifecycle()`** - Tracks and removes event listeners
+- **`setupDOMLifecycle()`** - Saves and restores DOM state
+- **`setupApiMockLifecycle()`** - Manages fetch mocking
+
+See [test/unit/utils/test-lifecycle-utils.test.ts](../unit/utils/test-lifecycle-utils.test.ts) for complete examples.
 
 ---
 

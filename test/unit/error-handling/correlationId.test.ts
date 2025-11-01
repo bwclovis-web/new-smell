@@ -5,11 +5,12 @@
  * and retrieved across async operations using AsyncLocalStorage.
  */
 
-import { describe, it, expect, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
+
 import {
   generateCorrelationId,
-  setCorrelationId,
   getCorrelationId,
+  setCorrelationId,
   withCorrelationId
 } from '~/utils/correlationId.server'
 
@@ -141,18 +142,14 @@ describe('Correlation ID Utilities', () => {
     })
 
     it('should pass through arguments to the wrapped handler', async () => {
-      const handler = withCorrelationId(async (a: number, b: string) => {
-        return `${b}-${a}`
-      })
+      const handler = withCorrelationId(async (a: number, b: string) => `${b}-${a}`)
 
       const result = await handler(42, 'test')
       expect(result).toBe('test-42')
     })
 
     it('should pass through return values from the wrapped handler', async () => {
-      const handler = withCorrelationId(async () => {
-        return { data: 'test', count: 5 }
-      })
+      const handler = withCorrelationId(async () => ({ data: 'test', count: 5 }))
 
       const result = await handler()
       expect(result).toEqual({ data: 'test', count: 5 })

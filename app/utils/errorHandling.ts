@@ -55,7 +55,9 @@ const SENSITIVE_KEYS = [
  * This prevents sensitive data from being logged or exposed in error responses
  */
 export function sanitizeContext(context?: Record<string, any>): Record<string, any> | undefined {
-  if (!context) return undefined
+  if (!context) {
+ return undefined 
+}
 
   const sanitized: Record<string, any> = {}
 
@@ -63,18 +65,14 @@ export function sanitizeContext(context?: Record<string, any>): Record<string, a
     const lowerKey = key.toLowerCase()
     
     // Check if key contains any sensitive keywords
-    const isSensitive = SENSITIVE_KEYS.some(sensitive => 
-      lowerKey.includes(sensitive.toLowerCase())
-    )
+    const isSensitive = SENSITIVE_KEYS.some(sensitive => lowerKey.includes(sensitive.toLowerCase()))
 
     if (isSensitive) {
       sanitized[key] = '[REDACTED]'
     } else if (typeof context[key] === 'object' && context[key] !== null) {
       // Recursively sanitize nested objects
       if (Array.isArray(context[key])) {
-        sanitized[key] = context[key].map((item: any) => 
-          typeof item === 'object' ? sanitizeContext(item) : item
-        )
+        sanitized[key] = context[key].map((item: any) => typeof item === 'object' ? sanitizeContext(item) : item)
       } else {
         sanitized[key] = sanitizeContext(context[key] as Record<string, any>)
       }
@@ -193,7 +191,7 @@ function getCorrelationId(): string | undefined {
   // Server-side: try to get correlation ID from AsyncLocalStorage
   try {
     // Use require for conditional server-only import
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+     
     const { getCorrelationId: getCorrelationIdFunc } = require('./correlationId.server')
     return getCorrelationIdFunc()
   } catch {

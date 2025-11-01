@@ -5,24 +5,22 @@
  * in a real test scenario.
  */
 
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
+
 import {
+  // Data utilities
+  createMockDataset,
+  createMockPerfume,
+  createMockUser,
+  // Async utilities
+  mockAsyncOperation,
+  mockFetch,
   // Main utilities
   renderWithProviders,
-  createMockUser,
-  createMockPerfume,
-  mockFetch,
-  
   // Viewport utilities
   setViewportByName,
   viewportPresets,
-  
-  // Async utilities
-  mockAsyncOperation,
   waitForCondition,
-  
-  // Data utilities
-  createMockDataset,
 } from './index'
 
 describe('Test Utilities Example Usage', () => {
@@ -52,7 +50,7 @@ describe('Test Utilities Example Usage', () => {
     })
 
     it('should create mock dataset', () => {
-      const dataset = createMockDataset(10, (i) => ({ id: i, name: `Item ${i}` }))
+      const dataset = createMockDataset(10, i => ({ id: i, name: `Item ${i}` }))
       
       expect(dataset).toHaveLength(10)
       expect(dataset[0]).toEqual({ id: 0, name: 'Item 0' })
@@ -87,7 +85,9 @@ describe('Test Utilities Example Usage', () => {
 
     it('should wait for condition', async () => {
       let condition = false
-      setTimeout(() => { condition = true }, 50)
+      setTimeout(() => {
+ condition = true 
+}, 50)
       
       await waitForCondition(() => condition, 1000)
       

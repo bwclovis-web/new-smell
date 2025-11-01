@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { prisma } from '~/db.server'
-import * as wishlistServer from '~/models/wishlist.server'
 import * as perfumeServer from '~/models/perfume.server'
+import * as wishlistServer from '~/models/wishlist.server'
 
 // Mock the prisma client
 vi.mock('~/db.server', () => ({
@@ -118,9 +119,7 @@ describe('Database Error Handling Integration Tests', () => {
       
       vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(uniqueError)
 
-      await expect(
-        wishlistServer.addToWishlist('user-123', 'perfume-456', false)
-      ).rejects.toThrow('Unique constraint failed')
+      await expect(wishlistServer.addToWishlist('user-123', 'perfume-456', false)).rejects.toThrow('Unique constraint failed')
     })
 
     it('should handle foreign key constraint violation', async () => {
@@ -129,9 +128,7 @@ describe('Database Error Handling Integration Tests', () => {
       
       vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(fkError)
 
-      await expect(
-        wishlistServer.addToWishlist('invalid-user', 'invalid-perfume', false)
-      ).rejects.toThrow('Foreign key constraint failed')
+      await expect(wishlistServer.addToWishlist('invalid-user', 'invalid-perfume', false)).rejects.toThrow('Foreign key constraint failed')
     })
 
     it('should handle null constraint violation', async () => {
@@ -140,15 +137,13 @@ describe('Database Error Handling Integration Tests', () => {
       
       vi.mocked(prisma.userPerfumeRating.create).mockRejectedValue(nullError)
 
-      await expect(
-        prisma.userPerfumeRating.create({
+      await expect(prisma.userPerfumeRating.create({
           data: {
             userId: 'user-123',
             perfumeId: 'perfume-456',
             overall: null as any
           }
-        })
-      ).rejects.toThrow('Null constraint violation')
+        })).rejects.toThrow('Null constraint violation')
     })
   })
 
@@ -158,9 +153,7 @@ describe('Database Error Handling Integration Tests', () => {
       
       vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(transactionError)
 
-      await expect(
-        wishlistServer.addToWishlist('user-123', 'perfume-456', false)
-      ).rejects.toThrow('Transaction aborted')
+      await expect(wishlistServer.addToWishlist('user-123', 'perfume-456', false)).rejects.toThrow('Transaction aborted')
     })
 
     it('should handle transaction timeout', async () => {
@@ -169,9 +162,7 @@ describe('Database Error Handling Integration Tests', () => {
       
       vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(timeoutError)
 
-      await expect(
-        wishlistServer.addToWishlist('user-123', 'perfume-456', false)
-      ).rejects.toThrow('Transaction timeout')
+      await expect(wishlistServer.addToWishlist('user-123', 'perfume-456', false)).rejects.toThrow('Transaction timeout')
     })
   })
 
@@ -181,14 +172,12 @@ describe('Database Error Handling Integration Tests', () => {
       
       vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(missingFieldError)
 
-      await expect(
-        prisma.userPerfumeWishlist.create({
+      await expect(prisma.userPerfumeWishlist.create({
           data: {
             userId: 'user-123',
             perfumeId: undefined as any
           }
-        })
-      ).rejects.toThrow('Missing required field')
+        })).rejects.toThrow('Missing required field')
     })
 
     it('should handle invalid data type', async () => {
@@ -196,15 +185,13 @@ describe('Database Error Handling Integration Tests', () => {
       
       vi.mocked(prisma.userPerfumeRating.create).mockRejectedValue(typeError)
 
-      await expect(
-        prisma.userPerfumeRating.create({
+      await expect(prisma.userPerfumeRating.create({
           data: {
             userId: 'user-123',
             perfumeId: 'perfume-456',
             overall: 'invalid' as any
           }
-        })
-      ).rejects.toThrow('Invalid data type')
+        })).rejects.toThrow('Invalid data type')
     })
 
     it('should handle data too long for field', async () => {
@@ -213,15 +200,13 @@ describe('Database Error Handling Integration Tests', () => {
       vi.mocked(prisma.userPerfumeReview.create).mockRejectedValue(dataError)
 
       const longReview = 'a'.repeat(10000)
-      await expect(
-        prisma.userPerfumeReview.create({
+      await expect(prisma.userPerfumeReview.create({
           data: {
             userId: 'user-123',
             perfumeId: 'perfume-456',
             review: longReview
           }
-        })
-      ).rejects.toThrow('Data too long')
+        })).rejects.toThrow('Data too long')
     })
   })
 
@@ -232,12 +217,10 @@ describe('Database Error Handling Integration Tests', () => {
       
       vi.mocked(prisma.userPerfumeWishlist.update).mockRejectedValue(deadlockError)
 
-      await expect(
-        prisma.userPerfumeWishlist.update({
+      await expect(prisma.userPerfumeWishlist.update({
           where: { id: 'wishlist-123' },
           data: { isPublic: true }
-        })
-      ).rejects.toThrow('Deadlock detected')
+        })).rejects.toThrow('Deadlock detected')
     })
 
     it('should handle optimistic locking conflict', async () => {
@@ -245,9 +228,7 @@ describe('Database Error Handling Integration Tests', () => {
       
       vi.mocked(prisma.userPerfumeWishlist.updateMany).mockRejectedValue(conflictError)
 
-      await expect(
-        wishlistServer.updateWishlistVisibility('user-123', 'perfume-456', true)
-      ).rejects.toThrow('Record was modified by another request')
+      await expect(wishlistServer.updateWishlistVisibility('user-123', 'perfume-456', true)).rejects.toThrow('Record was modified by another request')
     })
   })
 
@@ -344,9 +325,7 @@ describe('Database Error Handling Integration Tests', () => {
       // Simulate error on create
       vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValueOnce(new Error('Create failed'))
       
-      await expect(
-        wishlistServer.addToWishlist('user-123', 'perfume-456', false)
-      ).rejects.toThrow('Create failed')
+      await expect(wishlistServer.addToWishlist('user-123', 'perfume-456', false)).rejects.toThrow('Create failed')
 
       // Verify no partial data was created by checking with findFirst
       vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)

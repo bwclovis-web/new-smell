@@ -1,14 +1,13 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
-  sanitizeContext,
   AppError,
   createError,
   createErrorResponse,
   ErrorLogger,
+  ErrorSeverity,
   ErrorType,
-  ErrorSeverity
-} from './errorHandling'
+  sanitizeContext} from './errorHandling'
 
 describe('Error Handling Security', () => {
   let originalEnv: string | undefined

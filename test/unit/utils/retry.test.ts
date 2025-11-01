@@ -2,15 +2,15 @@
  * Tests for retry utility
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import {
-  withRetry,
-  isRetryableError,
-  createRetryable,
-  retryPresets,
-  type RetryOptions
-} from '../../../app/utils/retry'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { AppError, createError } from '../../../app/utils/errorHandling'
+import {
+  createRetryable,
+  isRetryableError,
+  type RetryOptions,
+  retryPresets,
+  withRetry} from '../../../app/utils/retry'
 
 describe('retry utility', () => {
   beforeEach(() => {

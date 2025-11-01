@@ -1,9 +1,9 @@
 import type { ActionFunctionArgs } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import * as auth from '~/utils/auth.server'
 import * as wishlistServer from '~/models/wishlist.server'
 import { action as wishlistAction } from '~/routes/api/wishlist'
+import * as auth from '~/utils/auth.server'
 
 vi.mock('~/models/wishlist.server')
 vi.mock('~/utils/auth.server')

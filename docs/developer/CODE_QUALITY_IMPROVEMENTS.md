@@ -1388,9 +1388,9 @@ const adminUser = userFactoryPresets.newUser();
 - ✅ Fixed React Router v7 compatibility (react-router-dom → react-router)
 - ✅ Fixed JSX file extensions (viewport-test-utils.ts → .tsx)
 - ✅ Fixed duplicate exports (mockFetchError, testFormAccessibility)
-- ✅ Fixed async-test-utils linting issues (imports, naming, complexity)
+- ✅ Fixed async-test-utils linting issues (imports, naming, complexity, types)
 - ✅ All test utilities tests passing (10/10 tests)
-- ✅ Reduced linting errors from 46 to 9 minor warnings
+- ✅ **Zero linting errors** (reduced from 46+ initial errors)
 
 **Files Created:**
 
@@ -1480,10 +1480,54 @@ test("complete user flow", async () => {
 - [x] Create test data factories **✅ COMPLETED** (October 31, 2025)
 - [x] **Add custom test utilities** **✅ COMPLETED** (October 31, 2025) - **VERIFIED & FIXED** (November 1, 2025)
 - [x] **Document testing utilities** **✅ COMPLETED** (October 31, 2025)
-- [ ] Implement beforeEach/afterEach properly
+- [x] **Implement beforeEach/afterEach properly** **✅ COMPLETED** (November 1, 2025)
 - [ ] Add test descriptions
 - [ ] Remove flaky tests
 - [ ] Add test timeouts
+
+**Test Lifecycle Implementation Summary (Completed - November 1, 2025):**
+
+Comprehensive test lifecycle management utilities have been implemented:
+
+**Files Created:**
+
+- `test/utils/test-lifecycle-utils.ts` (461 lines) - Main lifecycle utilities
+- `test/unit/utils/test-lifecycle-utils.test.ts` (510 lines) - Comprehensive tests (40 tests, 100% passing)
+
+**Key Features:**
+
+- ✅ Cleanup registry for automatic resource cleanup
+- ✅ Standard beforeEach/afterEach patterns for common scenarios
+- ✅ Composite lifecycle setup for component/integration/API/E2E tests
+- ✅ Specialized utilities: timers, storage, async, console, events, DOM, API mocking
+- ✅ Test context pattern for sharing state across tests
+- ✅ LIFO cleanup execution (Last In, First Out)
+- ✅ Full TypeScript support with proper types
+- ✅ Comprehensive documentation in README.md
+
+**Usage Example:**
+
+```typescript
+import { setupCompositeLifecycle, registerCleanup } from "test/utils";
+
+describe("MyComponent", () => {
+  setupCompositeLifecycle("component");
+
+  it("should cleanup resources", () => {
+    const resource = createResource();
+    registerCleanup(() => resource.dispose());
+    // Test code...
+  });
+});
+```
+
+**Benefits:**
+
+- Consistent test setup/teardown across the codebase
+- Prevents resource leaks and test pollution
+- Reduces boilerplate code in tests
+- Type-safe and well-documented
+- Flexible and composable
 
 **Test Organization Summary (Completed):**
 

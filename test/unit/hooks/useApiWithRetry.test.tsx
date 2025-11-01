@@ -2,8 +2,9 @@
  * Tests for useApiWithRetry hook
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, waitFor, act } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { useApiWithRetry } from '../../../app/hooks/useApiWithRetry'
 import { createError } from '../../../app/utils/errorHandling'
 import { retryPresets } from '../../../app/utils/retry'
@@ -36,14 +37,12 @@ describe('useApiWithRetry', () => {
     })
 
     it('should accept default retry options', () => {
-      const { result } = renderHook(() =>
-        useApiWithRetry({
+      const { result } = renderHook(() => useApiWithRetry({
           defaultRetryOptions: {
             maxRetries: 5,
             delay: 500
           }
-        })
-      )
+        }))
 
       expect(result.current.error).toBeNull()
     })
@@ -282,14 +281,12 @@ describe('useApiWithRetry', () => {
           return Promise.resolve('success')
         })
 
-        const { result } = renderHook(() =>
-          useApiWithRetry({
+        const { result } = renderHook(() => useApiWithRetry({
             defaultRetryOptions: {
               maxRetries: 5,
               delay: 10
             }
-          })
-        )
+          }))
 
         let apiResult: any
         act(() => {
@@ -311,14 +308,12 @@ describe('useApiWithRetry', () => {
       it('should override default options with call-specific options', async () => {
         const apiFn = vi.fn().mockRejectedValue(createError.network('Network error'))
 
-        const { result } = renderHook(() =>
-          useApiWithRetry({
+        const { result } = renderHook(() => useApiWithRetry({
             defaultRetryOptions: {
               maxRetries: 5,
               delay: 100
             }
-          })
-        )
+          }))
 
         act(() => {
           result.current.fetchWithRetry(apiFn, {
@@ -372,9 +367,7 @@ describe('useApiWithRetry', () => {
           return Promise.resolve('success')
         })
 
-        const { result } = renderHook(() =>
-          useApiWithRetry({ onRetry: globalOnRetry })
-        )
+        const { result } = renderHook(() => useApiWithRetry({ onRetry: globalOnRetry }))
 
         act(() => {
           result.current.fetchWithRetry(apiFn, {
@@ -422,9 +415,7 @@ describe('useApiWithRetry', () => {
         const onMaxRetriesReached = vi.fn()
         const apiFn = vi.fn().mockRejectedValue(createError.network('Network error'))
 
-        const { result } = renderHook(() =>
-          useApiWithRetry({ onMaxRetriesReached })
-        )
+        const { result } = renderHook(() => useApiWithRetry({ onMaxRetriesReached }))
 
         act(() => {
           result.current.fetchWithRetry(apiFn, {
@@ -447,9 +438,7 @@ describe('useApiWithRetry', () => {
           .mockRejectedValueOnce(createError.network('Network error'))
           .mockResolvedValueOnce('success')
 
-        const { result } = renderHook(() =>
-          useApiWithRetry({ onMaxRetriesReached })
-        )
+        const { result } = renderHook(() => useApiWithRetry({ onMaxRetriesReached }))
 
         act(() => {
           result.current.fetchWithRetry(apiFn, {

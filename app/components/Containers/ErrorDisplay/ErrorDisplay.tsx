@@ -2,7 +2,7 @@ import { type FC } from 'react'
 import { Link } from 'react-router'
 
 import { AppError, getErrorCode, getErrorMessage, getErrorType } from '~/utils/errorHandling'
-import { getUserErrorMessage, type ErrorMessage } from '~/utils/errorMessages'
+import { type ErrorMessage, getUserErrorMessage } from '~/utils/errorMessages'
 
 interface ErrorDisplayProps {
   error: unknown

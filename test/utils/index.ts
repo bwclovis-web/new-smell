@@ -17,6 +17,7 @@ export * from './data-test-utils'
 export * from './form-test-utils'
 export * from './modal-test-utils'
 export * from './router-test-utils'
+export * from './test-lifecycle-utils'
 export * from './viewport-test-utils'
 
 // Re-export factories for convenience

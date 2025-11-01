@@ -4,6 +4,7 @@
  */
 
 import { describe, expect, it } from 'vitest'
+
 import {
   createMockHouse,
   createMockHouses,
@@ -84,7 +85,9 @@ describe('House Factory', () => {
     })
 
     it('should generate valid house types', () => {
-      const validTypes = ['niche', 'designer', 'indie', 'celebrity', 'drugstore']
+      const validTypes = [
+'niche', 'designer', 'indie', 'celebrity', 'drugstore'
+]
 
       for (let i = 0; i < 10; i++) {
         const house = createMockHouse()

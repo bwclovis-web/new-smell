@@ -116,7 +116,7 @@ export const testRetryMechanism = async (
 
 // Test debounced function
 export const testDebouncedFunction = async (
-  debouncedFn: (..._args: unknown[]) => void,
+  debouncedFn: Function,
   delay = 300,
   callCount = 5
 ) => {
@@ -140,7 +140,7 @@ export const testDebouncedFunction = async (
 
 // Test throttled function
 export const testThrottledFunction = async (
-  throttledFn: (..._args: unknown[]) => void,
+  throttledFn: Function,
   delay = 300,
   callCount = 5
 ) => {
@@ -179,8 +179,8 @@ export const testConcurrentOperations = async (
 }
 
 // Test sequential operations
-type AsyncOperation = () => Promise<any>
-export const testSequentialOperations = async (operations: Array<AsyncOperation>) => {
+type AsyncOp = () => Promise<any>
+export const testSequentialOperations = async (operations: Array<AsyncOp>) => {
   const results = []
 
   for (const operation of operations) {
@@ -196,7 +196,7 @@ export const mockPromiseWithProgress = <T>(
   data: T,
   totalSteps = 100,
   stepDelay = 10,
-  onProgress?: (_progressPercent: number) => void
+  onProgress?: Function
 ) => vi.fn().mockImplementation(() => new Promise<T>(resolve => {
   let currentStep = 0
 
@@ -256,9 +256,8 @@ export const testTimeout = async (
   }
 }
 
-// Test cancellable operation  
-type CancellableOpFactory = (_signal: AbortSignal) => Promise<any>
-export const testCancellableOperation = async (createOperation: CancellableOpFactory) => {
+// Test cancellable operation
+export const testCancellableOperation = async (createOperation: Function) => {
   const abortController = new AbortController()
   const operation = createOperation(abortController.signal)
 
@@ -293,7 +292,7 @@ export const testPolling = async (
   pollFn: () => Promise<any>,
   interval = 1000,
   maxPolls = 5,
-  condition?: (_pollResult: any) => boolean
+  condition?: Function
 ) => {
   let pollCount = 0
   let lastResult: any

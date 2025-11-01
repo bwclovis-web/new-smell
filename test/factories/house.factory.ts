@@ -5,6 +5,7 @@
 
 import { faker } from '@faker-js/faker'
 import type { HouseType } from '@prisma/client'
+
 import type { PerfumeHouse } from '~/types/database'
 
 /**
@@ -32,9 +33,7 @@ export interface CreateMockHouseOptions {
  * @param overrides - Optional field overrides
  * @returns Mock PerfumeHouse object
  */
-export function createMockHouse(
-  overrides: CreateMockHouseOptions = {}
-): Omit<PerfumeHouse, 'perfumes'> {
+export function createMockHouse(overrides: CreateMockHouseOptions = {}): Omit<PerfumeHouse, 'perfumes'> {
   const name = overrides.name ?? faker.company.name()
   const slug = overrides.slug ?? faker.helpers.slugify(name).toLowerCase()
 
@@ -87,23 +86,21 @@ export function createMockHouses(
   count: number,
   overrides: CreateMockHouseOptions = {}
 ): Array<Omit<PerfumeHouse, 'perfumes'>> {
-  return Array.from({ length: count }, (_, i) =>
-    createMockHouse({
+  return Array.from({ length: count }, (_, i) => createMockHouse({
       ...overrides,
       id: overrides.id ?? `house-${i + 1}`,
-    })
-  )
+    }))
 }
 
 /**
  * Creates a mock house with specific test scenarios
  */
 export const houseFactoryPresets = {
+
   /**
    * Luxury niche perfume house
    */
-  nicheHouse: (): ReturnType<typeof createMockHouse> =>
-    createMockHouse({
+  nicheHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
       type: 'niche',
       country: 'France',
       founded: '1990',
@@ -113,8 +110,7 @@ export const houseFactoryPresets = {
   /**
    * Designer perfume house
    */
-  designerHouse: (): ReturnType<typeof createMockHouse> =>
-    createMockHouse({
+  designerHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
       type: 'designer',
       country: faker.helpers.arrayElement(['France', 'Italy', 'USA']),
       founded: faker.date.past({ years: 100 }).getFullYear().toString(),
@@ -123,8 +119,7 @@ export const houseFactoryPresets = {
   /**
    * Indie perfume house
    */
-  indieHouse: (): ReturnType<typeof createMockHouse> =>
-    createMockHouse({
+  indieHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
       type: 'indie',
       country: faker.helpers.arrayElement(['USA', 'UK', 'Canada']),
       founded: faker.date.past({ years: 10 }).getFullYear().toString(),
@@ -133,8 +128,7 @@ export const houseFactoryPresets = {
   /**
    * Celebrity perfume house
    */
-  celebrityHouse: (): ReturnType<typeof createMockHouse> =>
-    createMockHouse({
+  celebrityHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
       type: 'celebrity',
       name: `${faker.person.firstName()} ${faker.person.lastName()} Fragrances`,
     }),
@@ -142,8 +136,7 @@ export const houseFactoryPresets = {
   /**
    * Minimal house with only required fields
    */
-  minimalHouse: (): ReturnType<typeof createMockHouse> =>
-    createMockHouse({
+  minimalHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
       description: null,
       image: null,
       website: null,
@@ -157,8 +150,7 @@ export const houseFactoryPresets = {
   /**
    * Historic perfume house
    */
-  historicHouse: (): ReturnType<typeof createMockHouse> =>
-    createMockHouse({
+  historicHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
       founded: faker.date.past({ years: 200 }).getFullYear().toString(),
       country: 'France',
       type: 'designer',
@@ -167,8 +159,7 @@ export const houseFactoryPresets = {
   /**
    * House with special characters in name (edge case)
    */
-  specialCharHouse: (): ReturnType<typeof createMockHouse> =>
-    createMockHouse({
+  specialCharHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
       name: "L'Artisan Parfumeur & Co.",
       slug: 'lartisan-parfumeur-and-co',
     }),
@@ -176,8 +167,7 @@ export const houseFactoryPresets = {
   /**
    * House with very long description (edge case)
    */
-  longDescriptionHouse: (): ReturnType<typeof createMockHouse> =>
-    createMockHouse({
+  longDescriptionHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
       description: faker.lorem.paragraphs(10),
     }),
 }

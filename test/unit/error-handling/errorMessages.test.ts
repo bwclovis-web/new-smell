@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest'
 
 import { AppError, createError } from '~/utils/errorHandling'
 import {
-  getUserErrorMessage,
+  type ErrorMessage,
   getErrorMessageByType,
   getRecoveryAction,
+  getUserErrorMessage,
   isRetryableError,
   USER_ERROR_MESSAGES,
-  type ErrorMessage,
 } from '~/utils/errorMessages'
 
 describe('errorMessages', () => {

@@ -263,13 +263,11 @@ export const testDataGrouping = async (
 }
 
 // Test data aggregation
-export const testDataAggregation = (
-  aggregationTests: Array<{
+export const testDataAggregation = (aggregationTests: Array<{
     column: string
     function: 'sum' | 'avg' | 'count' | 'min' | 'max'
     expectedValue: number
-  }>
-) => {
+  }>) => {
   aggregationTests.forEach(test => {
     const aggregateCell = screen.getByText(new RegExp(`${test.function}.*${test.expectedValue}`, 'i'))
     expect(aggregateCell).toBeInTheDocument()
@@ -295,7 +293,5 @@ export const testDataSearch = async (
 export const createMockDataset = (
   count: number,
   generator: (index: number) => any
-) => {
-  return Array.from({ length: count }, (_, i) => generator(i))
-}
+) => Array.from({ length: count }, (_, i) => generator(i))
 

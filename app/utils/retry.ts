@@ -8,6 +8,7 @@
 import { AppError } from './errorHandling'
 
 export interface RetryOptions {
+
   /**
    * Maximum number of retry attempts
    * @default 3
@@ -230,6 +231,7 @@ export function createRetryable<TArgs extends any[], TReturn>(
  * Retry configuration presets for common scenarios
  */
 export const retryPresets = {
+
   /**
    * Conservative retry: 2 attempts, 2s initial delay, exponential backoff
    * Good for user-facing operations where quick failure is better than long waits

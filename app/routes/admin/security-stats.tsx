@@ -1,5 +1,5 @@
-import { getSecurityStats } from '~/utils/security/security-monitor.server'
 import { ServerErrorHandler } from '~/utils/errorHandling.server'
+import { getSecurityStats } from '~/utils/security/security-monitor.server'
 
 export const ROUTE_PATH = '/admin/security-stats' as const
 

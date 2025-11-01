@@ -4,6 +4,7 @@
  */
 
 import { describe, expect, it } from 'vitest'
+
 import {
   createMockPerfume,
   createMockPerfumes,
@@ -214,9 +215,7 @@ describe('Perfume Factory', () => {
     it('should have updatedAt after or equal to createdAt', () => {
       const perfume = createMockPerfume()
 
-      expect(perfume.updatedAt.getTime()).toBeGreaterThanOrEqual(
-        perfume.createdAt.getTime()
-      )
+      expect(perfume.updatedAt.getTime()).toBeGreaterThanOrEqual(perfume.createdAt.getTime())
     })
 
     it('should handle custom dates correctly', () => {

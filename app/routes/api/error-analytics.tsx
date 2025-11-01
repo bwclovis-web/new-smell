@@ -5,37 +5,38 @@
  * Requires admin authentication.
  */
 
-import { type LoaderFunctionArgs } from 'react-router';
-import { withLoaderErrorHandling } from '~/utils/errorHandling.server';
-import { errorAnalytics } from '~/utils/errorAnalytics.server';
-import { sharedLoader } from '~/utils/sharedLoader';
-import { createError } from '~/utils/errorHandling';
+import { type LoaderFunctionArgs } from 'react-router'
+
+import { errorAnalytics } from '~/utils/errorAnalytics.server'
+import { createError } from '~/utils/errorHandling'
+import { withLoaderErrorHandling } from '~/utils/errorHandling.server'
+import { sharedLoader } from '~/utils/sharedLoader'
 
 export const loader = withLoaderErrorHandling(
   async ({ request }: LoaderFunctionArgs) => {
     // Check authentication and authorization
-    const user = await sharedLoader(request);
+    const user = await sharedLoader(request)
     
     if (!user) {
-      throw createError.authentication('Authentication required');
+      throw createError.authentication('Authentication required')
     }
     
     if (user.role !== 'admin') {
-      throw createError.authorization('Admin access required');
+      throw createError.authorization('Admin access required')
     }
     
     // Parse query parameters
-    const url = new URL(request.url);
+    const url = new URL(request.url)
     const timeRange = (url.searchParams.get('timeRange') || 'day') as 
-      'hour' | 'day' | 'week' | 'month' | 'all';
-    const format = url.searchParams.get('format') || 'json';
+      'hour' | 'day' | 'week' | 'month' | 'all'
+    const format = url.searchParams.get('format') || 'json'
     
     // Generate analytics report
-    const report = errorAnalytics.generateReport({ timeRange });
+    const report = errorAnalytics.generateReport({ timeRange })
     
     // Export format
     if (format === 'export') {
-      const data = errorAnalytics.exportData({ timeRange });
+      const data = errorAnalytics.exportData({ timeRange })
       
       return new Response(data, {
         status: 200,
@@ -44,7 +45,7 @@ export const loader = withLoaderErrorHandling(
           'Content-Disposition': `attachment; filename="error-analytics-${new Date().toISOString()}.json"`,
           'Cache-Control': 'no-store',
         },
-      });
+      })
     }
     
     // Regular JSON response
@@ -58,12 +59,12 @@ export const loader = withLoaderErrorHandling(
         'Pragma': 'no-cache',
         'Expires': '0',
       },
-    });
+    })
   },
   {
     context: { api: 'error-analytics' },
     redirectOnAuth: '/sign-in?redirect=/admin/error-analytics',
     redirectOnAuthz: '/unauthorized',
   }
-);
+)
 
