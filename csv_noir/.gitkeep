@@ -1,0 +1,8 @@
+# CSV Noir - Film Noir Enriched Perfume Data
+
+This directory stores enriched perfume data with film noir-styled descriptions.
+
+The Research Crew outputs CSV files here for manual review before database import.
+
+**IMPORTANT**: The crews never modify the database directly. You control all imports.
+
