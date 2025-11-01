@@ -1376,39 +1376,114 @@ const adminUser = userFactoryPresets.newUser();
 - **Relationships**: Maintains referential integrity
 - **Backward compatible**: Legacy functions still work
 
-#### Custom Test Utilities
+#### Custom Test Utilities ✅ **COMPLETED** (October 31, 2025) - **VERIFIED** (November 1, 2025)
+
+**Implementation Summary:**
+
+- ✅ 10 comprehensive test utility modules created
+- ✅ Central index file for easy imports
+- ✅ Comprehensive README documentation
+- ✅ All utilities type-safe with TypeScript
+- ✅ Zero lint errors
+- ✅ Fixed React Router v7 compatibility (react-router-dom → react-router)
+- ✅ Fixed JSX file extensions (viewport-test-utils.ts → .tsx)
+- ✅ Fixed duplicate exports (mockFetchError, testFormAccessibility)
+- ✅ Fixed async-test-utils linting issues (imports, naming, complexity)
+- ✅ All test utilities tests passing (10/10 tests)
+- ✅ Reduced linting errors from 46 to 9 minor warnings
+
+**Files Created:**
+
+```
+test/utils/
+├── index.ts                          # Central export point
+├── README.md                         # Comprehensive documentation
+├── example-usage.test.tsx            # Example usage tests (10 tests passing)
+├── test-utils.tsx                    # Main utilities (existing, enhanced)
+├── router-test-utils.tsx             # Router testing (existing)
+├── form-test-utils.tsx               # Form testing (existing)
+├── auth-test-utils.tsx               # Auth testing (existing)
+├── api-test-utils.ts                 # API testing (existing)
+├── accessibility-test-utils.tsx      # A11y testing (existing)
+├── viewport-test-utils.tsx           # Viewport & responsive (NEW) ✅ FIXED
+├── modal-test-utils.tsx              # Modal & dialog testing (NEW)
+├── async-test-utils.ts               # Async & loading states (NEW)
+└── data-test-utils.ts                # Data display testing (NEW)
+```
+
+**Key Features:**
+
+1. **Viewport Testing** - Test responsive layouts across devices
+
+   ```typescript
+   await testAtViewports(
+     (viewport) => {
+       renderWithProviders(<MyComponent />);
+       // Assertions based on viewport
+     },
+     ["mobile", "tablet", "desktop"]
+   );
+   ```
+
+2. **Modal Testing** - Comprehensive modal interaction testing
+
+   ```typescript
+   await testModalOpen("trigger", "Modal content");
+   testModalAccessibility();
+   await testModalFocusTrap("modal");
+   await testModalClose("escape");
+   ```
+
+3. **Async Testing** - Test loading states and async operations
+
+   ```typescript
+   await testLoadingStateSequence(
+     () => component.isLoading,
+     async () => await fetchData(),
+     1000
+   );
+   ```
+
+4. **Data Display Testing** - Test tables, grids, and lists
+   ```typescript
+   testTableRendering(["Name", "Price", "Brand"], 50);
+   await testTableSorting("Price", "desc");
+   await testTableFiltering("niche", 15);
+   ```
+
+**Usage Example:**
 
 ```typescript
-// test/utils/render-with-router.tsx
-import { ReactElement } from "react";
-import { render } from "@testing-library/react";
-import { createMemoryRouter, RouterProvider } from "react-router-dom";
+// Import from central location
+import {
+  renderWithProviders,
+  testFormValidation,
+  mockFetch,
+  testAtViewports,
+  testModalAccessibility,
+  testLoadingStateSequence,
+} from "test/utils";
 
-export function renderWithRouter(
-  ui: ReactElement,
-  { route = "/", ...renderOptions } = {}
-) {
-  const router = createMemoryRouter([{ path: "*", element: ui }], {
-    initialEntries: [route],
-  });
+test("complete user flow", async () => {
+  setViewportByName("mobile");
+  const { history } = renderWithRouter(<App />);
 
-  return render(<RouterProvider router={router} />, renderOptions);
-}
-
-// Usage
-renderWithRouter(<PerfumePage />, { route: "/perfume/santal-33" });
+  await testLoginFlow(<LoginPage />, credentials);
+  await testNavigation(<Dashboard />, navigationSteps);
+  await testKeyboardNavigation(<Dashboard />);
+});
 ```
 
 #### Checklist
 
 - [x] Organize tests by functionality **✅ COMPLETED**
 - [x] Create test data factories **✅ COMPLETED** (October 31, 2025)
-- [ ] Add custom test utilities
+- [x] **Add custom test utilities** **✅ COMPLETED** (October 31, 2025) - **VERIFIED & FIXED** (November 1, 2025)
+- [x] **Document testing utilities** **✅ COMPLETED** (October 31, 2025)
 - [ ] Implement beforeEach/afterEach properly
 - [ ] Add test descriptions
 - [ ] Remove flaky tests
 - [ ] Add test timeouts
-- [ ] Document testing utilities
 
 **Test Organization Summary (Completed):**
 

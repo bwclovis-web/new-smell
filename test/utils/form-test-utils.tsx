@@ -95,20 +95,7 @@ export const testFieldTypes = async (fieldTests: Array<{
   }
 }
 
-// Test form accessibility
-export const testFormAccessibility = () => {
-  // Check for form labels
-  const inputs = screen.getAllByRole('textbox')
-  inputs.forEach(input => {
-    expect(input).toHaveAccessibleName()
-  })
-
-  // Check for required field indicators
-  const requiredInputs = screen.getAllByRole('textbox', { required: true })
-  requiredInputs.forEach(input => {
-    expect(input).toHaveAttribute('required')
-  })
-}
+// Note: testFormAccessibility has been moved to accessibility-test-utils.tsx for better organization
 
 // Test form with different states
 export const testFormStates = async (

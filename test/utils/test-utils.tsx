@@ -3,7 +3,7 @@ import { render, type RenderOptions, screen, waitFor } from '@testing-library/re
 import userEvent from '@testing-library/user-event'
 import { createMemoryHistory } from 'history'
 import React, { type ReactElement, type ReactNode } from 'react'
-import { MemoryRouter, Router } from 'react-router-dom'
+import { MemoryRouter, Router } from 'react-router'
 import { expect, vi } from 'vitest'
 
 // ============================================================================
@@ -177,7 +177,7 @@ export const mockFetch = (data: any, status = 200) => vi.fn().mockResolvedValue(
   text: () => Promise.resolve(JSON.stringify(data)),
 })
 
-export const mockFetchError = (message = 'Network error') => vi.fn().mockRejectedValue(new Error(message))
+// Note: mockFetchError has been moved to api-test-utils.ts for better organization
 
 // Generic storage mock factory
 const createStorageMock = () => {
