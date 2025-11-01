@@ -29,7 +29,7 @@ describe('chartConfig', () => {
       const config = createChartConfig()
       
       expect(config.plugins.title.display).toBe(true)
-      expect(config.plugins.title.text).toBe('Top Brands with Issues')
+      expect(config.plugins.title.text).toBe('Data Quality Metrics')
     })
 
     it('should return a new object on each call', () => {

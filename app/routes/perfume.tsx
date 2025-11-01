@@ -2,6 +2,7 @@ import cookie from 'cookie'
 import { useTranslation } from 'react-i18next'
 import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, useLocation, useNavigate } from 'react-router'
 
+import { Button } from '~/components/Atoms/Button'
 import PerfumeIcons from '~/components/Containers/Perfume/PerfumeIcons'
 import PerfumeNotes from '~/components/Containers/Perfume/PerfumeNotes'
 import PerfumeRatingSystem from '~/components/Containers/Perfume/PerfumeRatingSystem'
@@ -283,21 +284,22 @@ const PerfumeContent = ({
         />
       )}
       <div className='bg-white/5 md:w-3/4 border-4 noir-border relative shadow-lg text-noir-gold-500'>
-        {/* Back Button */}
-        <button
-          onClick={onBack}
-          className="absolute top-4 right-4 z-20 bg-noir-gold/90 hover:bg-noir-gold text-noir-black px-2 rounded-md font-semibold transition-all duration-300 ease-in-out shadow-lg"
-          aria-label={selectedLetter ? `Back to ${sourcePage === 'vault' ? 'perfumes' : 'houses'} starting with ${selectedLetter}` : `Back to ${sourcePage === 'vault' ? 'perfumes' : 'houses'}`}
-        >
-          ← Back {selectedLetter ? `to ${selectedLetter}` : `to ${sourcePage === 'vault' ? 'Perfumes' : 'Houses'}`}
-        </button>
-
         <PerfumeNotes
           perfumeNotesOpen={perfume.perfumeNotesOpen}
           perfumeNotesHeart={perfume.perfumeNotesHeart}
           perfumeNotesClose={perfume.perfumeNotesClose}
         />
-        <p className='p-4'>{perfume.description}</p>
+        <p className='p-4 mb-14'>{perfume.description}</p>
+        <Button
+          onClick={onBack}
+          variant="primary"
+          background="gold"
+          size="sm"
+          className="gap-2 max-w-max absolute bottom-4 left-4 z-20"
+          aria-label={selectedLetter ? `Back to ${sourcePage === 'vault' ? 'perfumes' : 'houses'} starting with ${selectedLetter}` : `Back to ${sourcePage === 'vault' ? 'perfumes' : 'houses'}`}
+        >
+          ← Back {selectedLetter ? `to ${selectedLetter}` : `to ${sourcePage === 'vault' ? 'Perfumes' : 'Houses'}`}
+        </Button>
       </div>
     </div>
 

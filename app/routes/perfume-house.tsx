@@ -142,15 +142,18 @@ const HouseDetailPage = () => {
           <PerfumeHouseAddressBlock perfumeHouse={perfumeHouse} />
           <p className='p-4 mb-8'>{perfumeHouse.description}</p>
           <span className="tag absolute">{perfumeHouse.type}</span>
-          <button
+          <Button
             onClick={() => navigate(BEHIND_THE_BOTTLE, {
               state: selectedLetter ? { selectedLetter } : {}
             })}
-            className="absolute bottom-2 left-4 z-20 bg-noir-gold/90 hover:bg-noir-gold text-noir-black px-2 cursor-pointer rounded-md font-semibold transition-all duration-300 ease-in-out shadow-lg"
+            variant="primary"
+            background="gold"
+            size="sm"
+            className="gap-2 max-w-max ml-2 mb-2"
             aria-label={selectedLetter ? `Back to houses starting with ${selectedLetter}` : 'Back to houses'}
           >
             ← Back to {selectedLetter || 'Houses'}
-          </button>
+          </Button>
 
         </div>
         {perfumes.length > 0 && (
