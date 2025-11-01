@@ -114,7 +114,7 @@ const SearchBar = ({
 
   return (
     <div className="relative w-full">
-      <form className="flex gap-2" onSubmit={(evt) => evt.preventDefault()}>
+      <form className="flex gap-2" onSubmit={evt => evt.preventDefault()}>
         <label htmlFor="search" className="sr-only">
           Search
         </label>

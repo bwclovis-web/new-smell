@@ -49,9 +49,7 @@ export const useRatingSystem = ({
   const { handleError } = useErrorHandler()
   const { addToHeaders } = useCSRF()
 
-  const [currentRatings, setCurrentRatings] = useState<RatingData | null>(
-    initialRatings
-  )
+  const [currentRatings, setCurrentRatings] = useState<RatingData | null>(initialRatings)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const isLoggedIn = Boolean(userId) && userId !== "anonymous"
@@ -71,7 +69,7 @@ export const useRatingSystem = ({
 
       // Optimistic update
       const previousRatings = currentRatings
-      setCurrentRatings((prev) => ({
+      setCurrentRatings(prev => ({
         ...prev,
         [category]: rating,
       }))

@@ -101,7 +101,7 @@ const RichTextEditor = ({
     <div className={styleMerge("rich-text-editor", className)}>
       {/* Toolbar */}
       <div className="flex flex-wrap gap-1 p-2 border-b border-gray-300 bg-noir-gold-100 rounded-t-md">
-        {formatButtons.map((button) => (
+        {formatButtons.map(button => (
           <button
             key={button.command}
             type="button"

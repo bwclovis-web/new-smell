@@ -26,7 +26,7 @@ const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
         data-cy="AdminNavigation"
       >
         {(user?.role === "admin" || user?.role === "editor") &&
-          adminNavigation.map((item) => (
+          adminNavigation.map(item => (
             <li
               key={item.id}
               className="capitalize font-semibold text-shadow-sm text-shadow-noir-dark/70"
@@ -35,8 +35,7 @@ const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
                 viewTransition
                 to={item.path}
                 suppressHydrationWarning
-                className={({ isActive }) =>
-                  styleMerge(
+                className={({ isActive }) => styleMerge(
                     "text-noir-gold py-2  hover:text-noir-gold-500 transition-colors duration-200 hover:bg-noir-dark/80 block w-full",
                     isActive
                       ? "text-noir-dark text-shadow-none  bg-noir-gold/80 border-2 border-noir-gold"
@@ -48,7 +47,7 @@ const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
               </NavLink>
             </li>
           ))}
-        {profileNavigation.map((item) => (
+        {profileNavigation.map(item => (
           <li
             key={item.id}
             className="capitalize font-semibold text-shadow-sm text-shadow-noir-dark/70"
@@ -57,8 +56,7 @@ const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
               viewTransition
               to={item.path}
               suppressHydrationWarning
-              className={({ isActive }) =>
-                styleMerge(
+              className={({ isActive }) => styleMerge(
                   "text-noir-gold py-2  hover:text-noir-gold-500 transition-colors duration-200 hover:bg-noir-dark/80 block w-full",
                   isActive
                     ? "text-noir-dark text-shadow-none  bg-noir-gold/80 border-2 border-noir-gold"

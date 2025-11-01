@@ -37,14 +37,12 @@ describe("useApiWithRetry", () => {
     })
 
     it("should accept default retry options", () => {
-      const { result } = renderHook(() =>
-        useApiWithRetry({
+      const { result } = renderHook(() => useApiWithRetry({
           defaultRetryOptions: {
             maxRetries: 5,
             delay: 500,
           },
-        })
-      )
+        }))
 
       expect(result.current.error).toBeNull()
     })
@@ -60,7 +58,7 @@ describe("useApiWithRetry", () => {
 
         let apiResult: any
         act(() => {
-          result.current.fetchWithRetry(apiFn).then((r) => {
+          result.current.fetchWithRetry(apiFn).then(r => {
             apiResult = r
           })
         })
@@ -154,7 +152,7 @@ describe("useApiWithRetry", () => {
             .fetchWithRetry(apiFn, {
               retryOptions: { maxRetries: 3, delay: 10 },
             })
-            .then((r) => {
+            .then(r => {
               apiResult = r
             })
         })
@@ -263,7 +261,7 @@ describe("useApiWithRetry", () => {
             .fetchWithRetry(apiFn, {
               retryOptions: { maxRetries: 2, delay: 10 },
             })
-            .then((r) => {
+            .then(r => {
               apiResult = r
             })
         })
@@ -291,18 +289,16 @@ describe("useApiWithRetry", () => {
           return Promise.resolve("success")
         })
 
-        const { result } = renderHook(() =>
-          useApiWithRetry({
+        const { result } = renderHook(() => useApiWithRetry({
             defaultRetryOptions: {
               maxRetries: 5,
               delay: 10,
             },
-          })
-        )
+          }))
 
         let apiResult: any
         act(() => {
-          result.current.fetchWithRetry(apiFn).then((r) => {
+          result.current.fetchWithRetry(apiFn).then(r => {
             apiResult = r
           })
         })
@@ -320,14 +316,12 @@ describe("useApiWithRetry", () => {
       it("should override default options with call-specific options", async () => {
         const apiFn = vi.fn().mockRejectedValue(createError.network("Network error"))
 
-        const { result } = renderHook(() =>
-          useApiWithRetry({
+        const { result } = renderHook(() => useApiWithRetry({
             defaultRetryOptions: {
               maxRetries: 5,
               delay: 100,
             },
-          })
-        )
+          }))
 
         act(() => {
           result.current.fetchWithRetry(apiFn, {
@@ -381,9 +375,7 @@ describe("useApiWithRetry", () => {
           return Promise.resolve("success")
         })
 
-        const { result } = renderHook(() =>
-          useApiWithRetry({ onRetry: globalOnRetry })
-        )
+        const { result } = renderHook(() => useApiWithRetry({ onRetry: globalOnRetry }))
 
         act(() => {
           result.current.fetchWithRetry(apiFn, {
@@ -489,7 +481,7 @@ describe("useApiWithRetry", () => {
       act(() => {
         result.current
           .fetchWithPreset(apiFn, "conservative", "/api/test", "GET")
-          .then((r) => {
+          .then(r => {
             apiResult = r
           })
       })
@@ -511,7 +503,7 @@ describe("useApiWithRetry", () => {
 
       let apiResult: any
       act(() => {
-        result.current.fetchWithPreset(apiFn, "standard").then((r) => {
+        result.current.fetchWithPreset(apiFn, "standard").then(r => {
           apiResult = r
         })
       })
@@ -532,7 +524,7 @@ describe("useApiWithRetry", () => {
 
       let apiResult: any
       act(() => {
-        result.current.fetchWithPreset(apiFn, "aggressive").then((r) => {
+        result.current.fetchWithPreset(apiFn, "aggressive").then(r => {
           apiResult = r
         })
       })
@@ -553,7 +545,7 @@ describe("useApiWithRetry", () => {
 
       let apiResult: any
       act(() => {
-        result.current.fetchWithPreset(apiFn, "quick").then((r) => {
+        result.current.fetchWithPreset(apiFn, "quick").then(r => {
           apiResult = r
         })
       })
@@ -636,10 +628,10 @@ describe("useApiWithRetry", () => {
       let result2: any
 
       act(() => {
-        result.current.fetchWithRetry(apiFn1).then((r) => {
+        result.current.fetchWithRetry(apiFn1).then(r => {
           result1 = r
         })
-        result.current.fetchWithRetry(apiFn2).then((r) => {
+        result.current.fetchWithRetry(apiFn2).then(r => {
           result2 = r
         })
       })
@@ -713,7 +705,7 @@ describe("useApiWithRetry", () => {
             method: "GET",
             retryOptions: retryPresets.standard,
           })
-          .then((r) => {
+          .then(r => {
             apiResult = r
           })
       })
@@ -746,7 +738,7 @@ describe("useApiWithRetry", () => {
             method: "POST",
             retryOptions: retryPresets.conservative,
           })
-          .then((r) => {
+          .then(r => {
             apiResult = r
           })
       })

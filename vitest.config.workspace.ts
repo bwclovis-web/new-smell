@@ -27,7 +27,9 @@ export default defineConfig({
     // Workspace-level coverage
     coverage: {
       provider: "v8",
-      reporter: ["text", "json", "html", "lcov"],
+      reporter: [
+"text", "json", "html", "lcov"
+],
       reportsDirectory: "./coverage/workspace",
       include: ["app/**/*.{js,ts,jsx,tsx}", "utils/**/*.{js,ts,jsx,tsx}"],
       exclude: [

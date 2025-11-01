@@ -192,9 +192,7 @@ describe("Wishlist API Integration Tests", () => {
         user: { id: "user-123" } as any,
       })
 
-      vi.mocked(wishlistServer.addToWishlist).mockRejectedValue(
-        new Error("Database error")
-      )
+      vi.mocked(wishlistServer.addToWishlist).mockRejectedValue(new Error("Database error"))
 
       const formData = new FormData()
       formData.append("perfumeId", "perfume-456")

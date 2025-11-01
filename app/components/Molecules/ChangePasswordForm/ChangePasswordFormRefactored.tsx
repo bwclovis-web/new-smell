@@ -35,11 +35,11 @@ export default function ChangePasswordForm({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   const togglePasswordVisibility = (field: "current" | "new" | "confirm") => {
-    setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }))
+    setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }))
   }
 
   const passwordsMatch = formData.newPassword === formData.confirmNewPassword
@@ -139,8 +139,7 @@ export default function ChangePasswordForm({
       <div className="flex justify-end space-x-3">
         <button
           type="button"
-          onClick={() =>
-            setFormData({
+          onClick={() => setFormData({
               currentPassword: "",
               newPassword: "",
               confirmNewPassword: "",

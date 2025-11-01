@@ -205,7 +205,7 @@ describe("LanguageSwitcher", () => {
       render(<LanguageSwitcher />)
       const options = screen.getAllByRole("option")
 
-      options.forEach((option) => {
+      options.forEach(option => {
         expect(option).toBeInTheDocument()
         expect(option).toHaveAttribute("value")
       })
@@ -305,7 +305,7 @@ describe("LanguageSwitcher", () => {
     it("renders consistently regardless of current language", () => {
       const languages = ["en", "es"]
 
-      languages.forEach((lang) => {
+      languages.forEach(lang => {
         mockI18n.language = lang
         const { unmount } = render(<LanguageSwitcher />)
 

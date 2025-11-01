@@ -45,7 +45,9 @@ export function useInView<T extends Element = Element>(
         observerRef.current = null
       }
     }
-  }, [ref, callback, threshold, rootMargin, root])
+  }, [
+ref, callback, threshold, rootMargin, root
+])
 
   return isInView
 }

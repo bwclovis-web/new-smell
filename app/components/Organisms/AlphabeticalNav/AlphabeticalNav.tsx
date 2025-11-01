@@ -30,7 +30,7 @@ const AlphabeticalNav = ({
         All
       </Button>
 
-      {letters.map((letter) => (
+      {letters.map(letter => (
         <Button
           key={letter}
           onClick={() => onLetterSelect(letter)}

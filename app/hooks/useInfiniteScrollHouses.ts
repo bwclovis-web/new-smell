@@ -31,9 +31,7 @@ async function fetchHousesByLetter(
   return response.json()
 }
 
-export function useInfiniteScrollHouses(
-  options: UseInfiniteScrollHousesOptions
-): UseInfiniteScrollHousesReturn {
+export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions): UseInfiniteScrollHousesReturn {
   const {
     letter,
     initialHouses,
@@ -63,8 +61,8 @@ export function useInfiniteScrollHouses(
     try {
       const data = await fetchHousesByLetter(letter, skip, take, houseType)
       if (data.success && Array.isArray(data.houses)) {
-        setHouses((prev) => [...prev, ...data.houses])
-        setSkip((prev) => prev + data.houses.length)
+        setHouses(prev => [...prev, ...data.houses])
+        setSkip(prev => prev + data.houses.length)
         setHasMore(data.meta.hasMore)
         setTotalCount(data.meta.totalCount)
       } else {

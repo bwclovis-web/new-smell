@@ -120,8 +120,8 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
             max={parseFloat(userPerfume.amount)}
             step={0.1}
             value={parseFloat(values.deStashAmount) || 0}
-            onChange={(value) => setValue("deStashAmount", value.toFixed(1))}
-            formatValue={(value) => value.toFixed(1)}
+            onChange={value => setValue("deStashAmount", value.toFixed(1))}
+            formatValue={value => value.toFixed(1)}
             label="Amount to De-stash"
             showManualInput={true}
             inputPlaceholder={`Enter amount (0-${userPerfume.amount}ml)`}
@@ -146,7 +146,7 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
               name="price"
               placeholder="0.00"
               value={values.price}
-              onChange={(event) => setValue("price", event.target.value)}
+              onChange={event => setValue("price", event.target.value)}
               step="0.01"
               min="0"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -161,12 +161,11 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
                 Trade Preferences
               </legend>
               <RadioSelect
-                data={tradeOptions.map((option) => ({
+                data={tradeOptions.map(option => ({
                   ...option,
                   defaultChecked: option.value === values.tradePreference,
                 }))}
-                handleRadioChange={(event) =>
-                  setValue(
+                handleRadioChange={event => setValue(
                     "tradePreference",
                     event.target.value as "cash" | "trade" | "both"
                   )

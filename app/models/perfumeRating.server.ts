@@ -68,9 +68,9 @@ export async function getPerfumeRatings(perfumeId: string) {
   ] as const
   const averages: Record<string, number | null> = {}
 
-  categories.forEach((category) => {
+  categories.forEach(category => {
     const validRatings = ratings
-      .map((rating) => rating[category])
+      .map(rating => rating[category])
       .filter((value): value is number => value !== null)
 
     if (validRatings.length > 0) {

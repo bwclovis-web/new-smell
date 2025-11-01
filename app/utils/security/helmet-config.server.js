@@ -103,7 +103,9 @@ export function getDevelopmentHelmetConfig() {
         defaultSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
-        imgSrc: ["'self'", "data:", "https:", "blob:", "http://localhost:*"],
+        imgSrc: [
+"'self'", "data:", "https:", "blob:", "http://localhost:*"
+],
         scriptSrc: [
           "'self'",
           "'unsafe-inline'",

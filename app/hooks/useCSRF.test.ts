@@ -387,9 +387,7 @@ describe("useCSRF", () => {
 
       const formData = new FormData()
 
-      await expect(
-        result.current.submitForm("/api/submit", formData)
-      ).rejects.toThrow("Network error")
+      await expect(result.current.submitForm("/api/submit", formData)).rejects.toThrow("Network error")
     })
   })
 
@@ -493,16 +491,12 @@ describe("useCSRF", () => {
     })
 
     it("should handle URL-safe base64 tokens", async () => {
-      mockDocumentCookie(
-        "_csrf=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
-      )
+      mockDocumentCookie("_csrf=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_")
 
       const { result } = renderHook(() => useCSRF())
 
       await waitFor(() => {
-        expect(result.current.csrfToken).toBe(
-          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_"
-        )
+        expect(result.current.csrfToken).toBe("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_")
       })
     })
   })

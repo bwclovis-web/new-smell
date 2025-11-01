@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client"
 import { Client } from "pg"
 
 // Define the slug utility function inline
-const createUrlSlug = (name) => {
+const createUrlSlug = name => {
   if (!name || typeof name !== "string") {
     return ""
   }
@@ -147,9 +147,7 @@ async function migratePerfumes() {
       if (perfume.perfumeHouseId) {
         perfumeHouseId = migratedHouses.get(perfume.perfumeHouseId)
         if (!perfumeHouseId) {
-          console.log(
-            `⚠️  House not found for perfume ${perfume.name}, skipping house relation`
-          )
+          console.log(`⚠️  House not found for perfume ${perfume.name}, skipping house relation`)
         }
       }
 
@@ -435,9 +433,7 @@ async function migrateWishlistNotifications() {
 
 async function main() {
   console.log("🚀 Starting migration from local PostgreSQL to Prisma Accelerate...")
-  console.log(
-    "📊 This will migrate all data and generate slugs for houses and perfumes"
-  )
+  console.log("📊 This will migrate all data and generate slugs for houses and perfumes")
 
   try {
     // Connect to local database
@@ -457,9 +453,7 @@ async function main() {
     await migrateWishlistNotifications()
 
     console.log("🎉 Migration completed successfully!")
-    console.log(
-      `📈 Migrated ${migratedHouses.size} houses and ${migratedPerfumes.size} perfumes`
-    )
+    console.log(`📈 Migrated ${migratedHouses.size} houses and ${migratedPerfumes.size} perfumes`)
   } catch (error) {
     console.error("❌ Migration failed:", error)
     process.exit(1)

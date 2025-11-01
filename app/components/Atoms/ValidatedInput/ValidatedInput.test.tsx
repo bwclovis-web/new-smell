@@ -131,14 +131,12 @@ describe("ValidatedInput", () => {
   describe("Validation", () => {
     it("should use field validation hook", () => {
       const schema = z.string().min(3)
-      render(
-        <ValidatedInput
+      render(<ValidatedInput
           {...defaultProps}
           validationSchema={schema}
           validateOnChange={true}
           debounceMs={500}
-        />
-      )
+        />)
 
       expect(mockUseFieldValidation).toHaveBeenCalledWith(schema, "testField", "", {
         validateOnChange: true,
@@ -158,9 +156,7 @@ describe("ValidatedInput", () => {
       const input = screen.getByRole("textbox")
       fireEvent.blur(input)
 
-      expect(screen.getByTestId("error-message")).toHaveTextContent(
-        "Field is required"
-      )
+      expect(screen.getByTestId("error-message")).toHaveTextContent("Field is required")
     })
 
     it("should show success when validation passes", () => {
@@ -347,13 +343,11 @@ describe("ValidatedInput", () => {
     })
 
     it("should pass custom labelClassName to FormField", () => {
-      render(
-        <ValidatedInput
+      render(<ValidatedInput
           {...defaultProps}
           label="Test Label"
           labelClassName="custom-label"
-        />
-      )
+        />)
 
       const label = screen.getByText("Test Label")
       expect(label).toHaveClass("custom-label")

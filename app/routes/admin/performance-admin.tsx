@@ -76,7 +76,9 @@ const PerformanceAdmin: React.FC = () => {
     tracing: {
       enabled: true,
       maxEvents: 1000,
-      categories: ["navigation", "resource", "paint", "measure", "mark"],
+      categories: [
+"navigation", "resource", "paint", "measure", "mark"
+],
     },
     thresholds: {
       lcp: 2500,
@@ -110,7 +112,7 @@ const PerformanceAdmin: React.FC = () => {
     section: keyof PerformanceSettings,
     updates: Partial<PerformanceSettings[keyof PerformanceSettings]>
   ) => {
-    setSettings((prev) => ({
+    setSettings(prev => ({
       ...prev,
       [section]: { ...prev[section], ...updates },
     }))
@@ -135,7 +137,9 @@ const PerformanceAdmin: React.FC = () => {
       tracing: {
         enabled: true,
         maxEvents: 1000,
-        categories: ["navigation", "resource", "paint", "measure", "mark"],
+        categories: [
+"navigation", "resource", "paint", "measure", "mark"
+],
       },
       thresholds: { lcp: 2500, fid: 100, cls: 0.1, fcp: 1800, tti: 3800 },
     }
@@ -351,8 +355,7 @@ const PerformanceAdmin: React.FC = () => {
             <VooDooCheck
               id="monitoring-enabled"
               checked={settings.monitoring.enabled}
-              onChange={() =>
-                updateSettings("monitoring", {
+              onChange={() => updateSettings("monitoring", {
                   enabled: !settings.monitoring.enabled,
                 })
               }
@@ -367,8 +370,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.monitoring.refreshInterval}
-              onChange={(e) =>
-                updateSettings("monitoring", {
+              onChange={e => updateSettings("monitoring", {
                   refreshInterval: Number(e.target.value),
                 })
               }
@@ -387,8 +389,7 @@ const PerformanceAdmin: React.FC = () => {
             <VooDooCheck
               id="monitoring-auto-start"
               checked={settings.monitoring.autoStart}
-              onChange={() =>
-                updateSettings("monitoring", {
+              onChange={() => updateSettings("monitoring", {
                   autoStart: !settings.monitoring.autoStart,
                 })
               }
@@ -412,8 +413,7 @@ const PerformanceAdmin: React.FC = () => {
             <VooDooCheck
               id="alerts-enabled"
               checked={settings.alerts.enabled}
-              onChange={() =>
-                updateSettings("alerts", { enabled: !settings.alerts.enabled })
+              onChange={() => updateSettings("alerts", { enabled: !settings.alerts.enabled })
               }
               labelChecked="Enable Alerts"
               labelUnchecked="Disable Alerts"
@@ -428,8 +428,7 @@ const PerformanceAdmin: React.FC = () => {
             <VooDooCheck
               id="alerts-auto-resolve"
               checked={settings.alerts.autoResolve}
-              onChange={() =>
-                updateSettings("alerts", {
+              onChange={() => updateSettings("alerts", {
                   autoResolve: !settings.alerts.autoResolve,
                 })
               }
@@ -444,8 +443,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.alerts.autoResolveDelay}
-              onChange={(e) =>
-                updateSettings("alerts", {
+              onChange={e => updateSettings("alerts", {
                   autoResolveDelay: Number(e.target.value),
                 })
               }
@@ -461,8 +459,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.alerts.maxAlerts}
-              onChange={(e) =>
-                updateSettings("alerts", { maxAlerts: Number(e.target.value) })
+              onChange={e => updateSettings("alerts", { maxAlerts: Number(e.target.value) })
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               min="10"
@@ -485,8 +482,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.thresholds.lcp}
-              onChange={(e) =>
-                updateSettings("thresholds", { lcp: Number(e.target.value) })
+              onChange={e => updateSettings("thresholds", { lcp: Number(e.target.value) })
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               min="1000"
@@ -500,8 +496,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.thresholds.fid}
-              onChange={(e) =>
-                updateSettings("thresholds", { fid: Number(e.target.value) })
+              onChange={e => updateSettings("thresholds", { fid: Number(e.target.value) })
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               min="10"
@@ -515,8 +510,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.thresholds.cls}
-              onChange={(e) =>
-                updateSettings("thresholds", { cls: Number(e.target.value) })
+              onChange={e => updateSettings("thresholds", { cls: Number(e.target.value) })
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               min="0.01"
@@ -530,8 +524,7 @@ const PerformanceAdmin: React.FC = () => {
             <input
               type="number"
               value={settings.thresholds.fcp}
-              onChange={(e) =>
-                updateSettings("thresholds", { fcp: Number(e.target.value) })
+              onChange={e => updateSettings("thresholds", { fcp: Number(e.target.value) })
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               min="500"
@@ -602,7 +595,7 @@ const PerformanceAdmin: React.FC = () => {
         {/* Tab Navigation */}
         <div className="mb-8">
           <nav className="flex space-x-8 overflow-x-auto">
-            {tabs.map((tab) => (
+            {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}

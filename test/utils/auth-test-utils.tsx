@@ -32,7 +32,9 @@ export const mockAuthStates = {
   },
   admin: createMockAuthUser({
     role: "admin",
-    permissions: ["read", "write", "delete", "admin"],
+    permissions: [
+"read", "write", "delete", "admin"
+],
   }),
   guest: createMockAuthUser({
     role: "guest",
@@ -130,13 +132,11 @@ export const testRegistrationFlow = async (
   await user.click(screen.getByRole("button", { name: /register/i }))
 
   // Verify registration was called
-  expect(mockRegister).toHaveBeenCalledWith(
-    expect.objectContaining({
+  expect(mockRegister).toHaveBeenCalledWith(expect.objectContaining({
       name: userData.name,
       email: userData.email,
       password: userData.password,
-    })
-  )
+    }))
 }
 
 // Test authentication guards

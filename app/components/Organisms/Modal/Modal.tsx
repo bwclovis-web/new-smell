@@ -65,17 +65,15 @@ const Modal: FC<ModalProps> = ({
     >
       {modalOpen && (
         <div
-          className={styleMerge(
-            modalBackgroundVariant({
+          className={styleMerge(modalBackgroundVariant({
               animate,
               animateStart,
               background,
-            })
-          )}
+            }))}
           tabIndex={0}
           role="button"
           onClick={() => handleClick()}
-          onKeyDown={(evt) => {
+          onKeyDown={evt => {
             if (evt.key === "Enter" || evt.key === " ") {
               evt.preventDefault()
               setAnimate(true)
@@ -87,13 +85,11 @@ const Modal: FC<ModalProps> = ({
       )}
       <div
         ref={modalRef}
-        className={styleMerge(
-          modalContentVariant({
+        className={styleMerge(modalContentVariant({
             animate,
             animateStart,
             innerType,
-          })
-        )}
+          }))}
         style={{ willChange: "transform, opacity" }}
       >
         <button

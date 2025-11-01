@@ -32,8 +32,7 @@ const MobileBottomNavigation: FC<MobileBottomNavigationProps> = ({
       {/* Home */}
       <NavLink
         to="/"
-        className={({ isActive: active }) =>
-          styleMerge(
+        className={({ isActive: active }) => styleMerge(
             "flex flex-col items-center gap-1 p-2 mobile-touch-target transition-colors duration-200",
             active ? "text-noir-light" : "text-noir-gold hover:text-noir-light"
           )
@@ -46,9 +45,7 @@ const MobileBottomNavigation: FC<MobileBottomNavigationProps> = ({
       {/* Search - Quick access to main search */}
       <button
         onClick={() => {
-          const searchInput = document.querySelector(
-            'input[type="search"], input[placeholder*="search"], input[placeholder*="Search"]'
-          ) as HTMLInputElement
+          const searchInput = document.querySelector('input[type="search"], input[placeholder*="search"], input[placeholder*="Search"]') as HTMLInputElement
           if (searchInput) {
             searchInput.focus()
           }
@@ -62,10 +59,9 @@ const MobileBottomNavigation: FC<MobileBottomNavigationProps> = ({
       {/* Quick access to perfumes */}
       <NavLink
         to={
-          mainNavigation.find((nav) => nav.key === "perfumes")?.path || "/the-vault"
+          mainNavigation.find(nav => nav.key === "perfumes")?.path || "/the-vault"
         }
-        className={({ isActive: active }) =>
-          styleMerge(
+        className={({ isActive: active }) => styleMerge(
             "flex flex-col items-center gap-1 p-2 mobile-touch-target transition-colors duration-200",
             active ? "text-noir-light" : "text-noir-gold hover:text-noir-light"
           )
@@ -78,8 +74,7 @@ const MobileBottomNavigation: FC<MobileBottomNavigationProps> = ({
       {/* User/Profile */}
       <NavLink
         to={user ? ADMIN_PATH : SIGN_IN}
-        className={({ isActive: active }) =>
-          styleMerge(
+        className={({ isActive: active }) => styleMerge(
             "flex flex-col items-center gap-1 p-2 mobile-touch-target transition-colors duration-200",
             active ? "text-noir-light" : "text-noir-gold hover:text-noir-light"
           )

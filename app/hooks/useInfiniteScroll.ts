@@ -1,4 +1,4 @@
-/* eslint-disable max-len, curly, array-bracket-newline */
+/* eslint-disable curly, array-bracket-newline */
 //
 import { type RefObject, useEffect, useRef, useState } from "react"
 
@@ -22,16 +22,12 @@ interface UseInfiniteScrollReturn {
 }
 
 async function fetchPerfumes(houseSlug: string, skip: number, take: number) {
-  const url = `/api/more-perfumes?houseSlug=${encodeURIComponent(
-    houseSlug
-  )}&skip=${skip}&take=${take}`
+  const url = `/api/more-perfumes?houseSlug=${encodeURIComponent(houseSlug)}&skip=${skip}&take=${take}`
   const response = await fetch(url)
   return response.json()
 }
 
-export function useInfiniteScroll(
-  options: UseInfiniteScrollOptions
-): UseInfiniteScrollReturn {
+export function useInfiniteScroll(options: UseInfiniteScrollOptions): UseInfiniteScrollReturn {
   const {
     houseSlug,
     initialPerfumes,
@@ -56,8 +52,8 @@ export function useInfiniteScroll(
     try {
       const data = await fetchPerfumes(houseSlug, skip, take)
       if (data.success && Array.isArray(data.perfumes)) {
-        setPerfumes((prev) => [...prev, ...data.perfumes])
-        setSkip((prev) => prev + data.perfumes.length)
+        setPerfumes(prev => [...prev, ...data.perfumes])
+        setSkip(prev => prev + data.perfumes.length)
         setHasMore(data.perfumes.length === take)
       } else {
         setHasMore(false)

@@ -336,9 +336,7 @@ describe("Authentication Error Handling Integration Tests", () => {
 
   describe("Authentication Service Errors", () => {
     it("should handle authentication service unavailable", async () => {
-      vi.mocked(auth.authenticateUser).mockRejectedValue(
-        new Error("Authentication service unavailable")
-      )
+      vi.mocked(auth.authenticateUser).mockRejectedValue(new Error("Authentication service unavailable"))
 
       const formData = new FormData()
       formData.append("perfumeId", "perfume-456")
@@ -361,9 +359,7 @@ describe("Authentication Error Handling Integration Tests", () => {
     })
 
     it("should handle authentication timeout", async () => {
-      vi.mocked(auth.authenticateUser).mockRejectedValue(
-        new Error("Authentication request timeout")
-      )
+      vi.mocked(auth.authenticateUser).mockRejectedValue(new Error("Authentication request timeout"))
 
       const formData = new FormData()
       formData.append("perfumeId", "perfume-456")
@@ -386,9 +382,7 @@ describe("Authentication Error Handling Integration Tests", () => {
     })
 
     it("should handle database error during authentication", async () => {
-      vi.mocked(auth.authenticateUser).mockRejectedValue(
-        new Error("Database error during authentication")
-      )
+      vi.mocked(auth.authenticateUser).mockRejectedValue(new Error("Database error during authentication"))
 
       const formData = new FormData()
       formData.append("perfumeId", "perfume-456")
@@ -556,13 +550,13 @@ describe("Authentication Error Handling Integration Tests", () => {
         })
       })
 
-      const args = requests.map((request) => ({
+      const args = requests.map(request => ({
         request,
         params: {},
         context: {},
       }))
 
-      await Promise.all(args.map((arg) => wishlistAction(arg)))
+      await Promise.all(args.map(arg => wishlistAction(arg)))
 
       expect(auth.authenticateUser).toHaveBeenCalledTimes(5)
     })

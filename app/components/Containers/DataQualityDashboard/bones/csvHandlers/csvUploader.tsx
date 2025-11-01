@@ -3,7 +3,7 @@ import type { ChangeEvent } from "react"
 // Helper function to get CSRF token from cookies (fallback method)
 const getCSRFTokenFromCookies = (): string | null => {
   const cookies = document.cookie.split(";")
-  const csrfCookie = cookies.find((cookie) => cookie.trim().startsWith("_csrf="))
+  const csrfCookie = cookies.find(cookie => cookie.trim().startsWith("_csrf="))
   return csrfCookie ? csrfCookie.split("=")[1] : null
 }
 
@@ -61,16 +61,12 @@ export const createHandleUploadCSV =
         alert("Error updating houses: " + result.error)
       } else {
         const successCount =
-          result.results?.filter(
-            (r: any) => r.status === "created" || r.status === "updated"
-          ).length || 0
+          result.results?.filter((r: any) => r.status === "created" || r.status === "updated").length || 0
         const errorCount =
           result.results?.filter((r: any) => r.status === "error").length || 0
 
         if (errorCount > 0) {
-          alert(
-            `CSV uploaded with issues: ${successCount} successful, ${errorCount} errors. Check console for details.`
-          )
+          alert(`CSV uploaded with issues: ${successCount} successful, ${errorCount} errors. Check console for details.`)
         } else {
           alert(`CSV uploaded successfully! Updated: ${successCount} houses`)
         }

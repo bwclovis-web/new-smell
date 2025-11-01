@@ -172,9 +172,7 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
 
     try {
       // Collect navigation timing
-      const navigation = performance.getEntriesByType(
-        "navigation"
-      )[0] as PerformanceNavigationTiming
+      const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming
       if (navigation) {
         const metrics = {
           lcp: navigation.loadEventEnd - navigation.navigationStart,
@@ -185,7 +183,7 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
         }
 
         // Check each rule
-        rules.forEach((rule) => {
+        rules.forEach(rule => {
           if (!rule.enabled) {
             return
           }
@@ -226,9 +224,7 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
 
           if (checkRule(rule, value)) {
             // Check if alert already exists and is not resolved
-            const existingAlert = alerts.find(
-              (alert) => alert.ruleId === rule.id && !alert.resolved
-            )
+            const existingAlert = alerts.find(alert => alert.ruleId === rule.id && !alert.resolved)
 
             if (!existingAlert) {
               newAlerts.push(createAlert(rule, value))
@@ -238,35 +234,29 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
       }
 
       if (newAlerts.length > 0) {
-        setAlerts((prev) => [...newAlerts, ...prev].slice(0, maxAlerts))
+        setAlerts(prev => [...newAlerts, ...prev].slice(0, maxAlerts))
       }
     } catch (error) {
       console.error("Error collecting performance metrics for alerts:", error)
     }
-  }, [enabled, rules, checkRule, createAlert, maxAlerts])
+  }, [
+enabled, rules, checkRule, createAlert, maxAlerts
+])
 
   const resolveAlert = useCallback((alertId: string) => {
-    setAlerts((prev) =>
-      prev.map((alert) =>
-        alert.id === alertId ? { ...alert, resolved: true } : alert
-      )
-    )
+    setAlerts(prev => prev.map(alert => alert.id === alertId ? { ...alert, resolved: true } : alert))
   }, [])
 
   const resolveAllAlerts = useCallback(() => {
-    setAlerts((prev) => prev.map((alert) => ({ ...alert, resolved: true })))
+    setAlerts(prev => prev.map(alert => ({ ...alert, resolved: true })))
   }, [])
 
   const clearResolvedAlerts = useCallback(() => {
-    setAlerts((prev) => prev.filter((alert) => !alert.resolved))
+    setAlerts(prev => prev.filter(alert => !alert.resolved))
   }, [])
 
   const toggleRule = useCallback((ruleId: string) => {
-    setRules((prev) =>
-      prev.map((rule) =>
-        rule.id === ruleId ? { ...rule, enabled: !rule.enabled } : rule
-      )
-    )
+    setRules(prev => prev.map(rule => rule.id === ruleId ? { ...rule, enabled: !rule.enabled } : rule))
   }, [])
 
   useEffect(() => {
@@ -290,13 +280,9 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
     }
 
     const timer = setTimeout(() => {
-      setAlerts((prev) =>
-        prev.map((alert) =>
-          Date.now() - alert.timestamp > autoResolveDelay
+      setAlerts(prev => prev.map(alert => Date.now() - alert.timestamp > autoResolveDelay
             ? { ...alert, resolved: true }
-            : alert
-        )
-      )
+            : alert))
     }, autoResolveDelay)
 
     return () => clearTimeout(timer)
@@ -332,8 +318,8 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
     }
   }
 
-  const activeAlerts = alerts.filter((alert) => !alert.resolved)
-  const resolvedAlerts = alerts.filter((alert) => alert.resolved)
+  const activeAlerts = alerts.filter(alert => !alert.resolved)
+  const resolvedAlerts = alerts.filter(alert => alert.resolved)
 
   if (!enabled || !showUI) {
     return null
@@ -365,25 +351,25 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
         <div className="bg-red-50 p-4 rounded-lg">
           <div className="text-sm text-red-600 mb-1">Critical</div>
           <div className="text-2xl font-bold text-red-800">
-            {activeAlerts.filter((alert) => alert.severity === "critical").length}
+            {activeAlerts.filter(alert => alert.severity === "critical").length}
           </div>
         </div>
         <div className="bg-orange-50 p-4 rounded-lg">
           <div className="text-sm text-orange-600 mb-1">High</div>
           <div className="text-2xl font-bold text-orange-800">
-            {activeAlerts.filter((alert) => alert.severity === "high").length}
+            {activeAlerts.filter(alert => alert.severity === "high").length}
           </div>
         </div>
         <div className="bg-yellow-50 p-4 rounded-lg">
           <div className="text-sm text-yellow-600 mb-1">Medium</div>
           <div className="text-2xl font-bold text-yellow-800">
-            {activeAlerts.filter((alert) => alert.severity === "medium").length}
+            {activeAlerts.filter(alert => alert.severity === "medium").length}
           </div>
         </div>
         <div className="bg-blue-50 p-4 rounded-lg">
           <div className="text-sm text-blue-600 mb-1">Low</div>
           <div className="text-2xl font-bold text-blue-800">
-            {activeAlerts.filter((alert) => alert.severity === "low").length}
+            {activeAlerts.filter(alert => alert.severity === "low").length}
           </div>
         </div>
       </div>
@@ -411,12 +397,10 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
             Active Alerts ({activeAlerts.length})
           </h3>
           <div className="space-y-3">
-            {activeAlerts.map((alert) => (
+            {activeAlerts.map(alert => (
               <div
                 key={alert.id}
-                className={`p-4 rounded-lg border ${getSeverityColor(
-                  alert.severity
-                )}`}
+                className={`p-4 rounded-lg border ${getSeverityColor(alert.severity)}`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
@@ -450,7 +434,7 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
             Resolved Alerts ({resolvedAlerts.length})
           </h3>
           <div className="space-y-2">
-            {resolvedAlerts.slice(0, 5).map((alert) => (
+            {resolvedAlerts.slice(0, 5).map(alert => (
               <div
                 key={alert.id}
                 className="p-3 rounded-lg border border-gray-200 bg-gray-50 opacity-75"
@@ -483,7 +467,7 @@ const PerformanceAlerts: React.FC<PerformanceAlertsProps> = ({
       <div>
         <h3 className="text-lg font-semibold text-gray-700 mb-4">Alert Rules</h3>
         <div className="space-y-2">
-          {rules.map((rule) => (
+          {rules.map(rule => (
             <div
               key={rule.id}
               className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"

@@ -53,7 +53,7 @@ export const AlertBell = ({
             onClick={() => setIsOpen(false)}
             role="button"
             tabIndex={0}
-            onKeyDown={(evt) => {
+            onKeyDown={evt => {
               if (evt.key === "Enter" || evt.key === " ") {
                 evt.preventDefault()
                 setIsOpen(false)
@@ -91,7 +91,7 @@ export const AlertBell = ({
                 </div>
               ) : (
                 <div className="divide-y divide-gray-100">
-                  {recentAlerts.map((alert) => (
+                  {recentAlerts.map(alert => (
                     <div key={alert.id} className="p-3 hover:bg-gray-50">
                       <AlertItem
                         alert={alert}

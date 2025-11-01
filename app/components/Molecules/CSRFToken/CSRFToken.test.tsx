@@ -221,12 +221,10 @@ describe("CSRFToken", () => {
         submitForm: vi.fn(),
       })
 
-      const { container } = render(
-        <form data-testid="test-form">
+      const { container } = render(<form data-testid="test-form">
           <CSRFToken />
           <input type="text" name="username" />
-        </form>
-      )
+        </form>)
 
       const form = container.querySelector('[data-testid="test-form"]')
       const csrfInput = form?.querySelector('input[name="_csrf"]')
@@ -247,13 +245,11 @@ describe("CSRFToken", () => {
         submitForm: vi.fn(),
       })
 
-      const { container } = render(
-        <form>
+      const { container } = render(<form>
           <input type="text" name="field1" value="value1" readOnly />
           <CSRFToken />
           <input type="text" name="field2" value="value2" readOnly />
-        </form>
-      )
+        </form>)
 
       const field1 = container.querySelector('input[name="field1"]')
       const field2 = container.querySelector('input[name="field2"]')
@@ -274,12 +270,10 @@ describe("CSRFToken", () => {
         submitForm: vi.fn(),
       })
 
-      const { container } = render(
-        <form>
+      const { container } = render(<form>
           <CSRFToken name="csrf1" />
           <CSRFToken name="csrf2" />
-        </form>
-      )
+        </form>)
 
       const csrf1 = container.querySelector('input[name="csrf1"]')
       const csrf2 = container.querySelector('input[name="csrf2"]')
@@ -410,13 +404,11 @@ describe("CSRFToken", () => {
         submitForm: vi.fn(),
       })
 
-      render(
-        <form aria-label="Test form">
+      render(<form aria-label="Test form">
           <CSRFToken />
           <label htmlFor="username">Username</label>
           <input id="username" type="text" name="username" />
-        </form>
-      )
+        </form>)
 
       expect(screen.getByLabelText("Username")).toBeInTheDocument()
       expect(screen.getByRole("textbox")).toBeInTheDocument()

@@ -61,7 +61,7 @@ describe("Error Handling Performance", () => {
         "Create all error types 100x",
         () => {
           for (let i = 0; i < 100; i++) {
-            errorTypes.forEach((createFn) => createFn())
+            errorTypes.forEach(createFn => createFn())
           }
         }
       )
@@ -194,8 +194,7 @@ describe("Error Handling Performance", () => {
     it("should handle multiple concurrent retry operations", async () => {
       vi.useFakeTimers()
 
-      const retryFn = (id: number) =>
-        vi.fn(async () => {
+      const retryFn = (id: number) => vi.fn(async () => {
           throw createError.network(`Network error ${id}`)
         })
 
@@ -580,9 +579,7 @@ describe("Error Handling Performance", () => {
       console.log(`Error Handling (100x):    ${results.errorHandling.toFixed(2)}ms`)
       console.log(`Retry Mechanism (100x):   ${results.retryMechanism.toFixed(2)}ms`)
       console.log(`Error Logging (100x):     ${results.errorLogging.toFixed(2)}ms`)
-      console.log(
-        `Overall Overhead (100x):  ${results.overallOverhead.toFixed(2)}ms`
-      )
+      console.log(`Overall Overhead (100x):  ${results.overallOverhead.toFixed(2)}ms`)
       console.log("==========================================\n")
 
       // All operations should meet the < 100ms requirement

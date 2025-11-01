@@ -203,8 +203,7 @@ export const getAllHouses = async (options?: {
   })
 }
 
-export const getHousesByLetter = async (letter: string, includeEmpty = false) =>
-  prisma.perfumeHouse.findMany({
+export const getHousesByLetter = async (letter: string, includeEmpty = false) => prisma.perfumeHouse.findMany({
     where: {
       name: {
         startsWith: letter,
@@ -360,7 +359,7 @@ export const searchPerfumeHouseByName = async (
       AND: [
         { name: { contains: searchTerm, mode: "insensitive" } },
         // Exclude items already found in exact matches
-        { id: { notIn: exactMatches.map((h) => h.id) } },
+        { id: { notIn: exactMatches.map(h => h.id) } },
         perfumeFilter,
       ],
     },
@@ -378,7 +377,7 @@ export const searchPerfumeHouseByName = async (
 
   // Sort by relevance score
   const rankedResults = allResults
-    .map((house) => ({
+    .map(house => ({
       ...house,
       relevanceScore: calculateHouseRelevanceScore(house.name, searchTerm),
     }))
@@ -461,7 +460,9 @@ function validateHouseFormData(data: FormData): void {
 
   // Validate type if provided
   if (type && typeof type === "string") {
-    const validTypes: HouseType[] = ["niche", "designer", "indie", "mainstream"]
+    const validTypes: HouseType[] = [
+"niche", "designer", "indie", "mainstream"
+]
     assertValid(
       validTypes.includes(type as HouseType),
       `Invalid house type. Must be one of: ${validTypes.join(", ")}`,

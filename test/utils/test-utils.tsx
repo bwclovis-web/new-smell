@@ -50,8 +50,7 @@ interface MockHouse {
 // QUERY CLIENT SETUP
 // ============================================================================
 
-const createTestQueryClient = () =>
-  new QueryClient({
+const createTestQueryClient = () => new QueryClient({
     defaultOptions: {
       queries: {
         retry: false,
@@ -139,9 +138,7 @@ export const createMockUser = (overrides: Partial<MockUser> = {}): MockUser => (
  * @deprecated Use createMockPerfume from test/factories instead
  * Legacy mock perfume generator - kept for backward compatibility
  */
-export const createMockPerfume = (
-  overrides: Partial<MockPerfume> = {}
-): MockPerfume => ({
+export const createMockPerfume = (overrides: Partial<MockPerfume> = {}): MockPerfume => ({
   id: "1",
   name: "Test Perfume",
   brand: "Test Brand",
@@ -171,8 +168,7 @@ export const createMockHouse = (overrides: Partial<MockHouse> = {}): MockHouse =
 // MOCK FUNCTIONS
 // ============================================================================
 
-export const mockFetch = (data: any, status = 200) =>
-  vi.fn().mockResolvedValue({
+export const mockFetch = (data: any, status = 200) => vi.fn().mockResolvedValue({
     ok: status >= 200 && status < 300,
     status,
     json: () => Promise.resolve(data),
@@ -194,7 +190,7 @@ const createStorageMock = () => {
       delete store[key]
     }),
     clear: vi.fn(() => {
-      Object.keys(store).forEach((key) => {
+      Object.keys(store).forEach(key => {
         delete store[key]
       })
     }),
@@ -237,7 +233,7 @@ export const mockResizeObserver = () => {
 export const mockMatchMedia = (matches = false) => {
   Object.defineProperty(window, "matchMedia", {
     writable: true,
-    value: vi.fn().mockImplementation((query) => ({
+    value: vi.fn().mockImplementation(query => ({
       matches,
       media: query,
       onchange: null,
@@ -270,12 +266,9 @@ export const mockScrollTo = () => {
  * - import { batchGeneration, generateBulkTestData } from 'test/factories'
  */
 export const createTestData = {
-  users: (count: number) =>
-    Array.from({ length: count }, (_, i) => createMockUser({ id: `${i + 1}` })),
-  perfumes: (count: number) =>
-    Array.from({ length: count }, (_, i) => createMockPerfume({ id: `${i + 1}` })),
-  houses: (count: number) =>
-    Array.from({ length: count }, (_, i) => createMockHouse({ id: `${i + 1}` })),
+  users: (count: number) => Array.from({ length: count }, (_, i) => createMockUser({ id: `${i + 1}` })),
+  perfumes: (count: number) => Array.from({ length: count }, (_, i) => createMockPerfume({ id: `${i + 1}` })),
+  houses: (count: number) => Array.from({ length: count }, (_, i) => createMockHouse({ id: `${i + 1}` })),
 }
 
 // Re-export new factories for convenience
@@ -285,18 +278,15 @@ export * from "../factories"
 // UTILITY FUNCTIONS
 // ============================================================================
 
-export const wait = (milliseconds: number) =>
-  new Promise((resolve) => {
+export const wait = (milliseconds: number) => new Promise(resolve => {
     setTimeout(resolve, milliseconds)
   })
 
 export const createTestUser = () => userEvent.setup()
 
-export const waitForElement = async (selector: string, timeout = 5000) =>
-  waitFor(() => screen.getByTestId(selector), { timeout })
+export const waitForElement = async (selector: string, timeout = 5000) => waitFor(() => screen.getByTestId(selector), { timeout })
 
-export const waitForElementToDisappear = async (selector: string, timeout = 5000) =>
-  waitFor(
+export const waitForElementToDisappear = async (selector: string, timeout = 5000) => waitFor(
     () => {
       expect(screen.queryByTestId(selector)).not.toBeInTheDocument()
     },
@@ -324,8 +314,7 @@ export const customMatchers = {
       received && received.classList && received.classList.contains(className)
     return {
       pass,
-      message: () =>
-        `expected element ${pass ? "not " : ""}to have class "${className}"`,
+      message: () => `expected element ${pass ? "not " : ""}to have class "${className}"`,
     }
   },
 
@@ -338,8 +327,7 @@ export const customMatchers = {
     const pass = hasAttribute && hasValue
     return {
       pass,
-      message: () =>
-        `expected element ${pass ? "not " : ""}to have attribute "${attribute}"${
+      message: () => `expected element ${pass ? "not " : ""}to have attribute "${attribute}"${
           value ? ` with value "${value}"` : ""
         }`,
     }
@@ -386,15 +374,11 @@ export const testAccessibility = async (
   const { container } = renderWithProviders(<Component {...props} />)
 
   // Test for basic accessibility attributes
-  const elements = container.querySelectorAll(
-    "[role], [aria-label], [aria-labelledby]"
-  )
+  const elements = container.querySelectorAll("[role], [aria-label], [aria-labelledby]")
   expect(elements.length).toBeGreaterThan(0)
 
   // Test for keyboard navigation
-  const focusableElements = container.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  )
+  const focusableElements = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
   expect(focusableElements.length).toBeGreaterThan(0)
 }
 

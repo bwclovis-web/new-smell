@@ -66,8 +66,8 @@ describe("Bulk Data Factory", () => {
       })
 
       const rating = data.ratings[0]
-      const ratingUser = data.users.find((u) => u.id === rating!.userId)
-      const ratingPerfume = data.perfumes.find((p) => p.id === rating!.perfumeId)
+      const ratingUser = data.users.find(u => u.id === rating!.userId)
+      const ratingPerfume = data.perfumes.find(p => p.id === rating!.perfumeId)
 
       expect(ratingUser).toBeDefined()
       expect(ratingPerfume).toBeDefined()
@@ -92,7 +92,7 @@ describe("Bulk Data Factory", () => {
       })
 
       expect(data.wishlistItems.length).toBeGreaterThan(0)
-      data.wishlistItems.forEach((item) => {
+      data.wishlistItems.forEach(item => {
         expect(item.userId).toBeTruthy()
         expect(item.perfumeId).toBeTruthy()
       })
@@ -169,7 +169,7 @@ describe("Bulk Data Factory", () => {
       )
 
       expect(ratings).toHaveLength(3)
-      ratings.forEach((rating) => {
+      ratings.forEach(rating => {
         expect(rating.userId).toBe("user-1")
         expect(rating.perfumeId).toBe("perfume-1")
       })
@@ -186,7 +186,7 @@ describe("Bulk Data Factory", () => {
       )
 
       expect(reviews).toHaveLength(2)
-      reviews.forEach((review) => {
+      reviews.forEach(review => {
         expect(review.userId).toBe("user-1")
         expect(review.perfumeId).toBe("perfume-1")
       })
@@ -216,7 +216,7 @@ describe("Bulk Data Factory", () => {
       expect(singleUser.reviews).toHaveLength(0)
 
       // Verify user owns all ratings
-      singleUser.ratings.forEach((rating) => {
+      singleUser.ratings.forEach(rating => {
         expect(rating.userId).toBe(singleUser.users[0]!.id)
       })
     })
@@ -257,17 +257,17 @@ describe("Bulk Data Factory", () => {
       })
 
       // All ratings should reference existing users and perfumes
-      data.ratings.forEach((rating) => {
-        const userExists = data.users.some((u) => u.id === rating.userId)
-        const perfumeExists = data.perfumes.some((p) => p.id === rating.perfumeId)
+      data.ratings.forEach(rating => {
+        const userExists = data.users.some(u => u.id === rating.userId)
+        const perfumeExists = data.perfumes.some(p => p.id === rating.perfumeId)
         expect(userExists).toBe(true)
         expect(perfumeExists).toBe(true)
       })
 
       // All reviews should reference existing users and perfumes
-      data.reviews.forEach((review) => {
-        const userExists = data.users.some((u) => u.id === review.userId)
-        const perfumeExists = data.perfumes.some((p) => p.id === review.perfumeId)
+      data.reviews.forEach(review => {
+        const userExists = data.users.some(u => u.id === review.userId)
+        const perfumeExists = data.perfumes.some(p => p.id === review.perfumeId)
         expect(userExists).toBe(true)
         expect(perfumeExists).toBe(true)
       })
@@ -279,8 +279,8 @@ describe("Bulk Data Factory", () => {
         perfumesPerHouse: 3,
       })
 
-      data.perfumes.forEach((perfume) => {
-        const houseExists = data.houses.some((h) => h.id === perfume.perfumeHouseId)
+      data.perfumes.forEach(perfume => {
+        const houseExists = data.houses.some(h => h.id === perfume.perfumeHouseId)
         expect(houseExists).toBe(true)
       })
     })

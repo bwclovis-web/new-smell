@@ -46,9 +46,7 @@ describe("Perfume Loader API Integration Tests", () => {
         },
       ]
 
-      vi.mocked(perfumeServer.searchPerfumeByName).mockResolvedValue(
-        mockPerfumes as any
-      )
+      vi.mocked(perfumeServer.searchPerfumeByName).mockResolvedValue(mockPerfumes as any)
 
       const request = new Request("https://example.com/api/perfumeLoader?name=rose")
       const args: LoaderFunctionArgs = {
@@ -80,9 +78,7 @@ describe("Perfume Loader API Integration Tests", () => {
     it("should return empty array when no perfumes match", async () => {
       vi.mocked(perfumeServer.searchPerfumeByName).mockResolvedValue(null)
 
-      const request = new Request(
-        "https://example.com/api/perfumeLoader?name=nonexistent"
-      )
+      const request = new Request("https://example.com/api/perfumeLoader?name=nonexistent")
       const args: LoaderFunctionArgs = {
         request,
         params: {},
@@ -121,13 +117,9 @@ describe("Perfume Loader API Integration Tests", () => {
         },
       ]
 
-      vi.mocked(perfumeServer.searchPerfumeByName).mockResolvedValue(
-        mockPerfumes as any
-      )
+      vi.mocked(perfumeServer.searchPerfumeByName).mockResolvedValue(mockPerfumes as any)
 
-      const request = new Request(
-        "https://example.com/api/perfumeLoader?name=L%27eau"
-      )
+      const request = new Request("https://example.com/api/perfumeLoader?name=L%27eau")
       const args: LoaderFunctionArgs = {
         request,
         params: {},
@@ -141,9 +133,7 @@ describe("Perfume Loader API Integration Tests", () => {
     })
 
     it("should handle database errors", async () => {
-      vi.mocked(perfumeServer.searchPerfumeByName).mockRejectedValue(
-        new Error("Database connection error")
-      )
+      vi.mocked(perfumeServer.searchPerfumeByName).mockRejectedValue(new Error("Database connection error"))
 
       const request = new Request("https://example.com/api/perfumeLoader?name=test")
       const args: LoaderFunctionArgs = {
@@ -183,13 +173,9 @@ describe("Perfume Loader API Integration Tests", () => {
         },
       ]
 
-      vi.mocked(perfumeServer.searchPerfumeByName).mockResolvedValue(
-        mockPerfumes as any
-      )
+      vi.mocked(perfumeServer.searchPerfumeByName).mockResolvedValue(mockPerfumes as any)
 
-      const request = new Request(
-        "https://example.com/api/perfumeLoader?name=%20test%20"
-      )
+      const request = new Request("https://example.com/api/perfumeLoader?name=%20test%20")
       const args: LoaderFunctionArgs = {
         request,
         params: {},
@@ -213,9 +199,7 @@ describe("Perfume Loader API Integration Tests", () => {
         },
       ]
 
-      vi.mocked(perfumeServer.searchPerfumeByName).mockResolvedValue(
-        mockPerfumes as any
-      )
+      vi.mocked(perfumeServer.searchPerfumeByName).mockResolvedValue(mockPerfumes as any)
 
       const request = new Request("https://example.com/api/perfumeLoader?name=TEST")
       const args: LoaderFunctionArgs = {

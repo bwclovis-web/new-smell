@@ -31,13 +31,9 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
   }, [userPerfume.comments])
   const handleTogglePublic = async (commentId: string, currentIsPublic: boolean) => {
     // Optimistically update UI
-    setComments((prevComments) =>
-      prevComments.map((comment) =>
-        comment.id === commentId
+    setComments(prevComments => prevComments.map(comment => comment.id === commentId
           ? { ...comment, isPublic: !currentIsPublic }
-          : comment
-      )
-    )
+          : comment))
 
     // Validate required IDs exist
     const perfumeId = assertExists(
@@ -57,20 +53,14 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
     formData.append("isPublic", (!currentIsPublic).toString())
 
     // Use safeAsync for error handling
-    const [error, response] = await safeAsync(() =>
-      submitForm("/api/user-perfumes", formData)
-    )
+    const [error, response] = await safeAsync(() => submitForm("/api/user-perfumes", formData))
 
     if (error) {
       console.error("Error toggling comment visibility:", error)
       // Revert the UI change on error
-      setComments((prevComments) =>
-        prevComments.map((comment) =>
-          comment.id === commentId
+      setComments(prevComments => prevComments.map(comment => comment.id === commentId
             ? { ...comment, isPublic: currentIsPublic }
-            : comment
-        )
-      )
+            : comment))
       return
     }
 
@@ -82,20 +72,16 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
         jsonError || result.error
       )
       // Revert the UI change on error
-      setComments((prevComments) =>
-        prevComments.map((comment) =>
-          comment.id === commentId
+      setComments(prevComments => prevComments.map(comment => comment.id === commentId
             ? { ...comment, isPublic: currentIsPublic }
-            : comment
-        )
-      )
+            : comment))
     }
   }
 
   const handleDeleteComment = async (commentId: string) => {
     const originalComments = [...comments]
     // Optimistically remove from UI
-    setComments((prev) => prev.filter((comment) => comment.id !== commentId))
+    setComments(prev => prev.filter(comment => comment.id !== commentId))
 
     // Validate required IDs exist
     const perfumeId = assertExists(
@@ -119,9 +105,7 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
     }
 
     // Use safeAsync for error handling
-    const [error, response] = await safeAsync(() =>
-      submitForm("/api/user-perfumes", formData)
-    )
+    const [error, response] = await safeAsync(() => submitForm("/api/user-perfumes", formData))
 
     if (error) {
       console.error("Error deleting comment:", error)
@@ -135,11 +119,9 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
     if (jsonError || !result.success) {
       console.error("Failed to delete comment:", jsonError || result.error)
       setComments(originalComments)
-      alert(
-        `${t("comments.deleteFailed", "Failed to delete comment")}: ${
+      alert(`${t("comments.deleteFailed", "Failed to delete comment")}: ${
           result?.error || "Unknown error"
-        }`
-      )
+        }`)
     } else {
       console.log("Comment deleted successfully")
     }
@@ -155,7 +137,7 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
       </p>
       {comments.length > 0 ? (
         <ul className="list-disc pl-5">
-          {comments.map((comment) => (
+          {comments.map(comment => (
             <li
               key={comment.id}
               className="mb-1 border-b border-noir-dark/20 dark:border-noir-light/90 pb-2 bg-noir-light"
@@ -208,8 +190,8 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
         <Modal innerType="dark" animateStart="bottom">
           <CommentsModal
             perfume={userPerfume}
-            onCommentAdded={(newComment) => {
-              setComments((prev) => [newComment, ...prev])
+            onCommentAdded={newComment => {
+              setComments(prev => [newComment, ...prev])
             }}
           />
         </Modal>

@@ -11,6 +11,7 @@ import { RetryOptions, retryPresets } from "~/utils/retry"
 import { useApiWithRetry } from "./useApiWithRetry"
 
 export interface UseDataFetchingOptions<T> {
+
   /**
    * URL or function that returns a URL to fetch from
    */
@@ -82,6 +83,7 @@ export interface UseDataFetchingOptions<T> {
 }
 
 export interface UseDataFetchingReturn<T> {
+
   /**
    * The fetched data
    */
@@ -141,7 +143,9 @@ interface CachedData<T> {
 const CACHE_PREFIX = "data-fetch-"
 
 function getCachedData<T>(cacheKey: string): CachedData<T> | null {
-  if (typeof window === "undefined") return null
+  if (typeof window === "undefined") {
+ return null 
+}
 
   try {
     const cached = localStorage.getItem(`${CACHE_PREFIX}${cacheKey}`)
@@ -152,7 +156,9 @@ function getCachedData<T>(cacheKey: string): CachedData<T> | null {
 }
 
 function setCachedData<T>(cacheKey: string, data: T): void {
-  if (typeof window === "undefined") return
+  if (typeof window === "undefined") {
+ return 
+}
 
   try {
     localStorage.setItem(
@@ -209,9 +215,7 @@ function isCacheExpired(timestamp: number, cacheDuration: number): boolean {
  * })
  * ```
  */
-export function useDataFetching<T = unknown>(
-  options: UseDataFetchingOptions<T> = {}
-): UseDataFetchingReturn<T> {
+export function useDataFetching<T = unknown>(options: UseDataFetchingOptions<T> = {}): UseDataFetchingReturn<T> {
   const {
     url,
     fetchFn,
@@ -256,7 +260,9 @@ export function useDataFetching<T = unknown>(
         }
       }
     }
-  }, [cacheKey, cacheDuration, staleWhileRevalidate, enabled])
+  }, [
+cacheKey, cacheDuration, staleWhileRevalidate, enabled
+])
 
   const performFetch = useCallback(
     async (isRefetch = false) => {
@@ -325,7 +331,9 @@ export function useDataFetching<T = unknown>(
         setIsRefetching(false)
       }
     },
-    [url, fetchFn, fetchWithRetry, transform, onSuccess, onError, cacheKey]
+    [
+url, fetchFn, fetchWithRetry, transform, onSuccess, onError, cacheKey
+]
   )
 
   const refetch = useCallback(async () => {
@@ -348,7 +356,9 @@ export function useDataFetching<T = unknown>(
 
   // Fetch effect with debouncing
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) {
+ return 
+}
 
     // Clear any existing timer
     if (debounceTimerRef.current) {
@@ -371,7 +381,9 @@ export function useDataFetching<T = unknown>(
       }
       abortControllerRef.current?.abort()
     }
-  }, [enabled, ...deps, performFetch, debounceMs])
+  }, [
+enabled, ...deps, performFetch, debounceMs
+])
 
   return {
     data,

@@ -132,7 +132,7 @@ describe("User Factory", () => {
     it("should apply overrides to all users", () => {
       const users = createMockUsers(3, { role: "editor" })
 
-      users.forEach((user) => {
+      users.forEach(user => {
         expect(user.role).toBe("editor")
       })
     })
@@ -140,7 +140,7 @@ describe("User Factory", () => {
     it("should create users with unique IDs when not overridden", () => {
       const users = createMockUsers(3, {})
 
-      const ids = users.map((u) => u.id)
+      const ids = users.map(u => u.id)
       const uniqueIds = new Set(ids)
       expect(uniqueIds.size).toBe(3)
     })
@@ -208,9 +208,7 @@ describe("User Factory", () => {
     it("should have updatedAt after or equal to createdAt", () => {
       const user = createMockUser()
 
-      expect(user.updatedAt.getTime()).toBeGreaterThanOrEqual(
-        user.createdAt.getTime()
-      )
+      expect(user.updatedAt.getTime()).toBeGreaterThanOrEqual(user.createdAt.getTime())
     })
 
     it("should handle custom dates correctly", () => {

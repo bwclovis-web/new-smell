@@ -21,7 +21,7 @@ function parseNotes(openNotes, heartNotes, baseNotes) {
   const notes = []
 
   // Helper to parse and add notes
-  const addNotes = (notesString) => {
+  const addNotes = notesString => {
     if (!notesString || notesString.trim() === "" || notesString === "[]") {
       return
     }
@@ -80,9 +80,7 @@ async function mergeBpalCsvs() {
     columns: true,
     skip_empty_lines: true,
   })
-  console.log(
-    `   Found ${blackPhoenixRecords.length} perfumes in Black Phoenix CSV\n`
-  )
+  console.log(`   Found ${blackPhoenixRecords.length} perfumes in Black Phoenix CSV\n`)
 
   // Create a map of existing perfumes by normalized name
   const existingPerfumes = new Map()
@@ -131,9 +129,7 @@ async function mergeBpalCsvs() {
   console.log(`   - Existing perfumes (kept): ${enhancedRecords.length}`)
   console.log(`   - Duplicates (skipped): ${duplicates}`)
   console.log(`   - New perfumes (added): ${newPerfumes.length}`)
-  console.log(
-    `   - Total after merge: ${enhancedRecords.length + newPerfumes.length}\n`
-  )
+  console.log(`   - Total after merge: ${enhancedRecords.length + newPerfumes.length}\n`)
 
   // Merge: enhanced records + new perfumes
   const mergedRecords = [...enhancedRecords, ...newPerfumes]
@@ -142,7 +138,7 @@ async function mergeBpalCsvs() {
   console.log("💾 Writing merged data...")
 
   // Manually create CSV output
-  const escapeCSV = (value) => {
+  const escapeCSV = value => {
     if (value === null || value === undefined) {
       return ""
     }
@@ -164,7 +160,7 @@ async function mergeBpalCsvs() {
   const csvLines = [columns.join(",")]
 
   for (const record of mergedRecords) {
-    const line = columns.map((col) => escapeCSV(record[col])).join(",")
+    const line = columns.map(col => escapeCSV(record[col])).join(",")
     csvLines.push(line)
   }
 
@@ -179,7 +175,7 @@ async function mergeBpalCsvs() {
   console.log(`   3. Delete the old file (will be done automatically)`)
 }
 
-mergeBpalCsvs().catch((e) => {
+mergeBpalCsvs().catch(e => {
   console.error("❌ Fatal error:", e)
   process.exit(1)
 })

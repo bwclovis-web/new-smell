@@ -84,7 +84,9 @@ export const useRangeSlider = ({
         step,
       })
     },
-    [internalValue, min, max, step]
+    [
+internalValue, min, max, step
+]
   )
 
   // Animation effects

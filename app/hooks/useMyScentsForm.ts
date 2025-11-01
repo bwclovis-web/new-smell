@@ -30,9 +30,7 @@ export function useMyScentsForm(initialPerfume?: UserPerfumeI) {
   const submit = useSubmit()
 
   // Initialize state with helper functions
-  const [selectedPerfume, setSelectedPerfume] = useState<UserPerfumeI | null>(
-    getInitialPerfumeState(initialPerfume)
-  )
+  const [selectedPerfume, setSelectedPerfume] = useState<UserPerfumeI | null>(getInitialPerfumeState(initialPerfume))
   const initialData = getInitialPerfumeData(initialPerfume)
   const [perfumeData, setPerfumeData] = useState(initialData)
 

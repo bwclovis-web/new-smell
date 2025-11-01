@@ -147,9 +147,7 @@ test.describe("Wishlist Management", () => {
       await page.goto("/wishlist")
 
       // Should show empty state
-      await expect(
-        page.locator("text=/no.*wishlist|empty wishlist|start adding/i")
-      ).toBeVisible()
+      await expect(page.locator("text=/no.*wishlist|empty wishlist|start adding/i")).toBeVisible()
     })
 
     test("should navigate to perfume from wishlist", async ({ page }) => {
@@ -175,9 +173,7 @@ test.describe("Wishlist Management", () => {
         await expect(firstItem.locator('[data-testid="perfume-name"]')).toBeVisible()
 
         // Should show perfume house
-        await expect(
-          firstItem.locator('[data-testid="perfume-house"]')
-        ).toBeVisible()
+        await expect(firstItem.locator('[data-testid="perfume-house"]')).toBeVisible()
 
         // Should show image
         await expect(firstItem.locator("img")).toBeVisible()

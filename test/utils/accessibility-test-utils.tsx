@@ -15,9 +15,7 @@ export const testKeyboardNavigation = async (
   const user = userEvent.setup()
 
   // Get all focusable elements
-  const focusableElements = container.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  )
+  const focusableElements = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
 
   expect(focusableElements.length).toBeGreaterThan(0)
 
@@ -80,19 +78,19 @@ export const testFormAccessibility = (
 
   // Test that all inputs have labels
   const inputs = screen.getAllByRole("textbox")
-  inputs.forEach((input) => {
+  inputs.forEach(input => {
     expect(input).toHaveAccessibleName()
   })
 
   // Test required field indicators
   const requiredInputs = screen.getAllByRole("textbox", { required: true })
-  requiredInputs.forEach((input) => {
+  requiredInputs.forEach(input => {
     expect(input).toHaveAttribute("aria-required", "true")
   })
 
   // Test error messages are associated
   const errorMessages = screen.queryAllByRole("alert")
-  errorMessages.forEach((error) => {
+  errorMessages.forEach(error => {
     const associatedInput = screen.getByLabelText(error.textContent!)
     expect(associatedInput).toHaveAttribute("aria-describedby", error.id)
   })
@@ -108,7 +106,7 @@ export const testColorContrast = (
 
   // Mock color contrast calculation
   const elements = container.querySelectorAll("*")
-  elements.forEach((element) => {
+  elements.forEach(element => {
     const style = window.getComputedStyle(element)
     const color = style.color
     const backgroundColor = style.backgroundColor
@@ -189,10 +187,10 @@ export const testHeadingsHierarchy = (
   const { container } = renderWithProviders(<Component {...props} />)
 
   const headings = container.querySelectorAll("h1, h2, h3, h4, h5, h6")
-  const headingLevels = Array.from(headings).map((h) => parseInt(h.tagName[1]))
+  const headingLevels = Array.from(headings).map(h => parseInt(h.tagName[1]))
 
   // Check that there's only one h1
-  const h1Count = headingLevels.filter((level) => level === 1).length
+  const h1Count = headingLevels.filter(level => level === 1).length
   expect(h1Count).toBeLessThanOrEqual(1)
 
   // Check that headings follow logical order
@@ -226,7 +224,7 @@ export const testImageAltText = (
   const { container } = renderWithProviders(<Component {...props} />)
 
   const images = container.querySelectorAll("img")
-  images.forEach((img) => {
+  images.forEach(img => {
     // Images should have alt text or be marked as decorative
     const hasAlt = img.hasAttribute("alt")
     const isDecorative =
@@ -245,7 +243,7 @@ export const testButtonAccessibility = (
   renderWithProviders(<Component {...props} />)
 
   const buttons = screen.getAllByRole("button")
-  buttons.forEach((button) => {
+  buttons.forEach(button => {
     // Buttons should have accessible names
     expect(button).toHaveAccessibleName()
 
@@ -265,7 +263,7 @@ export const testLinkAccessibility = (
   renderWithProviders(<Component {...props} />)
 
   const links = screen.getAllByRole("link")
-  links.forEach((link) => {
+  links.forEach(link => {
     // Links should have accessible names
     expect(link).toHaveAccessibleName()
 
@@ -286,7 +284,7 @@ export const testTableAccessibility = (
   const { container } = renderWithProviders(<Component {...props} />)
 
   const tables = container.querySelectorAll("table")
-  tables.forEach((table) => {
+  tables.forEach(table => {
     // Tables should have captions or aria-label
     const hasCaption = table.querySelector("caption")
     const hasAriaLabel = table.hasAttribute("aria-label")
@@ -297,7 +295,7 @@ export const testTableAccessibility = (
     const headers = table.querySelectorAll("th")
     expect(headers.length).toBeGreaterThan(0)
 
-    headers.forEach((header) => {
+    headers.forEach(header => {
       expect(header).toHaveAttribute("scope")
     })
   })
@@ -311,7 +309,7 @@ export const testMotionAccessibility = (
   // Mock prefers-reduced-motion
   Object.defineProperty(window, "matchMedia", {
     writable: true,
-    value: vi.fn().mockImplementation((query) => ({
+    value: vi.fn().mockImplementation(query => ({
       matches: query === "(prefers-reduced-motion: reduce)",
       media: query,
       onchange: null,
@@ -327,7 +325,7 @@ export const testMotionAccessibility = (
 
   // Check that animations respect user preferences
   const animatedElements = container.querySelectorAll('[class*="animate"]')
-  animatedElements.forEach((element) => {
+  animatedElements.forEach(element => {
     const style = window.getComputedStyle(element)
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       expect(style.animationDuration).toBe("0s")

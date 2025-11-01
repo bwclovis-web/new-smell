@@ -32,7 +32,7 @@ describe("ImagePreloader", () => {
     })
 
     // Mock IntersectionObserver
-    mockIntersectionObserver.mockImplementation((callback) => ({
+    mockIntersectionObserver.mockImplementation(callback => ({
       observe: vi.fn(),
       unobserve: vi.fn(),
       disconnect: vi.fn(),
@@ -75,9 +75,7 @@ describe("ImagePreloader", () => {
       const images = ["image1.jpg", "image2.jpg"]
       render(<ImagePreloader images={images} priority="high" />)
 
-      const preloadLinks = mockDocumentHead.querySelectorAll(
-        'link[rel="preload"][as="image"]'
-      )
+      const preloadLinks = mockDocumentHead.querySelectorAll('link[rel="preload"][as="image"]')
       expect(preloadLinks).toHaveLength(2)
 
       expect(preloadLinks[0]).toHaveAttribute("href", "image1.jpg")
@@ -89,9 +87,7 @@ describe("ImagePreloader", () => {
     it("should handle empty images array for high priority", () => {
       render(<ImagePreloader images={[]} priority="high" />)
 
-      const preloadLinks = mockDocumentHead.querySelectorAll(
-        'link[rel="preload"][as="image"]'
-      )
+      const preloadLinks = mockDocumentHead.querySelectorAll('link[rel="preload"][as="image"]')
       expect(preloadLinks).toHaveLength(0)
     })
   })
@@ -142,9 +138,7 @@ describe("ImagePreloader", () => {
       expect(vi.getTimerCount()).toBeGreaterThan(0)
       vi.runAllTimers()
 
-      const preloadLinks = mockDocumentHead.querySelectorAll(
-        'link[rel="preload"][as="image"]'
-      )
+      const preloadLinks = mockDocumentHead.querySelectorAll('link[rel="preload"][as="image"]')
       expect(preloadLinks).toHaveLength(1)
 
       vi.useRealTimers()
@@ -152,15 +146,13 @@ describe("ImagePreloader", () => {
 
     it("should create preload links with low priority", () => {
       const images = ["image1.jpg"]
-      mockRequestIdleCallback.mockImplementation((fn) => {
+      mockRequestIdleCallback.mockImplementation(fn => {
         fn() // Execute immediately for testing
       })
 
       render(<ImagePreloader images={images} priority="low" lazy={false} />)
 
-      const preloadLinks = mockDocumentHead.querySelectorAll(
-        'link[rel="preload"][as="image"]'
-      )
+      const preloadLinks = mockDocumentHead.querySelectorAll('link[rel="preload"][as="image"]')
       expect(preloadLinks).toHaveLength(1)
       expect(preloadLinks[0]).toHaveAttribute("href", "image1.jpg")
       expect(preloadLinks[0]).toHaveAttribute("fetchpriority", "low")
@@ -253,9 +245,7 @@ describe("ImagePreloader", () => {
       ]
       render(<ImagePreloader images={images} priority="high" />)
 
-      const preloadLinks = mockDocumentHead.querySelectorAll(
-        'link[rel="preload"][as="image"]'
-      )
+      const preloadLinks = mockDocumentHead.querySelectorAll('link[rel="preload"][as="image"]')
       expect(preloadLinks).toHaveLength(3)
     })
   })
@@ -265,7 +255,7 @@ describe("ImagePreloader", () => {
       const images = ["image1.jpg"]
       let observerCallback: any
 
-      mockIntersectionObserver.mockImplementation((callback) => {
+      mockIntersectionObserver.mockImplementation(callback => {
         observerCallback = callback
         return {
           observe: vi.fn(),
@@ -295,7 +285,7 @@ describe("ImagePreloader", () => {
       const images = ["image1.jpg"]
       let observerCallback: any
 
-      mockIntersectionObserver.mockImplementation((callback) => {
+      mockIntersectionObserver.mockImplementation(callback => {
         observerCallback = callback
         return {
           observe: vi.fn(),

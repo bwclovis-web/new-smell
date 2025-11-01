@@ -26,7 +26,7 @@ export const useToggle = ({
   const [value, setValueState] = useState(initialValue)
 
   const toggle = () => {
-    setValueState((prev) => {
+    setValueState(prev => {
       const newValue = !prev
       onToggle?.(newValue)
       return newValue

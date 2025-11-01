@@ -6,12 +6,13 @@
  * and utilities for server-side action handling.
  */
 
-import { type FormEvent, useState, useCallback } from "react"
+import { type FormEvent, useCallback, useState } from "react"
 
 /**
  * Options for useFormSubmit hook
  */
 export interface UseFormSubmitOptions<T> {
+
   /** Validation function to run before submission */
   validate?: (data: T) => Record<string, string> | null
 
@@ -32,6 +33,7 @@ export interface UseFormSubmitOptions<T> {
  * Return type for useFormSubmit hook
  */
 export interface UseFormSubmitReturn<T> {
+
   /** Handler for form submission */
   handleSubmit: (
     submitFn: (data: T) => Promise<any>
@@ -88,15 +90,14 @@ export function useFormSubmit<T>({
   }, [])
 
   const setFieldError = useCallback((field: string, error: string) => {
-    setErrors((prev) => ({
+    setErrors(prev => ({
       ...prev,
       [field]: error,
     }))
   }, [])
 
   const handleSubmit = useCallback(
-    (submitFn: (data: T) => Promise<any>) =>
-      async (e: FormEvent<HTMLFormElement>) => {
+    (submitFn: (data: T) => Promise<any>) => async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         // Clear previous errors
@@ -151,7 +152,9 @@ export function useFormSubmit<T>({
           setIsSubmitting(false)
         }
       },
-    [validate, onSuccess, onError, transform, resetOnSuccess, clearErrors]
+    [
+validate, onSuccess, onError, transform, resetOnSuccess, clearErrors
+]
   )
 
   return {
@@ -185,9 +188,7 @@ export function extractFormData<T extends Record<string, any>>(
 /**
  * Convert FormData to plain object with type safety
  */
-export function formDataToObject<T extends Record<string, any>>(
-  formData: FormData
-): Partial<T> {
+export function formDataToObject<T extends Record<string, any>>(formData: FormData): Partial<T> {
   const data: Partial<T> = {}
 
   for (const [key, value] of formData.entries()) {

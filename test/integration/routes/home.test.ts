@@ -62,9 +62,7 @@ describe("Home Route Integration Tests", () => {
     })
 
     it("should handle errors gracefully", async () => {
-      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(
-        new Error("Database error")
-      )
+      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(new Error("Database error"))
 
       await expect(homeLoader()).rejects.toThrow("Database error")
     })
@@ -93,17 +91,13 @@ describe("Home Route Integration Tests", () => {
 
   describe("Error Handling", () => {
     it("should propagate network errors", async () => {
-      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(
-        new Error("Network error")
-      )
+      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(new Error("Network error"))
 
       await expect(homeLoader()).rejects.toThrow("Network error")
     })
 
     it("should propagate database connection errors", async () => {
-      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(
-        new Error("Database connection failed")
-      )
+      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(new Error("Database connection failed"))
 
       await expect(homeLoader()).rejects.toThrow("Database connection failed")
     })

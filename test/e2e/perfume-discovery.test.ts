@@ -113,9 +113,7 @@ test.describe("Perfume Discovery Flows", () => {
       await vaultPage.waitForLoadingComplete()
 
       // Get all perfume names
-      const names = await page.$$eval('[data-testid="perfume-card"]', (cards) =>
-        cards.map((card) => card.textContent?.trim() || "")
-      )
+      const names = await page.$$eval('[data-testid="perfume-card"]', cards => cards.map(card => card.textContent?.trim() || ""))
 
       // Verify they are sorted
       const sortedNames = [...names].sort()
@@ -132,9 +130,7 @@ test.describe("Perfume Discovery Flows", () => {
       await vaultPage.waitForLoadingComplete()
 
       // Get all perfume names
-      const names = await page.$$eval('[data-testid="perfume-card"]', (cards) =>
-        cards.map((card) => card.textContent?.trim() || "")
-      )
+      const names = await page.$$eval('[data-testid="perfume-card"]', cards => cards.map(card => card.textContent?.trim() || ""))
 
       // Verify they are sorted in descending order
       const sortedNames = [...names].sort().reverse()

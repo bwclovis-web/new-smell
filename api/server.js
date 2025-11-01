@@ -47,7 +47,7 @@ import {
 import { parseCookies, verifyJwt } from "./utils.js"
 
 // Run environment validation before starting the server
-console.log("🚀 Starting Voodoo Perfumes server...")
+console.warn("🚀 Starting Voodoo Perfumes server...")
 validateEnvironmentAtStartup()
 const METRICS_PORT = process.env.METRICS_PORT || 3030
 const PORT = process.env.APP_PORT || 2112
@@ -57,12 +57,10 @@ const MAX_LIMIT_MULTIPLE = NODE_ENV !== "production" ? 10_000 : 1
 const viteDevServer =
   process.env.NODE_ENV === "production"
     ? undefined
-    : await import("vite").then((vite) =>
-        vite.createServer({
+    : await import("vite").then(vite => vite.createServer({
           server: { middlewareMode: true },
           appType: "custom",
-        })
-      )
+        }))
 
 const defaultRateLimit = {
   legacyHeaders: false,
@@ -109,16 +107,7 @@ const ratingRateLimit = rateLimit({
   legacyHeaders: false,
 })
 
-const strongestRateLimit = rateLimit({
-  ...defaultRateLimit,
-  max: 10 * MAX_LIMIT_MULTIPLE,
-  windowMs: 60 * 1000,
-  message: {
-    error: "Rate limit exceeded",
-    message: "Too many requests, please slow down",
-    retryAfter: 60,
-  },
-})
+// strongestRateLimit removed - unused
 
 const strongRateLimit = rateLimit({
   ...defaultRateLimit,
@@ -164,14 +153,15 @@ if (viteDevServer) {
 app.disable("x-powered-by")
 
 // Security headers with helmet.js
-app.use(
-  helmet({
+app.use(helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "https:", "blob:"],
+        imgSrc: [
+"'self'", "data:", "https:", "blob:"
+],
         scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // Note: unsafe-eval needed for Vite in dev
         connectSrc: [
           "'self'",
@@ -198,12 +188,10 @@ app.use(
     crossOriginEmbedderPolicy: false, // Disable for compatibility
     crossOriginOpenerPolicy: { policy: "same-origin" },
     crossOriginResourcePolicy: { policy: "cross-origin" },
-  })
-)
+  }))
 
 // Enhanced compression configuration
-app.use(
-  compression({
+app.use(compression({
     // Only compress responses above 1KB
     threshold: 1024,
     // Use gzip compression
@@ -224,18 +212,15 @@ app.use(
     windowBits: 15, // Window size
     // Enable compression for API responses
     chunkSize: 16 * 1024, // 16KB chunks
-  })
-)
+  }))
 app.use(morgan("tiny"))
 
 // Prometheus
-app.use(
-  prom({
+app.use(prom({
     collectDefaultMetrics: true,
     metricsApp,
     metricsPath: "/metrics",
-  })
-)
+  }))
 
 app.use((_, res, next) => {
   res.locals.cspNonce = crypto.randomBytes(16).toString("hex")
@@ -297,7 +282,7 @@ app.use((req, res, next) => {
 
   // Apply specific rate limits based on path
   if (req.path.startsWith("/auth/")) {
-    return authRateLimit(req, res, (err) => {
+    return authRateLimit(req, res, err => {
       if (err) {
         trackRateLimitViolation(clientIP, req.path, "auth")
         logSecurityEvent({
@@ -314,7 +299,7 @@ app.use((req, res, next) => {
   }
 
   if (req.path.startsWith("/api/")) {
-    return apiRateLimit(req, res, (err) => {
+    return apiRateLimit(req, res, err => {
       if (err) {
         trackRateLimitViolation(clientIP, req.path, "api")
         logSecurityEvent({
@@ -331,7 +316,7 @@ app.use((req, res, next) => {
   }
 
   if (req.path.includes("/rating") || req.path.includes("/rate")) {
-    return ratingRateLimit(req, res, (err) => {
+    return ratingRateLimit(req, res, err => {
       if (err) {
         trackRateLimitViolation(clientIP, req.path, "rating")
         logSecurityEvent({
@@ -349,7 +334,7 @@ app.use((req, res, next) => {
 
   // Apply general rate limits for other requests
   if (req.method !== "GET" && req.method !== "HEAD") {
-    return strongRateLimit(req, res, (err) => {
+    return strongRateLimit(req, res, err => {
       if (err) {
         trackRateLimitViolation(clientIP, req.path, "general")
         logSecurityEvent({
@@ -365,7 +350,7 @@ app.use((req, res, next) => {
     })
   }
 
-  return generalRateLimit(req, res, (err) => {
+  return generalRateLimit(req, res, err => {
     if (err) {
       trackRateLimitViolation(clientIP, req.path, "general")
       logSecurityEvent({
@@ -432,7 +417,7 @@ const findServerBuild = () => {
   const serverDir = path.join(process.cwd(), "build", "server")
   const subdirs = fs
     .readdirSync(serverDir, { withFileTypes: true })
-    .filter((dirent) => dirent.isDirectory())
+    .filter(dirent => dirent.isDirectory())
   if (subdirs.length !== 1) {
     throw new Error("Could not uniquely identify server build directory")
   }
@@ -587,17 +572,13 @@ app.use((err, req, res, next) => {
 
   res
     .status(500)
-    .send(
-      NODE_ENV === "development"
+    .send(NODE_ENV === "development"
         ? `<pre>${err.stack}</pre>`
-        : "Internal Server Error"
-    )
+        : "Internal Server Error")
 })
 export const handler = serverless(app)
 
 if (NODE_ENV !== "production") {
-  app.listen(PORT, () => console.log(`🤘 server running: http://localhost:${PORT}`))
-  metricsApp.listen(METRICS_PORT, () =>
-    console.log(`✅ metrics ready: http://localhost:${METRICS_PORT}/metrics`)
-  )
+  app.listen(PORT, () => console.warn(`🤘 server running: http://localhost:${PORT}`))
+  metricsApp.listen(METRICS_PORT, () => console.warn(`✅ metrics ready: http://localhost:${METRICS_PORT}/metrics`))
 }

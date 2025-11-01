@@ -95,7 +95,9 @@ export default defineConfig({
   testMatch: ["**/test/e2e/**/*.test.ts", "**/test/e2e/**/*.spec.ts"],
 
   // Ignore patterns
-  testIgnore: ["**/node_modules/**", "**/build/**", "**/dist/**", "**/coverage/**"],
+  testIgnore: [
+"**/node_modules/**", "**/build/**", "**/dist/**", "**/coverage/**"
+],
 
   // Preserve output directory
   preserveOutput: "failures-only",

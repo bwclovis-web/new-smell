@@ -5,8 +5,7 @@ import { ReactElement } from "react"
 import { vi } from "vitest"
 
 // Mock providers for router testing
-const createTestQueryClient = () =>
-  new QueryClient({
+const createTestQueryClient = () => new QueryClient({
     defaultOptions: {
       queries: {
         retry: false,
@@ -141,9 +140,7 @@ export const testRouteGuards = async (
       expect(history.location.pathname).toBe(expectedPath)
     })
 
-    console.log(
-      `✓ ${description}: redirected from ${initialPath} to ${expectedPath}`
-    )
+    console.log(`✓ ${description}: redirected from ${initialPath} to ${expectedPath}`)
   }
 }
 

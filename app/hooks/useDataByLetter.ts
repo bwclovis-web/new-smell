@@ -33,9 +33,7 @@ const useDataByLetter = <T>({
       const url = `${endpoint}?letter=${letter}&skip=0&take=12&houseType=${currentHouseType}`
       const response = await fetch(url)
       if (!response.ok) {
-        throw new Error(
-          `Failed to fetch ${itemName}: ${response.status} ${response.statusText}`
-        )
+        throw new Error(`Failed to fetch ${itemName}: ${response.status} ${response.statusText}`)
       }
       const data = await response.json()
       if (!data.success) {

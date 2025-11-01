@@ -63,9 +63,7 @@ const ReviewCard = ({
 
   return (
     <div
-      className={styleMerge(
-        "bg-white/5 border border-noir-gold rounded-lg p-4 space-y-3"
-      )}
+      className={styleMerge("bg-white/5 border border-noir-gold rounded-lg p-4 space-y-3")}
     >
       {/* Header */}
       <div className="flex items-center justify-between">

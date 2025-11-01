@@ -66,9 +66,7 @@ export default function PasswordStrengthIndicator({
       <div className="flex items-center space-x-2">
         <div className="flex-1 bg-gray-200 rounded-full h-2">
           <div
-            className={`h-2 rounded-full transition-all duration-300 ${getStrengthColor(
-              strengthInfo.strength
-            )}`}
+            className={`h-2 rounded-full transition-all duration-300 ${getStrengthColor(strengthInfo.strength)}`}
             style={{
               width: `${Math.min(100, (strengthInfo.score / 8) * 100)}%`,
             }}

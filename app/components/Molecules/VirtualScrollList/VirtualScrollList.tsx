@@ -33,8 +33,7 @@ const VirtualScrollList: React.FC<VirtualScrollListProps> = ({
   const hasItems = items.length > 0
 
   const renderItemWithWrapper = useMemo(
-    () => (item: any, index: number) =>
-      (
+    () => (item: any, index: number) => (
         <div
           key={`${item.id || index}`}
           className={styleMerge("w-full", itemClassName)}

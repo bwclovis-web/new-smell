@@ -76,8 +76,7 @@ export function runWithCorrelationId<T>(
  * ```
  */
 export function withCorrelationId<T extends (...args: any[]) => Promise<any>>(
-  handler: T
-): T {
+  handler: T): T {
   return (async (...args: any[]) => {
     const correlationId = generateCorrelationId()
     return correlationIdStorage.run(correlationId, async () => handler(...args))

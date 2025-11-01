@@ -7,10 +7,8 @@ import {
 } from "~/models/wishlist.server"
 import { processDecantInterestAlerts } from "~/utils/alert-processors"
 import { authenticateUser } from "~/utils/auth.server"
-import {
-  validationError,
-  withActionErrorHandling,
-} from "~/utils/errorHandling.patterns"
+import { validationError } from "~/utils/errorHandling.patterns"
+import { withActionErrorHandling } from "~/utils/errorHandling.server"
 import { WishlistActionSchema } from "~/utils/formValidationSchemas"
 import { createErrorResponse, createJsonResponse } from "~/utils/response.server"
 import { validateFormData } from "~/utils/validation"
@@ -94,9 +92,7 @@ const processRequest = async (request: Request) => {
 }
 
 export const action = withActionErrorHandling(
-  async ({ request }: ActionFunctionArgs) => {
-    return await processRequest(request)
-  },
+  async ({ request }: ActionFunctionArgs) => await processRequest(request),
   {
     context: { api: "wishlist", route: "api/wishlist" },
   }

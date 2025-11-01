@@ -133,9 +133,7 @@ describe("parseApiResponse", () => {
       status: 404,
     } as Response
 
-    await expect(parseApiResponse(Promise.resolve(mockResponse))).rejects.toThrow(
-      "HTTP error! status: 404"
-    )
+    await expect(parseApiResponse(Promise.resolve(mockResponse))).rejects.toThrow("HTTP error! status: 404")
   })
 
   it("should throw when success is false", async () => {
@@ -147,9 +145,7 @@ describe("parseApiResponse", () => {
       }),
     } as Response
 
-    await expect(parseApiResponse(Promise.resolve(mockResponse))).rejects.toThrow(
-      "Something went wrong"
-    )
+    await expect(parseApiResponse(Promise.resolve(mockResponse))).rejects.toThrow("Something went wrong")
   })
 
   it("should throw when data is missing", async () => {
@@ -161,9 +157,7 @@ describe("parseApiResponse", () => {
       }),
     } as Response
 
-    await expect(parseApiResponse(Promise.resolve(mockResponse))).rejects.toThrow(
-      "API response missing data field"
-    )
+    await expect(parseApiResponse(Promise.resolve(mockResponse))).rejects.toThrow("API response missing data field")
   })
 
   it("should use message field if error is missing", async () => {
@@ -175,9 +169,7 @@ describe("parseApiResponse", () => {
       }),
     } as Response
 
-    await expect(parseApiResponse(Promise.resolve(mockResponse))).rejects.toThrow(
-      "Error message"
-    )
+    await expect(parseApiResponse(Promise.resolve(mockResponse))).rejects.toThrow("Error message")
   })
 })
 
@@ -307,12 +299,10 @@ describe("retryFetch", () => {
   it("should throw after max attempts", async () => {
     const mockFn = vi.fn().mockRejectedValue(new Error("Always fail"))
 
-    await expect(
-      retryFetch(mockFn, {
+    await expect(retryFetch(mockFn, {
         maxAttempts: 3,
         initialDelay: 10,
-      })
-    ).rejects.toThrow("Always fail")
+      })).rejects.toThrow("Always fail")
 
     expect(mockFn).toHaveBeenCalledTimes(3)
   })
@@ -379,7 +369,7 @@ describe("retryFetch", () => {
     })
 
     // All delays should be capped at maxDelay
-    delays.forEach((delay) => {
+    delays.forEach(delay => {
       expect(delay).toBeLessThanOrEqual(1600) // Allow some tolerance
     })
   })

@@ -97,7 +97,9 @@ function ValidatedForm<T extends Record<string, unknown>>({
         form.setSubmitting(false)
       }
     },
-    [form, validateOnSubmit, onSubmit, onReset]
+    [
+form, validateOnSubmit, onSubmit, onReset
+]
   )
 
   return (

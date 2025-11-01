@@ -56,7 +56,7 @@ const MyReviewsPage = () => {
           {/* Reviews List */}
           {reviews.length > 0 ? (
             <div className="space-y-6">
-              {reviews.map((review) => (
+              {reviews.map(review => (
                 <div
                   key={review.id}
                   className="bg-white/5 border border-gray-300 rounded-lg p-6"

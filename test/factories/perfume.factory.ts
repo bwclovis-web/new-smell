@@ -104,17 +104,13 @@ const PERFUME_NOTES = {
 function generatePerfumeName(): string {
   const patterns = [
     () => `${faker.word.adjective()} ${faker.word.noun()}`,
-    () =>
-      `${faker.person.lastName()} No. ${faker.number.int({
+    () => `${faker.person.lastName()} No. ${faker.number.int({
         min: 1,
         max: 100,
       })}`,
     () => faker.word.adjective(),
     () => `${faker.location.city()} ${faker.word.noun()}`,
-    () =>
-      `${faker.color.human()} ${faker.helpers.arrayElement(
-        Object.values(PERFUME_NOTES).flat()
-      )}`,
+    () => `${faker.color.human()} ${faker.helpers.arrayElement(Object.values(PERFUME_NOTES).flat())}`,
   ]
 
   const pattern = faker.helpers.arrayElement(patterns)
@@ -150,9 +146,7 @@ Base Notes: ${baseNotes.join(", ")}`
  * @param overrides - Optional field overrides
  * @returns Mock Perfume object
  */
-export function createMockPerfume(
-  overrides: CreateMockPerfumeOptions = {}
-): Omit<
+export function createMockPerfume(overrides: CreateMockPerfumeOptions = {}): Omit<
   Perfume,
   | "perfumeNotesClose"
   | "perfumeNotesHeart"
@@ -214,12 +208,10 @@ export function createMockPerfumes(
   count: number,
   overrides: CreateMockPerfumeOptions = {}
 ): Array<ReturnType<typeof createMockPerfume>> {
-  return Array.from({ length: count }, (_, i) =>
-    createMockPerfume({
+  return Array.from({ length: count }, (_, i) => createMockPerfume({
       ...overrides,
       id: overrides.id ?? `perfume-${i + 1}`,
-    })
-  )
+    }))
 }
 
 /**
@@ -235,25 +227,23 @@ export function createMockPerfumesForHouse(
   overrides: Omit<CreateMockPerfumeOptions, "perfumeHouseId"> = {}
 ): Array<ReturnType<typeof createMockPerfume>> {
   const house = createMockHouse({ id: houseId })
-  return Array.from({ length: count }, (_, i) =>
-    createMockPerfume({
+  return Array.from({ length: count }, (_, i) => createMockPerfume({
       ...overrides,
       perfumeHouseId: houseId,
       perfumeHouse: house,
       id: overrides.id ?? `perfume-${i + 1}`,
-    })
-  )
+    }))
 }
 
 /**
  * Creates a mock perfume with specific test scenarios
  */
 export const perfumeFactoryPresets = {
+
   /**
    * Classic designer perfume
    */
-  classicPerfume: (): ReturnType<typeof createMockPerfume> =>
-    createMockPerfume({
+  classicPerfume: (): ReturnType<typeof createMockPerfume> => createMockPerfume({
       name: `${faker.person.lastName()} No. ${faker.number.int({
         min: 1,
         max: 100,
@@ -265,24 +255,21 @@ export const perfumeFactoryPresets = {
   /**
    * Modern niche perfume
    */
-  nichePerfume: (): ReturnType<typeof createMockPerfume> =>
-    createMockPerfume({
+  nichePerfume: (): ReturnType<typeof createMockPerfume> => createMockPerfume({
       perfumeHouse: createMockHouse({ type: "niche" }),
     }),
 
   /**
    * Indie perfume
    */
-  indiePerfume: (): ReturnType<typeof createMockPerfume> =>
-    createMockPerfume({
+  indiePerfume: (): ReturnType<typeof createMockPerfume> => createMockPerfume({
       perfumeHouse: createMockHouse({ type: "indie" }),
     }),
 
   /**
    * Perfume without a house (orphaned)
    */
-  orphanedPerfume: (): ReturnType<typeof createMockPerfume> =>
-    createMockPerfume({
+  orphanedPerfume: (): ReturnType<typeof createMockPerfume> => createMockPerfume({
       perfumeHouseId: null,
       perfumeHouse: null,
     }),
@@ -290,8 +277,7 @@ export const perfumeFactoryPresets = {
   /**
    * Minimal perfume with only required fields
    */
-  minimalPerfume: (): ReturnType<typeof createMockPerfume> =>
-    createMockPerfume({
+  minimalPerfume: (): ReturnType<typeof createMockPerfume> => createMockPerfume({
       description: null,
       image: null,
       perfumeHouseId: null,
@@ -301,8 +287,7 @@ export const perfumeFactoryPresets = {
   /**
    * Recently added perfume
    */
-  recentPerfume: (): ReturnType<typeof createMockPerfume> =>
-    createMockPerfume({
+  recentPerfume: (): ReturnType<typeof createMockPerfume> => createMockPerfume({
       createdAt: faker.date.recent({ days: 1 }),
       updatedAt: faker.date.recent({ days: 1 }),
     }),
@@ -310,8 +295,7 @@ export const perfumeFactoryPresets = {
   /**
    * Perfume with special characters in name (edge case)
    */
-  specialCharPerfume: (): ReturnType<typeof createMockPerfume> =>
-    createMockPerfume({
+  specialCharPerfume: (): ReturnType<typeof createMockPerfume> => createMockPerfume({
       name: "L'Eau d'Issey & Rose",
       slug: "leau-dissey-and-rose",
     }),
@@ -319,16 +303,14 @@ export const perfumeFactoryPresets = {
   /**
    * Perfume with very long description (edge case)
    */
-  longDescriptionPerfume: (): ReturnType<typeof createMockPerfume> =>
-    createMockPerfume({
+  longDescriptionPerfume: (): ReturnType<typeof createMockPerfume> => createMockPerfume({
       description: faker.lorem.paragraphs(15),
     }),
 
   /**
    * Perfume with no image
    */
-  noImagePerfume: (): ReturnType<typeof createMockPerfume> =>
-    createMockPerfume({
+  noImagePerfume: (): ReturnType<typeof createMockPerfume> => createMockPerfume({
       image: null,
     }),
 }

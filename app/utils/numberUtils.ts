@@ -28,8 +28,7 @@ export const createSafeStep = (decimalStep: number) => {
   }
 }
 
-export const formatPrice = (amount: number, locale = "en-US", currency = "USD") =>
-  new Intl.NumberFormat(locale, {
+export const formatPrice = (amount: number, locale = "en-US", currency = "USD") => new Intl.NumberFormat(locale, {
     style: "currency",
     currency,
   }).format(amount)

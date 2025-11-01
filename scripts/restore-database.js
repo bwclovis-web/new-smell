@@ -46,8 +46,8 @@ function listBackups() {
   }
 
   const files = readdirSync(BACKUP_DIR)
-    .filter((file) => file.endsWith("_manifest.json"))
-    .map((file) => {
+    .filter(file => file.endsWith("_manifest.json"))
+    .map(file => {
       const manifestPath = join(BACKUP_DIR, file)
       const manifest = JSON.parse(readFileSync(manifestPath, "utf8"))
       const stats = statSync(manifestPath)
@@ -159,24 +159,20 @@ async function restoreDatabase(backupName, options = {}) {
     console.log("🔄 Starting database restore...")
 
     const dbConfig = parseDatabaseUrl(process.env.DATABASE_URL)
-    console.log(
-      `🗄️  Target database: ${dbConfig.database}@${dbConfig.host}:${dbConfig.port}`
-    )
+    console.log(`🗄️  Target database: ${dbConfig.database}@${dbConfig.host}:${dbConfig.port}`)
 
     // Find backup
     const backups = listBackups()
     let selectedBackup = null
 
     if (backupName) {
-      selectedBackup = backups.find((b) => b.file.includes(backupName))
+      selectedBackup = backups.find(b => b.file.includes(backupName))
       if (!selectedBackup) {
         console.log("❌ Backup not found. Available backups:")
         backups.forEach((backup, index) => {
-          console.log(
-            `  ${index + 1}. ${backup.manifest.timestamp} (${
+          console.log(`  ${index + 1}. ${backup.manifest.timestamp} (${
               backup.manifest.database
-            })`
-          )
+            })`)
         })
         return
       }
@@ -225,9 +221,7 @@ async function interactiveRestore() {
 
   console.log("📋 Available backups:")
   backups.forEach((backup, index) => {
-    console.log(
-      `  ${index + 1}. ${backup.manifest.timestamp} (${backup.manifest.database})`
-    )
+    console.log(`  ${index + 1}. ${backup.manifest.timestamp} (${backup.manifest.database})`)
     console.log(`     Files: ${Object.keys(backup.manifest.files).join(", ")}`)
     console.log(`     Created: ${backup.created.toLocaleString()}`)
     console.log("")
@@ -255,11 +249,9 @@ function main() {
     } else {
       console.log("📋 Available backups:")
       backups.forEach((backup, index) => {
-        console.log(
-          `  ${index + 1}. ${backup.manifest.timestamp} (${
+        console.log(`  ${index + 1}. ${backup.manifest.timestamp} (${
             backup.manifest.database
-          })`
-        )
+          })`)
         console.log(`     Files: ${Object.keys(backup.manifest.files).join(", ")}`)
         console.log(`     Created: ${backup.created.toLocaleString()}`)
         console.log("")

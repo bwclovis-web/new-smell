@@ -75,13 +75,13 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
                   max={10}
                   step={0.1}
                   value={parseFloat(perfumeData.amount) || 0}
-                  onChange={(value) => {
+                  onChange={value => {
                     setPerfumeData({
                       ...perfumeData,
                       amount: value.toFixed(1),
                     })
                   }}
-                  formatValue={(value) => value.toFixed(1)}
+                  formatValue={value => value.toFixed(1)}
                   label={t("myScents.modal.amountLabel")}
                   showManualInput={true}
                   inputPlaceholder="Enter amount (0-10ml)"
@@ -102,7 +102,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
                   label={t("myScents.modal.priceLabel")}
                   value={perfumeData.price}
                   inputRef={priceInputRef}
-                  onChange={(event) => {
+                  onChange={event => {
                     const target = event.target as HTMLInputElement
                     setPerfumeData({
                       ...perfumeData,
@@ -119,7 +119,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
                   value={perfumeData.placeOfPurchase}
                   inputRef={placeInputRef}
                   shading={true}
-                  onChange={(event) => {
+                  onChange={event => {
                     const target = event.target as HTMLInputElement
                     setPerfumeData({
                       ...perfumeData,

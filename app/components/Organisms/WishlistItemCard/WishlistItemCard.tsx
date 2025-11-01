@@ -5,8 +5,8 @@ import { Form, NavLink } from "react-router"
 
 import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 import { useCSRF } from "~/hooks/useCSRF"
-import { styleMerge } from "~/utils/styleUtils"
 import { safeAsync } from "~/utils/errorHandling.patterns"
+import { styleMerge } from "~/utils/styleUtils"
 
 import {
   wishlistAddedVariants,
@@ -41,13 +41,11 @@ const WishlistItemCard = ({
     formData.append("action", "updateVisibility")
     formData.append("isPublic", newVisibility.toString())
 
-    const [error, response] = await safeAsync(() =>
-      fetch("/api/wishlist", {
+    const [error, response] = await safeAsync(() => fetch("/api/wishlist", {
         method: "POST",
         headers: addToHeaders(),
         body: formData,
-      })
-    )
+      }))
 
     if (error || !response.ok) {
       // Revert on error

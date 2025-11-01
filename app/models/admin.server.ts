@@ -60,9 +60,7 @@ export async function getAllUsersWithCounts(): Promise<UserWithCounts[]> {
 /**
  * Get a specific user with their data counts
  */
-export async function getUserWithCounts(
-  userId: string
-): Promise<UserWithCounts | null> {
+export async function getUserWithCounts(userId: string): Promise<UserWithCounts | null> {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -137,7 +135,7 @@ export async function deleteUserSafely(
       : 0
 
     // Delete user and all related data in a transaction
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async tx => {
       // Delete all related records first
       await tx.userPerfumeComment.deleteMany({ where: { userId } })
       await tx.userPerfumeRating.deleteMany({ where: { userId } })

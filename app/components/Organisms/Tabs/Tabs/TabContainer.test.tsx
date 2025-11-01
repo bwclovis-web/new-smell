@@ -44,11 +44,9 @@ describe("TabContainer", () => {
   })
 
   it("renders auxComponent if provided", () => {
-    render(
-      <TabContainer auxComponent={<div data-testid="aux">Aux</div>}>
+    render(<TabContainer auxComponent={<div data-testid="aux">Aux</div>}>
         {getTabItems()}
-      </TabContainer>
-    )
+      </TabContainer>)
     expect(screen.getByTestId("aux")).toBeInTheDocument()
   })
 })

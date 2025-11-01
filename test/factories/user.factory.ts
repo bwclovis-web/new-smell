@@ -28,9 +28,7 @@ export interface CreateMockUserOptions {
  * @param overrides - Optional field overrides
  * @returns Mock User object
  */
-export function createMockUser(
-  overrides: CreateMockUserOptions = {}
-): Omit<
+export function createMockUser(overrides: CreateMockUserOptions = {}): Omit<
   User,
   | "UserPerfume"
   | "userPerfumeComments"
@@ -81,9 +79,7 @@ export function createMockUser(
  * @param overrides - Optional field overrides
  * @returns Mock SafeUser object
  */
-export function createMockSafeUser(
-  overrides: Omit<CreateMockUserOptions, "password"> = {}
-): SafeUser {
+export function createMockSafeUser(overrides: Omit<CreateMockUserOptions, "password"> = {}): SafeUser {
   const user = createMockUser(overrides)
 
   const { password, ...safeUser } = user
@@ -95,9 +91,7 @@ export function createMockSafeUser(
  * @param overrides - Optional field overrides
  * @returns Mock admin User object
  */
-export function createMockAdminUser(
-  overrides: CreateMockUserOptions = {}
-): Omit<
+export function createMockAdminUser(overrides: CreateMockUserOptions = {}): Omit<
   User,
   | "UserPerfume"
   | "userPerfumeComments"
@@ -120,9 +114,7 @@ export function createMockAdminUser(
  * @param overrides - Optional field overrides
  * @returns Mock editor User object
  */
-export function createMockEditorUser(
-  overrides: CreateMockUserOptions = {}
-): Omit<
+export function createMockEditorUser(overrides: CreateMockUserOptions = {}): Omit<
   User,
   | "UserPerfume"
   | "userPerfumeComments"
@@ -162,23 +154,21 @@ export function createMockUsers(
     | "alertPreferences"
   >
 > {
-  return Array.from({ length: count }, (_, i) =>
-    createMockUser({
+  return Array.from({ length: count }, (_, i) => createMockUser({
       ...overrides,
       id: overrides.id ?? `user-${i + 1}`,
-    })
-  )
+    }))
 }
 
 /**
  * Creates a mock user with specific test scenarios
  */
 export const userFactoryPresets = {
+
   /**
    * New user who just signed up
    */
-  newUser: (): ReturnType<typeof createMockUser> =>
-    createMockUser({
+  newUser: (): ReturnType<typeof createMockUser> => createMockUser({
       createdAt: faker.date.recent({ days: 1 }),
       updatedAt: faker.date.recent({ days: 1 }),
       firstName: null,
@@ -188,8 +178,7 @@ export const userFactoryPresets = {
   /**
    * Established user with complete profile
    */
-  establishedUser: (): ReturnType<typeof createMockUser> =>
-    createMockUser({
+  establishedUser: (): ReturnType<typeof createMockUser> => createMockUser({
       createdAt: faker.date.past({ years: 2 }),
       updatedAt: faker.date.recent({ days: 7 }),
     }),
@@ -197,8 +186,7 @@ export const userFactoryPresets = {
   /**
    * User with minimal information
    */
-  minimalUser: (): ReturnType<typeof createMockUser> =>
-    createMockUser({
+  minimalUser: (): ReturnType<typeof createMockUser> => createMockUser({
       firstName: null,
       lastName: null,
       username: null,
@@ -207,8 +195,7 @@ export const userFactoryPresets = {
   /**
    * User with special characters in name (edge case)
    */
-  specialCharUser: (): ReturnType<typeof createMockUser> =>
-    createMockUser({
+  specialCharUser: (): ReturnType<typeof createMockUser> => createMockUser({
       firstName: "O'Brien",
       lastName: "Smith-Jones",
       username: "user_test-123",
@@ -217,8 +204,7 @@ export const userFactoryPresets = {
   /**
    * User with very long name (edge case)
    */
-  longNameUser: (): ReturnType<typeof createMockUser> =>
-    createMockUser({
+  longNameUser: (): ReturnType<typeof createMockUser> => createMockUser({
       firstName: faker.lorem.words(10),
       lastName: faker.lorem.words(10),
     }),

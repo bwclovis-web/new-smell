@@ -61,9 +61,7 @@ describe("Admin Users Route Integration Tests", () => {
       ]
 
       vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(mockAdminUser as any)
-      vi.mocked(adminServer.getAllUsersWithCounts).mockResolvedValue(
-        mockUsers as any
-      )
+      vi.mocked(adminServer.getAllUsersWithCounts).mockResolvedValue(mockUsers as any)
 
       const request = new Request("https://example.com/admin/users")
 
@@ -109,9 +107,7 @@ describe("Admin Users Route Integration Tests", () => {
 
     it("should handle database errors gracefully", async () => {
       vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(mockAdminUser as any)
-      vi.mocked(adminServer.getAllUsersWithCounts).mockRejectedValue(
-        new Error("Database error")
-      )
+      vi.mocked(adminServer.getAllUsersWithCounts).mockRejectedValue(new Error("Database error"))
 
       const request = new Request("https://example.com/admin/users")
 
@@ -258,9 +254,7 @@ describe("Admin Users Route Integration Tests", () => {
 
     it("should handle database errors during deletion", async () => {
       vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(mockAdminUser as any)
-      vi.mocked(adminServer.deleteUserSafely).mockRejectedValue(
-        new Error("Database error")
-      )
+      vi.mocked(adminServer.deleteUserSafely).mockRejectedValue(new Error("Database error"))
 
       const formData = new FormData()
       formData.append("userId", "user-1")

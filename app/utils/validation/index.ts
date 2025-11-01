@@ -122,7 +122,7 @@ export function validateSearchParams<T>(
  * Format Zod errors into a consistent format
  */
 function formatZodErrors(error: ZodError): ValidationError[] {
-  return error.errors.map((err) => ({
+  return error.errors.map(err => ({
     field: err.path.join("."),
     message: err.message,
     code: err.code,
@@ -222,9 +222,7 @@ export function sanitizeObject<T extends Record<string, unknown>>(obj: T): T {
     if (typeof value === "string") {
       sanitized[key as keyof T] = sanitizeString(value) as T[keyof T]
     } else if (typeof value === "object" && value !== null) {
-      sanitized[key as keyof T] = sanitizeObject(
-        value as Record<string, unknown>
-      ) as T[keyof T]
+      sanitized[key as keyof T] = sanitizeObject(value as Record<string, unknown>) as T[keyof T]
     } else {
       sanitized[key as keyof T] = value
     }
@@ -464,11 +462,9 @@ export function validateArray<T>(
     try {
       validatedValues.push(validator(values[i]))
     } catch (error) {
-      throw new Error(
-        `${fieldName}[${i}]: ${
+      throw new Error(`${fieldName}[${i}]: ${
           error instanceof Error ? error.message : "Invalid value"
-        }`
-      )
+        }`)
     }
   }
 
@@ -493,11 +489,9 @@ export function validateObject<T extends Record<string, unknown>>(
     try {
       validatedObj[key as keyof T] = validator((obj as Record<string, unknown>)[key])
     } catch (error) {
-      throw new Error(
-        `${fieldName}.${key}: ${
+      throw new Error(`${fieldName}.${key}: ${
           error instanceof Error ? error.message : "Invalid value"
-        }`
-      )
+        }`)
     }
   }
 

@@ -32,6 +32,56 @@ export default defineConfig([
       globals: { ...globals.browser, ...globals.node },
     },
   },
+  // Test files configuration
+  {
+    files: ["**/*.{test,spec}.{js,mjs,cjs,ts,jsx,tsx}", "test/**/*.{js,ts,jsx,tsx}"],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        ...globals.jest, // Vitest uses Jest-compatible globals
+        vi: "readonly",
+        expect: "readonly",
+        describe: "readonly",
+        it: "readonly",
+        test: "readonly",
+        beforeEach: "readonly",
+        afterEach: "readonly",
+        beforeAll: "readonly",
+        afterAll: "readonly",
+      },
+    },
+    rules: {
+      "no-console": "off",
+      "max-nested-callbacks": ["error", 5],
+      "max-depth": ["error", 4],
+      "id-length": [
+        "error",
+        {
+          min: 2,
+          max: 40,
+          properties: "never",
+          exceptions: [
+"_", "__", "i", "j", "fs", "t", "to", "id", "fn", "e", "r", "ui", "q", "a", "b", "fd"
+],
+        },
+      ],
+      "no-unused-vars": [
+        "error",
+        {
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
+      ],
+      "no-empty-function": "off",
+    },
+  },
+  // Exclude generated files
+  {
+    ignores: [
+".react-router/**", "build/**", "dist/**", "coverage/**", "test-results/**"
+],
+  },
   {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
     plugins: { "@typescript-eslint": tseslint.plugin },
@@ -79,15 +129,17 @@ export default defineConfig([
           min: 3,
           max: 40,
           properties: "never",
-          exceptions: ["_", "__", "i", "j", "fs", "t", "to", "id"],
+          exceptions: [
+"_", "__", "i", "j", "fs", "t", "to", "id", "e", "r"
+],
         },
       ],
       "max-depth": ["error", 2],
-      "max-nested-callbacks": ["error", 3],
+      "max-nested-callbacks": ["error", 4],
       "max-params": ["error", 4],
       "max-statements": ["error", 20],
       "new-cap": ["error", { newIsCap: true, capIsNew: true }],
-      "no-console": "error",
+      "no-console": ["error", { allow: ["warn", "error"] }],
       "no-empty": "error",
       "no-empty-function": ["error", { allow: ["constructors"] }],
       "no-template-curly-in-string": "error",

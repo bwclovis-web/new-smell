@@ -52,21 +52,17 @@ type DataQualityStats = {
 
 // Helper functions for chart data preparation
 // Helper to generate breakdown for missing house info
-const getMissingHouseInfoBreakdown = (
-  stats: DataQualityStats | null
-): Record<string, string[]> => {
+const getMissingHouseInfoBreakdown = (stats: DataQualityStats | null): Record<string, string[]> => {
   if (!stats || !stats.missingHouseInfoByBrand) {
     return {}
   }
   // This assumes backend returns missingHouseInfoByBrand as { houseName: number }
   // For a more detailed breakdown, backend should return { houseName: [fields] }
   // For now, we infer missing fields by showing count as array of 'Field missing'
-  return Object.fromEntries(
-    Object.entries(stats.missingHouseInfoByBrand || {}).map(([house, count]) => [
+  return Object.fromEntries(Object.entries(stats.missingHouseInfoByBrand || {}).map(([house, count]) => [
       house,
       Array(count).fill("Field missing"),
-    ])
-  )
+    ]))
 }
 const prepareMissingChartData = (stats: DataQualityStats | null) => ({
   labels: stats?.missingByBrand
@@ -245,16 +241,14 @@ const renderChartVisualizations = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {Object.entries(missingHouseInfoBreakdown || {}).map(
-                    ([house, fields]) => (
+                  {Object.entries(missingHouseInfoBreakdown || {}).map(([house, fields]) => (
                       <tr key={house} className="border-t border-yellow-100">
                         <td className="px-2 py-1 text-yellow-900">{house}</td>
                         <td className="px-2 py-1 text-yellow-700">
                           {fields.length}
                         </td>
                       </tr>
-                    )
-                  )}
+                    ))}
                 </tbody>
               </table>
             </div>
@@ -398,7 +392,7 @@ const DashboardContent = ({
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-purple-100">
-              {stats.housesNoPerfumes.map((house) => (
+              {stats.housesNoPerfumes.map(house => (
                 <tr key={house.id} className="hover:bg-purple-50">
                   <td className="px-4 py-3 text-sm font-medium text-gray-900">
                     {house.name}
@@ -487,11 +481,9 @@ const useFetchDataQualityStats = (timeframe: "week" | "month" | "all") => {
         await performApiFetch(timeframe, setStats, refreshTrigger.force)
         setLastFetch(Date.now())
       } catch (err) {
-        setError(
-          `Failed to fetch data quality stats: ${
+        setError(`Failed to fetch data quality stats: ${
             err instanceof Error ? err.message : String(err)
-          }`
-        )
+          }`)
         console.error("[DATA QUALITY] Fetch error:", err)
       } finally {
         setLoading(false)
@@ -502,8 +494,7 @@ const useFetchDataQualityStats = (timeframe: "week" | "month" | "all") => {
   }, [timeframe, refreshTrigger]) // Only depend on timeframe and manual refresh trigger
 
   // Expose a function to force refresh
-  const forceRefresh = (force: boolean = false) =>
-    setRefreshTrigger((prev) => ({ count: prev.count + 1, force }))
+  const forceRefresh = (force: boolean = false) => setRefreshTrigger(prev => ({ count: prev.count + 1, force }))
 
   return { stats, loading, error, forceRefresh }
 }
@@ -614,16 +605,14 @@ const DataQualityDashboard: FC<DataQualityDashboardProps> = ({ user, isAdmin }) 
   const handleUploadCSV = createHandleUploadCSV(csrfToken)
 
   // Wrap the upload handler to refresh dashboard after upload
-  const handleUploadAndRefresh: React.ChangeEventHandler<HTMLInputElement> = async (
-    e
-  ) => {
+  const handleUploadAndRefresh: React.ChangeEventHandler<HTMLInputElement> = async e => {
     try {
       await handleUploadCSV(e)
       // Force refresh with force=true to regenerate reports immediately
       forceRefresh(true)
     } catch (err) {
       // Optionally handle error
-      // eslint-disable-next-line no-console
+       
       console.error("CSV upload failed", err)
     }
   }

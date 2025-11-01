@@ -6,11 +6,9 @@ import SearchBar from "./SearchBar"
 
 describe("SearchBar", () => {
   it("renders a searchbar", () => {
-    render(
-      <MemoryRouter>
+    render(<MemoryRouter>
         <SearchBar searchType="perfume" />
-      </MemoryRouter>
-    )
+      </MemoryRouter>)
     expect(screen.getByRole("textbox")).toBeInTheDocument()
   })
 })

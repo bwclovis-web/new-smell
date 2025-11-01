@@ -95,9 +95,7 @@ describe("LoadingErrorState", () => {
       const error = new Error("Test error")
       render(<LoadingErrorState error={error} errorTitle="Custom Error Title" />)
 
-      expect(screen.getByTestId("error-title")).toHaveTextContent(
-        "Custom Error Title"
-      )
+      expect(screen.getByTestId("error-title")).toHaveTextContent("Custom Error Title")
     })
 
     it("should pass showErrorDetails to ErrorDisplay", () => {
@@ -149,33 +147,27 @@ describe("LoadingErrorState", () => {
 
   describe("Children rendering", () => {
     it("should render children when neither loading nor error", () => {
-      render(
-        <LoadingErrorState>
+      render(<LoadingErrorState>
           <div data-testid="children">Children content</div>
-        </LoadingErrorState>
-      )
+        </LoadingErrorState>)
 
       expect(screen.getByTestId("children")).toBeInTheDocument()
       expect(screen.getByTestId("children")).toHaveTextContent("Children content")
     })
 
     it("should not render children when loading", () => {
-      render(
-        <LoadingErrorState isLoading>
+      render(<LoadingErrorState isLoading>
           <div data-testid="children">Children content</div>
-        </LoadingErrorState>
-      )
+        </LoadingErrorState>)
 
       expect(screen.queryByTestId("children")).not.toBeInTheDocument()
     })
 
     it("should not render children when error", () => {
       const error = new Error("Test error")
-      render(
-        <LoadingErrorState error={error}>
+      render(<LoadingErrorState error={error}>
           <div data-testid="children">Children content</div>
-        </LoadingErrorState>
-      )
+        </LoadingErrorState>)
 
       expect(screen.queryByTestId("children")).not.toBeInTheDocument()
     })
@@ -192,22 +184,18 @@ describe("LoadingErrorState", () => {
 
     it("should prioritize error over children", () => {
       const error = new Error("Test error")
-      render(
-        <LoadingErrorState error={error}>
+      render(<LoadingErrorState error={error}>
           <div data-testid="children">Children content</div>
-        </LoadingErrorState>
-      )
+        </LoadingErrorState>)
 
       expect(screen.getByTestId("error-display")).toBeInTheDocument()
       expect(screen.queryByTestId("children")).not.toBeInTheDocument()
     })
 
     it("should prioritize loading over children", () => {
-      render(
-        <LoadingErrorState isLoading>
+      render(<LoadingErrorState isLoading>
           <div data-testid="children">Children content</div>
-        </LoadingErrorState>
-      )
+        </LoadingErrorState>)
 
       expect(screen.getByText("Loading...")).toBeInTheDocument()
       expect(screen.queryByTestId("children")).not.toBeInTheDocument()

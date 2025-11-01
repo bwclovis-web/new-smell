@@ -36,27 +36,25 @@
  */
 
 // Re-export hooks
-export { useDataFetching } from "~/hooks/useDataFetching"
 export type {
   UseDataFetchingOptions,
   UseDataFetchingReturn,
 } from "~/hooks/useDataFetching"
-
-export { usePaginatedData } from "~/hooks/usePaginatedData"
+export { useDataFetching } from "~/hooks/useDataFetching"
 export type {
-  UsePaginatedDataOptions,
-  UsePaginatedDataReturn,
   PaginatedResponse,
   PaginationMeta,
+  UsePaginatedDataOptions,
+  UsePaginatedDataReturn,
 } from "~/hooks/usePaginatedData"
+export { usePaginatedData } from "~/hooks/usePaginatedData"
 
 // Re-export related utilities
-export { useApiWithRetry } from "~/hooks/useApiWithRetry"
 export type {
   UseApiWithRetryOptions,
   UseApiWithRetryReturn,
 } from "~/hooks/useApiWithRetry"
-
+export { useApiWithRetry } from "~/hooks/useApiWithRetry"
 export { useDebouncedSearch } from "~/hooks/useDebouncedSearch"
 
 /**
@@ -157,9 +155,7 @@ export interface ApiResponse<T> {
  * )
  * ```
  */
-export async function parseApiResponse<T>(
-  responsePromise: Promise<Response>
-): Promise<T> {
+export async function parseApiResponse<T>(responsePromise: Promise<Response>): Promise<T> {
   const response = await responsePromise
 
   if (!response.ok) {
@@ -253,10 +249,12 @@ export async function retryFetch<T>(
       lastError = error instanceof Error ? error : new Error(String(error))
 
       // Don't retry on last attempt
-      if (attempt === maxAttempts) break
+      if (attempt === maxAttempts) {
+ break 
+}
 
       // Wait before retry
-      await new Promise((resolve) => setTimeout(resolve, delay))
+      await new Promise(resolve => setTimeout(resolve, delay))
 
       // Exponential backoff
       delay = Math.min(delay * backoffFactor, maxDelay)
@@ -270,10 +268,12 @@ export async function retryFetch<T>(
  * Clear all cached data
  */
 export function clearAllCache(): void {
-  if (typeof window === "undefined") return
+  if (typeof window === "undefined") {
+ return 
+}
 
   const keys = Object.keys(localStorage)
-  keys.forEach((key) => {
+  keys.forEach(key => {
     if (key.startsWith("data-fetch-")) {
       localStorage.removeItem(key)
     }
@@ -292,9 +292,7 @@ export function getCacheStats(): {
     return { count: 0, totalSize: 0, keys: [] }
   }
 
-  const keys = Object.keys(localStorage).filter((key) =>
-    key.startsWith("data-fetch-")
-  )
+  const keys = Object.keys(localStorage).filter(key => key.startsWith("data-fetch-"))
 
   const totalSize = keys.reduce((acc, key) => {
     const value = localStorage.getItem(key)
@@ -304,6 +302,6 @@ export function getCacheStats(): {
   return {
     count: keys.length,
     totalSize,
-    keys: keys.map((k) => k.replace("data-fetch-", "")),
+    keys: keys.map(k => k.replace("data-fetch-", "")),
   }
 }

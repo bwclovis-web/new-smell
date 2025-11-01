@@ -33,9 +33,7 @@ const HouseTypeahead = ({
     width: 0,
   })
   const [showDropdown, setShowDropdown] = useState(false)
-  const [inputId] = useState(
-    `house-typeahead-${Math.random().toString(36).substr(2, 9)}`
-  )
+  const [inputId] = useState(`house-typeahead-${Math.random().toString(36).substr(2, 9)}`)
   const wrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -70,11 +68,9 @@ const HouseTypeahead = ({
     }
 
     try {
-      const res = await fetch(
-        `/api/perfume-houses?name=${encodeURIComponent(query)}`
-      )
+      const res = await fetch(`/api/perfume-houses?name=${encodeURIComponent(query)}`)
       const data = await res.json()
-      console.log("Search results:", data) // Debug log
+      // Search results loaded
       setResults(data)
 
       if (data.length > 0) {
@@ -107,7 +103,7 @@ const HouseTypeahead = ({
     const query = evt.target.value
     const previousSearchValue = searchValue
     setSearchValue(query)
-    // Clear selection if user is manually typing (value different from selected item name)
+    // Clear selection if user manually types (value differs from selected)
     if (selectedId && query !== previousSearchValue) {
       setSelectedId("")
     }
@@ -115,7 +111,6 @@ const HouseTypeahead = ({
   }
 
   const handleSelect = (item: any) => {
-    console.log("Selected house:", item) // Debug log
     setSearchValue(item.name)
     setSelectedId(item.id)
     setShowDropdown(false)
@@ -169,8 +164,8 @@ const HouseTypeahead = ({
                 <button
                   type="button"
                   className="block min-w-full text-left"
-                  onMouseDown={(e) => {
-                    e.preventDefault()
+                  onMouseDown={event => {
+                    event.preventDefault()
                     handleSelect(item)
                   }}
                 >

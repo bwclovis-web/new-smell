@@ -54,7 +54,7 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
       enabled: true,
       action: () => {
         const images = document.querySelectorAll("img:not([loading])")
-        images.forEach((img) => {
+        images.forEach(img => {
           if (img.getBoundingClientRect().top > window.innerHeight) {
             img.setAttribute("loading", "lazy")
           }
@@ -98,7 +98,7 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
       enabled: true,
       action: () => {
         const scripts = document.querySelectorAll("script:not([defer]):not([async])")
-        scripts.forEach((script) => {
+        scripts.forEach(script => {
           if (!script.src.includes("critical") && !script.src.includes("main")) {
             script.setAttribute("defer", "true")
           }
@@ -122,9 +122,7 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
         console.log("Image optimization would be applied server-side")
       },
       condition: () => {
-        const images = document.querySelectorAll(
-          'img[src$=".jpg"], img[src$=".png"]'
-        )
+        const images = document.querySelectorAll('img[src$=".jpg"], img[src$=".png"]')
         return images.length > 0
       },
       impact: "medium",
@@ -234,19 +232,19 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
       }
     }
 
-    setOptimizations((prev) => [...results, ...prev])
+    setOptimizations(prev => [...results, ...prev])
     setIsRunning(false)
   }, [enabled, rules, runOptimization])
 
   const runOptimizationById = useCallback(
     async (ruleId: string) => {
-      const rule = rules.find((r) => r.id === ruleId)
+      const rule = rules.find(r => r.id === ruleId)
       if (!rule) {
         return
       }
 
       const result = await runOptimization(rule)
-      setOptimizations((prev) => [result, ...prev])
+      setOptimizations(prev => [result, ...prev])
     },
     [rules, runOptimization]
   )
@@ -359,7 +357,7 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
           Optimization Rules
         </h3>
         <div className="space-y-3">
-          {rules.map((rule) => (
+          {rules.map(rule => (
             <div key={rule.id} className="p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-3">
@@ -371,9 +369,7 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
                 </div>
                 <div className="flex items-center space-x-2">
                   <span
-                    className={`text-xs px-2 py-1 rounded ${getImpactColor(
-                      rule.impact
-                    )}`}
+                    className={`text-xs px-2 py-1 rounded ${getImpactColor(rule.impact)}`}
                   >
                     {rule.impact} impact
                   </span>
@@ -412,7 +408,7 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
             Optimization Results
           </h3>
           <div className="space-y-3">
-            {optimizations.slice(0, 10).map((result) => (
+            {optimizations.slice(0, 10).map(result => (
               <div
                 key={result.id}
                 className={`p-4 rounded-lg border ${
@@ -462,19 +458,19 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
           <div>
             <div className="text-blue-600">Enabled</div>
             <div className="font-semibold text-blue-800">
-              {rules.filter((rule) => rule.enabled).length}
+              {rules.filter(rule => rule.enabled).length}
             </div>
           </div>
           <div>
             <div className="text-blue-600">Applied</div>
             <div className="font-semibold text-blue-800">
-              {optimizations.filter((result) => result.applied).length}
+              {optimizations.filter(result => result.applied).length}
             </div>
           </div>
           <div>
             <div className="text-blue-600">Failed</div>
             <div className="font-semibold text-blue-800">
-              {optimizations.filter((result) => !result.applied).length}
+              {optimizations.filter(result => !result.applied).length}
             </div>
           </div>
         </div>

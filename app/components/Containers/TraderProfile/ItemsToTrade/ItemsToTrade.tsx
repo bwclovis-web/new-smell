@@ -74,7 +74,7 @@ const TradeInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
 const CommentsSection = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
   const { t } = useTranslation()
   const publicComments =
-    userPerfume?.comments?.filter((comment) => comment.isPublic) || []
+    userPerfume?.comments?.filter(comment => comment.isPublic) || []
 
   return (
     <>

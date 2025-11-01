@@ -28,9 +28,7 @@ test.describe("Collection Management", () => {
       await page.click('[data-testid="add-to-collection"]')
 
       // Should show success message
-      await expect(
-        page.locator("text=/added.*collection|added.*successfully/i")
-      ).toBeVisible({ timeout: 5000 })
+      await expect(page.locator("text=/added.*collection|added.*successfully/i")).toBeVisible({ timeout: 5000 })
     })
 
     test("should select collection type when adding", async ({ page }) => {
@@ -104,9 +102,7 @@ test.describe("Collection Management", () => {
       await page.click('[data-testid="add-to-collection"]')
 
       // Should show message that it's already in collection
-      await expect(
-        page.locator("text=/already.*collection|already added/i")
-      ).toBeVisible({ timeout: 5000 })
+      await expect(page.locator("text=/already.*collection|already added/i")).toBeVisible({ timeout: 5000 })
     })
   })
 
@@ -482,9 +478,7 @@ test.describe("Collection Management", () => {
       await page.goto("/collection")
 
       // Should show empty state
-      await expect(
-        page.locator("text=/no perfumes|empty collection|start adding/i")
-      ).toBeVisible()
+      await expect(page.locator("text=/no perfumes|empty collection|start adding/i")).toBeVisible()
     })
 
     test("should show call-to-action in empty state", async ({ page }) => {
@@ -495,9 +489,7 @@ test.describe("Collection Management", () => {
 
       if (await emptyState.isVisible()) {
         // Should have button to add perfumes
-        await expect(
-          page.locator("text=/browse|add perfume|explore/i")
-        ).toBeVisible()
+        await expect(page.locator("text=/browse|add perfume|explore/i")).toBeVisible()
       }
     })
   })

@@ -74,7 +74,9 @@ export const useServerError = ({
 
       return () => clearTimeout(timer)
     }
-  }, [autoClear, serverError, clearDelay, clearError])
+  }, [
+autoClear, serverError, clearDelay, clearError
+])
 
   return {
     serverError,

@@ -23,13 +23,11 @@ export const perfumeTypes = [
   { id: "ipmSpray", name: "ipmSpray", label: "IPM Spray" },
 ]
 
-export const getPerfumeTypeLabel = (
-  typeName: string | undefined
-): string | undefined => {
+export const getPerfumeTypeLabel = (typeName: string | undefined): string | undefined => {
   if (!typeName) {
     return undefined
   }
 
-  const perfumeType = perfumeTypes.find((type) => type.name === typeName)
+  const perfumeType = perfumeTypes.find(type => type.name === typeName)
   return perfumeType?.label
 }

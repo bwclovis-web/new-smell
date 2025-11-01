@@ -46,38 +46,27 @@ async function verifyImport() {
     console.log(`✅ ${perfume.name}`)
     console.log(`   Slug: ${perfume.slug}`)
     console.log(`   Image: ${perfume.image ? "✓" : "✗"}`)
-    console.log(
-      `   Description: ${
+    console.log(`   Description: ${
         perfume.description ? perfume.description.substring(0, 50) + "..." : "✗"
-      }`
-    )
-    console.log(
-      `   Open Notes (${perfume.perfumeNotesOpen.length}): ${
-        perfume.perfumeNotesOpen.map((n) => n.name).join(", ") || "none"
-      }`
-    )
-    console.log(
-      `   Heart Notes (${perfume.perfumeNotesHeart.length}): ${
-        perfume.perfumeNotesHeart.map((n) => n.name).join(", ") || "none"
-      }`
-    )
-    console.log(
-      `   Base Notes (${perfume.perfumeNotesClose.length}): ${
-        perfume.perfumeNotesClose.map((n) => n.name).join(", ") || "none"
-      }`
-    )
+      }`)
+    console.log(`   Open Notes (${perfume.perfumeNotesOpen.length}): ${
+        perfume.perfumeNotesOpen.map(n => n.name).join(", ") || "none"
+      }`)
+    console.log(`   Heart Notes (${perfume.perfumeNotesHeart.length}): ${
+        perfume.perfumeNotesHeart.map(n => n.name).join(", ") || "none"
+      }`)
+    console.log(`   Base Notes (${perfume.perfumeNotesClose.length}): ${
+        perfume.perfumeNotesClose.map(n => n.name).join(", ") || "none"
+      }`)
     console.log("")
   }
 
   // Summary
-  const withDescriptions = perfumes.filter((p) => p.description).length
-  const withImages = perfumes.filter((p) => p.image).length
-  const withNotes = perfumes.filter(
-    (p) =>
-      p.perfumeNotesOpen.length > 0 ||
+  const withDescriptions = perfumes.filter(p => p.description).length
+  const withImages = perfumes.filter(p => p.image).length
+  const withNotes = perfumes.filter(p => p.perfumeNotesOpen.length > 0 ||
       p.perfumeNotesHeart.length > 0 ||
-      p.perfumeNotesClose.length > 0
-  ).length
+      p.perfumeNotesClose.length > 0).length
 
   console.log(`\n📈 Summary:`)
   console.log(`   Total Perfumes: ${perfumes.length}`)

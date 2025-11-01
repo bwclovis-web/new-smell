@@ -37,9 +37,7 @@ describe("PageError", () => {
     it("should display error message", () => {
       render(<PageError {...mockProps} />)
 
-      expect(
-        screen.getByText("Something went wrong. Please try again.")
-      ).toBeInTheDocument()
+      expect(screen.getByText("Something went wrong. Please try again.")).toBeInTheDocument()
     })
 
     it("should display error ID", () => {
@@ -107,13 +105,11 @@ describe("PageError", () => {
       const onRetrySpy = vi.fn()
       const onReportErrorSpy = vi.fn()
 
-      render(
-        <PageError
+      render(<PageError
           {...mockProps}
           onRetry={onRetrySpy}
           onReportError={onReportErrorSpy}
-        />
-      )
+        />)
 
       const tryAgainButton = screen.getByText("Try Again")
       const reportButton = screen.getByText("Report Issue")
@@ -139,9 +135,7 @@ describe("PageError", () => {
 
       render(<PageError {...mockProps} error={serverError} />)
 
-      expect(
-        screen.getByText("Server error. Please try again later.")
-      ).toBeInTheDocument()
+      expect(screen.getByText("Server error. Please try again later.")).toBeInTheDocument()
     })
 
     it("should display not found error message", () => {
@@ -155,9 +149,7 @@ describe("PageError", () => {
 
       render(<PageError {...mockProps} error={notFoundError} />)
 
-      expect(
-        screen.getByText("The requested resource was not found.")
-      ).toBeInTheDocument()
+      expect(screen.getByText("The requested resource was not found.")).toBeInTheDocument()
     })
 
     it("should display authorization error message", () => {
@@ -171,9 +163,7 @@ describe("PageError", () => {
 
       render(<PageError {...mockProps} error={authzError} />)
 
-      expect(
-        screen.getByText("You do not have permission to perform this action.")
-      ).toBeInTheDocument()
+      expect(screen.getByText("You do not have permission to perform this action.")).toBeInTheDocument()
     })
   })
 
@@ -188,9 +178,7 @@ describe("PageError", () => {
     it("should center content", () => {
       const { container } = render(<PageError {...mockProps} />)
 
-      const centerContainer = container.querySelector(
-        ".flex.items-center.justify-center"
-      )
+      const centerContainer = container.querySelector(".flex.items-center.justify-center")
       expect(centerContainer).toBeInTheDocument()
     })
 
@@ -229,7 +217,7 @@ describe("PageError", () => {
       render(<PageError {...mockProps} />)
 
       const buttons = screen.getAllByRole("button")
-      buttons.forEach((button) => {
+      buttons.forEach(button => {
         expect(button).toHaveClass("transition-colors")
       })
     })
@@ -291,9 +279,7 @@ describe("PageError", () => {
     it("should display error information in accessible format", () => {
       render(<PageError {...mockProps} />)
 
-      expect(
-        screen.getByRole("heading", { name: /Something went wrong/i })
-      ).toBeInTheDocument()
+      expect(screen.getByRole("heading", { name: /Something went wrong/i })).toBeInTheDocument()
     })
 
     it("should have proper heading hierarchy", () => {
@@ -340,9 +326,7 @@ describe("PageError", () => {
 
       render(<PageError {...mockProps} error={longError} />)
 
-      expect(
-        screen.getByText(/This is a very long error message/i)
-      ).toBeInTheDocument()
+      expect(screen.getByText(/This is a very long error message/i)).toBeInTheDocument()
     })
 
     it("should handle error messages with special characters", () => {
@@ -356,9 +340,7 @@ describe("PageError", () => {
 
       render(<PageError {...mockProps} error={specialError} />)
 
-      expect(
-        screen.getByText(/Error: <Component> failed with "quotes" & ampersands/i)
-      ).toBeInTheDocument()
+      expect(screen.getByText(/Error: <Component> failed with "quotes" & ampersands/i)).toBeInTheDocument()
     })
 
     it("should handle rapid button clicks", () => {
@@ -376,16 +358,12 @@ describe("PageError", () => {
     })
 
     it("should handle long error IDs", () => {
-      render(
-        <PageError
+      render(<PageError
           {...mockProps}
           errorId="error_page_1234567890_abcdefghijklmnopqrstuvwxyz"
-        />
-      )
+        />)
 
-      expect(
-        screen.getByText(/Error ID: error_page_1234567890/i)
-      ).toBeInTheDocument()
+      expect(screen.getByText(/Error ID: error_page_1234567890/i)).toBeInTheDocument()
     })
   })
 
@@ -399,7 +377,7 @@ describe("PageError", () => {
         ErrorType.AUTHORIZATION,
       ]
 
-      errorTypes.forEach((type) => {
+      errorTypes.forEach(type => {
         const error = new AppError(
           `${type} error`,
           type,

@@ -181,26 +181,20 @@ describe("ReviewCard", () => {
   describe("Owner Actions", () => {
     it("shows edit button when user is the owner", () => {
       const onEdit = vi.fn()
-      render(
-        <ReviewCard review={mockReview} currentUserId="user-1" onEdit={onEdit} />
-      )
+      render(<ReviewCard review={mockReview} currentUserId="user-1" onEdit={onEdit} />)
       expect(screen.getByRole("button", { name: /edit/i })).toBeInTheDocument()
     })
 
     it("shows delete button when user is the owner", () => {
       const onDelete = vi.fn()
-      render(
-        <ReviewCard review={mockReview} currentUserId="user-1" onDelete={onDelete} />
-      )
+      render(<ReviewCard review={mockReview} currentUserId="user-1" onDelete={onDelete} />)
       expect(screen.getByRole("button", { name: /delete/i })).toBeInTheDocument()
     })
 
     it("calls onEdit with review id when edit is clicked", async () => {
       const user = userEvent.setup()
       const onEdit = vi.fn()
-      render(
-        <ReviewCard review={mockReview} currentUserId="user-1" onEdit={onEdit} />
-      )
+      render(<ReviewCard review={mockReview} currentUserId="user-1" onEdit={onEdit} />)
 
       const editButton = screen.getByRole("button", { name: /edit/i })
       // Use fireEvent for immediate execution instead of userEvent
@@ -213,9 +207,7 @@ describe("ReviewCard", () => {
     it("calls onDelete with review id when delete is clicked", async () => {
       const user = userEvent.setup()
       const onDelete = vi.fn()
-      render(
-        <ReviewCard review={mockReview} currentUserId="user-1" onDelete={onDelete} />
-      )
+      render(<ReviewCard review={mockReview} currentUserId="user-1" onDelete={onDelete} />)
 
       const deleteButton = screen.getByRole("button", { name: /delete/i })
       // Use fireEvent for immediate execution instead of userEvent
@@ -227,62 +219,52 @@ describe("ReviewCard", () => {
 
     it("does not show edit button when user is not the owner", () => {
       const onEdit = vi.fn()
-      render(
-        <ReviewCard
+      render(<ReviewCard
           review={mockReview}
           currentUserId="different-user"
           onEdit={onEdit}
-        />
-      )
+        />)
       expect(screen.queryByRole("button", { name: /edit/i })).not.toBeInTheDocument()
     })
 
     it("does not show action buttons when callbacks are not provided", () => {
       render(<ReviewCard review={mockReview} currentUserId="user-1" />)
       expect(screen.queryByRole("button", { name: /edit/i })).not.toBeInTheDocument()
-      expect(
-        screen.queryByRole("button", { name: /delete/i })
-      ).not.toBeInTheDocument()
+      expect(screen.queryByRole("button", { name: /delete/i })).not.toBeInTheDocument()
     })
   })
 
   describe("Admin/Editor Actions", () => {
     it("shows delete button for admin users even if not owner", () => {
       const onDelete = vi.fn()
-      render(
-        <ReviewCard
+      render(<ReviewCard
           review={mockReview}
           currentUserId="admin-user"
           currentUserRole="admin"
           onDelete={onDelete}
-        />
-      )
+        />)
       expect(screen.getByRole("button", { name: /delete/i })).toBeInTheDocument()
     })
 
     it("shows delete button for editor users even if not owner", () => {
       const onDelete = vi.fn()
-      render(
-        <ReviewCard
+      render(<ReviewCard
           review={mockReview}
           currentUserId="editor-user"
           currentUserRole="editor"
           onDelete={onDelete}
-        />
-      )
+        />)
       expect(screen.getByRole("button", { name: /delete/i })).toBeInTheDocument()
     })
 
     it("does not show edit button for moderators who are not owners", () => {
       const onEdit = vi.fn()
-      render(
-        <ReviewCard
+      render(<ReviewCard
           review={mockReview}
           currentUserId="admin-user"
           currentUserRole="admin"
           onEdit={onEdit}
-        />
-      )
+        />)
       // Edit button should not appear for non-owners
       expect(screen.queryByRole("button", { name: /edit/i })).not.toBeInTheDocument()
     })
@@ -291,14 +273,12 @@ describe("ReviewCard", () => {
   describe("Moderation Actions", () => {
     it("shows moderation actions when showModerationActions is true and user is admin", () => {
       const onModerate = vi.fn()
-      render(
-        <ReviewCard
+      render(<ReviewCard
           review={mockReview}
           currentUserRole="admin"
           onModerate={onModerate}
           showModerationActions={true}
-        />
-      )
+        />)
 
       expect(screen.getByRole("button", { name: /approve/i })).toBeInTheDocument()
       expect(screen.getByRole("button", { name: /reject/i })).toBeInTheDocument()
@@ -306,14 +286,12 @@ describe("ReviewCard", () => {
 
     it("shows moderation actions when showModerationActions is true and user is editor", () => {
       const onModerate = vi.fn()
-      render(
-        <ReviewCard
+      render(<ReviewCard
           review={mockReview}
           currentUserRole="editor"
           onModerate={onModerate}
           showModerationActions={true}
-        />
-      )
+        />)
 
       expect(screen.getByRole("button", { name: /approve/i })).toBeInTheDocument()
       expect(screen.getByRole("button", { name: /reject/i })).toBeInTheDocument()
@@ -321,53 +299,39 @@ describe("ReviewCard", () => {
 
     it("does not show moderation actions when user is not admin or editor", () => {
       const onModerate = vi.fn()
-      render(
-        <ReviewCard
+      render(<ReviewCard
           review={mockReview}
           currentUserRole="user"
           onModerate={onModerate}
           showModerationActions={true}
-        />
-      )
+        />)
 
-      expect(
-        screen.queryByRole("button", { name: /approve/i })
-      ).not.toBeInTheDocument()
-      expect(
-        screen.queryByRole("button", { name: /reject/i })
-      ).not.toBeInTheDocument()
+      expect(screen.queryByRole("button", { name: /approve/i })).not.toBeInTheDocument()
+      expect(screen.queryByRole("button", { name: /reject/i })).not.toBeInTheDocument()
     })
 
     it("does not show moderation actions when showModerationActions is false", () => {
       const onModerate = vi.fn()
-      render(
-        <ReviewCard
+      render(<ReviewCard
           review={mockReview}
           currentUserRole="admin"
           onModerate={onModerate}
           showModerationActions={false}
-        />
-      )
+        />)
 
-      expect(
-        screen.queryByRole("button", { name: /approve/i })
-      ).not.toBeInTheDocument()
-      expect(
-        screen.queryByRole("button", { name: /reject/i })
-      ).not.toBeInTheDocument()
+      expect(screen.queryByRole("button", { name: /approve/i })).not.toBeInTheDocument()
+      expect(screen.queryByRole("button", { name: /reject/i })).not.toBeInTheDocument()
     })
 
     it("calls onModerate with true when approve is clicked", async () => {
       const user = userEvent.setup()
       const onModerate = vi.fn()
-      render(
-        <ReviewCard
+      render(<ReviewCard
           review={mockReview}
           currentUserRole="admin"
           onModerate={onModerate}
           showModerationActions={true}
-        />
-      )
+        />)
 
       const approveButton = screen.getByRole("button", { name: /approve/i })
       // Use fireEvent for immediate execution instead of userEvent
@@ -380,14 +344,12 @@ describe("ReviewCard", () => {
     it("calls onModerate with false when reject is clicked", async () => {
       const user = userEvent.setup()
       const onModerate = vi.fn()
-      render(
-        <ReviewCard
+      render(<ReviewCard
           review={mockReview}
           currentUserRole="admin"
           onModerate={onModerate}
           showModerationActions={true}
-        />
-      )
+        />)
 
       const rejectButton = screen.getByRole("button", { name: /reject/i })
       // Use fireEvent for immediate execution instead of userEvent
@@ -448,14 +410,12 @@ describe("ReviewCard", () => {
     it("has proper button roles for action buttons", () => {
       const onEdit = vi.fn()
       const onDelete = vi.fn()
-      render(
-        <ReviewCard
+      render(<ReviewCard
           review={mockReview}
           currentUserId="user-1"
           onEdit={onEdit}
           onDelete={onDelete}
-        />
-      )
+        />)
 
       expect(screen.getByRole("button", { name: /edit/i })).toBeInTheDocument()
       expect(screen.getByRole("button", { name: /delete/i })).toBeInTheDocument()
@@ -500,9 +460,7 @@ describe("ReviewCard", () => {
         },
       }
       render(<ReviewCard review={longUsernameReview} />)
-      expect(
-        screen.getByText("verylongusernamethatmightbreakthelayout1234567890")
-      ).toBeInTheDocument()
+      expect(screen.getByText("verylongusernamethatmightbreakthelayout1234567890")).toBeInTheDocument()
     })
 
     it("handles special characters in display names", () => {
@@ -521,9 +479,7 @@ describe("ReviewCard", () => {
   describe("Style Classes", () => {
     it("applies correct text colors to status indicators", () => {
       const approvedReview = { ...mockReview, isApproved: true }
-      const { container } = render(
-        <ReviewCard review={approvedReview} showModerationActions={true} />
-      )
+      const { container } = render(<ReviewCard review={approvedReview} showModerationActions={true} />)
 
       const approvedStatus = screen.getByText(/✓ Approved/)
       expect(approvedStatus).toHaveClass("text-green-600")
@@ -531,9 +487,7 @@ describe("ReviewCard", () => {
 
     it("applies correct hover effects to buttons", () => {
       const onDelete = vi.fn()
-      render(
-        <ReviewCard review={mockReview} currentUserId="user-1" onDelete={onDelete} />
-      )
+      render(<ReviewCard review={mockReview} currentUserId="user-1" onDelete={onDelete} />)
 
       const deleteButton = screen.getByRole("button", { name: /delete/i })
       expect(deleteButton).toHaveClass("hover:text-red-800")

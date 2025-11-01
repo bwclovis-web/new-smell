@@ -56,7 +56,9 @@ export function useDataWithFilters<
     filtered = sortItems(filtered, selectedSort)
 
     return filtered
-  }, [initialData, selectedSort, selectedType, searchQuery])
+  }, [
+initialData, selectedSort, selectedType, searchQuery
+])
 
   const resetFilters = useCallback(() => {
     setSelectedSort(defaultSort)

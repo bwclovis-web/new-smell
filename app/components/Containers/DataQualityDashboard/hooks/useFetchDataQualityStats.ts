@@ -65,11 +65,9 @@ export const useFetchDataQualityStats = (timeframe: "week" | "month" | "all") =>
         await performApiFetch(timeframe, setStats, refreshTrigger.force)
         setLastFetch(Date.now())
       } catch (err) {
-        setError(
-          `Failed to fetch data quality stats: ${
+        setError(`Failed to fetch data quality stats: ${
             err instanceof Error ? err.message : String(err)
-          }`
-        )
+          }`)
         console.error("[DATA QUALITY] Fetch error:", err)
       } finally {
         setLoading(false)
@@ -80,8 +78,7 @@ export const useFetchDataQualityStats = (timeframe: "week" | "month" | "all") =>
   }, [timeframe, refreshTrigger]) // Only depend on timeframe and manual refresh trigger
 
   // Expose a function to force refresh
-  const forceRefresh = (force: boolean = false) =>
-    setRefreshTrigger((prev) => ({ count: prev.count + 1, force }))
+  const forceRefresh = (force: boolean = false) => setRefreshTrigger(prev => ({ count: prev.count + 1, force }))
 
   return { stats, loading, error, forceRefresh }
 }

@@ -33,8 +33,8 @@ function listBackups() {
   }
 
   const files = readdirSync(BACKUP_DIR)
-    .filter((file) => file.endsWith("_manifest.json"))
-    .map((file) => {
+    .filter(file => file.endsWith("_manifest.json"))
+    .map(file => {
       const manifestPath = join(BACKUP_DIR, file)
       const manifest = JSON.parse(readFileSync(manifestPath, "utf8"))
       const stats = statSync(manifestPath)
@@ -84,9 +84,7 @@ async function restoreFromJson(backupFile) {
   console.log(`📖 Reading JSON backup: ${backupFile}`)
   const backup = JSON.parse(readFileSync(backupFile, "utf8"))
 
-  console.log(
-    `📊 Restoring ${backup.totalRecords} records from ${backup.tables.length} tables`
-  )
+  console.log(`📊 Restoring ${backup.totalRecords} records from ${backup.tables.length} tables`)
 
   // Restore tables in order to respect foreign key constraints
   const tableOrder = [
@@ -104,7 +102,7 @@ async function restoreFromJson(backupFile) {
   ]
 
   for (const tableName of tableOrder) {
-    const tableData = backup.tables.find((t) => t.table === tableName)
+    const tableData = backup.tables.find(t => t.table === tableName)
     if (!tableData || tableData.count === 0) {
       console.log(`  ⏭️  Skipping ${tableName}: no data`)
       continue
@@ -144,11 +142,7 @@ async function restoreFromJson(backupFile) {
           data: batch,
           skipDuplicates: true,
         })
-        console.log(
-          `    ✅ Inserted batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(
-            records.length / batchSize
-          )}`
-        )
+        console.log(`    ✅ Inserted batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(records.length / batchSize)}`)
       }
     } catch (error) {
       console.error(`    ❌ Error restoring ${tableName}:`, error.message)
@@ -170,7 +164,7 @@ async function restoreDatabase(backupName, options = {}) {
     let selectedBackup = null
 
     if (backupName) {
-      selectedBackup = backups.find((b) => b.file.includes(backupName))
+      selectedBackup = backups.find(b => b.file.includes(backupName))
       if (!selectedBackup) {
         console.log("❌ Backup not found. Available backups:")
         backups.forEach((backup, index) => {

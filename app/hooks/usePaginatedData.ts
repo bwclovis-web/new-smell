@@ -21,6 +21,7 @@ export interface PaginatedResponse<T> {
 
 export interface UsePaginatedDataOptions<T>
   extends Omit<UseDataFetchingOptions<PaginatedResponse<T>>, "url" | "deps"> {
+
   /**
    * Base URL for the API endpoint
    */
@@ -51,6 +52,7 @@ export interface UsePaginatedDataOptions<T>
 }
 
 export interface UsePaginatedDataReturn<T> {
+
   /**
    * The paginated data
    */
@@ -149,9 +151,7 @@ export interface UsePaginatedDataReturn<T> {
  * })
  * ```
  */
-export function usePaginatedData<T = unknown>(
-  options: UsePaginatedDataOptions<T>
-): UsePaginatedDataReturn<T> {
+export function usePaginatedData<T = unknown>(options: UsePaginatedDataOptions<T>): UsePaginatedDataReturn<T> {
   const {
     baseUrl,
     initialPage = 1,
@@ -179,7 +179,9 @@ export function usePaginatedData<T = unknown>(
     })
 
     return `${baseUrl}?${searchParams.toString()}`
-  }, [baseUrl, currentPage, pageSize, params])
+  }, [
+baseUrl, currentPage, pageSize, params
+])
 
   const {
     data: response,
@@ -213,7 +215,7 @@ export function usePaginatedData<T = unknown>(
 
       // Only append if it's actually new data (prevent duplicates)
       if (lastId !== firstNewId) {
-        setAccumulatedData((prev) => [...prev, ...response.data])
+        setAccumulatedData(prev => [...prev, ...response.data])
       }
     }
     setIsLoadingMore(false)
@@ -221,8 +223,12 @@ export function usePaginatedData<T = unknown>(
 
   const goToPage = useCallback(
     (page: number) => {
-      if (page < 1) return
-      if (meta && page > meta.totalPages) return
+      if (page < 1) {
+ return 
+}
+      if (meta && page > meta.totalPages) {
+ return 
+}
 
       if (accumulate && page > currentPage) {
         setIsLoadingMore(true)
@@ -234,12 +240,16 @@ export function usePaginatedData<T = unknown>(
   )
 
   const nextPage = useCallback(() => {
-    if (!meta?.hasMore) return
+    if (!meta?.hasMore) {
+ return 
+}
     goToPage(currentPage + 1)
   }, [currentPage, meta, goToPage])
 
   const prevPage = useCallback(() => {
-    if (currentPage <= 1) return
+    if (currentPage <= 1) {
+ return 
+}
     goToPage(currentPage - 1)
   }, [currentPage, goToPage])
 

@@ -143,7 +143,7 @@ export class ErrorAnalytics {
         LOW: 0,
       }
 
-      entries.forEach((entry) => {
+      entries.forEach(entry => {
         severityCounts[entry.error.severity]++
       })
 
@@ -158,9 +158,7 @@ export class ErrorAnalytics {
       })
     })
 
-    return rateData.sort(
-      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-    )
+    return rateData.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
   }
 
   /**
@@ -170,7 +168,7 @@ export class ErrorAnalytics {
     const typeCounts = new Map<ErrorType, number>()
     const lastOccurrence = new Map<ErrorType, string>()
 
-    logs.forEach((log) => {
+    logs.forEach(log => {
       const type = log.error.type
       typeCounts.set(type, (typeCounts.get(type) || 0) + 1)
 
@@ -202,7 +200,7 @@ export class ErrorAnalytics {
   getErrorSeverityBreakdown(logs: ErrorLogEntry[]): ErrorSeverityBreakdown[] {
     const severityCounts = new Map<ErrorSeverity, number>()
 
-    logs.forEach((log) => {
+    logs.forEach(log => {
       const severity = log.error.severity
       severityCounts.set(severity, (severityCounts.get(severity) || 0) + 1)
     })
@@ -219,10 +217,10 @@ export class ErrorAnalytics {
     })
 
     // Sort by severity level
-    const severityOrder: ErrorSeverity[] = ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
-    return breakdown.sort(
-      (a, b) => severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity)
-    )
+    const severityOrder: ErrorSeverity[] = [
+"CRITICAL", "HIGH", "MEDIUM", "LOW"
+]
+    return breakdown.sort((a, b) => severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity))
   }
 
   /**
@@ -236,9 +234,7 @@ export class ErrorAnalytics {
       trends.push(this.createTrend(hour, entries))
     })
 
-    return trends.sort(
-      (a, b) => new Date(a.period).getTime() - new Date(b.period).getTime()
-    )
+    return trends.sort((a, b) => new Date(a.period).getTime() - new Date(b.period).getTime())
   }
 
   /**
@@ -252,9 +248,7 @@ export class ErrorAnalytics {
       trends.push(this.createTrend(day, entries))
     })
 
-    return trends.sort(
-      (a, b) => new Date(a.period).getTime() - new Date(b.period).getTime()
-    )
+    return trends.sort((a, b) => new Date(a.period).getTime() - new Date(b.period).getTime())
   }
 
   /**
@@ -270,7 +264,7 @@ export class ErrorAnalytics {
       }
     >()
 
-    logs.forEach((log) => {
+    logs.forEach(log => {
       const code = log.error.code
       const existing = errorCounts.get(code)
 
@@ -305,7 +299,7 @@ export class ErrorAnalytics {
   private countAffectedUsers(logs: ErrorLogEntry[]): number {
     const users = new Set<string>()
 
-    logs.forEach((log) => {
+    logs.forEach(log => {
       if (log.userId) {
         users.add(log.userId)
       }
@@ -320,7 +314,7 @@ export class ErrorAnalytics {
   private getMostAffectedUsers(logs: ErrorLogEntry[], limit: number = 10) {
     const userCounts = new Map<string, number>()
 
-    logs.forEach((log) => {
+    logs.forEach(log => {
       if (log.userId) {
         userCounts.set(log.userId, (userCounts.get(log.userId) || 0) + 1)
       }
@@ -340,8 +334,8 @@ export class ErrorAnalytics {
     limit: number = 10
   ): string[] {
     return logs
-      .filter((log) => log.correlationId)
-      .map((log) => log.correlationId!)
+      .filter(log => log.correlationId)
+      .map(log => log.correlationId!)
       .slice(-limit)
       .reverse()
   }
@@ -368,7 +362,7 @@ export class ErrorAnalytics {
    * Count errors by severity
    */
   private countBySeverity(logs: ErrorLogEntry[], severity: ErrorSeverity): number {
-    return logs.filter((log) => log.error.severity === severity).length
+    return logs.filter(log => log.error.severity === severity).length
   }
 
   /**
@@ -379,7 +373,7 @@ export class ErrorAnalytics {
     const startTime = this.getStartTime(options)
     const endTime = options.endDate || new Date()
 
-    return allLogs.filter((log) => {
+    return allLogs.filter(log => {
       const logTime = new Date(log.timestamp)
       return logTime >= startTime && logTime <= endTime
     })
@@ -421,7 +415,7 @@ export class ErrorAnalytics {
   private groupByHour(logs: ErrorLogEntry[]): Record<string, ErrorLogEntry[]> {
     const groups: Record<string, ErrorLogEntry[]> = {}
 
-    logs.forEach((log) => {
+    logs.forEach(log => {
       const date = new Date(log.timestamp)
       const hourKey = new Date(
         date.getFullYear(),
@@ -448,7 +442,7 @@ export class ErrorAnalytics {
   private groupByDay(logs: ErrorLogEntry[]): Record<string, ErrorLogEntry[]> {
     const groups: Record<string, ErrorLogEntry[]> = {}
 
-    logs.forEach((log) => {
+    logs.forEach(log => {
       const date = new Date(log.timestamp)
       const dayKey = new Date(
         date.getFullYear(),
@@ -476,7 +470,7 @@ export class ErrorAnalytics {
     const errorsByType: Record<string, number> = {}
     const errorsBySeverity: Record<string, number> = {}
 
-    entries.forEach((entry) => {
+    entries.forEach(entry => {
       const type = entry.error.type
       const severity = entry.error.severity
 

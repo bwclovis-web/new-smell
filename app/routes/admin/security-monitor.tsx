@@ -68,18 +68,14 @@ export const loader = withLoaderErrorHandling(
     // Fetch security statistics
     const securityResponse = await fetch(`${baseUrl}/admin/security-stats`)
     if (!securityResponse.ok) {
-      throw new Error(
-        `Failed to fetch security stats: ${securityResponse.statusText}`
-      )
+      throw new Error(`Failed to fetch security stats: ${securityResponse.statusText}`)
     }
     const securityData = await securityResponse.json()
 
     // Fetch rate limit statistics
     const rateLimitResponse = await fetch(`${baseUrl}/admin/rate-limit-stats`)
     if (!rateLimitResponse.ok) {
-      throw new Error(
-        `Failed to fetch rate limit stats: ${rateLimitResponse.statusText}`
-      )
+      throw new Error(`Failed to fetch rate limit stats: ${rateLimitResponse.statusText}`)
     }
     const rateLimitData = await rateLimitResponse.json()
 
@@ -324,8 +320,7 @@ const SecurityMonitor = () => {
                     Violations by Path
                   </h3>
                   <div className="space-y-2">
-                    {Object.entries(rateLimit?.violationsByPath || {}).map(
-                      ([path, count]: [string, any]) => (
+                    {Object.entries(rateLimit?.violationsByPath || {}).map(([path, count]: [string, any]) => (
                         <div
                           key={path}
                           className="flex justify-between items-center p-3 bg-red-50 rounded-lg"
@@ -337,8 +332,7 @@ const SecurityMonitor = () => {
                             {String(count)} violations
                           </span>
                         </div>
-                      )
-                    )}
+                      ))}
                   </div>
                 </div>
               )}

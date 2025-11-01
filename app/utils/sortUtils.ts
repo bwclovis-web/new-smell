@@ -46,7 +46,7 @@ export const filterByType = (items: SortableItem[], type: string) => {
   if (!type || type === "all") {
     return items
   }
-  return items.filter((item) => item.type === type)
+  return items.filter(item => item.type === type)
 }
 
 export const filterBySearchQuery = (items: SortableItem[], searchQuery: string) => {
@@ -54,7 +54,7 @@ export const filterBySearchQuery = (items: SortableItem[], searchQuery: string) 
     return items
   }
   const query = searchQuery.toLowerCase()
-  return items.filter((item) => item.name.toLowerCase().includes(query))
+  return items.filter(item => item.name.toLowerCase().includes(query))
 }
 
 export const sortItems = <T extends SortableItem>(
@@ -69,26 +69,20 @@ export const sortItems = <T extends SortableItem>(
     case "name-desc":
       return sortedItems.sort((a, b) => b.name.localeCompare(a.name))
     case "created-asc":
-      return sortedItems.sort(
-        (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
-      )
+      return sortedItems.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
     case "created-desc":
-      return sortedItems.sort(
-        (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-      )
+      return sortedItems.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
     case "type-asc":
       return sortedItems.sort((a, b) => (a.type || "").localeCompare(b.type || ""))
     default:
-      return sortedItems.sort(
-        (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-      )
+      return sortedItems.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
   }
 }
 
 export const groupByFirstLetter = <T extends SortableItem>(items: T[]) => {
   const grouped: Record<string, T[]> = {}
 
-  items.forEach((item) => {
+  items.forEach(item => {
     const firstLetter = item.name.charAt(0).toUpperCase()
     if (!grouped[firstLetter]) {
       grouped[firstLetter] = []
@@ -105,8 +99,7 @@ export const groupByFirstLetter = <T extends SortableItem>(items: T[]) => {
     }, {} as Record<string, T[]>)
 }
 
-export const getAlphabetLetters = () =>
-  Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))
+export const getAlphabetLetters = () => Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i))
 
 export const getDefaultSortOptions = (t: (key: string) => string) => [
   {

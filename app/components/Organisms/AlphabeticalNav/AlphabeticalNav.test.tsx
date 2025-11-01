@@ -49,16 +49,12 @@ describe("AlphabeticalNav", () => {
 
   describe("Rendering", () => {
     it("renders the alphabetical navigation", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
       expect(screen.getByText("All")).toBeInTheDocument()
     })
 
     it("renders all alphabet letters", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const letters = [
         "A",
@@ -88,62 +84,50 @@ describe("AlphabeticalNav", () => {
         "Y",
         "Z",
       ]
-      letters.forEach((letter) => {
+      letters.forEach(letter => {
         expect(screen.getByText(letter)).toBeInTheDocument()
       })
     })
 
     it("renders All button", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
       expect(screen.getByRole("button", { name: "All" })).toBeInTheDocument()
     })
 
     it("renders 27 buttons total (All + 26 letters)", () => {
-      const { container } = render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      const { container } = render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
       // Query buttons within the component container only
       const buttons = container.querySelectorAll("button")
       expect(buttons).toHaveLength(27)
     })
 
     it("applies custom className", () => {
-      const { container } = render(
-        <AlphabeticalNav
+      const { container } = render(<AlphabeticalNav
           selectedLetter={null}
           onLetterSelect={mockOnLetterSelect}
           className="custom-class"
-        />
-      )
+        />)
       expect(container.firstChild).toHaveClass("custom-class")
     })
   })
 
   describe("Selection State", () => {
     it("highlights All button when selectedLetter is null", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
       const allButton = screen.getByRole("button", { name: "All" })
       expect(allButton).toHaveClass("bg-noir-gold")
       expect(allButton).toHaveClass("text-noir-black")
     })
 
     it("highlights selected letter", () => {
-      render(
-        <AlphabeticalNav selectedLetter="A" onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter="A" onLetterSelect={mockOnLetterSelect} />)
       const aButton = screen.getByRole("button", { name: "A" })
       expect(aButton).toHaveClass("bg-noir-gold")
       expect(aButton).toHaveClass("text-noir-black")
     })
 
     it("does not highlight All button when a letter is selected", () => {
-      render(
-        <AlphabeticalNav selectedLetter="B" onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter="B" onLetterSelect={mockOnLetterSelect} />)
       const allButton = screen.getByRole("button", { name: "All" })
       expect(allButton).not.toHaveClass("bg-noir-gold")
       expect(allButton).toHaveClass("bg-noir-dark")
@@ -151,9 +135,7 @@ describe("AlphabeticalNav", () => {
     })
 
     it("only highlights one letter at a time", () => {
-      render(
-        <AlphabeticalNav selectedLetter="M" onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter="M" onLetterSelect={mockOnLetterSelect} />)
 
       const mButton = screen.getByRole("button", { name: "M" })
       expect(mButton).toHaveClass("bg-noir-gold")
@@ -166,9 +148,7 @@ describe("AlphabeticalNav", () => {
 
   describe("Click Interactions", () => {
     it("calls onLetterSelect with null when All is clicked", () => {
-      render(
-        <AlphabeticalNav selectedLetter="A" onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter="A" onLetterSelect={mockOnLetterSelect} />)
 
       const allButton = screen.getByRole("button", { name: "All" })
       allButton.click()
@@ -178,9 +158,7 @@ describe("AlphabeticalNav", () => {
     })
 
     it("calls onLetterSelect with letter when clicked", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const aButton = screen.getByRole("button", { name: "A" })
       aButton.click()
@@ -190,9 +168,7 @@ describe("AlphabeticalNav", () => {
     })
 
     it("calls onLetterSelect with correct letter for each button", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const testLetters = ["B", "M", "Z"]
 
@@ -205,9 +181,7 @@ describe("AlphabeticalNav", () => {
     })
 
     it("handles rapid clicks", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const aButton = screen.getByRole("button", { name: "A" })
       const bButton = screen.getByRole("button", { name: "B" })
@@ -220,9 +194,7 @@ describe("AlphabeticalNav", () => {
     })
 
     it("can select same letter multiple times", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const aButton = screen.getByRole("button", { name: "A" })
 
@@ -236,49 +208,37 @@ describe("AlphabeticalNav", () => {
 
   describe("Styling", () => {
     it("applies grid layout", () => {
-      const { container } = render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      const { container } = render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
       expect(container.firstChild).toHaveClass("grid")
       expect(container.firstChild).toHaveClass("grid-cols-9")
       expect(container.firstChild).toHaveClass("gap-4")
     })
 
     it("centers content", () => {
-      const { container } = render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      const { container } = render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
       expect(container.firstChild).toHaveClass("justify-center")
     })
 
     it("applies inner-container class", () => {
-      const { container } = render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      const { container } = render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
       expect(container.firstChild).toHaveClass("inner-container")
     })
 
     it("applies margin classes", () => {
-      const { container } = render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      const { container } = render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
       expect(container.firstChild).toHaveClass("mt-10")
       expect(container.firstChild).toHaveClass("md:mb-18")
     })
 
     it("applies active styling to selected letter", () => {
-      render(
-        <AlphabeticalNav selectedLetter="C" onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter="C" onLetterSelect={mockOnLetterSelect} />)
       const cButton = screen.getByRole("button", { name: "C" })
       expect(cButton).toHaveClass("bg-noir-gold")
       expect(cButton).toHaveClass("text-noir-black")
     })
 
     it("applies inactive styling to non-selected letters", () => {
-      render(
-        <AlphabeticalNav selectedLetter="C" onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter="C" onLetterSelect={mockOnLetterSelect} />)
       const aButton = screen.getByRole("button", { name: "A" })
       expect(aButton).toHaveClass("bg-noir-dark")
       expect(aButton).toHaveClass("text-noir-gold")
@@ -287,20 +247,16 @@ describe("AlphabeticalNav", () => {
     })
 
     it("applies transition classes to all buttons", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const buttons = screen.getAllByRole("button")
-      buttons.forEach((button) => {
+      buttons.forEach(button => {
         expect(button).toHaveClass("transition-colors")
       })
     })
 
     it("applies large text on lg screens", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const aButton = screen.getByRole("button", { name: "A" })
       const span = aButton.querySelector("span")
@@ -310,9 +266,7 @@ describe("AlphabeticalNav", () => {
 
   describe("Layout", () => {
     it("positions letter spans correctly", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const aButton = screen.getByRole("button", { name: "A" })
       expect(aButton).toHaveClass("flex")
@@ -321,35 +275,29 @@ describe("AlphabeticalNav", () => {
     })
 
     it("applies padding to buttons", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const buttons = screen.getAllByRole("button")
-      buttons.forEach((button) => {
+      buttons.forEach(button => {
         expect(button).toHaveClass("px-3")
         expect(button).toHaveClass("py-2")
       })
     })
 
     it("applies rounded corners to buttons", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const buttons = screen.getAllByRole("button")
-      buttons.forEach((button) => {
+      buttons.forEach(button => {
         expect(button).toHaveClass("rounded-md")
       })
     })
 
     it("applies font-medium to buttons", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const buttons = screen.getAllByRole("button")
-      buttons.forEach((button) => {
+      buttons.forEach(button => {
         expect(button).toHaveClass("font-medium")
       })
     })
@@ -358,9 +306,7 @@ describe("AlphabeticalNav", () => {
   describe("Accessibility", () => {
     it("all buttons are keyboard accessible", async () => {
       const user = userEvent.setup()
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       // Tab to first button
       await user.tab()
@@ -369,20 +315,16 @@ describe("AlphabeticalNav", () => {
     })
 
     it("buttons have proper role", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const buttons = screen.getAllByRole("button")
-      buttons.forEach((button) => {
+      buttons.forEach(button => {
         expect(button.tagName).toBe("BUTTON")
       })
     })
 
     it("provides clear button labels", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       expect(screen.getByRole("button", { name: "All" })).toBeInTheDocument()
       expect(screen.getByRole("button", { name: "A" })).toBeInTheDocument()
@@ -390,9 +332,7 @@ describe("AlphabeticalNav", () => {
     })
 
     it("visually indicates selected state", () => {
-      render(
-        <AlphabeticalNav selectedLetter="D" onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter="D" onLetterSelect={mockOnLetterSelect} />)
 
       const selectedButton = screen.getByRole("button", { name: "D" })
       const unselectedButton = screen.getByRole("button", { name: "E" })
@@ -404,19 +344,15 @@ describe("AlphabeticalNav", () => {
 
   describe("Edge Cases", () => {
     it("handles selectedLetter being undefined", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
       expect(screen.getByRole("button", { name: "All" })).toHaveClass("bg-noir-gold")
     })
 
     it("handles invalid selectedLetter gracefully", () => {
-      render(
-        <AlphabeticalNav
+      render(<AlphabeticalNav
           selectedLetter={"1" as any}
           onLetterSelect={mockOnLetterSelect}
-        />
-      )
+        />)
 
       // All button should not be highlighted
       const allButton = screen.getByRole("button", { name: "All" })
@@ -428,9 +364,7 @@ describe("AlphabeticalNav", () => {
         throw new Error("Callback error")
       })
 
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={throwingCallback} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={throwingCallback} />)
 
       const aButton = screen.getByRole("button", { name: "A" })
 
@@ -440,49 +374,39 @@ describe("AlphabeticalNav", () => {
     })
 
     it("renders correctly with empty className", () => {
-      const { container } = render(
-        <AlphabeticalNav
+      const { container } = render(<AlphabeticalNav
           selectedLetter={null}
           onLetterSelect={mockOnLetterSelect}
           className=""
-        />
-      )
+        />)
       expect(container.firstChild).toBeInTheDocument()
     })
   })
 
   describe("Letter Selection Scenarios", () => {
     it("can select first letter", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       screen.getByRole("button", { name: "A" }).click()
       expect(mockOnLetterSelect).toHaveBeenCalledWith("A")
     })
 
     it("can select last letter", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       screen.getByRole("button", { name: "Z" }).click()
       expect(mockOnLetterSelect).toHaveBeenCalledWith("Z")
     })
 
     it("can select middle letter", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       screen.getByRole("button", { name: "M" }).click()
       expect(mockOnLetterSelect).toHaveBeenCalledWith("M")
     })
 
     it("can deselect by clicking All", () => {
-      render(
-        <AlphabeticalNav selectedLetter="K" onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter="K" onLetterSelect={mockOnLetterSelect} />)
 
       screen.getByRole("button", { name: "All" }).click()
       expect(mockOnLetterSelect).toHaveBeenCalledWith(null)
@@ -491,9 +415,7 @@ describe("AlphabeticalNav", () => {
 
   describe("Visual States", () => {
     it("differentiates selected and unselected states", () => {
-      render(
-        <AlphabeticalNav selectedLetter="F" onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter="F" onLetterSelect={mockOnLetterSelect} />)
 
       const selected = screen.getByRole("button", { name: "F" })
       const unselected = screen.getByRole("button", { name: "G" })
@@ -503,21 +425,17 @@ describe("AlphabeticalNav", () => {
     })
 
     it("shows hover state on unselected buttons", () => {
-      render(
-        <AlphabeticalNav selectedLetter="A" onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter="A" onLetterSelect={mockOnLetterSelect} />)
 
       const unselected = screen.getByRole("button", { name: "B" })
       expect(unselected).toHaveClass("hover:bg-noir-gold/20")
     })
 
     it("applies relative positioning to buttons", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const buttons = screen.getAllByRole("button")
-      buttons.forEach((button) => {
+      buttons.forEach(button => {
         expect(button).toHaveClass("relative")
       })
     })
@@ -525,9 +443,7 @@ describe("AlphabeticalNav", () => {
 
   describe("Integration with getAlphabetLetters", () => {
     it("renders letters from getAlphabetLetters utility", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       // Should have 26 letters + 1 All button
       const buttons = screen.getAllByRole("button")
@@ -535,43 +451,33 @@ describe("AlphabeticalNav", () => {
     })
 
     it("maintains letter order from utility", () => {
-      render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />
-      )
+      render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
 
       const buttons = screen.getAllByRole("button")
       const letterButtons = buttons.slice(1) // Skip "All" button
 
-      const letters = letterButtons.map((btn) => btn.textContent)
+      const letters = letterButtons.map(btn => btn.textContent)
       expect(letters.join("")).toBe("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
     })
   })
 
   describe("Component Reusability", () => {
     it("works with different selectedLetter props", () => {
-      const { rerender } = render(
-        <AlphabeticalNav selectedLetter="A" onLetterSelect={mockOnLetterSelect} />
-      )
+      const { rerender } = render(<AlphabeticalNav selectedLetter="A" onLetterSelect={mockOnLetterSelect} />)
 
       expect(screen.getByRole("button", { name: "A" })).toHaveClass("bg-noir-gold")
 
-      rerender(
-        <AlphabeticalNav selectedLetter="Z" onLetterSelect={mockOnLetterSelect} />
-      )
+      rerender(<AlphabeticalNav selectedLetter="Z" onLetterSelect={mockOnLetterSelect} />)
 
       expect(screen.getByRole("button", { name: "Z" })).toHaveClass("bg-noir-gold")
-      expect(screen.getByRole("button", { name: "A" })).not.toHaveClass(
-        "bg-noir-gold"
-      )
+      expect(screen.getByRole("button", { name: "A" })).not.toHaveClass("bg-noir-gold")
     })
 
     it("works with different onLetterSelect callbacks", () => {
       const callback1 = vi.fn()
       const callback2 = vi.fn()
 
-      const { rerender } = render(
-        <AlphabeticalNav selectedLetter={null} onLetterSelect={callback1} />
-      )
+      const { rerender } = render(<AlphabeticalNav selectedLetter={null} onLetterSelect={callback1} />)
 
       screen.getByRole("button", { name: "A" }).click()
       expect(callback1).toHaveBeenCalledWith("A")

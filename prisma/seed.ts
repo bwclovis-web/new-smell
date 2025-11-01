@@ -31,11 +31,7 @@ async function importCsv(
       console.error("Record data:", records[i])
     }
   }
-  console.log(
-    `✅ Completed importing ${records.length} records from ${path.basename(
-      filePath
-    )}`
-  )
+  console.log(`✅ Completed importing ${records.length} records from ${path.basename(filePath)}`)
 }
 
 function parseNotes(notesString: string): string[] {
@@ -51,8 +47,8 @@ function parseNotes(notesString: string): string[] {
     // If JSON parsing fails, try to split by comma
     return notesString
       .split(",")
-      .map((note) => note.trim())
-      .filter((note) => note.length > 0)
+      .map(note => note.trim())
+      .filter(note => note.length > 0)
   }
 }
 
@@ -135,7 +131,7 @@ async function importPerfumeData(csvFiles: string[]) {
       continue
     }
 
-    await importCsv(filePath, async (data) => {
+    await importCsv(filePath, async data => {
       // Skip if name is empty
       if (!data.name || data.name.trim() === "") {
         return
@@ -157,9 +153,7 @@ async function importPerfumeData(csvFiles: string[]) {
         // If duplicate found, append house name
         const houseName = data.perfumeHouse ? data.perfumeHouse.trim() : "Unknown"
         perfumeName = `${perfumeName} - ${houseName}`
-        console.log(
-          `Perfume "${data.name}" already exists, renaming to "${perfumeName}"`
-        )
+        console.log(`Perfume "${data.name}" already exists, renaming to "${perfumeName}"`)
 
         // Check if the renamed version also exists
         const renamedExists = await prisma.perfume.findUnique({
@@ -240,7 +234,7 @@ main()
   .then(async () => {
     await prisma.$disconnect()
   })
-  .catch(async (e) => {
+  .catch(async e => {
     console.error(e)
     await prisma.$disconnect()
     process.exit(1)

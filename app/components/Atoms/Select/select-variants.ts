@@ -9,9 +9,7 @@ export const selectWrapperVariants = cva(["flex flex-col"], {
 })
 
 export const selectVariants = cva(
-  [
-    'mt-1 cursor-pointer appearance-none relative after:absolute after:content-["😹"] rounded-tl-sm rounded-bl-sm border border-noir-gold px-2.5 h-full py-2.5 bg-noir-black/90 text-noir-gold',
-  ],
+  ['mt-1 cursor-pointer appearance-none relative after:absolute after:content-["😹"] rounded-tl-sm rounded-bl-sm border border-noir-gold px-2.5 h-full py-2.5 bg-noir-black/90 text-noir-gold',],
   {
     compoundVariants: [{}],
     defaultVariants: {},

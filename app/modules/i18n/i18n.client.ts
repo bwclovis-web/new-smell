@@ -26,7 +26,9 @@ if (!i18n.isInitialized) {
         bindI18n: "languageChanged loaded",
       },
       detection: {
-        order: ["cookie", "localStorage", "navigator", "htmlTag"],
+        order: [
+"cookie", "localStorage", "navigator", "htmlTag"
+],
         caches: ["localStorage", "cookie"],
       },
     })

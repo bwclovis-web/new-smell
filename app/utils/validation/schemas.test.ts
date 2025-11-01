@@ -40,9 +40,7 @@ describe("commonSchemas", () => {
     it("should validate and normalize email addresses", () => {
       expect(commonSchemas.email.parse("user@example.com")).toBe("user@example.com")
       expect(commonSchemas.email.parse("USER@EXAMPLE.COM")).toBe("user@example.com")
-      expect(commonSchemas.email.parse("test.email+tag@domain.co.uk")).toBe(
-        "test.email+tag@domain.co.uk"
-      )
+      expect(commonSchemas.email.parse("test.email+tag@domain.co.uk")).toBe("test.email+tag@domain.co.uk")
     })
 
     it("should reject invalid email addresses", () => {
@@ -76,22 +74,12 @@ describe("commonSchemas", () => {
     })
 
     it("should reject weak passwords", () => {
-      expect(() => commonSchemas.password.parse("short")).toThrow(
-        "at least 8 characters"
-      )
-      expect(() => commonSchemas.password.parse("alllowercase1!")).toThrow(
-        "uppercase"
-      )
-      expect(() => commonSchemas.password.parse("ALLUPPERCASE1!")).toThrow(
-        "lowercase"
-      )
+      expect(() => commonSchemas.password.parse("short")).toThrow("at least 8 characters")
+      expect(() => commonSchemas.password.parse("alllowercase1!")).toThrow("uppercase")
+      expect(() => commonSchemas.password.parse("ALLUPPERCASE1!")).toThrow("lowercase")
       expect(() => commonSchemas.password.parse("NoNumbers!")).toThrow("number")
-      expect(() => commonSchemas.password.parse("NoSpecial1")).toThrow(
-        "special character"
-      )
-      expect(() => commonSchemas.password.parse("Has Space1!")).toThrow(
-        "cannot contain spaces"
-      )
+      expect(() => commonSchemas.password.parse("NoSpecial1")).toThrow("special character")
+      expect(() => commonSchemas.password.parse("Has Space1!")).toThrow("cannot contain spaces")
     })
   })
 
@@ -103,15 +91,9 @@ describe("commonSchemas", () => {
     })
 
     it("should reject invalid usernames", () => {
-      expect(() => commonSchemas.username.parse("ab")).toThrow(
-        "at least 3 characters"
-      )
-      expect(() => commonSchemas.username.parse("a".repeat(31))).toThrow(
-        "less than 30"
-      )
-      expect(() => commonSchemas.username.parse("user@name")).toThrow(
-        "letters, numbers"
-      )
+      expect(() => commonSchemas.username.parse("ab")).toThrow("at least 3 characters")
+      expect(() => commonSchemas.username.parse("a".repeat(31))).toThrow("less than 30")
+      expect(() => commonSchemas.username.parse("user@name")).toThrow("letters, numbers")
       expect(() => commonSchemas.username.parse("user name")).toThrow()
     })
   })
@@ -161,12 +143,8 @@ describe("commonSchemas", () => {
 
   describe("url", () => {
     it("should validate URLs", () => {
-      expect(commonSchemas.url.parse("https://example.com")).toBe(
-        "https://example.com"
-      )
-      expect(commonSchemas.url.parse("http://example.com/path")).toBe(
-        "http://example.com/path"
-      )
+      expect(commonSchemas.url.parse("https://example.com")).toBe("https://example.com")
+      expect(commonSchemas.url.parse("http://example.com/path")).toBe("http://example.com/path")
       expect(commonSchemas.url.parse(undefined)).toBeUndefined()
     })
 
@@ -212,11 +190,9 @@ describe("perfumeHouseSchemas", () => {
     })
 
     it("should reject invalid perfume house data", () => {
-      expect(() =>
-        perfumeHouseSchemas.create.parse({
+      expect(() => perfumeHouseSchemas.create.parse({
           name: "A", // Too short
-        })
-      ).toThrow()
+        })).toThrow()
     })
   })
 })
@@ -244,13 +220,11 @@ describe("perfumeSchemas", () => {
     })
 
     it("should reject invalid perfume data", () => {
-      expect(() =>
-        perfumeSchemas.create.parse({
+      expect(() => perfumeSchemas.create.parse({
           name: "Chanel No. 5",
           description: "Short", // Too short
           house: "chanel-id",
-        })
-      ).toThrow("at least 10 characters")
+        })).toThrow("at least 10 characters")
     })
   })
 
@@ -305,20 +279,16 @@ describe("ratingSchemas", () => {
     })
 
     it("should reject rating with no values", () => {
-      expect(() =>
-        ratingSchemas.create.parse({
+      expect(() => ratingSchemas.create.parse({
           perfumeId: "perfume-123",
-        })
-      ).toThrow("At least one rating is required")
+        })).toThrow("At least one rating is required")
     })
 
     it("should reject invalid rating values", () => {
-      expect(() =>
-        ratingSchemas.create.parse({
+      expect(() => ratingSchemas.create.parse({
           perfumeId: "perfume-123",
           overall: 6,
-        })
-      ).toThrow()
+        })).toThrow()
     })
   })
 })
@@ -343,23 +313,19 @@ describe("commentSchemas", () => {
     })
 
     it("should reject empty comments", () => {
-      expect(() =>
-        commentSchemas.create.parse({
+      expect(() => commentSchemas.create.parse({
           perfumeId: "perfume-123",
           userPerfumeId: "user-perfume-456",
           comment: "",
-        })
-      ).toThrow()
+        })).toThrow()
     })
 
     it("should reject comments that are too long", () => {
-      expect(() =>
-        commentSchemas.create.parse({
+      expect(() => commentSchemas.create.parse({
           perfumeId: "perfume-123",
           userPerfumeId: "user-perfume-456",
           comment: "x".repeat(1001),
-        })
-      ).toThrow("less than 1000 characters")
+        })).toThrow("less than 1000 characters")
     })
   })
 })
@@ -399,12 +365,10 @@ describe("wishlistSchemas", () => {
     })
 
     it("should reject invalid actions", () => {
-      expect(() =>
-        wishlistSchemas.action.parse({
+      expect(() => wishlistSchemas.action.parse({
           perfumeId: "perfume-123",
           action: "invalid",
-        })
-      ).toThrow()
+        })).toThrow()
     })
   })
 })
@@ -432,25 +396,21 @@ describe("authSchemas", () => {
     })
 
     it("should reject mismatched passwords", () => {
-      expect(() =>
-        authSchemas.signup.parse({
+      expect(() => authSchemas.signup.parse({
           email: "user@example.com",
           password: "SecureP@ss123",
           confirmPassword: "DifferentP@ss123",
           acceptTerms: "true",
-        })
-      ).toThrow("Passwords do not match")
+        })).toThrow("Passwords do not match")
     })
 
     it("should reject if terms not accepted", () => {
-      expect(() =>
-        authSchemas.signup.parse({
+      expect(() => authSchemas.signup.parse({
           email: "user@example.com",
           password: "SecureP@ss123",
           confirmPassword: "SecureP@ss123",
           acceptTerms: "false",
-        })
-      ).toThrow("accept the terms")
+        })).toThrow("accept the terms")
     })
   })
 
@@ -481,23 +441,19 @@ describe("authSchemas", () => {
     })
 
     it("should reject if new passwords do not match", () => {
-      expect(() =>
-        authSchemas.changePassword.parse({
+      expect(() => authSchemas.changePassword.parse({
           currentPassword: "OldP@ss123",
           newPassword: "NewSecureP@ss456",
           confirmNewPassword: "DifferentP@ss456",
-        })
-      ).toThrow("New passwords do not match")
+        })).toThrow("New passwords do not match")
     })
 
     it("should reject if new password is same as current", () => {
-      expect(() =>
-        authSchemas.changePassword.parse({
+      expect(() => authSchemas.changePassword.parse({
           currentPassword: "SameP@ss123",
           newPassword: "SameP@ss123",
           confirmNewPassword: "SameP@ss123",
-        })
-      ).toThrow("different from current password")
+        })).toThrow("different from current password")
     })
   })
 })
@@ -525,17 +481,13 @@ describe("apiSchemas", () => {
     })
 
     it("should reject invalid pagination values", () => {
-      expect(() =>
-        apiSchemas.pagination.parse({
+      expect(() => apiSchemas.pagination.parse({
           page: "0",
-        })
-      ).toThrow()
+        })).toThrow()
 
-      expect(() =>
-        apiSchemas.pagination.parse({
+      expect(() => apiSchemas.pagination.parse({
           limit: "101",
-        })
-      ).toThrow()
+        })).toThrow()
     })
   })
 
@@ -575,13 +527,11 @@ describe("adminSchemas", () => {
     })
 
     it("should reject invalid roles", () => {
-      expect(() =>
-        adminSchemas.userForm.parse({
+      expect(() => adminSchemas.userForm.parse({
           email: "admin@example.com",
           role: "SUPERUSER",
           isActive: true,
-        })
-      ).toThrow()
+        })).toThrow()
     })
   })
 

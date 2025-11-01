@@ -190,7 +190,7 @@ describe("Comprehensive Component Testing Examples", () => {
       { theme: "danger", size: "medium", disabled: false },
     ]
 
-    await testComponentWithProps(FlexibleComponent, propVariations, (props) => {
+    await testComponentWithProps(FlexibleComponent, propVariations, props => {
       const button = screen.getByRole("button")
       expect(button).toHaveClass(`btn-${props.theme}`)
       expect(button).toHaveClass(`btn-${props.size}`)
@@ -302,21 +302,17 @@ describe("Comprehensive Component Testing Examples", () => {
     const mockLogin = vi.fn()
     const mockLogout = vi.fn()
 
-    renderWithProviders(
-      <PageComponent user={null} onLogin={mockLogin} onLogout={mockLogout} />
-    )
+    renderWithProviders(<PageComponent user={null} onLogin={mockLogin} onLogout={mockLogout} />)
 
     expect(screen.getByText("Please log in")).toBeInTheDocument()
     expect(screen.getByText("Login")).toBeInTheDocument()
 
     // Test logged in state
-    const { rerender } = renderWithProviders(
-      <PageComponent
+    const { rerender } = renderWithProviders(<PageComponent
         user={createMockUser()}
         onLogin={mockLogin}
         onLogout={mockLogout}
-      />
-    )
+      />)
 
     expect(screen.getByText("Welcome, Test User")).toBeInTheDocument()
     expect(screen.getByText("Dashboard Content")).toBeInTheDocument()

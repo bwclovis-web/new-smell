@@ -69,9 +69,7 @@ class TestMonitor {
 
     // Integration tests
     try {
-      const integrationResults = await this.parseTestResults(
-        "integration-results.json"
-      )
+      const integrationResults = await this.parseTestResults("integration-results.json")
       this.results.integration = integrationResults
     } catch (error) {
       console.warn("⚠️  Integration test results not found")
@@ -87,9 +85,7 @@ class TestMonitor {
 
     // Performance tests
     try {
-      const performanceResults = await this.parseTestResults(
-        "performance-results.json"
-      )
+      const performanceResults = await this.parseTestResults("performance-results.json")
       this.results.performance = performanceResults
     } catch (error) {
       console.warn("⚠️  Performance test results not found")
@@ -140,24 +136,16 @@ class TestMonitor {
       const thresholds = CONFIG.thresholds.unit
 
       if (lines < thresholds.lines) {
-        issues.push(
-          `Unit test line coverage ${lines}% is below threshold ${thresholds.lines}%`
-        )
+        issues.push(`Unit test line coverage ${lines}% is below threshold ${thresholds.lines}%`)
       }
       if (functions < thresholds.functions) {
-        issues.push(
-          `Unit test function coverage ${functions}% is below threshold ${thresholds.functions}%`
-        )
+        issues.push(`Unit test function coverage ${functions}% is below threshold ${thresholds.functions}%`)
       }
       if (branches < thresholds.branches) {
-        issues.push(
-          `Unit test branch coverage ${branches}% is below threshold ${thresholds.branches}%`
-        )
+        issues.push(`Unit test branch coverage ${branches}% is below threshold ${thresholds.branches}%`)
       }
       if (statements < thresholds.statements) {
-        issues.push(
-          `Unit test statement coverage ${statements}% is below threshold ${thresholds.statements}%`
-        )
+        issues.push(`Unit test statement coverage ${statements}% is below threshold ${thresholds.statements}%`)
       }
     }
 
@@ -165,11 +153,9 @@ class TestMonitor {
     if (this.results.e2e) {
       const passRate = (this.results.e2e.passed / this.results.e2e.total) * 100
       if (passRate < CONFIG.thresholds.e2e.passRate) {
-        issues.push(
-          `E2E test pass rate ${passRate.toFixed(1)}% is below threshold ${
+        issues.push(`E2E test pass rate ${passRate.toFixed(1)}% is below threshold ${
             CONFIG.thresholds.e2e.passRate
-          }%`
-        )
+          }%`)
       }
     }
 
@@ -177,20 +163,16 @@ class TestMonitor {
     if (this.results.performance) {
       const { duration, memory } = this.results.performance
       if (duration > CONFIG.thresholds.performance.maxDuration) {
-        issues.push(
-          `Performance test duration ${duration}ms exceeds threshold ${CONFIG.thresholds.performance.maxDuration}ms`
-        )
+        issues.push(`Performance test duration ${duration}ms exceeds threshold ${CONFIG.thresholds.performance.maxDuration}ms`)
       }
       if (memory > CONFIG.thresholds.performance.maxMemory) {
-        issues.push(
-          `Performance test memory usage ${memory}MB exceeds threshold ${CONFIG.thresholds.performance.maxMemory}MB`
-        )
+        issues.push(`Performance test memory usage ${memory}MB exceeds threshold ${CONFIG.thresholds.performance.maxMemory}MB`)
       }
     }
 
     if (issues.length > 0) {
       console.error("❌ Threshold violations detected:")
-      issues.forEach((issue) => console.error(`  - ${issue}`))
+      issues.forEach(issue => console.error(`  - ${issue}`))
       this.results.thresholdViolations = issues
     } else {
       console.log("✅ All thresholds met")
@@ -224,7 +206,7 @@ class TestMonitor {
     }
 
     // Aggregate test results
-    ;["unit", "integration", "e2e"].forEach((type) => {
+    ;["unit", "integration", "e2e"].forEach(type => {
       if (this.results[type]) {
         summary.totalTests += this.results[type].total || 0
         summary.passedTests += this.results[type].passed || 0

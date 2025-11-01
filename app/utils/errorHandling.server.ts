@@ -42,6 +42,7 @@ export interface ServerSuccessResponse<T = any> {
 
 // Server Error Handler
 export class ServerErrorHandler {
+
   /**
    * Handle errors in server-side functions (loaders, actions)
    */
@@ -159,6 +160,7 @@ export class ServerErrorHandler {
 
 // Database Error Handler
 export class DatabaseErrorHandler {
+
   /**
    * Handle database-specific errors
    */
@@ -220,6 +222,7 @@ export class DatabaseErrorHandler {
 
 // Authentication Error Handler
 export class AuthErrorHandler {
+
   /**
    * Handle authentication-specific errors
    */
@@ -284,6 +287,7 @@ export class AuthErrorHandler {
 
 // Validation Error Handler
 export class ValidationErrorHandler {
+
   /**
    * Handle validation-specific errors
    */
@@ -341,8 +345,7 @@ export class ValidationErrorHandler {
 }
 
 // Utility Functions
-export const isServerError = (error: unknown): error is AppError =>
-  error instanceof AppError
+export const isServerError = (error: unknown): error is AppError => error instanceof AppError
 
 export const getServerErrorMessage = (error: unknown): string => {
   if (isServerError(error)) {

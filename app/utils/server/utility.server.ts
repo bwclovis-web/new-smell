@@ -31,9 +31,7 @@ export const singleton = <Value>(name: string, valueFactory: () => Value): Value
   return g.__singletons[name] as Value
 }
 
-export const mergeHeaders = (
-  ...headers: Array<ResponseInit["headers"] | null | undefined>
-) => {
+export const mergeHeaders = (...headers: Array<ResponseInit["headers"] | null | undefined>) => {
   const mergedHeaders = new Headers()
 
   for (const header of headers) {

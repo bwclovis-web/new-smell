@@ -180,7 +180,7 @@ describe("Async Resource Management Example", () => {
 
     // Register async cleanup
     registerCleanup(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await new Promise(resolve => setTimeout(resolve, 10))
       resource.close()
     })
 

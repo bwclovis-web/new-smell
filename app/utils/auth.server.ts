@@ -63,7 +63,7 @@ export const authenticateUser = async (request: Request): Promise<AuthResult> =>
     const validation = validateToken(token)
     return await getUserFromValidation(validation)
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Authentication error:", error)
     return { success: false, error: "Authentication failed", status: 500 }
   }

@@ -87,7 +87,7 @@ export const WithManualInput = () => {
         step={0.5}
         value={value}
         onChange={setValue}
-        formatValue={(val) => val.toFixed(1)}
+        formatValue={val => val.toFixed(1)}
         showManualInput={true}
         inputPlaceholder="Enter value (0-100ml)"
       />

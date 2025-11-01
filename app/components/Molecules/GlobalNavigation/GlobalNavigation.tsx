@@ -50,13 +50,12 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
           {logoText}
         </NavLink>
         <ul className="flex gap-4 items-center tracking-wide max-w-max">
-          {mainNavigation.map((item) => (
+          {mainNavigation.map(item => (
             <li key={item.id}>
               <NavLink
                 viewTransition
                 to={item.path}
-                className={({ isActive }) =>
-                  styleMerge(
+                className={({ isActive }) => styleMerge(
                     "text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400",
                     isActive &&
                       isClientReady &&
@@ -76,8 +75,7 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
               <NavLink
                 viewTransition
                 to={ADMIN_PATH}
-                className={({ isActive }) =>
-                  styleMerge(
+                className={({ isActive }) => styleMerge(
                     "text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400",
                     isActive &&
                       isClientReady &&
@@ -94,8 +92,7 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
               <NavLink
                 viewTransition
                 to={SIGN_IN}
-                className={({ isActive }) =>
-                  styleMerge(
+                className={({ isActive }) => styleMerge(
                     "text-noir-gold hover:text-noir-light dark:text-noir-light/70 dark:hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400 flex",
                     isActive &&
                       isClientReady &&

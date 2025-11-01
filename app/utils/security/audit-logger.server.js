@@ -128,29 +128,29 @@ export function getAuditLogs(filters = {}) {
   let filteredLogs = allLogs
 
   if (category) {
-    filteredLogs = filteredLogs.filter((log) => log.category === category)
+    filteredLogs = filteredLogs.filter(log => log.category === category)
   }
 
   if (level) {
-    filteredLogs = filteredLogs.filter((log) => log.level === level)
+    filteredLogs = filteredLogs.filter(log => log.level === level)
   }
 
   if (userId) {
-    filteredLogs = filteredLogs.filter((log) => log.userId === userId)
+    filteredLogs = filteredLogs.filter(log => log.userId === userId)
   }
 
   if (ipAddress) {
-    filteredLogs = filteredLogs.filter((log) => log.ipAddress === ipAddress)
+    filteredLogs = filteredLogs.filter(log => log.ipAddress === ipAddress)
   }
 
   if (startDate) {
     const start = new Date(startDate)
-    filteredLogs = filteredLogs.filter((log) => new Date(log.timestamp) >= start)
+    filteredLogs = filteredLogs.filter(log => new Date(log.timestamp) >= start)
   }
 
   if (endDate) {
     const end = new Date(endDate)
-    filteredLogs = filteredLogs.filter((log) => new Date(log.timestamp) <= end)
+    filteredLogs = filteredLogs.filter(log => new Date(log.timestamp) <= end)
   }
 
   // Sort by timestamp (newest first) and limit
@@ -179,7 +179,7 @@ export function getAuditStats() {
   for (const logs of auditLogs.values()) {
     stats.totalLogs += logs.length
 
-    logs.forEach((log) => {
+    logs.forEach(log => {
       // Count by level
       stats.logsByLevel[log.level] = (stats.logsByLevel[log.level] || 0) + 1
 
@@ -229,7 +229,7 @@ export function cleanupAuditLogs() {
   const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
   for (const [key, logs] of auditLogs) {
-    const recentLogs = logs.filter((log) => new Date(log.timestamp) > oneWeekAgo)
+    const recentLogs = logs.filter(log => new Date(log.timestamp) > oneWeekAgo)
 
     if (recentLogs.length === 0) {
       auditLogs.delete(key)

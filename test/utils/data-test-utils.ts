@@ -16,10 +16,8 @@ export const testTableRendering = (
   expect(table).toBeInTheDocument()
 
   // Check headers
-  expectedHeaders.forEach((header) => {
-    expect(
-      within(table).getByRole("columnheader", { name: header })
-    ).toBeInTheDocument()
+  expectedHeaders.forEach(header => {
+    expect(within(table).getByRole("columnheader", { name: header })).toBeInTheDocument()
   })
 
   // Check row count
@@ -180,9 +178,7 @@ export const testInfiniteScroll = async (
 
   // Check that more items were added
   const newItemCount = within(list).getAllByRole("listitem").length
-  expect(newItemCount).toBeGreaterThanOrEqual(
-    initialItemCount + expectedNewItemCount
-  )
+  expect(newItemCount).toBeGreaterThanOrEqual(initialItemCount + expectedNewItemCount)
 }
 
 // Test data loading states
@@ -268,23 +264,19 @@ export const testDataGrouping = async (
   await user.click(screen.getByText(groupByColumn))
 
   // Verify groups are created
-  expectedGroups.forEach((group) => {
+  expectedGroups.forEach(group => {
     expect(screen.getByText(group)).toBeInTheDocument()
   })
 }
 
 // Test data aggregation
-export const testDataAggregation = (
-  aggregationTests: Array<{
+export const testDataAggregation = (aggregationTests: Array<{
     column: string
     function: "sum" | "avg" | "count" | "min" | "max"
     expectedValue: number
-  }>
-) => {
-  aggregationTests.forEach((test) => {
-    const aggregateCell = screen.getByText(
-      new RegExp(`${test.function}.*${test.expectedValue}`, "i")
-    )
+  }>) => {
+  aggregationTests.forEach(test => {
+    const aggregateCell = screen.getByText(new RegExp(`${test.function}.*${test.expectedValue}`, "i"))
     expect(aggregateCell).toBeInTheDocument()
   })
 }

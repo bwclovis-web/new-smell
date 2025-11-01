@@ -192,9 +192,7 @@ test.describe("Reviews and Ratings", () => {
       await page.click('button:has-text("Submit")')
 
       // Should show error
-      await expect(
-        page.locator("text=/minimum|too short|more characters/i")
-      ).toBeVisible()
+      await expect(page.locator("text=/minimum|too short|more characters/i")).toBeVisible()
     })
 
     test("should require rating with review", async ({ page }) => {
@@ -218,9 +216,7 @@ test.describe("Reviews and Ratings", () => {
       await page.click('button:has-text("Submit")')
 
       // Should show error about missing rating
-      await expect(
-        page.locator("text=/rating.*required|please.*rate/i")
-      ).toBeVisible()
+      await expect(page.locator("text=/rating.*required|please.*rate/i")).toBeVisible()
     })
 
     test("should save draft review", async ({ page }) => {

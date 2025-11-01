@@ -52,9 +52,7 @@ export const AlertItem = ({
   const formatTimeAgo = (date: Date | string) => {
     const now = new Date()
     const dateObj = typeof date === "string" ? new Date(date) : date
-    const diffInMinutes = Math.floor(
-      (now.getTime() - dateObj.getTime()) / (1000 * 60)
-    )
+    const diffInMinutes = Math.floor((now.getTime() - dateObj.getTime()) / (1000 * 60))
 
     if (diffInMinutes < 1) {
       return "Just now"
@@ -210,8 +208,7 @@ export const AlertItem = ({
                           Available from:
                         </span>
                         <div className="mt-1 space-y-1">
-                          {alert.metadata.availableTraders.map(
-                            (trader: any, index: number) => (
+                          {alert.metadata.availableTraders.map((trader: any, index: number) => (
                               <Link
                                 key={index}
                                 to={`/trader/${trader.userId}`}
@@ -221,8 +218,7 @@ export const AlertItem = ({
                                   trader.email ||
                                   "Unknown Trader"}
                               </Link>
-                            )
-                          )}
+                            ))}
                         </div>
                       </div>
                     )}

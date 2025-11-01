@@ -1,7 +1,8 @@
 import type { LoaderFunctionArgs } from "react-router"
 
 import { getHousesByLetter } from "~/models/house.server"
-import { assertValid, withLoaderErrorHandling } from "~/utils/errorHandling.patterns"
+import { assertValid } from "~/utils/errorHandling.patterns"
+import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
 
 export const loader = withLoaderErrorHandling(
   async ({ request }: LoaderFunctionArgs) => {

@@ -72,12 +72,10 @@ describe("usePaginatedData", () => {
 
   describe("Basic Pagination", () => {
     it("should fetch first page", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           pageSize: 20,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.isLoading).toBe(false)
@@ -90,12 +88,10 @@ describe("usePaginatedData", () => {
     })
 
     it("should navigate to next page", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           pageSize: 20,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toHaveLength(20)
@@ -113,13 +109,11 @@ describe("usePaginatedData", () => {
     })
 
     it("should navigate to previous page", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           initialPage: 2,
           pageSize: 20,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.currentPage).toBe(2)
@@ -133,12 +127,10 @@ describe("usePaginatedData", () => {
     })
 
     it("should not go below page 1", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           pageSize: 20,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toHaveLength(20)
@@ -152,13 +144,11 @@ describe("usePaginatedData", () => {
     })
 
     it("should not go beyond total pages", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           initialPage: 5,
           pageSize: 20,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.meta?.totalPages).toBe(5)
@@ -173,12 +163,10 @@ describe("usePaginatedData", () => {
     })
 
     it("should go to specific page", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           pageSize: 20,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toHaveLength(20)
@@ -198,13 +186,11 @@ describe("usePaginatedData", () => {
 
   describe("Query Parameters", () => {
     it("should include custom query parameters", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           params: { type: "niche", search: "rose" },
           pageSize: 20,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toHaveLength(20)
@@ -215,8 +201,7 @@ describe("usePaginatedData", () => {
     })
 
     it("should ignore undefined/null params", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           params: {
             type: "niche",
@@ -225,8 +210,7 @@ describe("usePaginatedData", () => {
             empty: "",
           },
           pageSize: 20,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toHaveLength(20)
@@ -236,8 +220,7 @@ describe("usePaginatedData", () => {
     it("should refetch when params change", async () => {
       let params = { type: "niche" }
       const { result, rerender } = renderHook(
-        ({ params }) =>
-          usePaginatedData({
+        ({ params }) => usePaginatedData({
             baseUrl: "/api/items",
             params,
             pageSize: 20,
@@ -261,13 +244,11 @@ describe("usePaginatedData", () => {
 
   describe("Accumulation (Infinite Scroll)", () => {
     it("should accumulate data across pages", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           pageSize: 20,
           accumulate: true,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toHaveLength(20)
@@ -290,14 +271,12 @@ describe("usePaginatedData", () => {
     })
 
     it("should reset accumulation when going back to page 1", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           initialPage: 2,
           pageSize: 20,
           accumulate: true,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.currentPage).toBe(2)
@@ -317,13 +296,11 @@ describe("usePaginatedData", () => {
     })
 
     it("should set isLoadingMore when fetching next page", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           pageSize: 20,
           accumulate: true,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toHaveLength(20)
@@ -340,14 +317,12 @@ describe("usePaginatedData", () => {
 
   describe("Reset", () => {
     it("should reset to initial page", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           initialPage: 1,
           pageSize: 20,
           accumulate: true,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toHaveLength(20)
@@ -371,13 +346,11 @@ describe("usePaginatedData", () => {
     })
 
     it("should clear accumulated data on reset", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           pageSize: 20,
           accumulate: true,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toHaveLength(20)
@@ -405,12 +378,10 @@ describe("usePaginatedData", () => {
 
   describe("Refetch", () => {
     it("should refetch current page", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           pageSize: 20,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toHaveLength(20)
@@ -424,13 +395,11 @@ describe("usePaginatedData", () => {
     })
 
     it("should reset accumulation and refetch from page 1 when accumulating", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           pageSize: 20,
           accumulate: true,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toHaveLength(20)
@@ -456,12 +425,10 @@ describe("usePaginatedData", () => {
 
   describe("Error Handling", () => {
     it("should handle errors", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/error",
           pageSize: 20,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.isLoading).toBe(false)
@@ -471,12 +438,10 @@ describe("usePaginatedData", () => {
     })
 
     it("should clear errors", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           pageSize: 20,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toHaveLength(20)
@@ -492,12 +457,10 @@ describe("usePaginatedData", () => {
 
   describe("Page Size", () => {
     it("should respect custom page size", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           pageSize: 10,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toHaveLength(10)
@@ -507,12 +470,10 @@ describe("usePaginatedData", () => {
 
   describe("Loading States", () => {
     it("should track initial loading state", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           pageSize: 20,
-        })
-      )
+        }))
 
       expect(result.current.isInitialLoading).toBe(true)
 
@@ -522,12 +483,10 @@ describe("usePaginatedData", () => {
     })
 
     it("should track loading state", async () => {
-      const { result } = renderHook(() =>
-        usePaginatedData({
+      const { result } = renderHook(() => usePaginatedData({
           baseUrl: "/api/items",
           pageSize: 20,
-        })
-      )
+        }))
 
       expect(result.current.isLoading).toBe(true)
 

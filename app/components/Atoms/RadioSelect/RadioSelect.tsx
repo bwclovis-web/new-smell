@@ -13,7 +13,7 @@ interface RadioSelectProps extends VariantProps<typeof radioSelectVariants> {
 
 const RadioSelect = ({ className, data, handleRadioChange }: RadioSelectProps) => (
   <div className="flex gap-2 flex-wrap">
-    {data?.map((item) => (
+    {data?.map(item => (
       <div key={item.id} className={styleMerge(radioSelectVariants({ className }))}>
         <input
           type="radio"

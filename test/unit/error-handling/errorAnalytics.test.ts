@@ -110,11 +110,11 @@ describe("ErrorAnalytics", () => {
 
       expect(breakdown).toHaveLength(3)
 
-      const dbErrors = breakdown.find((b) => b.type === "DATABASE")
+      const dbErrors = breakdown.find(b => b.type === "DATABASE")
       expect(dbErrors?.count).toBe(2)
       expect(dbErrors?.percentage).toBe(50)
 
-      const validationErrors = breakdown.find((b) => b.type === "VALIDATION")
+      const validationErrors = breakdown.find(b => b.type === "VALIDATION")
       expect(validationErrors?.count).toBe(1)
       expect(validationErrors?.percentage).toBe(25)
     })
@@ -156,7 +156,7 @@ describe("ErrorAnalytics", () => {
       ;(errorLogger as any).logs.push(log1, log2)
 
       const report = analytics.generateReport()
-      const dbBreakdown = report.errorsByType.find((b) => b.type === "DATABASE")
+      const dbBreakdown = report.errorsByType.find(b => b.type === "DATABASE")
 
       expect(dbBreakdown?.lastOccurrence).toBe(secondTime.toISOString())
     })
@@ -171,11 +171,11 @@ describe("ErrorAnalytics", () => {
       const report = analytics.generateReport()
       const breakdown = report.errorsBySeverity
 
-      const critical = breakdown.find((b) => b.severity === "CRITICAL")
+      const critical = breakdown.find(b => b.severity === "CRITICAL")
       expect(critical?.count).toBe(2)
       expect(critical?.percentage).toBeCloseTo(66.67, 1)
 
-      const high = breakdown.find((b) => b.severity === "HIGH")
+      const high = breakdown.find(b => b.severity === "HIGH")
       expect(high?.count).toBe(1)
       expect(high?.percentage).toBeCloseTo(33.33, 1)
     })
@@ -322,7 +322,7 @@ describe("ErrorAnalytics", () => {
       const report = analytics.generateReport({ timeRange: "day" })
 
       expect(report.hourlyTrend.length).toBeGreaterThan(0)
-      expect(report.hourlyTrend.every((t) => t.totalErrors > 0)).toBe(true)
+      expect(report.hourlyTrend.every(t => t.totalErrors > 0)).toBe(true)
     })
 
     it("should group errors by day", () => {
@@ -377,16 +377,14 @@ describe("ErrorAnalytics", () => {
       // Create errors with different severities
       for (let i = 0; i < 3; i++) {
         const timestamp = new Date(now.getTime() - i * 30 * 60 * 1000)
-        errorLogger.log(
-          createError.server(`Critical ${i}`, { severity: "CRITICAL" })
-        )
+        errorLogger.log(createError.server(`Critical ${i}`, { severity: "CRITICAL" }))
         errorLogger.log(createError.server(`High ${i}`, { severity: "HIGH" }))
       }
 
       const rateData = analytics.getErrorRate({ timeRange: "day" })
 
       expect(rateData.length).toBeGreaterThan(0)
-      expect(rateData.every((d) => d.timestamp && d.count > 0)).toBe(true)
+      expect(rateData.every(d => d.timestamp && d.count > 0)).toBe(true)
     })
   })
 

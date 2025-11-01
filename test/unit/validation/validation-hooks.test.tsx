@@ -27,13 +27,11 @@ describe("useValidation Hook", () => {
   })
 
   it("should initialize with correct default values", () => {
-    const { result } = renderHook(() =>
-      useValidation({
+    const { result } = renderHook(() => useValidation({
         schema,
         initialValues,
         onSubmit: vi.fn(),
-      })
-    )
+      }))
 
     expect(result.current.values).toEqual(initialValues)
     expect(result.current.errors).toEqual({})
@@ -45,13 +43,11 @@ describe("useValidation Hook", () => {
   })
 
   it("should update values when setValue is called", () => {
-    const { result } = renderHook(() =>
-      useValidation({
+    const { result } = renderHook(() => useValidation({
         schema,
         initialValues,
         onSubmit: vi.fn(),
-      })
-    )
+      }))
 
     act(() => {
       result.current.setValue("name", "John Doe")
@@ -62,13 +58,11 @@ describe("useValidation Hook", () => {
   })
 
   it("should update multiple values when setValues is called", () => {
-    const { result } = renderHook(() =>
-      useValidation({
+    const { result } = renderHook(() => useValidation({
         schema,
         initialValues,
         onSubmit: vi.fn(),
-      })
-    )
+      }))
 
     act(() => {
       result.current.setValues({
@@ -83,13 +77,11 @@ describe("useValidation Hook", () => {
   })
 
   it("should set field errors", () => {
-    const { result } = renderHook(() =>
-      useValidation({
+    const { result } = renderHook(() => useValidation({
         schema,
         initialValues,
         onSubmit: vi.fn(),
-      })
-    )
+      }))
 
     act(() => {
       result.current.setError("name", "Name is required")
@@ -99,13 +91,11 @@ describe("useValidation Hook", () => {
   })
 
   it("should clear field errors", () => {
-    const { result } = renderHook(() =>
-      useValidation({
+    const { result } = renderHook(() => useValidation({
         schema,
         initialValues,
         onSubmit: vi.fn(),
-      })
-    )
+      }))
 
     act(() => {
       result.current.setError("name", "Name is required")
@@ -121,13 +111,11 @@ describe("useValidation Hook", () => {
   })
 
   it("should clear all errors", () => {
-    const { result } = renderHook(() =>
-      useValidation({
+    const { result } = renderHook(() => useValidation({
         schema,
         initialValues,
         onSubmit: vi.fn(),
-      })
-    )
+      }))
 
     act(() => {
       result.current.setErrors({
@@ -146,13 +134,11 @@ describe("useValidation Hook", () => {
   })
 
   it("should set touched state", () => {
-    const { result } = renderHook(() =>
-      useValidation({
+    const { result } = renderHook(() => useValidation({
         schema,
         initialValues,
         onSubmit: vi.fn(),
-      })
-    )
+      }))
 
     act(() => {
       result.current.setTouched("name", true)
@@ -162,13 +148,11 @@ describe("useValidation Hook", () => {
   })
 
   it("should validate form and return validation result", async () => {
-    const { result } = renderHook(() =>
-      useValidation({
+    const { result } = renderHook(() => useValidation({
         schema,
         initialValues,
         onSubmit: vi.fn(),
-      })
-    )
+      }))
 
     act(() => {
       result.current.setValues({
@@ -188,13 +172,11 @@ describe("useValidation Hook", () => {
   })
 
   it("should return validation errors for invalid data", async () => {
-    const { result } = renderHook(() =>
-      useValidation({
+    const { result } = renderHook(() => useValidation({
         schema,
         initialValues,
         onSubmit: vi.fn(),
-      })
-    )
+      }))
 
     act(() => {
       result.current.setValues({
@@ -217,13 +199,11 @@ describe("useValidation Hook", () => {
 
   it("should handle form submission", async () => {
     const onSubmit = vi.fn()
-    const { result } = renderHook(() =>
-      useValidation({
+    const { result } = renderHook(() => useValidation({
         schema,
         initialValues,
         onSubmit,
-      })
-    )
+      }))
 
     act(() => {
       result.current.setValues({
@@ -246,14 +226,12 @@ describe("useValidation Hook", () => {
 
   it("should not submit form with validation errors", async () => {
     const onSubmit = vi.fn()
-    const { result } = renderHook(() =>
-      useValidation({
+    const { result } = renderHook(() => useValidation({
         schema,
         initialValues,
         onSubmit,
         validateOnSubmit: true,
-      })
-    )
+      }))
 
     act(() => {
       result.current.setValues({
@@ -271,13 +249,11 @@ describe("useValidation Hook", () => {
   })
 
   it("should reset form to initial values", () => {
-    const { result } = renderHook(() =>
-      useValidation({
+    const { result } = renderHook(() => useValidation({
         schema,
         initialValues,
         onSubmit: vi.fn(),
-      })
-    )
+      }))
 
     act(() => {
       result.current.setValues({
@@ -299,13 +275,11 @@ describe("useValidation Hook", () => {
   })
 
   it("should reset form to specific values", () => {
-    const { result } = renderHook(() =>
-      useValidation({
+    const { result } = renderHook(() => useValidation({
         schema,
         initialValues,
         onSubmit: vi.fn(),
-      })
-    )
+      }))
 
     const newValues = {
       name: "Jane Doe",
@@ -332,33 +306,27 @@ describe("useFieldValidation Hook", () => {
   })
 
   it("should validate field on change", async () => {
-    const { result } = renderHook(() =>
-      useFieldValidation(schema, "email", "invalid-email", {
+    const { result } = renderHook(() => useFieldValidation(schema, "email", "invalid-email", {
         validateOnChange: true,
-      })
-    )
+      }))
 
     expect(result.current.error).toBe("Invalid email format")
     expect(result.current.isValidating).toBe(false)
   })
 
   it("should not validate field when validateOnChange is false", () => {
-    const { result } = renderHook(() =>
-      useFieldValidation(schema, "email", "invalid-email", {
+    const { result } = renderHook(() => useFieldValidation(schema, "email", "invalid-email", {
         validateOnChange: false,
-      })
-    )
+      }))
 
     expect(result.current.error).toBe("")
     expect(result.current.isValidating).toBe(false)
   })
 
   it("should validate field manually", async () => {
-    const { result } = renderHook(() =>
-      useFieldValidation(schema, "email", "invalid-email", {
+    const { result } = renderHook(() => useFieldValidation(schema, "email", "invalid-email", {
         validateOnChange: false,
-      })
-    )
+      }))
 
     let validationResult: boolean
     await act(async () => {
@@ -371,8 +339,7 @@ describe("useFieldValidation Hook", () => {
 
   it("should clear error on valid input", async () => {
     const { result, rerender } = renderHook(
-      ({ value }) =>
-        useFieldValidation(schema, "email", value, {
+      ({ value }) => useFieldValidation(schema, "email", value, {
           validateOnChange: true,
         }),
       {
@@ -386,7 +353,7 @@ describe("useFieldValidation Hook", () => {
 
     await act(async () => {
       // Wait for debounced validation
-      await new Promise((resolve) => setTimeout(resolve, 350))
+      await new Promise(resolve => setTimeout(resolve, 350))
     })
 
     expect(result.current.error).toBe("")

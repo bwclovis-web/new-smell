@@ -31,9 +31,7 @@ describe("ComponentError", () => {
     it("should display error message", () => {
       render(<ComponentError {...mockProps} />)
 
-      expect(
-        screen.getByText("Something went wrong. Please try again.")
-      ).toBeInTheDocument()
+      expect(screen.getByText("Something went wrong. Please try again.")).toBeInTheDocument()
     })
 
     it("should display error ID", () => {
@@ -118,9 +116,7 @@ describe("ComponentError", () => {
 
       render(<ComponentError {...mockProps} error={validationError} />)
 
-      expect(
-        screen.getByText("Please check your input and try again.")
-      ).toBeInTheDocument()
+      expect(screen.getByText("Please check your input and try again.")).toBeInTheDocument()
     })
 
     it("should display authentication error message", () => {
@@ -148,9 +144,7 @@ describe("ComponentError", () => {
 
       render(<ComponentError {...mockProps} error={dbError} />)
 
-      expect(
-        screen.getByText("Database error. Please try again later.")
-      ).toBeInTheDocument()
+      expect(screen.getByText("Database error. Please try again later.")).toBeInTheDocument()
     })
 
     it("should display network error message", () => {
@@ -164,11 +158,7 @@ describe("ComponentError", () => {
 
       render(<ComponentError {...mockProps} error={networkError} />)
 
-      expect(
-        screen.getByText(
-          "Network error. Please check your connection and try again."
-        )
-      ).toBeInTheDocument()
+      expect(screen.getByText("Network error. Please check your connection and try again.")).toBeInTheDocument()
     })
   })
 
@@ -273,19 +263,13 @@ describe("ComponentError", () => {
 
       render(<ComponentError {...mockProps} error={longError} />)
 
-      expect(
-        screen.getByText(/This is a very long error message/i)
-      ).toBeInTheDocument()
+      expect(screen.getByText(/This is a very long error message/i)).toBeInTheDocument()
     })
 
     it("should handle long error IDs", () => {
-      render(
-        <ComponentError {...mockProps} errorId="error_1234567890_abcdefghijklmnop" />
-      )
+      render(<ComponentError {...mockProps} errorId="error_1234567890_abcdefghijklmnop" />)
 
-      expect(
-        screen.getByText("Error ID: error_1234567890_abcdefghijklmnop")
-      ).toBeInTheDocument()
+      expect(screen.getByText("Error ID: error_1234567890_abcdefghijklmnop")).toBeInTheDocument()
     })
 
     it("should handle error with special characters in message", () => {
@@ -299,9 +283,7 @@ describe("ComponentError", () => {
 
       render(<ComponentError {...mockProps} error={specialCharError} />)
 
-      expect(
-        screen.getByText('Error message with <special> & "characters"')
-      ).toBeInTheDocument()
+      expect(screen.getByText('Error message with <special> & "characters"')).toBeInTheDocument()
     })
 
     it("should handle rapid button clicks", () => {
@@ -352,10 +334,8 @@ describe("ComponentError", () => {
         "12345",
       ]
 
-      errorIds.forEach((errorId) => {
-        const { unmount } = render(
-          <ComponentError {...mockProps} errorId={errorId} />
-        )
+      errorIds.forEach(errorId => {
+        const { unmount } = render(<ComponentError {...mockProps} errorId={errorId} />)
 
         expect(screen.getByText(`Error ID: ${errorId}`)).toBeInTheDocument()
         unmount()
@@ -364,9 +344,7 @@ describe("ComponentError", () => {
 
     it("should maintain functionality across re-renders", () => {
       const onRetrySpy = vi.fn()
-      const { rerender } = render(
-        <ComponentError {...mockProps} onRetry={onRetrySpy} />
-      )
+      const { rerender } = render(<ComponentError {...mockProps} onRetry={onRetrySpy} />)
 
       const retryButton = screen.getByText("Retry")
       fireEvent.click(retryButton)

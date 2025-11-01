@@ -103,7 +103,7 @@ export function calculatePasswordStrength(password: string): {
     "monkey",
   ]
 
-  if (commonPasswords.some((common) => password.toLowerCase().includes(common))) {
+  if (commonPasswords.some(common => password.toLowerCase().includes(common))) {
     score -= 2
     feedback.push("Avoid common passwords")
   }
@@ -165,15 +165,11 @@ export function validatePasswordComplexity(password: string): {
   const errors: string[] = []
 
   if (password.length < PASSWORD_CONFIG.MIN_LENGTH) {
-    errors.push(
-      `Password must be at least ${PASSWORD_CONFIG.MIN_LENGTH} characters long`
-    )
+    errors.push(`Password must be at least ${PASSWORD_CONFIG.MIN_LENGTH} characters long`)
   }
 
   if (password.length > PASSWORD_CONFIG.MAX_LENGTH) {
-    errors.push(
-      `Password must be less than ${PASSWORD_CONFIG.MAX_LENGTH} characters`
-    )
+    errors.push(`Password must be less than ${PASSWORD_CONFIG.MAX_LENGTH} characters`)
   }
 
   if (!/[a-z]/.test(password)) {
@@ -198,9 +194,7 @@ export function validatePasswordComplexity(password: string): {
 
   // Check for common patterns
   if (/(.)\1{2,}/.test(password)) {
-    errors.push(
-      "Password cannot contain more than 2 consecutive identical characters"
-    )
+    errors.push("Password cannot contain more than 2 consecutive identical characters")
   }
 
   return {

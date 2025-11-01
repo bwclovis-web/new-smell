@@ -16,7 +16,9 @@ test.describe("Accessibility Tests", () => {
       await homePage.waitForReady()
 
       const accessibilityScanResults = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .withTags([
+"wcag2a", "wcag2aa", "wcag21a", "wcag21aa"
+])
         .analyze()
 
       expect(accessibilityScanResults.violations).toEqual([])
@@ -30,7 +32,9 @@ test.describe("Accessibility Tests", () => {
       await vaultPage.waitForPerfumesToLoad()
 
       const accessibilityScanResults = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .withTags([
+"wcag2a", "wcag2aa", "wcag21a", "wcag21aa"
+])
         .analyze()
 
       expect(accessibilityScanResults.violations).toEqual([])
@@ -48,7 +52,9 @@ test.describe("Accessibility Tests", () => {
       await perfumePage.waitForPerfumeData()
 
       const accessibilityScanResults = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .withTags([
+"wcag2a", "wcag2aa", "wcag21a", "wcag21aa"
+])
         .analyze()
 
       expect(accessibilityScanResults.violations).toEqual([])
@@ -61,7 +67,9 @@ test.describe("Accessibility Tests", () => {
       await loginPage.navigateTo()
 
       const accessibilityScanResults = await new AxeBuilder({ page })
-        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .withTags([
+"wcag2a", "wcag2aa", "wcag21a", "wcag21aa"
+])
         .analyze()
 
       expect(accessibilityScanResults.violations).toEqual([])
@@ -82,9 +90,7 @@ test.describe("Accessibility Tests", () => {
         .withTags(["wcag2a", "wcag2aa"])
         .analyze()
 
-      const criticalViolations = collectionScan.violations.filter(
-        (v) => v.impact === "critical" || v.impact === "serious"
-      )
+      const criticalViolations = collectionScan.violations.filter(v => v.impact === "critical" || v.impact === "serious")
 
       expect(criticalViolations).toEqual([])
     })
@@ -289,7 +295,7 @@ test.describe("Accessibility Tests", () => {
       const headings = await page.locator("h1, h2, h3, h4, h5, h6").all()
 
       if (headings.length > 0) {
-        const firstHeading = await headings[0].evaluate((el) => el.tagName)
+        const firstHeading = await headings[0].evaluate(el => el.tagName)
         expect(firstHeading).toBe("H1")
       }
     })
@@ -443,9 +449,7 @@ test.describe("Accessibility Tests", () => {
         await page.keyboard.press("Escape")
 
         // Focus should return to button
-        const focusedElement = await page.evaluate(() =>
-          document.activeElement?.getAttribute("data-testid")
-        )
+        const focusedElement = await page.evaluate(() => document.activeElement?.getAttribute("data-testid"))
 
         expect(focusedElement).toBe("add-to-collection")
       }

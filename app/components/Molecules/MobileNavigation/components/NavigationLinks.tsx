@@ -27,14 +27,13 @@ const NavigationLinks: FC<NavigationLinksProps> = ({
   return (
     <nav className="flex-1 px-4 pb-4">
       <ul className="space-y-2">
-        {mainNavigation.map((item) => (
+        {mainNavigation.map(item => (
           <li key={item.id}>
             <NavLink
               viewTransition
               to={item.path}
               onClick={onNavClick}
-              className={({ isActive }) =>
-                styleMerge(
+              className={({ isActive }) => styleMerge(
                   "block text-noir-gold hover:text-noir-light font-semibold text-lg py-4 px-4 border border-transparent transition-colors duration-400 rounded-lg mobile-touch-target hover:bg-noir-black/30",
                   isActive &&
                     isClientReady &&
@@ -57,8 +56,7 @@ const NavigationLinks: FC<NavigationLinksProps> = ({
               viewTransition
               to={ADMIN_PATH}
               onClick={onNavClick}
-              className={({ isActive }) =>
-                styleMerge(
+              className={({ isActive }) => styleMerge(
                   "block text-noir-gold hover:text-noir-light font-semibold text-lg py-4 px-4 border border-transparent transition-colors duration-400 rounded-lg mobile-touch-target hover:bg-noir-black/30",
                   isActive &&
                     isClientReady &&

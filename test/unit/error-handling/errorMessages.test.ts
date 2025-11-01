@@ -366,11 +366,9 @@ describe("errorMessages", () => {
 
   describe("Error message completeness", () => {
     it("should have suggestions for all database errors", () => {
-      const dbErrorCodes = Object.keys(USER_ERROR_MESSAGES).filter((code) =>
-        code.startsWith("DB_")
-      )
+      const dbErrorCodes = Object.keys(USER_ERROR_MESSAGES).filter(code => code.startsWith("DB_"))
 
-      dbErrorCodes.forEach((code) => {
+      dbErrorCodes.forEach(code => {
         const message = USER_ERROR_MESSAGES[code]
         expect(message.suggestion).toBeDefined()
         expect(message.suggestion.length).toBeGreaterThan(0)
@@ -378,11 +376,9 @@ describe("errorMessages", () => {
     })
 
     it("should have suggestions for all network errors", () => {
-      const networkErrorCodes = Object.keys(USER_ERROR_MESSAGES).filter((code) =>
-        code.startsWith("NETWORK_")
-      )
+      const networkErrorCodes = Object.keys(USER_ERROR_MESSAGES).filter(code => code.startsWith("NETWORK_"))
 
-      networkErrorCodes.forEach((code) => {
+      networkErrorCodes.forEach(code => {
         const message = USER_ERROR_MESSAGES[code]
         expect(message.suggestion).toBeDefined()
         expect(message.suggestion.length).toBeGreaterThan(0)
@@ -403,7 +399,7 @@ describe("errorMessages", () => {
         "SERVER_RATE_LIMIT",
       ]
 
-      transientErrorCodes.forEach((code) => {
+      transientErrorCodes.forEach(code => {
         const message = USER_ERROR_MESSAGES[code]
         expect(message.action).toBe("retry")
         expect(message.actionText).toBeDefined()
@@ -413,7 +409,7 @@ describe("errorMessages", () => {
     it("should have navigation action for permanent errors", () => {
       const permanentErrorCodes = ["AUTH_ERROR", "AUTHZ_ERROR", "NOT_FOUND_ERROR"]
 
-      permanentErrorCodes.forEach((code) => {
+      permanentErrorCodes.forEach(code => {
         const message = USER_ERROR_MESSAGES[code]
         expect(message.action).toBeDefined()
         expect(message.action).not.toBe("retry")

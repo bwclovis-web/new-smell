@@ -40,9 +40,7 @@ export function createValidationErrorResponse(
 }
 
 // Generic API validation middleware
-export function createApiValidationMiddleware<T extends Record<string, unknown>>(
-  options: ApiValidationOptions
-) {
+export function createApiValidationMiddleware<T extends Record<string, unknown>>(options: ApiValidationOptions) {
   return async (request: Request): Promise<ValidatedRequest<T>> => {
     const validated: ValidatedRequest<T> = {}
     const errors: any[] = []
@@ -181,7 +179,7 @@ export const validateRatingSubmission = createApiValidationMiddleware({
       overall: z.number().min(1).max(5).optional(),
     })
     .refine(
-      (data) => {
+      data => {
         const ratings = [
           data.longevity,
           data.sillage,
@@ -189,7 +187,7 @@ export const validateRatingSubmission = createApiValidationMiddleware({
           data.priceValue,
           data.overall,
         ]
-        return ratings.some((rating) => rating !== undefined)
+        return ratings.some(rating => rating !== undefined)
       },
       {
         message: "At least one rating is required",
@@ -215,7 +213,9 @@ export const validateSearchQuery = createApiValidationMiddleware({
     q: z.string().max(100, "Search query too long").optional(),
     page: z.string().regex(/^\d+$/).transform(Number).optional(),
     limit: z.string().regex(/^\d+$/).transform(Number).optional(),
-    sortBy: z.enum(["name", "price", "rating", "createdAt"]).optional(),
+    sortBy: z.enum([
+"name", "price", "rating", "createdAt"
+]).optional(),
     sortOrder: z.enum(["asc", "desc"]).optional(),
   }),
 })
@@ -304,7 +304,7 @@ export function validateContentType(request: Request, expectedTypes: string[]) {
     )
   }
 
-  const isValidType = expectedTypes.some((type) => contentType.includes(type))
+  const isValidType = expectedTypes.some(type => contentType.includes(type))
 
   if (!isValidType) {
     throw new Response(

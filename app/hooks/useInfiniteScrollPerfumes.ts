@@ -25,9 +25,7 @@ async function fetchPerfumesByLetter(letter: string, skip: number, take: number)
   return response.json()
 }
 
-export function useInfiniteScrollPerfumes(
-  options: UseInfiniteScrollPerfumesOptions
-): UseInfiniteScrollPerfumesReturn {
+export function useInfiniteScrollPerfumes(options: UseInfiniteScrollPerfumesOptions): UseInfiniteScrollPerfumesReturn {
   const {
     letter,
     initialPerfumes,
@@ -55,8 +53,8 @@ export function useInfiniteScrollPerfumes(
     try {
       const data = await fetchPerfumesByLetter(letter, skip, take)
       if (data.success && Array.isArray(data.perfumes)) {
-        setPerfumes((prev) => [...prev, ...data.perfumes])
-        setSkip((prev) => prev + data.perfumes.length)
+        setPerfumes(prev => [...prev, ...data.perfumes])
+        setSkip(prev => prev + data.perfumes.length)
         setHasMore(data.meta.hasMore)
         setTotalCount(data.meta.totalCount)
       } else {

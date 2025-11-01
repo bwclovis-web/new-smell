@@ -34,7 +34,7 @@ const NoirButton = ({
   <button
     type="button"
     disabled={!isInteractive}
-    onClick={(event) => {
+    onClick={event => {
       event.preventDefault()
       event.stopPropagation()
       onClick()

@@ -157,7 +157,7 @@ export function validatePasswordValue(password: string | null) {
       .regex(/[^a-zA-Z0-9]/, {
         message: "Password must contain at least one special character",
       })
-      .refine((pwd) => !pwd.includes(" "), {
+      .refine(pwd => !pwd.includes(" "), {
         message: "Password cannot contain spaces",
       })
 
@@ -242,7 +242,7 @@ export const commonValidationSchemas = {
     .regex(/[^a-zA-Z0-9]/, {
       message: "Password must contain at least one special character",
     })
-    .refine((pwd) => !pwd.includes(" "), {
+    .refine(pwd => !pwd.includes(" "), {
       message: "Password cannot contain spaces",
     }),
 

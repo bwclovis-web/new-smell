@@ -37,7 +37,7 @@ export function getCSRFTokenFromRequest(request: Request): string | null {
   const formData = request.formData ? request.formData() : null
   if (formData) {
     return formData
-      .then((data) => (data.get("_csrf") as string) || null)
+      .then(data => (data.get("_csrf") as string) || null)
       .catch(() => null)
   }
 

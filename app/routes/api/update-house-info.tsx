@@ -21,7 +21,9 @@ export const action = async ({ request }: { request: Request }) => {
     await import("~/models/house.server")
 
   // Valid HouseType values
-  const validHouseTypes = ["niche", "designer", "indie", "celebrity", "drugstore"]
+  const validHouseTypes = [
+"niche", "designer", "indie", "celebrity", "drugstore"
+]
 
   // Helper function to validate and clean row data
   const validateRow = (row: Record<string, string>) => {
@@ -42,7 +44,7 @@ export const action = async ({ request }: { request: Request }) => {
     }
 
     // Clean other string fields
-    Object.keys(cleaned).forEach((key) => {
+    Object.keys(cleaned).forEach(key => {
       if (typeof cleaned[key] === "string") {
         cleaned[key] = cleaned[key].trim()
       }

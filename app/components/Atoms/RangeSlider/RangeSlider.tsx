@@ -64,16 +64,12 @@ const RangeSlider = ({
   })
 
   // Manual input state
-  const [inputValue, setInputValue] = useState(
-    formatValue ? formatValue(internalValue) : internalValue.toString()
-  )
+  const [inputValue, setInputValue] = useState(formatValue ? formatValue(internalValue) : internalValue.toString())
   const [isInputFocused, setIsInputFocused] = useState(false)
 
   const updateInputValue = useCallback(() => {
     if (!isInputFocused) {
-      setInputValue(
-        formatValue ? formatValue(internalValue) : internalValue.toString()
-      )
+      setInputValue(formatValue ? formatValue(internalValue) : internalValue.toString())
     }
   }, [formatValue, internalValue, isInputFocused])
 
@@ -102,14 +98,10 @@ const RangeSlider = ({
       if (steppedValue !== internalValue) {
         onChange?.(steppedValue)
       }
-      setInputValue(
-        formatValue ? formatValue(steppedValue) : steppedValue.toString()
-      )
+      setInputValue(formatValue ? formatValue(steppedValue) : steppedValue.toString())
     } else {
       // Reset to current value if invalid
-      setInputValue(
-        formatValue ? formatValue(internalValue) : internalValue.toString()
-      )
+      setInputValue(formatValue ? formatValue(internalValue) : internalValue.toString())
     }
   }
 
@@ -156,9 +148,7 @@ const RangeSlider = ({
         >
           <div
             ref={fillRef}
-            className={styleMerge(
-              rangeSliderFillVariants({ className, theme: "light" })
-            )}
+            className={styleMerge(rangeSliderFillVariants({ className, theme: "light" }))}
             style={{ width: `${percentage}%` }}
           />
         </div>

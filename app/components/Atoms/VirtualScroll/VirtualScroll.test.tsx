@@ -17,16 +17,14 @@ const MockItem = ({ item, index }: { item: any; index: number }) => (
 
 describe("VirtualScroll", () => {
   it("renders visible items only", () => {
-    render(
-      <VirtualScroll
+    render(<VirtualScroll
         items={mockItems}
         itemHeight={50}
         containerHeight={200}
         overscan={2}
       >
         {(item, index) => <MockItem item={item} index={index} />}
-      </VirtualScroll>
-    )
+      </VirtualScroll>)
 
     // Should render only visible items (200px / 50px = 4 items + overscan)
     const visibleItems = screen.queryAllByTestId(/^item-\d+$/)
@@ -35,16 +33,14 @@ describe("VirtualScroll", () => {
 
   it("handles scroll events", () => {
     const onScroll = vi.fn()
-    const { container } = render(
-      <VirtualScroll
+    const { container } = render(<VirtualScroll
         items={mockItems}
         itemHeight={50}
         containerHeight={200}
         onScroll={onScroll}
       >
         {(item, index) => <MockItem item={item} index={index} />}
-      </VirtualScroll>
-    )
+      </VirtualScroll>)
 
     const scrollContainer = container.firstChild as HTMLElement
     fireEvent.scroll(scrollContainer, { target: { scrollTop: 100 } })
@@ -53,8 +49,7 @@ describe("VirtualScroll", () => {
   })
 
   it("scrolls to specific index", async () => {
-    const { container } = render(
-      <VirtualScroll
+    const { container } = render(<VirtualScroll
         items={mockItems}
         itemHeight={50}
         containerHeight={200}
@@ -62,11 +57,10 @@ describe("VirtualScroll", () => {
         scrollToAlignment="start"
       >
         {(item, index) => <MockItem item={item} index={index} />}
-      </VirtualScroll>
-    )
+      </VirtualScroll>)
 
     // Wait for the scroll effect to complete and state to update
-    await new Promise((resolve) => setTimeout(resolve, 100))
+    await new Promise(resolve => setTimeout(resolve, 100))
 
     // After scrolling to index 10, items around index 10 should be visible
     // With itemHeight=50 and containerHeight=200, we can see 4 items at once
@@ -76,7 +70,7 @@ describe("VirtualScroll", () => {
     expect(visibleItems.length).toBeGreaterThan(0)
 
     // Verify that item 10 or nearby items are rendered
-    const hasNearbyItems = Array.from(visibleItems).some((el) => {
+    const hasNearbyItems = Array.from(visibleItems).some(el => {
       const match = el.getAttribute("data-testid")?.match(/item-(\d+)/)
       if (match) {
         const index = parseInt(match[1])
@@ -88,26 +82,22 @@ describe("VirtualScroll", () => {
   })
 
   it("applies custom className", () => {
-    const { container } = render(
-      <VirtualScroll
+    const { container } = render(<VirtualScroll
         items={mockItems}
         itemHeight={50}
         containerHeight={200}
         className="custom-class"
       >
         {(item, index) => <MockItem item={item} index={index} />}
-      </VirtualScroll>
-    )
+      </VirtualScroll>)
 
     expect(container.firstChild).toHaveClass("custom-class")
   })
 
   it("handles empty items array", () => {
-    const { container } = render(
-      <VirtualScroll items={[]} itemHeight={50} containerHeight={200}>
+    const { container } = render(<VirtualScroll items={[]} itemHeight={50} containerHeight={200}>
         {(item, index) => <MockItem item={item} index={index} />}
-      </VirtualScroll>
-    )
+      </VirtualScroll>)
 
     // Check that no items are rendered
     const items = container.querySelectorAll('[data-testid^="item-"]')
@@ -115,11 +105,9 @@ describe("VirtualScroll", () => {
   })
 
   it("calculates correct total height", () => {
-    const { container } = render(
-      <VirtualScroll items={mockItems} itemHeight={50} containerHeight={200}>
+    const { container } = render(<VirtualScroll items={mockItems} itemHeight={50} containerHeight={200}>
         {(item, index) => <MockItem item={item} index={index} />}
-      </VirtualScroll>
-    )
+      </VirtualScroll>)
 
     // The inner div should have the total height (100 items * 50px = 5000px)
     const innerDiv = container.querySelector("div > div") as HTMLElement

@@ -5,19 +5,20 @@
  * @group forms
  */
 
-import { describe, it, expect } from "vitest"
+import { describe, expect, it } from "vitest"
+
 import {
-  validateEmail,
-  validatePassword,
-  validateMatch,
-  validateRequired,
-  validateMinLength,
-  validateMaxLength,
   combineValidationErrors,
-  createValidator,
   commonValidators,
-  sanitizeFormInput,
+  createValidator,
   sanitizeFormData,
+  sanitizeFormInput,
+  validateEmail,
+  validateMatch,
+  validateMaxLength,
+  validateMinLength,
+  validatePassword,
+  validateRequired,
   VALIDATION_MESSAGES,
 } from "~/utils/forms/formValidation"
 
@@ -174,8 +175,8 @@ describe("combineValidationErrors", () => {
 describe("createValidator", () => {
   it("should create a validator function", () => {
     const validator = createValidator<{ email: string; password: string }>({
-      email: (value) => (!value ? "Email is required" : null),
-      password: (value) => (value.length < 8 ? "Too short" : null),
+      email: value => (!value ? "Email is required" : null),
+      password: value => (value.length < 8 ? "Too short" : null),
     })
 
     const errors = validator({ email: "", password: "short" })
@@ -187,8 +188,8 @@ describe("createValidator", () => {
 
   it("should return null when all validations pass", () => {
     const validator = createValidator<{ email: string; password: string }>({
-      email: (value) => (!value ? "Email is required" : null),
-      password: (value) => (value.length < 8 ? "Too short" : null),
+      email: value => (!value ? "Email is required" : null),
+      password: value => (value.length < 8 ? "Too short" : null),
     })
 
     const errors = validator({
@@ -203,8 +204,7 @@ describe("createValidator", () => {
       password: string
       confirmPassword: string
     }>({
-      confirmPassword: (value, allValues) =>
-        value !== allValues.password ? "Passwords must match" : null,
+      confirmPassword: (value, allValues) => value !== allValues.password ? "Passwords must match" : null,
     })
 
     const errors = validator({ password: "pass1", confirmPassword: "pass2" })
@@ -235,9 +235,7 @@ describe("commonValidators", () => {
   it("should validate maximum length", () => {
     const validator = commonValidators.maxLength("Username", 20)
     expect(validator("short")).toBe(null)
-    expect(validator("verylongusernamethatexceedsmaximum")).toContain(
-      "at most 20 characters"
-    )
+    expect(validator("verylongusernamethatexceedsmaximum")).toContain("at most 20 characters")
   })
 
   it("should validate password strength", () => {
@@ -260,9 +258,7 @@ describe("sanitizeFormInput", () => {
   })
 
   it("should remove angle brackets", () => {
-    expect(sanitizeFormInput('<script>alert("xss")</script>')).toBe(
-      'scriptalert("xss")/script'
-    )
+    expect(sanitizeFormInput('<script>alert("xss")</script>')).toBe('scriptalert("xss")/script')
   })
 
   it("should remove javascript: protocol", () => {
@@ -316,14 +312,8 @@ describe("sanitizeFormData", () => {
 describe("VALIDATION_MESSAGES", () => {
   it("should have correct message templates", () => {
     expect(VALIDATION_MESSAGES.required("Email")).toBe("Email is required")
-    expect(VALIDATION_MESSAGES.minLength("Password", 8)).toBe(
-      "Password must be at least 8 characters"
-    )
-    expect(VALIDATION_MESSAGES.maxLength("Username", 20)).toBe(
-      "Username must be at most 20 characters"
-    )
-    expect(VALIDATION_MESSAGES.match("Password", "Confirm Password")).toBe(
-      "Password and Confirm Password must match"
-    )
+    expect(VALIDATION_MESSAGES.minLength("Password", 8)).toBe("Password must be at least 8 characters")
+    expect(VALIDATION_MESSAGES.maxLength("Username", 20)).toBe("Username must be at most 20 characters")
+    expect(VALIDATION_MESSAGES.match("Password", "Confirm Password")).toBe("Password and Confirm Password must match")
   })
 })

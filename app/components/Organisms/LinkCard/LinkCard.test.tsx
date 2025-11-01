@@ -5,8 +5,7 @@ import { afterEach, describe, expect, it } from "vitest"
 import LinkCard from "./LinkCard"
 
 // Helper to render with router
-const renderWithRouter = (component: React.ReactElement) =>
-  render(<MemoryRouter>{component}</MemoryRouter>)
+const renderWithRouter = (component: React.ReactElement) => render(<MemoryRouter>{component}</MemoryRouter>)
 
 describe("LinkCard", () => {
   afterEach(() => {
@@ -38,9 +37,7 @@ describe("LinkCard", () => {
 
     it("renders perfume name", () => {
       renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
-      expect(
-        screen.getByRole("heading", { name: "Test Perfume" })
-      ).toBeInTheDocument()
+      expect(screen.getByRole("heading", { name: "Test Perfume" })).toBeInTheDocument()
     })
 
     it("renders perfume house name when provided", () => {
@@ -86,30 +83,24 @@ describe("LinkCard", () => {
     })
 
     it("passes selectedLetter in state when provided", () => {
-      renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume" selectedLetter="A" />
-      )
+      renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" selectedLetter="A" />)
       const link = screen.getByRole("link")
       expect(link).toBeInTheDocument()
     })
 
     it("passes sourcePage in state when provided", () => {
-      renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume" sourcePage="vault" />
-      )
+      renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" sourcePage="vault" />)
       const link = screen.getByRole("link")
       expect(link).toBeInTheDocument()
     })
 
     it("passes both selectedLetter and sourcePage when both provided", () => {
-      renderWithRouter(
-        <LinkCard
+      renderWithRouter(<LinkCard
           data={mockPerfumeData}
           type="perfume"
           selectedLetter="B"
           sourcePage="favorites"
-        />
-      )
+        />)
       const link = screen.getByRole("link")
       expect(link).toBeInTheDocument()
     })
@@ -184,9 +175,11 @@ describe("LinkCard", () => {
     })
 
     it("renders different perfume types correctly", () => {
-      const types = ["eau de parfum", "eau de toilette", "parfum", "cologne"]
+      const types = [
+"eau de parfum", "eau de toilette", "parfum", "cologne"
+]
 
-      types.forEach((type) => {
+      types.forEach(type => {
         const data = { ...mockPerfumeData, type }
         const { unmount } = renderWithRouter(<LinkCard data={data} type="perfume" />)
         expect(screen.getByText(type)).toBeInTheDocument()
@@ -197,26 +190,20 @@ describe("LinkCard", () => {
 
   describe("Children", () => {
     it("renders children when provided", () => {
-      renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume">
+      renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume">
           <button>Add to Wishlist</button>
-        </LinkCard>
-      )
+        </LinkCard>)
       expect(screen.getByText("Add to Wishlist")).toBeInTheDocument()
     })
 
     it("renders without children", () => {
-      expect(() =>
-        renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
-      ).not.toThrow()
+      expect(() => renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)).not.toThrow()
     })
 
     it("positions children at bottom with overlay", () => {
-      const { container } = renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume">
+      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume">
           <div data-testid="child-content">Content</div>
-        </LinkCard>
-      )
+        </LinkCard>)
 
       const childContainer = screen.getByTestId("child-content").parentElement
       expect(childContainer).toHaveClass("absolute")
@@ -226,22 +213,18 @@ describe("LinkCard", () => {
     })
 
     it("applies dark overlay background to children container", () => {
-      const { container } = renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume">
+      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume">
           <button>Test</button>
-        </LinkCard>
-      )
+        </LinkCard>)
 
       const childContainer = screen.getByText("Test").parentElement
       expect(childContainer).toHaveClass("bg-noir-dark/80")
     })
 
     it("applies border to children container", () => {
-      const { container } = renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume">
+      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume">
           <button>Test</button>
-        </LinkCard>
-      )
+        </LinkCard>)
 
       const childContainer = screen.getByText("Test").parentElement
       expect(childContainer).toHaveClass("border-t")
@@ -251,26 +234,20 @@ describe("LinkCard", () => {
 
   describe("Styling", () => {
     it("applies noir border class", () => {
-      const { container } = renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume" />
-      )
+      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
       const card = container.querySelector(".noir-border")
       expect(card).toBeInTheDocument()
     })
 
     it("applies transition classes", () => {
-      const { container } = renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume" />
-      )
+      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
       const card = container.querySelector(".transition-all")
       expect(card).toHaveClass("duration-300")
       expect(card).toHaveClass("ease-in-out")
     })
 
     it("applies dark background with backdrop blur", () => {
-      const { container } = renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume" />
-      )
+      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
       const card = container.querySelector(".bg-noir-dark\\/70")
       expect(card).toBeInTheDocument()
 
@@ -279,17 +256,13 @@ describe("LinkCard", () => {
     })
 
     it("applies group class for hover effects", () => {
-      const { container } = renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume" />
-      )
+      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
       const card = container.querySelector(".group")
       expect(card).toBeInTheDocument()
     })
 
     it("applies overflow-hidden", () => {
-      const { container } = renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume" />
-      )
+      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
       const card = container.querySelector(".overflow-hidden")
       expect(card).toBeInTheDocument()
     })
@@ -317,9 +290,7 @@ describe("LinkCard", () => {
     })
 
     it("centers text content", () => {
-      const { container } = renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume" />
-      )
+      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
       const textContainer = container.querySelector(".text-center")
       expect(textContainer).toBeInTheDocument()
     })
@@ -335,9 +306,7 @@ describe("LinkCard", () => {
     })
 
     it("renders house name as paragraph", () => {
-      const { container } = renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume" />
-      )
+      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
       const houseName = screen.getByText("Test House")
       expect(houseName.tagName).toBe("P")
     })
@@ -345,9 +314,7 @@ describe("LinkCard", () => {
 
   describe("Text Wrapping", () => {
     it("applies text-wrap to perfume name", () => {
-      const { container } = renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume" />
-      )
+      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
       const heading = screen.getByRole("heading")
       expect(heading).toHaveClass("text-wrap")
       expect(heading).toHaveClass("break-words")
@@ -391,9 +358,7 @@ describe("LinkCard", () => {
   describe("Edge Cases", () => {
     it("handles missing image gracefully", () => {
       const dataWithoutImage = { ...mockPerfumeData, image: "" }
-      expect(() =>
-        renderWithRouter(<LinkCard data={dataWithoutImage} type="perfume" />)
-      ).not.toThrow()
+      expect(() => renderWithRouter(<LinkCard data={dataWithoutImage} type="perfume" />)).not.toThrow()
     })
 
     it("handles special characters in name", () => {
@@ -415,22 +380,16 @@ describe("LinkCard", () => {
     })
 
     it("handles null children", () => {
-      expect(() =>
-        renderWithRouter(
-          <LinkCard data={mockPerfumeData} type="perfume">
+      expect(() => renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume">
             {null}
-          </LinkCard>
-        )
-      ).not.toThrow()
+          </LinkCard>)).not.toThrow()
     })
 
     it("handles multiple children", () => {
-      renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume">
+      renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume">
           <button>Add to Wishlist</button>
           <button>Quick View</button>
-        </LinkCard>
-      )
+        </LinkCard>)
       expect(screen.getByText("Add to Wishlist")).toBeInTheDocument()
       expect(screen.getByText("Quick View")).toBeInTheDocument()
     })
@@ -472,9 +431,7 @@ describe("LinkCard", () => {
 
   describe("Integration", () => {
     it("works with both perfume and house types", () => {
-      const { unmount } = renderWithRouter(
-        <LinkCard data={mockPerfumeData} type="perfume" />
-      )
+      const { unmount } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
       expect(screen.getByText("Test Perfume")).toBeInTheDocument()
       unmount()
 

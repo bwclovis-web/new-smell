@@ -91,7 +91,7 @@ export class TestHelpers {
    * Wait for API response
    */
   async waitForAPIResponse(urlPattern: string | RegExp) {
-    return await this.page.waitForResponse((response) => {
+    return await this.page.waitForResponse(response => {
       const url = response.url()
       if (typeof urlPattern === "string") {
         return url.includes(urlPattern)
@@ -106,7 +106,7 @@ export class TestHelpers {
   async checkForConsoleErrors() {
     const errors: string[] = []
 
-    this.page.on("console", (msg) => {
+    this.page.on("console", msg => {
       if (msg.type() === "error") {
         errors.push(msg.text())
       }

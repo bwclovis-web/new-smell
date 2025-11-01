@@ -49,11 +49,7 @@ const ReviewSection = ({
 
   // Load reviews
   const loadReviews = async (pageNum: number = 1, append: boolean = false) => {
-    const [error, response] = await safeAsync(() =>
-      fetch(
-        `/api/reviews?perfumeId=${perfumeId}&page=${pageNum}&limit=5&isApproved=true`
-      )
-    )
+    const [error, response] = await safeAsync(() => fetch(`/api/reviews?perfumeId=${perfumeId}&page=${pageNum}&limit=5&isApproved=true`))
 
     if (error) {
       console.error("Error loading reviews:", error)
@@ -71,7 +67,7 @@ const ReviewSection = ({
 
     if (data.reviews) {
       if (append) {
-        setReviews((prev) => [...prev, ...data.reviews])
+        setReviews(prev => [...prev, ...data.reviews])
       } else {
         setReviews(data.reviews)
       }
@@ -105,9 +101,7 @@ const ReviewSection = ({
     formData.append("perfumeId", perfumeId)
     formData.append("review", sanitizedReview)
 
-    const [error, response] = await safeAsync(() =>
-      submitForm("/api/reviews", formData)
-    )
+    const [error, response] = await safeAsync(() => submitForm("/api/reviews", formData))
 
     if (error) {
       console.error(t("singlePerfume.review.failedToCreateReview"), error)
@@ -149,9 +143,7 @@ const ReviewSection = ({
     formData.append("_action", "delete")
     formData.append("reviewId", reviewId)
 
-    const [error, response] = await safeAsync(() =>
-      submitForm("/api/reviews", formData)
-    )
+    const [error, response] = await safeAsync(() => submitForm("/api/reviews", formData))
 
     if (error) {
       console.error(t("singlePerfume.review.failedToDeleteReview"), error)
@@ -169,7 +161,7 @@ const ReviewSection = ({
 
     if (result.success) {
       // Remove the review from the list
-      setReviews((prev) => prev.filter((review) => review.id !== reviewId))
+      setReviews(prev => prev.filter(review => review.id !== reviewId))
     } else {
       alert(result.error || t("singlePerfume.review.failedToDeleteReview"))
     }
@@ -178,16 +170,14 @@ const ReviewSection = ({
   const handleModerateReview = async (reviewId: string, isApproved: boolean) => {
     // Optimistically remove the review from the list for real-time feel
     const originalReviews = [...reviews]
-    setReviews((prev) => prev.filter((review) => review.id !== reviewId))
+    setReviews(prev => prev.filter(review => review.id !== reviewId))
 
     const formData = new FormData()
     formData.append("_action", "moderate")
     formData.append("reviewId", reviewId)
     formData.append("isApproved", isApproved.toString())
 
-    const [error, response] = await safeAsync(() =>
-      submitForm("/api/reviews", formData)
-    )
+    const [error, response] = await safeAsync(() => submitForm("/api/reviews", formData))
 
     if (error) {
       console.error(t("singlePerfume.review.failedToModerateReview"), error)
@@ -291,7 +281,7 @@ const ReviewSection = ({
       {/* Reviews List */}
       {reviews.length > 0 ? (
         <div className="space-y-4">
-          {reviews.map((review) => (
+          {reviews.map(review => (
             <ReviewCard
               key={review.id}
               review={review}

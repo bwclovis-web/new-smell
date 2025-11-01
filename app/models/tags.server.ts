@@ -30,7 +30,7 @@ export const getTagsByName = async (name: string) => {
       AND: [
         { name: { contains: searchTerm, mode: "insensitive" } },
         // Exclude items already found in exact matches
-        { id: { notIn: exactMatches.map((t) => t.id) } },
+        { id: { notIn: exactMatches.map(t => t.id) } },
       ],
     },
     orderBy: { name: "asc" },
@@ -42,7 +42,7 @@ export const getTagsByName = async (name: string) => {
 
   // Sort by relevance score
   const rankedResults = allResults
-    .map((tag) => ({
+    .map(tag => ({
       ...tag,
       relevanceScore: calculateTagRelevanceScore(tag.name, searchTerm),
     }))

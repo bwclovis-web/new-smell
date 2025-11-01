@@ -40,9 +40,7 @@ export async function getUserAlerts(userId: string, limit: number = 10) {
 /**
  * Get user's alert preferences, creating default preferences if none exist
  */
-export async function getUserAlertPreferences(
-  userId: string
-): Promise<UserAlertPreferences> {
+export async function getUserAlertPreferences(userId: string): Promise<UserAlertPreferences> {
   let preferences = await prisma.userAlertPreferences.findUnique({
     where: { userId },
   })
@@ -185,7 +183,7 @@ export async function createUserAlert(
     await prisma.userAlert.updateMany({
       where: {
         id: {
-          in: oldestAlerts.map((alert) => alert.id),
+          in: oldestAlerts.map(alert => alert.id),
         },
       },
       data: {
@@ -302,9 +300,7 @@ export async function checkWishlistAvailabilityAlerts(perfumeId: string) {
     })
 
     if (existingAlert) {
-      console.log(
-        `Skipping wishlist alert for user ${wishlistItem.userId} and perfume ${perfumeId} - active alert exists from ${existingAlert.createdAt}`
-      )
+      console.log(`Skipping wishlist alert for user ${wishlistItem.userId} and perfume ${perfumeId} - active alert exists from ${existingAlert.createdAt}`)
       continue
     }
 
@@ -312,9 +308,7 @@ export async function checkWishlistAvailabilityAlerts(perfumeId: string) {
     const title = `${wishlistItem.perfume.name} is now available!`
     const message = `${wishlistItem.perfume.name} by ${wishlistItem.perfume.perfumeHouse?.name} is now available on the trading post from ${availableTraders.length} trader(s).`
 
-    console.log(
-      `Creating wishlist availability alert for user ${wishlistItem.userId} and perfume ${perfumeId}`
-    )
+    console.log(`Creating wishlist availability alert for user ${wishlistItem.userId} and perfume ${perfumeId}`)
     alertsToCreate.push({
       userId: wishlistItem.userId,
       perfumeId,
@@ -322,7 +316,7 @@ export async function checkWishlistAvailabilityAlerts(perfumeId: string) {
       title,
       message,
       metadata: {
-        availableTraders: availableTraders.map((trader) => ({
+        availableTraders: availableTraders.map(trader => ({
           userId: trader.user.id,
           displayName:
             trader.user.username ||
@@ -444,18 +438,14 @@ export async function checkDecantInterestAlerts(
         },
       },
     })
-    console.log(
-      `Found ${allExistingAlerts.length} existing decant interest alerts for user ${
+    console.log(`Found ${allExistingAlerts.length} existing decant interest alerts for user ${
         decanter.userId
       } and perfume ${perfumeId} in last 24h (${
-        allExistingAlerts.filter((a) => !a.isDismissed).length
-      } active)`
-    )
+        allExistingAlerts.filter(a => !a.isDismissed).length
+      } active)`)
 
     if (existingAlert) {
-      console.log(
-        `Skipping decant interest alert for user ${decanter.userId}, perfume ${perfumeId}, interested user ${interestedUserId} - active alert exists from ${existingAlert.createdAt}`
-      )
+      console.log(`Skipping decant interest alert for user ${decanter.userId}, perfume ${perfumeId}, interested user ${interestedUserId} - active alert exists from ${existingAlert.createdAt}`)
       continue
     }
 
@@ -480,9 +470,7 @@ export async function checkDecantInterestAlerts(
     const title = `Someone wants your ${decanter.perfume.name}!`
     const message = `${interestedUserName} added ${decanter.perfume.name} by ${decanter.perfume.perfumeHouse?.name} to their wishlist. They might be interested in trading with you!`
 
-    console.log(
-      `Creating decant interest alert for user ${decanter.userId}, perfume ${perfumeId}, interested user ${interestedUserId}`
-    )
+    console.log(`Creating decant interest alert for user ${decanter.userId}, perfume ${perfumeId}, interested user ${interestedUserId}`)
     alertsToCreate.push({
       userId: decanter.userId,
       perfumeId,

@@ -106,7 +106,7 @@ async function listUsersWithCounts() {
     })
 
     console.log("Users with data counts:")
-    users.forEach((user) => {
+    users.forEach(user => {
       const totalData =
         user._count.UserPerfume +
         user._count.UserPerfumeRating +

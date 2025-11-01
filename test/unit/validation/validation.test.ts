@@ -101,12 +101,8 @@ describe("Validation Utilities", () => {
 
     it("should reject invalid IDs", () => {
       expect(() => validateId("")).toThrow("ID is required")
-      expect(() => validateId("invalid id")).toThrow(
-        "ID contains invalid characters"
-      )
-      expect(() => validateId("invalid@id")).toThrow(
-        "ID contains invalid characters"
-      )
+      expect(() => validateId("invalid id")).toThrow("ID contains invalid characters")
+      expect(() => validateId("invalid@id")).toThrow("ID contains invalid characters")
     })
   })
 
@@ -130,24 +126,12 @@ describe("Validation Utilities", () => {
     })
 
     it("should reject weak passwords", () => {
-      expect(() => validatePassword("weak")).toThrow(
-        "Password must be at least 8 characters long"
-      )
-      expect(() => validatePassword("weakpassword")).toThrow(
-        "Password must contain at least one uppercase letter"
-      )
-      expect(() => validatePassword("WEAKPASSWORD")).toThrow(
-        "Password must contain at least one lowercase letter"
-      )
-      expect(() => validatePassword("WeakPassword")).toThrow(
-        "Password must contain at least one number"
-      )
-      expect(() => validatePassword("WeakPass123")).toThrow(
-        "Password must contain at least one special character"
-      )
-      expect(() => validatePassword("Weak Pass123!")).toThrow(
-        "Password cannot contain spaces"
-      )
+      expect(() => validatePassword("weak")).toThrow("Password must be at least 8 characters long")
+      expect(() => validatePassword("weakpassword")).toThrow("Password must contain at least one uppercase letter")
+      expect(() => validatePassword("WEAKPASSWORD")).toThrow("Password must contain at least one lowercase letter")
+      expect(() => validatePassword("WeakPassword")).toThrow("Password must contain at least one number")
+      expect(() => validatePassword("WeakPass123")).toThrow("Password must contain at least one special character")
+      expect(() => validatePassword("Weak Pass123!")).toThrow("Password cannot contain spaces")
     })
   })
 
@@ -182,12 +166,8 @@ describe("Validation Utilities", () => {
     })
 
     it("should reject invalid years", () => {
-      expect(() => validateYear("1899")).toThrow(
-        "Year must be between 1900 and 2099"
-      )
-      expect(() => validateYear("2100")).toThrow(
-        "Year must be between 1900 and 2099"
-      )
+      expect(() => validateYear("1899")).toThrow("Year must be between 1900 and 2099")
+      expect(() => validateYear("2100")).toThrow("Year must be between 1900 and 2099")
       expect(() => validateYear("abc")).toThrow("Year must be between 1900 and 2099")
     })
   })
@@ -200,15 +180,9 @@ describe("Validation Utilities", () => {
     })
 
     it("should reject invalid ratings", () => {
-      expect(() => validateRating(0)).toThrow(
-        "Rating must be an integer between 1 and 5"
-      )
-      expect(() => validateRating(6)).toThrow(
-        "Rating must be an integer between 1 and 5"
-      )
-      expect(() => validateRating(2.5)).toThrow(
-        "Rating must be an integer between 1 and 5"
-      )
+      expect(() => validateRating(0)).toThrow("Rating must be an integer between 1 and 5")
+      expect(() => validateRating(6)).toThrow("Rating must be an integer between 1 and 5")
+      expect(() => validateRating(2.5)).toThrow("Rating must be an integer between 1 and 5")
     })
   })
 
@@ -220,12 +194,8 @@ describe("Validation Utilities", () => {
     })
 
     it("should reject invalid amounts", () => {
-      expect(() => validateAmount("-100")).toThrow(
-        "Amount must be a positive number"
-      )
-      expect(() => validateAmount("100.999")).toThrow(
-        "Amount must have at most 2 decimal places"
-      )
+      expect(() => validateAmount("-100")).toThrow("Amount must be a positive number")
+      expect(() => validateAmount("100.999")).toThrow("Amount must have at most 2 decimal places")
       expect(() => validateAmount("abc")).toThrow("Amount must be a positive number")
     })
   })
@@ -237,24 +207,18 @@ describe("Validation Utilities", () => {
     })
 
     it("should reject invalid enum values", () => {
-      expect(() => validateEnum("invalid", ["add", "remove"] as const)).toThrow(
-        "Value must be one of: add, remove"
-      )
+      expect(() => validateEnum("invalid", ["add", "remove"] as const)).toThrow("Value must be one of: add, remove")
     })
   })
 
   describe("validateArray", () => {
     it("should validate valid arrays", () => {
-      const result = validateArray(["1", "2", "3"], (val) =>
-        parseInt(val as string, 10)
-      )
+      const result = validateArray(["1", "2", "3"], val => parseInt(val as string, 10))
       expect(result).toEqual([1, 2, 3])
     })
 
     it("should reject invalid arrays", () => {
-      expect(() => validateArray("not-array", (val) => val)).toThrow(
-        "Array must be an array"
-      )
+      expect(() => validateArray("not-array", val => val)).toThrow("Array must be an array")
     })
   })
 
@@ -263,17 +227,15 @@ describe("Validation Utilities", () => {
       const result = validateObject(
         { name: "John", age: "25" },
         {
-          name: (val) => val as string,
-          age: (val) => parseInt(val as string, 10),
+          name: val => val as string,
+          age: val => parseInt(val as string, 10),
         }
       )
       expect(result).toEqual({ name: "John", age: 25 })
     })
 
     it("should reject invalid objects", () => {
-      expect(() => validateObject("not-object", {})).toThrow(
-        "Object must be an object"
-      )
+      expect(() => validateObject("not-object", {})).toThrow("Object must be an object")
     })
   })
 })

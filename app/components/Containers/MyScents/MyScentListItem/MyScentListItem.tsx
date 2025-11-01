@@ -39,11 +39,7 @@ const MyScentsListItem = ({
   const isSubmitting = navigation.state === "submitting"
 
   const updateUserPerfumeState = (amount: string) => {
-    setUserPerfumes((prev) =>
-      prev.map((perfume) =>
-        perfume.id === userPerfume.id ? { ...perfume, available: amount } : perfume
-      )
-    )
+    setUserPerfumes(prev => prev.map(perfume => perfume.id === userPerfume.id ? { ...perfume, available: amount } : perfume))
   }
 
   const createDecantFormData = (data: DeStashData, perfumeId: string) => {
@@ -62,9 +58,9 @@ const MyScentsListItem = ({
   }
 
   const handleDecantConfirm = (data: DeStashData) => {
-    const foundUserPerfume = userPerfumes.find((item) => item.id === userPerfume.id)
+    const foundUserPerfume = userPerfumes.find(item => item.id === userPerfume.id)
     if (!foundUserPerfume) {
-      // eslint-disable-next-line no-console
+       
       console.error("User perfume not found for de-stashing")
       return
     }
@@ -75,9 +71,7 @@ const MyScentsListItem = ({
   }
 
   const handleRemovePerfume = (perfumeId: string) => {
-    setUserPerfumes((prev) =>
-      prev.filter((perfume) => perfume.perfume.id !== perfumeId)
-    )
+    setUserPerfumes(prev => prev.filter(perfume => perfume.perfume.id !== perfumeId))
 
     const formData = new FormData()
     formData.append("perfumeId", perfumeId)

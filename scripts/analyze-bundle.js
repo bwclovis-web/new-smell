@@ -62,7 +62,9 @@ function analyzeBundle() {
         } else if (ext === ".css") {
           cssFiles.push(asset)
         } else if (
-          [".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif"].includes(ext)
+          [
+".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif"
+].includes(ext)
         ) {
           imageFiles.push(asset)
         }
@@ -90,9 +92,7 @@ function analyzeBundle() {
       files: assets.length,
       size: assets.reduce((sum, asset) => sum + asset.size, 0),
       sizeKB:
-        Math.round(
-          (assets.reduce((sum, asset) => sum + asset.size, 0) / 1024) * 100
-        ) / 100,
+        Math.round((assets.reduce((sum, asset) => sum + asset.size, 0) / 1024) * 100) / 100,
     },
   })
 }
@@ -125,7 +125,7 @@ function analyzeJavaScriptBundles(jsFiles) {
   }
 
   // Group files by type
-  jsFiles.forEach((file) => {
+  jsFiles.forEach(file => {
     const name = file.name
     let type = "other"
 
@@ -148,7 +148,7 @@ function analyzeJavaScriptBundles(jsFiles) {
   })
 
   // Calculate sizes by type
-  Object.keys(analysis.chunks).forEach((type) => {
+  Object.keys(analysis.chunks).forEach(type => {
     const files = analysis.chunks[type]
     const totalSize = files.reduce((sum, file) => sum + file.size, 0)
     analysis.chunks[type] = {
@@ -174,7 +174,7 @@ function analyzeJavaScriptBundles(jsFiles) {
     })
   }
 
-  const largeFiles = jsFiles.filter((file) => file.sizeKB > LIMITS.component)
+  const largeFiles = jsFiles.filter(file => file.sizeKB > LIMITS.component)
   if (largeFiles.length > 0) {
     analysis.recommendations.push({
       type: "info",
@@ -202,15 +202,13 @@ function analyzeImages(imageFiles) {
     total: imageFiles.length,
     totalSize: imageFiles.reduce((sum, file) => sum + file.size, 0),
     totalSizeKB:
-      Math.round(
-        (imageFiles.reduce((sum, file) => sum + file.size, 0) / 1024) * 100
-      ) / 100,
+      Math.round((imageFiles.reduce((sum, file) => sum + file.size, 0) / 1024) * 100) / 100,
     byFormat: {},
     largeImages: [],
   }
 
   // Group by format
-  imageFiles.forEach((file) => {
+  imageFiles.forEach(file => {
     const ext = path.extname(file.name).toLowerCase()
     if (!analysis.byFormat[ext]) {
       analysis.byFormat[ext] = { count: 0, size: 0 }
@@ -220,7 +218,7 @@ function analyzeImages(imageFiles) {
   })
 
   // Find large images
-  analysis.largeImages = imageFiles.filter((file) => file.sizeKB > 100)
+  analysis.largeImages = imageFiles.filter(file => file.sizeKB > 100)
 
   return analysis
 }
@@ -230,46 +228,34 @@ function generateReport(analysis) {
   console.log("=".repeat(50))
 
   // Total summary
-  console.log(
-    `\n📦 Total Assets: ${analysis.total.files} files (${analysis.total.sizeKB}KB)`
-  )
+  console.log(`\n📦 Total Assets: ${analysis.total.files} files (${analysis.total.sizeKB}KB)`)
 
   // JavaScript analysis
   console.log("\n🔧 JavaScript Bundles:")
-  console.log(
-    `   Total: ${analysis.js.total} files (${
+  console.log(`   Total: ${analysis.js.total} files (${
       Math.round((analysis.js.totalSize / 1024) * 100) / 100
-    }KB)`
-  )
+    }KB)`)
 
-  Object.keys(analysis.js.chunks).forEach((type) => {
+  Object.keys(analysis.js.chunks).forEach(type => {
     const chunk = analysis.js.chunks[type]
-    console.log(
-      `   ${type.toUpperCase()}: ${chunk.count} files (${chunk.totalSizeKB}KB)`
-    )
+    console.log(`   ${type.toUpperCase()}: ${chunk.count} files (${chunk.totalSizeKB}KB)`)
   })
 
   // CSS analysis
   console.log("\n🎨 CSS Bundles:")
-  console.log(
-    `   Total: ${analysis.css.total} files (${analysis.css.totalSizeKB}KB)`
-  )
+  console.log(`   Total: ${analysis.css.total} files (${analysis.css.totalSizeKB}KB)`)
 
   // Images analysis
   console.log("\n🖼️  Images:")
-  console.log(
-    `   Total: ${analysis.images.total} files (${analysis.images.totalSizeKB}KB)`
-  )
+  console.log(`   Total: ${analysis.images.total} files (${analysis.images.totalSizeKB}KB)`)
 
   if (Object.keys(analysis.images.byFormat).length > 0) {
     console.log("   By format:")
-    Object.keys(analysis.images.byFormat).forEach((format) => {
+    Object.keys(analysis.images.byFormat).forEach(format => {
       const formatData = analysis.images.byFormat[format]
-      console.log(
-        `     ${format}: ${formatData.count} files (${
+      console.log(`     ${format}: ${formatData.count} files (${
           Math.round((formatData.size / 1024) * 100) / 100
-        }KB)`
-      )
+        }KB)`)
     })
   }
 

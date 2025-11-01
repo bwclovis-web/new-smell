@@ -51,13 +51,13 @@ const Select = ({
         </label>
       )}
       <select
-        onChange={(evt) => handleChange(evt)}
+        onChange={evt => handleChange(evt)}
         id={selectId}
         aria-label={ariaLabel ?? undefined}
         name={selectId}
         className={styleMerge(selectVariants({ className, size }))}
       >
-        {selectData.map((item) => (
+        {selectData.map(item => (
           <option
             key={item.id}
             value={item.id}

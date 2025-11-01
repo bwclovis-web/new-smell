@@ -258,7 +258,7 @@ test.describe("Critical User Flows", () => {
   test.describe("Error Handling Flows", () => {
     test("should handle network errors gracefully", async ({ page }) => {
       // Simulate network failure
-      await page.route("**/api/**", (route) => route.abort())
+      await page.route("**/api/**", route => route.abort())
 
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()

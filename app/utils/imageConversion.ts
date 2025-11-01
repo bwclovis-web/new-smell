@@ -184,9 +184,7 @@ export async function findPngFiles(directory: string): Promise<string[]> {
 /**
  * Get optimized conversion options for different use cases
  */
-export function getOptimizedOptions(
-  useCase: "web" | "mobile" | "print" | "thumbnail"
-): ConversionOptions {
+export function getOptimizedOptions(useCase: "web" | "mobile" | "print" | "thumbnail"): ConversionOptions {
   switch (useCase) {
     case "web":
       return {
@@ -233,8 +231,8 @@ export function getOptimizedOptions(
  * Generate a summary report of conversion results
  */
 export function generateConversionReport(results: ConversionResult[]): string {
-  const successful = results.filter((r) => r.success)
-  const failed = results.filter((r) => !r.success)
+  const successful = results.filter(r => r.success)
+  const failed = results.filter(r => !r.success)
 
   const totalOriginalSize = successful.reduce((sum, r) => sum + r.originalSize, 0)
   const totalConvertedSize = successful.reduce((sum, r) => sum + r.convertedSize, 0)
@@ -262,7 +260,7 @@ ${
   failed.length > 0
     ? `
 ❌ Failed Conversions:
-${failed.map((f) => `   - ${f.inputPath}: ${f.error}`).join("\n")}
+${failed.map(f => `   - ${f.inputPath}: ${f.error}`).join("\n")}
 `
     : ""
 }
@@ -278,7 +276,9 @@ function formatBytes(bytes: number): string {
   }
 
   const k = 1024
-  const sizes = ["Bytes", "KB", "MB", "GB"]
+  const sizes = [
+"Bytes", "KB", "MB", "GB"
+]
   const i = Math.floor(Math.log(bytes) / Math.log(k))
 
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]

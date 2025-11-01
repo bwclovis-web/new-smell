@@ -60,7 +60,7 @@ async function processSingleNotification(notification: any) {
       })),
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error(
       `Error processing notification for user ${notification.userId}:`,
       error
@@ -90,7 +90,7 @@ export async function sendWishlistNotificationEmail(
     Perfume: ${perfumeName}
     
     Available from:
-    ${sellers.map((seller) => `- ${seller.email}`).join("\n")}
+    ${sellers.map(seller => `- ${seller.email}`).join("\n")}
     
     Visit the trading post to contact the seller(s) and make a purchase.
     

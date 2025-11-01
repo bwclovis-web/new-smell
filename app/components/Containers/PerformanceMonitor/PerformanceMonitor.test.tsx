@@ -526,7 +526,7 @@ describe("PerformanceMonitor (Container)", () => {
 
       unmount()
 
-      performanceObserverInstances.forEach((instance) => {
+      performanceObserverInstances.forEach(instance => {
         expect(instance.disconnect).toHaveBeenCalled()
       })
 

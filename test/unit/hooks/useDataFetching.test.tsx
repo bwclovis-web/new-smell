@@ -14,7 +14,7 @@ import { useDataFetching } from "~/hooks/useDataFetching"
 // Mock useApiWithRetry
 vi.mock("~/hooks/useApiWithRetry", () => ({
   useApiWithRetry: () => ({
-    fetchWithRetry: vi.fn(async (fn) => {
+    fetchWithRetry: vi.fn(async fn => {
       try {
         return await fn()
       } catch (error) {
@@ -86,9 +86,7 @@ describe("useDataFetching", () => {
     it("should not fetch when enabled is false", async () => {
       global.fetch = vi.fn()
 
-      const { result } = renderHook(() =>
-        useDataFetching({ url: "/api/test", enabled: false })
-      )
+      const { result } = renderHook(() => useDataFetching({ url: "/api/test", enabled: false }))
 
       await waitFor(() => {
         expect(result.current.isLoading).toBe(false)
@@ -106,12 +104,10 @@ describe("useDataFetching", () => {
         json: async () => mockData,
       })
 
-      const { result } = renderHook(() =>
-        useDataFetching({
+      const { result } = renderHook(() => useDataFetching({
           url: "/api/test",
           cacheKey: "test-cache",
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toEqual(mockData)
@@ -136,13 +132,11 @@ describe("useDataFetching", () => {
 
       global.fetch = vi.fn()
 
-      const { result } = renderHook(() =>
-        useDataFetching({
+      const { result } = renderHook(() => useDataFetching({
           url: "/api/test",
           cacheKey: "test-cache",
           cacheDuration: 600000, // 10 minutes
-        })
-      )
+        }))
 
       // Should load from cache immediately
       await waitFor(() => {
@@ -168,13 +162,11 @@ describe("useDataFetching", () => {
         json: async () => newData,
       })
 
-      const { result } = renderHook(() =>
-        useDataFetching({
+      const { result } = renderHook(() => useDataFetching({
           url: "/api/test",
           cacheKey: "test-cache",
           cacheDuration: 300000, // 5 minutes
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toEqual(newData)
@@ -197,13 +189,11 @@ describe("useDataFetching", () => {
         json: async () => freshData,
       })
 
-      const { result } = renderHook(() =>
-        useDataFetching({
+      const { result } = renderHook(() => useDataFetching({
           url: "/api/test",
           cacheKey: "test-cache",
           staleWhileRevalidate: true,
-        })
-      )
+        }))
 
       // Should show cached data immediately
       await waitFor(() => {
@@ -223,12 +213,10 @@ describe("useDataFetching", () => {
         json: async () => mockData,
       })
 
-      const { result } = renderHook(() =>
-        useDataFetching({
+      const { result } = renderHook(() => useDataFetching({
           url: "/api/test",
           cacheKey: "test-cache",
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toEqual(mockData)
@@ -262,8 +250,7 @@ describe("useDataFetching", () => {
 
       let filter = "test1"
       const { result, rerender } = renderHook(
-        ({ filter }) =>
-          useDataFetching({
+        ({ filter }) => useDataFetching({
             url: `/api/test?filter=${filter}`,
             deps: [filter],
           }),
@@ -296,8 +283,7 @@ describe("useDataFetching", () => {
 
       let search = "test"
       const { rerender } = renderHook(
-        ({ search }) =>
-          useDataFetching({
+        ({ search }) => useDataFetching({
             url: `/api/search?q=${search}`,
             deps: [search],
             debounceMs: 500,
@@ -331,12 +317,10 @@ describe("useDataFetching", () => {
         json: async () => mockData,
       })
 
-      const { result } = renderHook(() =>
-        useDataFetching({
+      const { result } = renderHook(() => useDataFetching({
           url: "/api/test",
           transform: (data: typeof mockData) => data.items,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(result.current.data).toEqual([1, 2, 3])
@@ -354,12 +338,10 @@ describe("useDataFetching", () => {
         json: async () => mockData,
       })
 
-      renderHook(() =>
-        useDataFetching({
+      renderHook(() => useDataFetching({
           url: "/api/test",
           onSuccess,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(onSuccess).toHaveBeenCalledWith(mockData)
@@ -374,12 +356,10 @@ describe("useDataFetching", () => {
         status: 500,
       })
 
-      renderHook(() =>
-        useDataFetching({
+      renderHook(() => useDataFetching({
           url: "/api/test",
           onError,
-        })
-      )
+        }))
 
       await waitFor(() => {
         expect(onError).toHaveBeenCalled()
@@ -510,9 +490,7 @@ describe("useDataFetching", () => {
   describe("Abort Controller", () => {
     it("should abort ongoing requests on unmount", async () => {
       let aborted = false
-      global.fetch = vi.fn().mockImplementation(
-        () =>
-          new Promise((resolve, reject) => {
+      global.fetch = vi.fn().mockImplementation(() => new Promise((resolve, reject) => {
             setTimeout(() => {
               if (aborted) {
                 reject(new Error("AbortError"))
@@ -523,8 +501,7 @@ describe("useDataFetching", () => {
                 })
               }
             }, 1000)
-          })
-      )
+          }))
 
       const { unmount } = renderHook(() => useDataFetching({ url: "/api/test" }))
 
@@ -533,7 +510,7 @@ describe("useDataFetching", () => {
       aborted = true
 
       // Wait to ensure no errors
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await new Promise(resolve => setTimeout(resolve, 100))
     })
   })
 })

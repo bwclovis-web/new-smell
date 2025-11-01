@@ -26,7 +26,9 @@ const VirtualScroll: React.FC<VirtualScrollProps> = ({
       Math.ceil((scrollTop + containerHeight) / itemHeight) + overscan
     )
     return { startIndex, endIndex }
-  }, [scrollTop, itemHeight, containerHeight, items.length, overscan])
+  }, [
+scrollTop, itemHeight, containerHeight, items.length, overscan
+])
 
   // Get visible items
   const visibleItems = useMemo(() => {
@@ -71,7 +73,9 @@ const VirtualScroll: React.FC<VirtualScrollProps> = ({
 
       element.scrollTop = Math.max(0, scrollTop)
     }
-  }, [scrollToIndex, scrollToAlignment, itemHeight, containerHeight])
+  }, [
+scrollToIndex, scrollToAlignment, itemHeight, containerHeight
+])
 
   const totalHeight = items.length * itemHeight
 

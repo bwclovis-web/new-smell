@@ -129,9 +129,7 @@ async function main() {
   console.log("🔍 Validating WebP support...")
   const webpSupported = await validateWebPSupport()
   if (!webpSupported) {
-    console.error(
-      "❌ WebP support validation failed. Please ensure Sharp is properly installed."
-    )
+    console.error("❌ WebP support validation failed. Please ensure Sharp is properly installed.")
     process.exit(1)
   }
   console.log("✅ WebP support validated\n")
@@ -157,8 +155,8 @@ async function main() {
       } else {
         const files = await fs.readdir(options.input)
         pngFiles = files
-          .filter((file) => file.toLowerCase().endsWith(".png"))
-          .map((file) => join(options.input, file))
+          .filter(file => file.toLowerCase().endsWith(".png"))
+          .map(file => join(options.input, file))
       }
     }
 
@@ -241,9 +239,7 @@ async function main() {
             deletedCount++
             console.log(`   ✅ Deleted: ${result.inputPath}`)
           } catch (error) {
-            console.log(
-              `   ⚠️  Could not delete: ${result.inputPath} - ${error.message}`
-            )
+            console.log(`   ⚠️  Could not delete: ${result.inputPath} - ${error.message}`)
           }
         }
       }
@@ -252,8 +248,8 @@ async function main() {
     }
 
     // Show summary
-    const successful = results.filter((r) => r.success)
-    const failed = results.filter((r) => !r.success)
+    const successful = results.filter(r => r.success)
+    const failed = results.filter(r => !r.success)
 
     if (successful.length > 0) {
       console.log(`\n✅ Successfully converted ${successful.length} files`)
@@ -278,7 +274,7 @@ process.on("unhandledRejection", (reason, promise) => {
 })
 
 // Run the script
-main().catch((error) => {
+main().catch(error => {
   console.error("❌ Script failed:", error.message)
   process.exit(1)
 })

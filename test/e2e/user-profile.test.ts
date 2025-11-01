@@ -328,9 +328,7 @@ test.describe("User Profile & Preferences", () => {
       })
 
       // Should show error about password mismatch
-      await expect(
-        page.locator("text=/passwords.*match|match.*password/i")
-      ).toBeVisible()
+      await expect(page.locator("text=/passwords.*match|match.*password/i")).toBeVisible()
     })
 
     test("should enforce minimum password length", async ({ page }) => {
@@ -341,9 +339,7 @@ test.describe("User Profile & Preferences", () => {
       await page.blur('[name="password"]')
 
       // Should show error
-      await expect(
-        page.locator("text=/password.*short|minimum.*characters/i")
-      ).toBeVisible()
+      await expect(page.locator("text=/password.*short|minimum.*characters/i")).toBeVisible()
     })
   })
 

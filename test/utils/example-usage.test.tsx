@@ -50,7 +50,7 @@ describe("Test Utilities Example Usage", () => {
     })
 
     it("should create mock dataset", () => {
-      const dataset = createMockDataset(10, (i) => ({
+      const dataset = createMockDataset(10, i => ({
         id: i,
         name: `Item ${i}`,
       }))
@@ -75,7 +75,7 @@ describe("Test Utilities Example Usage", () => {
         "desktop",
       ]
 
-      viewports.forEach((viewport) => {
+      viewports.forEach(viewport => {
         setViewportByName(viewport)
         expect(window.innerWidth).toBe(viewportPresets[viewport].width)
       })

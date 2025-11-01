@@ -17,16 +17,14 @@ const AdminCSVControls: FC<AdminCSVControlsProps> = ({ onUploadComplete }) => {
   const handleUploadCSV = createHandleUploadCSV(csrfToken)
 
   // Wrap the upload handler to refresh dashboard after upload
-  const handleUploadAndRefresh: React.ChangeEventHandler<HTMLInputElement> = async (
-    e
-  ) => {
+  const handleUploadAndRefresh: React.ChangeEventHandler<HTMLInputElement> = async e => {
     try {
       await handleUploadCSV(e)
       // Force refresh by updating lastFetch to 0 (or Date.now())
       onUploadComplete()
     } catch (err) {
       // Optionally handle error
-      // eslint-disable-next-line no-console
+       
       console.error("CSV upload failed", err)
     }
   }

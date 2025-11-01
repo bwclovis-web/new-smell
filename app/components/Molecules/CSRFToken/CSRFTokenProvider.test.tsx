@@ -48,32 +48,26 @@ describe("CSRFTokenProvider", () => {
 
   describe("Context Provider", () => {
     it("should provide CSRF context to children", () => {
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("csrf-token")).toHaveTextContent("test-token-123")
       expect(screen.getByTestId("is-loading")).toHaveTextContent("false")
     })
 
     it("should render children", () => {
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <div data-testid="child">Child content</div>
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("child")).toHaveTextContent("Child content")
     })
 
     it("should call useCSRF hook", () => {
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <div>Content</div>
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(useCSRF).toHaveBeenCalledTimes(1)
     })
@@ -81,11 +75,9 @@ describe("CSRFTokenProvider", () => {
 
   describe("Context Values", () => {
     it("should provide csrfToken value", () => {
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("csrf-token")).toHaveTextContent("test-token-123")
     })
@@ -100,21 +92,17 @@ describe("CSRFTokenProvider", () => {
         submitForm: mockSubmitForm,
       })
 
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("is-loading")).toHaveTextContent("true")
     })
 
     it("should provide addToFormData function", () => {
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       const button = screen.getByRole("button", { name: "Add to FormData" })
       button.click()
@@ -124,11 +112,9 @@ describe("CSRFTokenProvider", () => {
     })
 
     it("should provide addToHeaders function", () => {
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       const button = screen.getByRole("button", { name: "Add to Headers" })
       button.click()
@@ -137,11 +123,9 @@ describe("CSRFTokenProvider", () => {
     })
 
     it("should provide submitForm function", () => {
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       const button = screen.getByRole("button", { name: "Submit Form" })
       button.click()
@@ -153,12 +137,10 @@ describe("CSRFTokenProvider", () => {
 
   describe("Multiple Children", () => {
     it("should provide context to multiple children", () => {
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <TestConsumer />
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       const tokens = screen.getAllByTestId("csrf-token")
       expect(tokens).toHaveLength(2)
@@ -167,15 +149,13 @@ describe("CSRFTokenProvider", () => {
     })
 
     it("should provide context to nested children", () => {
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <div>
             <div>
               <TestConsumer />
             </div>
           </div>
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("csrf-token")).toHaveTextContent("test-token-123")
     })
@@ -192,22 +172,18 @@ describe("CSRFTokenProvider", () => {
         submitForm: mockSubmitForm,
       })
 
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("is-loading")).toHaveTextContent("true")
       expect(screen.getByTestId("csrf-token")).toHaveTextContent("null")
     })
 
     it("should update when loading completes", () => {
-      const { rerender } = render(
-        <CSRFTokenProvider>
+      const { rerender } = render(<CSRFTokenProvider>
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       // Update mock to simulate loading complete
       vi.mocked(useCSRF).mockReturnValue({
@@ -219,11 +195,9 @@ describe("CSRFTokenProvider", () => {
         submitForm: mockSubmitForm,
       })
 
-      rerender(
-        <CSRFTokenProvider>
+      rerender(<CSRFTokenProvider>
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("is-loading")).toHaveTextContent("false")
       expect(screen.getByTestId("csrf-token")).toHaveTextContent("new-token")
@@ -232,11 +206,9 @@ describe("CSRFTokenProvider", () => {
 
   describe("Token Updates", () => {
     it("should handle token updates", () => {
-      const { rerender } = render(
-        <CSRFTokenProvider>
+      const { rerender } = render(<CSRFTokenProvider>
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("csrf-token")).toHaveTextContent("test-token-123")
 
@@ -250,21 +222,17 @@ describe("CSRFTokenProvider", () => {
         submitForm: mockSubmitForm,
       })
 
-      rerender(
-        <CSRFTokenProvider>
+      rerender(<CSRFTokenProvider>
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("csrf-token")).toHaveTextContent("updated-token-456")
     })
 
     it("should handle token becoming null", () => {
-      const { rerender } = render(
-        <CSRFTokenProvider>
+      const { rerender } = render(<CSRFTokenProvider>
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("csrf-token")).toHaveTextContent("test-token-123")
 
@@ -278,11 +246,9 @@ describe("CSRFTokenProvider", () => {
         submitForm: mockSubmitForm,
       })
 
-      rerender(
-        <CSRFTokenProvider>
+      rerender(<CSRFTokenProvider>
           <TestConsumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("csrf-token")).toHaveTextContent("null")
     })
@@ -332,11 +298,9 @@ describe("useCSRFToken", () => {
       }
 
       expect(() => {
-        render(
-          <CSRFTokenProvider>
+        render(<CSRFTokenProvider>
             <ValidConsumer />
-          </CSRFTokenProvider>
-        )
+          </CSRFTokenProvider>)
       }).not.toThrow()
     })
   })
@@ -348,11 +312,9 @@ describe("useCSRFToken", () => {
         return <div data-testid="token">{csrfToken}</div>
       }
 
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <Consumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("token")).toHaveTextContent("test-token")
     })
@@ -363,11 +325,9 @@ describe("useCSRFToken", () => {
         return <div data-testid="loading">{isLoading.toString()}</div>
       }
 
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <Consumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("loading")).toHaveTextContent("false")
     })
@@ -390,11 +350,9 @@ describe("useCSRFToken", () => {
         )
       }
 
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <Consumer />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("has-add-form-data")).toHaveTextContent("yes")
       expect(screen.getByTestId("has-add-headers")).toHaveTextContent("yes")
@@ -414,12 +372,10 @@ describe("useCSRFToken", () => {
         return <div data-testid="consumer2">{csrfToken}</div>
       }
 
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <Consumer1 />
           <Consumer2 />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       expect(screen.getByTestId("consumer1")).toHaveTextContent("test-token")
       expect(screen.getByTestId("consumer2")).toHaveTextContent("test-token")
@@ -441,12 +397,10 @@ describe("useCSRFToken", () => {
         return <div>Consumer 2</div>
       }
 
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <Consumer1 />
           <Consumer2 />
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       // Both consumers should receive the same function reference
       expect(addToFormDataRef1).toBe(addToFormDataRef2)
@@ -471,13 +425,11 @@ describe("useCSRFToken", () => {
       }
 
       // Render with nested providers - both should work
-      render(
-        <CSRFTokenProvider>
+      render(<CSRFTokenProvider>
           <CSRFTokenProvider>
             <Consumer />
           </CSRFTokenProvider>
-        </CSRFTokenProvider>
-      )
+        </CSRFTokenProvider>)
 
       // The innermost provider should be used
       expect(screen.getByTestId("token")).toHaveTextContent("test-token")

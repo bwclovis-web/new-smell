@@ -1,4 +1,4 @@
-import { type ChangeEvent, useState, useEffect } from "react"
+import { type ChangeEvent, useEffect, useState } from "react"
 import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs"
 import { Form } from "react-router"
 
@@ -27,13 +27,11 @@ export const ChangePasswordForm = ({
     new: false,
     confirm: false,
   })
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>(
-    {}
-  )
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   // Validate form on change
@@ -41,7 +39,7 @@ export const ChangePasswordForm = ({
     const result = authSchemas.changePassword.safeParse(formData)
     if (!result.success) {
       const errors: Record<string, string> = {}
-      result.error.errors.forEach((err) => {
+      result.error.errors.forEach(err => {
         if (err.path[0]) {
           errors[err.path[0] as string] = err.message
         }
@@ -53,7 +51,7 @@ export const ChangePasswordForm = ({
   }, [formData])
 
   const togglePasswordVisibility = (field: "current" | "new" | "confirm") => {
-    setShowPasswords((prev) => ({ ...prev, [field]: !prev[field] }))
+    setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }))
   }
 
   const passwordsMatch = formData.newPassword === formData.confirmNewPassword
@@ -251,8 +249,7 @@ export const ChangePasswordForm = ({
       <div className="flex justify-end space-x-3">
         <button
           type="button"
-          onClick={() =>
-            setFormData({
+          onClick={() => setFormData({
               currentPassword: "",
               newPassword: "",
               confirmNewPassword: "",

@@ -75,12 +75,8 @@ export function useValidation<T extends Record<string, unknown>>({
   transform,
 }: UseValidationOptions<T>): UseValidationReturn<T> {
   const [values, setValues] = useState<T>(initialValues)
-  const [errors, setErrors] = useState<Record<keyof T, string>>(
-    {} as Record<keyof T, string>
-  )
-  const [touched, setTouched] = useState<Record<keyof T, boolean>>(
-    {} as Record<keyof T, boolean>
-  )
+  const [errors, setErrors] = useState<Record<keyof T, string>>({} as Record<keyof T, string>)
+  const [touched, setTouched] = useState<Record<keyof T, boolean>>({} as Record<keyof T, boolean>)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isValidating, setIsValidating] = useState(false)
 
@@ -95,11 +91,8 @@ export function useValidation<T extends Record<string, unknown>>({
 
   // Check if form is valid
   const isValid = useMemo(
-    () =>
-      Object.keys(errors).length === 0 &&
-      Object.values(values).every(
-        (value) => value !== null && value !== undefined && value !== ""
-      ),
+    () => Object.keys(errors).length === 0 &&
+      Object.values(values).every(value => value !== null && value !== undefined && value !== ""),
     [errors, values]
   )
 
@@ -119,7 +112,7 @@ export function useValidation<T extends Record<string, unknown>>({
         await fieldSchema.parseAsync(dataToValidate)
 
         // Clear error for this field
-        setErrors((prev) => {
+        setErrors(prev => {
           const newErrors = { ...prev }
           delete newErrors[field]
           return newErrors
@@ -128,9 +121,9 @@ export function useValidation<T extends Record<string, unknown>>({
         return true
       } catch (error) {
         if (error instanceof z.ZodError) {
-          const fieldError = error.errors.find((err) => err.path[0] === field)
+          const fieldError = error.errors.find(err => err.path[0] === field)
           if (fieldError) {
-            setErrors((prev) => ({
+            setErrors(prev => ({
               ...prev,
               [field]: fieldError.message,
             }))
@@ -161,7 +154,7 @@ export function useValidation<T extends Record<string, unknown>>({
       if (error instanceof z.ZodError) {
         const newErrors = {} as Record<keyof T, string>
 
-        error.errors.forEach((err) => {
+        error.errors.forEach(err => {
           const field = err.path[0] as keyof T
           if (field) {
             newErrors[field] = err.message
@@ -179,14 +172,14 @@ export function useValidation<T extends Record<string, unknown>>({
   // Set individual field value
   const setValue = useCallback(
     <K extends keyof T>(field: K, value: T[K]) => {
-      setValues((prev) => ({
+      setValues(prev => ({
         ...prev,
         [field]: value,
       }))
 
       // Clear error for this field when user starts typing
       if (errors[field]) {
-        setErrors((prev) => {
+        setErrors(prev => {
           const newErrors = { ...prev }
           delete newErrors[field]
           return newErrors
@@ -198,7 +191,7 @@ export function useValidation<T extends Record<string, unknown>>({
 
   // Set multiple field values
   const setValues = useCallback((newValues: Partial<T>) => {
-    setValues((prev) => ({
+    setValues(prev => ({
       ...prev,
       ...newValues,
     }))
@@ -206,7 +199,7 @@ export function useValidation<T extends Record<string, unknown>>({
 
   // Set individual field error
   const setError = useCallback(<K extends keyof T>(field: K, error: string) => {
-    setErrors((prev) => ({
+    setErrors(prev => ({
       ...prev,
       [field]: error,
     }))
@@ -214,7 +207,7 @@ export function useValidation<T extends Record<string, unknown>>({
 
   // Set multiple field errors
   const setErrors = useCallback((newErrors: Partial<Record<keyof T, string>>) => {
-    setErrors((prev) => ({
+    setErrors(prev => ({
       ...prev,
       ...newErrors,
     }))
@@ -222,7 +215,7 @@ export function useValidation<T extends Record<string, unknown>>({
 
   // Clear individual field error
   const clearError = useCallback(<K extends keyof T>(field: K) => {
-    setErrors((prev) => {
+    setErrors(prev => {
       const newErrors = { ...prev }
       delete newErrors[field]
       return newErrors
@@ -236,7 +229,7 @@ export function useValidation<T extends Record<string, unknown>>({
 
   // Set individual field touched state
   const setTouched = useCallback(<K extends keyof T>(field: K, touched: boolean) => {
-    setTouched((prev) => ({
+    setTouched(prev => ({
       ...prev,
       [field]: touched,
     }))
@@ -246,7 +239,7 @@ export function useValidation<T extends Record<string, unknown>>({
   const setAllTouched = useCallback(
     (touched: boolean) => {
       const newTouched = {} as Record<keyof T, boolean>
-      Object.keys(values).forEach((key) => {
+      Object.keys(values).forEach(key => {
         newTouched[key as keyof T] = touched
       })
       setTouched(newTouched)
@@ -256,8 +249,7 @@ export function useValidation<T extends Record<string, unknown>>({
 
   // Handle field change
   const handleChange = useCallback(
-    <K extends keyof T>(field: K) =>
-      (value: T[K]) => {
+    <K extends keyof T>(field: K) => (value: T[K]) => {
         setValue(field, value)
       },
     [setValue]
@@ -265,8 +257,7 @@ export function useValidation<T extends Record<string, unknown>>({
 
   // Handle field blur
   const handleBlur = useCallback(
-    <K extends keyof T>(field: K) =>
-      () => {
+    <K extends keyof T>(field: K) => () => {
         setTouched(field, true)
 
         if (validateOnBlur) {
@@ -303,7 +294,9 @@ export function useValidation<T extends Record<string, unknown>>({
         setIsSubmitting(false)
       }
     },
-    [validateOnSubmit, validate, values, setAllTouched]
+    [
+validateOnSubmit, validate, values, setAllTouched
+]
   )
 
   // Reset form to initial values
@@ -331,7 +324,9 @@ export function useValidation<T extends Record<string, unknown>>({
 
       return () => clearTimeout(timeoutId)
     }
-  }, [debouncedValues, validateOnChange, isDirty, validate, debounceMs])
+  }, [
+debouncedValues, validateOnChange, isDirty, validate, debounceMs
+])
 
   // Update values when initialValues change
   useEffect(() => {
@@ -394,7 +389,7 @@ export function useFieldValidation<T, K extends keyof T>(
       return true
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const fieldError = error.errors.find((err) => err.path[0] === field)
+        const fieldError = error.errors.find(err => err.path[0] === field)
         if (fieldError) {
           setError(fieldError.message)
         }
@@ -430,9 +425,7 @@ export function useFormValidation<T>(
     debounceMs?: number
   } = {}
 ) {
-  const [errors, setErrors] = useState<Record<keyof T, string>>(
-    {} as Record<keyof T, string>
-  )
+  const [errors, setErrors] = useState<Record<keyof T, string>>({} as Record<keyof T, string>)
   const [isValidating, setIsValidating] = useState(false)
   const [isValid, setIsValid] = useState(false)
 
@@ -449,7 +442,7 @@ export function useFormValidation<T>(
       if (error instanceof z.ZodError) {
         const newErrors = {} as Record<keyof T, string>
 
-        error.errors.forEach((err) => {
+        error.errors.forEach(err => {
           const field = err.path[0] as keyof T
           if (field) {
             newErrors[field] = err.message

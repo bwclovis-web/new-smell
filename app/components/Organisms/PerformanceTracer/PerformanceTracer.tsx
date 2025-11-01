@@ -28,7 +28,9 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
   showUI = true,
   className = "",
   maxEvents = 1000,
-  categories = ["navigation", "resource", "paint", "measure", "mark"],
+  categories = [
+"navigation", "resource", "paint", "measure", "mark"
+],
   autoStart = true,
 }) => {
   const [events, setEvents] = useState<TraceEvent[]>([])
@@ -56,10 +58,10 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
     eventCounterRef.current = 0
 
     try {
-      observerRef.current = new PerformanceObserver((list) => {
+      observerRef.current = new PerformanceObserver(list => {
         const newEvents = list
           .getEntries()
-          .filter((entry) => categories.includes(entry.entryType))
+          .filter(entry => categories.includes(entry.entryType))
           .map((entry: PerformanceEntry): TraceEvent => {
             const event: TraceEvent = {
               id: `event-${++eventCounterRef.current}`,
@@ -115,7 +117,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
             return event
           })
 
-        setEvents((prev) => {
+        setEvents(prev => {
           const updated = [...newEvents, ...prev]
           return updated.slice(0, maxEvents)
         })
@@ -157,7 +159,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
         data: { ...data, custom: true },
       }
 
-      setEvents((prev) => [event, ...prev].slice(0, maxEvents))
+      setEvents(prev => [event, ...prev].slice(0, maxEvents))
     },
     [enabled, maxEvents]
   )
@@ -184,7 +186,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
           data: { ...data, custom: true, startMark, endMark },
         }
 
-        setEvents((prev) => [event, ...prev].slice(0, maxEvents))
+        setEvents(prev => [event, ...prev].slice(0, maxEvents))
       } catch (error) {
         console.error("Error adding custom measure:", error)
       }
@@ -192,7 +194,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
     [enabled, maxEvents]
   )
 
-  const filteredEvents = events.filter((event) => {
+  const filteredEvents = events.filter(event => {
     if (filters.category && event.category !== filters.category) {
       return false
     }
@@ -252,8 +254,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
     return `${(duration / 1000).toFixed(1)}s`
   }
 
-  const formatTime = (time: number) =>
-    new Date(time).toLocaleTimeString("en-US", {
+  const formatTime = (time: number) => new Date(time).toLocaleTimeString("en-US", {
       hour12: false,
       hour: "2-digit",
       minute: "2-digit",
@@ -350,13 +351,12 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
           </label>
           <select
             value={filters.category}
-            onChange={(e) =>
-              setFilters((prev) => ({ ...prev, category: e.target.value }))
+            onChange={e => setFilters(prev => ({ ...prev, category: e.target.value }))
             }
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
           >
             <option value="">All Categories</option>
-            {categories.map((category) => (
+            {categories.map(category => (
               <option key={category} value={category}>
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </option>
@@ -370,8 +370,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
           <input
             type="number"
             value={filters.minDuration}
-            onChange={(e) =>
-              setFilters((prev) => ({
+            onChange={e => setFilters(prev => ({
                 ...prev,
                 minDuration: Number(e.target.value),
               }))
@@ -388,8 +387,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
           <input
             type="text"
             value={filters.search}
-            onChange={(e) =>
-              setFilters((prev) => ({ ...prev, search: e.target.value }))
+            onChange={e => setFilters(prev => ({ ...prev, search: e.target.value }))
             }
             placeholder="Search events..."
             className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
@@ -403,7 +401,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
           Events ({filteredEvents.length})
         </h3>
         <div className="max-h-96 overflow-y-auto space-y-2">
-          {filteredEvents.map((event) => (
+          {filteredEvents.map(event => (
             <div
               key={event.id}
               onClick={() => setSelectedEvent(event)}
@@ -426,9 +424,7 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
                 </div>
                 <div className="flex items-center space-x-2">
                   <span
-                    className={`text-xs px-2 py-1 rounded ${getCategoryColor(
-                      event.category
-                    )}`}
+                    className={`text-xs px-2 py-1 rounded ${getCategoryColor(event.category)}`}
                   >
                     {event.category}
                   </span>
@@ -500,13 +496,13 @@ const PerformanceTracer: React.FC<PerformanceTracerProps> = ({
           <div>
             <div className="text-blue-600">Categories</div>
             <div className="font-semibold text-blue-800">
-              {new Set(events.map((e) => e.category)).size}
+              {new Set(events.map(e => e.category)).size}
             </div>
           </div>
           <div>
             <div className="text-blue-600">Custom Events</div>
             <div className="font-semibold text-blue-800">
-              {events.filter((e) => e.data?.custom).length}
+              {events.filter(e => e.data?.custom).length}
             </div>
           </div>
         </div>

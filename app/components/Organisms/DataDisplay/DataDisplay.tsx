@@ -15,9 +15,7 @@ const DataDisplay = ({
   className = "",
 }: DataDisplayProps) => {
   if (selectedLetter) {
-    const letterItems = items.filter(
-      (item) => item.name.charAt(0).toUpperCase() === selectedLetter
-    )
+    const letterItems = items.filter(item => item.name.charAt(0).toUpperCase() === selectedLetter)
 
     return (
       <div className={className}>
@@ -25,7 +23,7 @@ const DataDisplay = ({
           {selectedLetter}
         </h2>
         <ul className="grid grid-cols-2 gap-6 md:grid-cols-2 2xl:grid-cols-4 auto-rows-fr">
-          {letterItems.map((item) => (
+          {letterItems.map(item => (
             <li key={item.id}>
               <LinkCard data={item} type={type} />
             </li>
@@ -46,13 +44,13 @@ const DataDisplay = ({
 
   return (
     <div className={className}>
-      {letters.map((letter) => (
+      {letters.map(letter => (
         <div key={letter} className="mb-12">
           <h2 className="text-2xl font-bold text-noir-gold mb-6 text-center">
             {letter}
           </h2>
           <ul className="grid grid-cols-2 gap-6 md:grid-cols-2 2xl:grid-cols-4 auto-rows-fr">
-            {groupedItems[letter].map((item) => (
+            {groupedItems[letter].map(item => (
               <li key={item.id}>
                 <LinkCard data={item} type={type} />
               </li>

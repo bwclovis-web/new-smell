@@ -33,8 +33,7 @@ export interface ValidatedInputProps {
   max?: number
 }
 
-const ValidatedInput = forwardRef<HTMLInputElement, ValidatedInputProps>(
-  (
+const ValidatedInput = forwardRef<HTMLInputElement, ValidatedInputProps>((
     {
       name,
       label,
@@ -134,8 +133,7 @@ const ValidatedInput = forwardRef<HTMLInputElement, ValidatedInputProps>(
         />
       </FormField>
     )
-  }
-)
+  })
 
 ValidatedInput.displayName = "ValidatedInput"
 

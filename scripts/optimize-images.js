@@ -18,7 +18,9 @@ if (!fs.existsSync(OUTPUT_DIR)) {
 }
 
 // Image sizes for responsive images
-const SIZES = [320, 640, 768, 1024, 1280, 1536, 1920]
+const SIZES = [
+320, 640, 768, 1024, 1280, 1536, 1920
+]
 
 // Quality settings
 const QUALITY = {
@@ -81,7 +83,7 @@ async function optimizeAllImages() {
   console.log("🖼️  Starting image optimization...")
 
   const files = fs.readdirSync(IMAGE_DIR)
-  const imageFiles = files.filter((file) => /\.(jpg|jpeg|png|webp)$/i.test(file))
+  const imageFiles = files.filter(file => /\.(jpg|jpeg|png|webp)$/i.test(file))
 
   if (imageFiles.length === 0) {
     console.log("No images found to optimize")

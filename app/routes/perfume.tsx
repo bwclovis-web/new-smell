@@ -23,10 +23,8 @@ import { getUserPerfumeReview } from "~/models/perfumeReview.server"
 import { getUserById } from "~/models/user.server"
 import { isInWishlist } from "~/models/wishlist.server"
 import { createSafeUser } from "~/types"
-import {
-  assertExists,
-  withLoaderErrorHandling,
-} from "~/utils/errorHandling.patterns"
+import { assertExists } from "~/utils/errorHandling.patterns"
+import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
 import { verifyAccessToken } from "~/utils/security/session-manager.server"
 
 import { ROUTE_PATH as HOUSE_PATH } from "./perfume-house"

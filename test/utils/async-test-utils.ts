@@ -26,15 +26,12 @@ export const waitForCondition = async (
     if (Date.now() - startTime > timeout) {
       throw new Error(errorMessage)
     }
-    await new Promise((resolve) => setTimeout(resolve, 50))
+    await new Promise(resolve => setTimeout(resolve, 50))
   }
 }
 
 // Mock async operation
-export const mockAsyncOperation = <T>(data: T, delay = 100, shouldFail = false) =>
-  vi.fn().mockImplementation(
-    () =>
-      new Promise((resolve, reject) => {
+export const mockAsyncOperation = <T>(data: T, delay = 100, shouldFail = false) => vi.fn().mockImplementation(() => new Promise((resolve, reject) => {
         setTimeout(() => {
           if (shouldFail) {
             reject(new Error("Async operation failed"))
@@ -42,8 +39,7 @@ export const mockAsyncOperation = <T>(data: T, delay = 100, shouldFail = false) 
             resolve(data)
           }
         }, delay)
-      })
-  )
+      }))
 
 // Test loading state sequence
 export const testLoadingStateSequence = async (
@@ -106,7 +102,7 @@ export const testRetryMechanism = async (
 
     // Wait before next attempt
     if (i < maxRetries - 1) {
-      await new Promise((resolve) => setTimeout(resolve, retryDelay))
+      await new Promise(resolve => setTimeout(resolve, retryDelay))
     }
   }
 
@@ -125,14 +121,14 @@ export const testDebouncedFunction = async (
   // Call function multiple times rapidly
   for (let i = 0; i < callCount; i++) {
     debouncedFn(mockFn)
-    await new Promise((resolve) => setTimeout(resolve, 50))
+    await new Promise(resolve => setTimeout(resolve, 50))
   }
 
   // Function should not have been called yet
   expect(mockFn).not.toHaveBeenCalled()
 
   // Wait for debounce delay
-  await new Promise((resolve) => setTimeout(resolve, delay + 100))
+  await new Promise(resolve => setTimeout(resolve, delay + 100))
 
   // Function should have been called once
   expect(mockFn).toHaveBeenCalledTimes(1)
@@ -149,14 +145,14 @@ export const testThrottledFunction = async (
   // Call function multiple times rapidly
   for (let i = 0; i < callCount; i++) {
     throttledFn(mockFn)
-    await new Promise((resolve) => setTimeout(resolve, 50))
+    await new Promise(resolve => setTimeout(resolve, 50))
   }
 
   // Function should have been called once immediately
   expect(mockFn).toHaveBeenCalledTimes(1)
 
   // Wait for throttle delay
-  await new Promise((resolve) => setTimeout(resolve, delay + 100))
+  await new Promise(resolve => setTimeout(resolve, delay + 100))
 
   // Function should have been called again
   expect(mockFn).toHaveBeenCalledTimes(2)
@@ -167,12 +163,10 @@ export const testConcurrentOperations = async (
   operations: Array<() => Promise<any>>,
   shouldAllSucceed = true
 ) => {
-  const results = await Promise.allSettled(
-    operations.map((operation) => operation())
-  )
+  const results = await Promise.allSettled(operations.map(operation => operation()))
 
   if (shouldAllSucceed) {
-    results.forEach((result) => {
+    results.forEach(result => {
       expect(result.status).toBe("fulfilled")
     })
   }
@@ -199,10 +193,7 @@ export const mockPromiseWithProgress = <T>(
   totalSteps = 100,
   stepDelay = 10,
   onProgress?: Function
-) =>
-  vi.fn().mockImplementation(
-    () =>
-      new Promise<T>((resolve) => {
+) => vi.fn().mockImplementation(() => new Promise<T>(resolve => {
         let currentStep = 0
 
         const interval = setInterval(() => {
@@ -218,8 +209,7 @@ export const mockPromiseWithProgress = <T>(
             resolve(data)
           }
         }, stepDelay)
-      })
-  )
+      }))
 
 // Test with fake timers
 export const testWithFakeTimers = async (testFn: () => void | Promise<void>) => {
@@ -311,7 +301,7 @@ export const testPolling = async (
       break
     }
 
-    await new Promise((resolve) => setTimeout(resolve, interval))
+    await new Promise(resolve => setTimeout(resolve, interval))
   }
 
   expect(pollCount).toBeGreaterThan(0)

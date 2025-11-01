@@ -119,8 +119,7 @@ const handleAddAction = async (user: any, perfumeId: string, amount?: string) =>
   return result
 }
 
-const handleRemoveAction = async (user: any, perfumeId: string) =>
-  removeUserPerfume(user.id, perfumeId)
+const handleRemoveAction = async (user: any, perfumeId: string) => removeUserPerfume(user.id, perfumeId)
 
 const handleDecantAction = async (params: {
   user: any
@@ -269,8 +268,7 @@ const handleAuthSuccess = async (user: any) => {
 }
 
 // Helper function to handle authentication errors
-const handleAuthError = (result: AuthResult) =>
-  new Response(JSON.stringify({ success: false, error: result.error }), {
+const handleAuthError = (result: AuthResult) => new Response(JSON.stringify({ success: false, error: result.error }), {
     status: result.status,
     headers: { "Content-Type": "application/json" },
   })

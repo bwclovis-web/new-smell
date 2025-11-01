@@ -13,10 +13,8 @@ import type { ZodSchema } from "zod"
 export const VALIDATION_MESSAGES = {
   required: (field: string) => `${field} is required`,
   email: "Please enter a valid email address",
-  minLength: (field: string, min: number) =>
-    `${field} must be at least ${min} characters`,
-  maxLength: (field: string, max: number) =>
-    `${field} must be at most ${max} characters`,
+  minLength: (field: string, min: number) => `${field} must be at least ${min} characters`,
+  maxLength: (field: string, max: number) => `${field} must be at most ${max} characters`,
   match: (field1: string, field2: string) => `${field1} and ${field2} must match`,
   invalidFormat: (field: string) => `${field} has an invalid format`,
 } as const
@@ -157,9 +155,7 @@ export function validateMaxLength(
 /**
  * Combine multiple validation results
  */
-export function combineValidationErrors(
-  ...validations: (string | null)[]
-): string | null {
+export function combineValidationErrors(...validations: (string | null)[]): string | null {
   const errors = validations.filter(Boolean)
   return errors.length > 0 ? errors[0] : null
 }
@@ -223,17 +219,13 @@ export function createValidator<T extends Record<string, any>>(rules: {
  * Common form validation schemas
  */
 export const commonValidators = {
-  email: (value: string) =>
-    !validateEmail(value) ? VALIDATION_MESSAGES.email : null,
+  email: (value: string) => !validateEmail(value) ? VALIDATION_MESSAGES.email : null,
 
-  required: (fieldName: string) => (value: any) =>
-    validateRequired(value, fieldName),
+  required: (fieldName: string) => (value: any) => validateRequired(value, fieldName),
 
-  minLength: (fieldName: string, min: number) => (value: string) =>
-    validateMinLength(value, min, fieldName),
+  minLength: (fieldName: string, min: number) => (value: string) => validateMinLength(value, min, fieldName),
 
-  maxLength: (fieldName: string, max: number) => (value: string) =>
-    validateMaxLength(value, max, fieldName),
+  maxLength: (fieldName: string, max: number) => (value: string) => validateMaxLength(value, max, fieldName),
 
   password: (value: string) => {
     const result = validatePassword(value)
@@ -241,9 +233,7 @@ export const commonValidators = {
   },
 
   confirmPassword:
-    (passwordField: string = "password") =>
-    (value: string, allValues: any) =>
-      validateMatch(allValues[passwordField], value, "Passwords"),
+    (passwordField: string = "password") => (value: string, allValues: any) => validateMatch(allValues[passwordField], value, "Passwords"),
 }
 
 /**

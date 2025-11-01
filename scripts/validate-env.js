@@ -35,17 +35,13 @@ try {
   console.log("🔒 Security Recommendations:")
 
   if (coreEnv.JWT_SECRET.length < 64) {
-    console.log(
-      "⚠️  Consider using a longer JWT_SECRET (64+ characters) for production"
-    )
+    console.log("⚠️  Consider using a longer JWT_SECRET (64+ characters) for production")
   } else {
     console.log("✅ JWT_SECRET length is adequate")
   }
 
   if (coreEnv.SESSION_SECRET.length < 64) {
-    console.log(
-      "⚠️  Consider using a longer SESSION_SECRET (64+ characters) for production"
-    )
+    console.log("⚠️  Consider using a longer SESSION_SECRET (64+ characters) for production")
   } else {
     console.log("✅ SESSION_SECRET length is adequate")
   }
@@ -54,9 +50,7 @@ try {
     coreEnv.NODE_ENV === "production" &&
     coreEnv.DATABASE_URL.includes("localhost")
   ) {
-    console.log(
-      "⚠️  DATABASE_URL contains localhost in production - verify this is correct"
-    )
+    console.log("⚠️  DATABASE_URL contains localhost in production - verify this is correct")
   } else {
     console.log("✅ DATABASE_URL configuration looks good")
   }

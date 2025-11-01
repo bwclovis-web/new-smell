@@ -53,7 +53,7 @@ const analyzeMissingData = async () => {
     const missingDataRecords = []
 
     // Check each perfume for missing fields
-    perfumes.forEach((perfume) => {
+    perfumes.forEach(perfume => {
       const missingFields = []
 
       if (!perfume.description || perfume.description.trim() === "") {
@@ -102,7 +102,7 @@ const analyzeDuplicates = async () => {
 
     // Count occurrences of each name
     const nameCount = {}
-    perfumes.forEach((perfume) => {
+    perfumes.forEach(perfume => {
       const key = perfume.name.toLowerCase().trim()
       if (!nameCount[key]) {
         nameCount[key] = []
@@ -146,8 +146,8 @@ const analyzeHousesWithNoPerfumes = async () => {
 
     // Filter houses with no perfumes
     const housesWithNoPerfumes = houses
-      .filter((house) => house._count.perfumes === 0)
-      .map((house) => ({
+      .filter(house => house._count.perfumes === 0)
+      .map(house => ({
         id: house.id,
         name: house.name,
         type: house.type,
@@ -177,7 +177,7 @@ const saveReports = async (
 
       // Create CSV format
       const csvRows = ["ID,Name,Brand,Missing Fields"]
-      missingData.forEach((record) => {
+      missingData.forEach(record => {
         const fields = record.missingFields.join("; ")
         csvRows.push(`${record.id},${record.name},${record.brand},"${fields}"`)
       })
@@ -192,7 +192,7 @@ const saveReports = async (
 
       // Group by brand
       const byBrand = {}
-      missingData.forEach((record) => {
+      missingData.forEach(record => {
         if (!byBrand[record.brand]) {
           byBrand[record.brand] = []
         }
@@ -201,10 +201,8 @@ const saveReports = async (
 
       Object.entries(byBrand).forEach(([brand, records]) => {
         mdContent += `### ${brand} (${records.length})\n\n`
-        records.forEach((record) => {
-          mdContent += `- **${record.name}**: Missing ${record.missingFields.join(
-            ", "
-          )}\n`
+        records.forEach(record => {
+          mdContent += `- **${record.name}**: Missing ${record.missingFields.join(", ")}\n`
         })
         mdContent += "\n"
       })
@@ -226,8 +224,8 @@ const saveReports = async (
 
         // Group duplicates by brand
         const byBrand = {}
-        duplicates.forEach((dup) => {
-          dup.instances.forEach((instance) => {
+        duplicates.forEach(dup => {
+          dup.instances.forEach(instance => {
             const brand = instance.brand.toLowerCase().replace(/\s+/g, "_")
             byBrand[brand] = (byBrand[brand] || 0) + 1
           })
@@ -238,9 +236,9 @@ const saveReports = async (
         })
 
         mdContent += "\n## Duplicates List\n\n"
-        duplicates.forEach((dup) => {
+        duplicates.forEach(dup => {
           mdContent += `### ${dup.name} (${dup.count} instances)\n\n`
-          dup.instances.forEach((instance) => {
+          dup.instances.forEach(instance => {
             mdContent += `- ${instance.name} (${instance.brand})\n`
           })
           mdContent += "\n"
@@ -267,7 +265,7 @@ const saveReports = async (
         mdContent += "| Name | Type | Created At |\n"
         mdContent += "|------|------|------------|\n"
 
-        housesWithNoPerfumes.forEach((house) => {
+        housesWithNoPerfumes.forEach(house => {
           const createdAt = new Date(house.createdAt).toLocaleDateString()
           mdContent += `| ${house.name} | ${house.type} | ${createdAt} |\n`
         })

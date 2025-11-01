@@ -1,47 +1,10 @@
 {
-  "editor.formatOnSave": true,
-  "[javascript]": {
-    "editor.formatOnSave": false
+  // Only validate the main schema file, ignore production schema during development
+  "files.watcherExclude": {
+    "**/prisma/schema.prod.prisma": true
   },
-  "[javascriptreact]": {
-    "editor.formatOnSave": false
-  },
-  // show eslint icon at bottom toolbar
-  "eslint.alwaysShowStatus": true,
-  // tell the ESLint plugin to run on save
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "always"
-  },
-  "editor.tabSize": 2,
-  "editor.insertSpaces": true,
-  "cSpell.words": [
-    "accesstoken",
-    "creditcard",
-    "csrftoken",
-    "cuid",
-    "destashed",
-    "extrait",
-    "gsap",
-    "isbot",
-    "languagedetector",
-    "NOLOWERCASE",
-    "nouppercase",
-    "Parfum",
-    "Pipeable",
-    "pycache",
-    "Sillage"
-  ],
-  "github.copilot.chat.codeGeneration.instructions": [
-    { "file": "../copilot-instructions/js-styles.md" },
-    { "file": "../copilot-instructions/css-styles.md" },
-    { "file": "../copilot-instructions/project-context.md" },
-    { "file": "../copilot-instructions/personality.md" },
-    { "file": "../copilot-instructions/conversation-behavior.md" }
-  ],
-  "github.copilot.chat.pullRequestDescriptionGeneration.instructions": [
-    { "file": "../copilot-instructions/pull-request-descriptions.md" }
-  ],
-  "github.copilot.chat.testGeneration.instructions": [
-    { "file": "../copilot-instructions/test-generation.md" }
-  ]
+  // Configure Prisma extension to only process the main schema
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }

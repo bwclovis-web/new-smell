@@ -73,7 +73,7 @@ function generateInsertStatements(tableData) {
   // Generate INSERT statements
   for (const record of records) {
     const values = columns
-      .map((col) => {
+      .map(col => {
         const value = record[col]
         if (value === null) {
           return "NULL"
@@ -165,7 +165,7 @@ async function createBackup() {
     const jsonBackup = {
       timestamp: TIMESTAMP,
       totalRecords,
-      tables: tableData.map((t) => ({
+      tables: tableData.map(t => ({
         table: t.table,
         count: t.count,
         data: t.data,
@@ -185,7 +185,7 @@ async function createBackup() {
         sql: `${BACKUP_PREFIX}_data.sql`,
         json: `${BACKUP_PREFIX}_data.json`,
       },
-      tables: tableData.map((t) => ({
+      tables: tableData.map(t => ({
         name: t.table,
         count: t.count,
         hasError: !!t.error,
@@ -231,7 +231,9 @@ function formatBytes(bytes) {
     return "0 Bytes"
   }
   const k = 1024
-  const sizes = ["Bytes", "KB", "MB", "GB"]
+  const sizes = [
+"Bytes", "KB", "MB", "GB"
+]
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
 }

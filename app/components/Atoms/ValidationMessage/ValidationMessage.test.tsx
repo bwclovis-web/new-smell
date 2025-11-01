@@ -48,14 +48,12 @@ describe("ValidationMessage", () => {
     })
 
     it("should prioritize error over other message types", () => {
-      render(
-        <ValidationMessage
+      render(<ValidationMessage
           error="Error message"
           success="Success message"
           warning="Warning message"
           info="Info message"
-        />
-      )
+        />)
 
       expect(screen.getByText("Error message")).toBeInTheDocument()
       expect(screen.queryByText("Success message")).not.toBeInTheDocument()
@@ -64,13 +62,11 @@ describe("ValidationMessage", () => {
     })
 
     it("should prioritize success over warning and info", () => {
-      render(
-        <ValidationMessage
+      render(<ValidationMessage
           success="Success message"
           warning="Warning message"
           info="Info message"
-        />
-      )
+        />)
 
       expect(screen.getByText("Success message")).toBeInTheDocument()
       expect(screen.queryByText("Warning message")).not.toBeInTheDocument()
@@ -119,9 +115,7 @@ describe("ValidationMessage", () => {
     })
 
     it("should apply custom className", () => {
-      const { container } = render(
-        <ValidationMessage error="Error message" className="custom-class" />
-      )
+      const { container } = render(<ValidationMessage error="Error message" className="custom-class" />)
 
       const alert = container.querySelector('[role="alert"]')
       expect(alert).toHaveClass("custom-class")
@@ -130,9 +124,7 @@ describe("ValidationMessage", () => {
 
   describe("Size variants", () => {
     it("should apply small size styling", () => {
-      const { container } = render(
-        <ValidationMessage error="Error message" size="sm" />
-      )
+      const { container } = render(<ValidationMessage error="Error message" size="sm" />)
 
       const alert = container.querySelector('[role="alert"]')
       expect(alert).toHaveClass("text-xs", "px-2", "py-1")
@@ -146,9 +138,7 @@ describe("ValidationMessage", () => {
     })
 
     it("should apply large size styling", () => {
-      const { container } = render(
-        <ValidationMessage error="Error message" size="lg" />
-      )
+      const { container } = render(<ValidationMessage error="Error message" size="lg" />)
 
       const alert = container.querySelector('[role="alert"]')
       expect(alert).toHaveClass("text-base", "px-4", "py-3")
@@ -166,9 +156,7 @@ describe("ValidationMessage", () => {
     })
 
     it("should hide icon when showIcon is false", () => {
-      const { container } = render(
-        <ValidationMessage error="Error message" showIcon={false} />
-      )
+      const { container } = render(<ValidationMessage error="Error message" showIcon={false} />)
 
       // SVG icon should not be present
       const svg = container.querySelector("svg")

@@ -64,7 +64,7 @@ export function ErrorAnalyticsDashboard({
           {/* Time Range Selector */}
           <select
             value={timeRange}
-            onChange={(e) => handleTimeRangeChange(e.target.value as TimeRange)}
+            onChange={e => handleTimeRangeChange(e.target.value as TimeRange)}
             className="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-noir-black"
             disabled={isLoading}
           >
@@ -116,16 +116,14 @@ export function ErrorAnalyticsDashboard({
           Error Severity Breakdown
         </h2>
         <div className="space-y-3">
-          {data.errorsBySeverity.map((item) => (
+          {data.errorsBySeverity.map(item => (
             <div key={item.severity} className="flex items-center gap-4">
               <div className="w-24 text-sm font-medium text-gray-700">
                 {item.severity}
               </div>
               <div className="flex-1 bg-gray-200 rounded-full h-8 overflow-hidden">
                 <div
-                  className={`h-full flex items-center justify-end px-3 text-white text-sm font-medium ${getSeverityColor(
-                    item.severity
-                  )}`}
+                  className={`h-full flex items-center justify-end px-3 text-white text-sm font-medium ${getSeverityColor(item.severity)}`}
                   style={{ width: `${item.percentage}%` }}
                 >
                   {item.count > 0 &&
@@ -161,7 +159,7 @@ export function ErrorAnalyticsDashboard({
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {data.errorsByType.map((item) => (
+              {data.errorsByType.map(item => (
                 <tr key={item.type}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {item.type}
@@ -232,7 +230,7 @@ export function ErrorAnalyticsDashboard({
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {data.mostAffectedUsers.map((user) => (
+                {data.mostAffectedUsers.map(user => (
                   <tr key={user.userId}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {user.userId}
@@ -254,7 +252,7 @@ export function ErrorAnalyticsDashboard({
           Hourly Error Trend
         </h2>
         <div className="space-y-2">
-          {data.hourlyTrend.slice(-24).map((trend) => (
+          {data.hourlyTrend.slice(-24).map(trend => (
             <div key={trend.period} className="flex items-center gap-4">
               <div className="w-32 text-sm text-gray-600">
                 {new Date(trend.period).toLocaleTimeString()}
@@ -265,7 +263,7 @@ export function ErrorAnalyticsDashboard({
                   style={{
                     width: `${Math.min(
                       (trend.totalErrors /
-                        Math.max(...data.hourlyTrend.map((t) => t.totalErrors), 1)) *
+                        Math.max(...data.hourlyTrend.map(t => t.totalErrors), 1)) *
                         100,
                       100
                     )}%`,
@@ -286,7 +284,7 @@ export function ErrorAnalyticsDashboard({
             Recent Correlation IDs
           </h2>
           <div className="flex flex-wrap gap-2">
-            {data.recentCorrelationIds.map((id) => (
+            {data.recentCorrelationIds.map(id => (
               <code
                 key={id}
                 className="px-3 py-1 bg-gray-100 text-gray-800 rounded text-sm font-mono"

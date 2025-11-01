@@ -46,9 +46,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
     tti: 3800,
   },
 }) => {
-  const [performanceData, setPerformanceData] = useState<PerformanceData | null>(
-    null
-  )
+  const [performanceData, setPerformanceData] = useState<PerformanceData | null>(null)
   const [isCollecting, setIsCollecting] = useState(false)
   const [alerts, setAlerts] = useState<string[]>([])
 
@@ -70,9 +68,7 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
       }
 
       // Collect navigation timing
-      const navigation = performance.getEntriesByType(
-        "navigation"
-      )[0] as PerformanceNavigationTiming
+      const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming
       const navigationMetrics: PerformanceMetrics = {
         dns: navigation
           ? navigation.domainLookupEnd - navigation.domainLookupStart
@@ -123,24 +119,14 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
       // Check for performance alerts
       const newAlerts: string[] = []
       if (navigationMetrics.loadComplete > thresholds.lcp) {
-        newAlerts.push(
-          `Page load time (${navigationMetrics.loadComplete.toFixed(
-            0
-          )}ms) exceeds LCP threshold (${thresholds.lcp}ms)`
-        )
+        newAlerts.push(`Page load time (${navigationMetrics.loadComplete.toFixed(0)}ms) exceeds LCP threshold (${thresholds.lcp}ms)`)
       }
       if (resourceMetrics.count > 50) {
-        newAlerts.push(
-          `High resource count: ${resourceMetrics.count} resources loaded`
-        )
+        newAlerts.push(`High resource count: ${resourceMetrics.count} resources loaded`)
       }
       if (resourceMetrics.totalSize > 2 * 1024 * 1024) {
         // 2MB
-        newAlerts.push(
-          `Large bundle size: ${(resourceMetrics.totalSize / 1024 / 1024).toFixed(
-            1
-          )}MB`
-        )
+        newAlerts.push(`Large bundle size: ${(resourceMetrics.totalSize / 1024 / 1024).toFixed(1)}MB`)
       }
 
       setAlerts(newAlerts)
@@ -203,7 +189,9 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
       return "0 Bytes"
     }
     const k = 1024
-    const sizes = ["Bytes", "KB", "MB", "GB"]
+    const sizes = [
+"Bytes", "KB", "MB", "GB"
+]
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
   }
@@ -245,12 +233,10 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
               {performanceData.navigation.loadComplete.toFixed(0)}ms
             </div>
             <div
-              className={`text-sm ${getScoreColor(
-                getPerformanceScore(
+              className={`text-sm ${getScoreColor(getPerformanceScore(
                   performanceData.navigation.loadComplete,
                   thresholds.lcp
-                )
-              )}`}
+                ))}`}
             >
               {getPerformanceScore(
                 performanceData.navigation.loadComplete,
@@ -265,12 +251,10 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
               {performanceData.navigation.domContentLoaded.toFixed(0)}ms
             </div>
             <div
-              className={`text-sm ${getScoreColor(
-                getPerformanceScore(
+              className={`text-sm ${getScoreColor(getPerformanceScore(
                   performanceData.navigation.domContentLoaded,
                   thresholds.tti
-                )
-              )}`}
+                ))}`}
             >
               {getPerformanceScore(
                 performanceData.navigation.domContentLoaded,
@@ -285,12 +269,10 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
               {performanceData.navigation.domContentLoaded.toFixed(0)}ms
             </div>
             <div
-              className={`text-sm ${getScoreColor(
-                getPerformanceScore(
+              className={`text-sm ${getScoreColor(getPerformanceScore(
                   performanceData.navigation.domContentLoaded,
                   thresholds.fcp
-                )
-              )}`}
+                ))}`}
             >
               {getPerformanceScore(
                 performanceData.navigation.domContentLoaded,
@@ -305,13 +287,11 @@ const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
               {performanceData.webVitals.cls.toFixed(3)}
             </div>
             <div
-              className={`text-sm ${getScoreColor(
-                getPerformanceScore(
+              className={`text-sm ${getScoreColor(getPerformanceScore(
                   performanceData.webVitals.cls,
                   thresholds.cls,
                   true
-                )
-              )}`}
+                ))}`}
             >
               {getPerformanceScore(
                 performanceData.webVitals.cls,

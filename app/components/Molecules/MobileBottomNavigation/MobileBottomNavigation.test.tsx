@@ -53,9 +53,7 @@ describe("MobileBottomNavigation", () => {
     })
 
     it("applies custom className", () => {
-      const { container } = renderWithProviders(
-        <MobileBottomNavigation className="custom-class" />
-      )
+      const { container } = renderWithProviders(<MobileBottomNavigation className="custom-class" />)
       const wrapper = container.firstChild
       expect(wrapper).toHaveClass("custom-class")
     })
@@ -119,12 +117,9 @@ describe("MobileBottomNavigation", () => {
       const user = userEvent.setup()
       const mockFocus = vi.fn()
 
-      document.querySelector = vi.fn(
-        () =>
-          ({
+      document.querySelector = vi.fn(() => ({
             focus: mockFocus,
-          } as any)
-      )
+          } as any))
 
       renderWithProviders(<MobileBottomNavigation />)
       const searchButton = screen.getByRole("button", { name: /search/i })
@@ -367,7 +362,7 @@ describe("MobileBottomNavigation", () => {
       renderWithProviders(<MobileBottomNavigation />)
 
       const links = screen.getAllByRole("link")
-      links.forEach((link) => {
+      links.forEach(link => {
         expect(link).toHaveAttribute("href")
       })
     })
@@ -420,7 +415,7 @@ describe("MobileBottomNavigation", () => {
       renderWithProviders(<MobileBottomNavigation />)
       const links = screen.getAllByRole("link")
 
-      links.forEach((link) => {
+      links.forEach(link => {
         expect(link).toHaveClass("transition-colors")
       })
     })

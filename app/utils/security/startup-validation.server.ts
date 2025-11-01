@@ -44,9 +44,7 @@ function validateSecurityRequirements(env: any) {
       console.warn("⚠️  JWT_SECRET should be at least 64 characters in production")
     }
     if (env.SESSION_SECRET.length < 64) {
-      console.warn(
-        "⚠️  SESSION_SECRET should be at least 64 characters in production"
-      )
+      console.warn("⚠️  SESSION_SECRET should be at least 64 characters in production")
     }
   }
 
@@ -61,15 +59,11 @@ function validateSecurityRequirements(env: any) {
   ]
 
   if (commonWeakSecrets.includes(env.JWT_SECRET)) {
-    throw new Error(
-      "JWT_SECRET appears to be a default/weak value. Please use a strong, unique secret."
-    )
+    throw new Error("JWT_SECRET appears to be a default/weak value. Please use a strong, unique secret.")
   }
 
   if (commonWeakSecrets.includes(env.SESSION_SECRET)) {
-    throw new Error(
-      "SESSION_SECRET appears to be a default/weak value. Please use a strong, unique secret."
-    )
+    throw new Error("SESSION_SECRET appears to be a default/weak value. Please use a strong, unique secret.")
   }
 
   // Validate database URL format - support PostgreSQL, Prisma Accelerate, and Prisma Accelerate with prisma+postgres format
@@ -79,16 +73,12 @@ function validateSecurityRequirements(env: any) {
     env.DATABASE_URL.startsWith("prisma+postgres://")
 
   if (!isPostgreSQL && !isPrismaAccelerate && !isPrismaAccelerateWithPrefix) {
-    throw new Error(
-      "DATABASE_URL must be either a PostgreSQL connection string (postgresql://), a Prisma Accelerate URL (prisma://), or a Prisma Accelerate URL with prisma+postgres prefix"
-    )
+    throw new Error("DATABASE_URL must be either a PostgreSQL connection string (postgresql://), a Prisma Accelerate URL (prisma://), or a Prisma Accelerate URL with prisma+postgres prefix")
   }
 
   // Check for localhost in production
   if (env.NODE_ENV === "production" && env.DATABASE_URL.includes("localhost")) {
-    console.warn(
-      "⚠️  DATABASE_URL contains localhost in production - this may be incorrect"
-    )
+    console.warn("⚠️  DATABASE_URL contains localhost in production - this may be incorrect")
   }
 }
 

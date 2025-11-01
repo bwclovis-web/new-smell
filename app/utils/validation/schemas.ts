@@ -54,7 +54,7 @@ export const commonSchemas = {
     .regex(/[^a-zA-Z0-9]/, {
       message: "Password must contain at least one special character",
     })
-    .refine((pwd) => !pwd.includes(" "), {
+    .refine(pwd => !pwd.includes(" "), {
       message: "Password cannot contain spaces",
     }),
 
@@ -190,7 +190,9 @@ export const perfumeHouseSchemas = {
     country: commonSchemas.country,
     founded: commonSchemas.year,
     type: z
-      .enum(["niche", "designer", "indie", "celebrity", "drugstore"])
+      .enum([
+"niche", "designer", "indie", "celebrity", "drugstore"
+])
       .optional(),
     email: commonSchemas.email.optional(),
     phone: commonSchemas.phone,
@@ -205,7 +207,9 @@ export const perfumeHouseSchemas = {
     country: commonSchemas.country,
     founded: commonSchemas.year,
     type: z
-      .enum(["niche", "designer", "indie", "celebrity", "drugstore"])
+      .enum([
+"niche", "designer", "indie", "celebrity", "drugstore"
+])
       .optional(),
     email: commonSchemas.email.optional(),
     phone: commonSchemas.phone,
@@ -286,7 +290,9 @@ export const perfumeSchemas = {
       })
       .optional(),
     notes: commonSchemas.stringArrayOptional,
-    sortBy: z.enum(["name", "price", "rating", "createdAt"]).optional(),
+    sortBy: z.enum([
+"name", "price", "rating", "createdAt"
+]).optional(),
     sortOrder: z.enum(["asc", "desc"]).optional(),
   }),
 } as const
@@ -306,7 +312,7 @@ export const ratingSchemas = {
       overall: commonSchemas.ratingOptional,
     })
     .refine(
-      (data) => {
+      data => {
         const ratings = [
           data.longevity,
           data.sillage,
@@ -314,7 +320,7 @@ export const ratingSchemas = {
           data.priceValue,
           data.overall,
         ]
-        return ratings.some((rating) => rating !== undefined)
+        return ratings.some(rating => rating !== undefined)
       },
       {
         message: "At least one rating is required",
@@ -367,7 +373,7 @@ export const wishlistSchemas = {
       .string()
       .optional()
       .default("false")
-      .transform((val) => val === "true"),
+      .transform(val => val === "true"),
   }),
 } as const
 
@@ -389,14 +395,12 @@ export const authSchemas = {
       acceptTerms: z
         .string()
         .optional()
-        .transform((val) => val === "on" || val === "true")
-        .pipe(
-          z.boolean().refine((val) => val === true, {
+        .transform(val => val === "on" || val === "true")
+        .pipe(z.boolean().refine(val => val === true, {
             message: "You must accept the terms and conditions",
-          })
-        ),
+          })),
     })
-    .refine((data) => data.password === data.confirmPassword, {
+    .refine(data => data.password === data.confirmPassword, {
       message: "Passwords do not match",
       path: ["confirmPassword"],
     }),
@@ -417,11 +421,11 @@ export const authSchemas = {
         .string()
         .min(1, { message: "Confirm new password is required" }),
     })
-    .refine((data) => data.newPassword === data.confirmNewPassword, {
+    .refine(data => data.newPassword === data.confirmNewPassword, {
       message: "New passwords do not match",
       path: ["confirmNewPassword"],
     })
-    .refine((data) => data.currentPassword !== data.newPassword, {
+    .refine(data => data.currentPassword !== data.newPassword, {
       message: "New password must be different from current password",
       path: ["newPassword"],
     }),
@@ -438,7 +442,7 @@ export const authSchemas = {
         .string()
         .min(1, { message: "Confirm new password is required" }),
     })
-    .refine((data) => data.newPassword === data.confirmNewPassword, {
+    .refine(data => data.newPassword === data.confirmNewPassword, {
       message: "New passwords do not match",
       path: ["confirmNewPassword"],
     }),
@@ -475,7 +479,9 @@ export const apiSchemas = {
     q: z.string().max(100, "Search query too long").optional(),
     page: z.string().regex(/^\d+$/).transform(Number).optional(),
     limit: z.string().regex(/^\d+$/).transform(Number).optional(),
-    sortBy: z.enum(["name", "price", "rating", "createdAt"]).optional(),
+    sortBy: z.enum([
+"name", "price", "rating", "createdAt"
+]).optional(),
     sortOrder: z.enum(["asc", "desc"]).optional(),
   }),
 
@@ -508,7 +514,9 @@ export const adminSchemas = {
   }),
 
   dataQualityReport: z.object({
-    timeframe: z.enum(["7d", "30d", "90d", "1y", "all"], {
+    timeframe: z.enum([
+"7d", "30d", "90d", "1y", "all"
+], {
       errorMap: () => ({
         message: "Timeframe must be 7d, 30d, 90d, 1y, or all",
       }),

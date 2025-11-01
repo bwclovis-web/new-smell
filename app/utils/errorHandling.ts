@@ -54,31 +54,25 @@ const SENSITIVE_KEYS = [
  * Sanitize context by redacting sensitive information
  * This prevents sensitive data from being logged or exposed in error responses
  */
-export function sanitizeContext(
-  context?: Record<string, any>
-): Record<string, any> | undefined {
+export function sanitizeContext(context?: Record<string, any>): Record<string, any> | undefined {
   if (!context) {
     return undefined
   }
 
   const sanitized: Record<string, any> = {}
 
-  Object.keys(context).forEach((key) => {
+  Object.keys(context).forEach(key => {
     const lowerKey = key.toLowerCase()
 
     // Check if key contains any sensitive keywords
-    const isSensitive = SENSITIVE_KEYS.some((sensitive) =>
-      lowerKey.includes(sensitive.toLowerCase())
-    )
+    const isSensitive = SENSITIVE_KEYS.some(sensitive => lowerKey.includes(sensitive.toLowerCase()))
 
     if (isSensitive) {
       sanitized[key] = "[REDACTED]"
     } else if (typeof context[key] === "object" && context[key] !== null) {
       // Recursively sanitize nested objects
       if (Array.isArray(context[key])) {
-        sanitized[key] = context[key].map((item: any) =>
-          typeof item === "object" ? sanitizeContext(item) : item
-        )
+        sanitized[key] = context[key].map((item: any) => typeof item === "object" ? sanitizeContext(item) : item)
       } else {
         sanitized[key] = sanitizeContext(context[key] as Record<string, any>)
       }
@@ -169,8 +163,7 @@ export class AppError extends Error {
 
 // Error Factory Functions
 export const createError = {
-  validation: (message: string, context?: Record<string, any>) =>
-    new AppError(
+  validation: (message: string, context?: Record<string, any>) => new AppError(
       message,
       ErrorType.VALIDATION,
       ErrorSeverity.LOW,
@@ -182,8 +175,7 @@ export const createError = {
   authentication: (
     message: string = "Authentication failed",
     context?: Record<string, any>
-  ) =>
-    new AppError(
+  ) => new AppError(
       message,
       ErrorType.AUTHENTICATION,
       ErrorSeverity.MEDIUM,
@@ -195,8 +187,7 @@ export const createError = {
   authorization: (
     message: string = "Access denied",
     context?: Record<string, any>
-  ) =>
-    new AppError(
+  ) => new AppError(
       message,
       ErrorType.AUTHORIZATION,
       ErrorSeverity.MEDIUM,
@@ -205,8 +196,7 @@ export const createError = {
       context
     ),
 
-  notFound: (resource: string = "Resource", context?: Record<string, any>) =>
-    new AppError(
+  notFound: (resource: string = "Resource", context?: Record<string, any>) => new AppError(
       `${resource} not found`,
       ErrorType.NOT_FOUND,
       ErrorSeverity.LOW,
@@ -215,8 +205,7 @@ export const createError = {
       context
     ),
 
-  network: (message: string = "Network error", context?: Record<string, any>) =>
-    new AppError(
+  network: (message: string = "Network error", context?: Record<string, any>) => new AppError(
       message,
       ErrorType.NETWORK,
       ErrorSeverity.MEDIUM,
@@ -225,8 +214,7 @@ export const createError = {
       context
     ),
 
-  database: (message: string = "Database error", context?: Record<string, any>) =>
-    new AppError(
+  database: (message: string = "Database error", context?: Record<string, any>) => new AppError(
       message,
       ErrorType.DATABASE,
       ErrorSeverity.HIGH,
@@ -235,8 +223,7 @@ export const createError = {
       context
     ),
 
-  server: (message: string = "Server error", context?: Record<string, any>) =>
-    new AppError(
+  server: (message: string = "Server error", context?: Record<string, any>) => new AppError(
       message,
       ErrorType.SERVER,
       ErrorSeverity.HIGH,
@@ -245,8 +232,7 @@ export const createError = {
       context
     ),
 
-  client: (message: string = "Client error", context?: Record<string, any>) =>
-    new AppError(
+  client: (message: string = "Client error", context?: Record<string, any>) => new AppError(
       message,
       ErrorType.CLIENT,
       ErrorSeverity.MEDIUM,
@@ -255,8 +241,7 @@ export const createError = {
       context
     ),
 
-  unknown: (message: string = "Unknown error", context?: Record<string, any>) =>
-    new AppError(
+  unknown: (message: string = "Unknown error", context?: Record<string, any>) => new AppError(
       message,
       ErrorType.UNKNOWN,
       ErrorSeverity.MEDIUM,
@@ -529,8 +514,7 @@ export interface ErrorBoundaryProps {
 }
 
 // Utility Functions
-export const isAppError = (error: unknown): error is AppError =>
-  error instanceof AppError
+export const isAppError = (error: unknown): error is AppError => error instanceof AppError
 
 export const getErrorMessage = (error: unknown): string => {
   if (isAppError(error)) {
@@ -561,8 +545,7 @@ export const asyncErrorHandler =
   <T extends any[], R>(
     fn: (...args: T) => Promise<R>,
     context?: Record<string, any>
-  ) =>
-  async (...args: T): Promise<R> => {
+  ) => async (...args: T): Promise<R> => {
     try {
       return await fn(...args)
     } catch (error) {
@@ -572,8 +555,7 @@ export const asyncErrorHandler =
 
 // Sync Error Wrapper
 export const syncErrorHandler =
-  <T extends any[], R>(fn: (...args: T) => R, context?: Record<string, any>) =>
-  (...args: T): R => {
+  <T extends any[], R>(fn: (...args: T) => R, context?: Record<string, any>) => (...args: T): R => {
     try {
       return fn(...args)
     } catch (error) {

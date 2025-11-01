@@ -13,7 +13,7 @@ export function useCSRF() {
     const getCSRFToken = () => {
       const cookies = document.cookie.split(";")
 
-      const csrfCookie = cookies.find((cookie) => cookie.trim().startsWith("_csrf="))
+      const csrfCookie = cookies.find(cookie => cookie.trim().startsWith("_csrf="))
 
       if (csrfCookie) {
         const token = csrfCookie.split("=")[1]

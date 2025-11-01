@@ -6,7 +6,9 @@
 export const bundleStrategies = {
   // Route-based splitting
   routeBased: {
-    critical: ["home", "behind-the-bottle", "the-vault", "perfume", "perfume-house"],
+    critical: [
+"home", "behind-the-bottle", "the-vault", "perfume", "perfume-house"
+],
     admin: [
       "admin/adminIndex",
       "admin/MyScents",
@@ -23,7 +25,9 @@ export const bundleStrategies = {
 
   // Component-based splitting
   componentBased: {
-    heavy: ["DataQualityDashboard", "VirtualScrollDemo", "PerfumeForm", "HouseForm"],
+    heavy: [
+"DataQualityDashboard", "VirtualScrollDemo", "PerfumeForm", "HouseForm"
+],
     charts: ["ChartComponents", "DataVisualization"],
     modals: ["ComplexModals", "DataEntryModals"],
   },
@@ -31,9 +35,15 @@ export const bundleStrategies = {
   // Vendor splitting
   vendor: {
     react: ["react", "react-dom", "react-router"],
-    ui: ["@gsap/react", "gsap", "zustand", "react-i18next", "i18next"],
-    icons: ["react-icons/gr", "react-icons/md", "react-icons/fa", "react-icons/io5"],
-    utils: ["cookie", "clsx", "class-variance-authority", "tailwind-merge"],
+    ui: [
+"@gsap/react", "gsap", "zustand", "react-i18next", "i18next"
+],
+    icons: [
+"react-icons/gr", "react-icons/md", "react-icons/fa", "react-icons/io5"
+],
+    utils: [
+"cookie", "clsx", "class-variance-authority", "tailwind-merge"
+],
     charts: ["chart.js", "react-chartjs-2"], // If using chart libraries
   },
 }
@@ -75,9 +85,7 @@ export const analyzeBundle = () => {
   }
 
   const performance = window.performance
-  const navigation = performance.getEntriesByType(
-    "navigation"
-  )[0] as PerformanceNavigationTiming
+  const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming
 
   return {
     // Timing metrics
@@ -93,7 +101,7 @@ export const analyzeBundle = () => {
     },
 
     // Resource metrics
-    resources: performance.getEntriesByType("resource").map((resource) => ({
+    resources: performance.getEntriesByType("resource").map(resource => ({
       name: resource.name,
       duration: resource.duration,
       size: (resource as any).transferSize || 0,
@@ -112,9 +120,7 @@ export const analyzeBundle = () => {
 }
 
 // Bundle optimization recommendations
-export const getOptimizationRecommendations = (
-  bundleAnalysis: ReturnType<typeof analyzeBundle>
-) => {
+export const getOptimizationRecommendations = (bundleAnalysis: ReturnType<typeof analyzeBundle>) => {
   if (!bundleAnalysis) {
     return []
   }
@@ -133,21 +139,19 @@ export const getOptimizationRecommendations = (
   }
 
   // Check for large JavaScript bundles
-  const jsResources = resources.filter((r) => r.name.endsWith(".js"))
+  const jsResources = resources.filter(r => r.name.endsWith(".js"))
   const totalJSSize = jsResources.reduce((sum, r) => sum + r.size, 0)
 
   if (totalJSSize > bundleLimits.initial * 1024) {
     recommendations.push({
       type: "bundle-size",
-      message: `Total JS bundle size (${Math.round(
-        totalJSSize / 1024
-      )}KB) exceeds recommended limit. Consider splitting vendor chunks.`,
+      message: `Total JS bundle size (${Math.round(totalJSSize / 1024)}KB) exceeds recommended limit. Consider splitting vendor chunks.`,
       priority: "medium",
     })
   }
 
   // Check for unused resources
-  const unusedResources = resources.filter((r) => r.duration < 10 && r.size > 10000)
+  const unusedResources = resources.filter(r => r.duration < 10 && r.size > 10000)
   if (unusedResources.length > 0) {
     recommendations.push({
       type: "unused-code",
@@ -164,8 +168,7 @@ export const createRetryableImport = <T>(
   importFn: () => Promise<T>,
   maxRetries: number = 3,
   delay: number = 1000
-) =>
-  new Promise<T>((resolve, reject) => {
+) => new Promise<T>((resolve, reject) => {
     let retries = 0
 
     const attemptImport = async () => {
@@ -194,7 +197,9 @@ export const viteBundleConfig = {
         "react-vendor": ["react", "react-dom", "react-router"],
 
         // UI and animation libraries
-        "ui-vendor": ["@gsap/react", "gsap", "zustand", "react-i18next", "i18next"],
+        "ui-vendor": [
+"@gsap/react", "gsap", "zustand", "react-i18next", "i18next"
+],
 
         // Icon libraries
         "icons-vendor": [
@@ -228,9 +233,7 @@ export const viteBundleConfig = {
         ],
 
         // Data visualization
-        "data-viz": [
-          "./app/components/Containers/DataQualityDashboard/DataQualityDashboard.tsx",
-        ],
+        "data-viz": ["./app/components/Containers/DataQualityDashboard/DataQualityDashboard.tsx",],
       },
     },
   },

@@ -225,13 +225,11 @@ describe("VooDooCheck", () => {
     })
 
     it("should handle custom label text", () => {
-      render(
-        <VooDooCheck
+      render(<VooDooCheck
           {...defaultProps}
           labelChecked="Enabled"
           labelUnchecked="Disabled"
-        />
-      )
+        />)
 
       expect(screen.getByText("Disabled")).toBeInTheDocument()
       expect(screen.queryByText("Enabled")).not.toBeInTheDocument()
@@ -287,26 +285,22 @@ describe("VooDooCheck", () => {
 
     it("should handle very long label text", () => {
       const longLabel = "This is a very long label text that might wrap or overflow"
-      render(
-        <VooDooCheck
+      render(<VooDooCheck
           {...defaultProps}
           labelChecked={longLabel}
           labelUnchecked={longLabel}
-        />
-      )
+        />)
 
       expect(screen.getByText(longLabel)).toBeInTheDocument()
     })
 
     it("should handle special characters in label text", () => {
       const specialLabel = "On/Off & More!"
-      render(
-        <VooDooCheck
+      render(<VooDooCheck
           {...defaultProps}
           labelChecked={specialLabel}
           labelUnchecked={specialLabel}
-        />
-      )
+        />)
 
       expect(screen.getByText(specialLabel)).toBeInTheDocument()
     })

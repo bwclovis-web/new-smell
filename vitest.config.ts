@@ -32,7 +32,9 @@ export default defineConfig({
     // Coverage configuration
     coverage: {
       provider: "v8",
-      reporter: ["text", "json", "html", "lcov", "text-summary", "clover"],
+      reporter: [
+"text", "json", "html", "lcov", "text-summary", "clover"
+],
       reportsDirectory: "./coverage",
       include: ["app/**/*.{js,ts,jsx,tsx}", "utils/**/*.{js,ts,jsx,tsx}"],
       exclude: [
@@ -103,7 +105,9 @@ export default defineConfig({
     watch: false,
 
     // Reporter configuration
-    reporters: ["verbose", "json", "html", "junit"],
+    reporters: [
+"verbose", "json", "html", "junit"
+],
     outputFile: {
       json: "./test-results/results.json",
       junit: "./test-results/junit.xml",

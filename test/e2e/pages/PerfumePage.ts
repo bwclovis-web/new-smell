@@ -98,9 +98,7 @@ export class PerfumePage extends BasePage {
    */
   async ratePerfume(rating: number): Promise<void> {
     // Click on the star rating
-    const star = this.page.locator(
-      `${this.selectors.ratingStars} [data-rating="${rating}"]`
-    )
+    const star = this.page.locator(`${this.selectors.ratingStars} [data-rating="${rating}"]`)
     await star.click()
     await this.waitForReady()
   }

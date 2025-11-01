@@ -7,8 +7,7 @@ export const createJsonResponse = <T = unknown>(
   data: T,
   status = 200,
   headers: Record<string, string> = {}
-) =>
-  new Response(JSON.stringify(data), {
+) => new Response(JSON.stringify(data), {
     status,
     headers: {
       "Content-Type": "application/json",

@@ -46,7 +46,7 @@ export const useFormState = <T extends Record<string, any>>({
 
   // Set individual field value
   const setValue = <K extends keyof T>(field: K, value: T[K]) => {
-    setValuesState((prev) => {
+    setValuesState(prev => {
       const newValues = { ...prev, [field]: value }
       setIsDirty(true)
       return newValues
@@ -54,7 +54,7 @@ export const useFormState = <T extends Record<string, any>>({
 
     // Clear error for this field when user starts typing
     if (errors[field]) {
-      setErrorsState((prev) => {
+      setErrorsState(prev => {
         const newErrors = { ...prev }
         delete newErrors[field]
         return newErrors
@@ -64,7 +64,7 @@ export const useFormState = <T extends Record<string, any>>({
 
   // Set multiple field values
   const setValues = (newValues: Partial<T>) => {
-    setValuesState((prev) => {
+    setValuesState(prev => {
       const updated = { ...prev, ...newValues }
       setIsDirty(true)
       return updated
@@ -73,7 +73,7 @@ export const useFormState = <T extends Record<string, any>>({
 
   // Set individual field error
   const setError = <K extends keyof T>(field: K, error: string) => {
-    setErrorsState((prev) => ({
+    setErrorsState(prev => ({
       ...prev,
       [field]: error,
     }))
@@ -81,7 +81,7 @@ export const useFormState = <T extends Record<string, any>>({
 
   // Set multiple field errors
   const setErrors = (newErrors: Partial<Record<keyof T, string>>) => {
-    setErrorsState((prev) => ({
+    setErrorsState(prev => ({
       ...prev,
       ...newErrors,
     }))
@@ -89,7 +89,7 @@ export const useFormState = <T extends Record<string, any>>({
 
   // Clear individual field error
   const clearError = <K extends keyof T>(field: K) => {
-    setErrorsState((prev) => {
+    setErrorsState(prev => {
       const newErrors = { ...prev }
       delete newErrors[field]
       return newErrors

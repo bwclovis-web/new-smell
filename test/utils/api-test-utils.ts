@@ -3,8 +3,7 @@ import { vi } from "vitest"
 // API Testing Utilities
 
 // Mock fetch responses
-export const mockFetchResponse = (data: any, status = 200, headers = {}) =>
-  vi.fn().mockResolvedValue({
+export const mockFetchResponse = (data: any, status = 200, headers = {}) => vi.fn().mockResolvedValue({
     ok: status >= 200 && status < 300,
     status,
     statusText: status === 200 ? "OK" : "Error",
@@ -15,8 +14,7 @@ export const mockFetchResponse = (data: any, status = 200, headers = {}) =>
   })
 
 // Mock fetch error
-export const mockFetchError = (message = "Network error", status = 500) =>
-  vi.fn().mockRejectedValue(Object.assign(new Error(message), { status }))
+export const mockFetchError = (message = "Network error", status = 500) => vi.fn().mockRejectedValue(Object.assign(new Error(message), { status }))
 
 // Mock API endpoints
 export const mockAPIEndpoints = {
@@ -102,9 +100,7 @@ export const testHTTPMethods = async (
     })
 
     expect(response.status).toBe(endpoint.expectedStatus)
-    console.log(
-      `✓ ${endpoint.method} ${endpoint.path} returned ${endpoint.expectedStatus}`
-    )
+    console.log(`✓ ${endpoint.method} ${endpoint.path} returned ${endpoint.expectedStatus}`)
   }
 }
 
@@ -235,20 +231,16 @@ export const testAPILoadingStates = async (
   apiFunction: () => Promise<any>,
   getLoadingState: () => boolean
 ) => {
-  const slowMockResponse = vi.fn().mockImplementation(
-    () =>
-      new Promise((resolve) => {
+  const slowMockResponse = vi.fn().mockImplementation(() => new Promise(resolve => {
         setTimeout(
-          () =>
-            resolve({
+          () => resolve({
               ok: true,
               status: 200,
               json: () => Promise.resolve({ data: "success" }),
             }),
           100
         )
-      })
-  )
+      }))
 
   global.fetch = slowMockResponse
 
@@ -264,8 +256,7 @@ export const testAPILoadingStates = async (
 }
 
 // Create mock server responses
-export const createMockServer = (responses: Record<string, any>) =>
-  vi.fn().mockImplementation((url: string, options: any = {}) => {
+export const createMockServer = (responses: Record<string, any>) => vi.fn().mockImplementation((url: string, options: any = {}) => {
     const method = options.method || "GET"
     const key = `${method} ${url}`
 

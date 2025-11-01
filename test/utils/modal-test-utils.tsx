@@ -24,9 +24,7 @@ export const testModalOpen = async (
 }
 
 // Test modal closing
-export const testModalClose = async (
-  closeMethod: "button" | "overlay" | "escape" = "button"
-) => {
+export const testModalClose = async (closeMethod: "button" | "overlay" | "escape" = "button") => {
   const user = userEvent.setup()
 
   switch (closeMethod) {
@@ -80,9 +78,7 @@ export const testModalBackdrop = async () => {
 }
 
 // Test modal animations
-export const testModalAnimations = async (
-  expectedAnimation: "fade" | "slide" | "zoom" = "fade"
-) => {
+export const testModalAnimations = async (expectedAnimation: "fade" | "slide" | "zoom" = "fade") => {
   const modal = screen.getByRole("dialog")
 
   switch (expectedAnimation) {

@@ -33,7 +33,9 @@ const NoirIcon = ({
       return
     }
     animateLiquid(liquidRef.current, filled, rating)
-  }, [filled, rating, category, isClient])
+  }, [
+filled, rating, category, isClient
+])
 
   const animateLiquid = (
     element: SVGRectElement,

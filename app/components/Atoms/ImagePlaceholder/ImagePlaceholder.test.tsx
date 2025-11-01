@@ -78,9 +78,7 @@ describe("ImagePlaceholder", () => {
   describe("Icon variant", () => {
     it("should render icon variant with custom icon", () => {
       const customIcon = <span data-testid="custom-icon">📷</span>
-      const { container } = render(
-        <ImagePlaceholder variant="icon" icon={customIcon} />
-      )
+      const { container } = render(<ImagePlaceholder variant="icon" icon={customIcon} />)
 
       expect(screen.getByTestId("custom-icon")).toBeInTheDocument()
       expect(screen.getByTestId("custom-icon")).toHaveTextContent("📷")
@@ -88,9 +86,7 @@ describe("ImagePlaceholder", () => {
 
     it("should render icon with proper styling", () => {
       const customIcon = <span data-testid="custom-icon">📷</span>
-      const { container } = render(
-        <ImagePlaceholder variant="icon" icon={customIcon} />
-      )
+      const { container } = render(<ImagePlaceholder variant="icon" icon={customIcon} />)
 
       const iconContainer = screen.getByTestId("custom-icon").parentElement
       expect(iconContainer).toHaveClass(
@@ -111,9 +107,7 @@ describe("ImagePlaceholder", () => {
 
     it("should have animation by default in icon variant", () => {
       const customIcon = <span data-testid="custom-icon">📷</span>
-      const { container } = render(
-        <ImagePlaceholder variant="icon" icon={customIcon} />
-      )
+      const { container } = render(<ImagePlaceholder variant="icon" icon={customIcon} />)
 
       // The animate-pulse class is on the outer container, not the icon wrapper
       const placeholder = container.firstChild as HTMLElement
@@ -122,9 +116,7 @@ describe("ImagePlaceholder", () => {
 
     it("should not have animation when animate is false in icon variant", () => {
       const customIcon = <span data-testid="custom-icon">📷</span>
-      const { container } = render(
-        <ImagePlaceholder variant="icon" icon={customIcon} animate={false} />
-      )
+      const { container } = render(<ImagePlaceholder variant="icon" icon={customIcon} animate={false} />)
 
       const placeholder = container.firstChild as HTMLElement
       expect(placeholder).not.toHaveClass("animate-pulse")
@@ -153,9 +145,7 @@ describe("ImagePlaceholder", () => {
     })
 
     it("should not have animation when animate is false in gradient variant", () => {
-      const { container } = render(
-        <ImagePlaceholder variant="gradient" animate={false} />
-      )
+      const { container } = render(<ImagePlaceholder variant="gradient" animate={false} />)
 
       const placeholder = container.firstChild as HTMLElement
       expect(placeholder).not.toHaveClass("animate-pulse")
@@ -204,16 +194,14 @@ describe("ImagePlaceholder", () => {
   describe("Combined props", () => {
     it("should handle all props together", () => {
       const customIcon = <span data-testid="custom-icon">📷</span>
-      const { container } = render(
-        <ImagePlaceholder
+      const { container } = render(<ImagePlaceholder
           width={300}
           height={200}
           variant="icon"
           icon={customIcon}
           className="custom-class"
           animate={false}
-        />
-      )
+        />)
 
       const placeholder = container.firstChild as HTMLElement
       expect(placeholder).toHaveStyle("width: 300px")
@@ -224,15 +212,13 @@ describe("ImagePlaceholder", () => {
     })
 
     it("should handle gradient variant with custom dimensions and className", () => {
-      const { container } = render(
-        <ImagePlaceholder
+      const { container } = render(<ImagePlaceholder
           width="50%"
           height="100px"
           variant="gradient"
           className="custom-gradient"
           animate={true}
-        />
-      )
+        />)
 
       const placeholder = container.firstChild as HTMLElement
       expect(placeholder).toHaveStyle("width: 50%")
@@ -276,14 +262,10 @@ describe("ImagePlaceholder", () => {
         </div>
       )
 
-      const { container } = render(
-        <ImagePlaceholder variant="icon" icon={complexIcon} />
-      )
+      const { container } = render(<ImagePlaceholder variant="icon" icon={complexIcon} />)
 
       expect(screen.getByTestId("complex-icon")).toBeInTheDocument()
-      expect(
-        screen.getByTestId("complex-icon").querySelector("svg")
-      ).toBeInTheDocument()
+      expect(screen.getByTestId("complex-icon").querySelector("svg")).toBeInTheDocument()
     })
   })
 })

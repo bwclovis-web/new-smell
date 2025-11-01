@@ -33,19 +33,15 @@ async function copyImages() {
     let convertedCount = 0
 
     // Process PNG files first if conversion is enabled
-    const pngFiles = files.filter((file) => file.toLowerCase().endsWith(".png"))
-    const otherFiles = files.filter((file) =>
-      file.match(/\.(webp|jpg|jpeg|svg|gif|ico)$/i)
-    )
+    const pngFiles = files.filter(file => file.toLowerCase().endsWith(".png"))
+    const otherFiles = files.filter(file => file.match(/\.(webp|jpg|jpeg|svg|gif|ico)$/i))
 
     if (CONVERT_PNG_TO_WEBP && pngFiles.length > 0) {
       console.log(`🔄 Converting ${pngFiles.length} PNG files to WebP...`)
 
       try {
         // Dynamic import to avoid loading Sharp if not needed
-        const { convertPngToWebP, getOptimizedOptions } = await import(
-          "../app/utils/imageConversion.js"
-        )
+        const { convertPngToWebP, getOptimizedOptions } = await import("../app/utils/imageConversion.js")
 
         for (const file of pngFiles) {
           const sourcePath = join(sourceDir, file)
@@ -60,23 +56,15 @@ async function copyImages() {
 
           if (result.success) {
             convertedCount++
-            console.log(
-              `🔄 Converted: ${file} → ${webpFileName} (${result.compressionRatio.toFixed(
-                1
-              )}% smaller)`
-            )
+            console.log(`🔄 Converted: ${file} → ${webpFileName} (${result.compressionRatio.toFixed(1)}% smaller)`)
           } else {
-            console.log(
-              `⚠️  Failed to convert ${file}, copying original: ${result.error}`
-            )
+            console.log(`⚠️  Failed to convert ${file}, copying original: ${result.error}`)
             copyFileSync(sourcePath, join(targetDir, file))
             copiedCount++
           }
         }
       } catch (error) {
-        console.log(
-          `⚠️  WebP conversion failed, falling back to copying PNG files: ${error.message}`
-        )
+        console.log(`⚠️  WebP conversion failed, falling back to copying PNG files: ${error.message}`)
         // Fallback: copy PNG files as-is
         for (const file of pngFiles) {
           const sourcePath = join(sourceDir, file)
@@ -109,9 +97,7 @@ async function copyImages() {
 
     const totalProcessed = copiedCount + convertedCount
     if (convertedCount > 0) {
-      console.log(
-        `✅ Successfully processed ${totalProcessed} image files (${convertedCount} converted to WebP, ${copiedCount} copied)`
-      )
+      console.log(`✅ Successfully processed ${totalProcessed} image files (${convertedCount} converted to WebP, ${copiedCount} copied)`)
     } else {
       console.log(`✅ Successfully copied ${copiedCount} image files`)
     }

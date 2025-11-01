@@ -31,7 +31,7 @@ const passwordSchema = z
   .regex(/[^a-zA-Z0-9]/, {
     message: "Password must contain at least one special character",
   })
-  .refine((password) => !password.includes(" "), {
+  .refine(password => !password.includes(" "), {
     message: "Password cannot contain spaces",
   })
 
@@ -74,7 +74,9 @@ export const CreatePerfumeHouseSchema = z.object({
     .max(50, { message: "Country must be less than 50 characters" })
     .optional(),
   founded: yearSchema,
-  type: z.enum(["niche", "designer", "indie", "celebrity", "drugstore"]).optional(),
+  type: z.enum([
+"niche", "designer", "indie", "celebrity", "drugstore"
+]).optional(),
   email: emailSchema.optional(),
   phone: phoneSchema,
   address: z
@@ -158,7 +160,7 @@ export const CreateRatingSchema = z
     overall: ratingSchema.optional(),
   })
   .refine(
-    (data) => {
+    data => {
       const ratings = [
         data.longevity,
         data.sillage,
@@ -166,7 +168,7 @@ export const CreateRatingSchema = z
         data.priceValue,
         data.overall,
       ]
-      return ratings.some((rating) => rating !== undefined)
+      return ratings.some(rating => rating !== undefined)
     },
     {
       message: "At least one rating is required",
@@ -217,7 +219,7 @@ export const WishlistActionSchema = z.object({
     .string()
     .optional()
     .default("false")
-    .transform((val) => val === "true"),
+    .transform(val => val === "true"),
 })
 
 // User Authentication Schemas
@@ -250,14 +252,12 @@ export const UserFormSchema = z
     acceptTerms: z
       .string()
       .optional()
-      .transform((val) => val === "on" || val === "true")
-      .pipe(
-        z.boolean().refine((val) => val === true, {
+      .transform(val => val === "on" || val === "true")
+      .pipe(z.boolean().refine(val => val === true, {
           message: "You must accept the terms and conditions",
-        })
-      ),
+        })),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine(data => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   })
@@ -277,11 +277,11 @@ export const ChangePasswordSchema = z
       .string()
       .min(1, { message: "Confirm new password is required" }),
   })
-  .refine((data) => data.newPassword === data.confirmNewPassword, {
+  .refine(data => data.newPassword === data.confirmNewPassword, {
     message: "New passwords do not match",
     path: ["confirmNewPassword"],
   })
-  .refine((data) => data.currentPassword !== data.newPassword, {
+  .refine(data => data.currentPassword !== data.newPassword, {
     message: "New password must be different from current password",
     path: ["newPassword"],
   })
@@ -298,7 +298,7 @@ export const ResetPasswordSchema = z
       .string()
       .min(1, { message: "Confirm new password is required" }),
   })
-  .refine((data) => data.newPassword === data.confirmNewPassword, {
+  .refine(data => data.newPassword === data.confirmNewPassword, {
     message: "New passwords do not match",
     path: ["confirmNewPassword"],
   })
@@ -350,7 +350,9 @@ export const PerfumeSearchSchema = z.object({
     })
     .optional(),
   notes: z.array(z.string()).optional(),
-  sortBy: z.enum(["name", "price", "rating", "createdAt"]).optional(),
+  sortBy: z.enum([
+"name", "price", "rating", "createdAt"
+]).optional(),
   sortOrder: z.enum(["asc", "desc"]).optional(),
 })
 
@@ -384,7 +386,9 @@ export const AdminUserFormSchema = z.object({
 
 // Data quality report schema
 export const DataQualityReportSchema = z.object({
-  timeframe: z.enum(["7d", "30d", "90d", "1y", "all"], {
+  timeframe: z.enum([
+"7d", "30d", "90d", "1y", "all"
+], {
     errorMap: () => ({ message: "Timeframe must be 7d, 30d, 90d, 1y, or all" }),
   }),
   includeHistory: z.boolean(),

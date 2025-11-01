@@ -4,101 +4,13 @@
  * This module provides standardized patterns for error handling across the application.
  * Use these patterns consistently to ensure reliable error handling, logging, and user feedback.
  *
+ * Note: For server-only patterns like withLoaderErrorHandling and withActionErrorHandling,
+ * import from ~/utils/errorHandling.server instead.
+ *
  * @module errorHandling.patterns
  */
 
 import { AppError, createError, ErrorHandler } from "./errorHandling"
-import { ServerErrorHandler } from "./errorHandling.server"
-import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node"
-
-/**
- * Standard wrapper for route loaders with automatic error handling
- *
- * @example
- * export const loader = withLoaderErrorHandling(
- *   async ({ request, params }) => {
- *     const data = await getData(params.id)
- *     return json(data)
- *   },
- *   { context: { route: 'my-route', operation: 'getData' } }
- * )
- */
-export function withLoaderErrorHandling<T>(
-  loader: (args: LoaderFunctionArgs) => Promise<T>,
-  options?: {
-    context?: Record<string, any>
-    onError?: (error: AppError) => void
-  }
-): (args: LoaderFunctionArgs) => Promise<T | Response> {
-  return async (args: LoaderFunctionArgs) => {
-    try {
-      return await loader(args)
-    } catch (error) {
-      // Handle redirects (don't treat them as errors)
-      if (
-        error instanceof Response &&
-        (error.status === 302 || error.status === 303)
-      ) {
-        throw error
-      }
-
-      const appError = ServerErrorHandler.handle(error, {
-        route: args.request.url,
-        method: args.request.method,
-        ...options?.context,
-      })
-
-      options?.onError?.(appError)
-
-      return ServerErrorHandler.createErrorResponse(appError)
-    }
-  }
-}
-
-/**
- * Standard wrapper for route actions with automatic error handling
- *
- * @example
- * export const action = withActionErrorHandling(
- *   async ({ request }) => {
- *     const formData = await request.formData()
- *     await saveData(formData)
- *     return json({ success: true })
- *   },
- *   { context: { route: 'my-route', operation: 'saveData' } }
- * )
- */
-export function withActionErrorHandling<T>(
-  action: (args: ActionFunctionArgs) => Promise<T>,
-  options?: {
-    context?: Record<string, any>
-    onError?: (error: AppError) => void
-  }
-): (args: ActionFunctionArgs) => Promise<T | Response> {
-  return async (args: ActionFunctionArgs) => {
-    try {
-      return await action(args)
-    } catch (error) {
-      // Handle redirects (don't treat them as errors)
-      if (
-        error instanceof Response &&
-        (error.status === 302 || error.status === 303)
-      ) {
-        throw error
-      }
-
-      const appError = ServerErrorHandler.handle(error, {
-        route: args.request.url,
-        method: args.request.method,
-        ...options?.context,
-      })
-
-      options?.onError?.(appError)
-
-      return ServerErrorHandler.createErrorResponse(appError)
-    }
-  }
-}
 
 /**
  * Standard wrapper for database operations with automatic error handling
@@ -319,7 +231,7 @@ export async function withRetry<T>(
       if (attempt < maxRetries) {
         const delay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay)
         onRetry?.(attempt + 1, lastError)
-        await new Promise((resolve) => setTimeout(resolve, delay))
+        await new Promise(resolve => setTimeout(resolve, delay))
       }
     }
   }

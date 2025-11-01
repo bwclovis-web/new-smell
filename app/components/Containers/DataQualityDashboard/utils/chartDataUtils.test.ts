@@ -84,16 +84,16 @@ describe("chartDataUtils", () => {
         "Brand D",
         "Brand E",
       ])
-      expect(result.datasets[0].data).toEqual([30, 25, 20, 15, 10])
+      expect(result.datasets[0].data).toEqual([
+30, 25, 20, 15, 10
+])
       expect(result.datasets[0].label).toBe("Missing Information")
     })
 
     it("should limit to top 10 brands", () => {
       const statsWithManyBrands = {
         ...mockStats,
-        missingByBrand: Object.fromEntries(
-          Array.from({ length: 15 }, (_, i) => [`Brand ${i}`, 100 - i])
-        ),
+        missingByBrand: Object.fromEntries(Array.from({ length: 15 }, (_, i) => [`Brand ${i}`, 100 - i])),
       }
       const result = prepareMissingChartData(statsWithManyBrands)
       expect(result.labels.length).toBe(10)

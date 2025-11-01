@@ -37,8 +37,7 @@ const setToStorage = (key: string, data: CachedData): void => {
   }
 }
 
-const isExpired = (timestamp: number): boolean =>
-  Date.now() - timestamp > CACHE_DURATION
+const isExpired = (timestamp: number): boolean => Date.now() - timestamp > CACHE_DURATION
 
 export const useHousesWithLocalCache = (filters: HouseFilters = {}) => {
   const { houseType = "all", sortBy = "created-desc" } = filters
@@ -103,6 +102,6 @@ export const clearLocalHouseCache = () => {
   }
 
   Object.keys(localStorage)
-    .filter((key) => key.startsWith(STORAGE_PREFIX))
-    .forEach((key) => localStorage.removeItem(key))
+    .filter(key => key.startsWith(STORAGE_PREFIX))
+    .forEach(key => localStorage.removeItem(key))
 }

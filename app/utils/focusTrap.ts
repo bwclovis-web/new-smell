@@ -7,9 +7,7 @@ type FocusTrapFunction = (
 ) => void
 
 export const focusTrap: FocusTrapFunction = (root, trigger, action) => {
-  const elements = root?.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  )
+  const elements = root?.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
   if (!elements || elements.length === 0) {
     return
   }

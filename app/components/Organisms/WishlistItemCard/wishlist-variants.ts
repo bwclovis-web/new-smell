@@ -3,9 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 export type WishlistVariants = VariantProps<typeof wishlistVariants>
 
 export const wishlistVariants = cva(
-  [
-    "rounded-lg shadow-md overflow-hidden border transition-all duration-300 my-10 relative",
-  ],
+  ["rounded-lg shadow-md overflow-hidden border transition-all duration-300 my-10 relative",],
   {
     compoundVariants: [{}],
     defaultVariants: {

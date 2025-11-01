@@ -72,5 +72,7 @@ export default defineConfig({
       "@conform-to/zod",
     ],
   },
-  assetsInclude: ["**/*.webp", "**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.svg"],
+  assetsInclude: [
+"**/*.webp", "**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.svg"
+],
 })

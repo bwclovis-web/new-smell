@@ -21,21 +21,17 @@ export type DataQualityStats = {
 }
 
 // Helper to generate breakdown for missing house info
-export const getMissingHouseInfoBreakdown = (
-  stats: DataQualityStats | null
-): Record<string, string[]> => {
+export const getMissingHouseInfoBreakdown = (stats: DataQualityStats | null): Record<string, string[]> => {
   if (!stats || !stats.missingHouseInfoByBrand) {
     return {}
   }
   // This assumes backend returns missingHouseInfoByBrand as { houseName: number }
   // For a more detailed breakdown, backend should return { houseName: [fields] }
   // For now, we infer missing fields by showing count as array of 'Field missing'
-  return Object.fromEntries(
-    Object.entries(stats.missingHouseInfoByBrand).map(([house, count]) => [
+  return Object.fromEntries(Object.entries(stats.missingHouseInfoByBrand).map(([house, count]) => [
       house,
       Array(count).fill("Field missing"),
-    ])
-  )
+    ]))
 }
 
 export const prepareMissingChartData = (stats: DataQualityStats | null) => ({
@@ -55,9 +51,7 @@ export const prepareMissingChartData = (stats: DataQualityStats | null) => ({
   ],
 })
 
-export const prepareMissingHouseInfoChartData = (
-  stats: DataQualityStats | null
-) => ({
+export const prepareMissingHouseInfoChartData = (stats: DataQualityStats | null) => ({
   labels:
     stats && stats.missingHouseInfoByBrand
       ? Object.keys(stats.missingHouseInfoByBrand).slice(0, 10)

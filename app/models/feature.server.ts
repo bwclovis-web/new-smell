@@ -1,7 +1,6 @@
 import { prisma } from "../db.server"
 
-export const getAllFeatures = async () =>
-  prisma.perfumeHouse.findMany({
+export const getAllFeatures = async () => prisma.perfumeHouse.findMany({
     select: {
       id: true,
       name: true,

@@ -41,11 +41,9 @@ type House = {
   updatedAt?: string | Date
 }
 
-const getTypeField = (house: House): string =>
-  typeof house.type !== "string" && house.name ? house.name ?? "" : house.type ?? ""
+const getTypeField = (house: House): string => typeof house.type !== "string" && house.name ? house.name ?? "" : house.type ?? ""
 
-const getAddressField = (house: House): string =>
-  typeof house.address !== "string" && house.address
+const getAddressField = (house: House): string => typeof house.address !== "string" && house.address
     ? house.address ?? ""
     : house.type ?? ""
 
@@ -101,9 +99,7 @@ export const handleDownloadCSV = async () => {
     console.log("First house:", houses[0])
 
     if (houses.length === 0) {
-      alert(
-        "No houses found to export. Please check if there are houses in the database."
-      )
+      alert("No houses found to export. Please check if there are houses in the database.")
       return
     }
 
@@ -112,11 +108,11 @@ export const handleDownloadCSV = async () => {
 
     // Add data rows
     for (const house of houses) {
-      rows.push(fields.map((field) => formatField(field, house)))
+      rows.push(fields.map(field => formatField(field, house)))
     }
 
     // Join rows with proper line endings
-    const csvContent = rows.map((row) => row.join(",")).join("\r\n")
+    const csvContent = rows.map(row => row.join(",")).join("\r\n")
 
     // Add BOM for proper UTF-8 encoding in Excel
     const BOM = "\uFEFF"
@@ -142,9 +138,7 @@ export const handleDownloadCSV = async () => {
     document.body.removeChild(aTag)
     URL.revokeObjectURL(url)
 
-    console.log(
-      `CSV downloaded successfully: ${filename} with ${houses.length} houses`
-    )
+    console.log(`CSV downloaded successfully: ${filename} with ${houses.length} houses`)
   } catch (error) {
     console.error("Error downloading CSV:", error)
     const errorMessage = error instanceof Error ? error.message : String(error)

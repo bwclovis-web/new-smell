@@ -42,7 +42,9 @@ export const getOptimizedImageUrl = (
  */
 export const generateResponsiveSrcSet = (
   baseSrc: string,
-  sizes: number[] = [320, 640, 768, 1024, 1280, 1536, 1920]
+  sizes: number[] = [
+320, 640, 768, 1024, 1280, 1536, 1920
+]
 ): string => {
   if (!baseSrc) {
     return ""
@@ -51,21 +53,18 @@ export const generateResponsiveSrcSet = (
   const baseUrl = baseSrc.replace(/\.[^/.]+$/, "")
   const extension = baseSrc.split(".").pop() || "jpg"
 
-  return sizes.map((size) => `${baseUrl}-${size}w.${extension} ${size}w`).join(", ")
+  return sizes.map(size => `${baseUrl}-${size}w.${extension} ${size}w`).join(", ")
 }
 
 /**
  * Generates appropriate sizes attribute for responsive images
  */
-export const generateSizesAttribute = (
-  breakpoints: { maxWidth: number; size: string }[] = [
+export const generateSizesAttribute = (breakpoints: { maxWidth: number; size: string }[] = [
     { maxWidth: 640, size: "100vw" },
     { maxWidth: 768, size: "50vw" },
     { maxWidth: 1024, size: "33vw" },
     { maxWidth: 1280, size: "25vw" },
-  ]
-): string =>
-  breakpoints.map((bp) => `(max-width: ${bp.maxWidth}px) ${bp.size}`).join(", ") +
+  ]): string => breakpoints.map(bp => `(max-width: ${bp.maxWidth}px) ${bp.size}`).join(", ") +
   ", 20vw"
 
 /**
@@ -106,8 +105,7 @@ export const generateBlurDataURL = (
 /**
  * Preloads critical images
  */
-export const preloadImage = (src: string): Promise<void> =>
-  new Promise((resolve, reject) => {
+export const preloadImage = (src: string): Promise<void> => new Promise((resolve, reject) => {
     const img = new Image()
     img.onload = () => resolve()
     img.onerror = () => reject(new Error(`Failed to preload image: ${src}`))

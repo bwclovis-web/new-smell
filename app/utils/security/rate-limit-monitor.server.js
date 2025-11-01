@@ -33,7 +33,7 @@ export function trackRateLimitViolation(ip, path, limitType) {
  */
 function checkForRateLimitAbuse(ip, path, violations) {
   const now = new Date()
-  const recentViolations = violations.filter((v) => {
+  const recentViolations = violations.filter(v => {
     const violationTime = new Date(v.timestamp)
     return now - violationTime < 5 * 60 * 1000 // Last 5 minutes
   })
@@ -77,13 +77,13 @@ export function getRateLimitStats() {
     stats.totalViolations += violations.length
 
     // Count violations by path
-    violations.forEach((violation) => {
+    violations.forEach(violation => {
       const path = violation.path
       stats.violationsByPath[path] = (stats.violationsByPath[path] || 0) + 1
     })
 
     // Get recent violations (last hour)
-    const recent = violations.filter((v) => new Date(v.timestamp) > oneHourAgo)
+    const recent = violations.filter(v => new Date(v.timestamp) > oneHourAgo)
     stats.recentViolations.push(...recent)
   }
 
@@ -101,9 +101,7 @@ export function cleanupOldViolations() {
   const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
 
   for (const [key, violations] of rateLimitViolations) {
-    const recentViolations = violations.filter(
-      (v) => new Date(v.timestamp) > oneDayAgo
-    )
+    const recentViolations = violations.filter(v => new Date(v.timestamp) > oneDayAgo)
 
     if (recentViolations.length === 0) {
       rateLimitViolations.delete(key)
@@ -122,10 +120,10 @@ export function cleanupOldViolations() {
 export function shouldBlockIP(ip) {
   const violations = Array.from(rateLimitViolations.values())
     .flat()
-    .filter((v) => v.ip === ip)
+    .filter(v => v.ip === ip)
 
   const now = new Date()
-  const recentViolations = violations.filter((v) => {
+  const recentViolations = violations.filter(v => {
     const violationTime = new Date(v.timestamp)
     return now - violationTime < 15 * 60 * 1000 // Last 15 minutes
   })

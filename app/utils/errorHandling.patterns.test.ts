@@ -2,31 +2,34 @@
  * Tests for Standardized Error Handling Patterns
  */
 
-import { describe, it, expect, vi } from "vitest"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node"
+import { describe, expect, it, vi } from "vitest"
+
+import { AppError, ErrorType } from "./errorHandling"
 import {
-  withLoaderErrorHandling,
-  withActionErrorHandling,
-  withDatabaseErrorHandling,
-  withApiErrorHandling,
-  withValidationErrorHandling,
-  handleAuthenticationError,
-  handleAuthorizationError,
-  safeAsync,
-  safeSync,
-  withRetry,
-  notFoundError,
-  validationError,
+  assertAuthenticated,
+  assertAuthorized,
+  assertExists,
+  assertValid,
   authenticationError,
   authorizationError,
   databaseError,
+  handleAuthenticationError,
+  handleAuthorizationError,
   networkError,
-  assertExists,
-  assertValid,
-  assertAuthenticated,
-  assertAuthorized,
+  notFoundError,
+  safeAsync,
+  safeSync,
+  validationError,
+  withApiErrorHandling,
+  withDatabaseErrorHandling,
+  withRetry,
+  withValidationErrorHandling,
 } from "./errorHandling.patterns"
-import { AppError, ErrorType } from "./errorHandling"
-import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node"
+import {
+  withActionErrorHandling,
+  withLoaderErrorHandling,
+} from "./errorHandling.server"
 
 describe("errorHandling.patterns", () => {
   describe("withLoaderErrorHandling", () => {
@@ -160,14 +163,12 @@ describe("errorHandling.patterns", () => {
     })
 
     it("should throw AppError on failure", async () => {
-      await expect(
-        withDatabaseErrorHandling(
+      await expect(withDatabaseErrorHandling(
           async () => {
             throw new Error("Database error")
           },
           { operation: "findUser" }
-        )
-      ).rejects.toThrow(AppError)
+        )).rejects.toThrow(AppError)
     })
   })
 
@@ -181,14 +182,12 @@ describe("errorHandling.patterns", () => {
     })
 
     it("should throw AppError on failure", async () => {
-      await expect(
-        withApiErrorHandling(
+      await expect(withApiErrorHandling(
           async () => {
             throw new Error("API error")
           },
           { endpoint: "/api/test" }
-        )
-      ).rejects.toThrow(AppError)
+        )).rejects.toThrow(AppError)
     })
   })
 
@@ -202,14 +201,12 @@ describe("errorHandling.patterns", () => {
     })
 
     it("should throw AppError on validation failure", () => {
-      expect(() =>
-        withValidationErrorHandling(
+      expect(() => withValidationErrorHandling(
           () => {
             throw new Error("Validation failed")
           },
           { schema: "testSchema" }
-        )
-      ).toThrow(AppError)
+        )).toThrow(AppError)
     })
   })
 
@@ -307,12 +304,10 @@ describe("errorHandling.patterns", () => {
     it("should throw after max retries exceeded", async () => {
       const operation = vi.fn().mockRejectedValue(new Error("Always fails"))
 
-      await expect(
-        withRetry(operation, {
+      await expect(withRetry(operation, {
           maxRetries: 2,
           baseDelay: 1,
-        })
-      ).rejects.toThrow(AppError)
+        })).rejects.toThrow(AppError)
 
       expect(operation).toHaveBeenCalled()
       expect(operation.mock.calls.length).toBeGreaterThan(1)
@@ -379,9 +374,7 @@ describe("errorHandling.patterns", () => {
       })
 
       it("should throw notFoundError if value is undefined", () => {
-        expect(() => assertExists(undefined, "User", { userId: "123" })).toThrow(
-          AppError
-        )
+        expect(() => assertExists(undefined, "User", { userId: "123" })).toThrow(AppError)
       })
     })
 
@@ -391,9 +384,7 @@ describe("errorHandling.patterns", () => {
       })
 
       it("should throw validationError if condition is false", () => {
-        expect(() => assertValid(false, "Invalid", { field: "email" })).toThrow(
-          AppError
-        )
+        expect(() => assertValid(false, "Invalid", { field: "email" })).toThrow(AppError)
       })
     })
 
@@ -403,15 +394,11 @@ describe("errorHandling.patterns", () => {
       })
 
       it("should throw authenticationError if userId is null", () => {
-        expect(() => assertAuthenticated(null, { route: "/admin" })).toThrow(
-          AppError
-        )
+        expect(() => assertAuthenticated(null, { route: "/admin" })).toThrow(AppError)
       })
 
       it("should throw authenticationError if userId is undefined", () => {
-        expect(() => assertAuthenticated(undefined, { route: "/admin" })).toThrow(
-          AppError
-        )
+        expect(() => assertAuthenticated(undefined, { route: "/admin" })).toThrow(AppError)
       })
     })
 
@@ -421,9 +408,7 @@ describe("errorHandling.patterns", () => {
       })
 
       it("should throw authorizationError if condition is false", () => {
-        expect(() =>
-          assertAuthorized(false, "Not authorized", { userId: "123" })
-        ).toThrow(AppError)
+        expect(() => assertAuthorized(false, "Not authorized", { userId: "123" })).toThrow(AppError)
       })
     })
   })

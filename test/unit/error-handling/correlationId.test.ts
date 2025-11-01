@@ -72,7 +72,7 @@ describe("Correlation ID Utilities", () => {
       setCorrelationId(testId)
 
       // Simulate async operation
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await new Promise(resolve => setTimeout(resolve, 10))
 
       const retrievedId = getCorrelationId()
       expect(retrievedId).toBe(testId)
@@ -83,7 +83,7 @@ describe("Correlation ID Utilities", () => {
       const id2 = "context2_456"
 
       // First context
-      const promise1 = new Promise<string | undefined>((resolve) => {
+      const promise1 = new Promise<string | undefined>(resolve => {
         setCorrelationId(id1)
         setTimeout(() => {
           resolve(getCorrelationId())
@@ -91,7 +91,7 @@ describe("Correlation ID Utilities", () => {
       })
 
       // Second context
-      const promise2 = new Promise<string | undefined>((resolve) => {
+      const promise2 = new Promise<string | undefined>(resolve => {
         setCorrelationId(id2)
         setTimeout(() => {
           resolve(getCorrelationId())
@@ -127,9 +127,9 @@ describe("Correlation ID Utilities", () => {
 
       const handler = withCorrelationId(async () => {
         ids.push(getCorrelationId())
-        await new Promise((resolve) => setTimeout(resolve, 10))
+        await new Promise(resolve => setTimeout(resolve, 10))
         ids.push(getCorrelationId())
-        await new Promise((resolve) => setTimeout(resolve, 10))
+        await new Promise(resolve => setTimeout(resolve, 10))
         ids.push(getCorrelationId())
       })
 
@@ -170,17 +170,19 @@ describe("Correlation ID Utilities", () => {
       const ids: (string | undefined)[] = []
 
       const handler = withCorrelationId(async (index: number) => {
-        await new Promise((resolve) => setTimeout(resolve, Math.random() * 20))
+        await new Promise(resolve => setTimeout(resolve, Math.random() * 20))
         ids.push(getCorrelationId())
         return index
       })
 
       // Run multiple handlers concurrently
-      await Promise.all([handler(1), handler(2), handler(3), handler(4), handler(5)])
+      await Promise.all([
+handler(1), handler(2), handler(3), handler(4), handler(5)
+])
 
       expect(ids).toHaveLength(5)
       // All IDs should be defined
-      ids.forEach((id) => expect(id).toBeDefined())
+      ids.forEach(id => expect(id).toBeDefined())
       // All IDs should be unique
       const uniqueIds = new Set(ids)
       expect(uniqueIds.size).toBe(5)
@@ -192,10 +194,10 @@ describe("Correlation ID Utilities", () => {
       const handler = withCorrelationId(async () => {
         const outerCorrelationId = getCorrelationId()
 
-        await new Promise((resolve) => setTimeout(resolve, 10))
+        await new Promise(resolve => setTimeout(resolve, 10))
 
         const innerHandler = async () => {
-          await new Promise((resolve) => setTimeout(resolve, 5))
+          await new Promise(resolve => setTimeout(resolve, 5))
           return getCorrelationId()
         }
 
@@ -220,7 +222,7 @@ describe("Correlation ID Utilities", () => {
       for (let i = 0; i < 3; i++) {
         const handler = withCorrelationId(async () => {
           const id = getCorrelationId()
-          await new Promise((resolve) => setTimeout(resolve, 5))
+          await new Promise(resolve => setTimeout(resolve, 5))
           return id
         })
 
@@ -230,7 +232,7 @@ describe("Correlation ID Utilities", () => {
 
       expect(results).toHaveLength(3)
       // All results should be defined
-      results.forEach((id) => expect(id).toBeDefined())
+      results.forEach(id => expect(id).toBeDefined())
       // All results should be unique (different requests)
       const uniqueIds = new Set(results)
       expect(uniqueIds.size).toBe(3)

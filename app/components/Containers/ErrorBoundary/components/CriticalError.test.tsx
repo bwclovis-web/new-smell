@@ -35,11 +35,7 @@ describe("CriticalError", () => {
     it("should display critical error message", () => {
       render(<CriticalError {...mockProps} />)
 
-      expect(
-        screen.getByText(
-          /A critical error has occurred. Please refresh the page or contact support./i
-        )
-      ).toBeInTheDocument()
+      expect(screen.getByText(/A critical error has occurred. Please refresh the page or contact support./i)).toBeInTheDocument()
     })
 
     it("should display error ID", () => {
@@ -115,13 +111,11 @@ describe("CriticalError", () => {
       const onRetrySpy = vi.fn()
       const onReportErrorSpy = vi.fn()
 
-      render(
-        <CriticalError
+      render(<CriticalError
           {...mockProps}
           onRetry={onRetrySpy}
           onReportError={onReportErrorSpy}
-        />
-      )
+        />)
 
       const refreshButton = screen.getByText("Refresh Page")
       const reportButton = screen.getByText("Report Error")
@@ -148,11 +142,7 @@ describe("CriticalError", () => {
       render(<CriticalError {...mockProps} error={dbError} />)
 
       // Should still show the standard critical error message
-      expect(
-        screen.getByText(
-          /A critical error has occurred. Please refresh the page or contact support./i
-        )
-      ).toBeInTheDocument()
+      expect(screen.getByText(/A critical error has occurred. Please refresh the page or contact support./i)).toBeInTheDocument()
     })
 
     it("should display server critical error", () => {
@@ -166,11 +156,7 @@ describe("CriticalError", () => {
 
       render(<CriticalError {...mockProps} error={serverError} />)
 
-      expect(
-        screen.getByText(
-          /A critical error has occurred. Please refresh the page or contact support./i
-        )
-      ).toBeInTheDocument()
+      expect(screen.getByText(/A critical error has occurred. Please refresh the page or contact support./i)).toBeInTheDocument()
     })
   })
 
@@ -185,9 +171,7 @@ describe("CriticalError", () => {
     it("should center content", () => {
       const { container } = render(<CriticalError {...mockProps} />)
 
-      const centerContainer = container.querySelector(
-        ".flex.items-center.justify-center"
-      )
+      const centerContainer = container.querySelector(".flex.items-center.justify-center")
       expect(centerContainer).toBeInTheDocument()
     })
 
@@ -233,7 +217,7 @@ describe("CriticalError", () => {
       render(<CriticalError {...mockProps} />)
 
       const buttons = screen.getAllByRole("button")
-      buttons.forEach((button) => {
+      buttons.forEach(button => {
         expect(button).toHaveClass("transition-colors")
       })
     })
@@ -300,9 +284,7 @@ describe("CriticalError", () => {
     it("should display critical information in accessible format", () => {
       render(<CriticalError {...mockProps} />)
 
-      expect(
-        screen.getByRole("heading", { name: /Critical Error/i })
-      ).toBeInTheDocument()
+      expect(screen.getByRole("heading", { name: /Critical Error/i })).toBeInTheDocument()
     })
 
     it("should have proper heading hierarchy", () => {
@@ -317,7 +299,7 @@ describe("CriticalError", () => {
       render(<CriticalError {...mockProps} />)
 
       const buttons = screen.getAllByRole("button")
-      buttons.forEach((button) => {
+      buttons.forEach(button => {
         expect(button).toHaveClass("w-full")
       })
     })
@@ -354,10 +336,8 @@ describe("CriticalError", () => {
         "emergency_error_12345",
       ]
 
-      errorIds.forEach((errorId) => {
-        const { unmount } = render(
-          <CriticalError {...mockProps} errorId={errorId} />
-        )
+      errorIds.forEach(errorId => {
+        const { unmount } = render(<CriticalError {...mockProps} errorId={errorId} />)
 
         expect(screen.getByText(`Error ID: ${errorId}`)).toBeInTheDocument()
         unmount()
@@ -379,16 +359,12 @@ describe("CriticalError", () => {
     })
 
     it("should handle long error IDs", () => {
-      render(
-        <CriticalError
+      render(<CriticalError
           {...mockProps}
           errorId="error_critical_1234567890_abcdefghijklmnopqrstuvwxyz_very_long_id"
-        />
-      )
+        />)
 
-      expect(
-        screen.getByText(/Error ID: error_critical_1234567890/i)
-      ).toBeInTheDocument()
+      expect(screen.getByText(/Error ID: error_critical_1234567890/i)).toBeInTheDocument()
     })
   })
 
@@ -396,7 +372,7 @@ describe("CriticalError", () => {
     it("should work with all critical error types", () => {
       const errorTypes = [ErrorType.DATABASE, ErrorType.SERVER, ErrorType.UNKNOWN]
 
-      errorTypes.forEach((type) => {
+      errorTypes.forEach(type => {
         const error = new AppError(
           `${type} critical error`,
           type,
@@ -414,9 +390,7 @@ describe("CriticalError", () => {
 
     it("should maintain functionality across re-renders", () => {
       const onRetrySpy = vi.fn()
-      const { rerender } = render(
-        <CriticalError {...mockProps} onRetry={onRetrySpy} />
-      )
+      const { rerender } = render(<CriticalError {...mockProps} onRetry={onRetrySpy} />)
 
       const refreshButton = screen.getByText("Refresh Page")
       fireEvent.click(refreshButton)
@@ -484,11 +458,7 @@ describe("CriticalError", () => {
     it("should provide clear action instructions", () => {
       render(<CriticalError {...mockProps} />)
 
-      expect(
-        screen.getByText(
-          /A critical error has occurred. Please refresh the page or contact support./i
-        )
-      ).toBeInTheDocument()
+      expect(screen.getByText(/A critical error has occurred. Please refresh the page or contact support./i)).toBeInTheDocument()
     })
 
     it("should suggest both refresh and contact support", () => {

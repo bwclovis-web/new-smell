@@ -26,14 +26,14 @@ function parseNotes(notesString) {
   try {
     // The CSV library returns the value as-is, so we just need to parse JSON
     const parsed = JSON.parse(notesString)
-    return Array.isArray(parsed) ? parsed.filter((note) => note && note.trim()) : []
+    return Array.isArray(parsed) ? parsed.filter(note => note && note.trim()) : []
   } catch (error) {
     console.log(`  ⚠️  Failed to parse notes: ${notesString}`)
     // If JSON parsing fails, try to split by comma
     return notesString
       .split(",")
-      .map((note) => note.trim())
-      .filter((note) => note.length > 0)
+      .map(note => note.trim())
+      .filter(note => note.length > 0)
   }
 }
 
@@ -207,9 +207,7 @@ async function importAndreaMaackPerfumesData() {
               image: data.image || duplicateInSameHouse.image,
             },
           })
-          console.log(
-            `🔄 Updated existing perfume with better data: ${originalName}`
-          )
+          console.log(`🔄 Updated existing perfume with better data: ${originalName}`)
 
           // Process and update notes
           const openNotes = parseNotes(data.openNotes || "")
@@ -266,9 +264,7 @@ async function importAndreaMaackPerfumesData() {
 
           updated++
         } else {
-          console.log(
-            `⚠️  Perfume "${originalName}" already exists in same house with equal or better data, skipping...`
-          )
+          console.log(`⚠️  Perfume "${originalName}" already exists in same house with equal or better data, skipping...`)
           skipped++
         }
         continue
@@ -290,16 +286,12 @@ async function importAndreaMaackPerfumesData() {
         })
 
         if (modifiedExists) {
-          console.log(
-            `⚠️  Perfume "${originalName}" already exists with house suffix, skipping...`
-          )
+          console.log(`⚠️  Perfume "${originalName}" already exists with house suffix, skipping...`)
           skipped++
           continue
         }
 
-        console.log(
-          `🔄 Duplicate found in other house (${duplicateInOtherHouse.perfumeHouse.name}): "${originalName}" -> "${finalName}"`
-        )
+        console.log(`🔄 Duplicate found in other house (${duplicateInOtherHouse.perfumeHouse.name}): "${originalName}" -> "${finalName}"`)
         duplicates++
       }
 

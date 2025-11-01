@@ -33,7 +33,7 @@ export const AlertPreferences = ({
     key: keyof UserAlertPreferences,
     value: boolean | number
   ) => {
-    setTempPreferences((prev) => ({
+    setTempPreferences(prev => ({
       ...prev,
       [key]: value,
     }))
@@ -65,8 +65,7 @@ export const AlertPreferences = ({
                   <input
                     type="checkbox"
                     checked={tempPreferences.wishlistAlertsEnabled}
-                    onChange={(e) =>
-                      updatePreference("wishlistAlertsEnabled", e.target.checked)
+                    onChange={e => updatePreference("wishlistAlertsEnabled", e.target.checked)
                     }
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
@@ -87,8 +86,7 @@ export const AlertPreferences = ({
                   <input
                     type="checkbox"
                     checked={tempPreferences.decantAlertsEnabled}
-                    onChange={(e) =>
-                      updatePreference("decantAlertsEnabled", e.target.checked)
+                    onChange={e => updatePreference("decantAlertsEnabled", e.target.checked)
                     }
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
@@ -119,8 +117,7 @@ export const AlertPreferences = ({
                   <input
                     type="checkbox"
                     checked={tempPreferences.emailWishlistAlerts}
-                    onChange={(e) =>
-                      updatePreference("emailWishlistAlerts", e.target.checked)
+                    onChange={e => updatePreference("emailWishlistAlerts", e.target.checked)
                     }
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
@@ -141,8 +138,7 @@ export const AlertPreferences = ({
                   <input
                     type="checkbox"
                     checked={tempPreferences.emailDecantAlerts}
-                    onChange={(e) =>
-                      updatePreference("emailDecantAlerts", e.target.checked)
+                    onChange={e => updatePreference("emailDecantAlerts", e.target.checked)
                     }
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
@@ -180,8 +176,7 @@ export const AlertPreferences = ({
                   </div>
                   <select
                     value={tempPreferences.maxAlerts}
-                    onChange={(e) =>
-                      updatePreference("maxAlerts", parseInt(e.target.value))
+                    onChange={e => updatePreference("maxAlerts", parseInt(e.target.value))
                     }
                     className="rounded border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
                   >

@@ -67,9 +67,7 @@ export class VaultPage extends BasePage {
    * Click on a letter filter
    */
   async clickLetterFilter(letter: string): Promise<void> {
-    const letterButton = this.page.locator(
-      `${this.selectors.letterFilter}[data-letter="${letter}"]`
-    )
+    const letterButton = this.page.locator(`${this.selectors.letterFilter}[data-letter="${letter}"]`)
     await letterButton.click()
     await this.waitForReady()
   }

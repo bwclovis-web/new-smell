@@ -34,7 +34,7 @@ vi.mock("~/models/wishlist.server")
 vi.mock("~/utils/security/session-manager.server")
 vi.mock("cookie", () => ({
   default: {
-    parse: vi.fn((str) => {
+    parse: vi.fn(str => {
       const obj: Record<string, string> = {}
       if (str) {
         str.split(";").forEach((cookie: string) => {
@@ -89,9 +89,7 @@ describe("Perfume Route Integration Tests", () => {
 
       vi.mocked(perfumeServer.getPerfumeBySlug).mockResolvedValue(mockPerfume as any)
       vi.mocked(sessionManager.verifyAccessToken).mockReturnValue(null)
-      vi.mocked(perfumeRatingServer.getPerfumeRatings).mockResolvedValue(
-        mockRatings as any
-      )
+      vi.mocked(perfumeRatingServer.getPerfumeRatings).mockResolvedValue(mockRatings as any)
       vi.mocked(perfumeReviewServer.getUserPerfumeReview).mockResolvedValue(null)
 
       const args: LoaderFunctionArgs = {
@@ -135,9 +133,7 @@ describe("Perfume Route Integration Tests", () => {
     it("should handle database errors gracefully", async () => {
       const mockRequest = new Request("https://example.com/perfume/test-perfume")
 
-      vi.mocked(perfumeServer.getPerfumeBySlug).mockRejectedValue(
-        new Error("Database connection failed")
-      )
+      vi.mocked(perfumeServer.getPerfumeBySlug).mockRejectedValue(new Error("Database connection failed"))
 
       const args: LoaderFunctionArgs = {
         request: mockRequest,

@@ -42,15 +42,13 @@ export const clearCleanupRegistry = (): void => {
 /**
  * Standard beforeEach setup for common test scenarios
  */
-export const standardBeforeEach = (
-  options: {
+export const standardBeforeEach = (options: {
     clearMocks?: boolean
     resetDOM?: boolean
     clearTimers?: boolean
     clearLocalStorage?: boolean
     clearSessionStorage?: boolean
-  } = {}
-) => {
+  } = {}) => {
   const {
     clearMocks = true,
     resetDOM = false,
@@ -89,13 +87,11 @@ export const standardBeforeEach = (
 /**
  * Standard afterEach cleanup for common test scenarios
  */
-export const standardAfterEach = (
-  options: {
+export const standardAfterEach = (options: {
     restoreMocks?: boolean
     restoreTimers?: boolean
     executeRegisteredCleanup?: boolean
-  } = {}
-) => {
+  } = {}) => {
   const {
     restoreMocks = true,
     restoreTimers = true,
@@ -181,12 +177,10 @@ export const setupTimerLifecycle = (useFakeTimers = true) => {
 /**
  * Lifecycle utility for localStorage testing
  */
-export const setupStorageLifecycle = (
-  options: {
+export const setupStorageLifecycle = (options: {
     localStorage?: boolean
     sessionStorage?: boolean
-  } = {}
-) => {
+  } = {}) => {
   const {
     localStorage: useLocalStorage = true,
     sessionStorage: useSessionStorage = true,
@@ -260,8 +254,7 @@ export const setupEventListenerLifecycle = () => {
     options?: ListenerOptions
   }> = []
 
-  const addEventListenerSpy = vi.fn(
-    (
+  const addEventListenerSpy = vi.fn((
       target: EventTarget,
       type: string,
       listener: Listener,
@@ -273,8 +266,7 @@ export const setupEventListenerLifecycle = () => {
         listener as Parameters<typeof target.addEventListener>[1],
         options as Parameters<typeof target.addEventListener>[2]
       )
-    }
-  )
+    })
 
   afterEach(() => {
     // Remove all tracked event listeners
@@ -320,7 +312,7 @@ export const setupAsyncLifecycle = () => {
 
   afterEach(async () => {
     // Abort all controllers
-    abortControllers.forEach((controller) => {
+    abortControllers.forEach(controller => {
       if (!controller.signal.aborted) {
         controller.abort()
       }
@@ -328,7 +320,7 @@ export const setupAsyncLifecycle = () => {
     abortControllers.length = 0
 
     // Wait for all pending promises (with timeout)
-    const timeout = new Promise((resolve) => setTimeout(resolve, 100))
+    const timeout = new Promise(resolve => setTimeout(resolve, 100))
     await Promise.race([Promise.allSettled(pendingPromises), timeout])
     pendingPromises.length = 0
   })
@@ -344,14 +336,12 @@ export const setupAsyncLifecycle = () => {
 /**
  * Lifecycle utility for console mocking
  */
-export const setupConsoleLifecycle = (
-  options: {
+export const setupConsoleLifecycle = (options: {
     log?: boolean
     warn?: boolean
     error?: boolean
     info?: boolean
-  } = {}
-) => {
+  } = {}) => {
   const {
     log: mockLog = false,
     warn: mockWarn = false,
@@ -382,7 +372,7 @@ export const setupConsoleLifecycle = (
   })
 
   afterEach(() => {
-    Object.values(mocks).forEach((mock) => mock?.mockRestore())
+    Object.values(mocks).forEach(mock => mock?.mockRestore())
   })
 
   return mocks
@@ -415,9 +405,7 @@ export const createTestContext = <T extends Record<string, any>>() => {
 /**
  * Composite lifecycle setup for common testing scenarios
  */
-export const setupCompositeLifecycle = (
-  scenario: "component" | "integration" | "api" | "e2e"
-) => {
+export const setupCompositeLifecycle = (scenario: "component" | "integration" | "api" | "e2e") => {
   switch (scenario) {
     case "component":
       setupTestLifecycle({

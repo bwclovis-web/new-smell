@@ -30,8 +30,7 @@ console.log(
 
 const prisma = singleton(
   "prisma",
-  () =>
-    new PrismaClient({
+  () => new PrismaClient({
       datasources: {
         db: {
           url: databaseUrl,

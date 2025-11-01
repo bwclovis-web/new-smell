@@ -59,7 +59,7 @@ const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => 
   const handleItemClick = (item: any) => {
     // eslint-disable-next-line no-console
     console.log("TagSearch - handleItemClick called with:", item)
-    if (!selectedTags.find((t) => t.id === item.id)) {
+    if (!selectedTags.find(t => t.id === item.id)) {
       const newTags = [...selectedTags, item]
       // eslint-disable-next-line no-console
       console.log("TagSearch - updating tags:", {
@@ -78,7 +78,7 @@ const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => 
   const handleRemoveTag = (tagId: string) => {
     // eslint-disable-next-line no-console
     console.log("Removing tag:", tagId, "from:", selectedTags)
-    const newTags = selectedTags.filter((tag) => tag.id !== tagId)
+    const newTags = selectedTags.filter(tag => tag.id !== tagId)
     // eslint-disable-next-line no-console
     console.log("New tags after removal:", newTags)
     setSelectedTags(newTags)
@@ -100,7 +100,7 @@ const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => 
           autoComplete="off"
           id="tag-search"
           value={inputValue}
-          onChange={(evt) => {
+          onChange={evt => {
             setInputValue((evt.target as HTMLInputElement).value)
           }}
           inputType={""}

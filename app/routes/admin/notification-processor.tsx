@@ -72,7 +72,7 @@ export default function NotificationProcessor() {
           </h2>
 
           <div className="space-y-4">
-            {results.map((result) => (
+            {results.map(result => (
               <div
                 key={`${result.userId}-${result.perfumeId}`}
                 className="border border-gray-200 rounded p-4 bg-gray-50"
@@ -84,7 +84,7 @@ export default function NotificationProcessor() {
                 <div>
                   <p className="text-sm font-medium">Available from:</p>
                   <ul className="text-sm text-gray-600 ml-4">
-                    {result.sellers.map((seller) => (
+                    {result.sellers.map(seller => (
                       <li key={seller.userId}>
                         {seller.email} ({seller.userId})
                       </li>

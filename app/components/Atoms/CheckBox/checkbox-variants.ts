@@ -28,9 +28,7 @@ export const checkboxLabelVariants = cva([""], {
 })
 
 export const checkboxInputVariants = cva(
-  [
-    "appearance-none w-4 h-4 border-2 border-atom-gray-13 rounded-sm bg-white cursor-pointer",
-  ],
+  ["appearance-none w-4 h-4 border-2 border-atom-gray-13 rounded-sm bg-white cursor-pointer",],
   {
     compoundVariants: [{}],
     defaultVariants: {

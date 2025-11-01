@@ -3,9 +3,7 @@ import { Prisma } from "@prisma/client"
 import { prisma } from "~/db.server"
 import { createUrlSlug } from "~/utils/slug"
 
-const buildPerfumeOrderBy = (
-  sortBy?: string
-): Prisma.PerfumeOrderByWithRelationInput => {
+const buildPerfumeOrderBy = (sortBy?: string): Prisma.PerfumeOrderByWithRelationInput => {
   if (sortBy) {
     switch (sortBy) {
       case "name-asc":
@@ -106,7 +104,7 @@ export const searchPerfumeByName = async (name: string) => {
       AND: [
         { name: { contains: searchTerm, mode: "insensitive" } },
         // Exclude items already found in exact matches
-        { id: { notIn: exactMatches.map((p) => p.id) } },
+        { id: { notIn: exactMatches.map(p => p.id) } },
       ],
     },
     include: {
@@ -121,7 +119,7 @@ export const searchPerfumeByName = async (name: string) => {
 
   // Sort by relevance score
   const rankedResults = allResults
-    .map((perfume) => ({
+    .map(perfume => ({
       ...perfume,
       relevanceScore: calculateRelevanceScore(perfume.name, searchTerm),
     }))
@@ -189,13 +187,13 @@ export const updatePerfume = async (id: string, data: FormData) => {
         description: sanitizeText(data.get("description") as string),
         image: data.get("image") as string,
         perfumeNotesOpen: {
-          set: topNotes.map((id) => ({ id })),
+          set: topNotes.map(id => ({ id })),
         },
         perfumeNotesHeart: {
-          set: heartNotes.map((id) => ({ id })),
+          set: heartNotes.map(id => ({ id })),
         },
         perfumeNotesClose: {
-          set: baseNotes.map((id) => ({ id })),
+          set: baseNotes.map(id => ({ id })),
         },
         perfumeHouse: {
           connect: {
@@ -243,13 +241,13 @@ export const createPerfume = async (data: FormData) => {
       description,
       image,
       perfumeNotesOpen: {
-        connect: (data.getAll("notesTop") as string[]).map((id) => ({ id })),
+        connect: (data.getAll("notesTop") as string[]).map(id => ({ id })),
       },
       perfumeNotesHeart: {
-        connect: (data.getAll("notesHeart") as string[]).map((id) => ({ id })),
+        connect: (data.getAll("notesHeart") as string[]).map(id => ({ id })),
       },
       perfumeNotesClose: {
-        connect: (data.getAll("notesBase") as string[]).map((id) => ({ id })),
+        connect: (data.getAll("notesBase") as string[]).map(id => ({ id })),
       },
       perfumeHouse: {
         connect: {

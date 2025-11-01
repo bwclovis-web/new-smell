@@ -37,9 +37,7 @@ export const createUser = async (data: FormData) => {
 
   // Calculate password strength for logging
   const strengthInfo = calculatePasswordStrength(password)
-  console.log(
-    `New user password strength: ${strengthInfo.strength} (score: ${strengthInfo.score})`
-  )
+  console.log(`New user password strength: ${strengthInfo.strength} (score: ${strengthInfo.score})`)
 
   const user = await prisma.user.create({
     data: {
@@ -209,9 +207,7 @@ export const changePassword = async (
 
     // Calculate password strength
     const strengthInfo = calculatePasswordStrength(newPassword)
-    console.log(
-      `Password change - new password strength: ${strengthInfo.strength} (score: ${strengthInfo.score})`
-    )
+    console.log(`Password change - new password strength: ${strengthInfo.strength} (score: ${strengthInfo.score})`)
 
     // Hash and update password
     const hashedNewPassword = await hashPassword(newPassword)
@@ -240,8 +236,7 @@ export const changePassword = async (
 }
 
 // Password strength check for frontend
-export const checkPasswordStrength = (password: string) =>
-  calculatePasswordStrength(password)
+export const checkPasswordStrength = (password: string) => calculatePasswordStrength(password)
 
 export const getUserPerfumes = async (userId: string) => {
   const userPerfumes = await prisma.userPerfume.findMany({
@@ -263,8 +258,7 @@ export const getUserPerfumes = async (userId: string) => {
 }
 
 // Helper function to find a user perfume
-const findUserPerfume = async (userId: string, perfumeId: string) =>
-  prisma.userPerfume.findFirst({
+const findUserPerfume = async (userId: string, perfumeId: string) => prisma.userPerfume.findFirst({
     where: { userId, perfumeId },
   })
 
@@ -357,7 +351,7 @@ export const addUserPerfume = async ({
 
     return { success: true, userPerfume }
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Error adding perfume to user collection:", error)
     return { success: false, error: "Failed to add perfume to collection" }
   }
@@ -378,7 +372,7 @@ export const removeUserPerfume = async (userId: string, perfumeId: string) => {
     }
 
     // Use a transaction to ensure both operations succeed or fail together
-    await prisma.$transaction(async (transaction) => {
+    await prisma.$transaction(async transaction => {
       // First, delete all comments associated with this user perfume
       await transaction.userPerfumeComment.deleteMany({
         where: {
@@ -396,7 +390,7 @@ export const removeUserPerfume = async (userId: string, perfumeId: string) => {
 
     return { success: true }
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Error removing perfume from user collection:", error)
     return {
       success: false,
@@ -428,8 +422,7 @@ const prepareUpdateData = (
 }
 
 // Helper to update perfume in database
-const updatePerfumeInDatabase = async (perfumeId: string, updateData: any) =>
-  await prisma.userPerfume.update({
+const updatePerfumeInDatabase = async (perfumeId: string, updateData: any) => await prisma.userPerfume.update({
     where: { id: perfumeId },
     data: updateData,
     include: { perfume: true },
@@ -476,7 +469,7 @@ export const updateAvailableAmount = async (params: {
 
     return { success: true, userPerfume: updatedPerfume }
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Error updating available amount:", error)
     return { success: false, error: "Failed to update available amount" }
   }
@@ -525,7 +518,7 @@ export const addPerfumeComment = async ({
 
     return { success: true, userComment }
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Error adding comment to perfume:", error)
     return { success: false, error: "Failed to add comment to perfume" }
   }
@@ -605,7 +598,7 @@ export const updatePerfumeComment = async ({
 
     return { success: true, userComment: updatedComment }
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Error updating perfume comment:", error)
     return { success: false, error: "Failed to update perfume comment" }
   }
@@ -628,7 +621,7 @@ export const deletePerfumeComment = async (userId: string, commentId: string) =>
 
     return { success: true }
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Error deleting perfume comment:", error)
     return { success: false, error: "Failed to delete perfume comment" }
   }
@@ -655,7 +648,7 @@ export const getUserPerfumeComments = async (userId: string, perfumeId: string) 
 
     return { success: true, comments }
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Error fetching user perfume comments:", error)
     return { success: false, error: "Failed to fetch comments" }
   }
@@ -687,7 +680,7 @@ export const getPublicPerfumeComments = async (perfumeId: string) => {
 
     return { success: true, comments }
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Error fetching public perfume comments:", error)
     return { success: false, error: "Failed to fetch public comments" }
   }

@@ -8,7 +8,7 @@ const coreSecuritySchema = z.object({
     .min(32, "SESSION_SECRET must be at least 32 characters long"),
   DATABASE_URL: z
     .string()
-    .refine((url) => {
+    .refine(url => {
       // Check if it's a valid URL format or a Prisma Accelerate URL with prisma+postgres prefix
       if (url.startsWith("prisma+postgres://")) {
         return true // Skip URL validation for this special format
@@ -21,8 +21,7 @@ const coreSecuritySchema = z.object({
       }
     }, "DATABASE_URL must be a valid URL")
     .refine(
-      (url) =>
-        url.startsWith("postgresql://") ||
+      url => url.startsWith("postgresql://") ||
         url.startsWith("prisma://") ||
         url.startsWith("prisma+postgres://"),
       "DATABASE_URL must be either a PostgreSQL connection string (postgresql://), a Prisma Accelerate URL (prisma://), or a Prisma Accelerate URL with prisma+postgres prefix"
@@ -39,7 +38,7 @@ const extendedSchema = z.object({
     .min(32, "SESSION_SECRET must be at least 32 characters long"),
   DATABASE_URL: z
     .string()
-    .refine((url) => {
+    .refine(url => {
       // Check if it's a valid URL format or a Prisma Accelerate URL with prisma+postgres prefix
       if (url.startsWith("prisma+postgres://")) {
         return true // Skip URL validation for this special format
@@ -52,8 +51,7 @@ const extendedSchema = z.object({
       }
     }, "DATABASE_URL must be a valid URL")
     .refine(
-      (url) =>
-        url.startsWith("postgresql://") ||
+      url => url.startsWith("postgresql://") ||
         url.startsWith("prisma://") ||
         url.startsWith("prisma+postgres://"),
       "DATABASE_URL must be either a PostgreSQL connection string (postgresql://), a Prisma Accelerate URL (prisma://), or a Prisma Accelerate URL with prisma+postgres prefix"
@@ -110,7 +108,9 @@ const extendedSchema = z.object({
     .regex(/^\d+$/, "MIN_REQUEST_DELAY must be a number")
     .optional(),
   OUTPUT_DIR: z.string().optional(),
-  LOG_LEVEL: z.enum(["DEBUG", "INFO", "WARN", "ERROR"]).optional(),
+  LOG_LEVEL: z.enum([
+"DEBUG", "INFO", "WARN", "ERROR"
+]).optional(),
   MAX_RETRIES: z.string().regex(/^\d+$/, "MAX_RETRIES must be a number").optional(),
   TIMEOUT: z.string().regex(/^\d+$/, "TIMEOUT must be a number").optional(),
 })
@@ -119,14 +119,8 @@ const extendedSchema = z.object({
 export function validateCoreSecurityEnv() {
   const result = coreSecuritySchema.safeParse(process.env)
   if (!result.success) {
-    const errorMessages = result.error.errors.map(
-      (err) => `${err.path.join(".")}: ${err.message}`
-    )
-    throw new Error(
-      `Critical security configuration error:\n${errorMessages.join(
-        "\n"
-      )}\n\nPlease check your environment variables and ensure all required secrets are properly set.`
-    )
+    const errorMessages = result.error.errors.map(err => `${err.path.join(".")}: ${err.message}`)
+    throw new Error(`Critical security configuration error:\n${errorMessages.join("\n")}\n\nPlease check your environment variables and ensure all required secrets are properly set.`)
   }
   return result.data
 }
@@ -134,14 +128,8 @@ export function validateCoreSecurityEnv() {
 export function validateExtendedEnv() {
   const result = extendedSchema.safeParse(process.env)
   if (!result.success) {
-    const errorMessages = result.error.errors.map(
-      (err) => `${err.path.join(".")}: ${err.message}`
-    )
-    console.warn(
-      `Environment validation warnings:\n${errorMessages.join(
-        "\n"
-      )}\n\nSome optional environment variables may not be properly configured.`
-    )
+    const errorMessages = result.error.errors.map(err => `${err.path.join(".")}: ${err.message}`)
+    console.warn(`Environment validation warnings:\n${errorMessages.join("\n")}\n\nSome optional environment variables may not be properly configured.`)
   }
   return result.success ? result.data : null
 }

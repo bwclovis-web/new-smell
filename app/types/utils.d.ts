@@ -2,6 +2,7 @@
  * Type declarations for api/utils.js
  */
 declare module "@api/utils" {
+
   /**
    * Parse cookies from request
    */

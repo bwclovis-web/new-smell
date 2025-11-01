@@ -18,8 +18,7 @@ export interface FormFieldProps {
   showValidationIcon?: boolean
 }
 
-const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
-  (
+const FormField = forwardRef<HTMLDivElement, FormFieldProps>((
     {
       label,
       error,
@@ -172,8 +171,7 @@ const FormField = forwardRef<HTMLDivElement, FormFieldProps>(
         />
       </div>
     )
-  }
-)
+  })
 
 FormField.displayName = "FormField"
 

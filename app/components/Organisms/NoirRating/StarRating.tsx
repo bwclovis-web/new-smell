@@ -22,7 +22,9 @@ const StarRating = ({
   onLeave,
 }: StarRatingProps) => (
   <div className="flex items-center gap-0.5 min-h-0 flex-shrink-0">
-    {[1, 2, 3, 4, 5].map((rating) => (
+    {[
+1, 2, 3, 4, 5
+].map(rating => (
       <NoirButton
         key={rating}
         rating={rating}

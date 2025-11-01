@@ -55,8 +55,7 @@ const performAddAction = async ({
   amount,
   price,
   placeOfPurchase,
-}: AddParams) =>
-  await addUserPerfume({
+}: AddParams) => await addUserPerfume({
     userId,
     perfumeId,
     amount,
@@ -64,8 +63,7 @@ const performAddAction = async ({
     placeOfPurchase,
   })
 
-const performRemoveAction = async (userId: string, perfumeId: string) =>
-  await removeUserPerfume(userId, perfumeId)
+const performRemoveAction = async (userId: string, perfumeId: string) => await removeUserPerfume(userId, perfumeId)
 
 const performDecantAction = async (params: {
   userId: string
@@ -199,7 +197,7 @@ const MyScentsPage = () => {
         ) : (
           // Use regular rendering for small collections
           <ul className="w-full">
-            {userPerfumes.map((userPerfume) => renderUserPerfume(userPerfume))}
+            {userPerfumes.map(userPerfume => renderUserPerfume(userPerfume))}
           </ul>
         )}
       </div>

@@ -305,9 +305,7 @@ describe("Error Handling Security", () => {
       const error = createError.server("Test error")
       const response = createErrorResponse(error)
 
-      expect(response.headers.get("Cache-Control")).toBe(
-        "no-store, no-cache, must-revalidate"
-      )
+      expect(response.headers.get("Cache-Control")).toBe("no-store, no-cache, must-revalidate")
       expect(response.headers.get("Pragma")).toBe("no-cache")
       expect(response.headers.get("Expires")).toBe("0")
     })
@@ -328,9 +326,7 @@ describe("Error Handling Security", () => {
       })
 
       expect(response.headers.get("X-Custom-Header")).toBe("custom-value")
-      expect(response.headers.get("Cache-Control")).toBe(
-        "no-store, no-cache, must-revalidate"
-      )
+      expect(response.headers.get("Cache-Control")).toBe("no-store, no-cache, must-revalidate")
     })
 
     it("should use correct HTTP status codes", async () => {

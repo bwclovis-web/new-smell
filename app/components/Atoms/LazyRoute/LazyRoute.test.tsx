@@ -11,12 +11,10 @@ const mockImportFn = vi.fn(() => Promise.resolve({ default: MockComponent }))
 
 describe("LazyRoute", () => {
   it("renders fallback while loading", () => {
-    render(
-      <LazyRoute
+    render(<LazyRoute
         importFn={mockImportFn}
         fallback={<div data-testid="loading">Loading...</div>}
-      />
-    )
+      />)
 
     expect(screen.getByTestId("loading")).toBeInTheDocument()
   })
@@ -28,9 +26,7 @@ describe("LazyRoute", () => {
   })
 
   it("applies custom className", () => {
-    const { container } = render(
-      <LazyRoute importFn={mockImportFn} className="custom-class" />
-    )
+    const { container } = render(<LazyRoute importFn={mockImportFn} className="custom-class" />)
 
     expect(container.firstChild).toHaveClass("custom-class")
   })

@@ -34,9 +34,7 @@ describe("PasswordStrengthIndicator", () => {
 
   describe("Rendering", () => {
     it("renders password strength indicator with strength bar", () => {
-      const { container } = render(
-        <PasswordStrengthIndicator password="Password123!" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="Password123!" />)
 
       expect(container.querySelector(".bg-gray-200")).toBeInTheDocument()
       expect(container.querySelector(".h-2.rounded-full")).toBeInTheDocument()
@@ -63,12 +61,10 @@ describe("PasswordStrengthIndicator", () => {
     })
 
     it("applies custom className", () => {
-      const { container } = render(
-        <PasswordStrengthIndicator
+      const { container } = render(<PasswordStrengthIndicator
           password="Password123!"
           className="custom-class"
-        />
-      )
+        />)
       expect(container.firstChild).toHaveClass("custom-class")
     })
   })
@@ -206,9 +202,7 @@ describe("PasswordStrengthIndicator", () => {
         strengthInfo: { score: 8, strength: "very_strong", feedback: [] },
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="VeryStrong123!@#" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="VeryStrong123!@#" />)
 
       expect(container.querySelector(".space-y-1")).not.toBeInTheDocument()
     })
@@ -250,9 +244,7 @@ describe("PasswordStrengthIndicator", () => {
       })
 
       render(<PasswordStrengthIndicator password="weak" />)
-      expect(
-        screen.queryByText("Password meets all requirements")
-      ).not.toBeInTheDocument()
+      expect(screen.queryByText("Password meets all requirements")).not.toBeInTheDocument()
     })
 
     it("shows both excellence and validation messages for very strong valid passwords", () => {
@@ -282,15 +274,13 @@ describe("PasswordStrengthIndicator", () => {
     })
 
     it("passes custom requirement flags to hook", () => {
-      render(
-        <PasswordStrengthIndicator
+      render(<PasswordStrengthIndicator
           password="test"
           requireUppercase={false}
           requireLowercase={true}
           requireNumbers={false}
           requireSpecialChars={true}
-        />
-      )
+        />)
 
       expect(mockUsePasswordStrength).toHaveBeenCalledWith(
         "test",
@@ -378,9 +368,7 @@ describe("PasswordStrengthIndicator", () => {
         getStrengthText: vi.fn(() => "Strong"),
       })
 
-      const { container } = render(
-        <PasswordStrengthIndicator password="Strong123!" />
-      )
+      const { container } = render(<PasswordStrengthIndicator password="Strong123!" />)
 
       const icon = container.querySelector("svg")
       expect(icon).toBeInTheDocument()
@@ -407,9 +395,7 @@ describe("PasswordStrengthIndicator", () => {
         strengthInfo: { score: 8, strength: "very_strong", feedback: [] },
       })
 
-      expect(() =>
-        render(<PasswordStrengthIndicator password="test" />)
-      ).not.toThrow()
+      expect(() => render(<PasswordStrengthIndicator password="test" />)).not.toThrow()
     })
 
     it("handles very long feedback messages", () => {
@@ -418,9 +404,7 @@ describe("PasswordStrengthIndicator", () => {
         strengthInfo: {
           score: 2,
           strength: "weak",
-          feedback: [
-            "This is a very long feedback message that should still render correctly even though it contains a lot of text",
-          ],
+          feedback: ["This is a very long feedback message that should still render correctly even though it contains a lot of text",],
         },
       })
 
@@ -442,7 +426,7 @@ describe("PasswordStrengthIndicator", () => {
 
       render(<PasswordStrengthIndicator password="weak" />)
 
-      feedbackItems.forEach((item) => {
+      feedbackItems.forEach(item => {
         expect(screen.getByText(item)).toBeInTheDocument()
       })
     })

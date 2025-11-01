@@ -15,12 +15,10 @@ const HousesWithNoPerfumes: FC<HousesWithNoPerfumesProps> = ({ stats }) => {
   const missingHouseInfoByBrand = stats.missingHouseInfoByBrand || {}
 
   // Get houses with missing info
-  const housesWithMissingInfo = Object.entries(missingHouseInfoByBrand).map(
-    ([name, count]) => ({
+  const housesWithMissingInfo = Object.entries(missingHouseInfoByBrand).map(([name, count]) => ({
       name,
       missingFieldsCount: count,
-    })
-  )
+    }))
 
   // Determine which data to show based on filter
   const getFilteredData = () => {
@@ -40,8 +38,8 @@ const HousesWithNoPerfumes: FC<HousesWithNoPerfumesProps> = ({ stats }) => {
       case "all":
         // Combine both - houses with no perfumes OR missing info
         const allIssues = [
-          ...housesNoPerfumes.map((h) => ({ ...h, issue: "No Perfumes" })),
-          ...housesWithMissingInfo.map((h) => ({
+          ...housesNoPerfumes.map(h => ({ ...h, issue: "No Perfumes" })),
+          ...housesWithMissingInfo.map(h => ({
             ...h,
             issue: "Missing Info",
           })),

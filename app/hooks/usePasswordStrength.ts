@@ -131,8 +131,10 @@ export const usePasswordStrength = (
       }
 
       // Common password check (simplified)
-      const commonPasswords = ["password", "123456", "qwerty", "admin", "letmein"]
-      if (commonPasswords.some((common) => pwd.toLowerCase().includes(common))) {
+      const commonPasswords = [
+"password", "123456", "qwerty", "admin", "letmein"
+]
+      if (commonPasswords.some(common => pwd.toLowerCase().includes(common))) {
         score -= 2
         feedback.push("Avoid common passwords")
       }

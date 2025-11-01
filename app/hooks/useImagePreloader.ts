@@ -26,13 +26,12 @@ export const useImagePreloader = ({
       return
     }
 
-    const loadImage = (src: string): Promise<void> =>
-      new Promise((resolve, reject) => {
+    const loadImage = (src: string): Promise<void> => new Promise((resolve, reject) => {
         const img = new Image()
 
         img.onload = () => {
-          setLoadedImages((prev) => new Set([...prev, src]))
-          setLoadingImages((prev) => {
+          setLoadedImages(prev => new Set([...prev, src]))
+          setLoadingImages(prev => {
             const newSet = new Set(prev)
             newSet.delete(src)
             return newSet
@@ -41,8 +40,8 @@ export const useImagePreloader = ({
         }
 
         img.onerror = () => {
-          setFailedImages((prev) => new Set([...prev, src]))
-          setLoadingImages((prev) => {
+          setFailedImages(prev => new Set([...prev, src]))
+          setLoadingImages(prev => {
             const newSet = new Set(prev)
             newSet.delete(src)
             return newSet
@@ -50,7 +49,7 @@ export const useImagePreloader = ({
           reject(new Error(`Failed to load image: ${src}`))
         }
 
-        setLoadingImages((prev) => new Set([...prev, src]))
+        setLoadingImages(prev => new Set([...prev, src]))
         img.src = src
       })
 

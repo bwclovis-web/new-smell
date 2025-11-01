@@ -137,7 +137,7 @@ const RegisterPage = () => {
           <div className="bg-red-50 border border-red-200 rounded-md p-3 text-sm text-red-700">
             <p className="font-medium mb-1">Please fix the following errors:</p>
             <ul className="list-disc list-inside">
-              {signupForm.errors.map((error) => (
+              {signupForm.errors.map(error => (
                 <li key={error}>{error}</li>
               ))}
             </ul>

@@ -113,7 +113,7 @@ function analyzeSecurityEvent(event) {
  */
 function checkBruteForceAttempt(ipAddress, activities) {
   const now = new Date()
-  const recentAuthFailures = activities.filter((activity) => {
+  const recentAuthFailures = activities.filter(activity => {
     const activityTime = new Date(activity.timestamp)
     return (
       activity.type === SECURITY_EVENT_TYPES.AUTH_FAILURE &&
@@ -144,13 +144,13 @@ function checkBruteForceAttempt(ipAddress, activities) {
  */
 function checkSuspiciousPatterns(ipAddress, activities) {
   const now = new Date()
-  const recentActivities = activities.filter((activity) => {
+  const recentActivities = activities.filter(activity => {
     const activityTime = new Date(activity.timestamp)
     return now - activityTime < 60 * 60 * 1000 // Last hour
   })
 
   // Check for rapid-fire requests
-  const rapidRequests = recentActivities.filter((activity) => {
+  const rapidRequests = recentActivities.filter(activity => {
     const activityTime = new Date(activity.timestamp)
     return now - activityTime < 60 * 1000 // Last minute
   })
@@ -174,7 +174,7 @@ function checkSuspiciousPatterns(ipAddress, activities) {
   }
 
   // Check for scanning behavior
-  const uniquePaths = new Set(recentActivities.map((a) => a.path))
+  const uniquePaths = new Set(recentActivities.map(a => a.path))
   if (uniquePaths.size >= 10) {
     const alertKey = `${ipAddress}-scanning`
     if (!securityAlerts.has(alertKey)) {
@@ -198,11 +198,13 @@ function checkSuspiciousPatterns(ipAddress, activities) {
  * Check for data breach attempts
  */
 function checkDataBreachAttempts(ipAddress, activities) {
-  const sensitivePaths = ["/admin", "/api/users", "/api/auth", "/api/ratings"]
-  const recentSensitiveAccess = activities.filter((activity) => {
+  const sensitivePaths = [
+"/admin", "/api/users", "/api/auth", "/api/ratings"
+]
+  const recentSensitiveAccess = activities.filter(activity => {
     const activityTime = new Date(activity.timestamp)
     return (
-      sensitivePaths.some((path) => activity.path.startsWith(path)) &&
+      sensitivePaths.some(path => activity.path.startsWith(path)) &&
       new Date() - activityTime < 30 * 60 * 1000
     ) // Last 30 minutes
   })
@@ -258,7 +260,7 @@ export function getSecurityStats() {
     stats.uniqueIPs.add(ip)
     stats.totalEvents += events.length
 
-    events.forEach((event) => {
+    events.forEach(event => {
       // Count by type
       stats.eventsByType[event.type] = (stats.eventsByType[event.type] || 0) + 1
 
@@ -304,9 +306,7 @@ export function cleanupOldEvents() {
   const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
 
   for (const [key, events] of securityEvents) {
-    const recentEvents = events.filter(
-      (event) => new Date(event.timestamp) > oneDayAgo
-    )
+    const recentEvents = events.filter(event => new Date(event.timestamp) > oneDayAgo)
 
     if (recentEvents.length === 0) {
       securityEvents.delete(key)

@@ -75,10 +75,10 @@ const PerfumeForm = ({ formType, lastResult, data }: PerfumeFormProps) => {
 
     // Remove existing note inputs
     const existingInputs = formElement.querySelectorAll('input[name^="notes"]')
-    existingInputs.forEach((input) => input.remove())
+    existingInputs.forEach(input => input.remove())
 
     // Add current note states as hidden inputs
-    topNotes.forEach((note) => {
+    topNotes.forEach(note => {
       if (!note.id) {
         console.warn("Note missing id:", note)
         return
@@ -90,7 +90,7 @@ const PerfumeForm = ({ formType, lastResult, data }: PerfumeFormProps) => {
       formElement.appendChild(input)
     })
 
-    heartNotes.forEach((note) => {
+    heartNotes.forEach(note => {
       if (!note.id) {
         console.warn("Note missing id:", note)
         return
@@ -102,7 +102,7 @@ const PerfumeForm = ({ formType, lastResult, data }: PerfumeFormProps) => {
       formElement.appendChild(input)
     })
 
-    baseNotes.forEach((note) => {
+    baseNotes.forEach(note => {
       if (!note.id) {
         console.warn("Note missing id:", note)
         return
@@ -119,7 +119,9 @@ const PerfumeForm = ({ formType, lastResult, data }: PerfumeFormProps) => {
       heartNotesCount: heartNotes.length,
       baseNotesCount: baseNotes.length,
     })
-  }, [topNotes, heartNotes, baseNotes, formType])
+  }, [
+topNotes, heartNotes, baseNotes, formType
+])
 
   const [form, { name, description, image, house }] = useForm({
     id: formType,

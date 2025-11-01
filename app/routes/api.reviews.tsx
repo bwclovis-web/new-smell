@@ -54,9 +54,7 @@ export const action: ActionFunction = async ({ request }) => {
     updatePerfumeReview,
   } = await import("~/models/perfumeReview.server")
   const { authenticateUser } = await import("~/utils/auth.server")
-  const { createErrorResponse, createSuccessResponse } = await import(
-    "~/utils/response.server"
-  )
+  const { createErrorResponse, createSuccessResponse } = await import("~/utils/response.server")
 
   try {
     // Authenticate user

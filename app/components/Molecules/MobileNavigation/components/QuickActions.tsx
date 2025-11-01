@@ -21,9 +21,7 @@ const QuickActions: FC<QuickActionsProps> = ({ onNavClick }) => (
       <button
         onClick={() => {
           // Focus on search if available, or navigate to search page
-          const searchInput = document.querySelector(
-            'input[type="search"], input[placeholder*="search"], input[placeholder*="Search"]'
-          ) as HTMLInputElement
+          const searchInput = document.querySelector('input[type="search"], input[placeholder*="search"], input[placeholder*="Search"]') as HTMLInputElement
           if (searchInput) {
             searchInput.focus()
             onNavClick()

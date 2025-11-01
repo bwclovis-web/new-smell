@@ -85,7 +85,9 @@ describe("House Factory", () => {
     })
 
     it("should generate valid house types", () => {
-      const validTypes = ["niche", "designer", "indie", "celebrity", "drugstore"]
+      const validTypes = [
+"niche", "designer", "indie", "celebrity", "drugstore"
+]
 
       for (let i = 0; i < 10; i++) {
         const house = createMockHouse()
@@ -106,7 +108,7 @@ describe("House Factory", () => {
     it("should apply overrides to all houses", () => {
       const houses = createMockHouses(3, { type: "niche", country: "France" })
 
-      houses.forEach((house) => {
+      houses.forEach(house => {
         expect(house.type).toBe("niche")
         expect(house.country).toBe("France")
       })
@@ -115,7 +117,7 @@ describe("House Factory", () => {
     it("should create houses with unique names when not overridden", () => {
       const houses = createMockHouses(3, {})
 
-      const names = houses.map((h) => h.name)
+      const names = houses.map(h => h.name)
       const uniqueNames = new Set(names)
       expect(uniqueNames.size).toBe(3)
     })
@@ -208,9 +210,7 @@ describe("House Factory", () => {
     it("should have updatedAt after or equal to createdAt", () => {
       const house = createMockHouse()
 
-      expect(house.updatedAt.getTime()).toBeGreaterThanOrEqual(
-        house.createdAt.getTime()
-      )
+      expect(house.updatedAt.getTime()).toBeGreaterThanOrEqual(house.createdAt.getTime())
     })
 
     it("should generate valid founded years when present", () => {

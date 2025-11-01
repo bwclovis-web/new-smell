@@ -47,7 +47,7 @@ const TradingPostPage = () => {
         </div>
       ) : (
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 inner-container py-6 auto-rows-fr">
-          {availablePerfumes?.map((perfume) => (
+          {availablePerfumes?.map(perfume => (
             <li key={perfume.id} className="relative">
               <LinkCard data={perfume} type="perfume">
                 <div className="mt-2 rounded-md">
@@ -55,7 +55,7 @@ const TradingPostPage = () => {
                     {t("tradingPost.availableFrom")}:
                   </p>
 
-                  {perfume.userPerfume.map((userPerfume) => (
+                  {perfume.userPerfume.map(userPerfume => (
                     <div key={userPerfume.id} className="mb-1">
                       <a
                         href={`/trader/${userPerfume.userId}`}

@@ -93,13 +93,12 @@ const AboutDropdown = ({
       {isOpen && (
         <div className={dropdownClasses}>
           <ul className="py-2">
-            {aboutItems.map((item) => (
+            {aboutItems.map(item => (
               <li key={item.id}>
                 <NavLink
                   to={item.path}
                   onClick={handleNavClick}
-                  className={({ isActive }) =>
-                    styleMerge(
+                  className={({ isActive }) => styleMerge(
                       variant === "mobile"
                         ? "block text-noir-gold hover:text-noir-light font-semibold text-lg py-3 px-4 transition-colors duration-400 hover:bg-noir-black/30"
                         : "block text-noir-gold hover:text-noir-light font-semibold text-base py-2 px-4 transition-colors duration-400 hover:bg-noir-black/30",

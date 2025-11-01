@@ -7,13 +7,11 @@ interface CSRFProtectedFormProps extends FormHTMLAttributes<HTMLFormElement> {
   csrfName?: string
 }
 
-export const CSRFProtectedForm = forwardRef<HTMLFormElement, CSRFProtectedFormProps>(
-  ({ children, csrfName = "_csrf", ...props }, ref) => (
+export const CSRFProtectedForm = forwardRef<HTMLFormElement, CSRFProtectedFormProps>(({ children, csrfName = "_csrf", ...props }, ref) => (
     <form ref={ref} {...props}>
       <CSRFToken name={csrfName} />
       {children}
     </form>
-  )
-)
+  ))
 
 CSRFProtectedForm.displayName = "CSRFProtectedForm"

@@ -26,9 +26,7 @@ export const UserAlerts = ({
 }: UserAlertsProps) => {
   const { t } = useTranslation()
   const [alerts, setAlerts] = useState<UserAlert[]>(initialAlerts)
-  const [preferences, setPreferences] = useState<UserAlertPreferences | null>(
-    initialPreferences || null
-  )
+  const [preferences, setPreferences] = useState<UserAlertPreferences | null>(initialPreferences || null)
   const [unreadCount, setUnreadCount] = useState(initialUnreadCount)
   const [isLoading, setIsLoading] = useState(false)
   const { addToHeaders } = useCSRF()
@@ -61,14 +59,10 @@ export const UserAlerts = ({
       })
 
       if (response.ok) {
-        setAlerts((prev) =>
-          prev.map((alert) =>
-            alert.id === alertId
+        setAlerts(prev => prev.map(alert => alert.id === alertId
               ? { ...alert, isRead: true, readAt: new Date() }
-              : alert
-          )
-        )
-        setUnreadCount((prev) => Math.max(0, prev - 1))
+              : alert))
+        setUnreadCount(prev => Math.max(0, prev - 1))
       }
     } catch (error) {
       console.error("Failed to mark alert as read:", error)
@@ -83,9 +77,9 @@ export const UserAlerts = ({
       })
 
       if (response.ok) {
-        setAlerts((prev) => prev.filter((alert) => alert.id !== alertId))
-        setUnreadCount((prev) => {
-          const alert = alerts.find((a) => a.id === alertId)
+        setAlerts(prev => prev.filter(alert => alert.id !== alertId))
+        setUnreadCount(prev => {
+          const alert = alerts.find(a => a.id === alertId)
           return alert && !alert.isRead ? Math.max(0, prev - 1) : prev
         })
       }
@@ -113,9 +107,7 @@ export const UserAlerts = ({
     }
   }
 
-  const handlePreferencesChange = async (
-    newPreferences: Partial<UserAlertPreferences>
-  ) => {
+  const handlePreferencesChange = async (newPreferences: Partial<UserAlertPreferences>) => {
     try {
       const response = await fetch(`/api/user-alerts/${userId}/preferences`, {
         method: "PUT",
@@ -193,7 +185,7 @@ export const UserAlerts = ({
               </div>
             ) : (
               <div className="space-y-2">
-                {alerts.map((alert) => (
+                {alerts.map(alert => (
                   <AlertItem
                     key={alert.id}
                     alert={alert}

@@ -108,9 +108,7 @@ async function testCompression(endpoint) {
         console.log(`   Estimated Compression Ratio: ~${compressionRatio}% (Gzip)`)
       }
     } else {
-      console.log(
-        `📦 No compression applied (Content-Encoding: ${contentEncoding || "none"})`
-      )
+      console.log(`📦 No compression applied (Content-Encoding: ${contentEncoding || "none"})`)
     }
 
     // Validate expectations
@@ -119,11 +117,9 @@ async function testCompression(endpoint) {
       : !isCompressed
     const status = meetsExpectation ? "✅" : "❌"
 
-    console.log(
-      `${status} Compression Status: ${
+    console.log(`${status} Compression Status: ${
         isCompressed ? "COMPRESSED" : "NOT COMPRESSED"
-      }`
-    )
+      }`)
     console.log(`${status} Meets Expectation: ${meetsExpectation ? "YES" : "NO"}`)
 
     return {
@@ -162,11 +158,11 @@ async function runCompressionTests() {
   console.log("=" * 60)
 
   const totalTests = results.length
-  const compressedTests = results.filter((r) => r.isCompressed).length
-  const passedTests = results.filter((r) => r.meetsExpectation).length
+  const compressedTests = results.filter(r => r.isCompressed).length
+  const passedTests = results.filter(r => r.meetsExpectation).length
   const avgCompressionRatio =
     results
-      .filter((r) => r.isCompressed && r.compressionRatio > 0)
+      .filter(r => r.isCompressed && r.compressionRatio > 0)
       .reduce((sum, r) => sum + r.compressionRatio, 0) / compressedTests || 0
 
   console.log(`📊 Total Tests: ${totalTests}`)
@@ -178,7 +174,7 @@ async function runCompressionTests() {
   console.log("\n📋 DETAILED RESULTS")
   console.log("-" * 60)
 
-  results.forEach((result) => {
+  results.forEach(result => {
     const status = result.meetsExpectation ? "✅" : "❌"
     const compression = result.isCompressed
       ? `(${result.compressionRatio}%)`
@@ -205,9 +201,7 @@ async function runCompressionTests() {
   }
 
   if (avgCompressionRatio > 70) {
-    console.log(
-      "🎉 Excellent compression ratio! Your API responses are well optimized."
-    )
+    console.log("🎉 Excellent compression ratio! Your API responses are well optimized.")
   }
 
   console.log("\n✨ Compression testing complete!")

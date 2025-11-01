@@ -76,7 +76,7 @@ describe("Test Lifecycle Utilities", () => {
 
     it("should handle async cleanup functions", async () => {
       const cleanup = vi.fn(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 10))
+        await new Promise(resolve => setTimeout(resolve, 10))
       })
 
       registerCleanup(cleanup)
@@ -339,7 +339,7 @@ describe("Test Lifecycle Utilities", () => {
       const controller2 = createAbortController()
 
       // Simulate afterEach
-      getAbortControllers().forEach((c) => {
+      getAbortControllers().forEach(c => {
         if (!c.signal.aborted) {
           c.abort()
         }

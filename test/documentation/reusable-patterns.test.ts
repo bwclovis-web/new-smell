@@ -7,9 +7,9 @@
  * 3. Documentation stays in sync with implementation
  */
 
-import { describe, it, expect } from "vitest"
 import fs from "fs"
 import path from "path"
+import { describe, expect, it } from "vitest"
 
 // Helper to check if file exists
 function fileExists(filePath: string): boolean {
@@ -205,9 +205,7 @@ describe("Reusable Patterns Documentation Tests", () => {
   describe("Documentation Content Verification", () => {
     it("should reference correct test file counts", async () => {
       // Error handling: 38 tests
-      const errorTests = await import(
-        "../../app/utils/errorHandling.patterns.test.ts"
-      )
+      const errorTests = await import("../../app/utils/errorHandling.patterns.test.ts")
       // Note: We're checking the test file exists and is structured correctly
       // The actual test count is verified by running the tests themselves
       expect(errorTests).toBeDefined()
@@ -296,9 +294,7 @@ describe("Reusable Patterns Documentation Tests", () => {
 
   describe("Integration Tests", () => {
     it("should have working error handling patterns", async () => {
-      const { safeAsync, assertExists, validationError } = await import(
-        "../../app/utils/errorHandling.patterns"
-      )
+      const { safeAsync, assertExists, validationError } = await import("../../app/utils/errorHandling.patterns")
 
       // Test safeAsync
       const [error, result] = await safeAsync(async () => "success")
@@ -316,9 +312,7 @@ describe("Reusable Patterns Documentation Tests", () => {
     })
 
     it("should have working validation patterns", async () => {
-      const { commonSchemas, sanitizeString } = await import(
-        "../../app/utils/validation"
-      )
+      const { commonSchemas, sanitizeString } = await import("../../app/utils/validation")
 
       // Test email schema
       const emailResult = commonSchemas.email.safeParse("test@example.com")
@@ -331,9 +325,7 @@ describe("Reusable Patterns Documentation Tests", () => {
     })
 
     it("should have working data fetching utilities", async () => {
-      const { buildQueryString, getCacheStats } = await import(
-        "../../app/utils/data-fetching"
-      )
+      const { buildQueryString, getCacheStats } = await import("../../app/utils/data-fetching")
 
       // Test query string building
       const url = buildQueryString("/api/test", { page: 1, limit: 20 })

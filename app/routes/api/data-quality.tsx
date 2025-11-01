@@ -24,8 +24,8 @@ const getLatestReportTimestamp = async (): Promise<string | null> => {
 
     // Find the most recent report file
     const timestampedFiles = allFiles
-      .filter((file) => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
-      .map((file) => {
+      .filter(file => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
+      .map(file => {
         const match = file.match(/(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z)/)
         return match ? match[1] : null
       })
@@ -122,8 +122,8 @@ const getFilteredFiles = (
 ): TimestampedFile[] => {
   // Convert files to timestamped file info objects
   const timestampedFiles = allFiles
-    .filter((file) => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
-    .map((file) => {
+    .filter(file => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
+    .map(file => {
       const match = file.match(/(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z)/)
       const timestamp = match ? match[1] : ""
       // Convert timestamp format: 2025-10-18T11-59-48-603Z -> 2025-10-18T11:59:48.603Z
@@ -137,22 +137,20 @@ const getFilteredFiles = (
         date: isoTimestamp ? new Date(isoTimestamp) : new Date(0),
       }
     })
-    .filter((file) => file.timestamp)
-    .sort(
-      (fileA, fileB) =>
+    .filter(file => file.timestamp)
+    .sort((fileA, fileB) =>
         // Sort by date (most recent first)
-        fileB.date.getTime() - fileA.date.getTime()
-    )
+        fileB.date.getTime() - fileA.date.getTime())
 
   // Apply timeframe filtering
   if (timeframe === "week") {
     const oneWeekAgo = new Date()
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-    return timestampedFiles.filter((file) => file.date >= oneWeekAgo)
+    return timestampedFiles.filter(file => file.date >= oneWeekAgo)
   } else if (timeframe === "month") {
     const oneMonthAgo = new Date()
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
-    return timestampedFiles.filter((file) => file.date >= oneMonthAgo)
+    return timestampedFiles.filter(file => file.date >= oneMonthAgo)
   }
 
   return timestampedFiles
@@ -173,8 +171,8 @@ const getLatestReportFiles = async (timeframe: string = "all") => {
   if (filteredFiles.length === 0) {
     // Get all timestamped files and use the most recent ones
     const allTimestampedFiles = allFiles
-      .filter((file) => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
-      .map((file) => {
+      .filter(file => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
+      .map(file => {
         const match = file.match(/(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z)/)
         const timestamp = match ? match[1] : ""
         // Convert timestamp format: 2025-10-18T11-59-48-603Z -> 2025-10-18T11:59:48.603Z
@@ -188,12 +186,10 @@ const getLatestReportFiles = async (timeframe: string = "all") => {
           date: isoTimestamp ? new Date(isoTimestamp) : new Date(0),
         }
       })
-      .filter((file) => file.timestamp)
-      .sort(
-        (fileA, fileB) =>
+      .filter(file => file.timestamp)
+      .sort((fileA, fileB) =>
           // Sort by date (most recent first)
-          fileB.date.getTime() - fileA.date.getTime()
-      )
+          fileB.date.getTime() - fileA.date.getTime())
 
     filesToUse = allTimestampedFiles
   }
@@ -202,7 +198,7 @@ const getLatestReportFiles = async (timeframe: string = "all") => {
   const latestTimestamp = filesToUse[0].timestamp
 
   // Extract all unique dates for history and sort them
-  const dateStrings = filesToUse.map((file) => file.date.toISOString().split("T")[0])
+  const dateStrings = filesToUse.map(file => file.date.toISOString().split("T")[0])
   const uniqueDates = [...new Set(dateStrings)].sort()
 
   // Get paths for report types
@@ -214,7 +210,7 @@ const getLatestReportFiles = async (timeframe: string = "all") => {
       `houses_no_perfumes_${latestTimestamp}.json`
     ),
     historyDates: uniqueDates,
-    allReports: filesToUse.map((file) => ({
+    allReports: filesToUse.map(file => ({
       date: file.date.toISOString().split("T")[0],
       missing: path.join(reportsDir, `missing_info_${file.timestamp}.json`),
       duplicates: path.join(reportsDir, `duplicates_${file.timestamp}.md`),
@@ -257,7 +253,7 @@ const parseMissingData = async (filePath: string) => {
   })
   const missingHouseInfoByBrand: Record<string, number> = {}
   let totalMissingHouseInfo = 0
-  houses.forEach((house) => {
+  houses.forEach(house => {
     let missingFields = 0
     if (!house.image) {
       missingFields++
@@ -493,9 +489,7 @@ const collectReportData = async (
     missingHouseInfoByBrand,
   } = await parseMissingData(missingPath)
 
-  const { totalDuplicates, duplicatesByBrand } = await parseDuplicatesData(
-    duplicatesPath
-  )
+  const { totalDuplicates, duplicatesByBrand } = await parseDuplicatesData(duplicatesPath)
 
   const { totalHousesNoPerfumes, housesNoPerfumes } =
     await parseHousesNoPerfumesData(housesNoPerfsPath)

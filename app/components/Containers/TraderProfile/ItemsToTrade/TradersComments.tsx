@@ -6,7 +6,7 @@ interface TradersCommentsProps {
 
 const TradersComments = ({ comments }: TradersCommentsProps) => (
   <ul className="space-y-2">
-    {comments.map((comment) => (
+    {comments.map(comment => (
       <li
         key={comment.id}
         className="text-sm p-2 rounded border-l-4 border-noir-gold-500 bg-noir-gold/10"

@@ -81,7 +81,7 @@ describe("Correlation ID + ErrorLogger Integration", () => {
         expect(logs).toHaveLength(3)
 
         // All errors should have the same correlation ID
-        logs.forEach((log) => {
+        logs.forEach(log => {
           expect(log.correlationId).toBe(correlationId)
         })
       })
@@ -168,11 +168,11 @@ describe("Correlation ID + ErrorLogger Integration", () => {
         errorLogger.log(createError.validation("Outer error"))
 
         // Simulate nested async operation
-        await new Promise((resolve) => setTimeout(resolve, 10))
+        await new Promise(resolve => setTimeout(resolve, 10))
 
         // Nested function that also logs errors
         const nestedOperation = async () => {
-          await new Promise((resolve) => setTimeout(resolve, 5))
+          await new Promise(resolve => setTimeout(resolve, 5))
           errorLogger.log(createError.database("Nested error"))
         }
 
@@ -191,17 +191,17 @@ describe("Correlation ID + ErrorLogger Integration", () => {
 
     it("should handle concurrent requests with different correlation IDs", async () => {
       const handler1 = withCorrelationId(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 20))
+        await new Promise(resolve => setTimeout(resolve, 20))
         errorLogger.log(createError.server("Error in handler 1"))
       })
 
       const handler2 = withCorrelationId(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 10))
+        await new Promise(resolve => setTimeout(resolve, 10))
         errorLogger.log(createError.server("Error in handler 2"))
       })
 
       const handler3 = withCorrelationId(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 15))
+        await new Promise(resolve => setTimeout(resolve, 15))
         errorLogger.log(createError.server("Error in handler 3"))
       })
 
@@ -212,12 +212,12 @@ describe("Correlation ID + ErrorLogger Integration", () => {
       expect(logs).toHaveLength(3)
 
       // Each error should have a unique correlation ID
-      const correlationIds = logs.map((log) => log.correlationId)
+      const correlationIds = logs.map(log => log.correlationId)
       const uniqueIds = new Set(correlationIds)
       expect(uniqueIds.size).toBe(3)
 
       // All IDs should be defined
-      correlationIds.forEach((id) => {
+      correlationIds.forEach(id => {
         expect(id).toBeDefined()
         expect(id).toMatch(/^\d+_[a-z0-9]{9}$/)
       })
@@ -234,7 +234,7 @@ describe("Correlation ID + ErrorLogger Integration", () => {
         }
 
         // Step 2: Simulate database query
-        await new Promise((resolve) => setTimeout(resolve, 10))
+        await new Promise(resolve => setTimeout(resolve, 10))
 
         // Step 3: Simulate error in data processing
         try {
@@ -256,15 +256,14 @@ describe("Correlation ID + ErrorLogger Integration", () => {
       expect(logs.length).toBeGreaterThan(0)
 
       // All errors in this request should have the same correlation ID
-      const correlationIds = logs.map((log) => log.correlationId)
+      const correlationIds = logs.map(log => log.correlationId)
       const uniqueIds = new Set(correlationIds)
       expect(uniqueIds.size).toBe(1)
     })
 
     it("should handle multiple sequential requests with different IDs", async () => {
-      const simulateRequest = (requestId: string) =>
-        withCorrelationId(async () => {
-          await new Promise((resolve) => setTimeout(resolve, 5))
+      const simulateRequest = (requestId: string) => withCorrelationId(async () => {
+          await new Promise(resolve => setTimeout(resolve, 5))
           errorLogger.log(createError.server(`Error in request ${requestId}`))
           return requestId
         })()
@@ -278,7 +277,7 @@ describe("Correlation ID + ErrorLogger Integration", () => {
       expect(logs).toHaveLength(3)
 
       // Each request should have a different correlation ID
-      const correlationIds = logs.map((log) => log.correlationId)
+      const correlationIds = logs.map(log => log.correlationId)
       const uniqueIds = new Set(correlationIds)
       expect(uniqueIds.size).toBe(3)
     })
@@ -363,7 +362,7 @@ describe("Correlation ID + ErrorLogger Integration", () => {
         expect(logs).toHaveLength(50)
 
         // All should have the same correlation ID
-        logs.forEach((log) => {
+        logs.forEach(log => {
           expect(log.correlationId).toBe(correlationId)
         })
       })

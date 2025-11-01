@@ -12,9 +12,7 @@ export async function processWishlistAvailabilityAlerts(perfumeId: string) {
     const alerts = await checkWishlistAvailabilityAlerts(perfumeId)
 
     if (alerts.length > 0) {
-      console.log(
-        `Generated ${alerts.length} wishlist availability alerts for perfume ${perfumeId}`
-      )
+      console.log(`Generated ${alerts.length} wishlist availability alerts for perfume ${perfumeId}`)
 
       // NOTE: Email notifications are not yet implemented
       // When implementing, enable this code and integrate with your email service:
@@ -44,9 +42,7 @@ export async function processDecantInterestAlerts(
     const alerts = await checkDecantInterestAlerts(perfumeId, interestedUserId)
 
     if (alerts.length > 0) {
-      console.log(
-        `Generated ${alerts.length} decant interest alerts for perfume ${perfumeId} from user ${interestedUserId}`
-      )
+      console.log(`Generated ${alerts.length} decant interest alerts for perfume ${perfumeId} from user ${interestedUserId}`)
 
       // NOTE: Email notifications are not yet implemented
       // When implementing, enable this code and integrate with your email service:
@@ -101,27 +97,18 @@ export async function processAllAlertsForPerfume(
  */
 export async function processBulkAlerts(perfumeIds: string[]) {
   try {
-    const results = await Promise.allSettled(
-      perfumeIds.map((perfumeId) => processWishlistAvailabilityAlerts(perfumeId))
-    )
+    const results = await Promise.allSettled(perfumeIds.map(perfumeId => processWishlistAvailabilityAlerts(perfumeId)))
 
     const successful = results
-      .filter(
-        (result): result is PromiseFulfilledResult<any[]> =>
-          result.status === "fulfilled"
-      )
-      .map((result) => result.value)
+      .filter((result): result is PromiseFulfilledResult<any[]> => result.status === "fulfilled")
+      .map(result => result.value)
       .flat()
 
     const failed = results
-      .filter(
-        (result): result is PromiseRejectedResult => result.status === "rejected"
-      )
-      .map((result) => result.reason)
+      .filter((result): result is PromiseRejectedResult => result.status === "rejected")
+      .map(result => result.reason)
 
-    console.log(
-      `Bulk alert processing completed: ${successful.length} alerts generated, ${failed.length} failed`
-    )
+    console.log(`Bulk alert processing completed: ${successful.length} alerts generated, ${failed.length} failed`)
 
     return {
       successful,
@@ -164,9 +151,7 @@ export async function sendWishlistAlertEmail(
 ) {
   // NOTE: Email sending not yet implemented
   // This is a placeholder that logs the intended action
-  console.log(
-    `[Email Placeholder] Would send wishlist alert email to ${userEmail} for ${perfumeName}`
-  )
+  console.log(`[Email Placeholder] Would send wishlist alert email to ${userEmail} for ${perfumeName}`)
   console.log(`Available traders:`, availableTraders)
 }
 
@@ -177,8 +162,6 @@ export async function sendDecantInterestAlertEmail(
 ) {
   // NOTE: Email sending not yet implemented
   // This is a placeholder that logs the intended action
-  console.log(
-    `[Email Placeholder] Would send decant interest alert email to ${userEmail} for ${perfumeName}`
-  )
+  console.log(`[Email Placeholder] Would send decant interest alert email to ${userEmail} for ${perfumeName}`)
   console.log(`Interested user: ${interestedUserName}`)
 }

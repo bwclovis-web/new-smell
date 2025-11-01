@@ -17,9 +17,7 @@ export const rangeSliderWrapVariants = cva(["relative", "w-full", "select-none"]
 export type RangeSliderWrapVariants = VariantProps<typeof rangeSliderWrapVariants>
 
 export const rangeSliderVariants = cva(
-  [
-    "absolute top-1/2 left-0 right-0 h-2 -translate-y-1/2 rounded-full cursor-pointer transition-colors",
-  ],
+  ["absolute top-1/2 left-0 right-0 h-2 -translate-y-1/2 rounded-full cursor-pointer transition-colors",],
   {
     compoundVariants: [{}],
     defaultVariants: {

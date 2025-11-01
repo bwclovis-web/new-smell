@@ -69,7 +69,9 @@ export const useOptimisticUpdate = <T>({
         setIsUpdating(false)
       }
     },
-    [data, isUpdating, onUpdate, onSuccess, onError, revertOnError]
+    [
+data, isUpdating, onUpdate, onSuccess, onError, revertOnError
+]
   )
 
   const revertData = useCallback(() => {

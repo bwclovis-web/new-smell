@@ -99,7 +99,7 @@ const AllPerfumesPage = () => {
         searchType="perfume"
         sortOptions={sortOptions}
         selectedSort={selectedSort as any}
-        onSortChange={(evt) => setSelectedSort(evt.target.value)}
+        onSortChange={evt => setSelectedSort(evt.target.value)}
         className="mb-8"
       />
 

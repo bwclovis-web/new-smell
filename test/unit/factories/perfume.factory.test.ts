@@ -104,7 +104,7 @@ describe("Perfume Factory", () => {
     it("should apply overrides to all perfumes", () => {
       const perfumes = createMockPerfumes(3, { image: null })
 
-      perfumes.forEach((perfume) => {
+      perfumes.forEach(perfume => {
         expect(perfume.image).toBeNull()
       })
     })
@@ -112,7 +112,7 @@ describe("Perfume Factory", () => {
     it("should create perfumes with unique names when not overridden", () => {
       const perfumes = createMockPerfumes(3, {})
 
-      const names = perfumes.map((p) => p.name)
+      const names = perfumes.map(p => p.name)
       const uniqueNames = new Set(names)
       expect(uniqueNames.size).toBe(3)
     })
@@ -124,7 +124,7 @@ describe("Perfume Factory", () => {
       const perfumes = createMockPerfumesForHouse(houseId, 3)
 
       expect(perfumes).toHaveLength(3)
-      perfumes.forEach((perfume) => {
+      perfumes.forEach(perfume => {
         expect(perfume.perfumeHouseId).toBe(houseId)
         expect(perfume.perfumeHouse!.id).toBe(houseId)
       })
@@ -136,7 +136,7 @@ describe("Perfume Factory", () => {
         description: null,
       })
 
-      perfumes.forEach((perfume) => {
+      perfumes.forEach(perfume => {
         expect(perfume.perfumeHouseId).toBe(houseId)
         expect(perfume.description).toBeNull()
       })
@@ -215,9 +215,7 @@ describe("Perfume Factory", () => {
     it("should have updatedAt after or equal to createdAt", () => {
       const perfume = createMockPerfume()
 
-      expect(perfume.updatedAt.getTime()).toBeGreaterThanOrEqual(
-        perfume.createdAt.getTime()
-      )
+      expect(perfume.updatedAt.getTime()).toBeGreaterThanOrEqual(perfume.createdAt.getTime())
     })
 
     it("should handle custom dates correctly", () => {

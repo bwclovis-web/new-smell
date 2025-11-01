@@ -108,9 +108,7 @@ describe("SignIn Route Integration Tests", () => {
     })
 
     it("should handle authentication errors gracefully", async () => {
-      vi.mocked(userServer.signInCustomer).mockRejectedValue(
-        new Error("Authentication failed")
-      )
+      vi.mocked(userServer.signInCustomer).mockRejectedValue(new Error("Authentication failed"))
 
       const formData = new FormData()
       formData.append("email", "user@example.com")
