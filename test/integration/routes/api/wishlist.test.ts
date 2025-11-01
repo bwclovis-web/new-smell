@@ -1,3 +1,18 @@
+/**
+ * Wishlist API Integration Tests
+ * 
+ * Tests the wishlist API action functionality:
+ * - Adding perfumes to wishlist (authenticated users)
+ * - Removing perfumes from wishlist
+ * - Authentication and authorization checks
+ * - Error handling for invalid requests
+ * - Alert processing integration
+ * 
+ * @group integration
+ * @group api
+ * @group wishlist
+ */
+
 import type { ActionFunctionArgs } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

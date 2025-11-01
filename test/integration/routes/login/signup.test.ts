@@ -1,3 +1,20 @@
+/**
+ * SignUp Route Integration Tests
+ * 
+ * Tests user registration functionality:
+ * - Valid user registration flow
+ * - Password validation and matching
+ * - Email and username validation
+ * - Duplicate email/username prevention
+ * - Input sanitization
+ * - Required field validation
+ * - Session creation after registration
+ * 
+ * @group integration
+ * @group auth
+ * @group signup
+ */
+
 import type { ActionFunctionArgs } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

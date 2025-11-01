@@ -1,3 +1,19 @@
+/**
+ * SignIn Route Integration Tests
+ * 
+ * Tests user authentication functionality:
+ * - Valid credential authentication
+ * - Invalid credential handling
+ * - Missing field validation
+ * - Session creation
+ * - Security measures (timing attacks, rate limiting)
+ * - Email sanitization
+ * 
+ * @group integration
+ * @group auth
+ * @group signin
+ */
+
 import type { ActionFunctionArgs } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

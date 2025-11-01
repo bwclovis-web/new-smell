@@ -1,3 +1,17 @@
+/**
+ * Perfume Loader API Integration Tests
+ * 
+ * Tests the perfume search API loader functionality:
+ * - Search by perfume name
+ * - Query parameter handling
+ * - Empty results and error handling
+ * - Special character handling in searches
+ * - Database error propagation
+ * 
+ * @group integration
+ * @group api
+ */
+
 import type { LoaderFunctionArgs } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

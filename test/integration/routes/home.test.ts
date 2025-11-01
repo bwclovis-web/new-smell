@@ -1,3 +1,15 @@
+/**
+ * Home Route Integration Tests
+ * 
+ * Tests the home route loader functionality, including:
+ * - Feature loading and data fetching
+ * - Error handling and edge cases
+ * - Integration with feature.server model
+ * 
+ * @group integration
+ * @group routes
+ */
+
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import * as featureServer from '~/models/feature.server'

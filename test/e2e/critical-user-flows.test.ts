@@ -1,3 +1,18 @@
+/**
+ * Critical User Flows E2E Tests
+ * 
+ * Tests essential user journeys through the application:
+ * - Authentication flows (sign up, login, logout)
+ * - Perfume discovery and browsing
+ * - Wishlist management
+ * - User collection management
+ * 
+ * These tests ensure core user functionality works end-to-end.
+ * 
+ * @group e2e
+ * @group critical
+ */
+
 import { expect, test } from '@playwright/test'
 
 import { HomePage } from './pages/HomePage'

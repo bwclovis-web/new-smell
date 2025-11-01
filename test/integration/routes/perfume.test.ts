@@ -1,3 +1,20 @@
+/**
+ * Perfume Route Integration Tests
+ * 
+ * Tests perfume detail page loader functionality:
+ * - Perfume data loading by slug
+ * - Ratings and reviews aggregation
+ * - Wishlist status for authenticated users
+ * - User session handling
+ * - Parallel query execution and performance
+ * - Error handling (missing slug, 404, invalid tokens)
+ * - Authentication state management
+ * 
+ * @group integration
+ * @group routes
+ * @group perfume
+ */
+
 import type { LoaderFunctionArgs } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

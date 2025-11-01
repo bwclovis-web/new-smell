@@ -1481,9 +1481,49 @@ test("complete user flow", async () => {
 - [x] **Add custom test utilities** **✅ COMPLETED** (October 31, 2025) - **VERIFIED & FIXED** (November 1, 2025)
 - [x] **Document testing utilities** **✅ COMPLETED** (October 31, 2025)
 - [x] **Implement beforeEach/afterEach properly** **✅ COMPLETED** (November 1, 2025)
-- [ ] Add test descriptions
+- [x] **Add test descriptions** **✅ COMPLETED** (November 1, 2025)
 - [ ] Remove flaky tests
 - [ ] Add test timeouts
+
+**Test Descriptions Implementation Summary (Completed - November 1, 2025):**
+
+Comprehensive documentation comments have been added to test files:
+
+**Files Enhanced with Documentation:**
+
+- ✅ `test/integration/routes/home.test.ts` - Added documentation covering feature loading, error handling, and model integration
+- ✅ `test/integration/routes/perfume.test.ts` - Added documentation covering perfume data loading, ratings, reviews, and authentication
+- ✅ `test/integration/routes/the-vault.test.ts` - Added documentation explaining client-side data fetching behavior
+- ✅ `test/integration/routes/api/perfumeLoader.test.ts` - Added documentation covering search API functionality
+- ✅ `test/integration/routes/api/wishlist.test.ts` - Added documentation covering wishlist operations and authentication
+- ✅ `test/integration/routes/admin/users.test.ts` - Added documentation covering admin user management
+- ✅ `test/integration/routes/login/signin.test.ts` - Added documentation covering authentication and security
+- ✅ `test/integration/routes/login/signup.test.ts` - Added documentation covering user registration
+- ✅ `test/e2e/basic-functionality.test.ts` - Added documentation covering core application functionality
+- ✅ `test/e2e/critical-user-flows.test.ts` - Added documentation covering essential user journeys
+- ✅ `test/e2e/admin-flows.test.ts` - Added documentation covering administrator functionality
+
+**Key Improvements:**
+
+- **Comprehensive Documentation**: Each test file now has a JSDoc comment block explaining:
+
+  - Purpose of the test suite
+  - Key functionality being tested
+  - Test categories (@group tags for filtering)
+  - Important notes or context
+
+- **Standardized Format**: All documentation follows a consistent format with:
+
+  - Clear title line
+  - Bulleted list of test coverage areas
+  - Group tags for test organization
+  - Additional context where relevant
+
+- **Better Test Organization**: Documentation clarifies the scope and purpose of each test suite, making it easier for developers to:
+  - Understand what's being tested
+  - Find relevant tests quickly
+  - Identify test coverage gaps
+  - Write new tests following established patterns
 
 **Test Lifecycle Implementation Summary (Completed - November 1, 2025):**
 

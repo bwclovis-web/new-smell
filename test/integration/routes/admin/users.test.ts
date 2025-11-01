@@ -1,3 +1,19 @@
+/**
+ * Admin Users Route Integration Tests
+ * 
+ * Tests admin user management functionality:
+ * - Authorization (admin-only access)
+ * - User list loading with pagination and search
+ * - User role updates
+ * - User deletion (with self-deletion prevention)
+ * - Audit logging for admin actions
+ * - Error handling and database errors
+ * 
+ * @group integration
+ * @group admin
+ * @group users
+ */
+
 import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 

@@ -58,4 +58,4 @@ nul
 # Note: Baseline snapshots are excluded. Commit them manually after review if needed.
 
 ## Vitest
-/vitest.config.*.timestamp-*
+/vitest.config.*.timestamp-*html/

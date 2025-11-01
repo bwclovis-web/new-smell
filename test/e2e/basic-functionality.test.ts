@@ -1,3 +1,16 @@
+/**
+ * Basic Application Functionality E2E Tests
+ * 
+ * Tests core application functionality including:
+ * - Home page loading and rendering
+ * - Navigation visibility and functionality
+ * - Responsive design on mobile devices
+ * - Error-free page interactions
+ * 
+ * @group e2e
+ * @group smoke
+ */
+
 import { expect, test } from '@playwright/test'
 
 import { HomePage } from './pages/HomePage'

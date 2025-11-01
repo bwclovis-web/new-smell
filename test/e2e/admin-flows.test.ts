@@ -1,3 +1,19 @@
+/**
+ * Admin Flows E2E Tests
+ * 
+ * Tests administrator-specific functionality:
+ * - Admin dashboard access
+ * - Security monitoring
+ * - User management
+ * - Data quality monitoring
+ * - Perfume and house management
+ * 
+ * Requires admin-level authentication before each test.
+ * 
+ * @group e2e
+ * @group admin
+ */
+
 import { expect, test } from '@playwright/test'
 
 import { AdminPage } from './pages/AdminPage'
