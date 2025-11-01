@@ -1,8 +1,8 @@
-import { afterEach, beforeEach, vi } from 'vitest'
+import { afterEach, beforeEach, vi } from "vitest"
 
 /**
  * Test Lifecycle Utilities
- * 
+ *
  * Utilities for managing test setup and cleanup with beforeEach/afterEach
  * Provides standardized patterns for test initialization and teardown
  */
@@ -42,13 +42,15 @@ export const clearCleanupRegistry = (): void => {
 /**
  * Standard beforeEach setup for common test scenarios
  */
-export const standardBeforeEach = (options: {
-  clearMocks?: boolean
-  resetDOM?: boolean
-  clearTimers?: boolean
-  clearLocalStorage?: boolean
-  clearSessionStorage?: boolean
-} = {}) => {
+export const standardBeforeEach = (
+  options: {
+    clearMocks?: boolean
+    resetDOM?: boolean
+    clearTimers?: boolean
+    clearLocalStorage?: boolean
+    clearSessionStorage?: boolean
+  } = {}
+) => {
   const {
     clearMocks = true,
     resetDOM = false,
@@ -64,8 +66,8 @@ export const standardBeforeEach = (options: {
     }
 
     // Reset DOM if requested
-    if (resetDOM && typeof document !== 'undefined') {
-      document.body.innerHTML = ''
+    if (resetDOM && typeof document !== "undefined") {
+      document.body.innerHTML = ""
     }
 
     // Clear timers
@@ -74,11 +76,11 @@ export const standardBeforeEach = (options: {
     }
 
     // Clear storage
-    if (clearLocalStorage && typeof localStorage !== 'undefined') {
+    if (clearLocalStorage && typeof localStorage !== "undefined") {
       localStorage.clear()
     }
 
-    if (clearSessionStorage && typeof sessionStorage !== 'undefined') {
+    if (clearSessionStorage && typeof sessionStorage !== "undefined") {
       sessionStorage.clear()
     }
   })
@@ -87,11 +89,13 @@ export const standardBeforeEach = (options: {
 /**
  * Standard afterEach cleanup for common test scenarios
  */
-export const standardAfterEach = (options: {
-  restoreMocks?: boolean
-  restoreTimers?: boolean
-  executeRegisteredCleanup?: boolean
-} = {}) => {
+export const standardAfterEach = (
+  options: {
+    restoreMocks?: boolean
+    restoreTimers?: boolean
+    executeRegisteredCleanup?: boolean
+  } = {}
+) => {
   const {
     restoreMocks = true,
     restoreTimers = true,
@@ -177,10 +181,12 @@ export const setupTimerLifecycle = (useFakeTimers = true) => {
 /**
  * Lifecycle utility for localStorage testing
  */
-export const setupStorageLifecycle = (options: {
-  localStorage?: boolean
-  sessionStorage?: boolean
-} = {}) => {
+export const setupStorageLifecycle = (
+  options: {
+    localStorage?: boolean
+    sessionStorage?: boolean
+  } = {}
+) => {
   const {
     localStorage: useLocalStorage = true,
     sessionStorage: useSessionStorage = true,
@@ -195,23 +201,23 @@ export const setupStorageLifecycle = (options: {
   }
 
   beforeEach(() => {
-    if (useLocalStorage && typeof localStorage !== 'undefined') {
+    if (useLocalStorage && typeof localStorage !== "undefined") {
       localStorage.clear()
       storage.local = {}
     }
 
-    if (useSessionStorage && typeof sessionStorage !== 'undefined') {
+    if (useSessionStorage && typeof sessionStorage !== "undefined") {
       sessionStorage.clear()
       storage.session = {}
     }
   })
 
   afterEach(() => {
-    if (useLocalStorage && typeof localStorage !== 'undefined') {
+    if (useLocalStorage && typeof localStorage !== "undefined") {
       localStorage.clear()
     }
 
-    if (useSessionStorage && typeof sessionStorage !== 'undefined') {
+    if (useSessionStorage && typeof sessionStorage !== "undefined") {
       sessionStorage.clear()
     }
   })
@@ -226,14 +232,14 @@ export const setupDOMLifecycle = () => {
   let originalBodyInnerHTML: string
 
   beforeEach(() => {
-    if (typeof document !== 'undefined') {
+    if (typeof document !== "undefined") {
       originalBodyInnerHTML = document.body.innerHTML
     }
   })
 
   afterEach(() => {
-    if (typeof document !== 'undefined') {
-      document.body.innerHTML = originalBodyInnerHTML || ''
+    if (typeof document !== "undefined") {
+      document.body.innerHTML = originalBodyInnerHTML || ""
     }
   })
 }
@@ -254,19 +260,21 @@ export const setupEventListenerLifecycle = () => {
     options?: ListenerOptions
   }> = []
 
-  const addEventListenerSpy = vi.fn((
-    target: EventTarget,
-    type: string,
-    listener: Listener,
-    options?: ListenerOptions
-  ) => {
-    listeners.push({ target, type, listener, options })
-    target.addEventListener(
-      type,
-      listener as Parameters<typeof target.addEventListener>[1],
-      options as Parameters<typeof target.addEventListener>[2]
-    )
-  })
+  const addEventListenerSpy = vi.fn(
+    (
+      target: EventTarget,
+      type: string,
+      listener: Listener,
+      options?: ListenerOptions
+    ) => {
+      listeners.push({ target, type, listener, options })
+      target.addEventListener(
+        type,
+        listener as Parameters<typeof target.addEventListener>[1],
+        options as Parameters<typeof target.addEventListener>[2]
+      )
+    }
+  )
 
   afterEach(() => {
     // Remove all tracked event listeners
@@ -312,7 +320,7 @@ export const setupAsyncLifecycle = () => {
 
   afterEach(async () => {
     // Abort all controllers
-    abortControllers.forEach(controller => {
+    abortControllers.forEach((controller) => {
       if (!controller.signal.aborted) {
         controller.abort()
       }
@@ -320,11 +328,8 @@ export const setupAsyncLifecycle = () => {
     abortControllers.length = 0
 
     // Wait for all pending promises (with timeout)
-    const timeout = new Promise(resolve => setTimeout(resolve, 100))
-    await Promise.race([
-      Promise.allSettled(pendingPromises),
-      timeout,
-    ])
+    const timeout = new Promise((resolve) => setTimeout(resolve, 100))
+    await Promise.race([Promise.allSettled(pendingPromises), timeout])
     pendingPromises.length = 0
   })
 
@@ -339,12 +344,14 @@ export const setupAsyncLifecycle = () => {
 /**
  * Lifecycle utility for console mocking
  */
-export const setupConsoleLifecycle = (options: {
-  log?: boolean
-  warn?: boolean
-  error?: boolean
-  info?: boolean
-} = {}) => {
+export const setupConsoleLifecycle = (
+  options: {
+    log?: boolean
+    warn?: boolean
+    error?: boolean
+    info?: boolean
+  } = {}
+) => {
   const {
     log: mockLog = false,
     warn: mockWarn = false,
@@ -361,21 +368,21 @@ export const setupConsoleLifecycle = (options: {
 
   beforeEach(() => {
     if (mockLog) {
-      mocks.log = vi.spyOn(console, 'log').mockImplementation(() => undefined)
+      mocks.log = vi.spyOn(console, "log").mockImplementation(() => undefined)
     }
     if (mockWarn) {
-      mocks.warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+      mocks.warn = vi.spyOn(console, "warn").mockImplementation(() => undefined)
     }
     if (mockError) {
-      mocks.error = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+      mocks.error = vi.spyOn(console, "error").mockImplementation(() => undefined)
     }
     if (mockInfo) {
-      mocks.info = vi.spyOn(console, 'info').mockImplementation(() => undefined)
+      mocks.info = vi.spyOn(console, "info").mockImplementation(() => undefined)
     }
   })
 
   afterEach(() => {
-    Object.values(mocks).forEach(mock => mock?.mockRestore())
+    Object.values(mocks).forEach((mock) => mock?.mockRestore())
   })
 
   return mocks
@@ -408,9 +415,11 @@ export const createTestContext = <T extends Record<string, any>>() => {
 /**
  * Composite lifecycle setup for common testing scenarios
  */
-export const setupCompositeLifecycle = (scenario: 'component' | 'integration' | 'api' | 'e2e') => {
+export const setupCompositeLifecycle = (
+  scenario: "component" | "integration" | "api" | "e2e"
+) => {
   switch (scenario) {
-    case 'component':
+    case "component":
       setupTestLifecycle({
         beforeEach: {
           clearMocks: true,
@@ -425,7 +434,7 @@ export const setupCompositeLifecycle = (scenario: 'component' | 'integration' | 
       })
       break
 
-    case 'integration':
+    case "integration":
       setupTestLifecycle({
         beforeEach: {
           clearMocks: true,
@@ -443,7 +452,7 @@ export const setupCompositeLifecycle = (scenario: 'component' | 'integration' | 
       setupStorageLifecycle()
       break
 
-    case 'api':
+    case "api":
       setupTestLifecycle({
         beforeEach: {
           clearMocks: true,
@@ -456,7 +465,7 @@ export const setupCompositeLifecycle = (scenario: 'component' | 'integration' | 
       setupApiMockLifecycle()
       break
 
-    case 'e2e':
+    case "e2e":
       setupTestLifecycle({
         beforeEach: {
           clearMocks: false,
@@ -475,4 +484,3 @@ export const setupCompositeLifecycle = (scenario: 'component' | 'integration' | 
       throw new Error(`Unknown scenario: ${scenario as string}`)
   }
 }
-

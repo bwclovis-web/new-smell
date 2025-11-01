@@ -1,1 +1,1 @@
-export { default } from './DataDisplaySection'
+export { default } from "./DataDisplaySection"

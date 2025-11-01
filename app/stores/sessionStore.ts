@@ -1,5 +1,5 @@
-import { type RefObject } from 'react'
-import { create } from 'zustand'
+import { type RefObject } from "react"
+import { create } from "zustand"
 
 interface ModalData {
   [key: string]: unknown
@@ -12,7 +12,11 @@ interface SessionState {
   triggerId: RefObject<HTMLButtonElement> | null
 
   // Actions
-  toggleModal: (id: RefObject<HTMLButtonElement>, modalId: string, data?: ModalData) => void
+  toggleModal: (
+    id: RefObject<HTMLButtonElement>,
+    modalId: string,
+    data?: ModalData
+  ) => void
   closeModal: () => void
   setModalData: (data: ModalData | null) => void
   setModalId: (id: string | null) => void
@@ -24,7 +28,11 @@ export const useSessionStore = create<SessionState>((set, get) => ({
   modalId: null,
   triggerId: null,
 
-  toggleModal: (id: RefObject<HTMLButtonElement>, modalId: string, data?: ModalData) => {
+  toggleModal: (
+    id: RefObject<HTMLButtonElement>,
+    modalId: string,
+    data?: ModalData
+  ) => {
     const { modalOpen, modalId: currentModalId } = get()
 
     // If the same modal is already open, close it
@@ -33,9 +41,9 @@ export const useSessionStore = create<SessionState>((set, get) => ({
         modalOpen: false,
         modalId: null,
         modalData: null,
-        triggerId: null
+        triggerId: null,
       })
-      document.documentElement.style.overflow = 'auto'
+      document.documentElement.style.overflow = "auto"
       id.current?.focus()
       return
     }
@@ -45,11 +53,11 @@ export const useSessionStore = create<SessionState>((set, get) => ({
       modalOpen: true,
       modalId,
       modalData: data || null,
-      triggerId: id
+      triggerId: id,
     })
 
     // Handle body overflow
-    document.documentElement.style.overflow = 'hidden'
+    document.documentElement.style.overflow = "hidden"
   },
 
   closeModal: () => {
@@ -57,12 +65,12 @@ export const useSessionStore = create<SessionState>((set, get) => ({
       modalOpen: false,
       modalId: null,
       modalData: null,
-      triggerId: null
+      triggerId: null,
     })
 
     // Restore body overflow
     const root = document.documentElement
-    root.style.overflow = 'auto'
+    root.style.overflow = "auto"
   },
 
   setModalData: (data: ModalData | null) => {
@@ -71,5 +79,5 @@ export const useSessionStore = create<SessionState>((set, get) => ({
 
   setModalId: (id: string | null) => {
     set({ modalId: id })
-  }
+  },
 }))

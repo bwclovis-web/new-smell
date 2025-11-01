@@ -1,11 +1,11 @@
-import type { ActionFunctionArgs } from 'react-router'
+import type { ActionFunctionArgs } from "react-router"
 
-import { markAlertAsRead } from '~/models/user-alerts.server'
-import { authenticateUser } from '~/utils/auth.server'
+import { markAlertAsRead } from "~/models/user-alerts.server"
+import { authenticateUser } from "~/utils/auth.server"
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
-  if (request.method !== 'POST') {
-    throw new Response('Method not allowed', { status: 405 })
+  if (request.method !== "POST") {
+    throw new Response("Method not allowed", { status: 405 })
   }
 
   const alertId = params.alertId as string
@@ -19,18 +19,26 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     const result = await markAlertAsRead(alertId, authResult.user.id)
 
     if (result.count === 0) {
-      throw new Response('Alert not found or already read', { status: 404 })
+      throw new Response("Alert not found or already read", { status: 404 })
     }
 
     return Response.json({ success: true })
   } catch (error) {
     // If UserAlert table doesn't exist, silently succeed
-    if (error instanceof Error && error.message.includes('does not exist in the current database')) {
-      console.warn('UserAlert table not available:', error)
+    if (
+      error instanceof Error &&
+      error.message.includes("does not exist in the current database")
+    ) {
+      console.warn("UserAlert table not available:", error)
       return Response.json({ success: true })
     }
-    const { ErrorHandler } = await import('~/utils/errorHandling')
-    const appError = ErrorHandler.handle(error, { api: 'user-alerts', action: 'mark-read', alertId, userId: authResult.user.id })
+    const { ErrorHandler } = await import("~/utils/errorHandling")
+    const appError = ErrorHandler.handle(error, {
+      api: "user-alerts",
+      action: "mark-read",
+      alertId,
+      userId: authResult.user.id,
+    })
     throw new Response(appError.userMessage, { status: 500 })
   }
 }

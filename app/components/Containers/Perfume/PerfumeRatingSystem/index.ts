@@ -1,1 +1,1 @@
-export { default } from './PerfumeRatingSystem'
+export { default } from "./PerfumeRatingSystem"

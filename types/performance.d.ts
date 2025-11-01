@@ -2,7 +2,7 @@
 declare global {
   interface Window {
     gtag?: (
-      command: 'event',
+      command: "event",
       eventName: string,
       parameters: {
         value?: number
@@ -33,7 +33,7 @@ export interface PerformanceMetrics {
 
 // Image preloading types
 export interface ImagePreloadOptions {
-  priority: 'high' | 'low'
+  priority: "high" | "low"
   lazy: boolean
   threshold?: number
   rootMargin?: string
@@ -45,7 +45,7 @@ export interface ServiceWorkerRegistration {
   waiting: ServiceWorker | null
   active: ServiceWorker | null
   scope: string
-  updateViaCache: 'all' | 'imports' | 'none'
+  updateViaCache: "all" | "imports" | "none"
   onupdatefound: ((this: ServiceWorkerRegistration, ev: Event) => any) | null
   oncontrollerchange: ((this: ServiceWorkerRegistration, ev: Event) => any) | null
 }
@@ -144,4 +144,4 @@ export interface TimeToInteractive extends PerformanceEntry {
   readonly startTime: number
 }
 
-export { }
+export {}

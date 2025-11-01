@@ -13,17 +13,20 @@ Comprehensive performance benchmarks to ensure the error handling system maintai
 ### Test Coverage
 
 #### 1. Error Creation Overhead
+
 - Tests creation of 1000+ AppError instances
 - Tests all error types (validation, authentication, authorization, network, server, etc.)
 - **Result:** ~67ms for 1000 errors (0.067ms per error)
 
 #### 2. Error Handler Wrapper Overhead
+
 - Tests `asyncErrorHandler` wrapper with successful operations
 - Tests error handling with failures
 - Tests nested wrapper overhead
 - **Result:** < 20ms for 1000 wrapped function calls
 
 #### 3. Retry Mechanism Performance
+
 - Tests retry wrapper overhead on successful operations (no retries needed)
 - Tests retry behavior with fake timers
 - Tests concurrent retry operations
@@ -31,6 +34,7 @@ Comprehensive performance benchmarks to ensure the error handling system maintai
 - **Result:** ~5ms for 1000 operations (no retries)
 
 #### 4. ErrorLogger Performance
+
 - Tests logging 1000 errors efficiently
 - Tests memory limits (MAX_LOGS = 1000)
 - Tests log retrieval efficiency
@@ -38,16 +42,19 @@ Comprehensive performance benchmarks to ensure the error handling system maintai
 - **Result:** 11-15ms for 100 log operations
 
 #### 5. Overall Error Handling Overhead
+
 - Tests complete error handling flow (create → log → handle → wrap)
 - Tests high-frequency error scenarios (1000+ errors)
 - Tests concurrent load (500+ operations)
 - **Result:** < 10ms for 100 complete error flows
 
 #### 6. Error Sanitization Overhead
+
 - Tests sanitization of sensitive data in errors
 - **Result:** < 100ms for 1000 sanitizations
 
 #### 7. Performance Benchmarks Summary
+
 Comprehensive summary test that validates all components meet the < 100ms requirement:
 
 ```
@@ -72,14 +79,14 @@ npm test -- test/performance/error-handling-overhead.perf.test.ts --run --report
 
 ### Performance Targets
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| Error Creation (100x) | < 100ms | ~0-6ms | ✅ Pass |
-| Error Handling (100x) | < 100ms | ~0-5ms | ✅ Pass |
-| Retry Mechanism (100x) | < 100ms | ~0-5ms | ✅ Pass |
-| Error Logging (100x) | < 100ms | ~11-15ms | ✅ Pass |
-| Overall Overhead (100x) | < 100ms | ~5-10ms | ✅ Pass |
-| **Total** | **< 100ms** | **< 50ms** | **✅ Pass** |
+| Metric                  | Target      | Actual     | Status      |
+| ----------------------- | ----------- | ---------- | ----------- |
+| Error Creation (100x)   | < 100ms     | ~0-6ms     | ✅ Pass     |
+| Error Handling (100x)   | < 100ms     | ~0-5ms     | ✅ Pass     |
+| Retry Mechanism (100x)  | < 100ms     | ~0-5ms     | ✅ Pass     |
+| Error Logging (100x)    | < 100ms     | ~11-15ms   | ✅ Pass     |
+| Overall Overhead (100x) | < 100ms     | ~5-10ms    | ✅ Pass     |
+| **Total**               | **< 100ms** | **< 50ms** | **✅ Pass** |
 
 ### Key Findings
 
@@ -110,6 +117,7 @@ npm test -- test/performance/error-handling-overhead.perf.test.ts --run --report
 ## Setup
 
 Performance tests use the `setup-performance.ts` configuration which provides:
+
 - Performance measurement utilities
 - Memory measurement utilities
 - Mock performance APIs
@@ -123,4 +131,3 @@ Performance tests use the `setup-performance.ts` configuration which provides:
 4. Use fake timers for retry/delay tests
 5. Set realistic thresholds based on actual performance data
 6. Test both success and failure scenarios
-

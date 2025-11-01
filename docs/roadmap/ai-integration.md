@@ -23,17 +23,17 @@ This document outlines comprehensive AI integration opportunities for the New Sm
 ```typescript
 // app/models/ai/recommendation.server.ts
 interface RecommendationContext {
-  userId: string;
-  perfumePreferences: string[];
-  ratingHistory: PerfumeRating[];
-  wishlistItems: string[];
-  collectionItems: string[];
+  userId: string
+  perfumePreferences: string[]
+  ratingHistory: PerfumeRating[]
+  wishlistItems: string[]
+  collectionItems: string[]
 }
 
 interface RecommendationResult {
-  perfumes: PerfumeWithScore[];
-  reasoning: string;
-  confidence: number;
+  perfumes: PerfumeWithScore[]
+  reasoning: string
+  confidence: number
 }
 ```
 
@@ -90,15 +90,15 @@ interface RecommendationResult {
 ```typescript
 // app/routes/api/ai-search.ts
 interface SearchQuery {
-  query: string; // "floral perfumes similar to rose but less sweet"
-  filters?: SearchFilters;
-  userId?: string;
+  query: string // "floral perfumes similar to rose but less sweet"
+  filters?: SearchFilters
+  userId?: string
 }
 
 interface SearchResult {
-  perfumes: Perfume[];
-  interpretation: string;
-  suggestions: string[];
+  perfumes: Perfume[]
+  interpretation: string
+  suggestions: string[]
 }
 ```
 
@@ -113,28 +113,28 @@ interface SearchResult {
 
 ```typescript
 // Use OpenAI Embeddings
-import { OpenAI } from "openai";
+import { OpenAI } from "openai"
 
 const generateSearchEmbedding = async (query: string) => {
   const embedding = await openai.embeddings.create({
     model: "text-embedding-3-small",
     input: query,
-  });
-  return embedding.data[0].embedding;
-};
+  })
+  return embedding.data[0].embedding
+}
 
 const semanticSearch = async (query: string) => {
-  const embedding = await generateSearchEmbedding(query);
+  const embedding = await generateSearchEmbedding(query)
 
   // Store perfume embeddings in Prisma with pgvector extension
   const results = await prisma.$queryRaw`
     SELECT * FROM "Perfume"
     ORDER BY embedding <-> ${embedding}::vector
     LIMIT 20
-  `;
+  `
 
-  return results;
-};
+  return results
+}
 ```
 
 #### Checklist
@@ -157,10 +157,10 @@ const semanticSearch = async (query: string) => {
 ```typescript
 // app/utils/ai/moderation.server.ts
 interface ModerationResult {
-  approved: boolean;
-  confidence: number;
-  flags: string[];
-  suggestedEdit?: string;
+  approved: boolean
+  confidence: number
+  flags: string[]
+  suggestedEdit?: string
 }
 
 const moderateReview = async (content: string): Promise<ModerationResult> => {
@@ -168,7 +168,7 @@ const moderateReview = async (content: string): Promise<ModerationResult> => {
   // Detect spam patterns
   // Validate review quality
   // Suggest improvements
-};
+}
 ```
 
 #### Features
@@ -211,10 +211,10 @@ const generatePerfumeDescription = async (perfume: Perfume) => {
     
     Style: Sophisticated, sensory, not promotional
     Length: 2-3 sentences
-  `;
+  `
 
-  return await generateText(prompt);
-};
+  return await generateText(prompt)
+}
 ```
 
 #### Use Cases
@@ -243,10 +243,10 @@ const generatePerfumeDescription = async (perfume: Perfume) => {
 ```typescript
 // app/components/Organisms/ScentAssistant/ScentAssistant.tsx
 interface ChatMessage {
-  role: "user" | "assistant";
-  content: string;
-  suggestions?: string[];
-  perfumes?: Perfume[];
+  role: "user" | "assistant"
+  content: string
+  suggestions?: string[]
+  perfumes?: Perfume[]
 }
 ```
 
@@ -419,11 +419,11 @@ crews/
 ```typescript
 // scripts/ai-code-review.ts
 interface CodeReviewResult {
-  score: number;
-  issues: Issue[];
-  suggestions: Suggestion[];
-  securityConcerns: SecurityIssue[];
-  performanceImpacts: PerformanceAnalysis[];
+  score: number
+  issues: Issue[]
+  suggestions: Suggestion[]
+  securityConcerns: SecurityIssue[]
+  performanceImpacts: PerformanceAnalysis[]
 }
 ```
 
@@ -474,17 +474,17 @@ jobs:
 ```typescript
 // scripts/generate-tests.ts
 const generateTests = async (componentPath: string) => {
-  const component = await analyzeComponent(componentPath);
+  const component = await analyzeComponent(componentPath)
 
   const tests = {
     unit: generateUnitTests(component),
     integration: generateIntegrationTests(component),
     accessibility: generateA11yTests(component),
     visual: generateVisualTests(component),
-  };
+  }
 
-  return tests;
-};
+  return tests
+}
 ```
 
 #### Coverage Goals
@@ -515,11 +515,11 @@ const generateTests = async (componentPath: string) => {
 ```typescript
 // app/models/ai/trend-analysis.server.ts
 interface TrendAnalysis {
-  trendingPerfumes: Perfume[];
-  emergingNotes: string[];
-  popularHouses: PerfumeHouse[];
-  seasonalTrends: SeasonalTrend[];
-  predictions: Prediction[];
+  trendingPerfumes: Perfume[]
+  emergingNotes: string[]
+  popularHouses: PerfumeHouse[]
+  seasonalTrends: SeasonalTrend[]
+  predictions: Prediction[]
 }
 
 const analyzeTrends = async (): Promise<TrendAnalysis> => {
@@ -527,7 +527,7 @@ const analyzeTrends = async (): Promise<TrendAnalysis> => {
   // Track perfume popularity over time
   // Identify emerging trends
   // Predict future demand
-};
+}
 ```
 
 #### Features
@@ -578,9 +578,9 @@ const analyzeTrends = async (): Promise<TrendAnalysis> => {
 ```typescript
 // app/models/ai/trading-insights.server.ts
 interface TradingInsights {
-  optimalPricing: PriceRecommendation[];
-  demandForecast: DemandPrediction[];
-  tradingOpportunities: TradeMatch[];
+  optimalPricing: PriceRecommendation[]
+  demandForecast: DemandPrediction[]
+  tradingOpportunities: TradeMatch[]
 }
 
 const generateTradingInsights = async (userId: string) => {
@@ -588,7 +588,7 @@ const generateTradingInsights = async (userId: string) => {
   // Compare to market demand
   // Suggest optimal pricing
   // Find trading matches
-};
+}
 ```
 
 #### Features
@@ -617,11 +617,11 @@ const generateTradingInsights = async (userId: string) => {
 ```typescript
 // app/models/ai/user-analytics.server.ts
 interface UserBehaviorProfile {
-  preferredNotes: string[];
-  priceRange: { min: number; max: number };
-  tradingStyle: "collector" | "trader" | "casual";
-  engagementLevel: "high" | "medium" | "low";
-  churnRisk: number;
+  preferredNotes: string[]
+  priceRange: { min: number; max: number }
+  tradingStyle: "collector" | "trader" | "casual"
+  engagementLevel: "high" | "medium" | "low"
+  churnRisk: number
 }
 ```
 
@@ -728,22 +728,22 @@ crews/
 ```typescript
 // app/utils/ai/crew-client.ts
 export class CrewClient {
-  private baseUrl: string;
+  private baseUrl: string
 
   async executeDevCrew(task: string, context: any) {
     const response = await fetch(`${this.baseUrl}/crew/dev`, {
       method: "POST",
       body: JSON.stringify({ task, context }),
-    });
-    return response.json();
+    })
+    return response.json()
   }
 
   async executeBusinessCrew(analysis: string) {
     const response = await fetch(`${this.baseUrl}/crew/business`, {
       method: "POST",
       body: JSON.stringify({ analysis }),
-    });
-    return response.json();
+    })
+    return response.json()
   }
 }
 ```
@@ -757,18 +757,14 @@ export class CrewClient {
 ```typescript
 // app/utils/ai/metrics.server.ts
 interface AIMetrics {
-  recommendationAccuracy: number;
-  searchRelevance: number;
-  moderationAccuracy: number;
-  apiLatency: number;
-  apiCosts: number;
+  recommendationAccuracy: number
+  searchRelevance: number
+  moderationAccuracy: number
+  apiLatency: number
+  apiCosts: number
 }
 
-const trackAIMetrics = async (
-  operation: string,
-  result: any,
-  metadata: any
-) => {
+const trackAIMetrics = async (operation: string, result: any, metadata: any) => {
   // Log to monitoring service
   await prisma.aIMetrics.create({
     data: {
@@ -777,8 +773,8 @@ const trackAIMetrics = async (
       metadata,
       timestamp: new Date(),
     },
-  });
-};
+  })
+}
 ```
 
 #### Cost Management
@@ -792,8 +788,8 @@ const trackAPIUsage = async (
 ) => {
   await prisma.aIUsage.create({
     data: { provider, tokens, cost },
-  });
-};
+  })
+}
 ```
 
 ---

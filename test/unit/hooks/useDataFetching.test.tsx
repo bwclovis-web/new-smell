@@ -1,18 +1,18 @@
 /**
  * Tests for useDataFetching hook
- * 
+ *
  * @group unit
  * @group hooks
  * @group data-fetching
  */
 
-import { act, renderHook, waitFor } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, renderHook, waitFor } from "@testing-library/react"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
-import { useDataFetching } from '~/hooks/useDataFetching'
+import { useDataFetching } from "~/hooks/useDataFetching"
 
 // Mock useApiWithRetry
-vi.mock('~/hooks/useApiWithRetry', () => ({
+vi.mock("~/hooks/useApiWithRetry", () => ({
   useApiWithRetry: () => ({
     fetchWithRetry: vi.fn(async (fn) => {
       try {
@@ -20,28 +20,26 @@ vi.mock('~/hooks/useApiWithRetry', () => ({
       } catch (error) {
         throw error
       }
-    })
-  })
+    }),
+  }),
 }))
 
-describe('useDataFetching', () => {
+describe("useDataFetching", () => {
   beforeEach(() => {
     vi.clearAllMocks()
     localStorage.clear()
     global.fetch = vi.fn()
   })
 
-  describe('Basic Fetching', () => {
-    it('should fetch data successfully', async () => {
-      const mockData = { id: 1, name: 'Test' }
+  describe("Basic Fetching", () => {
+    it("should fetch data successfully", async () => {
+      const mockData = { id: 1, name: "Test" }
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => mockData
+        json: async () => mockData,
       })
 
-      const { result } = renderHook(() =>
-        useDataFetching({ url: '/api/test' })
-      )
+      const { result } = renderHook(() => useDataFetching({ url: "/api/test" }))
 
       expect(result.current.isLoading).toBe(true)
       expect(result.current.isInitialLoading).toBe(true)
@@ -55,15 +53,13 @@ describe('useDataFetching', () => {
       expect(result.current.isError).toBe(false)
     })
 
-    it('should handle fetch errors', async () => {
+    it("should handle fetch errors", async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: false,
-        status: 404
+        status: 404,
       })
 
-      const { result } = renderHook(() =>
-        useDataFetching({ url: '/api/test' })
-      )
+      const { result } = renderHook(() => useDataFetching({ url: "/api/test" }))
 
       await waitFor(() => {
         expect(result.current.isLoading).toBe(false)
@@ -74,13 +70,11 @@ describe('useDataFetching', () => {
       expect(result.current.isError).toBe(true)
     })
 
-    it('should use custom fetch function', async () => {
-      const mockData = { custom: 'data' }
+    it("should use custom fetch function", async () => {
+      const mockData = { custom: "data" }
       const fetchFn = vi.fn().mockResolvedValue(mockData)
 
-      const { result } = renderHook(() =>
-        useDataFetching({ fetchFn })
-      )
+      const { result } = renderHook(() => useDataFetching({ fetchFn }))
 
       await waitFor(() => {
         expect(result.current.data).toEqual(mockData)
@@ -89,11 +83,11 @@ describe('useDataFetching', () => {
       expect(fetchFn).toHaveBeenCalled()
     })
 
-    it('should not fetch when enabled is false', async () => {
+    it("should not fetch when enabled is false", async () => {
       global.fetch = vi.fn()
 
       const { result } = renderHook(() =>
-        useDataFetching({ url: '/api/test', enabled: false })
+        useDataFetching({ url: "/api/test", enabled: false })
       )
 
       await waitFor(() => {
@@ -104,18 +98,18 @@ describe('useDataFetching', () => {
     })
   })
 
-  describe('Caching', () => {
-    it('should cache data in localStorage', async () => {
-      const mockData = { id: 1, name: 'Cached' }
+  describe("Caching", () => {
+    it("should cache data in localStorage", async () => {
+      const mockData = { id: 1, name: "Cached" }
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => mockData
+        json: async () => mockData,
       })
 
       const { result } = renderHook(() =>
         useDataFetching({
-          url: '/api/test',
-          cacheKey: 'test-cache'
+          url: "/api/test",
+          cacheKey: "test-cache",
         })
       )
 
@@ -123,20 +117,20 @@ describe('useDataFetching', () => {
         expect(result.current.data).toEqual(mockData)
       })
 
-      const cached = localStorage.getItem('data-fetch-test-cache')
+      const cached = localStorage.getItem("data-fetch-test-cache")
       expect(cached).toBeTruthy()
-      
+
       const parsed = JSON.parse(cached!)
       expect(parsed.data).toEqual(mockData)
       expect(parsed.timestamp).toBeGreaterThan(0)
     })
 
-    it('should use cached data on subsequent renders', async () => {
-      const mockData = { id: 1, name: 'Cached' }
+    it("should use cached data on subsequent renders", async () => {
+      const mockData = { id: 1, name: "Cached" }
       const timestamp = Date.now()
-      
+
       localStorage.setItem(
-        'data-fetch-test-cache',
+        "data-fetch-test-cache",
         JSON.stringify({ data: mockData, timestamp })
       )
 
@@ -144,9 +138,9 @@ describe('useDataFetching', () => {
 
       const { result } = renderHook(() =>
         useDataFetching({
-          url: '/api/test',
-          cacheKey: 'test-cache',
-          cacheDuration: 600000 // 10 minutes
+          url: "/api/test",
+          cacheKey: "test-cache",
+          cacheDuration: 600000, // 10 minutes
         })
       )
 
@@ -159,26 +153,26 @@ describe('useDataFetching', () => {
       expect(global.fetch).not.toHaveBeenCalled()
     })
 
-    it('should refetch when cache is expired', async () => {
-      const oldData = { id: 1, name: 'Old' }
-      const newData = { id: 2, name: 'New' }
+    it("should refetch when cache is expired", async () => {
+      const oldData = { id: 1, name: "Old" }
+      const newData = { id: 2, name: "New" }
       const expiredTimestamp = Date.now() - 600000 // 10 minutes ago
-      
+
       localStorage.setItem(
-        'data-fetch-test-cache',
+        "data-fetch-test-cache",
         JSON.stringify({ data: oldData, timestamp: expiredTimestamp })
       )
 
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => newData
+        json: async () => newData,
       })
 
       const { result } = renderHook(() =>
         useDataFetching({
-          url: '/api/test',
-          cacheKey: 'test-cache',
-          cacheDuration: 300000 // 5 minutes
+          url: "/api/test",
+          cacheKey: "test-cache",
+          cacheDuration: 300000, // 5 minutes
         })
       )
 
@@ -189,25 +183,25 @@ describe('useDataFetching', () => {
       expect(global.fetch).toHaveBeenCalled()
     })
 
-    it('should support stale-while-revalidate', async () => {
-      const cachedData = { id: 1, name: 'Cached' }
-      const freshData = { id: 2, name: 'Fresh' }
-      
+    it("should support stale-while-revalidate", async () => {
+      const cachedData = { id: 1, name: "Cached" }
+      const freshData = { id: 2, name: "Fresh" }
+
       localStorage.setItem(
-        'data-fetch-test-cache',
+        "data-fetch-test-cache",
         JSON.stringify({ data: cachedData, timestamp: Date.now() })
       )
 
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => freshData
+        json: async () => freshData,
       })
 
       const { result } = renderHook(() =>
         useDataFetching({
-          url: '/api/test',
-          cacheKey: 'test-cache',
-          staleWhileRevalidate: true
+          url: "/api/test",
+          cacheKey: "test-cache",
+          staleWhileRevalidate: true,
         })
       )
 
@@ -222,17 +216,17 @@ describe('useDataFetching', () => {
       })
     })
 
-    it('should clear cache', async () => {
-      const mockData = { id: 1, name: 'Test' }
+    it("should clear cache", async () => {
+      const mockData = { id: 1, name: "Test" }
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => mockData
+        json: async () => mockData,
       })
 
       const { result } = renderHook(() =>
         useDataFetching({
-          url: '/api/test',
-          cacheKey: 'test-cache'
+          url: "/api/test",
+          cacheKey: "test-cache",
         })
       )
 
@@ -240,37 +234,39 @@ describe('useDataFetching', () => {
         expect(result.current.data).toEqual(mockData)
       })
 
-      expect(localStorage.getItem('data-fetch-test-cache')).toBeTruthy()
+      expect(localStorage.getItem("data-fetch-test-cache")).toBeTruthy()
 
       act(() => {
         result.current.clearCache()
       })
 
-      expect(localStorage.getItem('data-fetch-test-cache')).toBeNull()
+      expect(localStorage.getItem("data-fetch-test-cache")).toBeNull()
     })
   })
 
-  describe('Dependencies', () => {
-    it('should refetch when dependencies change', async () => {
+  describe("Dependencies", () => {
+    it("should refetch when dependencies change", async () => {
       const mockData1 = { id: 1 }
       const mockData2 = { id: 2 }
-      
-      global.fetch = vi.fn()
+
+      global.fetch = vi
+        .fn()
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => mockData1
+          json: async () => mockData1,
         })
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => mockData2
+          json: async () => mockData2,
         })
 
-      let filter = 'test1'
+      let filter = "test1"
       const { result, rerender } = renderHook(
-        ({ filter }) => useDataFetching({
-          url: `/api/test?filter=${filter}`,
-          deps: [filter]
-        }),
+        ({ filter }) =>
+          useDataFetching({
+            url: `/api/test?filter=${filter}`,
+            deps: [filter],
+          }),
         { initialProps: { filter } }
       )
 
@@ -279,7 +275,7 @@ describe('useDataFetching', () => {
       })
 
       // Change dependency
-      filter = 'test2'
+      filter = "test2"
       rerender({ filter })
 
       await waitFor(() => {
@@ -290,51 +286,55 @@ describe('useDataFetching', () => {
     })
   })
 
-  describe('Debouncing', () => {
-    it('should debounce fetch requests', async () => {
+  describe("Debouncing", () => {
+    it("should debounce fetch requests", async () => {
       const mockData = { id: 1 }
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => mockData
+        json: async () => mockData,
       })
 
-      let search = 'test'
+      let search = "test"
       const { rerender } = renderHook(
-        ({ search }) => useDataFetching({
-          url: `/api/search?q=${search}`,
-          deps: [search],
-          debounceMs: 500
-        }),
+        ({ search }) =>
+          useDataFetching({
+            url: `/api/search?q=${search}`,
+            deps: [search],
+            debounceMs: 500,
+          }),
         { initialProps: { search } }
       )
 
       // Rapidly change search
-      search = 'test1'
+      search = "test1"
       rerender({ search })
-      search = 'test2'
+      search = "test2"
       rerender({ search })
-      search = 'test3'
+      search = "test3"
       rerender({ search })
 
       // Wait for debounce
-      await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledTimes(1)
-      }, { timeout: 1000 })
+      await waitFor(
+        () => {
+          expect(global.fetch).toHaveBeenCalledTimes(1)
+        },
+        { timeout: 1000 }
+      )
     })
   })
 
-  describe('Transform', () => {
-    it('should transform response data', async () => {
+  describe("Transform", () => {
+    it("should transform response data", async () => {
       const mockData = { items: [1, 2, 3] }
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => mockData
+        json: async () => mockData,
       })
 
       const { result } = renderHook(() =>
         useDataFetching({
-          url: '/api/test',
-          transform: (data: typeof mockData) => data.items
+          url: "/api/test",
+          transform: (data: typeof mockData) => data.items,
         })
       )
 
@@ -344,20 +344,20 @@ describe('useDataFetching', () => {
     })
   })
 
-  describe('Callbacks', () => {
-    it('should call onSuccess callback', async () => {
+  describe("Callbacks", () => {
+    it("should call onSuccess callback", async () => {
       const mockData = { id: 1 }
       const onSuccess = vi.fn()
-      
+
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => mockData
+        json: async () => mockData,
       })
 
       renderHook(() =>
         useDataFetching({
-          url: '/api/test',
-          onSuccess
+          url: "/api/test",
+          onSuccess,
         })
       )
 
@@ -366,18 +366,18 @@ describe('useDataFetching', () => {
       })
     })
 
-    it('should call onError callback', async () => {
+    it("should call onError callback", async () => {
       const onError = vi.fn()
-      
+
       global.fetch = vi.fn().mockResolvedValue({
         ok: false,
-        status: 500
+        status: 500,
       })
 
       renderHook(() =>
         useDataFetching({
-          url: '/api/test',
-          onError
+          url: "/api/test",
+          onError,
         })
       )
 
@@ -387,24 +387,23 @@ describe('useDataFetching', () => {
     })
   })
 
-  describe('Refetch', () => {
-    it('should refetch data manually', async () => {
+  describe("Refetch", () => {
+    it("should refetch data manually", async () => {
       const mockData1 = { id: 1 }
       const mockData2 = { id: 2 }
-      
-      global.fetch = vi.fn()
+
+      global.fetch = vi
+        .fn()
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => mockData1
+          json: async () => mockData1,
         })
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => mockData2
+          json: async () => mockData2,
         })
 
-      const { result } = renderHook(() =>
-        useDataFetching({ url: '/api/test' })
-      )
+      const { result } = renderHook(() => useDataFetching({ url: "/api/test" }))
 
       await waitFor(() => {
         expect(result.current.data).toEqual(mockData1)
@@ -421,16 +420,14 @@ describe('useDataFetching', () => {
       expect(global.fetch).toHaveBeenCalledTimes(2)
     })
 
-    it('should set isRefetching when refetching with existing data', async () => {
+    it("should set isRefetching when refetching with existing data", async () => {
       const mockData = { id: 1 }
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => mockData
+        json: async () => mockData,
       })
 
-      const { result } = renderHook(() =>
-        useDataFetching({ url: '/api/test' })
-      )
+      const { result } = renderHook(() => useDataFetching({ url: "/api/test" }))
 
       await waitFor(() => {
         expect(result.current.data).toEqual(mockData)
@@ -445,16 +442,14 @@ describe('useDataFetching', () => {
     })
   })
 
-  describe('Error Handling', () => {
-    it('should clear error state', async () => {
+  describe("Error Handling", () => {
+    it("should clear error state", async () => {
       global.fetch = vi.fn().mockResolvedValue({
         ok: false,
-        status: 500
+        status: 500,
       })
 
-      const { result } = renderHook(() =>
-        useDataFetching({ url: '/api/test' })
-      )
+      const { result } = renderHook(() => useDataFetching({ url: "/api/test" }))
 
       await waitFor(() => {
         expect(result.current.error).not.toBeNull()
@@ -469,19 +464,17 @@ describe('useDataFetching', () => {
     })
   })
 
-  describe('URL Function', () => {
-    it('should support URL as a function', async () => {
+  describe("URL Function", () => {
+    it("should support URL as a function", async () => {
       const mockData = { id: 1 }
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => mockData
+        json: async () => mockData,
       })
 
-      const getUrl = vi.fn(() => '/api/dynamic')
+      const getUrl = vi.fn(() => "/api/dynamic")
 
-      const { result } = renderHook(() =>
-        useDataFetching({ url: getUrl })
-      )
+      const { result } = renderHook(() => useDataFetching({ url: getUrl }))
 
       await waitFor(() => {
         expect(result.current.data).toEqual(mockData)
@@ -491,17 +484,15 @@ describe('useDataFetching', () => {
     })
   })
 
-  describe('Manual Data Update', () => {
-    it('should allow manual data updates', async () => {
+  describe("Manual Data Update", () => {
+    it("should allow manual data updates", async () => {
       const mockData = { id: 1 }
       global.fetch = vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => mockData
+        json: async () => mockData,
       })
 
-      const { result } = renderHook(() =>
-        useDataFetching({ url: '/api/test' })
-      )
+      const { result } = renderHook(() => useDataFetching({ url: "/api/test" }))
 
       await waitFor(() => {
         expect(result.current.data).toEqual(mockData)
@@ -516,35 +507,33 @@ describe('useDataFetching', () => {
     })
   })
 
-  describe('Abort Controller', () => {
-    it('should abort ongoing requests on unmount', async () => {
+  describe("Abort Controller", () => {
+    it("should abort ongoing requests on unmount", async () => {
       let aborted = false
-      global.fetch = vi.fn().mockImplementation(() => 
-        new Promise((resolve, reject) => {
-          setTimeout(() => {
-            if (aborted) {
-              reject(new Error('AbortError'))
-            } else {
-              resolve({
-                ok: true,
-                json: async () => ({ id: 1 })
-              })
-            }
-          }, 1000)
-        })
+      global.fetch = vi.fn().mockImplementation(
+        () =>
+          new Promise((resolve, reject) => {
+            setTimeout(() => {
+              if (aborted) {
+                reject(new Error("AbortError"))
+              } else {
+                resolve({
+                  ok: true,
+                  json: async () => ({ id: 1 }),
+                })
+              }
+            }, 1000)
+          })
       )
 
-      const { unmount } = renderHook(() =>
-        useDataFetching({ url: '/api/test' })
-      )
+      const { unmount } = renderHook(() => useDataFetching({ url: "/api/test" }))
 
       // Unmount before fetch completes
       unmount()
       aborted = true
 
       // Wait to ensure no errors
-      await new Promise(resolve => setTimeout(resolve, 100))
+      await new Promise((resolve) => setTimeout(resolve, 100))
     })
   })
 })
-

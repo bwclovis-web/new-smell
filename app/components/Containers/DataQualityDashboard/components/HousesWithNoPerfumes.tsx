@@ -1,51 +1,56 @@
-import { type FC, useState } from 'react'
+import { type FC, useState } from "react"
 
-import { type DataQualityStats } from '../utils/chartDataUtils'
+import { type DataQualityStats } from "../utils/chartDataUtils"
 
 interface HousesWithNoPerfumesProps {
   stats: DataQualityStats
 }
 
-type FilterType = 'no-perfumes' | 'missing-info' | 'all'
+type FilterType = "no-perfumes" | "missing-info" | "all"
 
 const HousesWithNoPerfumes: FC<HousesWithNoPerfumesProps> = ({ stats }) => {
-  const [filter, setFilter] = useState<FilterType>('no-perfumes')
+  const [filter, setFilter] = useState<FilterType>("no-perfumes")
 
   const housesNoPerfumes = stats.housesNoPerfumes || []
   const missingHouseInfoByBrand = stats.missingHouseInfoByBrand || {}
 
   // Get houses with missing info
-  const housesWithMissingInfo = Object.entries(missingHouseInfoByBrand).map(([name, count]) => ({
-    name,
-    missingFieldsCount: count
-  }))
+  const housesWithMissingInfo = Object.entries(missingHouseInfoByBrand).map(
+    ([name, count]) => ({
+      name,
+      missingFieldsCount: count,
+    })
+  )
 
   // Determine which data to show based on filter
   const getFilteredData = () => {
     switch (filter) {
-      case 'no-perfumes':
+      case "no-perfumes":
         return {
           houses: housesNoPerfumes,
           count: housesNoPerfumes.length,
-          showMissingFields: false
+          showMissingFields: false,
         }
-      case 'missing-info':
+      case "missing-info":
         return {
           houses: housesWithMissingInfo,
           count: housesWithMissingInfo.length,
-          showMissingFields: true
+          showMissingFields: true,
         }
-      case 'all':
+      case "all":
         // Combine both - houses with no perfumes OR missing info
         const allIssues = [
-          ...housesNoPerfumes.map(h => ({ ...h, issue: 'No Perfumes' })),
-          ...housesWithMissingInfo.map(h => ({ ...h, issue: 'Missing Info' }))
+          ...housesNoPerfumes.map((h) => ({ ...h, issue: "No Perfumes" })),
+          ...housesWithMissingInfo.map((h) => ({
+            ...h,
+            issue: "Missing Info",
+          })),
         ]
         return {
           houses: allIssues,
           count: allIssues.length,
           showMissingFields: false,
-          showIssueType: true
+          showIssueType: true,
         }
       default:
         return { houses: [], count: 0, showMissingFields: false }
@@ -53,7 +58,7 @@ const HousesWithNoPerfumes: FC<HousesWithNoPerfumesProps> = ({ stats }) => {
   }
 
   const filteredData = getFilteredData()
-  
+
   if (housesNoPerfumes.length === 0 && housesWithMissingInfo.length === 0) {
     return null
   }
@@ -62,7 +67,8 @@ const HousesWithNoPerfumes: FC<HousesWithNoPerfumesProps> = ({ stats }) => {
     <div className="mt-8 bg-purple-50 border border-purple-200 rounded-lg p-6">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-semibold text-purple-900">
-          House Data Issues ({stats.totalHousesNoPerfumes || 0} no perfumes, {stats.totalMissingHouseInfo || 0} missing info)
+          House Data Issues ({stats.totalHousesNoPerfumes || 0} no perfumes,{" "}
+          {stats.totalMissingHouseInfo || 0} missing info)
         </h3>
       </div>
 
@@ -70,29 +76,32 @@ const HousesWithNoPerfumes: FC<HousesWithNoPerfumesProps> = ({ stats }) => {
       <div className="mb-4 border-b border-purple-200">
         <nav className="flex space-x-4">
           <button
-            onClick={() => setFilter('no-perfumes')}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${filter === 'no-perfumes'
-              ? 'border-purple-600 text-purple-900'
-              : 'border-transparent text-purple-600 hover:text-purple-900 hover:border-purple-300'
-              }`}
+            onClick={() => setFilter("no-perfumes")}
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              filter === "no-perfumes"
+                ? "border-purple-600 text-purple-900"
+                : "border-transparent text-purple-600 hover:text-purple-900 hover:border-purple-300"
+            }`}
           >
             No Perfumes ({housesNoPerfumes.length})
           </button>
           <button
-            onClick={() => setFilter('missing-info')}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${filter === 'missing-info'
-              ? 'border-purple-600 text-purple-900'
-              : 'border-transparent text-purple-600 hover:text-purple-900 hover:border-purple-300'
-              }`}
+            onClick={() => setFilter("missing-info")}
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              filter === "missing-info"
+                ? "border-purple-600 text-purple-900"
+                : "border-transparent text-purple-600 hover:text-purple-900 hover:border-purple-300"
+            }`}
           >
             Missing Info ({housesWithMissingInfo.length})
           </button>
           <button
-            onClick={() => setFilter('all')}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${filter === 'all'
-              ? 'border-purple-600 text-purple-900'
-              : 'border-transparent text-purple-600 hover:text-purple-900 hover:border-purple-300'
-              }`}
+            onClick={() => setFilter("all")}
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              filter === "all"
+                ? "border-purple-600 text-purple-900"
+                : "border-transparent text-purple-600 hover:text-purple-900 hover:border-purple-300"
+            }`}
           >
             All Issues ({housesNoPerfumes.length + housesWithMissingInfo.length})
           </button>
@@ -100,9 +109,12 @@ const HousesWithNoPerfumes: FC<HousesWithNoPerfumesProps> = ({ stats }) => {
       </div>
 
       <p className="text-sm text-purple-700 mb-4">
-        {filter === 'no-perfumes' && 'These perfume houses exist in the database but have no perfumes listed.'}
-        {filter === 'missing-info' && 'These perfume houses are missing information like description, website, founded date, or image.'}
-        {filter === 'all' && 'All houses with either no perfumes or missing information.'}
+        {filter === "no-perfumes" &&
+          "These perfume houses exist in the database but have no perfumes listed."}
+        {filter === "missing-info" &&
+          "These perfume houses are missing information like description, website, founded date, or image."}
+        {filter === "all" &&
+          "All houses with either no perfumes or missing information."}
       </p>
 
       <div className="max-h-96 overflow-y-auto">
@@ -136,7 +148,10 @@ const HousesWithNoPerfumes: FC<HousesWithNoPerfumesProps> = ({ stats }) => {
           </thead>
           <tbody className="bg-white divide-y divide-purple-100">
             {filteredData.houses.map((house: any, index) => (
-              <tr key={house.id || house.name || index} className="hover:bg-purple-50">
+              <tr
+                key={house.id || house.name || index}
+                className="hover:bg-purple-50"
+              >
                 <td className="px-4 py-3 text-sm font-medium text-gray-900">
                   {house.name}
                 </td>
@@ -147,15 +162,19 @@ const HousesWithNoPerfumes: FC<HousesWithNoPerfumesProps> = ({ stats }) => {
                 )}
                 {filteredData.showMissingFields && house.missingFieldsCount && (
                   <td className="px-4 py-3 text-sm text-gray-700">
-                    {house.missingFieldsCount} field{house.missingFieldsCount > 1 ? 's' : ''}
+                    {house.missingFieldsCount} field
+                    {house.missingFieldsCount > 1 ? "s" : ""}
                   </td>
                 )}
                 {filteredData.showIssueType && house.issue && (
                   <td className="px-4 py-3 text-sm text-gray-700">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${house.issue === 'No Perfumes'
-                      ? 'bg-purple-100 text-purple-800'
-                      : 'bg-yellow-100 text-yellow-800'
-                      }`}>
+                    <span
+                      className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        house.issue === "No Perfumes"
+                          ? "bg-purple-100 text-purple-800"
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}
+                    >
                       {house.issue}
                     </span>
                   </td>
@@ -175,4 +194,3 @@ const HousesWithNoPerfumes: FC<HousesWithNoPerfumesProps> = ({ stats }) => {
 }
 
 export default HousesWithNoPerfumes
-

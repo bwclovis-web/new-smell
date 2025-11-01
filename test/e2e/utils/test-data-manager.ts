@@ -1,6 +1,6 @@
-import { Page } from '@playwright/test'
+import { Page } from "@playwright/test"
 
-import testData from '../fixtures/test-data.json'
+import testData from "../fixtures/test-data.json"
 
 /**
  * Test data manager for E2E tests
@@ -15,7 +15,7 @@ export class TestDataManager {
   /**
    * Get user data by type
    */
-  getUserData(userType: 'admin' | 'regular' | 'newUser') {
+  getUserData(userType: "admin" | "regular" | "newUser") {
     return testData.users[userType]
   }
 
@@ -36,7 +36,7 @@ export class TestDataManager {
   /**
    * Get search queries by type
    */
-  getSearchQueries(type: 'valid' | 'invalid' | 'specialCharacters') {
+  getSearchQueries(type: "valid" | "invalid" | "specialCharacters") {
     return testData.searchQueries[type]
   }
 
@@ -88,11 +88,11 @@ export class TestDataManager {
   /**
    * Get test user credentials
    */
-  getTestCredentials(userType: 'admin' | 'regular' | 'newUser') {
+  getTestCredentials(userType: "admin" | "regular" | "newUser") {
     const user = this.getUserData(userType)
     return {
       email: user.email,
-      password: user.password
+      password: user.password,
     }
   }
 
@@ -103,9 +103,9 @@ export class TestDataManager {
     return {
       name: this.generateRandomPerfumeName(),
       house: this.generateRandomHouseName(),
-      description: 'A test perfume created during E2E testing',
-      notes: ['rose', 'jasmine', 'sandalwood'],
-      image: '/images/test-perfume.webp'
+      description: "A test perfume created during E2E testing",
+      notes: ["rose", "jasmine", "sandalwood"],
+      image: "/images/test-perfume.webp",
     }
   }
 
@@ -115,10 +115,10 @@ export class TestDataManager {
   getTestHouseData() {
     return {
       name: this.generateRandomHouseName(),
-      description: 'A test perfume house created during E2E testing',
-      country: 'France',
-      founded: '2020',
-      image: '/images/test-house.webp'
+      description: "A test perfume house created during E2E testing",
+      country: "France",
+      founded: "2020",
+      image: "/images/test-house.webp",
     }
   }
 
@@ -128,7 +128,7 @@ export class TestDataManager {
   async cleanupTestData(): Promise<void> {
     // This would typically involve API calls to clean up test data
     // For now, we'll just log that cleanup would happen
-    console.log('Cleaning up test data...')
+    console.log("Cleaning up test data...")
   }
 
   /**
@@ -137,6 +137,6 @@ export class TestDataManager {
   async setupTestData(): Promise<void> {
     // This would typically involve API calls to set up test data
     // For now, we'll just log that setup would happen
-    console.log('Setting up test data...')
+    console.log("Setting up test data...")
   }
 }

@@ -1,6 +1,6 @@
-import { type FC } from 'react'
+import { type FC } from "react"
 
-import { type AppError } from '~/utils/errorHandling'
+import { type AppError } from "~/utils/errorHandling"
 
 interface CriticalErrorProps {
   error: AppError
@@ -13,7 +13,7 @@ const CriticalError: FC<CriticalErrorProps> = ({
   error,
   errorId,
   onRetry,
-  onReportError
+  onReportError,
 }) => (
   <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
     <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6 text-center">

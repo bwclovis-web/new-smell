@@ -1,1 +1,1 @@
-export { default } from './VooDooDetails'
+export { default } from "./VooDooDetails"

@@ -1,15 +1,15 @@
-import React from 'react'
+import React from "react"
 
 const NoirGradients = ({
   filled,
-  category
+  category,
 }: {
   filled: boolean
   category: string
 }) => (
   <defs>
     {/* Main bottle gradient */}
-    <linearGradient id={`gradient-${category}-${filled ? 'filled' : 'empty'}`}>
+    <linearGradient id={`gradient-${category}-${filled ? "filled" : "empty"}`}>
       {filled ? (
         <>
           <stop offset="0%" stopColor="#F4E4BC" />
@@ -32,7 +32,7 @@ const NoirGradients = ({
     </linearGradient>
 
     {/* Liquid gradient for overall bottles */}
-    {category === 'overall' && (
+    {category === "overall" && (
       <linearGradient id="liquid-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
         <stop offset="0%" stopColor="#F4E4BC" stopOpacity="0.9" />
         <stop offset="25%" stopColor="#D4AF37" stopOpacity="0.8" />

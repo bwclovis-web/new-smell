@@ -1,4 +1,4 @@
-export const ROUTE_PATH = '/admin'
+export const ROUTE_PATH = "/admin"
 
 const AdminIndex = () => (
   <div>

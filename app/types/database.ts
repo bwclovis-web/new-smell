@@ -8,7 +8,8 @@ import type {
   HouseType,
   PerfumeType,
   TradePreference,
-  UserRole} from '@prisma/client'
+  UserRole,
+} from "@prisma/client"
 
 // Base database models
 export interface User {
@@ -190,41 +191,99 @@ export interface UserAlertPreferences {
 export type { AlertType, HouseType, PerfumeType, TradePreference, UserRole }
 
 // Utility types for common database operations
-export type CreateUserInput = Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'UserPerfume' | 'userPerfumeComments' | 'UserPerfumeRating' | 'UserPerfumeReview' | 'UserPerfumeWishlist' | 'wishlistNotifications'>
+export type CreateUserInput = Omit<
+  User,
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "UserPerfume"
+  | "userPerfumeComments"
+  | "UserPerfumeRating"
+  | "UserPerfumeReview"
+  | "UserPerfumeWishlist"
+  | "wishlistNotifications"
+>
 
-export type UpdateUserInput = Partial<Pick<User, 'firstName' | 'lastName' | 'username' | 'email' | 'role'>>
+export type UpdateUserInput = Partial<
+  Pick<User, "firstName" | "lastName" | "username" | "email" | "role">
+>
 
-export type CreatePerfumeInput = Omit<Perfume, 'id' | 'createdAt' | 'updatedAt' | 'perfumeHouse' | 'perfumeNotesClose' | 'perfumeNotesHeart' | 'perfumeNotesOpen' | 'userPerfume' | 'userPerfumeComments' | 'userPerfumeRating' | 'userPerfumeReview' | 'userPerfumeWishlist' | 'wishlistNotifications'>
+export type CreatePerfumeInput = Omit<
+  Perfume,
+  | "id"
+  | "createdAt"
+  | "updatedAt"
+  | "perfumeHouse"
+  | "perfumeNotesClose"
+  | "perfumeNotesHeart"
+  | "perfumeNotesOpen"
+  | "userPerfume"
+  | "userPerfumeComments"
+  | "userPerfumeRating"
+  | "userPerfumeReview"
+  | "userPerfumeWishlist"
+  | "wishlistNotifications"
+>
 
-export type UpdatePerfumeInput = Partial<Pick<Perfume, 'name' | 'description' | 'image' | 'perfumeHouseId'>>
+export type UpdatePerfumeInput = Partial<
+  Pick<Perfume, "name" | "description" | "image" | "perfumeHouseId">
+>
 
-export type CreateUserPerfumeInput = Omit<UserPerfume, 'id' | 'createdAt' | 'perfume' | 'user' | 'comments'>
+export type CreateUserPerfumeInput = Omit<
+  UserPerfume,
+  "id" | "createdAt" | "perfume" | "user" | "comments"
+>
 
-export type UpdateUserPerfumeInput = Partial<Pick<UserPerfume, 'amount' | 'available' | 'price' | 'placeOfPurchase' | 'tradePrice' | 'tradePreference' | 'tradeOnly' | 'type'>>
+export type UpdateUserPerfumeInput = Partial<
+  Pick<
+    UserPerfume,
+    | "amount"
+    | "available"
+    | "price"
+    | "placeOfPurchase"
+    | "tradePrice"
+    | "tradePreference"
+    | "tradeOnly"
+    | "type"
+  >
+>
 
-export type CreateUserPerfumeRatingInput = Omit<UserPerfumeRating, 'id' | 'createdAt' | 'updatedAt' | 'perfume' | 'user'>
+export type CreateUserPerfumeRatingInput = Omit<
+  UserPerfumeRating,
+  "id" | "createdAt" | "updatedAt" | "perfume" | "user"
+>
 
-export type UpdateUserPerfumeRatingInput = Partial<Pick<UserPerfumeRating, 'gender' | 'longevity' | 'overall' | 'priceValue' | 'sillage'>>
+export type UpdateUserPerfumeRatingInput = Partial<
+  Pick<
+    UserPerfumeRating,
+    "gender" | "longevity" | "overall" | "priceValue" | "sillage"
+  >
+>
 
-export type CreateUserPerfumeCommentInput = Omit<UserPerfumeComment, 'id' | 'createdAt' | 'updatedAt' | 'perfume' | 'user' | 'userPerfume'>
+export type CreateUserPerfumeCommentInput = Omit<
+  UserPerfumeComment,
+  "id" | "createdAt" | "updatedAt" | "perfume" | "user" | "userPerfume"
+>
 
-export type UpdateUserPerfumeCommentInput = Partial<Pick<UserPerfumeComment, 'comment' | 'isPublic'>>
+export type UpdateUserPerfumeCommentInput = Partial<
+  Pick<UserPerfumeComment, "comment" | "isPublic">
+>
 
 // Safe types for client-side use (excluding sensitive data)
-export type SafeUser = Omit<User, 'password'>
+export type SafeUser = Omit<User, "password">
 
-export type SafeUserPerfume = Omit<UserPerfume, 'user'> & {
+export type SafeUserPerfume = Omit<UserPerfume, "user"> & {
   user: SafeUser
 }
 
-export type SafeUserPerfumeComment = Omit<UserPerfumeComment, 'user'> & {
+export type SafeUserPerfumeComment = Omit<UserPerfumeComment, "user"> & {
   user: SafeUser
 }
 
-export type SafeUserPerfumeRating = Omit<UserPerfumeRating, 'user'> & {
+export type SafeUserPerfumeRating = Omit<UserPerfumeRating, "user"> & {
   user: SafeUser
 }
 
-export type SafeUserPerfumeReview = Omit<UserPerfumeReview, 'user'> & {
+export type SafeUserPerfumeReview = Omit<UserPerfumeReview, "user"> & {
   user: SafeUser
 }

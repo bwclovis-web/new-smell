@@ -1,27 +1,40 @@
-import cookie from 'cookie'
-import { useTranslation } from 'react-i18next'
-import { type LoaderFunctionArgs, type MetaFunction, NavLink, useLoaderData, useLocation, useNavigate } from 'react-router'
+import cookie from "cookie"
+import { useTranslation } from "react-i18next"
+import {
+  type LoaderFunctionArgs,
+  type MetaFunction,
+  NavLink,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from "react-router"
 
-import { Button } from '~/components/Atoms/Button'
-import PerfumeIcons from '~/components/Containers/Perfume/PerfumeIcons'
-import PerfumeNotes from '~/components/Containers/Perfume/PerfumeNotes'
-import PerfumeRatingSystem from '~/components/Containers/Perfume/PerfumeRatingSystem'
-import ReviewSection from '~/components/Organisms/ReviewSection'
-import { getPerfumeBySlug } from '~/models/perfume.server'
-import { getPerfumeRatings, getUserPerfumeRating } from '~/models/perfumeRating.server'
-import { getUserPerfumeReview } from '~/models/perfumeReview.server'
-import { getUserById } from '~/models/user.server'
-import { isInWishlist } from '~/models/wishlist.server'
-import { createSafeUser } from '~/types'
-import { assertExists, withLoaderErrorHandling } from '~/utils/errorHandling.patterns'
-import { verifyAccessToken } from '~/utils/security/session-manager.server'
+import { Button } from "~/components/Atoms/Button"
+import PerfumeIcons from "~/components/Containers/Perfume/PerfumeIcons"
+import PerfumeNotes from "~/components/Containers/Perfume/PerfumeNotes"
+import PerfumeRatingSystem from "~/components/Containers/Perfume/PerfumeRatingSystem"
+import ReviewSection from "~/components/Organisms/ReviewSection"
+import { getPerfumeBySlug } from "~/models/perfume.server"
+import {
+  getPerfumeRatings,
+  getUserPerfumeRating,
+} from "~/models/perfumeRating.server"
+import { getUserPerfumeReview } from "~/models/perfumeReview.server"
+import { getUserById } from "~/models/user.server"
+import { isInWishlist } from "~/models/wishlist.server"
+import { createSafeUser } from "~/types"
+import {
+  assertExists,
+  withLoaderErrorHandling,
+} from "~/utils/errorHandling.patterns"
+import { verifyAccessToken } from "~/utils/security/session-manager.server"
 
-import { ROUTE_PATH as HOUSE_PATH } from './perfume-house'
-import { ROUTE_PATH as ALL_PERFUMES } from './the-vault'
-export const ROUTE_PATH = '/perfume'
+import { ROUTE_PATH as HOUSE_PATH } from "./perfume-house"
+import { ROUTE_PATH as ALL_PERFUMES } from "./the-vault"
+export const ROUTE_PATH = "/perfume"
 
 const getUserFromRequest = async (request: Request) => {
-  const cookieHeader = request.headers.get('cookie') || ''
+  const cookieHeader = request.headers.get("cookie") || ""
   const cookies = cookie.parse(cookieHeader)
 
   let accessToken = cookies.accessToken
@@ -44,17 +57,14 @@ const getUserFromRequest = async (request: Request) => {
 
 export const loader = withLoaderErrorHandling(
   async ({ params, request }: LoaderFunctionArgs) => {
-    const perfumeSlug = assertExists(
-      params.perfumeSlug,
-      'Perfume slug',
-      { route: 'perfume', params }
-    )
+    const perfumeSlug = assertExists(params.perfumeSlug, "Perfume slug", {
+      route: "perfume",
+      params,
+    })
 
-    const perfume = assertExists(
-      await getPerfumeBySlug(perfumeSlug),
-      'Perfume',
-      { perfumeSlug }
-    )
+    const perfume = assertExists(await getPerfumeBySlug(perfumeSlug), "Perfume", {
+      perfumeSlug,
+    })
 
     const user = await getUserFromRequest(request)
     const isInUserWishlist = await checkWishlistStatus(request, perfume.id)
@@ -62,7 +72,7 @@ export const loader = withLoaderErrorHandling(
     const [userRatings, ratingsData, userReview] = await Promise.all([
       getUserRatingsForPerfume(request, perfume.id),
       getPerfumeRatings(perfume.id),
-      user ? getUserPerfumeReview(user.id, perfume.id) : null
+      user ? getUserPerfumeReview(user.id, perfume.id) : null,
     ])
 
     return {
@@ -71,17 +81,17 @@ export const loader = withLoaderErrorHandling(
       isInUserWishlist,
       userRatings,
       averageRatings: ratingsData.averageRatings,
-      userReview
+      userReview,
     }
   },
   {
-    context: { route: 'perfume', page: 'detail' }
+    context: { route: "perfume", page: "detail" },
   }
 )
 
 const getUserIdFromRequest = async (request: Request): Promise<string | null> => {
   try {
-    const cookieHeader = request.headers.get('cookie') || ''
+    const cookieHeader = request.headers.get("cookie") || ""
     const cookies = cookie.parse(cookieHeader)
 
     // Try access token first
@@ -132,8 +142,8 @@ const checkWishlistStatus = async (request: Request, perfumeId: string) => {
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
   return [
-    { title: t('singlePerfume.meta.title') },
-    { name: 'description', content: t('singlePerfume.meta.description') }
+    { title: t("singlePerfume.meta.title") },
+    { name: "description", content: t("singlePerfume.meta.description") },
   ]
 }
 
@@ -144,7 +154,7 @@ const PerfumePage = () => {
     isInUserWishlist,
     userRatings,
     averageRatings,
-    userReview
+    userReview,
   } = useLoaderData<typeof loader>()
   const navigate = useNavigate()
   const location = useLocation()
@@ -164,12 +174,12 @@ const PerfumePage = () => {
   }
 
   const handleBack = () => {
-    if (sourcePage === 'vault') {
+    if (sourcePage === "vault") {
       // Navigate back to vault
       if (selectedLetter) {
         navigate(ALL_PERFUMES, {
           state: { selectedLetter },
-          replace: false
+          replace: false,
         })
       } else {
         navigate(ALL_PERFUMES)
@@ -177,12 +187,12 @@ const PerfumePage = () => {
     } else {
       // Default to behind-the-bottle (for houses or fallback)
       if (selectedLetter) {
-        navigate('/behind-the-bottle', {
+        navigate("/behind-the-bottle", {
           state: { selectedLetter },
-          replace: false
+          replace: false,
         })
       } else {
-        navigate('/behind-the-bottle')
+        navigate("/behind-the-bottle")
       }
     }
   }
@@ -217,7 +227,7 @@ const PerfumePage = () => {
 
 const PerfumeHeader = ({
   perfume,
-  t
+  t,
 }: {
   perfume: any
   t: any
@@ -226,7 +236,7 @@ const PerfumeHeader = ({
 }) => (
   <header className="flex items-end justify-center mb-10 relative h-[600px]">
     <img
-      src={perfume.image || ''}
+      src={perfume.image || ""}
       alt={perfume.name}
       loading="lazy"
       width={300}
@@ -234,13 +244,13 @@ const PerfumeHeader = ({
       className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 details-title filter contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-screen mask-linear-gradient-to-b"
       style={{
         viewTransitionName: `perfume-image-${perfume.id}`,
-        contain: 'layout style paint'
+        contain: "layout style paint",
       }}
     />
-    <div className='relative z-10 px-8 text-center filter w-full rounded-lg py-4 text-shadow-lg text-shadow-noir-black/90'>
-      <h1 className='capitalize'>{perfume.name}</h1>
-      <p className='text-lg tracking-wide mt-2 text-noir-gold-500'>
-        {t('singlePerfume.subheading')}
+    <div className="relative z-10 px-8 text-center filter w-full rounded-lg py-4 text-shadow-lg text-shadow-noir-black/90">
+      <h1 className="capitalize">{perfume.name}</h1>
+      <p className="text-lg tracking-wide mt-2 text-noir-gold-500">
+        {t("singlePerfume.subheading")}
         <NavLink
           className="text-blue-200 hover:underline font-semibold underline"
           viewTransition
@@ -263,7 +273,7 @@ const PerfumeContent = ({
   handleDelete,
   onBack,
   selectedLetter,
-  sourcePage
+  sourcePage,
 }: {
   perfume: any
   user: any
@@ -286,41 +296,50 @@ const PerfumeContent = ({
           isInWishlist={isInUserWishlist}
         />
       )}
-      <div className='bg-white/5 md:w-3/4 border-4 noir-border relative shadow-lg text-noir-gold-500'>
+      <div className="bg-white/5 md:w-3/4 border-4 noir-border relative shadow-lg text-noir-gold-500">
         <PerfumeNotes
           perfumeNotesOpen={perfume.perfumeNotesOpen}
           perfumeNotesHeart={perfume.perfumeNotesHeart}
           perfumeNotesClose={perfume.perfumeNotesClose}
         />
-        <p className='p-4 mb-14'>{perfume.description}</p>
+        <p className="p-4 mb-14">{perfume.description}</p>
         <Button
           onClick={onBack}
           variant="primary"
           background="gold"
           size="sm"
           className="gap-2 max-w-max absolute bottom-4 left-4 z-20"
-          aria-label={selectedLetter ? `Back to ${sourcePage === 'vault' ? 'perfumes' : 'houses'} starting with ${selectedLetter}` : `Back to ${sourcePage === 'vault' ? 'perfumes' : 'houses'}`}
+          aria-label={
+            selectedLetter
+              ? `Back to ${
+                  sourcePage === "vault" ? "perfumes" : "houses"
+                } starting with ${selectedLetter}`
+              : `Back to ${sourcePage === "vault" ? "perfumes" : "houses"}`
+          }
         >
-          ← Back {selectedLetter ? `to ${selectedLetter}` : `to ${sourcePage === 'vault' ? 'Perfumes' : 'Houses'}`}
+          ← Back{" "}
+          {selectedLetter
+            ? `to ${selectedLetter}`
+            : `to ${sourcePage === "vault" ? "Perfumes" : "Houses"}`}
         </Button>
       </div>
     </div>
 
     <div className="w-full flex flex-col md:flex-row gap-4 items-start justify-center">
-      <aside className='noir-border relative w-full md:w-1/3'>
+      <aside className="noir-border relative w-full md:w-1/3">
         <PerfumeRatingSystem
           perfumeId={perfume.id}
-          userId={user?.id || 'anonymous'}
+          userId={user?.id || "anonymous"}
           userRatings={userRatings}
           averageRatings={averageRatings}
         />
       </aside>
-      <div className='noir-border relative w-full md:w-3/4 p-4'>
+      <div className="noir-border relative w-full md:w-3/4 p-4">
         <ReviewSection
           perfumeId={perfume.id}
           currentUserId={user?.id}
           currentUserRole={user?.role}
-          canCreateReview={user && (user.role === 'admin' || user.role === 'editor')}
+          canCreateReview={user && (user.role === "admin" || user.role === "editor")}
           existingUserReview={userReview}
         />
       </div>

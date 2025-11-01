@@ -82,7 +82,7 @@ The test suite uses the following Playwright screenshot options:
 await expect(page).toHaveScreenshot("filename.png", {
   fullPage: true, // Capture entire page (not just viewport)
   animations: "disabled", // Disable animations for consistent screenshots
-});
+})
 ```
 
 ### Common Options
@@ -100,8 +100,8 @@ await expect(page).toHaveScreenshot("filename.png", {
 Always wait for the page to be fully loaded before taking screenshots:
 
 ```typescript
-await page.waitForLoadState("networkidle");
-await page.waitForTimeout(500); // Wait for animations to complete
+await page.waitForLoadState("networkidle")
+await page.waitForTimeout(500) // Wait for animations to complete
 ```
 
 ### 2. Disable Animations
@@ -111,7 +111,7 @@ For consistent screenshots, disable animations:
 ```typescript
 await expect(page).toHaveScreenshot("page.png", {
   animations: "disabled",
-});
+})
 ```
 
 ### 3. Handle Dynamic Content
@@ -122,9 +122,9 @@ For pages with dynamic content (dates, times, random data):
 // Hide or mock dynamic content before screenshot
 await page.evaluate(() => {
   document.querySelectorAll("[data-dynamic]").forEach((el) => {
-    el.textContent = "MOCKED_CONTENT";
-  });
-});
+    el.textContent = "MOCKED_CONTENT"
+  })
+})
 ```
 
 ### 4. Test Multiple States
@@ -133,15 +133,15 @@ Capture important UI states:
 
 ```typescript
 // Normal state
-await expect(button).toHaveScreenshot("button-normal.png");
+await expect(button).toHaveScreenshot("button-normal.png")
 
 // Hover state
-await button.hover();
-await expect(button).toHaveScreenshot("button-hover.png");
+await button.hover()
+await expect(button).toHaveScreenshot("button-hover.png")
 
 // Focus state
-await button.focus();
-await expect(button).toHaveScreenshot("button-focus.png");
+await button.focus()
+await expect(button).toHaveScreenshot("button-focus.png")
 ```
 
 ### 5. Test Responsive Layouts
@@ -149,9 +149,9 @@ await expect(button).toHaveScreenshot("button-focus.png");
 Test different viewport sizes:
 
 ```typescript
-await page.setViewportSize({ width: 375, height: 667 }); // Mobile
-await page.setViewportSize({ width: 768, height: 1024 }); // Tablet
-await page.setViewportSize({ width: 1920, height: 1080 }); // Desktop
+await page.setViewportSize({ width: 375, height: 667 }) // Mobile
+await page.setViewportSize({ width: 768, height: 1024 }) // Tablet
+await page.setViewportSize({ width: 1920, height: 1080 }) // Desktop
 ```
 
 ## CI/CD Integration
@@ -185,19 +185,19 @@ test.describe("Visual Regression Tests", () => {
   test.describe("Category Name", () => {
     test("should match specific element", async ({ page }) => {
       // 1. Navigate to page
-      await page.goto("/path");
+      await page.goto("/path")
 
       // 2. Wait for stability
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("networkidle")
 
       // 3. Take screenshot
       await expect(page).toHaveScreenshot("filename.png", {
         fullPage: true,
         animations: "disabled",
-      });
-    });
-  });
-});
+      })
+    })
+  })
+})
 ```
 
 ## Troubleshooting
@@ -255,19 +255,19 @@ Investigate failures when:
 ```typescript
 test("should match homepage layout", async ({ page }) => {
   // Navigate to homepage
-  const homePage = new HomePage(page);
-  await homePage.navigateTo();
-  await homePage.waitForReady();
+  const homePage = new HomePage(page)
+  await homePage.navigateTo()
+  await homePage.waitForReady()
 
   // Wait for animations to complete
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(500)
 
   // Take full page screenshot
   await expect(page).toHaveScreenshot("homepage-full.png", {
     fullPage: true,
     animations: "disabled",
-  });
-});
+  })
+})
 ```
 
 ## Contributing

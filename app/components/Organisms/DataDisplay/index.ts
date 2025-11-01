@@ -1,1 +1,1 @@
-export { default } from './DataDisplay'
+export { default } from "./DataDisplay"

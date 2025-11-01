@@ -1,88 +1,88 @@
 /**
  * Critical User Flows E2E Tests
- * 
+ *
  * Tests essential user journeys through the application:
  * - Authentication flows (sign up, login, logout)
  * - Perfume discovery and browsing
  * - Wishlist management
  * - User collection management
- * 
+ *
  * These tests ensure core user functionality works end-to-end.
- * 
+ *
  * @group e2e
  * @group critical
  */
 
-import { expect, test } from '@playwright/test'
+import { expect, test } from "@playwright/test"
 
-import { HomePage } from './pages/HomePage'
-import { LoginPage } from './pages/LoginPage'
-import { PerfumePage } from './pages/PerfumePage'
-import { SignUpPage } from './pages/SignUpPage'
-import { VaultPage } from './pages/VaultPage'
+import { HomePage } from "./pages/HomePage"
+import { LoginPage } from "./pages/LoginPage"
+import { PerfumePage } from "./pages/PerfumePage"
+import { SignUpPage } from "./pages/SignUpPage"
+import { VaultPage } from "./pages/VaultPage"
 
-test.describe('Critical User Flows', () => {
-  test.describe('Authentication Flows', () => {
-    test('should allow user to sign up with valid credentials', async ({ page }) => {
+test.describe("Critical User Flows", () => {
+  test.describe("Authentication Flows", () => {
+    test("should allow user to sign up with valid credentials", async ({ page }) => {
       const signUpPage = new SignUpPage(page)
       await signUpPage.navigateTo()
 
       // Fill sign up form
       await signUpPage.signUp({
-        email: 'test@example.com',
-        password: 'TestPassword123!',
-        confirmPassword: 'TestPassword123!',
-        firstName: 'Test',
-        lastName: 'User'
+        email: "test@example.com",
+        password: "TestPassword123!",
+        confirmPassword: "TestPassword123!",
+        firstName: "Test",
+        lastName: "User",
       })
 
       // Should redirect to home page or dashboard
       await expect(page).toHaveURL(/\/(?!login)/)
     })
 
-    test('should allow user to login with valid credentials', async ({ page }) => {
+    test("should allow user to login with valid credentials", async ({ page }) => {
       const loginPage = new LoginPage(page)
       await loginPage.navigateTo()
 
       // Fill login form
-      await loginPage.login('test@example.com', 'TestPassword123!')
+      await loginPage.login("test@example.com", "TestPassword123!")
 
       // Should redirect to home page or dashboard
       await expect(page).toHaveURL(/\/(?!login)/)
     })
 
-    test('should show error for invalid login credentials', async ({ page }) => {
+    test("should show error for invalid login credentials", async ({ page }) => {
       const loginPage = new LoginPage(page)
       await loginPage.navigateTo()
 
       // Try to login with invalid credentials
-      await loginPage.login('invalid@example.com', 'wrongpassword')
+      await loginPage.login("invalid@example.com", "wrongpassword")
 
       // Should show error message
       await expect(loginPage.hasErrorMessage()).resolves.toBe(true)
     })
 
-    test('should validate password strength during sign up', async ({ page }) => {
+    test("should validate password strength during sign up", async ({ page }) => {
       const signUpPage = new SignUpPage(page)
       await signUpPage.navigateTo()
 
       // Fill form with weak password
       await signUpPage.fillForm({
-        email: 'test@example.com',
-        password: '123',
-        confirmPassword: '123',
-        firstName: 'Test',
-        lastName: 'User'
+        email: "test@example.com",
+        password: "123",
+        confirmPassword: "123",
+        firstName: "Test",
+        lastName: "User",
       })
 
       // Check password strength indicator
       const strength = await signUpPage.getPasswordStrength()
-      expect(strength).toContain('weak')
+      expect(strength).toContain("weak")
     })
   })
 
-  test.describe('Perfume Browsing Flows', () => {
-    test('should allow user to browse perfumes in the vault', async ({ page }) => {
+  test.describe("Perfume Browsing Flows", () => {
+    test("should allow user to browse perfumes in the vault", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
 
@@ -92,15 +92,15 @@ test.describe('Critical User Flows', () => {
       expect(count).toBeGreaterThan(0)
 
       // Take screenshot for visual verification
-      await vaultPage.takeScreenshot('vault-page-loaded')
+      await vaultPage.takeScreenshot("vault-page-loaded")
     })
 
-    test('should allow user to search for perfumes', async ({ page }) => {
+    test("should allow user to search for perfumes", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
 
       // Perform search
-      await vaultPage.search('rose')
+      await vaultPage.search("rose")
 
       // Wait for results
       await vaultPage.waitForLoadingComplete()
@@ -110,12 +110,12 @@ test.describe('Critical User Flows', () => {
       expect(count).toBeGreaterThan(0)
     })
 
-    test('should allow user to filter perfumes by letter', async ({ page }) => {
+    test("should allow user to filter perfumes by letter", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
 
       // Click on letter filter
-      await vaultPage.clickLetterFilter('A')
+      await vaultPage.clickLetterFilter("A")
 
       // Wait for filtered results
       await vaultPage.waitForLoadingComplete()
@@ -125,12 +125,12 @@ test.describe('Critical User Flows', () => {
       expect(count).toBeGreaterThan(0)
     })
 
-    test('should allow user to sort perfumes', async ({ page }) => {
+    test("should allow user to sort perfumes", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
 
       // Select sort option
-      await vaultPage.selectSort('name-asc')
+      await vaultPage.selectSort("name-asc")
 
       // Wait for sorted results
       await vaultPage.waitForLoadingComplete()
@@ -140,12 +140,12 @@ test.describe('Critical User Flows', () => {
       expect(count).toBeGreaterThan(0)
     })
 
-    test('should show no results message for invalid search', async ({ page }) => {
+    test("should show no results message for invalid search", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
 
       // Search for something that doesn't exist
-      await vaultPage.search('nonexistentperfume12345')
+      await vaultPage.search("nonexistentperfume12345")
 
       // Wait for no results
       await vaultPage.waitForLoadingComplete()
@@ -155,8 +155,8 @@ test.describe('Critical User Flows', () => {
     })
   })
 
-  test.describe('Perfume Detail Flows', () => {
-    test('should allow user to view perfume details', async ({ page }) => {
+  test.describe("Perfume Detail Flows", () => {
+    test("should allow user to view perfume details", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -176,7 +176,7 @@ test.describe('Critical User Flows', () => {
       expect(name).toBeTruthy()
     })
 
-    test('should allow user to add perfume to wishlist', async ({ page }) => {
+    test("should allow user to add perfume to wishlist", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -196,7 +196,7 @@ test.describe('Critical User Flows', () => {
       expect(isInWishlist).toBe(true)
     })
 
-    test('should allow user to rate a perfume', async ({ page }) => {
+    test("should allow user to rate a perfume", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -216,8 +216,8 @@ test.describe('Critical User Flows', () => {
     })
   })
 
-  test.describe('Navigation Flows', () => {
-    test('should allow user to navigate between pages', async ({ page }) => {
+  test.describe("Navigation Flows", () => {
+    test("should allow user to navigate between pages", async ({ page }) => {
       const homePage = new HomePage(page)
       const vaultPage = new VaultPage(page)
 
@@ -234,13 +234,13 @@ test.describe('Critical User Flows', () => {
       await homePage.assertPageLoaded()
     })
 
-    test('should maintain state when navigating back', async ({ page }) => {
+    test("should maintain state when navigating back", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
       // Navigate to vault and perform search
       await vaultPage.navigateTo()
-      await vaultPage.search('rose')
+      await vaultPage.search("rose")
       await vaultPage.waitForLoadingComplete()
 
       // Click on a perfume
@@ -255,10 +255,10 @@ test.describe('Critical User Flows', () => {
     })
   })
 
-  test.describe('Error Handling Flows', () => {
-    test('should handle network errors gracefully', async ({ page }) => {
+  test.describe("Error Handling Flows", () => {
+    test("should handle network errors gracefully", async ({ page }) => {
       // Simulate network failure
-      await page.route('**/api/**', route => route.abort())
+      await page.route("**/api/**", (route) => route.abort())
 
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
@@ -267,20 +267,20 @@ test.describe('Critical User Flows', () => {
       await vaultPage.assertPageLoaded()
     })
 
-    test('should show appropriate error messages', async ({ page }) => {
+    test("should show appropriate error messages", async ({ page }) => {
       const loginPage = new LoginPage(page)
       await loginPage.navigateTo()
 
       // Try to login with invalid credentials
-      await loginPage.login('invalid@example.com', 'wrongpassword')
+      await loginPage.login("invalid@example.com", "wrongpassword")
 
       // Should show error message
       await expect(loginPage.hasErrorMessage()).resolves.toBe(true)
     })
   })
 
-  test.describe('Mobile Responsiveness', () => {
-    test('should work correctly on mobile devices', async ({ page }) => {
+  test.describe("Mobile Responsiveness", () => {
+    test("should work correctly on mobile devices", async ({ page }) => {
       // Set mobile viewport
       await page.setViewportSize({ width: 375, height: 667 })
 
@@ -296,7 +296,7 @@ test.describe('Critical User Flows', () => {
       await vaultPage.assertPageLoaded()
 
       // Take mobile screenshot
-      await vaultPage.takeScreenshot('vault-page-mobile')
+      await vaultPage.takeScreenshot("vault-page-mobile")
     })
   })
 })

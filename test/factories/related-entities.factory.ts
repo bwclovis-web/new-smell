@@ -3,8 +3,8 @@
  * Generates realistic data for perfume-related entities (ratings, reviews, wishlist, etc.)
  */
 
-import { faker } from '@faker-js/faker'
-import type { PerfumeType, TradePreference } from '@prisma/client'
+import { faker } from "@faker-js/faker"
+import type { PerfumeType, TradePreference } from "@prisma/client"
 
 import type {
   UserPerfume,
@@ -12,10 +12,10 @@ import type {
   UserPerfumeRating,
   UserPerfumeReview,
   UserPerfumeWishlist,
-} from '~/types/database'
+} from "~/types/database"
 
-import { createMockPerfume } from './perfume.factory'
-import { createMockUser } from './user.factory'
+import { createMockPerfume } from "./perfume.factory"
+import { createMockUser } from "./user.factory"
 
 /**
  * Creates a mock UserPerfume (perfume in user's collection)
@@ -35,13 +35,16 @@ export interface CreateMockUserPerfumeOptions {
   type?: PerfumeType
 }
 
-export function createMockUserPerfume(overrides: CreateMockUserPerfumeOptions = {}): Omit<UserPerfume, 'user' | 'perfume' | 'comments'> {
+export function createMockUserPerfume(
+  overrides: CreateMockUserPerfumeOptions = {}
+): Omit<UserPerfume, "user" | "perfume" | "comments"> {
   return {
     id: overrides.id ?? faker.string.uuid(),
     userId: overrides.userId ?? faker.string.uuid(),
     perfumeId: overrides.perfumeId ?? faker.string.uuid(),
     amount: overrides.amount ?? faker.number.int({ min: 1, max: 100 }).toString(),
-    available: overrides.available ?? faker.number.int({ min: 0, max: 50 }).toString(),
+    available:
+      overrides.available ?? faker.number.int({ min: 0, max: 50 }).toString(),
     price:
       overrides.price !== undefined
         ? overrides.price
@@ -56,21 +59,21 @@ export function createMockUserPerfume(overrides: CreateMockUserPerfumeOptions = 
         : faker.commerce.price({ min: 40, max: 400 }),
     tradePreference:
       overrides.tradePreference ??
-      faker.helpers.arrayElement<TradePreference>(['cash', 'trade', 'both']),
+      faker.helpers.arrayElement<TradePreference>(["cash", "trade", "both"]),
     tradeOnly: overrides.tradeOnly ?? faker.datatype.boolean(),
     createdAt: overrides.createdAt ?? faker.date.past({ years: 1 }),
     type:
       overrides.type ??
       faker.helpers.arrayElement<PerfumeType>([
-        'eauDeParfum',
-        'eauDeToilette',
-        'eauDeCologne',
-        'parfum',
-        'extraitDeParfum',
-        'extraitOil',
-        'oil',
-        'waterMist',
-        'ipmSpray',
+        "eauDeParfum",
+        "eauDeToilette",
+        "eauDeCologne",
+        "parfum",
+        "extraitDeParfum",
+        "extraitOil",
+        "oil",
+        "waterMist",
+        "ipmSpray",
       ]),
   }
 }
@@ -91,7 +94,9 @@ export interface CreateMockRatingOptions {
   updatedAt?: Date
 }
 
-export function createMockRating(overrides: CreateMockRatingOptions = {}): Omit<UserPerfumeRating, 'user' | 'perfume'> {
+export function createMockRating(
+  overrides: CreateMockRatingOptions = {}
+): Omit<UserPerfumeRating, "user" | "perfume"> {
   return {
     id: overrides.id ?? faker.string.uuid(),
     userId: overrides.userId ?? faker.string.uuid(),
@@ -132,7 +137,9 @@ export interface CreateMockReviewOptions {
   createdAt?: Date
 }
 
-export function createMockReview(overrides: CreateMockReviewOptions = {}): Omit<UserPerfumeReview, 'user' | 'perfume'> {
+export function createMockReview(
+  overrides: CreateMockReviewOptions = {}
+): Omit<UserPerfumeReview, "user" | "perfume"> {
   return {
     id: overrides.id ?? faker.string.uuid(),
     userId: overrides.userId ?? faker.string.uuid(),
@@ -152,7 +159,9 @@ export interface CreateMockWishlistOptions {
   createdAt?: Date
 }
 
-export function createMockWishlistItem(overrides: CreateMockWishlistOptions = {}): Omit<UserPerfumeWishlist, 'user' | 'perfume'> {
+export function createMockWishlistItem(
+  overrides: CreateMockWishlistOptions = {}
+): Omit<UserPerfumeWishlist, "user" | "perfume"> {
   return {
     id: overrides.id ?? faker.string.uuid(),
     userId: overrides.userId ?? faker.string.uuid(),
@@ -175,7 +184,9 @@ export interface CreateMockCommentOptions {
   updatedAt?: Date
 }
 
-export function createMockComment(overrides: CreateMockCommentOptions = {}): Omit<UserPerfumeComment, 'user' | 'perfume' | 'userPerfume'> {
+export function createMockComment(
+  overrides: CreateMockCommentOptions = {}
+): Omit<UserPerfumeComment, "user" | "perfume" | "userPerfume"> {
   return {
     id: overrides.id ?? faker.string.uuid(),
     userId: overrides.userId ?? faker.string.uuid(),
@@ -192,7 +203,6 @@ export function createMockComment(overrides: CreateMockCommentOptions = {}): Omi
  * Create complete test data sets with related entities
  */
 export const relatedEntitiesPresets = {
-
   /**
    * Creates a complete user collection item with rating and review
    */
@@ -310,16 +320,19 @@ export const relatedEntitiesPresets = {
 
     return {
       perfume,
-      ratings: users.map(user => createMockRating({
+      ratings: users.map((user) =>
+        createMockRating({
           userId: user.id,
           perfumeId: perfume.id,
-        })),
-      reviews: users.slice(0, 3).map(user => createMockReview({
+        })
+      ),
+      reviews: users.slice(0, 3).map((user) =>
+        createMockReview({
           userId: user.id,
           perfumeId: perfume.id,
-        })),
+        })
+      ),
       users,
     }
   },
 }
-

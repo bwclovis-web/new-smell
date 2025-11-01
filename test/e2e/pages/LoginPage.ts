@@ -1,6 +1,6 @@
-import { Page } from '@playwright/test'
+import { Page } from "@playwright/test"
 
-import { BasePage } from './BasePage'
+import { BasePage } from "./BasePage"
 
 /**
  * Login page object model
@@ -16,7 +16,7 @@ export class LoginPage extends BasePage {
     errorMessage: '[data-testid="error-message"]',
     successMessage: '[data-testid="success-message"]',
     loadingSpinner: '[data-testid="loading-spinner"]',
-    form: '[data-testid="login-form"]'
+    form: '[data-testid="login-form"]',
   }
 
   constructor(page: Page) {
@@ -27,7 +27,7 @@ export class LoginPage extends BasePage {
    * Navigate to the login page
    */
   async navigateTo(): Promise<void> {
-    await this.helpers.navigateTo('/login')
+    await this.helpers.navigateTo("/login")
     await this.waitForReady()
   }
 
@@ -83,7 +83,7 @@ export class LoginPage extends BasePage {
    */
   async getErrorMessage(): Promise<string> {
     const element = this.page.locator(this.selectors.errorMessage)
-    return await element.textContent() || ''
+    return (await element.textContent()) || ""
   }
 
   /**
@@ -126,6 +126,6 @@ export class LoginPage extends BasePage {
    */
   async assertLoginSuccess(): Promise<void> {
     // Should redirect away from login page
-    await this.helpers.assertURL('/(?!login)')
+    await this.helpers.assertURL("/(?!login)")
   }
 }

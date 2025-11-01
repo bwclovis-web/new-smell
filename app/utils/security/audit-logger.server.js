@@ -6,23 +6,23 @@ const auditLogs = new Map()
  * Audit log levels
  */
 export const AUDIT_LEVELS = {
-  INFO: 'info',
-  WARN: 'warn',
-  ERROR: 'error',
-  CRITICAL: 'critical'
+  INFO: "info",
+  WARN: "warn",
+  ERROR: "error",
+  CRITICAL: "critical",
 }
 
 /**
  * Audit log categories
  */
 export const AUDIT_CATEGORIES = {
-  AUTHENTICATION: 'authentication',
-  AUTHORIZATION: 'authorization',
-  DATA_ACCESS: 'data_access',
-  CONFIGURATION: 'configuration',
-  SECURITY: 'security',
-  PERFORMANCE: 'performance',
-  SYSTEM: 'system'
+  AUTHENTICATION: "authentication",
+  AUTHORIZATION: "authorization",
+  DATA_ACCESS: "data_access",
+  CONFIGURATION: "configuration",
+  SECURITY: "security",
+  PERFORMANCE: "performance",
+  SYSTEM: "system",
 }
 
 /**
@@ -38,7 +38,7 @@ export function logAuditEvent(event) {
     userAgent = null,
     resource = null,
     details = {},
-    outcome = 'success'
+    outcome = "success",
   } = event
 
   const auditLog = {
@@ -52,14 +52,14 @@ export function logAuditEvent(event) {
     userAgent,
     resource,
     details,
-    outcome
+    outcome,
   }
 
   // Store audit log
   const key = `${category}-${level}`
   const logs = auditLogs.get(key) || []
   logs.push(auditLog)
-  
+
   // Keep only last 1000 logs per category/level
   if (logs.length > 1000) {
     logs.shift()
@@ -88,17 +88,19 @@ export function logAuditEvent(event) {
  */
 function formatAuditLog(log) {
   const { timestamp, level, category, action, userId, ipAddress, outcome } = log
-  
-  let emoji = '📝'
+
+  let emoji = "📝"
   if (level === AUDIT_LEVELS.CRITICAL) {
- emoji = '🚨' 
-} else if (level === AUDIT_LEVELS.ERROR) {
- emoji = '❌' 
-} else if (level === AUDIT_LEVELS.WARN) {
- emoji = '⚠️' 
-}
-  
-  return `${emoji} [${timestamp}] ${level.toUpperCase()} ${category.toUpperCase()}: ${action} (${outcome}) ${userId ? `[User: ${userId}]` : ''} ${ipAddress ? `[IP: ${ipAddress}]` : ''}`
+    emoji = "🚨"
+  } else if (level === AUDIT_LEVELS.ERROR) {
+    emoji = "❌"
+  } else if (level === AUDIT_LEVELS.WARN) {
+    emoji = "⚠️"
+  }
+
+  return `${emoji} [${timestamp}] ${level.toUpperCase()} ${category.toUpperCase()}: ${action} (${outcome}) ${
+    userId ? `[User: ${userId}]` : ""
+  } ${ipAddress ? `[IP: ${ipAddress}]` : ""}`
 }
 
 /**
@@ -112,11 +114,11 @@ export function getAuditLogs(filters = {}) {
     ipAddress = null,
     startDate = null,
     endDate = null,
-    limit = 100
+    limit = 100,
   } = filters
 
   let allLogs = []
-  
+
   // Collect logs from all categories/levels
   for (const logs of auditLogs.values()) {
     allLogs.push(...logs)
@@ -126,29 +128,29 @@ export function getAuditLogs(filters = {}) {
   let filteredLogs = allLogs
 
   if (category) {
-    filteredLogs = filteredLogs.filter(log => log.category === category)
+    filteredLogs = filteredLogs.filter((log) => log.category === category)
   }
 
   if (level) {
-    filteredLogs = filteredLogs.filter(log => log.level === level)
+    filteredLogs = filteredLogs.filter((log) => log.level === level)
   }
 
   if (userId) {
-    filteredLogs = filteredLogs.filter(log => log.userId === userId)
+    filteredLogs = filteredLogs.filter((log) => log.userId === userId)
   }
 
   if (ipAddress) {
-    filteredLogs = filteredLogs.filter(log => log.ipAddress === ipAddress)
+    filteredLogs = filteredLogs.filter((log) => log.ipAddress === ipAddress)
   }
 
   if (startDate) {
     const start = new Date(startDate)
-    filteredLogs = filteredLogs.filter(log => new Date(log.timestamp) >= start)
+    filteredLogs = filteredLogs.filter((log) => new Date(log.timestamp) >= start)
   }
 
   if (endDate) {
     const end = new Date(endDate)
-    filteredLogs = filteredLogs.filter(log => new Date(log.timestamp) <= end)
+    filteredLogs = filteredLogs.filter((log) => new Date(log.timestamp) <= end)
   }
 
   // Sort by timestamp (newest first) and limit
@@ -168,7 +170,7 @@ export function getAuditStats() {
     logsByOutcome: {},
     recentLogs: [],
     uniqueUsers: new Set(),
-    uniqueIPs: new Set()
+    uniqueIPs: new Set(),
   }
 
   const now = new Date()
@@ -177,24 +179,25 @@ export function getAuditStats() {
   for (const logs of auditLogs.values()) {
     stats.totalLogs += logs.length
 
-    logs.forEach(log => {
+    logs.forEach((log) => {
       // Count by level
       stats.logsByLevel[log.level] = (stats.logsByLevel[log.level] || 0) + 1
-      
+
       // Count by category
-      stats.logsByCategory[log.category] = (stats.logsByCategory[log.category] || 0) + 1
-      
+      stats.logsByCategory[log.category] =
+        (stats.logsByCategory[log.category] || 0) + 1
+
       // Count by outcome
       stats.logsByOutcome[log.outcome] = (stats.logsByOutcome[log.outcome] || 0) + 1
-      
+
       // Track unique users and IPs
       if (log.userId) {
- stats.uniqueUsers.add(log.userId) 
-}
+        stats.uniqueUsers.add(log.userId)
+      }
       if (log.ipAddress) {
- stats.uniqueIPs.add(log.ipAddress) 
-}
-      
+        stats.uniqueIPs.add(log.ipAddress)
+      }
+
       // Get recent logs
       if (new Date(log.timestamp) > oneHourAgo) {
         stats.recentLogs.push(log)
@@ -224,10 +227,10 @@ function generateAuditId() {
 export function cleanupAuditLogs() {
   const now = new Date()
   const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-  
+
   for (const [key, logs] of auditLogs) {
-    const recentLogs = logs.filter(log => new Date(log.timestamp) > oneWeekAgo)
-    
+    const recentLogs = logs.filter((log) => new Date(log.timestamp) > oneWeekAgo)
+
     if (recentLogs.length === 0) {
       auditLogs.delete(key)
     } else {

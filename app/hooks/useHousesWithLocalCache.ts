@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from "react"
 
 interface HouseFilters {
   houseType?: string
@@ -11,11 +11,11 @@ interface CachedData {
 }
 
 const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
-const STORAGE_PREFIX = 'houses-cache-'
+const STORAGE_PREFIX = "houses-cache-"
 
 // Helper functions for localStorage
 const getFromStorage = (key: string): CachedData | null => {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return null
   }
   try {
@@ -27,7 +27,7 @@ const getFromStorage = (key: string): CachedData | null => {
 }
 
 const setToStorage = (key: string, data: CachedData): void => {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return
   }
   try {
@@ -37,10 +37,11 @@ const setToStorage = (key: string, data: CachedData): void => {
   }
 }
 
-const isExpired = (timestamp: number): boolean => Date.now() - timestamp > CACHE_DURATION
+const isExpired = (timestamp: number): boolean =>
+  Date.now() - timestamp > CACHE_DURATION
 
 export const useHousesWithLocalCache = (filters: HouseFilters = {}) => {
-  const { houseType = 'all', sortBy = 'created-desc' } = filters
+  const { houseType = "all", sortBy = "created-desc" } = filters
   const [data, setData] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -76,7 +77,7 @@ export const useHousesWithLocalCache = (filters: HouseFilters = {}) => {
         setToStorage(cacheKey, { data: result, timestamp: Date.now() })
         setData(result)
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('Unknown error'))
+        setError(err instanceof Error ? err : new Error("Unknown error"))
       } finally {
         setIsLoading(false)
       }
@@ -97,11 +98,11 @@ export const useHousesWithLocalCache = (filters: HouseFilters = {}) => {
 
 // Clear all cached house data
 export const clearLocalHouseCache = () => {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return
   }
 
   Object.keys(localStorage)
-    .filter(key => key.startsWith(STORAGE_PREFIX))
-    .forEach(key => localStorage.removeItem(key))
+    .filter((key) => key.startsWith(STORAGE_PREFIX))
+    .forEach((key) => localStorage.removeItem(key))
 }

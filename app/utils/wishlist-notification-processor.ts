@@ -1,4 +1,7 @@
-import { checkAndNotifyWishlistAvailability, markAsNotified } from '~/models/notification.server'
+import {
+  checkAndNotifyWishlistAvailability,
+  markAsNotified,
+} from "~/models/notification.server"
 
 export interface NotificationResult {
   userId: string
@@ -53,12 +56,15 @@ async function processSingleNotification(notification: any) {
       perfumeName: notification.perfume.name,
       sellers: notification.perfume.userPerfume.map((userPerfume: any) => ({
         userId: userPerfume.user.id,
-        email: userPerfume.user.email
-      }))
+        email: userPerfume.user.email,
+      })),
     }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error(`Error processing notification for user ${notification.userId}:`, error)
+    console.error(
+      `Error processing notification for user ${notification.userId}:`,
+      error
+    )
     return null
   }
 }
@@ -70,7 +76,7 @@ async function processSingleNotification(notification: any) {
 export async function sendWishlistNotificationEmail(
   userEmail: string,
   perfumeName: string,
-  sellers: Array<{ userId: string, email: string }>
+  sellers: Array<{ userId: string; email: string }>
 ): Promise<void> {
   // Placeholder for email sending logic
   // You could integrate with services like SendGrid, AWS SES, Nodemailer, etc.
@@ -84,7 +90,7 @@ export async function sendWishlistNotificationEmail(
     Perfume: ${perfumeName}
     
     Available from:
-    ${sellers.map(seller => `- ${seller.email}`).join('\n')}
+    ${sellers.map((seller) => `- ${seller.email}`).join("\n")}
     
     Visit the trading post to contact the seller(s) and make a purchase.
     

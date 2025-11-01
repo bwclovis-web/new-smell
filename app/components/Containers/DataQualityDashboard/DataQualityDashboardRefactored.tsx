@@ -1,13 +1,13 @@
 // Import to ensure Chart.js is registered
-import './utils/chartSetup'
+import "./utils/chartSetup"
 
-import React, { type FC } from 'react'
+import React, { type FC } from "react"
 
-import AdminCSVControls from './components/AdminCSVControls'
-import DashboardContent from './components/DashboardContent'
-import ErrorDisplay from './components/ErrorDisplay'
-import LoadingIndicator from './components/LoadingIndicator'
-import { useFetchDataQualityStats } from './hooks'
+import AdminCSVControls from "./components/AdminCSVControls"
+import DashboardContent from "./components/DashboardContent"
+import ErrorDisplay from "./components/ErrorDisplay"
+import LoadingIndicator from "./components/LoadingIndicator"
+import { useFetchDataQualityStats } from "./hooks"
 
 interface DataQualityDashboardProps {
   user?: any
@@ -15,7 +15,7 @@ interface DataQualityDashboardProps {
 }
 
 const DataQualityDashboard: FC<DataQualityDashboardProps> = ({ user, isAdmin }) => {
-  const [timeframe, setTimeframe] = React.useState<'week' | 'month' | 'all'>('month')
+  const [timeframe, setTimeframe] = React.useState<"week" | "month" | "all">("month")
   const { stats, loading, error, forceRefresh } = useFetchDataQualityStats(timeframe)
 
   const handleUploadComplete = () => {

@@ -1,10 +1,10 @@
-import type { LoaderFunctionArgs } from 'react-router'
+import type { LoaderFunctionArgs } from "react-router"
 
-import { createTag } from '~/models/tags.server'
+import { createTag } from "~/models/tags.server"
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
-  const tag = url.searchParams.get('tag')
+  const tag = url.searchParams.get("tag")
   if (!tag) {
     return []
   }

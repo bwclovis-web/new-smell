@@ -1,9 +1,9 @@
-import { waitFor } from '@testing-library/react'
-import { expect, vi } from 'vitest'
+import { waitFor } from "@testing-library/react"
+import { expect, vi } from "vitest"
 
 /**
  * Async and Loading State Testing Utilities
- * 
+ *
  * Utilities for testing asynchronous operations, loading states, and timing
  */
 
@@ -18,7 +18,7 @@ export const waitForWithTimeout = async <T>(
 export const waitForCondition = async (
   condition: () => boolean,
   timeout = 5000,
-  errorMessage = 'Condition not met within timeout'
+  errorMessage = "Condition not met within timeout"
 ): Promise<void> => {
   const startTime = Date.now()
 
@@ -26,24 +26,24 @@ export const waitForCondition = async (
     if (Date.now() - startTime > timeout) {
       throw new Error(errorMessage)
     }
-    await new Promise(resolve => setTimeout(resolve, 50))
+    await new Promise((resolve) => setTimeout(resolve, 50))
   }
 }
 
 // Mock async operation
-export const mockAsyncOperation = <T>(
-  data: T,
-  delay = 100,
-  shouldFail = false
-) => vi.fn().mockImplementation(() => new Promise((resolve, reject) => {
-  setTimeout(() => {
-    if (shouldFail) {
-      reject(new Error('Async operation failed'))
-    } else {
-      resolve(data)
-    }
-  }, delay)
-}))
+export const mockAsyncOperation = <T>(data: T, delay = 100, shouldFail = false) =>
+  vi.fn().mockImplementation(
+    () =>
+      new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (shouldFail) {
+            reject(new Error("Async operation failed"))
+          } else {
+            resolve(data)
+          }
+        }, delay)
+      })
+  )
 
 // Test loading state sequence
 export const testLoadingStateSequence = async (
@@ -90,7 +90,7 @@ export const testRetryMechanism = async (
   const mockOperation = vi.fn().mockImplementation(async () => {
     attempts++
     if (attempts < maxRetries) {
-      throw new Error('Operation failed')
+      throw new Error("Operation failed")
     }
     return { success: true }
   })
@@ -106,7 +106,7 @@ export const testRetryMechanism = async (
 
     // Wait before next attempt
     if (i < maxRetries - 1) {
-      await new Promise(resolve => setTimeout(resolve, retryDelay))
+      await new Promise((resolve) => setTimeout(resolve, retryDelay))
     }
   }
 
@@ -125,14 +125,14 @@ export const testDebouncedFunction = async (
   // Call function multiple times rapidly
   for (let i = 0; i < callCount; i++) {
     debouncedFn(mockFn)
-    await new Promise(resolve => setTimeout(resolve, 50))
+    await new Promise((resolve) => setTimeout(resolve, 50))
   }
 
   // Function should not have been called yet
   expect(mockFn).not.toHaveBeenCalled()
 
   // Wait for debounce delay
-  await new Promise(resolve => setTimeout(resolve, delay + 100))
+  await new Promise((resolve) => setTimeout(resolve, delay + 100))
 
   // Function should have been called once
   expect(mockFn).toHaveBeenCalledTimes(1)
@@ -149,14 +149,14 @@ export const testThrottledFunction = async (
   // Call function multiple times rapidly
   for (let i = 0; i < callCount; i++) {
     throttledFn(mockFn)
-    await new Promise(resolve => setTimeout(resolve, 50))
+    await new Promise((resolve) => setTimeout(resolve, 50))
   }
 
   // Function should have been called once immediately
   expect(mockFn).toHaveBeenCalledTimes(1)
 
   // Wait for throttle delay
-  await new Promise(resolve => setTimeout(resolve, delay + 100))
+  await new Promise((resolve) => setTimeout(resolve, delay + 100))
 
   // Function should have been called again
   expect(mockFn).toHaveBeenCalledTimes(2)
@@ -167,11 +167,13 @@ export const testConcurrentOperations = async (
   operations: Array<() => Promise<any>>,
   shouldAllSucceed = true
 ) => {
-  const results = await Promise.allSettled(operations.map(operation => operation()))
+  const results = await Promise.allSettled(
+    operations.map((operation) => operation())
+  )
 
   if (shouldAllSucceed) {
-    results.forEach(result => {
-      expect(result.status).toBe('fulfilled')
+    results.forEach((result) => {
+      expect(result.status).toBe("fulfilled")
     })
   }
 
@@ -197,23 +199,27 @@ export const mockPromiseWithProgress = <T>(
   totalSteps = 100,
   stepDelay = 10,
   onProgress?: Function
-) => vi.fn().mockImplementation(() => new Promise<T>(resolve => {
-  let currentStep = 0
+) =>
+  vi.fn().mockImplementation(
+    () =>
+      new Promise<T>((resolve) => {
+        let currentStep = 0
 
-  const interval = setInterval(() => {
-    currentStep++
-    const progressPercent = (currentStep / totalSteps) * 100
+        const interval = setInterval(() => {
+          currentStep++
+          const progressPercent = (currentStep / totalSteps) * 100
 
-    if (onProgress) {
-      onProgress(progressPercent)
-    }
+          if (onProgress) {
+            onProgress(progressPercent)
+          }
 
-    if (currentStep >= totalSteps) {
-      clearInterval(interval)
-      resolve(data)
-    }
-  }, stepDelay)
-}))
+          if (currentStep >= totalSteps) {
+            clearInterval(interval)
+            resolve(data)
+          }
+        }, stepDelay)
+      })
+  )
 
 // Test with fake timers
 export const testWithFakeTimers = async (testFn: () => void | Promise<void>) => {
@@ -242,14 +248,14 @@ export const testTimeout = async (
   timeout = 1000,
   shouldTimeout = true
 ) => {
-  const timeoutError = new Error('Operation timed out')
+  const timeoutError = new Error("Operation timed out")
   const timeoutPromise = new Promise((_, reject) => {
     setTimeout(() => reject(timeoutError), timeout)
   })
 
   if (shouldTimeout) {
     const racePromise = Promise.race([operation(), timeoutPromise])
-    await expect(racePromise).rejects.toThrow('Operation timed out')
+    await expect(racePromise).rejects.toThrow("Operation timed out")
   } else {
     const result = await Promise.race([operation(), timeoutPromise])
     expect(result).toBeDefined()
@@ -305,7 +311,7 @@ export const testPolling = async (
       break
     }
 
-    await new Promise(resolve => setTimeout(resolve, interval))
+    await new Promise((resolve) => setTimeout(resolve, interval))
   }
 
   expect(pollCount).toBeGreaterThan(0)
@@ -313,4 +319,3 @@ export const testPolling = async (
 
   return { pollCount, lastResult }
 }
-

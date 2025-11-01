@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react"
 
 export interface UseLocalStorageOptions<T> {
   key: string
@@ -18,7 +18,7 @@ export interface UseLocalStorageReturn<T> {
 
 /**
  * Custom hook for managing localStorage with type safety and error handling
- * 
+ *
  * @param options - Configuration options for localStorage
  * @returns LocalStorage state and handlers
  */
@@ -27,7 +27,7 @@ export const useLocalStorage = <T>({
   initialValue,
   serialize = JSON.stringify,
   deserialize = JSON.parse,
-  storage = typeof window !== 'undefined' ? localStorage : undefined
+  storage = typeof window !== "undefined" ? localStorage : undefined,
 }: UseLocalStorageOptions<T>): UseLocalStorageReturn<T> => {
   const [value, setValueState] = useState<T>(initialValue)
   const [isLoaded, setIsLoaded] = useState(false)
@@ -86,7 +86,7 @@ export const useLocalStorage = <T>({
       }
       setValueState(initialValue)
     } catch (error) {
-      console.error('Error clearing localStorage:', error)
+      console.error("Error clearing localStorage:", error)
     }
   }
 
@@ -95,7 +95,7 @@ export const useLocalStorage = <T>({
     setValue,
     removeValue,
     clearStorage,
-    isLoaded
+    isLoaded,
   }
 }
 

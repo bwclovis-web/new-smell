@@ -1,10 +1,10 @@
-import { render } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { render } from "@testing-library/react"
+import { describe, expect, it } from "vitest"
 
-import { performanceTestCleanup, performanceTestSetup } from '../setup-performance'
+import { performanceTestCleanup, performanceTestSetup } from "../setup-performance"
 
 // Example performance test for component rendering
-describe('Component Rendering Performance', () => {
+describe("Component Rendering Performance", () => {
   beforeEach(() => {
     performanceTestSetup()
   })
@@ -13,10 +13,10 @@ describe('Component Rendering Performance', () => {
     performanceTestCleanup()
   })
 
-  it('should render Button component within performance threshold', () => {
-    const { Button } = await import('../../app/components/Atoms/Button/Button')
+  it("should render Button component within performance threshold", () => {
+    const { Button } = await import("../../app/components/Atoms/Button/Button")
 
-    const renderTime = global.measurePerformance('Button render', () => {
+    const renderTime = global.measurePerformance("Button render", () => {
       render(<Button>Test Button</Button>)
     })
 
@@ -24,10 +24,10 @@ describe('Component Rendering Performance', () => {
     expect(renderTime).toBeLessThan(10)
   })
 
-  it('should render Modal component within performance threshold', () => {
-    const Modal = await import('../../app/components/Organisms/Modal/Modal')
+  it("should render Modal component within performance threshold", () => {
+    const Modal = await import("../../app/components/Organisms/Modal/Modal")
 
-    const renderTime = global.measurePerformance('Modal render', () => {
+    const renderTime = global.measurePerformance("Modal render", () => {
       render(<Modal.default>Test Modal</Modal.default>)
     })
 
@@ -35,10 +35,10 @@ describe('Component Rendering Performance', () => {
     expect(renderTime).toBeLessThan(20)
   })
 
-  it('should handle multiple component renders efficiently', () => {
-    const { Button } = await import('../../app/components/Atoms/Button/Button')
+  it("should handle multiple component renders efficiently", () => {
+    const { Button } = await import("../../app/components/Atoms/Button/Button")
 
-    const renderTime = global.measurePerformance('Multiple Button renders', () => {
+    const renderTime = global.measurePerformance("Multiple Button renders", () => {
       for (let i = 0; i < 100; i++) {
         render(<Button key={i}>Button {i}</Button>)
       }
@@ -48,8 +48,8 @@ describe('Component Rendering Performance', () => {
     expect(renderTime).toBeLessThan(500)
   })
 
-  it('should not exceed memory threshold during rendering', () => {
-    const { Button } = await import('../../app/components/Atoms/Button/Button')
+  it("should not exceed memory threshold during rendering", () => {
+    const { Button } = await import("../../app/components/Atoms/Button/Button")
 
     const initialMemory = global.measureMemory()
 

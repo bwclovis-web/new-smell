@@ -1,15 +1,15 @@
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react"
 
-import RatingLabel from './RatingLabel'
-import StarRating from './StarRating'
+import RatingLabel from "./RatingLabel"
+import StarRating from "./StarRating"
 
 interface NoirRatingProps {
-  category: 'longevity' | 'sillage' | 'gender' | 'priceValue' | 'overall'
+  category: "longevity" | "sillage" | "gender" | "priceValue" | "overall"
   value?: number | null
   onChange?: (rating: number) => void
   readonly?: boolean
-  size?: 'sm' | 'md' | 'lg'
+  size?: "sm" | "md" | "lg"
   showLabel?: boolean
 }
 
@@ -18,8 +18,8 @@ const NoirRating = ({
   value,
   onChange,
   readonly = false,
-  size = 'md',
-  showLabel = true
+  size = "md",
+  showLabel = true,
 }: NoirRatingProps) => {
   const [hoverValue, setHoverValue] = useState<number | null>(null)
   const [displayValue, setDisplayValue] = useState(value || 0)
@@ -59,5 +59,3 @@ const NoirRating = ({
 }
 
 export default NoirRating
-
-

@@ -31,12 +31,11 @@ import { CSRFToken } from '~/components/Molecules/CSRFToken'
 A form wrapper that automatically includes CSRF protection.
 
 ```tsx
-import { CSRFProtectedForm } from "~/components/Molecules/CSRFToken";
-
-<CSRFProtectedForm method="POST" action="/api/submit">
+import { CSRFProtectedForm } from "~/components/Molecules/CSRFToken"
+;<CSRFProtectedForm method="POST" action="/api/submit">
   <input type="text" name="username" />
   <button type="submit">Submit</button>
-</CSRFProtectedForm>;
+</CSRFProtectedForm>
 ```
 
 ### `CSRFTokenProvider`
@@ -44,10 +43,10 @@ import { CSRFProtectedForm } from "~/components/Molecules/CSRFToken";
 A context provider for CSRF token management across the app.
 
 ```tsx
-import { CSRFTokenProvider } from "~/components/Molecules/CSRFToken";
+import { CSRFTokenProvider } from "~/components/Molecules/CSRFToken"
 
 function App() {
-  return <CSRFTokenProvider>{/* Your app components */}</CSRFTokenProvider>;
+  return <CSRFTokenProvider>{/* Your app components */}</CSRFTokenProvider>
 }
 ```
 
@@ -58,20 +57,20 @@ function App() {
 Hook for accessing CSRF token and utilities.
 
 ```tsx
-import { useCSRF } from "~/hooks/useCSRF";
+import { useCSRF } from "~/hooks/useCSRF"
 
 function MyComponent() {
-  const { csrfToken, addToFormData, addToHeaders, submitForm } = useCSRF();
+  const { csrfToken, addToFormData, addToHeaders, submitForm } = useCSRF()
 
   const handleSubmit = async (formData: FormData) => {
     // Automatically includes CSRF token
-    const response = await submitForm("/api/submit", formData);
-  };
+    const response = await submitForm("/api/submit", formData)
+  }
 
   const handleFetch = async () => {
-    const headers = addToHeaders({ "Content-Type": "application/json" });
-    const response = await fetch("/api/data", { headers });
-  };
+    const headers = addToHeaders({ "Content-Type": "application/json" })
+    const response = await fetch("/api/data", { headers })
+  }
 }
 ```
 
@@ -80,10 +79,10 @@ function MyComponent() {
 Hook for accessing CSRF context (must be used within CSRFTokenProvider).
 
 ```tsx
-import { useCSRFToken } from "~/components/Molecules/CSRFToken";
+import { useCSRFToken } from "~/components/Molecules/CSRFToken"
 
 function MyComponent() {
-  const { csrfToken, addToFormData } = useCSRFToken();
+  const { csrfToken, addToFormData } = useCSRFToken()
   // Same API as useCSRF
 }
 ```
@@ -110,53 +109,52 @@ The CSRF protection works with the server-side middleware in `api/server.js`:
 ### Basic Form Protection
 
 ```tsx
-import { CSRFToken } from "~/components/Molecules/CSRFToken";
-
-<form method="POST" action="/api/ratings">
+import { CSRFToken } from "~/components/Molecules/CSRFToken"
+;<form method="POST" action="/api/ratings">
   <CSRFToken />
   <input type="hidden" name="perfumeId" value="123" />
   <input type="number" name="rating" min="1" max="5" />
   <button type="submit">Rate</button>
-</form>;
+</form>
 ```
 
 ### API Request Protection
 
 ```tsx
-import { useCSRF } from "~/hooks/useCSRF";
+import { useCSRF } from "~/hooks/useCSRF"
 
 function RatingComponent() {
-  const { submitForm } = useCSRF();
+  const { submitForm } = useCSRF()
 
   const handleRating = async (perfumeId: string, rating: number) => {
-    const formData = new FormData();
-    formData.append("perfumeId", perfumeId);
-    formData.append("rating", rating.toString());
+    const formData = new FormData()
+    formData.append("perfumeId", perfumeId)
+    formData.append("rating", rating.toString())
 
-    const response = await submitForm("/api/ratings", formData);
+    const response = await submitForm("/api/ratings", formData)
     // CSRF token automatically included
-  };
+  }
 }
 ```
 
 ### Custom Headers
 
 ```tsx
-import { useCSRF } from "~/hooks/useCSRF";
+import { useCSRF } from "~/hooks/useCSRF"
 
 function ApiComponent() {
-  const { addToHeaders } = useCSRF();
+  const { addToHeaders } = useCSRF()
 
   const fetchData = async () => {
     const headers = addToHeaders({
       "Content-Type": "application/json",
-    });
+    })
 
     const response = await fetch("/api/data", {
       method: "POST",
       headers,
       body: JSON.stringify({ data: "example" }),
-    });
-  };
+    })
+  }
 }
 ```

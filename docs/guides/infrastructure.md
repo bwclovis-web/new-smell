@@ -35,14 +35,14 @@ Comprehensive infrastructure enhancement strategies for the New Smell perfume tr
 
 ```typescript
 // app/entry.client.tsx
-import * as Sentry from "@sentry/react";
-import { useEffect } from "react";
+import * as Sentry from "@sentry/react"
+import { useEffect } from "react"
 import {
   useLocation,
   useNavigationType,
   createRoutesFromChildren,
   matchRoutes,
-} from "react-router-dom";
+} from "react-router-dom"
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
@@ -75,20 +75,20 @@ Sentry.init({
   beforeSend(event) {
     // Remove sensitive information
     if (event.request?.cookies) {
-      delete event.request.cookies;
+      delete event.request.cookies
     }
     if (event.request?.headers?.Authorization) {
-      delete event.request.headers.Authorization;
+      delete event.request.headers.Authorization
     }
-    return event;
+    return event
   },
-});
+})
 ```
 
 ```typescript
 // app/entry.server.tsx
-import * as Sentry from "@sentry/node";
-import "@sentry/tracing";
+import * as Sentry from "@sentry/node"
+import "@sentry/tracing"
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
@@ -99,7 +99,7 @@ Sentry.init({
     new Sentry.Integrations.Http({ tracing: true }),
     new Sentry.Integrations.Prisma({ client: prisma }),
   ],
-});
+})
 
 // Capture errors in loaders/actions
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -109,8 +109,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     Sentry.captureException(error, {
       tags: { loader: "perfume" },
       extra: { url: request.url },
-    });
-    throw error;
+    })
+    throw error
   }
 }
 ```
@@ -119,21 +119,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 ```typescript
 // app/utils/monitoring/performance.server.ts
-import { performance } from "perf_hooks";
+import { performance } from "perf_hooks"
 
 export class PerformanceMonitor {
-  private marks: Map<string, number> = new Map();
+  private marks: Map<string, number> = new Map()
 
   start(name: string) {
-    this.marks.set(name, performance.now());
+    this.marks.set(name, performance.now())
   }
 
   end(name: string, metadata?: Record<string, any>) {
-    const start = this.marks.get(name);
-    if (!start) return;
+    const start = this.marks.get(name)
+    if (!start) return
 
-    const duration = performance.now() - start;
-    this.marks.delete(name);
+    const duration = performance.now() - start
+    this.marks.delete(name)
 
     // Log to monitoring service
     this.logMetric({
@@ -141,9 +141,9 @@ export class PerformanceMonitor {
       duration,
       metadata,
       timestamp: new Date(),
-    });
+    })
 
-    return duration;
+    return duration
   }
 
   private logMetric(metric: PerformanceMetric) {
@@ -152,20 +152,20 @@ export class PerformanceMonitor {
       Sentry.captureMessage("Performance Metric", {
         level: "info",
         extra: metric,
-      });
+      })
     }
   }
 }
 
 // Usage
 export async function loader() {
-  const monitor = new PerformanceMonitor();
+  const monitor = new PerformanceMonitor()
 
-  monitor.start("database-query");
-  const data = await prisma.perfume.findMany();
-  monitor.end("database-query", { count: data.length });
+  monitor.start("database-query")
+  const data = await prisma.perfume.findMany()
+  monitor.end("database-query", { count: data.length })
 
-  return data;
+  return data
 }
 ```
 
@@ -190,7 +190,7 @@ export async function loader() {
 
 ```typescript
 // app/utils/logging/logger.server.ts
-import winston from "winston";
+import winston from "winston"
 
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || "info",
@@ -221,7 +221,7 @@ const logger = winston.createLogger({
       filename: "logs/combined.log",
     }),
   ],
-});
+})
 
 // Production: Use external service
 if (process.env.NODE_ENV === "production") {
@@ -232,44 +232,44 @@ if (process.env.NODE_ENV === "production") {
       path: "/logs",
       ssl: true,
     })
-  );
+  )
 }
 
-export { logger };
+export { logger }
 ```
 
 #### Usage Pattern
 
 ```typescript
 // app/models/perfume.server.ts
-import { logger } from "~/utils/logging/logger.server";
+import { logger } from "~/utils/logging/logger.server"
 
 export async function getPerfumeBySlug(slug: string) {
-  logger.info("Fetching perfume", { slug });
+  logger.info("Fetching perfume", { slug })
 
   try {
     const perfume = await prisma.perfume.findUnique({
       where: { slug },
-    });
+    })
 
     if (!perfume) {
-      logger.warn("Perfume not found", { slug });
-      return null;
+      logger.warn("Perfume not found", { slug })
+      return null
     }
 
     logger.info("Perfume fetched successfully", {
       slug,
       perfumeId: perfume.id,
-    });
+    })
 
-    return perfume;
+    return perfume
   } catch (error) {
     logger.error("Failed to fetch perfume", {
       slug,
       error: error.message,
       stack: error.stack,
-    });
-    throw error;
+    })
+    throw error
   }
 }
 ```
@@ -313,7 +313,7 @@ export async function getPerfumeBySlug(slug: string) {
 
 ```typescript
 // app/utils/monitoring/prisma-monitor.server.ts
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient({
   log: [
@@ -330,7 +330,7 @@ const prisma = new PrismaClient({
       level: "warn",
     },
   ],
-});
+})
 
 // Monitor slow queries
 prisma.$on("query", (e) => {
@@ -340,7 +340,7 @@ prisma.$on("query", (e) => {
       query: e.query,
       duration: e.duration,
       params: e.params,
-    });
+    })
 
     Sentry.captureMessage("Slow Database Query", {
       level: "warning",
@@ -348,19 +348,19 @@ prisma.$on("query", (e) => {
         query: e.query,
         duration: e.duration,
       },
-    });
+    })
   }
-});
+})
 
 // Monitor errors
 prisma.$on("error", (e) => {
   logger.error("Prisma error", {
     message: e.message,
     target: e.target,
-  });
-});
+  })
+})
 
-export { prisma };
+export { prisma }
 ```
 
 #### Database Health Checks
@@ -372,21 +372,21 @@ export async function loader() {
     database: false,
     memory: false,
     disk: false,
-  };
+  }
 
   // Check database connection
   try {
-    await prisma.$queryRaw`SELECT 1`;
-    checks.database = true;
+    await prisma.$queryRaw`SELECT 1`
+    checks.database = true
   } catch (error) {
-    logger.error("Database health check failed", { error });
+    logger.error("Database health check failed", { error })
   }
 
   // Check memory usage
-  const memUsage = process.memoryUsage();
-  checks.memory = memUsage.heapUsed < 500 * 1024 * 1024; // < 500MB
+  const memUsage = process.memoryUsage()
+  checks.memory = memUsage.heapUsed < 500 * 1024 * 1024 // < 500MB
 
-  const allHealthy = Object.values(checks).every(Boolean);
+  const allHealthy = Object.values(checks).every(Boolean)
 
   return Response.json(
     {
@@ -395,7 +395,7 @@ export async function loader() {
       timestamp: new Date().toISOString(),
     },
     { status: allHealthy ? 200 : 503 }
-  );
+  )
 }
 ```
 
@@ -799,7 +799,7 @@ NODE_ENV=development
 
 ```typescript
 // scripts/validate-env.ts
-import { z } from "zod";
+import { z } from "zod"
 
 const envSchema = z.object({
   DATABASE_URL: z.string().url(),
@@ -813,21 +813,21 @@ const envSchema = z.object({
     .string()
     .transform((v) => v === "true")
     .default("false"),
-});
+})
 
 export function validateEnvironment() {
   try {
-    const env = envSchema.parse(process.env);
-    return env;
+    const env = envSchema.parse(process.env)
+    return env
   } catch (error) {
-    console.error("❌ Invalid environment variables:");
-    console.error(error.errors);
-    process.exit(1);
+    console.error("❌ Invalid environment variables:")
+    console.error(error.errors)
+    process.exit(1)
   }
 }
 
 // Run at startup
-validateEnvironment();
+validateEnvironment()
 ```
 
 #### Multi-Environment Setup
@@ -964,16 +964,16 @@ app.use(
       },
     },
   })
-);
+)
 ```
 
 #### Rate Limiting Enhancement
 
 ```typescript
 // app/utils/security/rate-limiter.server.ts
-import rateLimit from "express-rate-limit";
-import RedisStore from "rate-limit-redis";
-import { redis } from "./redis.server";
+import rateLimit from "express-rate-limit"
+import RedisStore from "rate-limit-redis"
+import { redis } from "./redis.server"
 
 export const createRateLimiter = (options: RateLimitOptions) => {
   return rateLimit({
@@ -988,18 +988,18 @@ export const createRateLimiter = (options: RateLimitOptions) => {
 
     // Custom key generator for more granular control
     keyGenerator: (req) => {
-      return req.user?.id || req.ip;
+      return req.user?.id || req.ip
     },
 
     // Skip rate limiting for certain conditions
     skip: (req) => {
       // Skip for health checks
-      if (req.path === "/api/health") return true;
+      if (req.path === "/api/health") return true
 
       // Skip for admin users
-      if (req.user?.role === "admin") return true;
+      if (req.user?.role === "admin") return true
 
-      return false;
+      return false
     },
 
     // Custom error handler
@@ -1008,10 +1008,10 @@ export const createRateLimiter = (options: RateLimitOptions) => {
         error: "Too many requests",
         message: "Please try again later",
         retryAfter: req.rateLimit.resetTime,
-      });
+      })
     },
-  });
-};
+  })
+}
 ```
 
 #### Checklist
@@ -1035,28 +1035,28 @@ export const createRateLimiter = (options: RateLimitOptions) => {
 
 ```typescript
 // app/utils/security/secrets.server.ts
-import { SecretsManager } from "@aws-sdk/client-secrets-manager";
+import { SecretsManager } from "@aws-sdk/client-secrets-manager"
 
 const client = new SecretsManager({
   region: process.env.AWS_REGION,
-});
+})
 
 export async function getSecret(secretName: string): Promise<string> {
   try {
     const response = await client.getSecretValue({
       SecretId: secretName,
-    });
+    })
 
-    return response.SecretString || "";
+    return response.SecretString || ""
   } catch (error) {
-    logger.error("Failed to retrieve secret", { secretName, error });
-    throw error;
+    logger.error("Failed to retrieve secret", { secretName, error })
+    throw error
   }
 }
 
 // Usage
-const jwtSecret = await getSecret("jwt-secret");
-const dbPassword = await getSecret("db-password");
+const jwtSecret = await getSecret("jwt-secret")
+const dbPassword = await getSecret("db-password")
 ```
 
 #### Environment-Specific Secrets
@@ -1092,18 +1092,18 @@ const dbPassword = await getSecret("db-password");
 
 ```typescript
 // app/utils/security/audit.server.ts - Enhance existing
-import { prisma } from "~/db.server";
+import { prisma } from "~/db.server"
 
 export interface AuditLogEntry {
-  userId?: string;
-  action: string;
-  resource: string;
-  resourceId?: string;
-  ipAddress?: string;
-  userAgent?: string;
-  metadata?: Record<string, any>;
-  result: "success" | "failure";
-  severity: "low" | "medium" | "high" | "critical";
+  userId?: string
+  action: string
+  resource: string
+  resourceId?: string
+  ipAddress?: string
+  userAgent?: string
+  metadata?: Record<string, any>
+  result: "success" | "failure"
+  severity: "low" | "medium" | "high" | "critical"
 }
 
 export async function logAuditEvent(entry: AuditLogEntry) {
@@ -1121,17 +1121,17 @@ export async function logAuditEvent(entry: AuditLogEntry) {
       severity: entry.severity,
       createdAt: new Date(),
     },
-  });
+  })
 
   // Also send to external logging service
-  logger.info("Audit event", entry);
+  logger.info("Audit event", entry)
 
   // Send critical events to Sentry
   if (entry.severity === "critical") {
     Sentry.captureMessage("Critical Audit Event", {
       level: "critical",
       extra: entry,
-    });
+    })
   }
 }
 
@@ -1145,7 +1145,7 @@ await logAuditEvent({
   userAgent: req.headers["user-agent"],
   result: "success",
   severity: "high",
-});
+})
 ```
 
 #### GDPR Compliance
@@ -1159,7 +1159,7 @@ export async function exportUserData(userId: string) {
     prisma.userPerfumeWishlist.findMany({ where: { userId } }),
     prisma.userPerfumeReview.findMany({ where: { userId } }),
     prisma.userPerfumeRating.findMany({ where: { userId } }),
-  ]);
+  ])
 
   return {
     user,
@@ -1168,7 +1168,7 @@ export async function exportUserData(userId: string) {
     reviews,
     ratings,
     exportedAt: new Date(),
-  };
+  }
 }
 
 export async function deleteUserData(userId: string) {
@@ -1182,7 +1182,7 @@ export async function deleteUserData(userId: string) {
 
     // Delete user account
     prisma.user.delete({ where: { id: userId } }),
-  ]);
+  ])
 
   // Log deletion
   await logAuditEvent({
@@ -1192,7 +1192,7 @@ export async function deleteUserData(userId: string) {
     resourceId: userId,
     result: "success",
     severity: "high",
-  });
+  })
 }
 ```
 
@@ -1373,14 +1373,14 @@ npm run test:unit
 
 ```typescript
 // scripts/cli.ts
-import { Command } from "commander";
+import { Command } from "commander"
 
-const program = new Command();
+const program = new Command()
 
 program
   .name("new-smell")
   .description("CLI tools for New Smell application")
-  .version("1.0.0");
+  .version("1.0.0")
 
 program
   .command("create:component <name>")
@@ -1388,23 +1388,23 @@ program
   .option("-t, --type <type>", "Component type (atom, molecule, organism)")
   .action((name, options) => {
     // Create component scaffolding
-  });
+  })
 
 program
   .command("analyze:bundle")
   .description("Analyze bundle size")
   .action(() => {
     // Run bundle analysis
-  });
+  })
 
 program
   .command("db:seed <file>")
   .description("Seed database from file")
   .action((file) => {
     // Seed database
-  });
+  })
 
-program.parse();
+program.parse()
 ```
 
 #### Checklist
@@ -1465,7 +1465,7 @@ module.exports = {
       },
     ],
   ],
-};
+}
 ```
 
 #### Checklist

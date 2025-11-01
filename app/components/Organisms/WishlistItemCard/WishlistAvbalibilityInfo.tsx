@@ -1,4 +1,4 @@
-import { getUserDisplayName } from '~/utils/user'
+import { getUserDisplayName } from "~/utils/user"
 
 interface WishListAvailabilityInfoI {
   userPerfumes: any[]
@@ -9,14 +9,18 @@ interface WishListAvailabilityInfoI {
 const WishListAvailabilityInfo = ({
   userPerfumes,
   availableAmount,
-  perfumeName
+  perfumeName,
 }: WishListAvailabilityInfoI) => (
   <div className="mb-4 p-3 bg-green-100 dark:bg-green-800/30 rounded-lg border border-green-200 dark:border-green-700">
     <h4 className="text-sm font-semibold text-green-800 dark:text-green-200 mb-2">
-      Available from {userPerfumes.length} seller{userPerfumes.length > 1 ? 's' : ''}:
+      Available from {userPerfumes.length} seller
+      {userPerfumes.length > 1 ? "s" : ""}:
     </h4>
     {userPerfumes.map((userPerfume: any) => (
-      <div key={userPerfume.id} className="flex justify-between items-center text-sm mb-1">
+      <div
+        key={userPerfume.id}
+        className="flex justify-between items-center text-sm mb-1"
+      >
         <div>
           <span className="font-medium text-green-700 dark:text-green-300">
             {getUserDisplayName(userPerfume.user)}

@@ -1,1 +1,1 @@
-export { default } from './PasswordStrengthIndicator'
+export { default } from "./PasswordStrengthIndicator"

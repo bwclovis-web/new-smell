@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react"
 
 const OverallBottle = ({
   filled,
   rating,
-  liquidRef
+  liquidRef,
 }: {
   filled: boolean
   rating: number
@@ -14,7 +14,7 @@ const OverallBottle = ({
     <path
       d="M12 8c0-1 1-2 3-2s3 1 3 2v20c0 2-1 3-3 3s-3-1-3-3V8z"
       fill="none"
-      stroke={filled ? '#D4AF37' : '#4A4A4A'}
+      stroke={filled ? "#D4AF37" : "#4A4A4A"}
       strokeWidth="2"
       filter="url(#shadow-overall)"
     />
@@ -25,8 +25,8 @@ const OverallBottle = ({
       y="4"
       width="3"
       height="4"
-      fill={filled ? '#F4E4BC' : '#2D2D2D'}
-      stroke={filled ? '#D4AF37' : '#4A4A4A'}
+      fill={filled ? "#F4E4BC" : "#2D2D2D"}
+      stroke={filled ? "#D4AF37" : "#4A4A4A"}
       strokeWidth="1"
     />
 
@@ -50,7 +50,7 @@ const OverallBottle = ({
       height="2"
       rx="1.5"
       fill="url(#cap-gradient)"
-      stroke={filled ? '#D4AF37' : '#4A4A4A'}
+      stroke={filled ? "#D4AF37" : "#4A4A4A"}
       strokeWidth="1"
     />
 
@@ -60,19 +60,12 @@ const OverallBottle = ({
       cy="3"
       rx="1"
       ry="0.5"
-      fill={filled ? '#FFFFFF' : '#1A1A1A'}
+      fill={filled ? "#FFFFFF" : "#1A1A1A"}
       opacity="0.6"
     />
 
     {/* Bottle reflection */}
-    <ellipse
-      cx="14"
-      cy="15"
-      rx="0.8"
-      ry="5"
-      fill="#FFFFFF"
-      opacity="0.15"
-    />
+    <ellipse cx="14" cy="15" rx="0.8" ry="5" fill="#FFFFFF" opacity="0.15" />
 
     {/* Liquid surface shimmer - only show when filled */}
     {filled && (

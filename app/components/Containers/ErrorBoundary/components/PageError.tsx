@@ -1,6 +1,6 @@
-import { type FC } from 'react'
+import { type FC } from "react"
 
-import { type AppError } from '~/utils/errorHandling'
+import { type AppError } from "~/utils/errorHandling"
 
 interface PageErrorProps {
   error: AppError
@@ -13,13 +13,15 @@ const PageError: FC<PageErrorProps> = ({
   error,
   errorId,
   onRetry,
-  onReportError
+  onReportError,
 }) => (
   <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
     <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-6">
       <div className="text-center mb-6">
         <div className="text-4xl mb-4">⚠️</div>
-        <h1 className="text-xl font-bold text-gray-900 mb-2">Something went wrong</h1>
+        <h1 className="text-xl font-bold text-gray-900 mb-2">
+          Something went wrong
+        </h1>
         <p className="text-gray-600">{error.userMessage}</p>
       </div>
 

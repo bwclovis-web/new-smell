@@ -20,11 +20,13 @@ The New Smell platform integrates CrewAI to provide autonomous AI agent crews fo
 ### Installation
 
 1. Navigate to the crews directory:
+
 ```bash
 cd crews
 ```
 
 2. Create and activate a Python virtual environment:
+
 ```bash
 # Windows
 python -m venv venv
@@ -36,11 +38,13 @@ source venv/bin/activate
 ```
 
 3. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 4. Configure environment variables in the root `.env` file:
+
 ```bash
 # Required
 OPENAI_API_KEY=your_api_key_here
@@ -72,6 +76,7 @@ python scripts/run_dev_crew.py analyze --file app/components/Atoms/Button/Button
 ```
 
 **Output**: Detailed analysis report with:
+
 - Overall quality score (0-100)
 - Issues categorized by severity (critical/high/medium/low)
 - Specific recommendations
@@ -87,6 +92,7 @@ python scripts/run_dev_crew.py test --file app/components/Atoms/Button/Button.ts
 ```
 
 **Optional**: Specify a reference test to match style:
+
 ```bash
 python scripts/run_dev_crew.py test \
   --file app/components/Atoms/NewComponent/NewComponent.tsx \
@@ -105,6 +111,7 @@ python scripts/run_dev_crew.py document --file app/components/Atoms/Button/Butto
 ```
 
 **Output**: Markdown documentation with:
+
 - Component overview
 - Props documentation
 - Usage examples
@@ -120,6 +127,7 @@ python scripts/run_dev_crew.py performance --file app/routes/home.tsx
 ```
 
 **Output**: Performance report with:
+
 - Performance score (0-100)
 - Identified issues with impact assessment
 - Optimization recommendations
@@ -144,6 +152,7 @@ python scripts/run_dev_crew.py review \
 #### Manual Usage
 
 Run crews directly when needed:
+
 ```bash
 cd crews
 source venv/bin/activate  # or venv\Scripts\activate on Windows
@@ -179,6 +188,7 @@ All descriptions follow a strict film noir aesthetic:
 **Structure**: 2-3 sentences (50-150 words), opening with noir atmosphere, describing the scent journey, closing with intrigue
 
 **Example**:
+
 > "A shadowy blend that whispers secrets in velvet tones, like a femme fatale's confession in a smoke-filled room. Midnight jasmine mingles with dark leather and amber, while sandalwood smolders beneath like a forgotten cigarette."
 
 ### Available Commands
@@ -207,6 +217,7 @@ python scripts/run_research_crew.py \
 ```
 
 **Parameters**:
+
 - `--csv`: Path to input CSV file
 - `--limit`: Maximum number of perfumes to process (optional)
 - `--output`: Output filename (auto-generated with timestamp if not provided)
@@ -218,19 +229,20 @@ python scripts/run_research_crew.py \
 
 The research crew generates CSV files with the following columns:
 
-| Column | Description |
-|--------|-------------|
-| `name` | Perfume name |
+| Column                 | Description                           |
+| ---------------------- | ------------------------------------- |
+| `name`                 | Perfume name                          |
 | `original_description` | Original description from source data |
-| `enriched_description` | Film noir-styled description |
-| `notes` | JSON array of fragrance notes |
-| `sources` | JSON array of source URLs consulted |
-| `quality_review` | Quality review results |
-| `timestamp` | Generation timestamp |
+| `enriched_description` | Film noir-styled description          |
+| `notes`                | JSON array of fragrance notes         |
+| `sources`              | JSON array of source URLs consulted   |
+| `quality_review`       | Quality review results                |
+| `timestamp`            | Generation timestamp                  |
 
 ### Quality Review
 
 Each enriched perfume undergoes automated quality review checking:
+
 - Film noir style adherence (noir vocabulary, no avoided words)
 - Appropriate length (50-150 words)
 - Proper note categorization (top/heart/base)
@@ -242,23 +254,27 @@ Each enriched perfume undergoes automated quality review checking:
 **⚠️ CRITICAL**: The Research Crew NEVER writes to the database. All enriched data requires manual review.
 
 1. **Run Enrichment**:
+
    ```bash
    cd crews
    python scripts/run_research_crew.py --csv ../csv/perfumes_house.csv
    ```
 
 2. **Review Output**:
+
    - Open the generated CSV in `enriched_data/`
    - Review each enriched description for quality and accuracy
    - Verify note categorizations are appropriate
    - Check that sources are valid
 
 3. **Edit if Needed**:
+
    - Manually edit descriptions that don't meet standards
    - Adjust note categorizations
    - Remove entries that failed quality checks
 
 4. **Merge to Source CSV**:
+
    - Manually copy approved enriched descriptions to original CSV files
    - Example: Update `csv/perfumes_fzotic.csv` with enriched descriptions
 
@@ -301,6 +317,7 @@ SCRAPING_CONFIG = {
 **Problem**: `ModuleNotFoundError` when running crews
 
 **Solution**: Ensure virtual environment is activated:
+
 ```bash
 cd crews
 source venv/bin/activate  # Linux/Mac
@@ -314,7 +331,8 @@ pip install -r requirements.txt
 
 **Problem**: `AuthenticationError` or `RateLimitError`
 
-**Solution**: 
+**Solution**:
+
 1. Verify `OPENAI_API_KEY` is set in `.env`
 2. Check API key is valid and has credits
 3. Reduce batch size if hitting rate limits
@@ -324,6 +342,7 @@ pip install -r requirements.txt
 **Problem**: ChromeDriver errors when scraping
 
 **Solution**:
+
 1. Ensure Chrome browser is installed
 2. `webdriver-manager` will auto-install correct ChromeDriver
 3. If issues persist, run: `pip install --upgrade selenium webdriver-manager`
@@ -333,6 +352,7 @@ pip install -r requirements.txt
 **Problem**: Most descriptions fail quality review
 
 **Solution**:
+
 1. Check noir style guide settings in `crews/shared/film_noir_style.py`
 2. Adjust description writer agent's prompts if needed
 3. Review examples in style guide
@@ -382,6 +402,7 @@ enriched = research_crew.enrich_perfume(
 ### Custom Agents
 
 To create custom agents, see:
+
 - `crews/dev_crew/agents.py`
 - `crews/research_crew/agents.py`
 
@@ -400,6 +421,7 @@ Extend or modify agent definitions, tools, and tasks as needed.
 ### Configuration Database
 
 Future versions may include:
+
 - Saved source configurations
 - Custom style guides
 - Agent behavior profiles
@@ -408,6 +430,7 @@ Future versions may include:
 ## Support
 
 For issues or questions:
+
 1. Review this documentation
 2. Check the AI Integration Roadmap: `docs/developer/AI_INTEGRATION_ROADMAP.md`
 3. Review crew source code in `crews/`
@@ -415,4 +438,3 @@ For issues or questions:
 ---
 
 **Remember**: Crews are assistants, not replacements. Always review and validate their output before using in production.
-

@@ -1,18 +1,22 @@
 /**
  * Integration Tests for Correlation ID + ErrorLogger
- * 
+ *
  * These tests verify that correlation IDs are properly captured
  * and included in error logs.
  */
 
 /* eslint-disable max-nested-callbacks */
 
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from "vitest"
 
-import { generateCorrelationId, runWithCorrelationId, withCorrelationId } from '~/utils/correlationId.server'
-import { createError, ErrorHandler, ErrorLogger } from '~/utils/errorHandling'
+import {
+  generateCorrelationId,
+  runWithCorrelationId,
+  withCorrelationId,
+} from "~/utils/correlationId.server"
+import { createError, ErrorHandler, ErrorLogger } from "~/utils/errorHandling"
 
-describe('Correlation ID + ErrorLogger Integration', () => {
+describe("Correlation ID + ErrorLogger Integration", () => {
   let errorLogger: ErrorLogger
 
   beforeEach(() => {
@@ -24,12 +28,12 @@ describe('Correlation ID + ErrorLogger Integration', () => {
     errorLogger.clearLogs()
   })
 
-  describe('Error logging with correlation IDs', () => {
-    it('should include correlation ID in error logs', async () => {
-      const correlationId = 'test_correlation_123'
+  describe("Error logging with correlation IDs", () => {
+    it("should include correlation ID in error logs", async () => {
+      const correlationId = "test_correlation_123"
 
       await runWithCorrelationId(correlationId, () => {
-        const error = createError.server('Test server error')
+        const error = createError.server("Test server error")
         errorLogger.log(error)
 
         const logs = errorLogger.getLogs()
@@ -38,9 +42,9 @@ describe('Correlation ID + ErrorLogger Integration', () => {
       })
     })
 
-    it('should handle missing correlation ID gracefully', () => {
+    it("should handle missing correlation ID gracefully", () => {
       // Don't set any correlation ID
-      const error = createError.validation('Test validation error')
+      const error = createError.validation("Test validation error")
       errorLogger.log(error)
 
       const logs = errorLogger.getLogs()
@@ -49,12 +53,12 @@ describe('Correlation ID + ErrorLogger Integration', () => {
       expect(logs[0].correlationId).toBeUndefined()
     })
 
-    it('should include correlation ID with userId', async () => {
-      const correlationId = 'test_correlation_456'
-      const userId = 'user_123'
+    it("should include correlation ID with userId", async () => {
+      const correlationId = "test_correlation_456"
+      const userId = "user_123"
 
       await runWithCorrelationId(correlationId, () => {
-        const error = createError.authentication('Auth failed')
+        const error = createError.authentication("Auth failed")
         errorLogger.log(error, userId)
 
         const logs = errorLogger.getLogs()
@@ -64,36 +68,36 @@ describe('Correlation ID + ErrorLogger Integration', () => {
       })
     })
 
-    it('should maintain correlation ID across multiple error logs', async () => {
-      const correlationId = 'request_correlation_789'
+    it("should maintain correlation ID across multiple error logs", async () => {
+      const correlationId = "request_correlation_789"
 
       await runWithCorrelationId(correlationId, () => {
         // Log multiple errors in the same request context
-        errorLogger.log(createError.validation('Validation error 1'))
-        errorLogger.log(createError.database('Database error'))
-        errorLogger.log(createError.network('Network error'))
+        errorLogger.log(createError.validation("Validation error 1"))
+        errorLogger.log(createError.database("Database error"))
+        errorLogger.log(createError.network("Network error"))
 
         const logs = errorLogger.getLogs()
         expect(logs).toHaveLength(3)
 
         // All errors should have the same correlation ID
-        logs.forEach(log => {
+        logs.forEach((log) => {
           expect(log.correlationId).toBe(correlationId)
         })
       })
     })
 
-    it('should generate unique correlation IDs for different requests', async () => {
+    it("should generate unique correlation IDs for different requests", async () => {
       // First request
       const correlationId1 = generateCorrelationId()
       await runWithCorrelationId(correlationId1, () => {
-        errorLogger.log(createError.server('Error in request 1'))
+        errorLogger.log(createError.server("Error in request 1"))
       })
 
       // Second request
       const correlationId2 = generateCorrelationId()
       await runWithCorrelationId(correlationId2, () => {
-        errorLogger.log(createError.server('Error in request 2'))
+        errorLogger.log(createError.server("Error in request 2"))
       })
 
       const logs = errorLogger.getLogs()
@@ -104,16 +108,15 @@ describe('Correlation ID + ErrorLogger Integration', () => {
     })
   })
 
-  describe('ErrorHandler integration', () => {
-    it('should include correlation ID when using ErrorHandler.handle', async () => {
-      const correlationId = 'handler_correlation_123'
+  describe("ErrorHandler integration", () => {
+    it("should include correlation ID when using ErrorHandler.handle", async () => {
+      const correlationId = "handler_correlation_123"
 
       await runWithCorrelationId(correlationId, () => {
         // ErrorHandler.handle automatically logs errors
-        const appError = ErrorHandler.handle(
-          new Error('Test error'),
-          { action: 'test' }
-        )
+        const appError = ErrorHandler.handle(new Error("Test error"), {
+          action: "test",
+        })
 
         const logs = errorLogger.getLogs()
         expect(logs).toHaveLength(1)
@@ -122,14 +125,14 @@ describe('Correlation ID + ErrorLogger Integration', () => {
       })
     })
 
-    it('should include correlation ID with context and userId', async () => {
-      const correlationId = 'full_context_456'
-      const userId = 'user_789'
+    it("should include correlation ID with context and userId", async () => {
+      const correlationId = "full_context_456"
+      const userId = "user_789"
 
       await runWithCorrelationId(correlationId, () => {
         ErrorHandler.handle(
-          new Error('Database connection failed'),
-          { database: 'main', query: 'SELECT * FROM users' },
+          new Error("Database connection failed"),
+          { database: "main", query: "SELECT * FROM users" },
           userId
         )
 
@@ -141,14 +144,14 @@ describe('Correlation ID + ErrorLogger Integration', () => {
     })
   })
 
-  describe('withCorrelationId wrapper integration', () => {
-    it('should automatically capture correlation ID in wrapped functions', async () => {
+  describe("withCorrelationId wrapper integration", () => {
+    it("should automatically capture correlation ID in wrapped functions", async () => {
       const handler = withCorrelationId(async () => {
         // Simulate an error in the handler
-        const error = createError.server('Error in wrapped handler')
+        const error = createError.server("Error in wrapped handler")
         errorLogger.log(error)
 
-        return 'success'
+        return "success"
       })
 
       await handler()
@@ -159,18 +162,18 @@ describe('Correlation ID + ErrorLogger Integration', () => {
       expect(logs[0].correlationId).toMatch(/^\d+_[a-z0-9]{9}$/)
     })
 
-    it('should maintain correlation ID through nested operations', async () => {
+    it("should maintain correlation ID through nested operations", async () => {
       const handler = withCorrelationId(async () => {
         // Log error in outer function
-        errorLogger.log(createError.validation('Outer error'))
+        errorLogger.log(createError.validation("Outer error"))
 
         // Simulate nested async operation
-        await new Promise(resolve => setTimeout(resolve, 10))
+        await new Promise((resolve) => setTimeout(resolve, 10))
 
         // Nested function that also logs errors
         const nestedOperation = async () => {
-          await new Promise(resolve => setTimeout(resolve, 5))
-          errorLogger.log(createError.database('Nested error'))
+          await new Promise((resolve) => setTimeout(resolve, 5))
+          errorLogger.log(createError.database("Nested error"))
         }
 
         await nestedOperation()
@@ -186,20 +189,20 @@ describe('Correlation ID + ErrorLogger Integration', () => {
       expect(logs[0].correlationId).toBeDefined()
     })
 
-    it('should handle concurrent requests with different correlation IDs', async () => {
+    it("should handle concurrent requests with different correlation IDs", async () => {
       const handler1 = withCorrelationId(async () => {
-        await new Promise(resolve => setTimeout(resolve, 20))
-        errorLogger.log(createError.server('Error in handler 1'))
+        await new Promise((resolve) => setTimeout(resolve, 20))
+        errorLogger.log(createError.server("Error in handler 1"))
       })
 
       const handler2 = withCorrelationId(async () => {
-        await new Promise(resolve => setTimeout(resolve, 10))
-        errorLogger.log(createError.server('Error in handler 2'))
+        await new Promise((resolve) => setTimeout(resolve, 10))
+        errorLogger.log(createError.server("Error in handler 2"))
       })
 
       const handler3 = withCorrelationId(async () => {
-        await new Promise(resolve => setTimeout(resolve, 15))
-        errorLogger.log(createError.server('Error in handler 3'))
+        await new Promise((resolve) => setTimeout(resolve, 15))
+        errorLogger.log(createError.server("Error in handler 3"))
       })
 
       // Run handlers concurrently
@@ -209,77 +212,78 @@ describe('Correlation ID + ErrorLogger Integration', () => {
       expect(logs).toHaveLength(3)
 
       // Each error should have a unique correlation ID
-      const correlationIds = logs.map(log => log.correlationId)
+      const correlationIds = logs.map((log) => log.correlationId)
       const uniqueIds = new Set(correlationIds)
       expect(uniqueIds.size).toBe(3)
 
       // All IDs should be defined
-      correlationIds.forEach(id => {
+      correlationIds.forEach((id) => {
         expect(id).toBeDefined()
         expect(id).toMatch(/^\d+_[a-z0-9]{9}$/)
       })
     })
   })
 
-  describe('Real-world scenarios', () => {
-    it('should trace errors across a simulated request lifecycle', async () => {
+  describe("Real-world scenarios", () => {
+    it("should trace errors across a simulated request lifecycle", async () => {
       const simulateRequest = withCorrelationId(async (userId: string) => {
         // Step 1: Validate input
         if (!userId) {
-          errorLogger.log(createError.validation('User ID required'))
-          throw new Error('Validation failed')
+          errorLogger.log(createError.validation("User ID required"))
+          throw new Error("Validation failed")
         }
 
         // Step 2: Simulate database query
-        await new Promise(resolve => setTimeout(resolve, 10))
+        await new Promise((resolve) => setTimeout(resolve, 10))
 
         // Step 3: Simulate error in data processing
         try {
-          throw new Error('Data processing failed')
+          throw new Error("Data processing failed")
         } catch (error) {
           ErrorHandler.handle(error, {
-            step: 'data-processing',
-            userId
+            step: "data-processing",
+            userId,
           })
           // ErrorHandler automatically logs, so we should have 1 log
         }
 
-        return 'success'
+        return "success"
       })
 
-      await simulateRequest('user_123')
+      await simulateRequest("user_123")
 
       const logs = errorLogger.getLogs()
       expect(logs.length).toBeGreaterThan(0)
 
       // All errors in this request should have the same correlation ID
-      const correlationIds = logs.map(log => log.correlationId)
+      const correlationIds = logs.map((log) => log.correlationId)
       const uniqueIds = new Set(correlationIds)
       expect(uniqueIds.size).toBe(1)
     })
 
-    it('should handle multiple sequential requests with different IDs', async () => {
-      const simulateRequest = (requestId: string) => withCorrelationId(async () => {
-        await new Promise(resolve => setTimeout(resolve, 5))
-        errorLogger.log(createError.server(`Error in request ${requestId}`))
-        return requestId
-      })()
+    it("should handle multiple sequential requests with different IDs", async () => {
+      const simulateRequest = (requestId: string) =>
+        withCorrelationId(async () => {
+          await new Promise((resolve) => setTimeout(resolve, 5))
+          errorLogger.log(createError.server(`Error in request ${requestId}`))
+          return requestId
+        })()
 
       // Process requests sequentially
-      await simulateRequest('req1')
-      await simulateRequest('req2')
-      await simulateRequest('req3')
+      await simulateRequest("req1")
+      await simulateRequest("req2")
+      await simulateRequest("req3")
 
       const logs = errorLogger.getLogs()
       expect(logs).toHaveLength(3)
 
       // Each request should have a different correlation ID
-      const correlationIds = logs.map(log => log.correlationId)
+      const correlationIds = logs.map((log) => log.correlationId)
       const uniqueIds = new Set(correlationIds)
       expect(uniqueIds.size).toBe(3)
     })
 
-    it('should maintain correlation ID across error recovery attempts', async () => {
+    it("should maintain correlation ID across error recovery attempts", async () => {
       const handler = withCorrelationId(async () => {
         let attempts = 0
 
@@ -288,10 +292,10 @@ describe('Correlation ID + ErrorLogger Integration', () => {
 
           if (attempts < 3) {
             errorLogger.log(createError.network(`Attempt ${attempts} failed`))
-            throw new Error('Operation failed')
+            throw new Error("Operation failed")
           }
 
-          return 'success'
+          return "success"
         }
 
         // Retry logic
@@ -319,26 +323,26 @@ describe('Correlation ID + ErrorLogger Integration', () => {
     })
   })
 
-  describe('Edge cases', () => {
-    it('should handle errors with very long contexts', async () => {
-      const correlationId = 'long_context_test'
+  describe("Edge cases", () => {
+    it("should handle errors with very long contexts", async () => {
+      const correlationId = "long_context_test"
 
       await runWithCorrelationId(correlationId, () => {
         const longContext = {
-          array: Array(100).fill('item'),
+          array: Array(100).fill("item"),
           nested: {
             deeply: {
               nested: {
                 object: {
-                  with: 'many keys'
-                }
-              }
-            }
+                  with: "many keys",
+                },
+              },
+            },
           },
-          longString: 'a'.repeat(1000)
+          longString: "a".repeat(1000),
         }
 
-        errorLogger.log(createError.server('Error with long context', longContext))
+        errorLogger.log(createError.server("Error with long context", longContext))
 
         const logs = errorLogger.getLogs()
         expect(logs).toHaveLength(1)
@@ -346,8 +350,8 @@ describe('Correlation ID + ErrorLogger Integration', () => {
       })
     })
 
-    it('should handle rapid succession of errors', async () => {
-      const correlationId = 'rapid_fire_test'
+    it("should handle rapid succession of errors", async () => {
+      const correlationId = "rapid_fire_test"
 
       await runWithCorrelationId(correlationId, () => {
         // Log many errors rapidly
@@ -359,11 +363,10 @@ describe('Correlation ID + ErrorLogger Integration', () => {
         expect(logs).toHaveLength(50)
 
         // All should have the same correlation ID
-        logs.forEach(log => {
+        logs.forEach((log) => {
           expect(log.correlationId).toBe(correlationId)
         })
       })
     })
   })
 })
-

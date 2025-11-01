@@ -7,5 +7,5 @@ export interface VirtualScrollProps {
   children: (item: any, index: number) => React.ReactNode
   onScroll?: (scrollTop: number) => void
   scrollToIndex?: number
-  scrollToAlignment?: 'start' | 'center' | 'end'
+  scrollToAlignment?: "start" | "center" | "end"
 }

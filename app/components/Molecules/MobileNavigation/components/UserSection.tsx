@@ -1,10 +1,10 @@
-import { type FC } from 'react'
-import { FaUser } from 'react-icons/fa6'
-import { NavLink } from 'react-router'
+import { type FC } from "react"
+import { FaUser } from "react-icons/fa6"
+import { NavLink } from "react-router"
 
-import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
+import { ROUTE_PATH as SIGN_IN } from "~/routes/login/SignInPage"
 
-import LogoutButton from '../../LogoutButton/LogoutButton'
+import LogoutButton from "../../LogoutButton/LogoutButton"
 
 interface UserSectionProps {
   user?: {

@@ -1,20 +1,22 @@
 /**
  * Common form validation utilities
- * 
+ *
  * This module provides reusable validation functions and patterns
  * to reduce duplication across forms.
  */
 
-import type { ZodSchema } from 'zod'
+import type { ZodSchema } from "zod"
 
 /**
  * Common validation error messages
  */
 export const VALIDATION_MESSAGES = {
   required: (field: string) => `${field} is required`,
-  email: 'Please enter a valid email address',
-  minLength: (field: string, min: number) => `${field} must be at least ${min} characters`,
-  maxLength: (field: string, max: number) => `${field} must be at most ${max} characters`,
+  email: "Please enter a valid email address",
+  minLength: (field: string, min: number) =>
+    `${field} must be at least ${min} characters`,
+  maxLength: (field: string, max: number) =>
+    `${field} must be at most ${max} characters`,
   match: (field1: string, field2: string) => `${field1} and ${field2} must match`,
   invalidFormat: (field: string) => `${field} has an invalid format`,
 } as const
@@ -44,53 +46,56 @@ export function validateEmail(email: string): boolean {
  * Validate password strength
  * Returns true if password meets minimum requirements
  */
-export function validatePassword(password: string, options: {
-  minLength?: number
-  requireUppercase?: boolean
-  requireLowercase?: boolean
-  requireNumbers?: boolean
-  requireSpecialChars?: boolean
-} = {}): { valid: boolean; message?: string } {
+export function validatePassword(
+  password: string,
+  options: {
+    minLength?: number
+    requireUppercase?: boolean
+    requireLowercase?: boolean
+    requireNumbers?: boolean
+    requireSpecialChars?: boolean
+  } = {}
+): { valid: boolean; message?: string } {
   const {
     minLength = 8,
     requireUppercase = true,
     requireLowercase = true,
     requireNumbers = true,
-    requireSpecialChars = false
+    requireSpecialChars = false,
   } = options
 
   if (password.length < minLength) {
     return {
       valid: false,
-      message: `Password must be at least ${minLength} characters`
+      message: `Password must be at least ${minLength} characters`,
     }
   }
 
   if (requireUppercase && !/[A-Z]/.test(password)) {
     return {
       valid: false,
-      message: 'Password must contain at least one uppercase letter'
+      message: "Password must contain at least one uppercase letter",
     }
   }
 
   if (requireLowercase && !/[a-z]/.test(password)) {
     return {
       valid: false,
-      message: 'Password must contain at least one lowercase letter'
+      message: "Password must contain at least one lowercase letter",
     }
   }
 
   if (requireNumbers && !/\d/.test(password)) {
     return {
       valid: false,
-      message: 'Password must contain at least one number'
+      message: "Password must contain at least one number",
     }
   }
 
   if (requireSpecialChars && !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
     return {
       valid: false,
-      message: 'Password must contain at least one special character'
+      message: "Password must contain at least one special character",
     }
   }
 
@@ -100,7 +105,11 @@ export function validatePassword(password: string, options: {
 /**
  * Validate that two fields match (e.g., password confirmation)
  */
-export function validateMatch(value1: string, value2: string, fieldName: string = 'Passwords'): string | null {
+export function validateMatch(
+  value1: string,
+  value2: string,
+  fieldName: string = "Passwords"
+): string | null {
   if (value1 !== value2) {
     return `${fieldName} do not match`
   }
@@ -111,7 +120,7 @@ export function validateMatch(value1: string, value2: string, fieldName: string 
  * Validate required field
  */
 export function validateRequired(value: any, fieldName: string): string | null {
-  if (!value || (typeof value === 'string' && value.trim() === '')) {
+  if (!value || (typeof value === "string" && value.trim() === "")) {
     return VALIDATION_MESSAGES.required(fieldName)
   }
   return null
@@ -120,7 +129,11 @@ export function validateRequired(value: any, fieldName: string): string | null {
 /**
  * Validate minimum length
  */
-export function validateMinLength(value: string, minLength: number, fieldName: string): string | null {
+export function validateMinLength(
+  value: string,
+  minLength: number,
+  fieldName: string
+): string | null {
   if (value.length < minLength) {
     return VALIDATION_MESSAGES.minLength(fieldName, minLength)
   }
@@ -130,7 +143,11 @@ export function validateMinLength(value: string, minLength: number, fieldName: s
 /**
  * Validate maximum length
  */
-export function validateMaxLength(value: string, maxLength: number, fieldName: string): string | null {
+export function validateMaxLength(
+  value: string,
+  maxLength: number,
+  fieldName: string
+): string | null {
   if (value.length > maxLength) {
     return VALIDATION_MESSAGES.maxLength(fieldName, maxLength)
   }
@@ -159,21 +176,21 @@ export function validateWithZod<T>(
     const validatedData = schema.parse(data)
     return {
       success: true,
-      data: validatedData
+      data: validatedData,
     }
   } catch (error: any) {
     const errors: Record<string, string> = {}
-    
+
     if (error.errors) {
       for (const err of error.errors) {
-        const path = err.path.join('.')
+        const path = err.path.join(".")
         errors[path] = err.message
       }
     }
-    
+
     return {
       success: false,
-      errors: errors as Record<keyof T, string>
+      errors: errors as Record<keyof T, string>,
     }
   }
 }
@@ -181,15 +198,13 @@ export function validateWithZod<T>(
 /**
  * Create a validator function that can be used with useFormSubmit
  */
-export function createValidator<T extends Record<string, any>>(
-  rules: {
-    [K in keyof T]?: (value: T[K], allValues: T) => string | null
-  }
-) {
+export function createValidator<T extends Record<string, any>>(rules: {
+  [K in keyof T]?: (value: T[K], allValues: T) => string | null
+}) {
   return (data: T): Record<string, string> | null => {
     const errors: Record<string, string> = {}
     let hasErrors = false
-    
+
     for (const [field, validator] of Object.entries(rules)) {
       if (validator) {
         const error = validator(data[field], data)
@@ -199,7 +214,7 @@ export function createValidator<T extends Record<string, any>>(
         }
       }
     }
-    
+
     return hasErrors ? errors : null
   }
 }
@@ -208,26 +223,27 @@ export function createValidator<T extends Record<string, any>>(
  * Common form validation schemas
  */
 export const commonValidators = {
-  email: (value: string) => 
+  email: (value: string) =>
     !validateEmail(value) ? VALIDATION_MESSAGES.email : null,
-  
+
   required: (fieldName: string) => (value: any) =>
     validateRequired(value, fieldName),
-  
+
   minLength: (fieldName: string, min: number) => (value: string) =>
     validateMinLength(value, min, fieldName),
-  
+
   maxLength: (fieldName: string, max: number) => (value: string) =>
     validateMaxLength(value, max, fieldName),
-  
+
   password: (value: string) => {
     const result = validatePassword(value)
-    return result.valid ? null : result.message || 'Invalid password'
+    return result.valid ? null : result.message || "Invalid password"
   },
-  
-  confirmPassword: (passwordField: string = 'password') => 
+
+  confirmPassword:
+    (passwordField: string = "password") =>
     (value: string, allValues: any) =>
-      validateMatch(allValues[passwordField], value, 'Passwords')
+      validateMatch(allValues[passwordField], value, "Passwords"),
 }
 
 /**
@@ -236,9 +252,9 @@ export const commonValidators = {
 export function sanitizeFormInput(value: string): string {
   return value
     .trim()
-    .replace(/[<>]/g, '') // Remove angle brackets
-    .replace(/javascript:/gi, '') // Remove javascript: protocol
-    .replace(/on\w+=/gi, '') // Remove event handlers
+    .replace(/[<>]/g, "") // Remove angle brackets
+    .replace(/javascript:/gi, "") // Remove javascript: protocol
+    .replace(/on\w+=/gi, "") // Remove event handlers
 }
 
 /**
@@ -246,13 +262,12 @@ export function sanitizeFormInput(value: string): string {
  */
 export function sanitizeFormData<T extends Record<string, any>>(data: T): T {
   const sanitized = { ...data }
-  
+
   for (const [key, value] of Object.entries(sanitized)) {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       sanitized[key] = sanitizeFormInput(value)
     }
   }
-  
+
   return sanitized
 }
-

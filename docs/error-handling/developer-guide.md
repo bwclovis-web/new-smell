@@ -25,27 +25,28 @@ This guide covers the comprehensive error handling system implemented in New Sme
 ✅ User-friendly error messages  
 ✅ Security (no sensitive data exposure)  
 ✅ Performance optimized (< 100ms overhead)  
-✅ Correlation IDs for debugging  
+✅ Correlation IDs for debugging
 
 ## Quick Start
 
 ### Basic Usage
 
 **Client-Side (React Component):**
+
 ```tsx
-import { useApiErrorHandler } from '~/hooks/useErrorHandler'
+import { useApiErrorHandler } from "~/hooks/useErrorHandler"
 
 function MyComponent() {
   const { error, isError, handleApiError, clearError } = useApiErrorHandler()
 
   const fetchData = async () => {
     try {
-      const response = await fetch('/api/data')
+      const response = await fetch("/api/data")
       if (!response.ok) throw response
       const data = await response.json()
       return data
     } catch (error) {
-      handleApiError(error, '/api/data', 'GET')
+      handleApiError(error, "/api/data", "GET")
       return null
     }
   }
@@ -60,14 +61,15 @@ function MyComponent() {
 ```
 
 **Server-Side (Route Loader):**
+
 ```typescript
-import { withLoaderErrorHandling } from '~/utils/errorHandling.server'
-import { createError } from '~/utils/errorHandling'
+import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { createError } from "~/utils/errorHandling"
 
 export const loader = withLoaderErrorHandling(async ({ request, params }) => {
   const id = params.id
   if (!id) {
-    throw createError.validation('Missing required ID parameter')
+    throw createError.validation("Missing required ID parameter")
   }
 
   const data = await db.getData(id)
@@ -87,16 +89,16 @@ The system supports multiple error types, each mapped to appropriate HTTP status
 
 ```typescript
 enum ErrorType {
-  VALIDATION = 'VALIDATION',           // 400 - Bad Request
-  AUTHENTICATION = 'AUTHENTICATION',   // 401 - Unauthorized
-  AUTHORIZATION = 'AUTHORIZATION',     // 403 - Forbidden
-  NOT_FOUND = 'NOT_FOUND',            // 404 - Not Found
-  CLIENT = 'CLIENT',                   // 400 - Bad Request
-  SERVER = 'SERVER',                   // 500 - Internal Server Error
-  NETWORK = 'NETWORK',                 // 503 - Service Unavailable
-  DATABASE = 'DATABASE',               // 500 - Internal Server Error
-  EXTERNAL_API = 'EXTERNAL_API',       // 502 - Bad Gateway
-  UNKNOWN = 'UNKNOWN'                  // 500 - Internal Server Error
+  VALIDATION = "VALIDATION", // 400 - Bad Request
+  AUTHENTICATION = "AUTHENTICATION", // 401 - Unauthorized
+  AUTHORIZATION = "AUTHORIZATION", // 403 - Forbidden
+  NOT_FOUND = "NOT_FOUND", // 404 - Not Found
+  CLIENT = "CLIENT", // 400 - Bad Request
+  SERVER = "SERVER", // 500 - Internal Server Error
+  NETWORK = "NETWORK", // 503 - Service Unavailable
+  DATABASE = "DATABASE", // 500 - Internal Server Error
+  EXTERNAL_API = "EXTERNAL_API", // 502 - Bad Gateway
+  UNKNOWN = "UNKNOWN", // 500 - Internal Server Error
 }
 ```
 
@@ -104,10 +106,10 @@ enum ErrorType {
 
 ```typescript
 enum ErrorSeverity {
-  LOW = 'LOW',           // Minor issues, app can continue
-  MEDIUM = 'MEDIUM',     // Significant but recoverable
-  HIGH = 'HIGH',         // Major issues requiring attention
-  CRITICAL = 'CRITICAL'  // System-critical, immediate action needed
+  LOW = "LOW", // Minor issues, app can continue
+  MEDIUM = "MEDIUM", // Significant but recoverable
+  HIGH = "HIGH", // Major issues requiring attention
+  CRITICAL = "CRITICAL", // System-critical, immediate action needed
 }
 ```
 
@@ -118,68 +120,68 @@ enum ErrorSeverity {
 The `createError` factory provides type-safe error creation:
 
 ```typescript
-import { createError } from '~/utils/errorHandling'
+import { createError } from "~/utils/errorHandling"
 
 // Validation errors
-throw createError.validation('Email is required', {
-  field: 'email',
-  value: userInput
+throw createError.validation("Email is required", {
+  field: "email",
+  value: userInput,
 })
 
 // Authentication errors
-throw createError.authentication('Invalid credentials')
+throw createError.authentication("Invalid credentials")
 
 // Authorization errors
-throw createError.authorization('Insufficient permissions', {
-  required: 'admin',
-  actual: 'user'
+throw createError.authorization("Insufficient permissions", {
+  required: "admin",
+  actual: "user",
 })
 
 // Not found errors
-throw createError.notFound('Resource not found', {
-  resourceType: 'perfume',
-  id: perfumeId
+throw createError.notFound("Resource not found", {
+  resourceType: "perfume",
+  id: perfumeId,
 })
 
 // Network errors
-throw createError.network('Failed to connect to API', {
-  endpoint: 'https://api.example.com',
-  timeout: 5000
+throw createError.network("Failed to connect to API", {
+  endpoint: "https://api.example.com",
+  timeout: 5000,
 })
 
 // Server errors
-throw createError.server('Database connection failed', {
+throw createError.server("Database connection failed", {
   originalError: error,
-  query: 'SELECT * FROM ...'
+  query: "SELECT * FROM ...",
 })
 
 // Database errors
-throw createError.database('Query failed', {
-  table: 'users',
-  operation: 'SELECT'
+throw createError.database("Query failed", {
+  table: "users",
+  operation: "SELECT",
 })
 
 // Client errors
-throw createError.client('Invalid request format')
+throw createError.client("Invalid request format")
 
 // Unknown errors (fallback)
-throw createError.unknown('Unexpected error occurred', {
-  originalError: error
+throw createError.unknown("Unexpected error occurred", {
+  originalError: error,
 })
 ```
 
 ### Custom Error Creation
 
 ```typescript
-import { AppError, ErrorType, ErrorSeverity } from '~/utils/errorHandling'
+import { AppError, ErrorType, ErrorSeverity } from "~/utils/errorHandling"
 
 const customError = new AppError(
-  'Custom error message',
+  "Custom error message",
   ErrorType.SERVER,
   ErrorSeverity.HIGH,
   {
-    customField: 'value',
-    userId: user.id
+    customField: "value",
+    userId: user.id,
   }
 )
 ```
@@ -193,17 +195,18 @@ const customError = new AppError(
 For API calls and async operations:
 
 ```tsx
-import { useApiErrorHandler } from '~/hooks/useErrorHandler'
+import { useApiErrorHandler } from "~/hooks/useErrorHandler"
 
 function DataFetcher() {
-  const { error, isError, handleApiError, clearError } = useApiErrorHandler('user-123')
+  const { error, isError, handleApiError, clearError } =
+    useApiErrorHandler("user-123")
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(false)
 
   const loadData = async () => {
     setLoading(true)
     try {
-      const response = await fetch('/api/data')
+      const response = await fetch("/api/data")
       if (!response.ok) {
         throw response
       }
@@ -211,7 +214,7 @@ function DataFetcher() {
       setData(json)
       clearError() // Clear any previous errors
     } catch (error) {
-      handleApiError(error, '/api/data', 'GET')
+      handleApiError(error, "/api/data", "GET")
     } finally {
       setLoading(false)
     }
@@ -220,11 +223,7 @@ function DataFetcher() {
   return (
     <div>
       {isError && (
-        <ErrorDisplay 
-          error={error} 
-          onRetry={loadData}
-          onDismiss={clearError}
-        />
+        <ErrorDisplay error={error} onRetry={loadData} onDismiss={clearError} />
       )}
       {/* Component UI */}
     </div>
@@ -237,38 +236,38 @@ function DataFetcher() {
 Automatic retry for transient failures:
 
 ```tsx
-import { useApiWithRetry } from '~/hooks/useApiWithRetry'
-import { retryPresets } from '~/utils/retry'
+import { useApiWithRetry } from "~/hooks/useApiWithRetry"
+import { retryPresets } from "~/utils/retry"
 
 function RobustDataFetcher() {
-  const { 
-    fetchWithRetry, 
+  const {
+    fetchWithRetry,
     fetchWithPreset,
-    isLoading, 
-    isRetrying, 
+    isLoading,
+    isRetrying,
     retryCount,
-    error 
+    error,
   } = useApiWithRetry({
-    userId: 'user-123',
+    userId: "user-123",
     defaultRetryOptions: retryPresets.standard,
     onRetry: (error, attempt, delay) => {
       console.log(`Retry attempt ${attempt} after ${delay}ms`)
-    }
+    },
   })
 
   const loadData = async () => {
     // Option 1: Use default retry options
     const data = await fetchWithRetry(
-      () => fetch('/api/data').then(r => r.json()),
-      { endpoint: '/api/data', method: 'GET' }
+      () => fetch("/api/data").then((r) => r.json()),
+      { endpoint: "/api/data", method: "GET" }
     )
 
     // Option 2: Use preset
     const data2 = await fetchWithPreset(
-      () => fetch('/api/data').then(r => r.json()),
-      'aggressive', // conservative, standard, aggressive, quick
-      '/api/data',
-      'GET'
+      () => fetch("/api/data").then((r) => r.json()),
+      "aggressive", // conservative, standard, aggressive, quick
+      "/api/data",
+      "GET"
     )
   }
 
@@ -287,7 +286,7 @@ function RobustDataFetcher() {
 Catch errors in React component trees:
 
 ```tsx
-import { ErrorBoundary } from '~/components/Containers/ErrorBoundary'
+import { ErrorBoundary } from "~/components/Containers/ErrorBoundary"
 
 function App() {
   return (
@@ -297,7 +296,7 @@ function App() {
       )}
       onError={(error, errorInfo) => {
         // Log to external service
-        console.error('ErrorBoundary caught:', error, errorInfo)
+        console.error("ErrorBoundary caught:", error, errorInfo)
       }}
     >
       <YourApp />
@@ -313,27 +312,27 @@ function App() {
 #### Loader Error Handling
 
 ```typescript
-import { withLoaderErrorHandling } from '~/utils/errorHandling.server'
-import { createError } from '~/utils/errorHandling'
-import { requireUserId } from '~/utils/auth.server'
+import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { createError } from "~/utils/errorHandling"
+import { requireUserId } from "~/utils/auth.server"
 
 export const loader = withLoaderErrorHandling(async ({ request, params }) => {
   // Authentication
   const userId = await requireUserId(request)
   if (!userId) {
-    throw createError.authentication('Please sign in to continue')
+    throw createError.authentication("Please sign in to continue")
   }
 
   // Validation
   const id = params.id
   if (!id || !isValidId(id)) {
-    throw createError.validation('Invalid ID format', { id })
+    throw createError.validation("Invalid ID format", { id })
   }
 
   // Database operations
   const data = await db.perfume.findUnique({ where: { id } })
   if (!data) {
-    throw createError.notFound('Perfume not found', { id })
+    throw createError.notFound("Perfume not found", { id })
   }
 
   return json({ perfume: data })
@@ -343,31 +342,31 @@ export const loader = withLoaderErrorHandling(async ({ request, params }) => {
 #### Action Error Handling
 
 ```typescript
-import { withActionErrorHandling } from '~/utils/errorHandling.server'
-import { createError } from '~/utils/errorHandling'
+import { withActionErrorHandling } from "~/utils/errorHandling.server"
+import { createError } from "~/utils/errorHandling"
 
 export const action = withActionErrorHandling(async ({ request }) => {
   const formData = await request.formData()
-  const name = formData.get('name')
-  
+  const name = formData.get("name")
+
   // Validation
   if (!name || name.length < 3) {
-    throw createError.validation('Name must be at least 3 characters', {
-      field: 'name',
-      value: name
+    throw createError.validation("Name must be at least 3 characters", {
+      field: "name",
+      value: name,
     })
   }
 
   // Database operation with error handling
   try {
     const result = await db.perfume.create({
-      data: { name: String(name) }
+      data: { name: String(name) },
     })
     return json({ success: true, perfume: result })
   } catch (error) {
-    throw createError.database('Failed to create perfume', {
+    throw createError.database("Failed to create perfume", {
       originalError: error,
-      operation: 'create'
+      operation: "create",
     })
   }
 })
@@ -376,7 +375,7 @@ export const action = withActionErrorHandling(async ({ request }) => {
 ### Database Error Handling
 
 ```typescript
-import { DatabaseErrorHandler } from '~/utils/errorHandling.server'
+import { DatabaseErrorHandler } from "~/utils/errorHandling.server"
 
 const dbHandler = new DatabaseErrorHandler()
 
@@ -390,9 +389,9 @@ async function createUser(data: UserData) {
     // - Connection errors
     // - Timeout errors
     return dbHandler.handleDatabaseError(error, {
-      operation: 'create',
-      table: 'user',
-      data
+      operation: "create",
+      table: "user",
+      data,
     })
   }
 }
@@ -401,7 +400,7 @@ async function createUser(data: UserData) {
 ### Authentication Error Handling
 
 ```typescript
-import { AuthErrorHandler } from '~/utils/errorHandling.server'
+import { AuthErrorHandler } from "~/utils/errorHandling.server"
 
 const authHandler = new AuthErrorHandler()
 
@@ -409,7 +408,7 @@ async function verifyUser(request: Request) {
   try {
     const session = await getSession(request)
     if (!session) {
-      throw new Error('No session')
+      throw new Error("No session")
     }
     return session.userId
   } catch (error) {
@@ -426,15 +425,15 @@ async function verifyUser(request: Request) {
 ### Validation Error Handling
 
 ```typescript
-import { ValidationErrorHandler } from '~/utils/errorHandling.server'
-import { z } from 'zod'
+import { ValidationErrorHandler } from "~/utils/errorHandling.server"
+import { z } from "zod"
 
 const validationHandler = new ValidationErrorHandler()
 
 const userSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
-  age: z.number().min(18)
+  age: z.number().min(18),
 })
 
 async function validateUserInput(data: unknown) {
@@ -452,49 +451,55 @@ async function validateUserInput(data: unknown) {
 ### 1. Always Use Typed Errors
 
 ❌ **Bad:**
+
 ```typescript
-throw new Error('Something went wrong')
+throw new Error("Something went wrong")
 ```
 
 ✅ **Good:**
+
 ```typescript
-throw createError.server('Database query failed', {
-  query: 'SELECT ...',
-  originalError: error
+throw createError.server("Database query failed", {
+  query: "SELECT ...",
+  originalError: error,
 })
 ```
 
 ### 2. Provide Context
 
 ❌ **Bad:**
+
 ```typescript
-throw createError.validation('Invalid input')
+throw createError.validation("Invalid input")
 ```
 
 ✅ **Good:**
+
 ```typescript
-throw createError.validation('Email format is invalid', {
-  field: 'email',
+throw createError.validation("Email format is invalid", {
+  field: "email",
   value: userInput,
-  expected: 'user@example.com'
+  expected: "user@example.com",
 })
 ```
 
 ### 3. Never Expose Sensitive Data
 
 ❌ **Bad:**
+
 ```typescript
-throw createError.server('Error', {
+throw createError.server("Error", {
   password: user.password,
-  token: session.token
+  token: session.token,
 })
 ```
 
 ✅ **Good:**
+
 ```typescript
-throw createError.server('Authentication failed', {
+throw createError.server("Authentication failed", {
   userId: user.id,
-  attemptedAction: 'login'
+  attemptedAction: "login",
 })
 // Sensitive fields are automatically sanitized
 ```
@@ -528,11 +533,11 @@ if (apiResponse.status === 503) {
 ### 5. Use Retry for Transient Failures
 
 ```typescript
-import { withRetry, retryPresets } from '~/utils/retry'
+import { withRetry, retryPresets } from "~/utils/retry"
 
 // Automatically retry network and server errors
 const data = await withRetry(
-  () => fetch('https://api.example.com/data').then(r => r.json()),
+  () => fetch("https://api.example.com/data").then((r) => r.json()),
   retryPresets.standard // 3 retries with exponential backoff
 )
 ```
@@ -540,14 +545,16 @@ const data = await withRetry(
 ### 6. Log Errors Appropriately
 
 ```typescript
-import { ErrorLogger } from '~/utils/errorHandling'
+import { ErrorLogger } from "~/utils/errorHandling"
 
 const logger = ErrorLogger.getInstance()
 
 try {
   await riskyOperation()
 } catch (error) {
-  const appError = createError.server('Operation failed', { originalError: error })
+  const appError = createError.server("Operation failed", {
+    originalError: error,
+  })
   logger.log(appError, userId) // Logs with correlation ID
   throw appError
 }
@@ -556,10 +563,11 @@ try {
 ### 7. Handle Errors Close to the Source
 
 ❌ **Bad:**
+
 ```typescript
 // Deep in the code
 async function fetchData() {
-  return await fetch('/api/data') // No error handling
+  return await fetch("/api/data") // No error handling
 }
 
 // Far away
@@ -573,21 +581,22 @@ function Component() {
 ```
 
 ✅ **Good:**
+
 ```typescript
 async function fetchData() {
   try {
-    const response = await fetch('/api/data')
+    const response = await fetch("/api/data")
     if (!response.ok) {
-      throw createError.network('API request failed', {
-        endpoint: '/api/data',
-        status: response.status
+      throw createError.network("API request failed", {
+        endpoint: "/api/data",
+        status: response.status,
       })
     }
     return await response.json()
   } catch (error) {
     if (error instanceof AppError) throw error
-    throw createError.unknown('Unexpected error in fetchData', {
-      originalError: error
+    throw createError.unknown("Unexpected error in fetchData", {
+      originalError: error,
     })
   }
 }
@@ -601,30 +610,31 @@ async function fetchData() {
 // Route action
 export const action = withActionErrorHandling(async ({ request }) => {
   const formData = await request.formData()
-  
+
   // Validation
-  const email = formData.get('email')
+  const email = formData.get("email")
   if (!email || !isValidEmail(email)) {
-    throw createError.validation('Invalid email address', {
-      field: 'email',
-      value: email
+    throw createError.validation("Invalid email address", {
+      field: "email",
+      value: email,
     })
   }
 
   // Database operation
   try {
     const user = await db.user.create({
-      data: { email: String(email) }
+      data: { email: String(email) },
     })
     return json({ success: true, user })
   } catch (error) {
-    if (error.code === 'P2002') { // Unique constraint
-      throw createError.validation('Email already exists', {
-        field: 'email'
+    if (error.code === "P2002") {
+      // Unique constraint
+      throw createError.validation("Email already exists", {
+        field: "email",
       })
     }
-    throw createError.database('Failed to create user', {
-      originalError: error
+    throw createError.database("Failed to create user", {
+      originalError: error,
     })
   }
 })
@@ -637,11 +647,11 @@ function SignUpForm() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
-    
+
     try {
-      submit.submit(formData, { method: 'post' })
+      submit.submit(formData, { method: "post" })
     } catch (error) {
-      handleApiError(error, '/signup', 'POST')
+      handleApiError(error, "/signup", "POST")
     }
   }
 
@@ -657,28 +667,28 @@ function SignUpForm() {
 ### Pattern 2: API Call with Retry
 
 ```typescript
-import { useApiWithRetry } from '~/hooks/useApiWithRetry'
-import { retryPresets } from '~/utils/retry'
+import { useApiWithRetry } from "~/hooks/useApiWithRetry"
+import { retryPresets } from "~/utils/retry"
 
 function DataList() {
   const { fetchWithPreset, isLoading, isRetrying, error } = useApiWithRetry({
     onRetry: (error, attempt, delay) => {
       toast.info(`Retrying in ${delay}ms... (Attempt ${attempt})`)
-    }
+    },
   })
 
   const loadData = async () => {
     const data = await fetchWithPreset(
       async () => {
-        const response = await fetch('/api/perfumes')
+        const response = await fetch("/api/perfumes")
         if (!response.ok) throw response
         return response.json()
       },
-      'standard', // 3 retries with exponential backoff
-      '/api/perfumes',
-      'GET'
+      "standard", // 3 retries with exponential backoff
+      "/api/perfumes",
+      "GET"
     )
-    
+
     if (data) {
       setItems(data)
     }
@@ -702,18 +712,18 @@ export const loader = withLoaderErrorHandling(async ({ request }) => {
   // Check authentication
   const userId = await getUserId(request)
   if (!userId) {
-    throw createError.authentication('Please sign in to continue', {
-      redirectTo: '/login',
-      returnTo: new URL(request.url).pathname
+    throw createError.authentication("Please sign in to continue", {
+      redirectTo: "/login",
+      returnTo: new URL(request.url).pathname,
     })
   }
 
   // Check authorization
   const user = await db.user.findUnique({ where: { id: userId } })
-  if (user.role !== 'admin') {
-    throw createError.authorization('Admin access required', {
-      required: 'admin',
-      actual: user.role
+  if (user.role !== "admin") {
+    throw createError.authorization("Admin access required", {
+      required: "admin",
+      actual: user.role,
     })
   }
 
@@ -726,8 +736,8 @@ export const loader = withLoaderErrorHandling(async ({ request }) => {
 ### Pattern 4: External API Integration
 
 ```typescript
-import { withRetry, retryPresets } from '~/utils/retry'
-import { createError } from '~/utils/errorHandling'
+import { withRetry, retryPresets } from "~/utils/retry"
+import { createError } from "~/utils/errorHandling"
 
 async function callExternalAPI(endpoint: string) {
   return withRetry(
@@ -737,23 +747,23 @@ async function callExternalAPI(endpoint: string) {
 
       try {
         const response = await fetch(`https://api.example.com${endpoint}`, {
-          signal: controller.signal
+          signal: controller.signal,
         })
 
         if (!response.ok) {
-          throw createError.externalApi('API request failed', {
+          throw createError.externalApi("API request failed", {
             endpoint,
             status: response.status,
-            statusText: response.statusText
+            statusText: response.statusText,
           })
         }
 
         return await response.json()
       } catch (error) {
-        if (error.name === 'AbortError') {
-          throw createError.network('Request timeout', {
+        if (error.name === "AbortError") {
+          throw createError.network("Request timeout", {
             endpoint,
-            timeout: 5000
+            timeout: 5000,
           })
         }
         throw error
@@ -771,30 +781,30 @@ async function callExternalAPI(endpoint: string) {
 ### Unit Tests
 
 ```typescript
-import { describe, it, expect } from 'vitest'
-import { createError, AppError } from '~/utils/errorHandling'
+import { describe, it, expect } from "vitest"
+import { createError, AppError } from "~/utils/errorHandling"
 
-describe('Error Creation', () => {
-  it('creates validation error with correct type', () => {
-    const error = createError.validation('Invalid input', { field: 'email' })
-    
+describe("Error Creation", () => {
+  it("creates validation error with correct type", () => {
+    const error = createError.validation("Invalid input", { field: "email" })
+
     expect(error).toBeInstanceOf(AppError)
-    expect(error.type).toBe('VALIDATION')
-    expect(error.message).toBe('Invalid input')
-    expect(error.context.field).toBe('email')
+    expect(error.type).toBe("VALIDATION")
+    expect(error.message).toBe("Invalid input")
+    expect(error.context.field).toBe("email")
   })
 
-  it('sanitizes sensitive data', () => {
-    const error = createError.server('Error', {
-      password: 'secret123',
-      token: 'bearer-token',
-      safeData: 'visible'
+  it("sanitizes sensitive data", () => {
+    const error = createError.server("Error", {
+      password: "secret123",
+      token: "bearer-token",
+      safeData: "visible",
     })
-    
+
     const json = error.toJSON()
-    expect(json.context.password).toBe('[REDACTED]')
-    expect(json.context.token).toBe('[REDACTED]')
-    expect(json.context.safeData).toBe('visible')
+    expect(json.context.password).toBe("[REDACTED]")
+    expect(json.context.token).toBe("[REDACTED]")
+    expect(json.context.safeData).toBe("visible")
   })
 })
 ```
@@ -802,43 +812,43 @@ describe('Error Creation', () => {
 ### Integration Tests
 
 ```typescript
-import { test, expect } from '@playwright/test'
+import { test, expect } from "@playwright/test"
 
-test('displays error message on validation failure', async ({ page }) => {
-  await page.goto('/signup')
-  
+test("displays error message on validation failure", async ({ page }) => {
+  await page.goto("/signup")
+
   // Submit without email
   await page.click('button[type="submit"]')
-  
+
   // Check error message
-  await expect(page.locator('[role="alert"]')).toContainText('Email is required')
+  await expect(page.locator('[role="alert"]')).toContainText("Email is required")
 })
 
-test('retries on network failure', async ({ page }) => {
+test("retries on network failure", async ({ page }) => {
   // Simulate network failure
-  await page.route('**/api/data', route => route.abort())
-  
-  await page.goto('/data')
-  
+  await page.route("**/api/data", (route) => route.abort())
+
+  await page.goto("/data")
+
   // Should show retry message
-  await expect(page.locator('text=Retrying')).toBeVisible()
+  await expect(page.locator("text=Retrying")).toBeVisible()
 })
 ```
 
 ### Performance Tests
 
 ```typescript
-import { describe, it, expect } from 'vitest'
-import { measurePerformance } from '~/test/utils'
+import { describe, it, expect } from "vitest"
+import { measurePerformance } from "~/test/utils"
 
-describe('Error Handling Performance', () => {
-  it('creates errors with minimal overhead', () => {
+describe("Error Handling Performance", () => {
+  it("creates errors with minimal overhead", () => {
     const duration = measurePerformance(() => {
       for (let i = 0; i < 1000; i++) {
         createError.validation(`Error ${i}`)
       }
     })
-    
+
     // Should be under 100ms for 1000 errors
     expect(duration).toBeLessThan(100)
   })
@@ -861,5 +871,4 @@ See the [Error Handling Troubleshooting Guide](./ERROR_HANDLING_TROUBLESHOOTING.
 
 ---
 
-*For questions or issues, refer to the troubleshooting guide or reach out to the development team.*
-
+_For questions or issues, refer to the troubleshooting guide or reach out to the development team._

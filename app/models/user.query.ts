@@ -3,11 +3,11 @@
  * This file should NOT import from session.server.ts or any files that import from session.server.ts
  */
 
-import { prisma } from '~/db.server'
+import { prisma } from "~/db.server"
 
 export const getUserById = async (id: string) => {
   const user = await prisma.user.findUnique({
-    where: { id }
+    where: { id },
   })
   return user
 }
@@ -17,16 +17,16 @@ export const getUserByName = async (username: string) => {
     where: {
       username: {
         equals: username,
-        mode: 'insensitive'
-      }
-    }
+        mode: "insensitive",
+      },
+    },
   })
   return user
 }
 
 export const getUserByEmail = async (email: string) => {
   const user = await prisma.user.findUnique({
-    where: { email }
+    where: { email },
   })
   return user
 }
@@ -35,4 +35,3 @@ export const getAllUsers = async () => {
   const users = await prisma.user.findMany()
   return users
 }
-

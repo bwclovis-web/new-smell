@@ -1,1 +1,1 @@
-export { default } from './GlobalNavigation'
+export { default } from "./GlobalNavigation"

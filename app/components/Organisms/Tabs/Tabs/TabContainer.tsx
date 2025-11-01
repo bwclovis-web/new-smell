@@ -1,19 +1,27 @@
-import { cx, VariantProps } from 'class-variance-authority'
-import { FC, HTMLProps, ReactElement, useRef, useState } from 'react'
+import { cx, VariantProps } from "class-variance-authority"
+import { FC, HTMLProps, ReactElement, useRef, useState } from "react"
 
-import { styleMerge } from '~/utils/styleUtils'
+import { styleMerge } from "~/utils/styleUtils"
 
-import TabPanel from './TabPanel/TabPanel'
-import { tabsVariants } from './tabs-variants'
+import TabPanel from "./TabPanel/TabPanel"
+import { tabsVariants } from "./tabs-variants"
 
-interface TabsProps extends Omit<HTMLProps<HTMLDivElement>, 'size'>,
-  VariantProps<typeof tabsVariants> {
+interface TabsProps
+  extends Omit<HTMLProps<HTMLDivElement>, "size">,
+    VariantProps<typeof tabsVariants> {
   children: ReactElement[]
   auxComponent?: ReactElement
-  type?: 'default' | 'secondary'
+  type?: "default" | "secondary"
 }
 
-const TabContainer: FC<TabsProps> = ({ className, children, background, size = 'md', auxComponent, type }) => {
+const TabContainer: FC<TabsProps> = ({
+  className,
+  children,
+  background,
+  size = "md",
+  auxComponent,
+  type,
+}) => {
   const [activeTab, setActiveTab] = useState(0)
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
 
@@ -32,7 +40,7 @@ const TabContainer: FC<TabsProps> = ({ className, children, background, size = '
     }
   }
 
-  const onKeyDown = (evt: { key: string | number, preventDefault: () => void }) => {
+  const onKeyDown = (evt: { key: string | number; preventDefault: () => void }) => {
     const count = children.length
     const nextTab = () => setIndex((activeTab + 1) % count)
     const prevTab = () => setIndex((activeTab - 1 + count) % count)
@@ -43,7 +51,7 @@ const TabContainer: FC<TabsProps> = ({ className, children, background, size = '
       ArrowLeft: prevTab,
       ArrowRight: nextTab,
       End: lastTab,
-      Home: firstTab
+      Home: firstTab,
     }
 
     const action = keyMap[evt.key as keyof typeof keyMap]
@@ -55,47 +63,57 @@ const TabContainer: FC<TabsProps> = ({ className, children, background, size = '
   return (
     <>
       <div data-cy="Tabs" className="flex items-center justify-between w-full">
-        <div role="tablist" aria-orientation="horizontal" className={styleMerge(tabsVariants({ background, className, size, type }))}>
-          {children && children.map((child, idx) => {
-            const tabClasses = cx({
-              'bg-atom-gray-4 text-atom-gray-13': activeTab !== idx && type === 'secondary',
-              'cursor-pointer': true,
-              'p-3': size === 'sm',
-              'px-5 py-2.5': size === 'md',
-              'rounded-t-lg border-t border-l border-r capitalize': type === 'secondary',
-              'text-atom-gray-16 bg-white border-atom-gray-4': activeTab === idx && type === 'secondary',
-              'text-blue-active border-b-2 border-blue-active': activeTab === idx && type === 'default'
-            })
-            return (
-              <button
-                key={`tab-${idx}`}
-                id={`tab-${idx}`}
-                onKeyDown={onKeyDown}
-                onClick={() => handleClick(idx)}
-                role="tab"
-                ref={ele => (tabRefs.current[idx] = ele)}
-                aria-selected={activeTab === idx}
-                aria-controls={`panel-${idx}`}
-                className={tabClasses}
-                tabIndex={activeTab === idx ? 0 : -1}
-                onFocus={() => setActiveTab(idx)}
-              >
-                {child.props.label}
-              </button>
-            )
-          })}
+        <div
+          role="tablist"
+          aria-orientation="horizontal"
+          className={styleMerge(tabsVariants({ background, className, size, type }))}
+        >
+          {children &&
+            children.map((child, idx) => {
+              const tabClasses = cx({
+                "bg-atom-gray-4 text-atom-gray-13":
+                  activeTab !== idx && type === "secondary",
+                "cursor-pointer": true,
+                "p-3": size === "sm",
+                "px-5 py-2.5": size === "md",
+                "rounded-t-lg border-t border-l border-r capitalize":
+                  type === "secondary",
+                "text-atom-gray-16 bg-white border-atom-gray-4":
+                  activeTab === idx && type === "secondary",
+                "text-blue-active border-b-2 border-blue-active":
+                  activeTab === idx && type === "default",
+              })
+              return (
+                <button
+                  key={`tab-${idx}`}
+                  id={`tab-${idx}`}
+                  onKeyDown={onKeyDown}
+                  onClick={() => handleClick(idx)}
+                  role="tab"
+                  ref={(ele) => (tabRefs.current[idx] = ele)}
+                  aria-selected={activeTab === idx}
+                  aria-controls={`panel-${idx}`}
+                  className={tabClasses}
+                  tabIndex={activeTab === idx ? 0 : -1}
+                  onFocus={() => setActiveTab(idx)}
+                >
+                  {child.props.label}
+                </button>
+              )
+            })}
         </div>
         {auxComponent && auxComponent}
       </div>
-      {children && children.map((child, idx) => (
-        <TabPanel
-          key={`panel-${idx}`}
-          idx={idx}
-          activeTab={activeTab}
-          child={child}
-          type={type}
-        />
-      ))}
+      {children &&
+        children.map((child, idx) => (
+          <TabPanel
+            key={`panel-${idx}`}
+            idx={idx}
+            activeTab={activeTab}
+            child={child}
+            type={type}
+          />
+        ))}
     </>
   )
 }

@@ -1,6 +1,6 @@
-import { LuBadge, LuBadgeAlert, LuBadgeCheck } from 'react-icons/lu'
+import { LuBadge, LuBadgeAlert, LuBadgeCheck } from "react-icons/lu"
 
-import { usePasswordStrength } from '~/hooks'
+import { usePasswordStrength } from "~/hooks"
 
 interface PasswordStrengthIndicatorProps {
   password: string
@@ -15,13 +15,13 @@ interface PasswordStrengthIndicatorProps {
 
 export default function PasswordStrengthIndicator({
   password,
-  className = '',
+  className = "",
   minLength = 8,
   requireUppercase = true,
   requireLowercase = true,
   requireNumbers = true,
   requireSpecialChars = true,
-  minScore = 3
+  minScore = 3,
 }: PasswordStrengthIndicatorProps) {
   const { strengthInfo, isValid, getStrengthColor, getStrengthText } =
     usePasswordStrength(password, {
@@ -30,7 +30,7 @@ export default function PasswordStrengthIndicator({
       requireLowercase,
       requireNumbers,
       requireSpecialChars,
-      minScore
+      minScore,
     })
 
   if (!password || !strengthInfo) {
@@ -39,12 +39,24 @@ export default function PasswordStrengthIndicator({
 
   const getStrengthIcon = (strength: string) => {
     switch (strength) {
-      case 'weak': return <LuBadgeAlert size={25} fill='red' strokeWidth={1.5} stroke='white' />
-      case 'fair': return <LuBadge size={25} fill='orange' strokeWidth={1.5} stroke='white' />
-      case 'good': return <LuBadge size={25} fill='yellow' strokeWidth={1.5} stroke='white' />
-      case 'strong': return <LuBadgeCheck size={25} fill='blue' strokeWidth={1.5} stroke='white' />
-      case 'very_strong': return <LuBadgeCheck size={25} fill='green' strokeWidth={1.5} stroke='white' />
-      default: return <LuBadgeAlert size={25} fill='white' strokeWidth={1.5} stroke='white' />
+      case "weak":
+        return <LuBadgeAlert size={25} fill="red" strokeWidth={1.5} stroke="white" />
+      case "fair":
+        return <LuBadge size={25} fill="orange" strokeWidth={1.5} stroke="white" />
+      case "good":
+        return <LuBadge size={25} fill="yellow" strokeWidth={1.5} stroke="white" />
+      case "strong":
+        return (
+          <LuBadgeCheck size={25} fill="blue" strokeWidth={1.5} stroke="white" />
+        )
+      case "very_strong":
+        return (
+          <LuBadgeCheck size={25} fill="green" strokeWidth={1.5} stroke="white" />
+        )
+      default:
+        return (
+          <LuBadgeAlert size={25} fill="white" strokeWidth={1.5} stroke="white" />
+        )
     }
   }
 
@@ -54,8 +66,12 @@ export default function PasswordStrengthIndicator({
       <div className="flex items-center space-x-2">
         <div className="flex-1 bg-gray-200 rounded-full h-2">
           <div
-            className={`h-2 rounded-full transition-all duration-300 ${getStrengthColor(strengthInfo.strength)}`}
-            style={{ width: `${Math.min(100, (strengthInfo.score / 8) * 100)}%` }}
+            className={`h-2 rounded-full transition-all duration-300 ${getStrengthColor(
+              strengthInfo.strength
+            )}`}
+            style={{
+              width: `${Math.min(100, (strengthInfo.score / 8) * 100)}%`,
+            }}
           />
         </div>
         <span className="text-sm font-medium text-noir-white flex items-center space-x-1">
@@ -77,7 +93,7 @@ export default function PasswordStrengthIndicator({
       )}
 
       {/* Security Recommendations */}
-      {strengthInfo.strength === 'very_strong' && (
+      {strengthInfo.strength === "very_strong" && (
         <div className="text-xs text-green-600 flex items-center space-x-1">
           <span>✅</span>
           <span>Excellent password strength!</span>

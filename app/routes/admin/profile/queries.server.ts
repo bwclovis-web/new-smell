@@ -1,4 +1,4 @@
-import { prisma } from '~/db.server'
+import { prisma } from "~/db.server"
 
 export async function updateUser(
   id: string,
@@ -12,7 +12,7 @@ export async function updateUser(
     lastName: string
     username: string
     email: string
-  },
+  }
 ) {
   return prisma.user.update({
     where: { id },

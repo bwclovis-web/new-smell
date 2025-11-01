@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useCallback, useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
 
-import { useCSRF } from './useCSRF'
-import { useErrorHandler } from './useErrorHandler'
+import { useCSRF } from "./useCSRF"
+import { useErrorHandler } from "./useErrorHandler"
 
 export interface RatingData {
   longevity?: number | null
@@ -33,7 +33,7 @@ export interface UseRatingSystemReturn {
 
 /**
  * Custom hook for managing rating system state and interactions
- * 
+ *
  * @param options - Configuration options for the rating system
  * @returns Rating system state and handlers
  */
@@ -43,16 +43,18 @@ export const useRatingSystem = ({
   initialRatings = null,
   readonly = false,
   onError,
-  onSuccess
+  onSuccess,
 }: UseRatingSystemOptions): UseRatingSystemReturn => {
   const { t } = useTranslation()
   const { handleError } = useErrorHandler()
   const { addToHeaders } = useCSRF()
 
-  const [currentRatings, setCurrentRatings] = useState<RatingData | null>(initialRatings)
+  const [currentRatings, setCurrentRatings] = useState<RatingData | null>(
+    initialRatings
+  )
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const isLoggedIn = Boolean(userId) && userId !== 'anonymous'
+  const isLoggedIn = Boolean(userId) && userId !== "anonymous"
   const isInteractive = isLoggedIn && !readonly
 
   // Update ratings when initial ratings change
@@ -60,69 +62,83 @@ export const useRatingSystem = ({
     setCurrentRatings(initialRatings)
   }, [initialRatings])
 
-  const handleRatingChange = useCallback(async (
-    category: keyof RatingData,
-    rating: number
-  ) => {
-    if (!isInteractive || !userId || userId === 'anonymous') {
-      console.log('Cannot submit rating:', { isInteractive, userId })
-      return
-    }
+  const handleRatingChange = useCallback(
+    async (category: keyof RatingData, rating: number) => {
+      if (!isInteractive || !userId || userId === "anonymous") {
+        console.log("Cannot submit rating:", { isInteractive, userId })
+        return
+      }
 
-    // Optimistic update
-    const previousRatings = currentRatings
-    setCurrentRatings(prev => ({
-      ...prev,
-      [category]: rating
-    }))
+      // Optimistic update
+      const previousRatings = currentRatings
+      setCurrentRatings((prev) => ({
+        ...prev,
+        [category]: rating,
+      }))
 
-    // Submit to server (same pattern as wishlist)
-    const formData = new FormData()
-    formData.append('perfumeId', perfumeId)
-    formData.append('category', category)
-    formData.append('rating', rating.toString())
+      // Submit to server (same pattern as wishlist)
+      const formData = new FormData()
+      formData.append("perfumeId", perfumeId)
+      formData.append("category", category)
+      formData.append("rating", rating.toString())
 
-    try {
-      setIsSubmitting(true)
-      const response = await fetch('/api/ratings', {
-        method: 'POST',
-        headers: addToHeaders(),
-        body: formData
-      })
+      try {
+        setIsSubmitting(true)
+        const response = await fetch("/api/ratings", {
+          method: "POST",
+          headers: addToHeaders(),
+          body: formData,
+        })
 
-      if (!response.ok) {
+        if (!response.ok) {
+          // Revert on error
+          setCurrentRatings(previousRatings)
+          const errorData = await response
+            .json()
+            .catch(() => ({ error: "Unknown error" }))
+          onError?.(errorData.error || "Failed to save rating")
+          handleError(new Error(errorData.error || "Failed to save rating"), {
+            context: { perfumeId, userId, category, rating },
+          })
+        } else {
+          onSuccess?.({ ...previousRatings, [category]: rating })
+        }
+      } catch (error) {
         // Revert on error
         setCurrentRatings(previousRatings)
-        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
-        onError?.(errorData.error || 'Failed to save rating')
-        handleError(new Error(errorData.error || 'Failed to save rating'), {
-          context: { perfumeId, userId, category, rating }
+        onError?.("Failed to save rating")
+        handleError(error as Error, {
+          context: { perfumeId, userId, category, rating },
         })
-      } else {
-        onSuccess?.({ ...previousRatings, [category]: rating })
+      } finally {
+        setIsSubmitting(false)
       }
-    } catch (error) {
-      // Revert on error
-      setCurrentRatings(previousRatings)
-      onError?.('Failed to save rating')
-      handleError(error as Error, { context: { perfumeId, userId, category, rating } })
-    } finally {
-      setIsSubmitting(false)
-    }
-  }, [
-isInteractive, userId, perfumeId, currentRatings, addToHeaders, onError, onSuccess, handleError
-])
+    },
+    [
+      isInteractive,
+      userId,
+      perfumeId,
+      currentRatings,
+      addToHeaders,
+      onError,
+      onSuccess,
+      handleError,
+    ]
+  )
 
   const resetRatings = useCallback(() => {
     setCurrentRatings(initialRatings)
   }, [initialRatings])
 
   const categories: Array<{ key: keyof RatingData; label: string }> = [
-    { key: 'longevity', label: t('singlePerfume.rating.categories.longevity') },
-    { key: 'sillage', label: t('singlePerfume.rating.categories.sillage') },
-    { key: 'gender', label: t('singlePerfume.rating.categories.gender') },
-    { key: 'priceValue', label: t('singlePerfume.rating.categories.priceValue') },
-    { key: 'overall', label: t('singlePerfume.rating.categories.overall') }
+    { key: "longevity", label: t("singlePerfume.rating.categories.longevity") },
+    { key: "sillage", label: t("singlePerfume.rating.categories.sillage") },
+    { key: "gender", label: t("singlePerfume.rating.categories.gender") },
+    {
+      key: "priceValue",
+      label: t("singlePerfume.rating.categories.priceValue"),
+    },
+    { key: "overall", label: t("singlePerfume.rating.categories.overall") },
   ]
 
   return {
@@ -132,7 +148,7 @@ isInteractive, userId, perfumeId, currentRatings, addToHeaders, onError, onSucce
     isSubmitting,
     handleRatingChange,
     resetRatings,
-    categories
+    categories,
   }
 }
 

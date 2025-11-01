@@ -1,14 +1,26 @@
 /**
  * Server-side Error Handling Utilities
- * 
+ *
  * This module provides server-specific error handling utilities for API routes,
  * loaders, and actions in the Voodoo Perfumes application.
  */
 
-import type { ActionFunction, ActionFunctionArgs, LoaderFunction, LoaderFunctionArgs } from 'react-router'
-import { redirect } from 'react-router'
+import type {
+  ActionFunction,
+  ActionFunctionArgs,
+  LoaderFunction,
+  LoaderFunctionArgs,
+} from "react-router"
+import { redirect } from "react-router"
 
-import { AppError, createError, createErrorResponse, ErrorHandler, ErrorLogger, type ErrorType } from './errorHandling'
+import {
+  AppError,
+  createError,
+  createErrorResponse,
+  ErrorHandler,
+  ErrorLogger,
+  type ErrorType,
+} from "./errorHandling"
 
 // Server Error Response Types
 export interface ServerErrorResponse {
@@ -30,38 +42,48 @@ export interface ServerSuccessResponse<T = any> {
 
 // Server Error Handler
 export class ServerErrorHandler {
-
   /**
    * Handle errors in server-side functions (loaders, actions)
    */
-  static handle(error: unknown, context?: Record<string, any>, userId?: string): AppError {
+  static handle(
+    error: unknown,
+    context?: Record<string, any>,
+    userId?: string
+  ): AppError {
     return ErrorHandler.handle(error, { ...context, server: true }, userId)
   }
 
   /**
    * Create a standardized error response for API routes
    */
-  static createErrorResponse(error: AppError, status?: number, options?: { headers?: HeadersInit }): Response {
+  static createErrorResponse(
+    error: AppError,
+    status?: number,
+    options?: { headers?: HeadersInit }
+  ): Response {
     return createErrorResponse(error, status, options)
   }
 
   /**
    * Create a success response for API routes
    */
-  static createSuccessResponse<T>(data?: T, options?: { message?: string; headers?: HeadersInit }): Response {
+  static createSuccessResponse<T>(
+    data?: T,
+    options?: { message?: string; headers?: HeadersInit }
+  ): Response {
     return new Response(
       JSON.stringify({
         success: true,
         data,
-        message: options?.message
+        message: options?.message,
       }),
       {
         status: 200,
         headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'private, max-age=0',
-          ...options?.headers
-        }
+          "Content-Type": "application/json",
+          "Cache-Control": "private, max-age=0",
+          ...options?.headers,
+        },
       }
     )
   }
@@ -73,18 +95,18 @@ export class ServerErrorHandler {
     const appError = this.handle(error, { ...context, loader: true })
 
     // For critical errors, redirect to error page
-    if (appError.severity === 'CRITICAL') {
-      throw redirect('/error?type=critical')
+    if (appError.severity === "CRITICAL") {
+      throw redirect("/error?type=critical")
     }
 
     // For authentication errors, redirect to login
-    if (appError.type === 'AUTHENTICATION') {
-      throw redirect('/sign-in?error=auth_required')
+    if (appError.type === "AUTHENTICATION") {
+      throw redirect("/sign-in?error=auth_required")
     }
 
     // For authorization errors, redirect to unauthorized page
-    if (appError.type === 'AUTHORIZATION') {
-      throw redirect('/unauthorized')
+    if (appError.type === "AUTHORIZATION") {
+      throw redirect("/unauthorized")
     }
 
     // For other errors, throw the error to be caught by error boundary
@@ -94,7 +116,10 @@ export class ServerErrorHandler {
   /**
    * Handle errors in actions with proper form error responses
    */
-  static handleActionError(error: unknown, context?: Record<string, any>): { error: string } {
+  static handleActionError(
+    error: unknown,
+    context?: Record<string, any>
+  ): { error: string } {
     const appError = this.handle(error, { ...context, action: true })
     return { error: appError.userMessage }
   }
@@ -134,68 +159,67 @@ export class ServerErrorHandler {
 
 // Database Error Handler
 export class DatabaseErrorHandler {
-
   /**
    * Handle database-specific errors
    */
-  static handle(error: unknown, operation: string, context?: Record<string, any>): AppError {
+  static handle(
+    error: unknown,
+    operation: string,
+    context?: Record<string, any>
+  ): AppError {
     const dbContext = {
       ...context,
       database: true,
       operation,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     }
 
     if (error instanceof Error) {
       const message = error.message.toLowerCase()
 
       // Handle specific database errors
-      if (message.includes('unique constraint') || message.includes('duplicate key')) {
+      if (
+        message.includes("unique constraint") ||
+        message.includes("duplicate key")
+      ) {
         return createError.validation(
-          'A record with this information already exists',
+          "A record with this information already exists",
           dbContext
         )
       }
 
-      if (message.includes('foreign key') || message.includes('constraint')) {
+      if (message.includes("foreign key") || message.includes("constraint")) {
         return createError.validation(
-          'Cannot perform this operation due to data constraints',
+          "Cannot perform this operation due to data constraints",
           dbContext
         )
       }
 
-      if (message.includes('not found') || message.includes('does not exist')) {
-        return createError.notFound(
-          'The requested record was not found',
-          dbContext
-        )
+      if (message.includes("not found") || message.includes("does not exist")) {
+        return createError.notFound("The requested record was not found", dbContext)
       }
 
-      if (message.includes('connection') || message.includes('timeout')) {
+      if (message.includes("connection") || message.includes("timeout")) {
         return createError.database(
-          'Database connection error. Please try again later.',
+          "Database connection error. Please try again later.",
           dbContext
         )
       }
 
-      if (message.includes('permission') || message.includes('access denied')) {
+      if (message.includes("permission") || message.includes("access denied")) {
         return createError.authorization(
-          'You do not have permission to perform this database operation',
+          "You do not have permission to perform this database operation",
           dbContext
         )
       }
     }
 
-    return createError.database(
-      'Database operation failed',
-      dbContext
-    )
+    return createError.database("Database operation failed", dbContext)
   }
 }
 
 // Authentication Error Handler
 export class AuthErrorHandler {
-
   /**
    * Handle authentication-specific errors
    */
@@ -203,58 +227,63 @@ export class AuthErrorHandler {
     const authContext = {
       ...context,
       authentication: true,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     }
 
     if (error instanceof Error) {
       const message = error.message.toLowerCase()
 
-      if (message.includes('invalid credentials') || message.includes('wrong password')) {
+      if (
+        message.includes("invalid credentials") ||
+        message.includes("wrong password")
+      ) {
+        return createError.authentication("Invalid email or password", authContext)
+      }
+
+      if (
+        message.includes("user not found") ||
+        message.includes("email not found")
+      ) {
         return createError.authentication(
-          'Invalid email or password',
+          "No account found with this email address",
           authContext
         )
       }
 
-      if (message.includes('user not found') || message.includes('email not found')) {
+      if (
+        message.includes("account disabled") ||
+        message.includes("account locked")
+      ) {
         return createError.authentication(
-          'No account found with this email address',
+          "Your account has been disabled. Please contact support.",
           authContext
         )
       }
 
-      if (message.includes('account disabled') || message.includes('account locked')) {
+      if (
+        message.includes("email not verified") ||
+        message.includes("verification")
+      ) {
         return createError.authentication(
-          'Your account has been disabled. Please contact support.',
+          "Please verify your email address before signing in",
           authContext
         )
       }
 
-      if (message.includes('email not verified') || message.includes('verification')) {
+      if (message.includes("session expired") || message.includes("token expired")) {
         return createError.authentication(
-          'Please verify your email address before signing in',
-          authContext
-        )
-      }
-
-      if (message.includes('session expired') || message.includes('token expired')) {
-        return createError.authentication(
-          'Your session has expired. Please sign in again.',
+          "Your session has expired. Please sign in again.",
           authContext
         )
       }
     }
 
-    return createError.authentication(
-      'Authentication failed',
-      authContext
-    )
+    return createError.authentication("Authentication failed", authContext)
   }
 }
 
 // Validation Error Handler
 export class ValidationErrorHandler {
-
   /**
    * Handle validation-specific errors
    */
@@ -262,57 +291,58 @@ export class ValidationErrorHandler {
     const validationContext = {
       ...context,
       validation: true,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     }
 
     if (error instanceof Error) {
       const message = error.message.toLowerCase()
 
-      if (message.includes('required') || message.includes('missing')) {
+      if (message.includes("required") || message.includes("missing")) {
         return createError.validation(
-          'Please fill in all required fields',
+          "Please fill in all required fields",
           validationContext
         )
       }
 
-      if (message.includes('invalid email') || message.includes('email format')) {
+      if (message.includes("invalid email") || message.includes("email format")) {
         return createError.validation(
-          'Please enter a valid email address',
+          "Please enter a valid email address",
           validationContext
         )
       }
 
-      if (message.includes('password') && message.includes('weak')) {
+      if (message.includes("password") && message.includes("weak")) {
         return createError.validation(
-          'Password must be at least 8 characters long and contain uppercase, lowercase, and numbers',
+          "Password must be at least 8 characters long and contain uppercase, lowercase, and numbers",
           validationContext
         )
       }
 
-      if (message.includes('too long') || message.includes('exceeds length')) {
+      if (message.includes("too long") || message.includes("exceeds length")) {
         return createError.validation(
-          'Input is too long. Please shorten your text.',
+          "Input is too long. Please shorten your text.",
           validationContext
         )
       }
 
-      if (message.includes('too short') || message.includes('minimum length')) {
+      if (message.includes("too short") || message.includes("minimum length")) {
         return createError.validation(
-          'Input is too short. Please provide more information.',
+          "Input is too short. Please provide more information.",
           validationContext
         )
       }
     }
 
     return createError.validation(
-      'Please check your input and try again',
+      "Please check your input and try again",
       validationContext
     )
   }
 }
 
 // Utility Functions
-export const isServerError = (error: unknown): error is AppError => error instanceof AppError
+export const isServerError = (error: unknown): error is AppError =>
+  error instanceof AppError
 
 export const getServerErrorMessage = (error: unknown): string => {
   if (isServerError(error)) {
@@ -321,22 +351,22 @@ export const getServerErrorMessage = (error: unknown): string => {
   if (error instanceof Error) {
     return error.message
   }
-  return 'An unexpected server error occurred'
+  return "An unexpected server error occurred"
 }
 
 export const getServerErrorCode = (error: unknown): string => {
   if (isServerError(error)) {
     return error.code
   }
-  return 'SERVER_ERROR'
+  return "SERVER_ERROR"
 }
 
 // Error Page Redirects
 export const redirectToErrorPage = (errorType: string, message?: string) => {
   const params = new URLSearchParams()
-  params.set('type', errorType)
+  params.set("type", errorType)
   if (message) {
-    params.set('message', message)
+    params.set("message", message)
   }
   throw redirect(`/error?${params.toString()}`)
 }
@@ -344,20 +374,20 @@ export const redirectToErrorPage = (errorType: string, message?: string) => {
 export const redirectToLogin = (message?: string) => {
   const params = new URLSearchParams()
   if (message) {
-    params.set('error', message)
+    params.set("error", message)
   }
   throw redirect(`/sign-in?${params.toString()}`)
 }
 
 export const redirectToUnauthorized = () => {
-  throw redirect('/unauthorized')
+  throw redirect("/unauthorized")
 }
 
 // Error Handling Wrappers for Loaders and Actions
 
 /**
  * Standardized error handler wrapper for route loaders
- * 
+ *
  * Usage:
  * export const loader = withLoaderErrorHandling(async ({ request }) => {
  *   const data = await fetchData()
@@ -384,25 +414,25 @@ export function withLoaderErrorHandling<T extends LoaderFunction>(
       const appError = ServerErrorHandler.handle(error, {
         ...options?.context,
         loader: true,
-        path: args.request.url
+        path: args.request.url,
       })
 
       // Log the error (with correlation ID if available)
       ErrorLogger.getInstance().log(appError)
 
       // Handle authentication errors
-      if (appError.type === 'AUTHENTICATION') {
-        throw redirect(options?.redirectOnAuth || '/sign-in?error=auth_required')
+      if (appError.type === "AUTHENTICATION") {
+        throw redirect(options?.redirectOnAuth || "/sign-in?error=auth_required")
       }
 
       // Handle authorization errors
-      if (appError.type === 'AUTHORIZATION') {
-        throw redirect(options?.redirectOnAuthz || '/unauthorized')
+      if (appError.type === "AUTHORIZATION") {
+        throw redirect(options?.redirectOnAuthz || "/unauthorized")
       }
 
       // For critical errors, redirect to error page
-      if (appError.severity === 'CRITICAL') {
-        throw redirect('/error?type=critical')
+      if (appError.severity === "CRITICAL") {
+        throw redirect("/error?type=critical")
       }
 
       // For other errors, throw to be caught by error boundary
@@ -413,7 +443,7 @@ export function withLoaderErrorHandling<T extends LoaderFunction>(
 
 /**
  * Standardized error handler wrapper for route actions
- * 
+ *
  * Usage:
  * export const action = withActionErrorHandling(async ({ request }) => {
  *   const formData = await request.formData()
@@ -439,7 +469,7 @@ export function withActionErrorHandling<T extends ActionFunction>(
       const appError = ServerErrorHandler.handle(error, {
         ...options?.context,
         action: true,
-        path: args.request.url
+        path: args.request.url,
       })
 
       // Log the error (with correlation ID if available)
@@ -449,7 +479,7 @@ export function withActionErrorHandling<T extends ActionFunction>(
       return {
         success: false,
         error: appError.userMessage,
-        code: appError.code
+        code: appError.code,
       }
     }
   }) as T

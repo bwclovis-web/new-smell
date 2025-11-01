@@ -1,18 +1,17 @@
 /**
  * React hook for API calls with automatic retry on transient failures
- * 
+ *
  * Combines the error handling capabilities of useApiErrorHandler
  * with the retry mechanism from the retry utility.
  */
 
-import { useCallback, useState } from 'react'
+import { useCallback, useState } from "react"
 
-import { RetryOptions, retryPresets, withRetry } from '~/utils/retry'
+import { RetryOptions, retryPresets, withRetry } from "~/utils/retry"
 
-import { useApiErrorHandler } from './useErrorHandler'
+import { useApiErrorHandler } from "./useErrorHandler"
 
 export interface UseApiWithRetryOptions {
-
   /**
    * User ID for error logging
    */
@@ -35,11 +34,10 @@ export interface UseApiWithRetryOptions {
 }
 
 export interface UseApiWithRetryReturn {
-
   /**
    * Current error state
    */
-  error: ReturnType<typeof useApiErrorHandler>['error']
+  error: ReturnType<typeof useApiErrorHandler>["error"]
 
   /**
    * Whether an error is present
@@ -63,7 +61,7 @@ export interface UseApiWithRetryReturn {
 
   /**
    * Execute an API call with automatic retry
-   * 
+   *
    * @param apiFn - The API function to call
    * @param options - Override retry options for this call
    * @returns Promise resolving to the API response or null on error
@@ -79,7 +77,7 @@ export interface UseApiWithRetryReturn {
 
   /**
    * Execute an API call with retry using a preset configuration
-   * 
+   *
    * @param apiFn - The API function to call
    * @param preset - Preset name ('conservative', 'standard', 'aggressive', 'quick')
    * @param endpoint - API endpoint for error context
@@ -105,28 +103,30 @@ export interface UseApiWithRetryReturn {
 
 /**
  * Hook for API calls with automatic retry on transient failures
- * 
+ *
  * @param options - Configuration options
  * @returns API utilities with retry capability
- * 
+ *
  * @example
  * ```typescript
  * const { fetchWithRetry, isLoading, error } = useApiWithRetry({
  *   defaultRetryOptions: retryPresets.standard
  * })
- * 
+ *
  * const data = await fetchWithRetry(
  *   () => fetch('/api/perfumes').then(r => r.json()),
  *   { endpoint: '/api/perfumes', method: 'GET' }
  * )
  * ```
  */
-export const useApiWithRetry = (options: UseApiWithRetryOptions = {}): UseApiWithRetryReturn => {
+export const useApiWithRetry = (
+  options: UseApiWithRetryOptions = {}
+): UseApiWithRetryReturn => {
   const {
     userId,
     defaultRetryOptions = retryPresets.standard,
     onRetry: globalOnRetry,
-    onMaxRetriesReached: globalOnMaxRetriesReached
+    onMaxRetriesReached: globalOnMaxRetriesReached,
   } = options
 
   const { error, isError, handleApiError, clearError } = useApiErrorHandler(userId)
@@ -169,15 +169,15 @@ export const useApiWithRetry = (options: UseApiWithRetryOptions = {}): UseApiWit
             setRetryCount(attempts)
             callOptions?.retryOptions?.onMaxRetriesReached?.(error, attempts)
             globalOnMaxRetriesReached?.(error, attempts)
-          }
+          },
         }
 
         const result = await withRetry(apiFn, retryOptions)
-        
+
         // Success - reset retry state
         setIsRetrying(false)
         setRetryCount(0)
-        
+
         return result
       } catch (error) {
         // All retries exhausted or non-retryable error
@@ -193,7 +193,7 @@ export const useApiWithRetry = (options: UseApiWithRetryOptions = {}): UseApiWit
       globalOnRetry,
       globalOnMaxRetriesReached,
       handleApiError,
-      clearError
+      clearError,
     ]
   )
 
@@ -203,10 +203,11 @@ export const useApiWithRetry = (options: UseApiWithRetryOptions = {}): UseApiWit
       preset: keyof typeof retryPresets,
       endpoint?: string,
       method?: string
-    ): Promise<T | null> => fetchWithRetry(apiFn, {
+    ): Promise<T | null> =>
+      fetchWithRetry(apiFn, {
         retryOptions: retryPresets[preset],
         endpoint,
-        method
+        method,
       }),
     [fetchWithRetry]
   )
@@ -220,9 +221,8 @@ export const useApiWithRetry = (options: UseApiWithRetryOptions = {}): UseApiWit
     fetchWithRetry,
     fetchWithPreset,
     clearError,
-    resetRetryCount
+    resetRetryCount,
   }
 }
 
 export default useApiWithRetry
-

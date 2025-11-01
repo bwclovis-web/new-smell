@@ -21,59 +21,73 @@ export type DataQualityStats = {
 }
 
 // Helper to generate breakdown for missing house info
-export const getMissingHouseInfoBreakdown = (stats: DataQualityStats | null): Record<string, string[]> => {
+export const getMissingHouseInfoBreakdown = (
+  stats: DataQualityStats | null
+): Record<string, string[]> => {
   if (!stats || !stats.missingHouseInfoByBrand) {
     return {}
   }
   // This assumes backend returns missingHouseInfoByBrand as { houseName: number }
   // For a more detailed breakdown, backend should return { houseName: [fields] }
   // For now, we infer missing fields by showing count as array of 'Field missing'
-  return Object.fromEntries(Object.entries(stats.missingHouseInfoByBrand).map(([house, count]) => [
+  return Object.fromEntries(
+    Object.entries(stats.missingHouseInfoByBrand).map(([house, count]) => [
       house,
-      Array(count).fill('Field missing')
-    ]))
+      Array(count).fill("Field missing"),
+    ])
+  )
 }
 
 export const prepareMissingChartData = (stats: DataQualityStats | null) => ({
-  labels: stats?.missingByBrand ? Object.keys(stats.missingByBrand).slice(0, 10) : [],
+  labels: stats?.missingByBrand
+    ? Object.keys(stats.missingByBrand).slice(0, 10)
+    : [],
   datasets: [
     {
-      label: 'Missing Information',
-      data: stats?.missingByBrand ? Object.values(stats.missingByBrand).slice(0, 10) : [],
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      borderColor: 'rgb(255, 99, 132)',
+      label: "Missing Information",
+      data: stats?.missingByBrand
+        ? Object.values(stats.missingByBrand).slice(0, 10)
+        : [],
+      backgroundColor: "rgba(255, 99, 132, 0.5)",
+      borderColor: "rgb(255, 99, 132)",
       borderWidth: 1,
     },
   ],
 })
 
-export const prepareMissingHouseInfoChartData = (stats: DataQualityStats | null) => ({
+export const prepareMissingHouseInfoChartData = (
+  stats: DataQualityStats | null
+) => ({
   labels:
     stats && stats.missingHouseInfoByBrand
       ? Object.keys(stats.missingHouseInfoByBrand).slice(0, 10)
       : [],
   datasets: [
     {
-      label: 'Missing House Info',
+      label: "Missing House Info",
       data:
         stats && stats.missingHouseInfoByBrand
           ? Object.values(stats.missingHouseInfoByBrand).slice(0, 10)
           : [],
-      backgroundColor: 'rgba(255, 206, 86, 0.5)',
-      borderColor: 'rgb(255, 206, 86)',
+      backgroundColor: "rgba(255, 206, 86, 0.5)",
+      borderColor: "rgb(255, 206, 86)",
       borderWidth: 1,
     },
   ],
 })
 
 export const prepareDuplicateChartData = (stats: DataQualityStats | null) => ({
-  labels: stats?.duplicatesByBrand ? Object.keys(stats.duplicatesByBrand).slice(0, 10) : [],
+  labels: stats?.duplicatesByBrand
+    ? Object.keys(stats.duplicatesByBrand).slice(0, 10)
+    : [],
   datasets: [
     {
-      label: 'Duplicate Entries',
-      data: stats?.duplicatesByBrand ? Object.values(stats.duplicatesByBrand).slice(0, 10) : [],
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      borderColor: 'rgb(53, 162, 235)',
+      label: "Duplicate Entries",
+      data: stats?.duplicatesByBrand
+        ? Object.values(stats.duplicatesByBrand).slice(0, 10)
+        : [],
+      backgroundColor: "rgba(53, 162, 235, 0.5)",
+      borderColor: "rgb(53, 162, 235)",
       borderWidth: 1,
     },
   ],
@@ -83,7 +97,7 @@ export const prepareTrendChartData = (stats: DataQualityStats | null) => {
   if (!stats?.historyData) {
     return {
       labels: [],
-      datasets: []
+      datasets: [],
     }
   }
 
@@ -91,17 +105,17 @@ export const prepareTrendChartData = (stats: DataQualityStats | null) => {
     labels: stats.historyData.dates || [],
     datasets: [
       {
-        label: 'Missing Information',
+        label: "Missing Information",
         data: stats.historyData.missing || [],
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        borderColor: "rgb(255, 99, 132)",
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
         tension: 0.1,
       },
       {
-        label: 'Duplicate Entries',
+        label: "Duplicate Entries",
         data: stats.historyData.duplicates || [],
-        borderColor: 'rgb(53, 162, 235)',
-        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+        borderColor: "rgb(53, 162, 235)",
+        backgroundColor: "rgba(53, 162, 235, 0.5)",
         tension: 0.1,
       },
     ],

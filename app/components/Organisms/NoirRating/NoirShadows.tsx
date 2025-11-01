@@ -1,8 +1,8 @@
-import React from 'react'
+import React from "react"
 
 const NoirShadows = ({
   category,
-  animated
+  animated,
 }: {
   category: string
   animated: boolean
@@ -22,16 +22,8 @@ const NoirShadows = ({
     {/* Animated smoke effect for special interactions */}
     {animated && (
       <filter id={`smoke-${category}`}>
-        <feTurbulence
-          baseFrequency="0.08"
-          numOctaves="2"
-          result="turbulence"
-        />
-        <feDisplacementMap
-          in="SourceGraphic"
-          in2="turbulence"
-          scale="2"
-        />
+        <feTurbulence baseFrequency="0.08" numOctaves="2" result="turbulence" />
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="2" />
       </filter>
     )}
   </defs>

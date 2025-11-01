@@ -3,10 +3,10 @@
  * Generates realistic perfume house data for testing using @faker-js/faker
  */
 
-import { faker } from '@faker-js/faker'
-import type { HouseType } from '@prisma/client'
+import { faker } from "@faker-js/faker"
+import type { HouseType } from "@prisma/client"
 
-import type { PerfumeHouse } from '~/types/database'
+import type { PerfumeHouse } from "~/types/database"
 
 /**
  * Options for creating a mock perfume house
@@ -33,7 +33,9 @@ export interface CreateMockHouseOptions {
  * @param overrides - Optional field overrides
  * @returns Mock PerfumeHouse object
  */
-export function createMockHouse(overrides: CreateMockHouseOptions = {}): Omit<PerfumeHouse, 'perfumes'> {
+export function createMockHouse(
+  overrides: CreateMockHouseOptions = {}
+): Omit<PerfumeHouse, "perfumes"> {
   const name = overrides.name ?? faker.company.name()
   const slug = overrides.slug ?? faker.helpers.slugify(name).toLowerCase()
 
@@ -57,20 +59,21 @@ export function createMockHouse(overrides: CreateMockHouseOptions = {}): Omit<Pe
       overrides.founded !== undefined
         ? overrides.founded
         : faker.date.past({ years: 50 }).getFullYear().toString(),
-    email:
-      overrides.email !== undefined ? overrides.email : faker.internet.email(),
+    email: overrides.email !== undefined ? overrides.email : faker.internet.email(),
     phone: overrides.phone !== undefined ? overrides.phone : faker.phone.number(),
     address:
       overrides.address !== undefined
         ? overrides.address
         : faker.location.streetAddress({ useFullAddress: true }),
-    type: overrides.type ?? faker.helpers.arrayElement<HouseType>([
-      'niche',
-      'designer',
-      'indie',
-      'celebrity',
-      'drugstore',
-    ]),
+    type:
+      overrides.type ??
+      faker.helpers.arrayElement<HouseType>([
+        "niche",
+        "designer",
+        "indie",
+        "celebrity",
+        "drugstore",
+      ]),
     createdAt: overrides.createdAt ?? faker.date.past({ years: 2 }),
     updatedAt: overrides.updatedAt ?? faker.date.recent({ days: 30 }),
   }
@@ -85,58 +88,64 @@ export function createMockHouse(overrides: CreateMockHouseOptions = {}): Omit<Pe
 export function createMockHouses(
   count: number,
   overrides: CreateMockHouseOptions = {}
-): Array<Omit<PerfumeHouse, 'perfumes'>> {
-  return Array.from({ length: count }, (_, i) => createMockHouse({
+): Array<Omit<PerfumeHouse, "perfumes">> {
+  return Array.from({ length: count }, (_, i) =>
+    createMockHouse({
       ...overrides,
       id: overrides.id ?? `house-${i + 1}`,
-    }))
+    })
+  )
 }
 
 /**
  * Creates a mock house with specific test scenarios
  */
 export const houseFactoryPresets = {
-
   /**
    * Luxury niche perfume house
    */
-  nicheHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
-      type: 'niche',
-      country: 'France',
-      founded: '1990',
+  nicheHouse: (): ReturnType<typeof createMockHouse> =>
+    createMockHouse({
+      type: "niche",
+      country: "France",
+      founded: "1990",
       name: `Maison ${faker.person.lastName()}`,
     }),
 
   /**
    * Designer perfume house
    */
-  designerHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
-      type: 'designer',
-      country: faker.helpers.arrayElement(['France', 'Italy', 'USA']),
+  designerHouse: (): ReturnType<typeof createMockHouse> =>
+    createMockHouse({
+      type: "designer",
+      country: faker.helpers.arrayElement(["France", "Italy", "USA"]),
       founded: faker.date.past({ years: 100 }).getFullYear().toString(),
     }),
 
   /**
    * Indie perfume house
    */
-  indieHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
-      type: 'indie',
-      country: faker.helpers.arrayElement(['USA', 'UK', 'Canada']),
+  indieHouse: (): ReturnType<typeof createMockHouse> =>
+    createMockHouse({
+      type: "indie",
+      country: faker.helpers.arrayElement(["USA", "UK", "Canada"]),
       founded: faker.date.past({ years: 10 }).getFullYear().toString(),
     }),
 
   /**
    * Celebrity perfume house
    */
-  celebrityHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
-      type: 'celebrity',
+  celebrityHouse: (): ReturnType<typeof createMockHouse> =>
+    createMockHouse({
+      type: "celebrity",
       name: `${faker.person.firstName()} ${faker.person.lastName()} Fragrances`,
     }),
 
   /**
    * Minimal house with only required fields
    */
-  minimalHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
+  minimalHouse: (): ReturnType<typeof createMockHouse> =>
+    createMockHouse({
       description: null,
       image: null,
       website: null,
@@ -150,25 +159,27 @@ export const houseFactoryPresets = {
   /**
    * Historic perfume house
    */
-  historicHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
+  historicHouse: (): ReturnType<typeof createMockHouse> =>
+    createMockHouse({
       founded: faker.date.past({ years: 200 }).getFullYear().toString(),
-      country: 'France',
-      type: 'designer',
+      country: "France",
+      type: "designer",
     }),
 
   /**
    * House with special characters in name (edge case)
    */
-  specialCharHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
+  specialCharHouse: (): ReturnType<typeof createMockHouse> =>
+    createMockHouse({
       name: "L'Artisan Parfumeur & Co.",
-      slug: 'lartisan-parfumeur-and-co',
+      slug: "lartisan-parfumeur-and-co",
     }),
 
   /**
    * House with very long description (edge case)
    */
-  longDescriptionHouse: (): ReturnType<typeof createMockHouse> => createMockHouse({
+  longDescriptionHouse: (): ReturnType<typeof createMockHouse> =>
+    createMockHouse({
       description: faker.lorem.paragraphs(10),
     }),
 }
-

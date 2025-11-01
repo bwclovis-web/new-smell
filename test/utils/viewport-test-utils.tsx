@@ -1,8 +1,8 @@
-import { vi } from 'vitest'
+import { vi } from "vitest"
 
 /**
  * Viewport and Responsive Testing Utilities
- * 
+ *
  * Utilities for testing responsive layouts and viewport-specific behavior
  */
 
@@ -21,20 +21,20 @@ export type ViewportName = keyof typeof viewportPresets
 
 // Set viewport size
 export const setViewport = (width: number, height: number) => {
-  Object.defineProperty(window, 'innerWidth', {
+  Object.defineProperty(window, "innerWidth", {
     writable: true,
     configurable: true,
     value: width,
   })
 
-  Object.defineProperty(window, 'innerHeight', {
+  Object.defineProperty(window, "innerHeight", {
     writable: true,
     configurable: true,
     value: height,
   })
 
   // Trigger resize event
-  window.dispatchEvent(new Event('resize'))
+  window.dispatchEvent(new Event("resize"))
 }
 
 // Set viewport by preset name
@@ -46,7 +46,7 @@ export const setViewportByName = (name: ViewportName) => {
 // Test component at different viewports
 export const testAtViewports = async (
   testFn: (viewport: ViewportName) => void | Promise<void>,
-  viewports: ViewportName[] = ['mobile', 'tablet', 'desktop']
+  viewports: ViewportName[] = ["mobile", "tablet", "desktop"]
 ) => {
   for (const viewport of viewports) {
     setViewportByName(viewport)
@@ -56,7 +56,7 @@ export const testAtViewports = async (
 
 // Mock matchMedia for media queries
 export const mockMediaQuery = (query: string, matches = true) => {
-  Object.defineProperty(window, 'matchMedia', {
+  Object.defineProperty(window, "matchMedia", {
     writable: true,
     value: vi.fn().mockImplementation((q: string) => ({
       matches: q === query ? matches : false,
@@ -91,13 +91,13 @@ export const testMediaQuery = async (
 
 // Mock touch support
 export const mockTouchSupport = (enabled = true) => {
-  Object.defineProperty(navigator, 'maxTouchPoints', {
+  Object.defineProperty(navigator, "maxTouchPoints", {
     writable: true,
     configurable: true,
     value: enabled ? 5 : 0,
   })
 
-  Object.defineProperty(window, 'ontouchstart', {
+  Object.defineProperty(window, "ontouchstart", {
     writable: true,
     configurable: true,
     value: enabled ? {} : undefined,
@@ -114,8 +114,8 @@ export const testResponsiveBehavior = async (
     description: string
   }>
 ) => {
-  const { screen } = await import('@testing-library/react')
-  const { renderWithProviders } = await import('./test-utils')
+  const { screen } = await import("@testing-library/react")
+  const { renderWithProviders } = await import("./test-utils")
 
   for (const test of tests) {
     setViewportByName(test.viewport)
@@ -141,20 +141,20 @@ export const testResponsiveBehavior = async (
 // Test orientation changes
 export const testOrientationChange = async (
   Component: React.ComponentType<any>,
-  testFn: (orientation: 'portrait' | 'landscape') => void | Promise<void>
+  testFn: (orientation: "portrait" | "landscape") => void | Promise<void>
 ) => {
   // Test portrait
   setViewport(375, 667)
-  await testFn('portrait')
+  await testFn("portrait")
 
   // Test landscape
   setViewport(667, 375)
-  await testFn('landscape')
+  await testFn("landscape")
 }
 
 // Mock device pixel ratio
 export const mockDevicePixelRatio = (ratio: number) => {
-  Object.defineProperty(window, 'devicePixelRatio', {
+  Object.defineProperty(window, "devicePixelRatio", {
     writable: true,
     configurable: true,
     value: ratio,
@@ -171,4 +171,3 @@ export const testAtPixelRatios = async (
     await testFn(ratio)
   }
 }
-

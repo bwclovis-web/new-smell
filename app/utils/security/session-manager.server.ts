@@ -1,16 +1,16 @@
-import crypto from 'crypto'
-import jwt from 'jsonwebtoken'
+import crypto from "crypto"
+import jwt from "jsonwebtoken"
 
-import { getSessionConfig, SESSION_CONFIG } from './session-config.server'
+import { getSessionConfig, SESSION_CONFIG } from "./session-config.server"
 
 // Validate JWT secret
 function validateJwtSecret() {
   const jwtSecret = process.env.JWT_SECRET
   if (!jwtSecret) {
-    throw new Error('JWT_SECRET environment variable is required')
+    throw new Error("JWT_SECRET environment variable is required")
   }
   if (jwtSecret.length < 32) {
-    throw new Error('JWT_SECRET must be at least 32 characters long')
+    throw new Error("JWT_SECRET must be at least 32 characters long")
   }
   return jwtSecret
 }
@@ -20,7 +20,7 @@ const config = getSessionConfig()
 
 // Generate secure refresh token
 export function generateRefreshToken(): string {
-  return crypto.randomBytes(SESSION_CONFIG.REFRESH_TOKEN_LENGTH / 2).toString('hex')
+  return crypto.randomBytes(SESSION_CONFIG.REFRESH_TOKEN_LENGTH / 2).toString("hex")
 }
 
 // Create access token
@@ -28,8 +28,8 @@ export function createAccessToken(userId: string): string {
   return jwt.sign(
     {
       userId,
-      type: 'access',
-      iat: Math.floor(Date.now() / 1000)
+      type: "access",
+      iat: Math.floor(Date.now() / 1000),
     },
     JWT_SECRET,
     { expiresIn: config.accessTokenExpiresIn }
@@ -41,8 +41,8 @@ export function createRefreshToken(userId: string): string {
   return jwt.sign(
     {
       userId,
-      type: 'refresh',
-      iat: Math.floor(Date.now() / 1000)
+      type: "refresh",
+      iat: Math.floor(Date.now() / 1000),
     },
     JWT_SECRET,
     { expiresIn: config.refreshTokenExpiresIn }
@@ -53,7 +53,7 @@ export function createRefreshToken(userId: string): string {
 export function verifyAccessToken(token: string): { userId: string } | null {
   try {
     const payload = jwt.verify(token, JWT_SECRET) as any
-    if (payload.type !== 'access') {
+    if (payload.type !== "access") {
       return null
     }
     return { userId: payload.userId }
@@ -66,7 +66,7 @@ export function verifyAccessToken(token: string): { userId: string } | null {
 export function verifyRefreshToken(token: string): { userId: string } | null {
   try {
     const payload = jwt.verify(token, JWT_SECRET) as any
-    if (payload.type !== 'refresh') {
+    if (payload.type !== "refresh") {
       return null
     }
     return { userId: payload.userId }
@@ -91,14 +91,14 @@ export async function createSession({
 
   // Calculate expiration date
   const expiresAt = new Date()
-  expiresAt.setTime(expiresAt.getTime() + (7 * 24 * 60 * 60 * 1000)) // 7 days
+  expiresAt.setTime(expiresAt.getTime() + 7 * 24 * 60 * 60 * 1000) // 7 days
 
   // Return session data (no database storage)
   return {
     accessToken,
     refreshToken,
     sessionId: crypto.randomUUID(), // Generate a unique session ID
-    expiresAt
+    expiresAt,
   }
 }
 
@@ -107,7 +107,7 @@ export async function refreshAccessToken(refreshToken: string) {
   // Verify refresh token
   const payload = verifyRefreshToken(refreshToken)
   if (!payload) {
-    throw new Error('Invalid refresh token')
+    throw new Error("Invalid refresh token")
   }
 
   // Generate new access token
@@ -116,7 +116,7 @@ export async function refreshAccessToken(refreshToken: string) {
   return {
     accessToken,
     userId: payload.userId,
-    sessionId: crypto.randomUUID() // Generate new session ID
+    sessionId: crypto.randomUUID(), // Generate new session ID
   }
 }
 
@@ -145,7 +145,7 @@ export async function getActiveSession(sessionId: string) {
 export async function cleanupExpiredSessions() {
   // In a cookie-based system, expired sessions are automatically invalid
   // No database cleanup needed
-  console.log('No database sessions to clean up')
+  console.log("No database sessions to clean up")
   return 0
 }
 
@@ -155,4 +155,3 @@ export async function getUserActiveSessions(userId: string) {
   // Return empty array
   return []
 }
-

@@ -1,83 +1,83 @@
 /**
  * Error Analytics Service
- * 
+ *
  * Provides analytics and reporting capabilities for error tracking.
  * Analyzes error logs to provide insights into error patterns, frequency, and trends.
  */
 
-import type { ErrorSeverity, ErrorType } from './errorHandling'
-import { type ErrorLogEntry, ErrorLogger } from './errorHandling'
+import type { ErrorSeverity, ErrorType } from "./errorHandling"
+import { type ErrorLogEntry, ErrorLogger } from "./errorHandling"
 
 export interface ErrorRateData {
-  timestamp: string;
-  count: number;
-  severity: ErrorSeverity;
+  timestamp: string
+  count: number
+  severity: ErrorSeverity
 }
 
 export interface ErrorTypeBreakdown {
-  type: ErrorType;
-  count: number;
-  percentage: number;
-  lastOccurrence: string;
+  type: ErrorType
+  count: number
+  percentage: number
+  lastOccurrence: string
 }
 
 export interface ErrorSeverityBreakdown {
-  severity: ErrorSeverity;
-  count: number;
-  percentage: number;
+  severity: ErrorSeverity
+  count: number
+  percentage: number
 }
 
 export interface ErrorTrend {
-  period: string;
-  totalErrors: number;
-  errorsByType: Record<ErrorType, number>;
-  errorsBySeverity: Record<ErrorSeverity, number>;
+  period: string
+  totalErrors: number
+  errorsByType: Record<ErrorType, number>
+  errorsBySeverity: Record<ErrorSeverity, number>
 }
 
 export interface ErrorAnalyticsReport {
   // Overview metrics
-  totalErrors: number;
-  errorRate: number; // errors per hour
-  criticalErrors: number;
-  highErrors: number;
-  mediumErrors: number;
-  lowErrors: number;
-  
+  totalErrors: number
+  errorRate: number // errors per hour
+  criticalErrors: number
+  highErrors: number
+  mediumErrors: number
+  lowErrors: number
+
   // Breakdowns
-  errorsByType: ErrorTypeBreakdown[];
-  errorsBySeverity: ErrorSeverityBreakdown[];
-  
+  errorsByType: ErrorTypeBreakdown[]
+  errorsBySeverity: ErrorSeverityBreakdown[]
+
   // Trends
-  hourlyTrend: ErrorTrend[];
-  dailyTrend: ErrorTrend[];
-  
+  hourlyTrend: ErrorTrend[]
+  dailyTrend: ErrorTrend[]
+
   // Top errors
   topErrors: {
-    code: string;
-    count: number;
-    message: string;
-    lastOccurrence: string;
-  }[];
-  
+    code: string
+    count: number
+    message: string
+    lastOccurrence: string
+  }[]
+
   // User impact
-  affectedUsers: number;
+  affectedUsers: number
   mostAffectedUsers: {
-    userId: string;
-    errorCount: number;
-  }[];
-  
+    userId: string
+    errorCount: number
+  }[]
+
   // Correlation IDs
-  recentCorrelationIds: string[];
-  
+  recentCorrelationIds: string[]
+
   // Time range
-  startTime: string;
-  endTime: string;
+  startTime: string
+  endTime: string
 }
 
 export interface AnalyticsOptions {
-  timeRange?: 'hour' | 'day' | 'week' | 'month' | 'all';
-  startDate?: Date;
-  endDate?: Date;
+  timeRange?: "hour" | "day" | "week" | "month" | "all"
+  startDate?: Date
+  endDate?: Date
 }
 
 export class ErrorAnalytics {
@@ -108,10 +108,10 @@ export class ErrorAnalytics {
     return {
       totalErrors: logs.length,
       errorRate: this.calculateErrorRate(logs, startTime, endTime),
-      criticalErrors: this.countBySeverity(logs, 'CRITICAL'),
-      highErrors: this.countBySeverity(logs, 'HIGH'),
-      mediumErrors: this.countBySeverity(logs, 'MEDIUM'),
-      lowErrors: this.countBySeverity(logs, 'LOW'),
+      criticalErrors: this.countBySeverity(logs, "CRITICAL"),
+      highErrors: this.countBySeverity(logs, "HIGH"),
+      mediumErrors: this.countBySeverity(logs, "MEDIUM"),
+      lowErrors: this.countBySeverity(logs, "LOW"),
       errorsByType: this.getErrorTypeBreakdown(logs),
       errorsBySeverity: this.getErrorSeverityBreakdown(logs),
       hourlyTrend: this.getHourlyTrend(logs),
@@ -131,10 +131,10 @@ export class ErrorAnalytics {
   getErrorRate(options: AnalyticsOptions = {}): ErrorRateData[] {
     const logs = this.getFilteredLogs(options)
     const rateData: ErrorRateData[] = []
-    
+
     // Group by hour
     const hourlyGroups = this.groupByHour(logs)
-    
+
     Object.entries(hourlyGroups).forEach(([hour, entries]) => {
       const severityCounts = {
         CRITICAL: 0,
@@ -142,11 +142,11 @@ export class ErrorAnalytics {
         MEDIUM: 0,
         LOW: 0,
       }
-      
-      entries.forEach(entry => {
+
+      entries.forEach((entry) => {
         severityCounts[entry.error.severity]++
       })
-      
+
       Object.entries(severityCounts).forEach(([severity, count]) => {
         if (count > 0) {
           rateData.push({
@@ -157,8 +157,10 @@ export class ErrorAnalytics {
         }
       })
     })
-    
-    return rateData.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
+
+    return rateData.sort(
+      (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    )
   }
 
   /**
@@ -167,30 +169,30 @@ export class ErrorAnalytics {
   getErrorTypeBreakdown(logs: ErrorLogEntry[]): ErrorTypeBreakdown[] {
     const typeCounts = new Map<ErrorType, number>()
     const lastOccurrence = new Map<ErrorType, string>()
-    
-    logs.forEach(log => {
+
+    logs.forEach((log) => {
       const type = log.error.type
       typeCounts.set(type, (typeCounts.get(type) || 0) + 1)
-      
+
       // Update last occurrence
       const current = lastOccurrence.get(type)
       if (!current || log.timestamp > current) {
         lastOccurrence.set(type, log.timestamp)
       }
     })
-    
+
     const total = logs.length
     const breakdown: ErrorTypeBreakdown[] = []
-    
+
     typeCounts.forEach((count, type) => {
       breakdown.push({
         type,
         count,
         percentage: total > 0 ? (count / total) * 100 : 0,
-        lastOccurrence: lastOccurrence.get(type) || '',
+        lastOccurrence: lastOccurrence.get(type) || "",
       })
     })
-    
+
     return breakdown.sort((a, b) => b.count - a.count)
   }
 
@@ -199,15 +201,15 @@ export class ErrorAnalytics {
    */
   getErrorSeverityBreakdown(logs: ErrorLogEntry[]): ErrorSeverityBreakdown[] {
     const severityCounts = new Map<ErrorSeverity, number>()
-    
-    logs.forEach(log => {
+
+    logs.forEach((log) => {
       const severity = log.error.severity
       severityCounts.set(severity, (severityCounts.get(severity) || 0) + 1)
     })
-    
+
     const total = logs.length
     const breakdown: ErrorSeverityBreakdown[] = []
-    
+
     severityCounts.forEach((count, severity) => {
       breakdown.push({
         severity,
@@ -215,12 +217,12 @@ export class ErrorAnalytics {
         percentage: total > 0 ? (count / total) * 100 : 0,
       })
     })
-    
+
     // Sort by severity level
-    const severityOrder: ErrorSeverity[] = [
-'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'
-]
-    return breakdown.sort((a, b) => severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity))
+    const severityOrder: ErrorSeverity[] = ["CRITICAL", "HIGH", "MEDIUM", "LOW"]
+    return breakdown.sort(
+      (a, b) => severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity)
+    )
   }
 
   /**
@@ -229,12 +231,14 @@ export class ErrorAnalytics {
   private getHourlyTrend(logs: ErrorLogEntry[]): ErrorTrend[] {
     const hourlyGroups = this.groupByHour(logs)
     const trends: ErrorTrend[] = []
-    
+
     Object.entries(hourlyGroups).forEach(([hour, entries]) => {
       trends.push(this.createTrend(hour, entries))
     })
-    
-    return trends.sort((a, b) => new Date(a.period).getTime() - new Date(b.period).getTime())
+
+    return trends.sort(
+      (a, b) => new Date(a.period).getTime() - new Date(b.period).getTime()
+    )
   }
 
   /**
@@ -243,28 +247,33 @@ export class ErrorAnalytics {
   private getDailyTrend(logs: ErrorLogEntry[]): ErrorTrend[] {
     const dailyGroups = this.groupByDay(logs)
     const trends: ErrorTrend[] = []
-    
+
     Object.entries(dailyGroups).forEach(([day, entries]) => {
       trends.push(this.createTrend(day, entries))
     })
-    
-    return trends.sort((a, b) => new Date(a.period).getTime() - new Date(b.period).getTime())
+
+    return trends.sort(
+      (a, b) => new Date(a.period).getTime() - new Date(b.period).getTime()
+    )
   }
 
   /**
    * Get top errors by frequency
    */
   private getTopErrors(logs: ErrorLogEntry[], limit: number = 10) {
-    const errorCounts = new Map<string, {
-      count: number;
-      message: string;
-      lastOccurrence: string;
-    }>()
-    
-    logs.forEach(log => {
+    const errorCounts = new Map<
+      string,
+      {
+        count: number
+        message: string
+        lastOccurrence: string
+      }
+    >()
+
+    logs.forEach((log) => {
       const code = log.error.code
       const existing = errorCounts.get(code)
-      
+
       if (existing) {
         existing.count++
         if (log.timestamp > existing.lastOccurrence) {
@@ -278,7 +287,7 @@ export class ErrorAnalytics {
         })
       }
     })
-    
+
     return Array.from(errorCounts.entries())
       .map(([code, data]) => ({
         code,
@@ -295,13 +304,13 @@ export class ErrorAnalytics {
    */
   private countAffectedUsers(logs: ErrorLogEntry[]): number {
     const users = new Set<string>()
-    
-    logs.forEach(log => {
+
+    logs.forEach((log) => {
       if (log.userId) {
         users.add(log.userId)
       }
     })
-    
+
     return users.size
   }
 
@@ -310,13 +319,13 @@ export class ErrorAnalytics {
    */
   private getMostAffectedUsers(logs: ErrorLogEntry[], limit: number = 10) {
     const userCounts = new Map<string, number>()
-    
-    logs.forEach(log => {
+
+    logs.forEach((log) => {
       if (log.userId) {
         userCounts.set(log.userId, (userCounts.get(log.userId) || 0) + 1)
       }
     })
-    
+
     return Array.from(userCounts.entries())
       .map(([userId, errorCount]) => ({ userId, errorCount }))
       .sort((a, b) => b.errorCount - a.errorCount)
@@ -326,10 +335,13 @@ export class ErrorAnalytics {
   /**
    * Get recent correlation IDs
    */
-  private getRecentCorrelationIds(logs: ErrorLogEntry[], limit: number = 10): string[] {
+  private getRecentCorrelationIds(
+    logs: ErrorLogEntry[],
+    limit: number = 10
+  ): string[] {
     return logs
-      .filter(log => log.correlationId)
-      .map(log => log.correlationId!)
+      .filter((log) => log.correlationId)
+      .map((log) => log.correlationId!)
       .slice(-limit)
       .reverse()
   }
@@ -337,14 +349,18 @@ export class ErrorAnalytics {
   /**
    * Calculate error rate (errors per hour)
    */
-  private calculateErrorRate(logs: ErrorLogEntry[], startTime: Date, endTime: Date): number {
+  private calculateErrorRate(
+    logs: ErrorLogEntry[],
+    startTime: Date,
+    endTime: Date
+  ): number {
     if (logs.length === 0) {
- return 0 
-}
-    
+      return 0
+    }
+
     const durationMs = endTime.getTime() - startTime.getTime()
     const durationHours = durationMs / (1000 * 60 * 60)
-    
+
     return durationHours > 0 ? logs.length / durationHours : 0
   }
 
@@ -352,7 +368,7 @@ export class ErrorAnalytics {
    * Count errors by severity
    */
   private countBySeverity(logs: ErrorLogEntry[], severity: ErrorSeverity): number {
-    return logs.filter(log => log.error.severity === severity).length
+    return logs.filter((log) => log.error.severity === severity).length
   }
 
   /**
@@ -362,8 +378,8 @@ export class ErrorAnalytics {
     const allLogs = this.errorLogger.getLogs()
     const startTime = this.getStartTime(options)
     const endTime = options.endDate || new Date()
-    
-    return allLogs.filter(log => {
+
+    return allLogs.filter((log) => {
       const logTime = new Date(log.timestamp)
       return logTime >= startTime && logTime <= endTime
     })
@@ -376,19 +392,19 @@ export class ErrorAnalytics {
     if (options.startDate) {
       return options.startDate
     }
-    
+
     const now = new Date()
-    
+
     switch (options.timeRange) {
-      case 'hour':
+      case "hour":
         return new Date(now.getTime() - 60 * 60 * 1000)
-      case 'day':
+      case "day":
         return new Date(now.getTime() - 24 * 60 * 60 * 1000)
-      case 'week':
+      case "week":
         return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-      case 'month':
+      case "month":
         return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
-      case 'all':
+      case "all":
       default:
         // Start from first log or 30 days ago
         const logs = this.errorLogger.getLogs()
@@ -404,8 +420,8 @@ export class ErrorAnalytics {
    */
   private groupByHour(logs: ErrorLogEntry[]): Record<string, ErrorLogEntry[]> {
     const groups: Record<string, ErrorLogEntry[]> = {}
-    
-    logs.forEach(log => {
+
+    logs.forEach((log) => {
       const date = new Date(log.timestamp)
       const hourKey = new Date(
         date.getFullYear(),
@@ -416,13 +432,13 @@ export class ErrorAnalytics {
         0,
         0
       ).toISOString()
-      
+
       if (!groups[hourKey]) {
         groups[hourKey] = []
       }
       groups[hourKey].push(log)
     })
-    
+
     return groups
   }
 
@@ -431,8 +447,8 @@ export class ErrorAnalytics {
    */
   private groupByDay(logs: ErrorLogEntry[]): Record<string, ErrorLogEntry[]> {
     const groups: Record<string, ErrorLogEntry[]> = {}
-    
-    logs.forEach(log => {
+
+    logs.forEach((log) => {
       const date = new Date(log.timestamp)
       const dayKey = new Date(
         date.getFullYear(),
@@ -443,13 +459,13 @@ export class ErrorAnalytics {
         0,
         0
       ).toISOString()
-      
+
       if (!groups[dayKey]) {
         groups[dayKey] = []
       }
       groups[dayKey].push(log)
     })
-    
+
     return groups
   }
 
@@ -459,15 +475,15 @@ export class ErrorAnalytics {
   private createTrend(period: string, entries: ErrorLogEntry[]): ErrorTrend {
     const errorsByType: Record<string, number> = {}
     const errorsBySeverity: Record<string, number> = {}
-    
-    entries.forEach(entry => {
+
+    entries.forEach((entry) => {
       const type = entry.error.type
       const severity = entry.error.severity
-      
+
       errorsByType[type] = (errorsByType[type] || 0) + 1
       errorsBySeverity[severity] = (errorsBySeverity[severity] || 0) + 1
     })
-    
+
     return {
       period,
       totalErrors: entries.length,
@@ -494,4 +510,3 @@ export class ErrorAnalytics {
 
 // Export singleton instance
 export const errorAnalytics = ErrorAnalytics.getInstance()
-

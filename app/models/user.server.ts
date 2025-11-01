@@ -1,46 +1,51 @@
-import { prisma } from '~/db.server'
-import { invalidateAllSessions } from '~/models/session.server'
-import { assertValid, validationError } from '~/utils/errorHandling.patterns'
+import { prisma } from "~/db.server"
+import { invalidateAllSessions } from "~/models/session.server"
+import { assertValid, validationError } from "~/utils/errorHandling.patterns"
 import {
   calculatePasswordStrength,
   hashPassword,
   validatePasswordComplexity,
-  verifyPassword
-} from '~/utils/security/password-security.server'
+  verifyPassword,
+} from "~/utils/security/password-security.server"
 
-import { getUserByEmail, getUserByName } from './user.query'
+import { getUserByEmail, getUserByName } from "./user.query"
 
 // Re-export query functions from user.query to maintain backwards compatibility
-export { getAllUsers, getUserByEmail, getUserById, getUserByName } from './user.query'
-
-
+export {
+  getAllUsers,
+  getUserByEmail,
+  getUserById,
+  getUserByName,
+} from "./user.query"
 
 export const createUser = async (data: FormData) => {
-  const password = data.get('password')
+  const password = data.get("password")
   assertValid(
-    typeof password === 'string',
-    'Password is required and must be a string',
-    { field: 'password' }
+    typeof password === "string",
+    "Password is required and must be a string",
+    { field: "password" }
   )
 
   // Validate password complexity
   const passwordValidation = validatePasswordComplexity(password)
   if (!passwordValidation.isValid) {
     throw validationError(
-      `Password validation failed: ${passwordValidation.errors.join(', ')}`,
-      { field: 'password', errors: passwordValidation.errors }
+      `Password validation failed: ${passwordValidation.errors.join(", ")}`,
+      { field: "password", errors: passwordValidation.errors }
     )
   }
 
   // Calculate password strength for logging
   const strengthInfo = calculatePasswordStrength(password)
-  console.log(`New user password strength: ${strengthInfo.strength} (score: ${strengthInfo.score})`)
+  console.log(
+    `New user password strength: ${strengthInfo.strength} (score: ${strengthInfo.score})`
+  )
 
   const user = await prisma.user.create({
     data: {
-      email: data.get('email') as string,
-      password: await hashPassword(password)
-    }
+      email: data.get("email") as string,
+      password: await hashPassword(password),
+    },
   })
   return user
 }
@@ -57,8 +62,8 @@ export const getTraderById = async (id: string) => {
       UserPerfume: {
         where: {
           available: {
-            not: '0'
-          }
+            not: "0",
+          },
         },
         select: {
           id: true,
@@ -79,14 +84,14 @@ export const getTraderById = async (id: string) => {
                 select: {
                   id: true,
                   name: true,
-                  slug: true
-                }
-              }
-            }
+                  slug: true,
+                },
+              },
+            },
           },
           comments: {
             where: {
-              isPublic: true
+              isPublic: true,
             },
             select: {
               id: true,
@@ -99,19 +104,19 @@ export const getTraderById = async (id: string) => {
                   id: true,
                   firstName: true,
                   lastName: true,
-                  username: true
-                }
-              }
+                  username: true,
+                },
+              },
             },
             orderBy: {
-              createdAt: 'desc'
-            }
-          }
-        }
+              createdAt: "desc",
+            },
+          },
+        },
       },
       UserPerfumeWishlist: {
         where: {
-          isPublic: true
+          isPublic: true,
         },
         select: {
           id: true,
@@ -128,25 +133,24 @@ export const getTraderById = async (id: string) => {
                 select: {
                   id: true,
                   name: true,
-                  slug: true
-                }
-              }
-            }
-          }
+                  slug: true,
+                },
+              },
+            },
+          },
         },
         orderBy: {
-          createdAt: 'desc'
-        }
-      }
-    }
+          createdAt: "desc",
+        },
+      },
+    },
   })
   return trader
 }
 
-
 export const signInCustomer = async (data: FormData) => {
-  const password = data.get('password') as string
-  const email = data.get('email') as string
+  const password = data.get("password") as string
+  const email = data.get("email") as string
   const user = await getUserByEmail(email)
   if (!user) {
     return null
@@ -161,22 +165,29 @@ export const signInCustomer = async (data: FormData) => {
 }
 
 // Enhanced password change functionality
-export const changePassword = async (userId: string, currentPassword: string, newPassword: string) => {
+export const changePassword = async (
+  userId: string,
+  currentPassword: string,
+  newPassword: string
+) => {
   try {
     // Get user with password
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, password: true }
+      select: { id: true, password: true },
     })
 
     if (!user) {
-      return { success: false, error: 'User not found' }
+      return { success: false, error: "User not found" }
     }
 
     // Verify current password
-    const isCurrentPasswordValid = await verifyPassword(currentPassword, user.password)
+    const isCurrentPasswordValid = await verifyPassword(
+      currentPassword,
+      user.password
+    )
     if (!isCurrentPasswordValid) {
-      return { success: false, error: 'Current password is incorrect' }
+      return { success: false, error: "Current password is incorrect" }
     }
 
     // Validate new password complexity
@@ -184,18 +195,23 @@ export const changePassword = async (userId: string, currentPassword: string, ne
     if (!passwordValidation.isValid) {
       return {
         success: false,
-        error: `Password validation failed: ${passwordValidation.errors.join(', ')}`
+        error: `Password validation failed: ${passwordValidation.errors.join(", ")}`,
       }
     }
 
     // Check if new password is different from current
     if (currentPassword === newPassword) {
-      return { success: false, error: 'New password must be different from current password' }
+      return {
+        success: false,
+        error: "New password must be different from current password",
+      }
     }
 
     // Calculate password strength
     const strengthInfo = calculatePasswordStrength(newPassword)
-    console.log(`Password change - new password strength: ${strengthInfo.strength} (score: ${strengthInfo.score})`)
+    console.log(
+      `Password change - new password strength: ${strengthInfo.strength} (score: ${strengthInfo.score})`
+    )
 
     // Hash and update password
     const hashedNewPassword = await hashPassword(newPassword)
@@ -204,8 +220,8 @@ export const changePassword = async (userId: string, currentPassword: string, ne
       where: { id: userId },
       data: {
         password: hashedNewPassword,
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     })
 
     // Invalidate all user sessions after password change
@@ -213,17 +229,19 @@ export const changePassword = async (userId: string, currentPassword: string, ne
 
     return {
       success: true,
-      message: 'Password changed successfully. All sessions have been invalidated for security.',
-      strength: strengthInfo.strength
+      message:
+        "Password changed successfully. All sessions have been invalidated for security.",
+      strength: strengthInfo.strength,
     }
   } catch (error) {
-    console.error('Password change error:', error)
-    return { success: false, error: 'Failed to change password' }
+    console.error("Password change error:", error)
+    return { success: false, error: "Failed to change password" }
   }
 }
 
 // Password strength check for frontend
-export const checkPasswordStrength = (password: string) => calculatePasswordStrength(password)
+export const checkPasswordStrength = (password: string) =>
+  calculatePasswordStrength(password)
 
 export const getUserPerfumes = async (userId: string) => {
   const userPerfumes = await prisma.userPerfume.findMany({
@@ -231,25 +249,24 @@ export const getUserPerfumes = async (userId: string) => {
     include: {
       perfume: {
         include: {
-          perfumeHouse: true
-        }
+          perfumeHouse: true,
+        },
       },
       comments: {
         orderBy: {
-          createdAt: 'desc'
-        }
-      }
-    }
+          createdAt: "desc",
+        },
+      },
+    },
   })
   return userPerfumes
 }
 
 // Helper function to find a user perfume
-const findUserPerfume = async (userId: string, perfumeId: string) => (
+const findUserPerfume = async (userId: string, perfumeId: string) =>
   prisma.userPerfume.findFirst({
-    where: { userId, perfumeId }
+    where: { userId, perfumeId },
   })
-)
 
 interface HandleExistingPerfumeParams {
   existingPerfume: any
@@ -263,7 +280,7 @@ const handleExistingPerfume = async ({
   existingPerfume,
   amount,
   price,
-  placeOfPurchase
+  placeOfPurchase,
 }: HandleExistingPerfumeParams) => {
   // If the perfume exists and we need to update it
   const updateData: any = {}
@@ -288,12 +305,12 @@ const handleExistingPerfume = async ({
     const updatedPerfume = await prisma.userPerfume.update({
       where: { id: existingPerfume.id },
       data: updateData,
-      include: { perfume: true }
+      include: { perfume: true },
     })
     return { success: true, userPerfume: updatedPerfume, updated: true }
   }
 
-  return { success: false, error: 'Perfume already in your collection' }
+  return { success: false, error: "Perfume already in your collection" }
 }
 
 interface AddUserPerfumeParams {
@@ -309,7 +326,7 @@ export const addUserPerfume = async ({
   perfumeId,
   amount,
   price,
-  placeOfPurchase
+  placeOfPurchase,
 }: AddUserPerfumeParams) => {
   try {
     // Check if the perfume exists in collection
@@ -320,7 +337,7 @@ export const addUserPerfume = async ({
         existingPerfume,
         amount,
         price,
-        placeOfPurchase
+        placeOfPurchase,
       })
     }
 
@@ -329,20 +346,20 @@ export const addUserPerfume = async ({
       data: {
         userId,
         perfumeId,
-        amount: amount || 'full', // Use provided amount or default to 'full'
+        amount: amount || "full", // Use provided amount or default to 'full'
         price,
-        placeOfPurchase
+        placeOfPurchase,
       },
       include: {
-        perfume: true
-      }
+        perfume: true,
+      },
     })
 
     return { success: true, userPerfume }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error adding perfume to user collection:', error)
-    return { success: false, error: 'Failed to add perfume to collection' }
+    console.error("Error adding perfume to user collection:", error)
+    return { success: false, error: "Failed to add perfume to collection" }
   }
 }
 
@@ -352,36 +369,39 @@ export const removeUserPerfume = async (userId: string, perfumeId: string) => {
     const existingPerfume = await prisma.userPerfume.findFirst({
       where: {
         userId,
-        perfumeId
-      }
+        perfumeId,
+      },
     })
 
     if (!existingPerfume) {
-      return { success: false, error: 'Perfume not found in your collection' }
+      return { success: false, error: "Perfume not found in your collection" }
     }
 
     // Use a transaction to ensure both operations succeed or fail together
-    await prisma.$transaction(async transaction => {
+    await prisma.$transaction(async (transaction) => {
       // First, delete all comments associated with this user perfume
       await transaction.userPerfumeComment.deleteMany({
         where: {
-          userPerfumeId: existingPerfume.id
-        }
+          userPerfumeId: existingPerfume.id,
+        },
       })
 
       // Then remove the perfume from the user's collection
       await transaction.userPerfume.delete({
         where: {
-          id: existingPerfume.id
-        }
+          id: existingPerfume.id,
+        },
       })
     })
 
     return { success: true }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error removing perfume from user collection:', error)
-    return { success: false, error: 'Failed to remove perfume from collection' }
+    console.error("Error removing perfume from user collection:", error)
+    return {
+      success: false,
+      error: "Failed to remove perfume from collection",
+    }
   }
 }
 
@@ -408,21 +428,20 @@ const prepareUpdateData = (
 }
 
 // Helper to update perfume in database
-const updatePerfumeInDatabase = async (perfumeId: string, updateData: any) => (
+const updatePerfumeInDatabase = async (perfumeId: string, updateData: any) =>
   await prisma.userPerfume.update({
     where: { id: perfumeId },
     data: updateData,
-    include: { perfume: true }
+    include: { perfume: true },
   })
-)
 
 export const updateAvailableAmount = async (params: {
-  userId: string;
-  perfumeId: string;
-  availableAmount: string;
-  tradePrice?: string;
-  tradePreference?: string;
-  tradeOnly?: boolean;
+  userId: string
+  perfumeId: string
+  availableAmount: string
+  tradePrice?: string
+  tradePreference?: string
+  tradeOnly?: boolean
 }) => {
   try {
     const {
@@ -431,14 +450,14 @@ export const updateAvailableAmount = async (params: {
       availableAmount,
       tradePrice,
       tradePreference,
-      tradeOnly
+      tradeOnly,
     } = params
 
     // Check if the user owns this perfume
     const existingPerfume = await findUserPerfume(userId, perfumeId)
 
     if (!existingPerfume) {
-      return { success: false, error: 'Perfume not found in your collection' }
+      return { success: false, error: "Perfume not found in your collection" }
     }
 
     // Prepare update data
@@ -458,8 +477,8 @@ export const updateAvailableAmount = async (params: {
     return { success: true, userPerfume: updatedPerfume }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error updating available amount:', error)
-    return { success: false, error: 'Failed to update available amount' }
+    console.error("Error updating available amount:", error)
+    return { success: false, error: "Failed to update available amount" }
   }
 }
 
@@ -476,14 +495,17 @@ export const addPerfumeComment = async ({
   perfumeId,
   comment,
   isPublic = false,
-  userPerfumeId
+  userPerfumeId,
 }: AddCommentParams) => {
   try {
     // Check if the user owns this perfume (only owners can comment)
     const existingPerfume = await findUserPerfume(userId, perfumeId)
 
     if (!existingPerfume) {
-      return { success: false, error: 'You can only comment on perfumes in your collection' }
+      return {
+        success: false,
+        error: "You can only comment on perfumes in your collection",
+      }
     }
 
     // Create the comment
@@ -493,19 +515,19 @@ export const addPerfumeComment = async ({
         perfumeId,
         userPerfumeId, // Use the provided userPerfumeId
         comment,
-        isPublic
+        isPublic,
       },
       include: {
         perfume: true,
-        userPerfume: true
-      }
+        userPerfume: true,
+      },
     })
 
     return { success: true, userComment }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error adding comment to perfume:', error)
-    return { success: false, error: 'Failed to add comment to perfume' }
+    console.error("Error adding comment to perfume:", error)
+    return { success: false, error: "Failed to add comment to perfume" }
   }
 }
 
@@ -517,33 +539,31 @@ interface UpdateCommentParams {
 }
 
 // Helper function to find a user's comment
-const findUserComment = async (commentId: string) => (
+const findUserComment = async (commentId: string) =>
   // Note: After running npx prisma generate, this will be available
   prisma.userPerfumeComment.findUnique({
-    where: { id: commentId }
+    where: { id: commentId },
   })
-)
 
 // Helper function to perform the comment update
-const performCommentUpdate = async (commentId: string, updateData: any) => (
+const performCommentUpdate = async (commentId: string, updateData: any) =>
   // Note: After running npx prisma generate, this will be available
   prisma.userPerfumeComment.update({
     where: { id: commentId },
     data: updateData,
     include: {
-      perfume: true
-    }
+      perfume: true,
+    },
   })
-)
 
 // Helper function to validate comment ownership
 const validateCommentOwnership = (comment: any, userId: string) => {
   if (!comment) {
-    return { isValid: false, error: 'Comment not found' }
+    return { isValid: false, error: "Comment not found" }
   }
 
   if (comment.userId !== userId) {
-    return { isValid: false, error: 'You can only update your own comments' }
+    return { isValid: false, error: "You can only update your own comments" }
   }
 
   return { isValid: true }
@@ -568,7 +588,7 @@ export const updatePerfumeComment = async ({
   userId,
   commentId,
   comment,
-  isPublic
+  isPublic,
 }: UpdateCommentParams) => {
   try {
     // Find and validate the comment
@@ -586,8 +606,8 @@ export const updatePerfumeComment = async ({
     return { success: true, userComment: updatedComment }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error updating perfume comment:', error)
-    return { success: false, error: 'Failed to update perfume comment' }
+    console.error("Error updating perfume comment:", error)
+    return { success: false, error: "Failed to update perfume comment" }
   }
 }
 
@@ -603,14 +623,14 @@ export const deletePerfumeComment = async (userId: string, commentId: string) =>
 
     // Delete the comment
     await prisma.userPerfumeComment.delete({
-      where: { id: commentId }
+      where: { id: commentId },
     })
 
     return { success: true }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error deleting perfume comment:', error)
-    return { success: false, error: 'Failed to delete perfume comment' }
+    console.error("Error deleting perfume comment:", error)
+    return { success: false, error: "Failed to delete perfume comment" }
   }
 }
 
@@ -620,24 +640,24 @@ export const getUserPerfumeComments = async (userId: string, perfumeId: string) 
     const existingPerfume = await findUserPerfume(userId, perfumeId)
 
     if (!existingPerfume) {
-      return { success: false, error: 'Perfume not found in your collection' }
+      return { success: false, error: "Perfume not found in your collection" }
     }
 
     // Get user's comments for a specific perfume
     const comments = await prisma.userPerfumeComment.findMany({
       where: {
-        userPerfumeId: existingPerfume.id
+        userPerfumeId: existingPerfume.id,
       },
       orderBy: {
-        createdAt: 'desc'
-      }
+        createdAt: "desc",
+      },
     })
 
     return { success: true, comments }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error fetching user perfume comments:', error)
-    return { success: false, error: 'Failed to fetch comments' }
+    console.error("Error fetching user perfume comments:", error)
+    return { success: false, error: "Failed to fetch comments" }
   }
 }
 
@@ -647,7 +667,7 @@ export const getPublicPerfumeComments = async (perfumeId: string) => {
     const comments = await prisma.userPerfumeComment.findMany({
       where: {
         perfumeId,
-        isPublic: true
+        isPublic: true,
       },
       include: {
         user: {
@@ -655,20 +675,20 @@ export const getPublicPerfumeComments = async (perfumeId: string) => {
             id: true,
             firstName: true,
             lastName: true,
-            username: true
-          }
+            username: true,
+          },
         },
-        userPerfume: true
+        userPerfume: true,
       },
       orderBy: {
-        createdAt: 'desc'
-      }
+        createdAt: "desc",
+      },
     })
 
     return { success: true, comments }
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error fetching public perfume comments:', error)
-    return { success: false, error: 'Failed to fetch public comments' }
+    console.error("Error fetching public perfume comments:", error)
+    return { success: false, error: "Failed to fetch public comments" }
   }
 }

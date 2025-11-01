@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react"
 
 /**
  * Hook to manage CSRF tokens in React components
@@ -11,12 +11,12 @@ export function useCSRF() {
   useEffect(() => {
     // Get CSRF token from cookie (set by server)
     const getCSRFToken = () => {
-      const cookies = document.cookie.split(';')
+      const cookies = document.cookie.split(";")
 
-      const csrfCookie = cookies.find(cookie => cookie.trim().startsWith('_csrf='))
+      const csrfCookie = cookies.find((cookie) => cookie.trim().startsWith("_csrf="))
 
       if (csrfCookie) {
-        const token = csrfCookie.split('=')[1]
+        const token = csrfCookie.split("=")[1]
         setCsrfToken(token)
       }
       setIsLoading(false)
@@ -35,7 +35,7 @@ export function useCSRF() {
    */
   const addToFormData = (formData: FormData): FormData => {
     if (csrfToken) {
-      formData.append('_csrf', csrfToken)
+      formData.append("_csrf", csrfToken)
     }
     return formData
   }
@@ -47,7 +47,7 @@ export function useCSRF() {
     if (csrfToken) {
       return {
         ...headers,
-        'x-csrf-token': csrfToken
+        "x-csrf-token": csrfToken,
       }
     }
     return headers
@@ -66,9 +66,9 @@ export function useCSRF() {
 
     return fetch(url, {
       ...options,
-      method: 'POST',
+      method: "POST",
       body: protectedFormData,
-      headers: protectedHeaders
+      headers: protectedHeaders,
     })
   }
 
@@ -78,6 +78,6 @@ export function useCSRF() {
     getToken,
     addToFormData,
     addToHeaders,
-    submitForm
+    submitForm,
   }
 }

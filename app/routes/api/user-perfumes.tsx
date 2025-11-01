@@ -1,7 +1,7 @@
-import { parseCookies, verifyJwt } from '@api/utils'
-import type { ActionFunctionArgs, LoaderFunctionArgs } from 'react-router'
+import { parseCookies, verifyJwt } from "@api/utils"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router"
 
-import { getAllPerfumes } from '~/models/perfume.server'
+import { getAllPerfumes } from "~/models/perfume.server"
 import {
   addPerfumeComment,
   addUserPerfume,
@@ -10,36 +10,39 @@ import {
   getUserPerfumes,
   removeUserPerfume,
   updateAvailableAmount,
-  updatePerfumeComment
-} from '~/models/user.server'
-import { processWishlistAvailabilityAlerts } from '~/utils/alert-processors'
-import { withActionErrorHandling, withLoaderErrorHandling } from '~/utils/errorHandling.server'
+  updatePerfumeComment,
+} from "~/models/user.server"
+import { processWishlistAvailabilityAlerts } from "~/utils/alert-processors"
+import {
+  withActionErrorHandling,
+  withLoaderErrorHandling,
+} from "~/utils/errorHandling.server"
 
 // Type definitions
 type AuthResult = {
-  success: boolean;
-  error?: string;
-  status?: number;
-  user?: any;
+  success: boolean
+  error?: string
+  status?: number
+  user?: any
 }
 
 type PerfumeActionParams = {
-  user: any;
-  perfumeId: string;
-  actionType: string;
-  amount?: string;
-  comment?: string;
-  isPublic?: boolean;
-  userPerfumeId?: string;
-  commentId?: string;
-  tradePrice?: string;
-  tradePreference?: string;
-  tradeOnly?: boolean;
+  user: any
+  perfumeId: string
+  actionType: string
+  amount?: string
+  comment?: string
+  isPublic?: boolean
+  userPerfumeId?: string
+  commentId?: string
+  tradePrice?: string
+  tradePreference?: string
+  tradeOnly?: boolean
 }
 
 // Helper functions for authentication
 const getTokenFromRequest = (request: Request) => {
-  const cookieHeader = request.headers.get('cookie') || ''
+  const cookieHeader = request.headers.get("cookie") || ""
   const cookies = parseCookies({ headers: { cookie: cookieHeader } })
   return cookies.accessToken || cookies.token
 }
@@ -59,16 +62,20 @@ const validateToken = (token: string): { valid: boolean; userId?: string } => {
 
 // Helper function to handle user lookup based on token validation
 const getUserFromValidation = async (validation: {
-  valid: boolean;
+  valid: boolean
   userId?: string
 }): Promise<AuthResult> => {
   if (!validation.valid || !validation.userId) {
-    return { success: false, error: 'Invalid authentication token', status: 401 }
+    return {
+      success: false,
+      error: "Invalid authentication token",
+      status: 401,
+    }
   }
 
   const user = await getUserById(validation.userId)
   if (!user) {
-    return { success: false, error: 'User not found', status: 401 }
+    return { success: false, error: "User not found", status: 401 }
   }
 
   return { success: true, user }
@@ -79,7 +86,7 @@ const authenticateUser = async (request: Request): Promise<AuthResult> => {
   const token = getTokenFromRequest(request)
 
   if (!token) {
-    return { success: false, error: 'User not authenticated', status: 401 }
+    return { success: false, error: "User not authenticated", status: 401 }
   }
 
   const validation = validateToken(token)
@@ -87,65 +94,74 @@ const authenticateUser = async (request: Request): Promise<AuthResult> => {
 }
 
 // Helper functions for different action types
-const handleAddAction = async (
-  user: any,
-  perfumeId: string,
-  amount?: string
-) => {
+const handleAddAction = async (user: any, perfumeId: string, amount?: string) => {
   const result = await addUserPerfume({
     userId: user.id,
     perfumeId,
-    amount
+    amount,
   })
-  
+
   // Process wishlist availability alerts when a perfume becomes available
   if (amount && parseFloat(amount) > 0) {
     try {
       await processWishlistAvailabilityAlerts(perfumeId)
     } catch (error) {
-      const { ErrorHandler } = await import('~/utils/errorHandling')
-      ErrorHandler.handle(error, { api: 'user-perfumes', action: 'processWishlistAlerts-add', perfumeId })
+      const { ErrorHandler } = await import("~/utils/errorHandling")
+      ErrorHandler.handle(error, {
+        api: "user-perfumes",
+        action: "processWishlistAlerts-add",
+        perfumeId,
+      })
       // Don't fail the operation if alert processing fails
     }
   }
-  
+
   return result
 }
 
-const handleRemoveAction = async (
-  user: any,
-  perfumeId: string
-) => removeUserPerfume(user.id, perfumeId)
+const handleRemoveAction = async (user: any, perfumeId: string) =>
+  removeUserPerfume(user.id, perfumeId)
 
 const handleDecantAction = async (params: {
-  user: any;
-  perfumeId: string;
-  amount?: string;
-  tradePrice?: string;
-  tradePreference?: string;
-  tradeOnly?: boolean;
+  user: any
+  perfumeId: string
+  amount?: string
+  tradePrice?: string
+  tradePreference?: string
+  tradeOnly?: boolean
 }) => {
-  const { user, perfumeId, amount = '0', tradePrice, tradePreference, tradeOnly } = params
+  const {
+    user,
+    perfumeId,
+    amount = "0",
+    tradePrice,
+    tradePreference,
+    tradeOnly,
+  } = params
   const result = await updateAvailableAmount({
     userId: user.id,
     perfumeId,
     availableAmount: amount,
     tradePrice,
     tradePreference,
-    tradeOnly
+    tradeOnly,
   })
-  
+
   // Process wishlist availability alerts when a perfume becomes available
   if (amount && parseFloat(amount) > 0) {
     try {
       await processWishlistAvailabilityAlerts(perfumeId)
     } catch (error) {
-      const { ErrorHandler } = await import('~/utils/errorHandling')
-      ErrorHandler.handle(error, { api: 'user-perfumes', action: 'processWishlistAlerts-decant', perfumeId })
+      const { ErrorHandler } = await import("~/utils/errorHandling")
+      ErrorHandler.handle(error, {
+        api: "user-perfumes",
+        action: "processWishlistAlerts-decant",
+        perfumeId,
+      })
       // Don't fail the operation if alert processing fails
     }
   }
-  
+
   return result
 }
 
@@ -159,7 +175,7 @@ const handleAddCommentAction = async (params: {
   const { user, perfumeId, comment, isPublic, userPerfumeId } = params
 
   if (!comment || !userPerfumeId) {
-    return { success: false, error: 'Comment and userPerfumeId are required' }
+    return { success: false, error: "Comment and userPerfumeId are required" }
   }
 
   return await addPerfumeComment({
@@ -167,7 +183,7 @@ const handleAddCommentAction = async (params: {
     perfumeId,
     comment,
     isPublic,
-    userPerfumeId
+    userPerfumeId,
   })
 }
 
@@ -177,22 +193,19 @@ const handleToggleCommentVisibilityAction = async (
   isPublic?: boolean
 ) => {
   if (!commentId) {
-    return { success: false, error: 'Comment ID is required' }
+    return { success: false, error: "Comment ID is required" }
   }
 
   return await updatePerfumeComment({
     userId: user.id,
     commentId,
-    isPublic
+    isPublic,
   })
 }
 
-const handleDeleteCommentAction = async (
-  user: any,
-  commentId?: string
-) => {
+const handleDeleteCommentAction = async (user: any, commentId?: string) => {
   if (!commentId) {
-    return { success: false, error: 'Comment ID is required' }
+    return { success: false, error: "Comment ID is required" }
   }
 
   return await deletePerfumeComment(user.id, commentId)
@@ -211,33 +224,37 @@ const processUserPerfumeAction = async (params: PerfumeActionParams) => {
     commentId,
     tradePrice,
     tradePreference,
-    tradeOnly
+    tradeOnly,
   } = params
 
   switch (actionType) {
-    case 'add':
+    case "add":
       return handleAddAction(user, perfumeId, amount)
-    case 'remove':
+    case "remove":
       return handleRemoveAction(user, perfumeId)
-    case 'decant':
+    case "decant":
       return handleDecantAction({
         user,
         perfumeId,
         amount,
         tradePrice,
         tradePreference,
-        tradeOnly
+        tradeOnly,
       })
-    case 'add-comment':
+    case "add-comment":
       return handleAddCommentAction({
-        user, perfumeId, comment, isPublic, userPerfumeId
+        user,
+        perfumeId,
+        comment,
+        isPublic,
+        userPerfumeId,
       })
-    case 'toggle-comment-visibility':
+    case "toggle-comment-visibility":
       return handleToggleCommentVisibilityAction(user, commentId, isPublic)
-    case 'delete-comment':
+    case "delete-comment":
       return handleDeleteCommentAction(user, commentId)
     default:
-      return { success: false, error: 'Invalid action' }
+      return { success: false, error: "Invalid action" }
   }
 }
 
@@ -246,17 +263,17 @@ const handleAuthSuccess = async (user: any) => {
   const userPerfumes = await getUserPerfumes(user.id)
   const allPerfumes = await getAllPerfumes()
 
-  return new Response(
-    JSON.stringify({ success: true, userPerfumes, allPerfumes }),
-    { headers: { 'Content-Type': 'application/json' } }
-  )
+  return new Response(JSON.stringify({ success: true, userPerfumes, allPerfumes }), {
+    headers: { "Content-Type": "application/json" },
+  })
 }
 
 // Helper function to handle authentication errors
-const handleAuthError = (result: AuthResult) => new Response(
-  JSON.stringify({ success: false, error: result.error }),
-  { status: result.status, headers: { 'Content-Type': 'application/json' } }
-)
+const handleAuthError = (result: AuthResult) =>
+  new Response(JSON.stringify({ success: false, error: result.error }), {
+    status: result.status,
+    headers: { "Content-Type": "application/json" },
+  })
 
 export const loader = withLoaderErrorHandling(
   async ({ request }: LoaderFunctionArgs) => {
@@ -269,16 +286,16 @@ export const loader = withLoaderErrorHandling(
     return handleAuthSuccess(authResult.user)
   },
   {
-    context: { api: 'user-perfumes', action: 'loader' }
+    context: { api: "user-perfumes", action: "loader" },
   }
 )
 
 // Helper function to validate perfume ID
 const validatePerfumeId = (perfumeId: string | null | undefined) => {
-  if (!perfumeId || perfumeId.trim() === '') {
+  if (!perfumeId || perfumeId.trim() === "") {
     return new Response(
-      JSON.stringify({ success: false, error: 'Perfume ID is required' }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({ success: false, error: "Perfume ID is required" }),
+      { status: 400, headers: { "Content-Type": "application/json" } }
     )
   }
   return null
@@ -286,54 +303,57 @@ const validatePerfumeId = (perfumeId: string | null | undefined) => {
 
 // Helper function to handle errors in action
 const handleActionError = async (error: any) => {
-  const { ErrorHandler } = await import('~/utils/errorHandling')
-  const appError = ErrorHandler.handle(error, { api: 'user-perfumes', action: 'action' })
+  const { ErrorHandler } = await import("~/utils/errorHandling")
+  const appError = ErrorHandler.handle(error, {
+    api: "user-perfumes",
+    action: "action",
+  })
   return new Response(
     JSON.stringify({ success: false, error: appError.userMessage }),
-    { status: 500, headers: { 'Content-Type': 'application/json' } }
+    { status: 500, headers: { "Content-Type": "application/json" } }
   )
 }
 
 // Helper function to process form data
 const processFormData = async (request: Request) => {
-  console.log('=== FORM DATA PROCESSING DEBUG ===')
+  console.log("=== FORM DATA PROCESSING DEBUG ===")
   const formData = await request.formData()
-  console.log('FormData keys:', Array.from(formData.keys()))
+  console.log("FormData keys:", Array.from(formData.keys()))
   for (const [key, value] of formData.entries()) {
     console.log(`Form field ${key}:`, value)
   }
 
   const result = {
-    perfumeId: formData.get('perfumeId') as string,
-    actionType: formData.get('action') as string,
-    amount: formData.get('amount') as string | undefined,
-    comment: formData.get('comment') as string | undefined,
-    isPublic: formData.get('isPublic') === 'true',
-    userPerfumeId: formData.get('userPerfumeId') as string | undefined,
-    commentId: formData.get('commentId') as string | undefined,
-    tradePrice: formData.get('tradePrice') as string | undefined,
-    tradePreference: formData.get('tradePreference') as string | undefined,
-    tradeOnly: formData.get('tradeOnly') === 'true'
+    perfumeId: formData.get("perfumeId") as string,
+    actionType: formData.get("action") as string,
+    amount: formData.get("amount") as string | undefined,
+    comment: formData.get("comment") as string | undefined,
+    isPublic: formData.get("isPublic") === "true",
+    userPerfumeId: formData.get("userPerfumeId") as string | undefined,
+    commentId: formData.get("commentId") as string | undefined,
+    tradePrice: formData.get("tradePrice") as string | undefined,
+    tradePreference: formData.get("tradePreference") as string | undefined,
+    tradeOnly: formData.get("tradeOnly") === "true",
   }
 
-  console.log('Processed form data result:', result)
-  console.log('=== END FORM DATA PROCESSING DEBUG ===')
+  console.log("Processed form data result:", result)
+  console.log("=== END FORM DATA PROCESSING DEBUG ===")
   return result
 }
 
 // Helper function to prepare perfume action
 const prepareAction = async (params: {
-  authResult: AuthResult;
-  perfumeId: string;
-  actionType: string;
-  amount?: string;
-  comment?: string;
-  isPublic?: boolean;
-  userPerfumeId?: string;
-  commentId?: string;
-  tradePrice?: string;
-  tradePreference?: string;
-  tradeOnly?: boolean;
+  authResult: AuthResult
+  perfumeId: string
+  actionType: string
+  amount?: string
+  comment?: string
+  isPublic?: boolean
+  userPerfumeId?: string
+  commentId?: string
+  tradePrice?: string
+  tradePreference?: string
+  tradeOnly?: boolean
 }) => {
   const {
     authResult,
@@ -346,7 +366,7 @@ const prepareAction = async (params: {
     commentId,
     tradePrice,
     tradePreference,
-    tradeOnly
+    tradeOnly,
   } = params
 
   const result = await processUserPerfumeAction({
@@ -360,13 +380,12 @@ const prepareAction = async (params: {
     commentId,
     tradePrice,
     tradePreference,
-    tradeOnly
+    tradeOnly,
   })
 
-  return new Response(
-    JSON.stringify(result),
-    { headers: { 'Content-Type': 'application/json' } }
-  )
+  return new Response(JSON.stringify(result), {
+    headers: { "Content-Type": "application/json" },
+  })
 }
 
 // Helper function to process action request
@@ -396,7 +415,7 @@ const processActionRequest = async (request: Request) => {
     commentId: formData.commentId,
     tradePrice: formData.tradePrice,
     tradePreference: formData.tradePreference,
-    tradeOnly: formData.tradeOnly
+    tradeOnly: formData.tradeOnly,
   })
 }
 
@@ -404,6 +423,6 @@ const processActionRequest = async (request: Request) => {
 export const action = withActionErrorHandling(
   async ({ request }: ActionFunctionArgs) => await processActionRequest(request),
   {
-    context: { api: 'user-perfumes', action: 'action' }
+    context: { api: "user-perfumes", action: "action" },
   }
 )

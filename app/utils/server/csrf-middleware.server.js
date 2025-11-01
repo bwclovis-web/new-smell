@@ -1,12 +1,12 @@
-import cookie from 'cookie'
-import crypto from 'crypto'
+import cookie from "cookie"
+import crypto from "crypto"
 
-const CSRF_COOKIE_KEY = '_csrf'
-const CSRF_HEADER_KEY = 'x-csrf-token'
+const CSRF_COOKIE_KEY = "_csrf"
+const CSRF_HEADER_KEY = "x-csrf-token"
 
 // Generate a secure CSRF token
 export function generateCSRFToken() {
-  return crypto.randomBytes(32).toString('hex')
+  return crypto.randomBytes(32).toString("hex")
 }
 
 // Validate CSRF token
@@ -14,11 +14,11 @@ export function validateCSRFToken(token, sessionToken) {
   if (!token || !sessionToken) {
     return false
   }
-  
+
   try {
     return crypto.timingSafeEqual(
-      Buffer.from(token, 'hex'),
-      Buffer.from(sessionToken, 'hex')
+      Buffer.from(token, "hex"),
+      Buffer.from(sessionToken, "hex")
     )
   } catch {
     return false
@@ -28,48 +28,57 @@ export function validateCSRFToken(token, sessionToken) {
 // CSRF middleware for Express
 export function csrfMiddleware(req, res, next) {
   // Skip CSRF for GET, HEAD, OPTIONS requests
-  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+  if (["GET", "HEAD", "OPTIONS"].includes(req.method)) {
     return next()
   }
-  
+
   // Skip CSRF for API routes that don't need it (like metrics)
-  if (req.path.startsWith('/metrics') || req.path.startsWith('/api/health')) {
+  if (req.path.startsWith("/metrics") || req.path.startsWith("/api/health")) {
     return next()
   }
-  
+
   // Skip CSRF for React Router internal requests
   // React Router makes internal requests for data loading that shouldn't be CSRF protected
-  if (req.headers['x-react-router'] || req.headers['x-remix-revalidate']) {
+  if (req.headers["x-react-router"] || req.headers["x-remix-revalidate"]) {
     return next()
   }
-  
+
   // Skip CSRF for static assets and build files
-  if (req.path.startsWith('/assets/') || req.path.startsWith('/build/') || req.path.startsWith('/node_modules/')) {
+  if (
+    req.path.startsWith("/assets/") ||
+    req.path.startsWith("/build/") ||
+    req.path.startsWith("/node_modules/")
+  ) {
     return next()
   }
-  
+
   // Skip CSRF for Vite dev server requests
-  if (req.path.startsWith('/@') || req.path.startsWith('/src/') || req.path.includes('.js') || req.path.includes('.css')) {
+  if (
+    req.path.startsWith("/@") ||
+    req.path.startsWith("/src/") ||
+    req.path.includes(".js") ||
+    req.path.includes(".css")
+  ) {
     return next()
   }
-  
+
   const token = req.headers[CSRF_HEADER_KEY] || req.body?._csrf
   const sessionToken = req.cookies?.[CSRF_COOKIE_KEY]
-  
+
   if (!token || !sessionToken) {
-    return res.status(403).json({ 
-      error: 'CSRF token missing',
-      message: 'Invalid or missing CSRF token' 
+    return res.status(403).json({
+      error: "CSRF token missing",
+      message: "Invalid or missing CSRF token",
     })
   }
-  
+
   if (!validateCSRFToken(token, sessionToken)) {
-    return res.status(403).json({ 
-      error: 'CSRF token invalid',
-      message: 'Invalid CSRF token' 
+    return res.status(403).json({
+      error: "CSRF token invalid",
+      message: "Invalid CSRF token",
     })
   }
-  
+
   next()
 }
 
@@ -77,13 +86,13 @@ export function csrfMiddleware(req, res, next) {
 export function setCSRFCookie(res, token) {
   const csrfCookie = cookie.serialize(CSRF_COOKIE_KEY, token, {
     httpOnly: false, // Allow JavaScript access for CSRF tokens
-    path: '/',
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60 * 24 // 24 hours
+    path: "/",
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24, // 24 hours
   })
-  
-  res.setHeader('Set-Cookie', csrfCookie)
+
+  res.setHeader("Set-Cookie", csrfCookie)
 }
 
 // Get CSRF token from request

@@ -1,26 +1,37 @@
-import { type VariantProps } from 'class-variance-authority'
-import { type ButtonHTMLAttributes, type LinkHTMLAttributes, type Ref } from 'react'
-import { NavLink } from 'react-router'
+import { type VariantProps } from "class-variance-authority"
+import { type ButtonHTMLAttributes, type LinkHTMLAttributes, type Ref } from "react"
+import { NavLink } from "react-router"
 
-import { styleMerge } from '~/utils/styleUtils'
+import { styleMerge } from "~/utils/styleUtils"
 
-import { buttonVariants } from './button-variants'
+import { buttonVariants } from "./button-variants"
 
-interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'style'>,
-  VariantProps<typeof buttonVariants> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'icon' | null
+interface ButtonProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "style">,
+    VariantProps<typeof buttonVariants> {
+  variant?: "primary" | "secondary" | "danger" | "icon" | null
   ref?: Ref<HTMLButtonElement>
 }
 
-interface LinkProps extends Omit<LinkHTMLAttributes<HTMLAnchorElement>, 'style'>,
-  VariantProps<typeof buttonVariants> {
-  variant?: 'primary' | 'secondary' | 'danger' | 'link' | 'icon' | null
+interface LinkProps
+  extends Omit<LinkHTMLAttributes<HTMLAnchorElement>, "style">,
+    VariantProps<typeof buttonVariants> {
+  variant?: "primary" | "secondary" | "danger" | "link" | "icon" | null
   url: string
   ref?: Ref<HTMLAnchorElement>
-  background?: 'red' | 'gold' | null
+  background?: "red" | "gold" | null
 }
 
-const Button = ({ className, size, variant, children, background, type = 'button', ref, ...props }: ButtonProps) => (
+const Button = ({
+  className,
+  size,
+  variant,
+  children,
+  background,
+  type = "button",
+  ref,
+  ...props
+}: ButtonProps) => (
   <button
     className={styleMerge(buttonVariants({ className, size, variant, background }))}
     data-cy="button"
@@ -33,7 +44,14 @@ const Button = ({ className, size, variant, children, background, type = 'button
 )
 
 const VooDooLink = ({
-  className, size, variant, children, url, background, ...props }: LinkProps) => (
+  className,
+  size,
+  variant,
+  children,
+  url,
+  background,
+  ...props
+}: LinkProps) => (
   <NavLink
     to={url}
     viewTransition

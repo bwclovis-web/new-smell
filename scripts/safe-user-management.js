@@ -1,4 +1,4 @@
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require("@prisma/client")
 
 const prisma = new PrismaClient()
 
@@ -12,16 +12,16 @@ async function softDeleteUser(userId) {
     const user = await prisma.user.update({
       where: { id: userId },
       data: {
-        role: 'user', // Keep as user but mark for review
+        role: "user", // Keep as user but mark for review
         email: `deleted_${Date.now()}_${user.email}`,
         username: user.username ? `deleted_${Date.now()}_${user.username}` : null,
         // You could add a deletedAt field to track when it was "deleted"
-      }
+      },
     })
-    console.log('User soft deleted:', user.email)
+    console.log("User soft deleted:", user.email)
     return user
   } catch (error) {
-    console.error('Error soft deleting user:', error)
+    console.error("Error soft deleting user:", error)
     throw error
   }
 }
@@ -32,14 +32,14 @@ async function deactivateUser(userId) {
     const user = await prisma.user.update({
       where: { id: userId },
       data: {
-        role: 'user', // or create a new 'inactive' role
+        role: "user", // or create a new 'inactive' role
         // Add any other fields to mark as inactive
-      }
+      },
     })
-    console.log('User deactivated:', user.email)
+    console.log("User deactivated:", user.email)
     return user
   } catch (error) {
-    console.error('Error deactivating user:', error)
+    console.error("Error deactivating user:", error)
     throw error
   }
 }
@@ -59,11 +59,11 @@ async function getUserWithDataCounts(userId) {
             userPerfumeComments: true,
             userAlerts: true,
             SecurityAuditLog: true,
-          }
-        }
-      }
+          },
+        },
+      },
     })
-    
+
     if (user) {
       console.log(`User: ${user.email}`)
       console.log(`- Perfumes: ${user._count.UserPerfume}`)
@@ -74,10 +74,10 @@ async function getUserWithDataCounts(userId) {
       console.log(`- Alerts: ${user._count.userAlerts}`)
       console.log(`- Security Logs: ${user._count.SecurityAuditLog}`)
     }
-    
+
     return user
   } catch (error) {
-    console.error('Error getting user data:', error)
+    console.error("Error getting user data:", error)
     throw error
   }
 }
@@ -99,25 +99,26 @@ async function listUsersWithCounts() {
             UserPerfumeRating: true,
             UserPerfumeReview: true,
             UserPerfumeWishlist: true,
-          }
-        }
+          },
+        },
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: "desc" },
     })
-    
-    console.log('Users with data counts:')
-    users.forEach(user => {
-      const totalData = user._count.UserPerfume + 
-                       user._count.UserPerfumeRating + 
-                       user._count.UserPerfumeReview + 
-                       user._count.UserPerfumeWishlist
-      
+
+    console.log("Users with data counts:")
+    users.forEach((user) => {
+      const totalData =
+        user._count.UserPerfume +
+        user._count.UserPerfumeRating +
+        user._count.UserPerfumeReview +
+        user._count.UserPerfumeWishlist
+
       console.log(`${user.email} (${user.role}) - ${totalData} total records`)
     })
-    
+
     return users
   } catch (error) {
-    console.error('Error listing users:', error)
+    console.error("Error listing users:", error)
     throw error
   }
 }
@@ -127,47 +128,47 @@ module.exports = {
   softDeleteUser,
   deactivateUser,
   getUserWithDataCounts,
-  listUsersWithCounts
+  listUsersWithCounts,
 }
 
 // If run directly, show usage
 if (require.main === module) {
-  console.log('Safe User Management Script')
-  console.log('Usage:')
-  console.log('  node scripts/safe-user-management.js list')
-  console.log('  node scripts/safe-user-management.js info <userId>')
-  console.log('  node scripts/safe-user-management.js soft-delete <userId>')
-  console.log('  node scripts/safe-user-management.js deactivate <userId>')
-  
+  console.log("Safe User Management Script")
+  console.log("Usage:")
+  console.log("  node scripts/safe-user-management.js list")
+  console.log("  node scripts/safe-user-management.js info <userId>")
+  console.log("  node scripts/safe-user-management.js soft-delete <userId>")
+  console.log("  node scripts/safe-user-management.js deactivate <userId>")
+
   const command = process.argv[2]
   const userId = process.argv[3]
-  
+
   switch (command) {
-    case 'list':
+    case "list":
       listUsersWithCounts()
       break
-    case 'info':
+    case "info":
       if (userId) {
         getUserWithDataCounts(userId)
       } else {
-        console.log('Please provide a userId')
+        console.log("Please provide a userId")
       }
       break
-    case 'soft-delete':
+    case "soft-delete":
       if (userId) {
         softDeleteUser(userId)
       } else {
-        console.log('Please provide a userId')
+        console.log("Please provide a userId")
       }
       break
-    case 'deactivate':
+    case "deactivate":
       if (userId) {
         deactivateUser(userId)
       } else {
-        console.log('Please provide a userId')
+        console.log("Please provide a userId")
       }
       break
     default:
-      console.log('Unknown command. Use: list, info, soft-delete, or deactivate')
+      console.log("Unknown command. Use: list, info, soft-delete, or deactivate")
   }
 }

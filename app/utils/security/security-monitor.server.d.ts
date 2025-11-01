@@ -9,7 +9,7 @@ export interface SecurityEvent {
   path: string | null
   method: string | null
   details: Record<string, any>
-  severity: 'low' | 'medium' | 'high' | 'critical'
+  severity: "low" | "medium" | "high" | "critical"
   timestamp: string
 }
 
@@ -26,17 +26,17 @@ export interface SecurityStats {
 }
 
 export const SECURITY_EVENT_TYPES: {
-  AUTH_FAILURE: 'AUTH_FAILURE'
-  RATE_LIMIT_EXCEEDED: 'RATE_LIMIT_EXCEEDED'
-  CSRF_VIOLATION: 'CSRF_VIOLATION'
-  SUSPICIOUS_ACTIVITY: 'SUSPICIOUS_ACTIVITY'
-  IP_BLOCKED: 'IP_BLOCKED'
-  INVALID_TOKEN: 'INVALID_TOKEN'
-  UNAUTHORIZED_ACCESS: 'UNAUTHORIZED_ACCESS'
-  SQL_INJECTION_ATTEMPT: 'SQL_INJECTION_ATTEMPT'
-  XSS_ATTEMPT: 'XSS_ATTEMPT'
-  BRUTE_FORCE_ATTEMPT: 'BRUTE_FORCE_ATTEMPT'
-  DATA_BREACH_ATTEMPT: 'DATA_BREACH_ATTEMPT'
+  AUTH_FAILURE: "AUTH_FAILURE"
+  RATE_LIMIT_EXCEEDED: "RATE_LIMIT_EXCEEDED"
+  CSRF_VIOLATION: "CSRF_VIOLATION"
+  SUSPICIOUS_ACTIVITY: "SUSPICIOUS_ACTIVITY"
+  IP_BLOCKED: "IP_BLOCKED"
+  INVALID_TOKEN: "INVALID_TOKEN"
+  UNAUTHORIZED_ACCESS: "UNAUTHORIZED_ACCESS"
+  SQL_INJECTION_ATTEMPT: "SQL_INJECTION_ATTEMPT"
+  XSS_ATTEMPT: "XSS_ATTEMPT"
+  BRUTE_FORCE_ATTEMPT: "BRUTE_FORCE_ATTEMPT"
+  DATA_BREACH_ATTEMPT: "DATA_BREACH_ATTEMPT"
 }
 
 export function logSecurityEvent(event: {
@@ -47,7 +47,7 @@ export function logSecurityEvent(event: {
   path?: string | null
   method?: string | null
   details?: Record<string, any>
-  severity?: 'low' | 'medium' | 'high' | 'critical'
+  severity?: "low" | "medium" | "high" | "critical"
 }): SecurityEvent
 
 export function getSecurityStats(): SecurityStats

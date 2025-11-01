@@ -1,10 +1,10 @@
-import { exec } from 'child_process'
-import * as fs from 'fs/promises'
-import * as path from 'path'
-import { fileURLToPath } from 'url'
-import { promisify } from 'util'
+import { exec } from "child_process"
+import * as fs from "fs/promises"
+import * as path from "path"
+import { fileURLToPath } from "url"
+import { promisify } from "util"
 
-import { withLoaderErrorHandling } from '~/utils/errorHandling.server'
+import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
 
 // Note: Compression is handled by Express middleware
 // The compression utility is for future use with native Response objects
@@ -14,18 +14,18 @@ const execAsync = promisify(exec)
 // Get the current module's directory
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const projectRoot = path.resolve(__dirname, '..', '..', '..')
+const projectRoot = path.resolve(__dirname, "..", "..", "..")
 
 // Get the most recent report timestamp
 const getLatestReportTimestamp = async (): Promise<string | null> => {
   try {
-    const reportsDir = path.resolve(projectRoot, 'docs', 'reports')
+    const reportsDir = path.resolve(projectRoot, "docs", "reports")
     const allFiles = await fs.readdir(reportsDir)
 
     // Find the most recent report file
     const timestampedFiles = allFiles
-      .filter(file => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
-      .map(file => {
+      .filter((file) => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
+      .map((file) => {
         const match = file.match(/(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z)/)
         return match ? match[1] : null
       })
@@ -68,8 +68,8 @@ const executeScriptGeneration = async (lockFilePath: string) => {
 
     const scriptPath = path.resolve(
       projectRoot,
-      'scripts',
-      'generate_data_quality_reports.js'
+      "scripts",
+      "generate_data_quality_reports.js"
     )
     // Execute the script
     await execAsync(`node "${scriptPath}"`)
@@ -86,18 +86,23 @@ const executeScriptGeneration = async (lockFilePath: string) => {
 const runDataQualityScript = async (force: boolean = false) => {
   try {
     // Check if we should regenerate reports
-    if (!await shouldRegenerateReports(force)) {
+    if (!(await shouldRegenerateReports(force))) {
       return true // Skip generation, use existing reports
     }
 
     // Create a lock file to prevent multiple simultaneous script runs
-    const lockFilePath = path.resolve(projectRoot, 'docs', 'reports', '.generating.lock')
+    const lockFilePath = path.resolve(
+      projectRoot,
+      "docs",
+      "reports",
+      ".generating.lock"
+    )
 
     // Check if lock file exists (another generation is in progress)
     // BUT if force=true, we should clean up any stale lock files
     if (await fileExists(lockFilePath)) {
       if (force) {
-        await fs.unlink(lockFilePath).catch(() => { })
+        await fs.unlink(lockFilePath).catch(() => {})
       } else {
         return true // Skip generation, another process is running
       }
@@ -117,40 +122,45 @@ const getFilteredFiles = (
 ): TimestampedFile[] => {
   // Convert files to timestamped file info objects
   const timestampedFiles = allFiles
-    .filter(file => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
-    .map(file => {
+    .filter((file) => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
+    .map((file) => {
       const match = file.match(/(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z)/)
-      const timestamp = match ? match[1] : ''
+      const timestamp = match ? match[1] : ""
       // Convert timestamp format: 2025-10-18T11-59-48-603Z -> 2025-10-18T11:59:48.603Z
-      const isoTimestamp = timestamp.replace(/T(\d{2})-(\d{2})-(\d{2})-(\d{3})Z/, 'T$1:$2:$3.$4Z')
+      const isoTimestamp = timestamp.replace(
+        /T(\d{2})-(\d{2})-(\d{2})-(\d{3})Z/,
+        "T$1:$2:$3.$4Z"
+      )
       return {
         filename: file,
         timestamp,
-        date: isoTimestamp ? new Date(isoTimestamp) : new Date(0)
+        date: isoTimestamp ? new Date(isoTimestamp) : new Date(0),
       }
     })
-    .filter(file => file.timestamp)
-    .sort((fileA, fileB) =>
-      // Sort by date (most recent first)
-      fileB.date.getTime() - fileA.date.getTime())
+    .filter((file) => file.timestamp)
+    .sort(
+      (fileA, fileB) =>
+        // Sort by date (most recent first)
+        fileB.date.getTime() - fileA.date.getTime()
+    )
 
   // Apply timeframe filtering
-  if (timeframe === 'week') {
+  if (timeframe === "week") {
     const oneWeekAgo = new Date()
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-    return timestampedFiles.filter(file => file.date >= oneWeekAgo)
-  } else if (timeframe === 'month') {
+    return timestampedFiles.filter((file) => file.date >= oneWeekAgo)
+  } else if (timeframe === "month") {
     const oneMonthAgo = new Date()
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
-    return timestampedFiles.filter(file => file.date >= oneMonthAgo)
+    return timestampedFiles.filter((file) => file.date >= oneMonthAgo)
   }
 
   return timestampedFiles
 }
 
 // Get the latest report files, optionally filtered by timeframe
-const getLatestReportFiles = async (timeframe: string = 'all') => {
-  const reportsDir = path.resolve(projectRoot, 'docs', 'reports')
+const getLatestReportFiles = async (timeframe: string = "all") => {
+  const reportsDir = path.resolve(projectRoot, "docs", "reports")
 
   // Read all files in the reports directory
   const allFiles = await fs.readdir(reportsDir)
@@ -163,22 +173,27 @@ const getLatestReportFiles = async (timeframe: string = 'all') => {
   if (filteredFiles.length === 0) {
     // Get all timestamped files and use the most recent ones
     const allTimestampedFiles = allFiles
-      .filter(file => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
-      .map(file => {
+      .filter((file) => file.match(/\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z/))
+      .map((file) => {
         const match = file.match(/(\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}-\d{3}Z)/)
-        const timestamp = match ? match[1] : ''
+        const timestamp = match ? match[1] : ""
         // Convert timestamp format: 2025-10-18T11-59-48-603Z -> 2025-10-18T11:59:48.603Z
-        const isoTimestamp = timestamp.replace(/T(\d{2})-(\d{2})-(\d{2})-(\d{3})Z/, 'T$1:$2:$3.$4Z')
+        const isoTimestamp = timestamp.replace(
+          /T(\d{2})-(\d{2})-(\d{2})-(\d{3})Z/,
+          "T$1:$2:$3.$4Z"
+        )
         return {
           filename: file,
           timestamp,
-          date: isoTimestamp ? new Date(isoTimestamp) : new Date(0)
+          date: isoTimestamp ? new Date(isoTimestamp) : new Date(0),
         }
       })
-      .filter(file => file.timestamp)
-      .sort((fileA, fileB) =>
-        // Sort by date (most recent first)
-        fileB.date.getTime() - fileA.date.getTime())
+      .filter((file) => file.timestamp)
+      .sort(
+        (fileA, fileB) =>
+          // Sort by date (most recent first)
+          fileB.date.getTime() - fileA.date.getTime()
+      )
 
     filesToUse = allTimestampedFiles
   }
@@ -187,27 +202,33 @@ const getLatestReportFiles = async (timeframe: string = 'all') => {
   const latestTimestamp = filesToUse[0].timestamp
 
   // Extract all unique dates for history and sort them
-  const dateStrings = filesToUse.map(file => file.date.toISOString().split('T')[0])
+  const dateStrings = filesToUse.map((file) => file.date.toISOString().split("T")[0])
   const uniqueDates = [...new Set(dateStrings)].sort()
 
   // Get paths for report types
   return {
     missingJsonPath: path.join(reportsDir, `missing_info_${latestTimestamp}.json`),
     duplicatesPath: path.join(reportsDir, `duplicates_${latestTimestamp}.md`),
-    housesNoPerfsPath: path.join(reportsDir, `houses_no_perfumes_${latestTimestamp}.json`),
+    housesNoPerfsPath: path.join(
+      reportsDir,
+      `houses_no_perfumes_${latestTimestamp}.json`
+    ),
     historyDates: uniqueDates,
-    allReports: filesToUse.map(file => ({
-      date: file.date.toISOString().split('T')[0],
+    allReports: filesToUse.map((file) => ({
+      date: file.date.toISOString().split("T")[0],
       missing: path.join(reportsDir, `missing_info_${file.timestamp}.json`),
       duplicates: path.join(reportsDir, `duplicates_${file.timestamp}.md`),
-      housesNoPerfumes: path.join(reportsDir, `houses_no_perfumes_${file.timestamp}.json`)
-    }))
+      housesNoPerfumes: path.join(
+        reportsDir,
+        `houses_no_perfumes_${file.timestamp}.json`
+      ),
+    })),
   }
 }
 
 // Parse missing data from JSON file
 const parseMissingData = async (filePath: string) => {
-  const data = await fs.readFile(filePath, 'utf-8')
+  const data = await fs.readFile(filePath, "utf-8")
   const missingData = JSON.parse(data)
 
   // Process missing data by brand
@@ -222,7 +243,7 @@ const parseMissingData = async (filePath: string) => {
 
   // --- Perfume House missing info logic ---
   // Query PerfumeHouse from Prisma and check for missing fields
-  const { prisma } = await import('../../db.server')
+  const { prisma } = await import("../../db.server")
   const houses = await prisma.perfumeHouse.findMany({
     select: {
       id: true,
@@ -232,11 +253,11 @@ const parseMissingData = async (filePath: string) => {
       founded: true,
       website: true,
     },
-    take: 1000 // Limit to prevent large responses
+    take: 1000, // Limit to prevent large responses
   })
   const missingHouseInfoByBrand: Record<string, number> = {}
   let totalMissingHouseInfo = 0
-  houses.forEach(house => {
+  houses.forEach((house) => {
     let missingFields = 0
     if (!house.image) {
       missingFields++
@@ -277,7 +298,7 @@ const extractDuplicatesByBrand = (data: string) => {
   const fileBreakdownRegex = /\| perfumes_([a-z0-9_]+)\.csv \| (\d+) \|/g
   let match
   while ((match = fileBreakdownRegex.exec(data)) !== null) {
-    const brand = match[1].replace('_updated', '').replace('_fixed', '')
+    const brand = match[1].replace("_updated", "").replace("_fixed", "")
     const count = parseInt(match[2], 10)
     duplicatesByBrand[brand] = count
   }
@@ -286,7 +307,7 @@ const extractDuplicatesByBrand = (data: string) => {
 
 // Parse duplicates from markdown file
 const parseDuplicatesData = async (filePath: string) => {
-  const data = await fs.readFile(filePath, 'utf-8')
+  const data = await fs.readFile(filePath, "utf-8")
 
   // Parse the report
   const totalDuplicates = extractDuplicatesTotal(data)
@@ -302,26 +323,29 @@ const parseDuplicatesData = async (filePath: string) => {
 const parseHousesNoPerfumesData = async (filePath: string) => {
   try {
     // Check if file exists first
-    if (!await fileExists(filePath)) {
+    if (!(await fileExists(filePath))) {
       return {
         totalHousesNoPerfumes: 0,
-        housesNoPerfumes: []
+        housesNoPerfumes: [],
       }
     }
 
-    const data = await fs.readFile(filePath, 'utf-8')
+    const data = await fs.readFile(filePath, "utf-8")
     const housesData = JSON.parse(data)
 
     return {
       totalHousesNoPerfumes: housesData.length,
-      housesNoPerfumes: housesData
+      housesNoPerfumes: housesData,
     }
   } catch (error) {
-    const { ErrorHandler } = await import('~/utils/errorHandling')
-    ErrorHandler.handle(error, { api: 'data-quality', function: 'parseHousesNoPerfumesData' })
+    const { ErrorHandler } = await import("~/utils/errorHandling")
+    ErrorHandler.handle(error, {
+      api: "data-quality",
+      function: "parseHousesNoPerfumesData",
+    })
     return {
       totalHousesNoPerfumes: 0,
-      housesNoPerfumes: []
+      housesNoPerfumes: [],
     }
   }
 }
@@ -354,7 +378,7 @@ const processMissingData = async (
 ): Promise<void> => {
   // Get missing count - skip if file doesn't exist
   if (await fileExists(report.missing)) {
-    const missingData = await fs.readFile(report.missing, 'utf-8')
+    const missingData = await fs.readFile(report.missing, "utf-8")
     const missingJson = JSON.parse(missingData)
     historyData.missing.push(missingJson.length)
   } else {
@@ -370,7 +394,7 @@ const processDuplicatesData = async (
 ): Promise<void> => {
   // Get duplicates count - skip if file doesn't exist
   if (await fileExists(report.duplicates)) {
-    const duplicatesData = await fs.readFile(report.duplicates, 'utf-8')
+    const duplicatesData = await fs.readFile(report.duplicates, "utf-8")
     const matchPattern = /Total perfumes with duplicate entries: \*\*(\d+)\*\*/
     const match = duplicatesData.match(matchPattern)
     const count = match ? parseInt(match[1], 10) : 0
@@ -386,7 +410,7 @@ const processHistoryData = async (reports: ReportInfo[]): Promise<HistoryData> =
   const historyData: HistoryData = {
     dates: [],
     missing: [],
-    duplicates: []
+    duplicates: [],
   }
 
   // Process report batches to avoid complexity issues
@@ -418,8 +442,8 @@ export const loader = withLoaderErrorHandling(
   async ({ request }: { request: Request }) => {
     // Extract timeframe and force from request query parameters
     const url = new URL(request.url)
-    const timeframe = url.searchParams.get('timeframe') || 'month'
-    const force = url.searchParams.get('force') === 'true'
+    const timeframe = url.searchParams.get("timeframe") || "month"
+    const force = url.searchParams.get("force") === "true"
 
     // Generate and process reports
     const reportData = await generateDataQualityReport(timeframe, force)
@@ -427,15 +451,15 @@ export const loader = withLoaderErrorHandling(
     // Return the data using the pattern that works
     return new Response(JSON.stringify(reportData), {
       headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate', // No caching for data quality
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      }
+        "Content-Type": "application/json",
+        "Cache-Control": "no-cache, no-store, must-revalidate", // No caching for data quality
+        Pragma: "no-cache",
+        Expires: "0",
+      },
     })
   },
   {
-    context: { api: 'data-quality', route: 'api/data-quality' }
+    context: { api: "data-quality", route: "api/data-quality" },
   }
 )
 
@@ -445,11 +469,11 @@ const validateReportFiles = async (
   duplicatesPath: string
 ): Promise<void> => {
   // Verify files exist before trying to parse them
-  if (!await fileExists(missingPath)) {
+  if (!(await fileExists(missingPath))) {
     throw new Error(`Missing data file not found: ${missingPath}`)
   }
 
-  if (!await fileExists(duplicatesPath)) {
+  if (!(await fileExists(duplicatesPath))) {
     throw new Error(`Duplicates file not found: ${duplicatesPath}`)
   }
 }
@@ -466,11 +490,12 @@ const collectReportData = async (
     totalMissing,
     missingByBrand,
     totalMissingHouseInfo,
-    missingHouseInfoByBrand
+    missingHouseInfoByBrand,
   } = await parseMissingData(missingPath)
 
-  const { totalDuplicates, duplicatesByBrand } =
-    await parseDuplicatesData(duplicatesPath)
+  const { totalDuplicates, duplicatesByBrand } = await parseDuplicatesData(
+    duplicatesPath
+  )
 
   const { totalHousesNoPerfumes, housesNoPerfumes } =
     await parseHousesNoPerfumesData(housesNoPerfsPath)
@@ -492,15 +517,21 @@ const collectReportData = async (
 }
 
 // Handle report generation and processing
-const generateDataQualityReport = async (timeframe: string, force: boolean = false) => {
+const generateDataQualityReport = async (
+  timeframe: string,
+  force: boolean = false
+) => {
   try {
     // Run the data quality report generation script
     const scriptResult = await runDataQualityScript(force)
 
     // If there was an error running the script
     if (scriptResult !== true) {
-      const { ErrorHandler } = await import('~/utils/errorHandling')
-      ErrorHandler.handle(scriptResult, { api: 'data-quality', step: 'script-execution' })
+      const { ErrorHandler } = await import("~/utils/errorHandling")
+      ErrorHandler.handle(scriptResult, {
+        api: "data-quality",
+        step: "script-execution",
+      })
       throw new Error(`Failed to generate data quality reports: ${scriptResult}`)
     }
 
@@ -525,8 +556,11 @@ const generateDataQualityReport = async (timeframe: string, force: boolean = fal
       lastUpdated: new Date().toLocaleString(),
     }
   } catch (error) {
-    const { ErrorHandler } = await import('~/utils/errorHandling')
-    ErrorHandler.handle(error, { api: 'data-quality', function: 'generateDataQualityReport' })
+    const { ErrorHandler } = await import("~/utils/errorHandling")
+    ErrorHandler.handle(error, {
+      api: "data-quality",
+      function: "generateDataQualityReport",
+    })
     throw error
   }
 }

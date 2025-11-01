@@ -1,13 +1,13 @@
-import helmet from 'helmet'
+import helmet from "helmet"
 
 /**
  * Helmet security configuration for Voodoo Perfumes
  * Provides comprehensive security headers with environment-specific settings
  */
 
-export function getHelmetConfig(nodeEnv = 'development') {
-  const isDevelopment = nodeEnv === 'development'
-  const isProduction = nodeEnv === 'production'
+export function getHelmetConfig(nodeEnv = "development") {
+  const isDevelopment = nodeEnv === "development"
+  const isProduction = nodeEnv === "production"
 
   return helmet({
     // Content Security Policy
@@ -17,31 +17,27 @@ export function getHelmetConfig(nodeEnv = 'development') {
         styleSrc: [
           "'self'",
           "'unsafe-inline'", // Required for Tailwind CSS and inline styles
-          "https://fonts.googleapis.com"
+          "https://fonts.googleapis.com",
         ],
-        fontSrc: [
-          "'self'",
-          "https://fonts.gstatic.com",
-          "data:"
-        ],
+        fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
         imgSrc: [
           "'self'",
           "data:",
           "https:",
           "blob:",
-          "*.vercel.app" // Allow Vercel deployment images
+          "*.vercel.app", // Allow Vercel deployment images
         ],
         scriptSrc: [
           "'self'",
           "'unsafe-inline'", // Required for inline scripts
           ...(isDevelopment ? ["'unsafe-eval'"] : []), // Vite needs this in dev
-          "https://vercel.live" // Vercel live preview
+          "https://vercel.live", // Vercel live preview
         ],
         connectSrc: [
           "'self'",
           "https:",
           "wss:",
-          ...(isDevelopment ? ["ws://localhost:*", "http://localhost:*"] : [])
+          ...(isDevelopment ? ["ws://localhost:*", "http://localhost:*"] : []),
         ],
         objectSrc: ["'none'"],
         baseUri: ["'self'"],
@@ -52,11 +48,13 @@ export function getHelmetConfig(nodeEnv = 'development') {
     },
 
     // HTTP Strict Transport Security
-    hsts: isProduction ? {
-      maxAge: 31536000, // 1 year
-      includeSubDomains: true,
-      preload: true,
-    } : false, // Disable in development
+    hsts: isProduction
+      ? {
+          maxAge: 31536000, // 1 year
+          includeSubDomains: true,
+          preload: true,
+        }
+      : false, // Disable in development
 
     // Prevent MIME type sniffing
     noSniff: true,
@@ -65,25 +63,25 @@ export function getHelmetConfig(nodeEnv = 'development') {
     xssFilter: true,
 
     // Referrer Policy
-    referrerPolicy: { 
-      policy: "strict-origin-when-cross-origin" 
+    referrerPolicy: {
+      policy: "strict-origin-when-cross-origin",
     },
 
     // Cross-Origin Policies
     crossOriginEmbedderPolicy: false, // Disable for compatibility with external resources
-    crossOriginOpenerPolicy: { 
-      policy: "same-origin" 
+    crossOriginOpenerPolicy: {
+      policy: "same-origin",
     },
-    crossOriginResourcePolicy: { 
-      policy: "cross-origin" 
+    crossOriginResourcePolicy: {
+      policy: "cross-origin",
     },
 
     // Additional security headers
     dnsPrefetchControl: {
-      allow: false
+      allow: false,
     },
     frameguard: {
-      action: 'deny'
+      action: "deny",
     },
     hidePoweredBy: true,
     ieNoOpen: true,
@@ -105,22 +103,20 @@ export function getDevelopmentHelmetConfig() {
         defaultSrc: ["'self'"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
-        imgSrc: [
-"'self'", "data:", "https:", "blob:", "http://localhost:*"
-],
+        imgSrc: ["'self'", "data:", "https:", "blob:", "http://localhost:*"],
         scriptSrc: [
           "'self'",
           "'unsafe-inline'",
           "'unsafe-eval'", // Required for Vite HMR
           "http://localhost:*",
-          "ws://localhost:*"
+          "ws://localhost:*",
         ],
         connectSrc: [
           "'self'",
           "http://localhost:*",
           "ws://localhost:*",
           "https:",
-          "wss:"
+          "wss:",
         ],
         objectSrc: ["'none'"],
         baseUri: ["'self'"],
@@ -168,7 +164,7 @@ export function getProductionHelmetConfig() {
     crossOriginOpenerPolicy: { policy: "same-origin" },
     crossOriginResourcePolicy: { policy: "cross-origin" },
     dnsPrefetchControl: { allow: false },
-    frameguard: { action: 'deny' },
+    frameguard: { action: "deny" },
     hidePoweredBy: true,
     ieNoOpen: true,
     originAgentCluster: true,

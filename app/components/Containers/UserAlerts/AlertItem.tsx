@@ -1,16 +1,16 @@
-import { useState } from 'react'
+import { useState } from "react"
 import {
   BsBell,
   BsBoxArrowUpRight,
   BsCheck,
   BsClock,
   BsHeartFill,
-  BsX
-} from 'react-icons/bs'
-import { Link } from 'react-router'
+  BsX,
+} from "react-icons/bs"
+import { Link } from "react-router"
 
-import { Button } from '~/components/Atoms/Button/Button'
-import type { UserAlert } from '~/types/database'
+import { Button } from "~/components/Atoms/Button/Button"
+import type { UserAlert } from "~/types/database"
 
 interface AlertItemProps {
   alert: UserAlert
@@ -23,15 +23,15 @@ export const AlertItem = ({
   alert,
   onMarkAsRead,
   onDismiss,
-  compact = false
+  compact = false,
 }: AlertItemProps) => {
   const [isHovered, setIsHovered] = useState(false)
 
   const getAlertIcon = () => {
     switch (alert.alertType) {
-      case 'wishlist_available':
+      case "wishlist_available":
         return <BsHeartFill className="h-4 w-4 text-green-600" />
-      case 'decant_interest':
+      case "decant_interest":
         return <BsBell className="h-4 w-4 text-blue-600" />
       default:
         return <BsBell className="h-4 w-4 text-gray-600" />
@@ -40,22 +40,24 @@ export const AlertItem = ({
 
   const getAlertTypeLabel = () => {
     switch (alert.alertType) {
-      case 'wishlist_available':
-        return 'Wishlist Alert'
-      case 'decant_interest':
-        return 'Interest Alert'
+      case "wishlist_available":
+        return "Wishlist Alert"
+      case "decant_interest":
+        return "Interest Alert"
       default:
-        return 'Alert'
+        return "Alert"
     }
   }
 
   const formatTimeAgo = (date: Date | string) => {
     const now = new Date()
-    const dateObj = typeof date === 'string' ? new Date(date) : date
-    const diffInMinutes = Math.floor((now.getTime() - dateObj.getTime()) / (1000 * 60))
+    const dateObj = typeof date === "string" ? new Date(date) : date
+    const diffInMinutes = Math.floor(
+      (now.getTime() - dateObj.getTime()) / (1000 * 60)
+    )
 
     if (diffInMinutes < 1) {
-      return 'Just now'
+      return "Just now"
     }
     if (diffInMinutes < 60) {
       return `${diffInMinutes}m ago`
@@ -79,20 +81,22 @@ export const AlertItem = ({
   if (compact) {
     return (
       <div
-        className={`flex items-start gap-3 ${!alert.isRead ? 'bg-blue-50' : ''}`}
+        className={`flex items-start gap-3 ${!alert.isRead ? "bg-blue-50" : ""}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Icon */}
-        <div className="flex-shrink-0 mt-0.5">
-          {getAlertIcon()}
-        </div>
+        <div className="flex-shrink-0 mt-0.5">{getAlertIcon()}</div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
-              <p className={`text-sm font-medium ${!alert.isRead ? 'text-gray-900' : 'text-gray-700'}`}>
+              <p
+                className={`text-sm font-medium ${
+                  !alert.isRead ? "text-gray-900" : "text-gray-700"
+                }`}
+              >
                 {alert.title}
               </p>
               <p className="text-xs text-gray-600 mt-1 line-clamp-2">
@@ -143,18 +147,17 @@ export const AlertItem = ({
   // Full-size alert item
   return (
     <div
-      className={`p-4 rounded-lg border transition-all duration-200 ${!alert.isRead
-        ? 'border-blue-200 bg-blue-50 shadow-sm'
-        : 'border-gray-200 bg-white'
-        } ${isHovered ? 'shadow-md' : ''}`}
+      className={`p-4 rounded-lg border transition-all duration-200 ${
+        !alert.isRead
+          ? "border-blue-200 bg-blue-50 shadow-sm"
+          : "border-gray-200 bg-white"
+      } ${isHovered ? "shadow-md" : ""}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex items-start gap-3">
         {/* Icon */}
-        <div className="flex-shrink-0 mt-1">
-          {getAlertIcon()}
-        </div>
+        <div className="flex-shrink-0 mt-1">{getAlertIcon()}</div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
@@ -170,13 +173,15 @@ export const AlertItem = ({
                 </span>
               </div>
 
-              <h4 className={`font-semibold ${!alert.isRead ? 'text-gray-900' : 'text-gray-700'}`}>
+              <h4
+                className={`font-semibold ${
+                  !alert.isRead ? "text-gray-900" : "text-gray-700"
+                }`}
+              >
                 {alert.title}
               </h4>
 
-              <p className="text-sm text-gray-600 mt-1 mb-3">
-                {alert.message}
-              </p>
+              <p className="text-sm text-gray-600 mt-1 mb-3">{alert.message}</p>
 
               {/* Perfume Info */}
               <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -187,7 +192,9 @@ export const AlertItem = ({
                 >
                   {alert.Perfume.name}
                   {alert.Perfume.perfumeHouse && (
-                    <span className="text-gray-500">by {alert.Perfume.perfumeHouse.name}</span>
+                    <span className="text-gray-500">
+                      by {alert.Perfume.perfumeHouse.name}
+                    </span>
                   )}
                   <BsBoxArrowUpRight className="h-3 w-3" />
                 </Link>
@@ -196,33 +203,42 @@ export const AlertItem = ({
               {/* Additional metadata for specific alert types */}
               {alert.metadata && (
                 <div className="mt-3 text-sm">
-                  {alert.alertType === 'wishlist_available' && alert.metadata.availableTraders && (
-                    <div>
-                      <span className="font-medium text-gray-700">Available from:</span>
-                      <div className="mt-1 space-y-1">
-                        {alert.metadata.availableTraders.map((trader: any, index: number) => (
-                          <Link
-                            key={index}
-                            to={`/trader/${trader.userId}`}
-                            className="block text-blue-600 hover:text-blue-800"
-                          >
-                            {trader.displayName || trader.email || 'Unknown Trader'}
-                          </Link>
-                        ))}
+                  {alert.alertType === "wishlist_available" &&
+                    alert.metadata.availableTraders && (
+                      <div>
+                        <span className="font-medium text-gray-700">
+                          Available from:
+                        </span>
+                        <div className="mt-1 space-y-1">
+                          {alert.metadata.availableTraders.map(
+                            (trader: any, index: number) => (
+                              <Link
+                                key={index}
+                                to={`/trader/${trader.userId}`}
+                                className="block text-blue-600 hover:text-blue-800"
+                              >
+                                {trader.displayName ||
+                                  trader.email ||
+                                  "Unknown Trader"}
+                              </Link>
+                            )
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {alert.alertType === 'decant_interest' && (
+                  {alert.alertType === "decant_interest" && (
                     <div>
-                      <span className="font-medium text-gray-700">Interested user:</span>
+                      <span className="font-medium text-gray-700">
+                        Interested user:
+                      </span>
                       <span className="ml-2 text-blue-600">
                         {alert.metadata?.interestedUserName ||
                           alert.metadata?.interestedUserEmail ||
-                          'Unknown User'}
+                          "Unknown User"}
                       </span>
                       {/* Debug info - remove this later */}
-                      {process.env.NODE_ENV === 'development' && (
+                      {process.env.NODE_ENV === "development" && (
                         <div className="text-xs text-gray-400 mt-1">
                           Debug: {JSON.stringify(alert.metadata)}
                         </div>

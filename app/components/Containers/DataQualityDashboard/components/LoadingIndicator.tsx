@@ -1,4 +1,4 @@
-import { type FC } from 'react'
+import { type FC } from "react"
 
 const LoadingIndicator: FC = () => (
   <div className="flex justify-center items-center h-64">

@@ -1,8 +1,12 @@
-import { type FormEvent, useEffect, useRef, useState } from 'react'
-import { type KeyboardEvent } from 'react'
-import { type DetailedHTMLProps, type HTMLAttributes, type StyleHTMLAttributes } from 'react'
+import { type FormEvent, useEffect, useRef, useState } from "react"
+import { type KeyboardEvent } from "react"
+import {
+  type DetailedHTMLProps,
+  type HTMLAttributes,
+  type StyleHTMLAttributes,
+} from "react"
 
-import { styleMerge } from '~/utils/styleUtils'
+import { styleMerge } from "~/utils/styleUtils"
 
 interface RichTextEditorProps {
   value?: string
@@ -14,12 +18,12 @@ interface RichTextEditorProps {
 }
 
 const RichTextEditor = ({
-  value = '',
+  value = "",
   onChange,
-  placeholder = 'Write your review...',
+  placeholder = "Write your review...",
   className,
   disabled = false,
-  maxLength = 5000
+  maxLength = 5000,
 }: RichTextEditorProps) => {
   const editorRef = useRef<HTMLDivElement>(null)
   const [isFocused, setIsFocused] = useState(false)
@@ -33,7 +37,7 @@ const RichTextEditor = ({
   }, [value])
 
   const getTextLength = (html: string) => {
-    const temp = document.createElement('div')
+    const temp = document.createElement("div")
     temp.innerHTML = html
     return temp.textContent?.length || 0
   }
@@ -59,7 +63,15 @@ const RichTextEditor = ({
     // Allow normal typing, but prevent if we're at the limit
     if (editorRef.current) {
       const currentLength = getTextLength(editorRef.current.innerHTML)
-      if (currentLength >= maxLength && evt.key !== 'Backspace' && evt.key !== 'Delete' && evt.key !== 'ArrowLeft' && evt.key !== 'ArrowRight' && evt.key !== 'ArrowUp' && evt.key !== 'ArrowDown') {
+      if (
+        currentLength >= maxLength &&
+        evt.key !== "Backspace" &&
+        evt.key !== "Delete" &&
+        evt.key !== "ArrowLeft" &&
+        evt.key !== "ArrowRight" &&
+        evt.key !== "ArrowUp" &&
+        evt.key !== "ArrowDown"
+      ) {
         evt.preventDefault()
       }
     }
@@ -78,18 +90,18 @@ const RichTextEditor = ({
   }
 
   const formatButtons = [
-    { command: 'bold', icon: 'B', title: 'Bold' },
-    { command: 'italic', icon: 'I', title: 'Italic' },
-    { command: 'underline', icon: 'U', title: 'Underline' },
-    { command: 'insertUnorderedList', icon: '•', title: 'Bullet List' },
-    { command: 'insertOrderedList', icon: '1.', title: 'Numbered List' }
+    { command: "bold", icon: "B", title: "Bold" },
+    { command: "italic", icon: "I", title: "Italic" },
+    { command: "underline", icon: "U", title: "Underline" },
+    { command: "insertUnorderedList", icon: "•", title: "Bullet List" },
+    { command: "insertOrderedList", icon: "1.", title: "Numbered List" },
   ]
 
   return (
-    <div className={styleMerge('rich-text-editor', className)}>
+    <div className={styleMerge("rich-text-editor", className)}>
       {/* Toolbar */}
       <div className="flex flex-wrap gap-1 p-2 border-b border-gray-300 bg-noir-gold-100 rounded-t-md">
-        {formatButtons.map(button => (
+        {formatButtons.map((button) => (
           <button
             key={button.command}
             type="button"
@@ -120,15 +132,15 @@ const RichTextEditor = ({
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         className={styleMerge(
-          'min-h-[120px] p-3 border border-noir-gold focus:outline-none focus:ring-2 focus:bg-noir-light/10',
-          ' focus:ring-noir-gold focus:border-noir-gold-500 text-noir-gold-500 transition-all',
-          disabled && 'bg-gray-100 cursor-not-allowed',
-          isFocused && 'ring-2 ring-noir-gold border-noir-gold-500'
+          "min-h-[120px] p-3 border border-noir-gold focus:outline-none focus:ring-2 focus:bg-noir-light/10",
+          " focus:ring-noir-gold focus:border-noir-gold-500 text-noir-gold-500 transition-all",
+          disabled && "bg-gray-100 cursor-not-allowed",
+          isFocused && "ring-2 ring-noir-gold border-noir-gold-500"
         )}
         style={{
-          minHeight: '120px',
-          direction: 'ltr',
-          textAlign: 'left'
+          minHeight: "120px",
+          direction: "ltr",
+          textAlign: "left",
         }}
         data-placeholder={placeholder}
         suppressContentEditableWarning
@@ -136,7 +148,9 @@ const RichTextEditor = ({
 
       {/* Character count */}
       <div className="flex justify-between items-center px-3 py-1 text-xs text-noir-dark bg-noir-gold-500 rounded-b-md">
-        <span>{currentLength} / {maxLength} characters</span>
+        <span>
+          {currentLength} / {maxLength} characters
+        </span>
         {currentLength > maxLength * 0.9 && (
           <span className="text-noir-gray">
             {maxLength - currentLength} characters remaining
@@ -145,14 +159,17 @@ const RichTextEditor = ({
       </div>
 
       {/* Placeholder styling */}
-      <style dangerouslySetInnerHTML={{
-        __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         .rich-text-editor [contenteditable]:empty:before {
           content: attr(data-placeholder);
           color: var(--color-noir-gold);
           pointer-events: none;
         }
-      ` }} />
+      `,
+        }}
+      />
     </div>
   )
 }

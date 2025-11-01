@@ -15,15 +15,15 @@ perfumes_fzotic_enriched_2025-11-01_15-20-10.csv
 
 Each enriched CSV contains:
 
-| Column | Description |
-|--------|-------------|
-| `name` | Perfume name |
-| `original_description` | Original description from source |
+| Column                 | Description                         |
+| ---------------------- | ----------------------------------- |
+| `name`                 | Perfume name                        |
+| `original_description` | Original description from source    |
 | `enriched_description` | **Film noir-styled description** ⭐ |
-| `notes` | JSON array of all fragrance notes |
-| `sources` | JSON array of source URLs |
-| `quality_review` | Quality score and review |
-| `timestamp` | When it was enriched |
+| `notes`                | JSON array of all fragrance notes   |
+| `sources`              | JSON array of source URLs           |
+| `quality_review`       | Quality score and review            |
+| `timestamp`            | When it was enriched                |
 
 ## Film Noir Style
 
@@ -32,6 +32,7 @@ All enriched descriptions follow the film noir aesthetic:
 **Tone**: Dark, mysterious, sophisticated, sensual
 
 **Example**:
+
 > "A shadowy blend that whispers secrets in velvet tones, like a femme fatale's confession in a smoke-filled room. Midnight jasmine mingles with dark leather and amber, while sandalwood smolders beneath like a forgotten cigarette."
 
 ## Workflow
@@ -55,6 +56,7 @@ All enriched descriptions follow the film noir aesthetic:
 **DO NOT automatically import these files to the database!**
 
 Always review:
+
 - ✅ Descriptions match film noir style
 - ✅ Note categorizations are accurate
 - ✅ Quality scores are acceptable (60+)
@@ -63,6 +65,7 @@ Always review:
 ## Safety
 
 The Research Crew:
+
 - ✅ Outputs ONLY to this directory
 - ❌ NEVER modifies `csv/` (original data)
 - ❌ NEVER accesses the database
@@ -88,4 +91,3 @@ This contains details about perfumes that failed to enrich.
 ---
 
 **Remember**: These are AI-generated descriptions. Always review before using! 🎭
-

@@ -1,47 +1,47 @@
 /**
  * Tests for usePaginatedData hook
- * 
+ *
  * @group unit
  * @group hooks
  * @group data-fetching
  */
 
-import { act, renderHook, waitFor } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { act, renderHook, waitFor } from "@testing-library/react"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
-import { usePaginatedData } from '~/hooks/usePaginatedData'
+import { usePaginatedData } from "~/hooks/usePaginatedData"
 
 // Mock useDataFetching
-vi.mock('~/hooks/useDataFetching', () => ({
+vi.mock("~/hooks/useDataFetching", () => ({
   useDataFetching: ({ url, ...rest }: any) => {
     const [data, setData] = React.useState(null)
     const [isLoading, setIsLoading] = React.useState(false)
     const [error, setError] = React.useState(null)
 
     React.useEffect(() => {
-      if (typeof url === 'function') {
+      if (typeof url === "function") {
         url = url()
       }
-      
+
       setIsLoading(true)
-      const urlObj = new URL(url, 'http://localhost')
-      const page = parseInt(urlObj.searchParams.get('page') || '1')
-      const pageSize = parseInt(urlObj.searchParams.get('pageSize') || '20')
+      const urlObj = new URL(url, "http://localhost")
+      const page = parseInt(urlObj.searchParams.get("page") || "1")
+      const pageSize = parseInt(urlObj.searchParams.get("pageSize") || "20")
 
       // Simulate fetch
       setTimeout(() => {
         const mockData = {
           data: Array.from({ length: pageSize }, (_, i) => ({
             id: (page - 1) * pageSize + i + 1,
-            name: `Item ${(page - 1) * pageSize + i + 1}`
+            name: `Item ${(page - 1) * pageSize + i + 1}`,
           })),
           meta: {
             page,
             pageSize,
             totalPages: 5,
             totalCount: 100,
-            hasMore: page < 5
-          }
+            hasMore: page < 5,
+          },
         }
         setData(mockData)
         setIsLoading(false)
@@ -58,24 +58,24 @@ vi.mock('~/hooks/useDataFetching', () => ({
       clearError: vi.fn(),
       setData,
       clearCache: vi.fn(),
-      isRefetching: false
+      isRefetching: false,
     }
-  }
+  },
 }))
 
-const React = await import('react')
+const React = await import("react")
 
-describe('usePaginatedData', () => {
+describe("usePaginatedData", () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  describe('Basic Pagination', () => {
-    it('should fetch first page', async () => {
+  describe("Basic Pagination", () => {
+    it("should fetch first page", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
-          pageSize: 20
+          baseUrl: "/api/items",
+          pageSize: 20,
         })
       )
 
@@ -89,11 +89,11 @@ describe('usePaginatedData', () => {
       expect(result.current.meta?.totalPages).toBe(5)
     })
 
-    it('should navigate to next page', async () => {
+    it("should navigate to next page", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
-          pageSize: 20
+          baseUrl: "/api/items",
+          pageSize: 20,
         })
       )
 
@@ -112,12 +112,12 @@ describe('usePaginatedData', () => {
       })
     })
 
-    it('should navigate to previous page', async () => {
+    it("should navigate to previous page", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
+          baseUrl: "/api/items",
           initialPage: 2,
-          pageSize: 20
+          pageSize: 20,
         })
       )
 
@@ -132,11 +132,11 @@ describe('usePaginatedData', () => {
       expect(result.current.currentPage).toBe(1)
     })
 
-    it('should not go below page 1', async () => {
+    it("should not go below page 1", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
-          pageSize: 20
+          baseUrl: "/api/items",
+          pageSize: 20,
         })
       )
 
@@ -151,12 +151,12 @@ describe('usePaginatedData', () => {
       expect(result.current.currentPage).toBe(1)
     })
 
-    it('should not go beyond total pages', async () => {
+    it("should not go beyond total pages", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
+          baseUrl: "/api/items",
           initialPage: 5,
-          pageSize: 20
+          pageSize: 20,
         })
       )
 
@@ -172,11 +172,11 @@ describe('usePaginatedData', () => {
       expect(result.current.currentPage).toBe(5)
     })
 
-    it('should go to specific page', async () => {
+    it("should go to specific page", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
-          pageSize: 20
+          baseUrl: "/api/items",
+          pageSize: 20,
         })
       )
 
@@ -196,13 +196,13 @@ describe('usePaginatedData', () => {
     })
   })
 
-  describe('Query Parameters', () => {
-    it('should include custom query parameters', async () => {
+  describe("Query Parameters", () => {
+    it("should include custom query parameters", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
-          params: { type: 'niche', search: 'rose' },
-          pageSize: 20
+          baseUrl: "/api/items",
+          params: { type: "niche", search: "rose" },
+          pageSize: 20,
         })
       )
 
@@ -214,17 +214,17 @@ describe('usePaginatedData', () => {
       expect(result.current.data).toBeDefined()
     })
 
-    it('should ignore undefined/null params', async () => {
+    it("should ignore undefined/null params", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
+          baseUrl: "/api/items",
           params: {
-            type: 'niche',
+            type: "niche",
             search: undefined,
             filter: null,
-            empty: ''
+            empty: "",
           },
-          pageSize: 20
+          pageSize: 20,
         })
       )
 
@@ -233,14 +233,14 @@ describe('usePaginatedData', () => {
       })
     })
 
-    it('should refetch when params change', async () => {
-      let params = { type: 'niche' }
+    it("should refetch when params change", async () => {
+      let params = { type: "niche" }
       const { result, rerender } = renderHook(
         ({ params }) =>
           usePaginatedData({
-            baseUrl: '/api/items',
+            baseUrl: "/api/items",
             params,
-            pageSize: 20
+            pageSize: 20,
           }),
         { initialProps: { params } }
       )
@@ -250,7 +250,7 @@ describe('usePaginatedData', () => {
       })
 
       // Change params
-      params = { type: 'designer' }
+      params = { type: "designer" }
       rerender({ params })
 
       await waitFor(() => {
@@ -259,13 +259,13 @@ describe('usePaginatedData', () => {
     })
   })
 
-  describe('Accumulation (Infinite Scroll)', () => {
-    it('should accumulate data across pages', async () => {
+  describe("Accumulation (Infinite Scroll)", () => {
+    it("should accumulate data across pages", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
+          baseUrl: "/api/items",
           pageSize: 20,
-          accumulate: true
+          accumulate: true,
         })
       )
 
@@ -289,13 +289,13 @@ describe('usePaginatedData', () => {
       expect(result.current.data[20].id).toBe(21) // Second page
     })
 
-    it('should reset accumulation when going back to page 1', async () => {
+    it("should reset accumulation when going back to page 1", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
+          baseUrl: "/api/items",
           initialPage: 2,
           pageSize: 20,
-          accumulate: true
+          accumulate: true,
         })
       )
 
@@ -316,12 +316,12 @@ describe('usePaginatedData', () => {
       expect(result.current.data[0].id).toBe(1)
     })
 
-    it('should set isLoadingMore when fetching next page', async () => {
+    it("should set isLoadingMore when fetching next page", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
+          baseUrl: "/api/items",
           pageSize: 20,
-          accumulate: true
+          accumulate: true,
         })
       )
 
@@ -338,14 +338,14 @@ describe('usePaginatedData', () => {
     })
   })
 
-  describe('Reset', () => {
-    it('should reset to initial page', async () => {
+  describe("Reset", () => {
+    it("should reset to initial page", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
+          baseUrl: "/api/items",
           initialPage: 1,
           pageSize: 20,
-          accumulate: true
+          accumulate: true,
         })
       )
 
@@ -370,12 +370,12 @@ describe('usePaginatedData', () => {
       expect(result.current.currentPage).toBe(1)
     })
 
-    it('should clear accumulated data on reset', async () => {
+    it("should clear accumulated data on reset", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
+          baseUrl: "/api/items",
           pageSize: 20,
-          accumulate: true
+          accumulate: true,
         })
       )
 
@@ -403,12 +403,12 @@ describe('usePaginatedData', () => {
     })
   })
 
-  describe('Refetch', () => {
-    it('should refetch current page', async () => {
+  describe("Refetch", () => {
+    it("should refetch current page", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
-          pageSize: 20
+          baseUrl: "/api/items",
+          pageSize: 20,
         })
       )
 
@@ -423,12 +423,12 @@ describe('usePaginatedData', () => {
       expect(result.current.data).toHaveLength(20)
     })
 
-    it('should reset accumulation and refetch from page 1 when accumulating', async () => {
+    it("should reset accumulation and refetch from page 1 when accumulating", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
+          baseUrl: "/api/items",
           pageSize: 20,
-          accumulate: true
+          accumulate: true,
         })
       )
 
@@ -454,12 +454,12 @@ describe('usePaginatedData', () => {
     })
   })
 
-  describe('Error Handling', () => {
-    it('should handle errors', async () => {
+  describe("Error Handling", () => {
+    it("should handle errors", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/error',
-          pageSize: 20
+          baseUrl: "/api/error",
+          pageSize: 20,
         })
       )
 
@@ -470,11 +470,11 @@ describe('usePaginatedData', () => {
       // Errors would be handled by useDataFetching mock
     })
 
-    it('should clear errors', async () => {
+    it("should clear errors", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
-          pageSize: 20
+          baseUrl: "/api/items",
+          pageSize: 20,
         })
       )
 
@@ -490,12 +490,12 @@ describe('usePaginatedData', () => {
     })
   })
 
-  describe('Page Size', () => {
-    it('should respect custom page size', async () => {
+  describe("Page Size", () => {
+    it("should respect custom page size", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
-          pageSize: 10
+          baseUrl: "/api/items",
+          pageSize: 10,
         })
       )
 
@@ -505,12 +505,12 @@ describe('usePaginatedData', () => {
     })
   })
 
-  describe('Loading States', () => {
-    it('should track initial loading state', async () => {
+  describe("Loading States", () => {
+    it("should track initial loading state", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
-          pageSize: 20
+          baseUrl: "/api/items",
+          pageSize: 20,
         })
       )
 
@@ -521,11 +521,11 @@ describe('usePaginatedData', () => {
       })
     })
 
-    it('should track loading state', async () => {
+    it("should track loading state", async () => {
       const { result } = renderHook(() =>
         usePaginatedData({
-          baseUrl: '/api/items',
-          pageSize: 20
+          baseUrl: "/api/items",
+          pageSize: 20,
         })
       )
 
@@ -537,4 +537,3 @@ describe('usePaginatedData', () => {
     })
   })
 })
-

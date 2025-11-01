@@ -3,22 +3,27 @@
  * Provides type safety for all React components
  */
 
-import type { ComponentType, ReactNode, RefObject } from 'react'
+import type { ComponentType, ReactNode, RefObject } from "react"
 
-import type { ApiResponse, PaginatedResponse } from './api'
-import type { SafeUser, SafeUserPerfume, SafeUserPerfumeComment, SafeUserPerfumeRating } from './database'
+import type { ApiResponse, PaginatedResponse } from "./api"
+import type {
+  SafeUser,
+  SafeUserPerfume,
+  SafeUserPerfumeComment,
+  SafeUserPerfumeRating,
+} from "./database"
 
 // Base component props
 export interface BaseComponentProps {
   className?: string
   children?: ReactNode
   id?: string
-  'data-testid'?: string
+  "data-testid"?: string
 }
 
 export interface LoadingProps extends BaseComponentProps {
-  size?: 'sm' | 'md' | 'lg' | 'xl'
-  variant?: 'spinner' | 'dots' | 'pulse' | 'skeleton'
+  size?: "sm" | "md" | "lg" | "xl"
+  variant?: "spinner" | "dots" | "pulse" | "skeleton"
   text?: string
 }
 
@@ -26,8 +31,8 @@ export interface ErrorProps extends BaseComponentProps {
   error: string | Error
   onRetry?: () => void
   onDismiss?: () => void
-  variant?: 'inline' | 'banner' | 'modal' | 'toast'
-  severity?: 'low' | 'medium' | 'high' | 'critical'
+  variant?: "inline" | "banner" | "modal" | "toast"
+  severity?: "low" | "medium" | "high" | "critical"
 }
 
 export interface EmptyStateProps extends BaseComponentProps {
@@ -35,16 +40,16 @@ export interface EmptyStateProps extends BaseComponentProps {
   description?: string
   icon?: ReactNode
   action?: ReactNode
-  variant?: 'default' | 'minimal' | 'illustrated'
+  variant?: "default" | "minimal" | "illustrated"
 }
 
 // Button component types
 export interface ButtonProps extends BaseComponentProps {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success'
-  size?: 'sm' | 'md' | 'lg'
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger" | "success"
+  size?: "sm" | "md" | "lg"
   disabled?: boolean
   loading?: boolean
-  type?: 'button' | 'submit' | 'reset'
+  type?: "button" | "submit" | "reset"
   onClick?: () => void
   href?: string
   target?: string
@@ -56,7 +61,7 @@ export interface ButtonProps extends BaseComponentProps {
 
 // Input component types
 export interface InputProps extends BaseComponentProps {
-  type?: 'text' | 'email' | 'password' | 'tel' | 'url' | 'search'
+  type?: "text" | "email" | "password" | "tel" | "url" | "search"
   value: string
   onChange: (value: string) => void
   onBlur?: () => void
@@ -77,10 +82,10 @@ export interface InputProps extends BaseComponentProps {
   autoFocus?: boolean
 }
 
-export interface TextAreaProps extends Omit<InputProps, 'type'> {
+export interface TextAreaProps extends Omit<InputProps, "type"> {
   rows?: number
   cols?: number
-  resize?: 'none' | 'both' | 'horizontal' | 'vertical'
+  resize?: "none" | "both" | "horizontal" | "vertical"
 }
 
 export interface SelectProps<T = string> extends BaseComponentProps {
@@ -134,7 +139,7 @@ export interface RadioProps<T = string> extends BaseComponentProps {
   touched?: boolean
   label?: string
   helperText?: string
-  orientation?: 'horizontal' | 'vertical'
+  orientation?: "horizontal" | "vertical"
 }
 
 export interface SwitchProps extends BaseComponentProps {
@@ -147,13 +152,13 @@ export interface SwitchProps extends BaseComponentProps {
   touched?: boolean
   label?: string
   helperText?: string
-  size?: 'sm' | 'md' | 'lg'
+  size?: "sm" | "md" | "lg"
 }
 
 // Card component types
 export interface CardProps extends BaseComponentProps {
-  variant?: 'default' | 'outlined' | 'elevated' | 'filled'
-  padding?: 'none' | 'sm' | 'md' | 'lg'
+  variant?: "default" | "outlined" | "elevated" | "filled"
+  padding?: "none" | "sm" | "md" | "lg"
   hover?: boolean
   clickable?: boolean
   onClick?: () => void
@@ -167,12 +172,12 @@ export interface CardHeaderProps extends BaseComponentProps {
 }
 
 export interface CardContentProps extends BaseComponentProps {
-  padding?: 'none' | 'sm' | 'md' | 'lg'
+  padding?: "none" | "sm" | "md" | "lg"
 }
 
 export interface CardFooterProps extends BaseComponentProps {
-  padding?: 'none' | 'sm' | 'md' | 'lg'
-  justify?: 'start' | 'center' | 'end' | 'between'
+  padding?: "none" | "sm" | "md" | "lg"
+  justify?: "start" | "center" | "end" | "between"
 }
 
 // Modal component types
@@ -180,8 +185,8 @@ export interface ModalProps extends BaseComponentProps {
   isOpen: boolean
   onClose: () => void
   title?: string
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
-  variant?: 'default' | 'centered' | 'fullscreen'
+  size?: "sm" | "md" | "lg" | "xl" | "full"
+  variant?: "default" | "centered" | "fullscreen"
   closeOnOverlayClick?: boolean
   closeOnEscape?: boolean
   showCloseButton?: boolean
@@ -195,12 +200,12 @@ export interface ModalHeaderProps extends BaseComponentProps {
 }
 
 export interface ModalBodyProps extends BaseComponentProps {
-  padding?: 'none' | 'sm' | 'md' | 'lg'
+  padding?: "none" | "sm" | "md" | "lg"
 }
 
 export interface ModalFooterProps extends BaseComponentProps {
-  padding?: 'none' | 'sm' | 'md' | 'lg'
-  justify?: 'start' | 'center' | 'end' | 'between'
+  padding?: "none" | "sm" | "md" | "lg"
+  justify?: "start" | "center" | "end" | "between"
 }
 
 // Table component types
@@ -228,8 +233,8 @@ export interface TableColumn<T = unknown> {
   sortable?: boolean
   filterable?: boolean
   width?: string | number
-  align?: 'left' | 'center' | 'right'
-  fixed?: 'left' | 'right'
+  align?: "left" | "center" | "right"
+  fixed?: "left" | "right"
   ellipsis?: boolean
   className?: string
 }
@@ -247,14 +252,14 @@ export interface PaginationProps {
 
 export interface SortingProps<T = unknown> {
   field?: keyof T
-  direction?: 'asc' | 'desc'
-  onChange: (field: keyof T, direction: 'asc' | 'desc') => void
+  direction?: "asc" | "desc"
+  onChange: (field: keyof T, direction: "asc" | "desc") => void
 }
 
 export interface SelectionProps<T = unknown> {
   selectedRowKeys: (string | number)[]
   onChange: (selectedRowKeys: (string | number)[], selectedRows: T[]) => void
-  type?: 'checkbox' | 'radio'
+  type?: "checkbox" | "radio"
   getCheckboxProps?: (record: T) => { disabled?: boolean; name?: string }
 }
 
@@ -271,9 +276,9 @@ export interface NavItemProps extends BaseComponentProps {
 
 export interface NavProps extends BaseComponentProps {
   items: NavItemProps[]
-  orientation?: 'horizontal' | 'vertical'
-  variant?: 'default' | 'pills' | 'tabs' | 'underline'
-  size?: 'sm' | 'md' | 'lg'
+  orientation?: "horizontal" | "vertical"
+  variant?: "default" | "pills" | "tabs" | "underline"
+  size?: "sm" | "md" | "lg"
 }
 
 export interface BreadcrumbProps extends BaseComponentProps {
@@ -288,7 +293,7 @@ export interface BreadcrumbProps extends BaseComponentProps {
 
 // Layout component types
 export interface LayoutProps extends BaseComponentProps {
-  variant?: 'default' | 'sidebar' | 'header-footer' | 'fullscreen'
+  variant?: "default" | "sidebar" | "header-footer" | "fullscreen"
 }
 
 export interface HeaderProps extends BaseComponentProps {
@@ -311,7 +316,7 @@ export interface SidebarProps extends BaseComponentProps {
   onCollapse?: (collapsed: boolean) => void
   onUserMenuClick?: () => void
   onLogout?: () => void
-  variant?: 'default' | 'minimal' | 'icons'
+  variant?: "default" | "minimal" | "icons"
 }
 
 export interface FooterProps extends BaseComponentProps {
@@ -326,7 +331,7 @@ export interface FooterProps extends BaseComponentProps {
     href: string
     icon: ReactNode
   }>
-  variant?: 'default' | 'minimal' | 'centered'
+  variant?: "default" | "minimal" | "centered"
 }
 
 // Perfume-specific component types
@@ -338,7 +343,7 @@ export interface PerfumeCardProps extends BaseComponentProps {
   onComment?: (perfume: SafeUserPerfume) => void
   onTrade?: (perfume: SafeUserPerfume) => void
   showActions?: boolean
-  variant?: 'default' | 'compact' | 'detailed'
+  variant?: "default" | "compact" | "detailed"
 }
 
 export interface PerfumeListProps extends BaseComponentProps {
@@ -357,7 +362,7 @@ export interface PerfumeRatingProps extends BaseComponentProps {
   onEdit?: (rating: SafeUserPerfumeRating) => void
   onDelete?: (rating: SafeUserPerfumeRating) => void
   showActions?: boolean
-  variant?: 'default' | 'compact' | 'detailed'
+  variant?: "default" | "compact" | "detailed"
 }
 
 export interface PerfumeCommentProps extends BaseComponentProps {
@@ -366,7 +371,7 @@ export interface PerfumeCommentProps extends BaseComponentProps {
   onDelete?: (comment: SafeUserPerfumeComment) => void
   onReply?: (comment: SafeUserPerfumeComment) => void
   showActions?: boolean
-  variant?: 'default' | 'compact' | 'detailed'
+  variant?: "default" | "compact" | "detailed"
 }
 
 // Search component types
@@ -379,8 +384,8 @@ export interface SearchProps extends BaseComponentProps {
   loading?: boolean
   suggestions?: string[]
   onSuggestionClick?: (suggestion: string) => void
-  variant?: 'default' | 'minimal' | 'filled'
-  size?: 'sm' | 'md' | 'lg'
+  variant?: "default" | "minimal" | "filled"
+  size?: "sm" | "md" | "lg"
   showClearButton?: boolean
   showSearchButton?: boolean
 }
@@ -390,14 +395,14 @@ export interface FilterProps extends BaseComponentProps {
   onChange: (filters: Record<string, unknown>) => void
   onReset?: () => void
   onApply?: () => void
-  variant?: 'default' | 'minimal' | 'sidebar'
+  variant?: "default" | "minimal" | "sidebar"
   collapsible?: boolean
 }
 
 // Chart component types
 export interface ChartProps extends BaseComponentProps {
   data: unknown[]
-  type: 'line' | 'bar' | 'pie' | 'doughnut' | 'scatter' | 'radar'
+  type: "line" | "bar" | "pie" | "doughnut" | "scatter" | "radar"
   options?: Record<string, unknown>
   loading?: boolean
   error?: string

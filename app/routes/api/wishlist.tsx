@@ -1,12 +1,19 @@
-import type { ActionFunctionArgs } from 'react-router'
+import type { ActionFunctionArgs } from "react-router"
 
-import { addToWishlist, removeFromWishlist, updateWishlistVisibility } from '~/models/wishlist.server'
-import { processDecantInterestAlerts } from '~/utils/alert-processors'
-import { authenticateUser } from '~/utils/auth.server'
-import { validationError, withActionErrorHandling } from '~/utils/errorHandling.patterns'
-import { WishlistActionSchema } from '~/utils/formValidationSchemas'
-import { createErrorResponse, createJsonResponse } from '~/utils/response.server'
-import { validateFormData } from '~/utils/validation'
+import {
+  addToWishlist,
+  removeFromWishlist,
+  updateWishlistVisibility,
+} from "~/models/wishlist.server"
+import { processDecantInterestAlerts } from "~/utils/alert-processors"
+import { authenticateUser } from "~/utils/auth.server"
+import {
+  validationError,
+  withActionErrorHandling,
+} from "~/utils/errorHandling.patterns"
+import { WishlistActionSchema } from "~/utils/formValidationSchemas"
+import { createErrorResponse, createJsonResponse } from "~/utils/response.server"
+import { validateFormData } from "~/utils/validation"
 
 const processWishlistAction = async (
   userId: string,
@@ -14,35 +21,42 @@ const processWishlistAction = async (
   actionType: string,
   isPublic?: boolean
 ) => {
-  if (actionType === 'add') {
+  if (actionType === "add") {
     const result = await addToWishlist(userId, perfumeId, isPublic || false)
-    
+
     // Process decant interest alerts when someone adds to wishlist
     try {
       await processDecantInterestAlerts(perfumeId, userId)
     } catch (error) {
-      const { ErrorHandler } = await import('~/utils/errorHandling')
-      ErrorHandler.handle(error, { api: 'wishlist', action: 'processDecantAlerts', perfumeId, userId })
+      const { ErrorHandler } = await import("~/utils/errorHandling")
+      ErrorHandler.handle(error, {
+        api: "wishlist",
+        action: "processDecantAlerts",
+        perfumeId,
+        userId,
+      })
       // Don't fail the wishlist operation if alert processing fails
     }
-    
+
     return result
   }
-  if (actionType === 'remove') {
+  if (actionType === "remove") {
     return await removeFromWishlist(userId, perfumeId)
   }
-  if (actionType === 'updateVisibility') {
+  if (actionType === "updateVisibility") {
     if (isPublic === undefined) {
-      throw validationError('isPublic is required for updateVisibility action', {
-        field: 'isPublic',
-        action: 'updateVisibility'
+      throw validationError("isPublic is required for updateVisibility action", {
+        field: "isPublic",
+        action: "updateVisibility",
       })
     }
     return await updateWishlistVisibility(userId, perfumeId, isPublic)
   }
-  throw validationError('Invalid action type', { actionType, validActions: ['add', 'remove', 'updateVisibility'] })
+  throw validationError("Invalid action type", {
+    actionType,
+    validActions: ["add", "remove", "updateVisibility"],
+  })
 }
-
 
 const processAuthenticatedRequest = async (
   request: Request,
@@ -71,11 +85,7 @@ const processRequest = async (request: Request) => {
 
   const validation = validateFormData(WishlistActionSchema, formData)
   if (!validation.success) {
-    return createErrorResponse(
-      'Validation failed',
-      400,
-      validation.errors
-    )
+    return createErrorResponse("Validation failed", 400, validation.errors)
   }
 
   const { perfumeId, action: actionType, isPublic } = validation.data!
@@ -88,7 +98,6 @@ export const action = withActionErrorHandling(
     return await processRequest(request)
   },
   {
-    context: { api: 'wishlist', route: 'api/wishlist' }
+    context: { api: "wishlist", route: "api/wishlist" },
   }
 )
-

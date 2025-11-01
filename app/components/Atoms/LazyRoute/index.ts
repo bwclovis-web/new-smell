@@ -1,1 +1,1 @@
-export { default as LazyRoute } from './LazyRoute'
+export { default as LazyRoute } from "./LazyRoute"

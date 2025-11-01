@@ -1,1 +1,1 @@
-export { default } from './DangerModal'
+export { default } from "./DangerModal"

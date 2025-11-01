@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import {
   createMockPerfume,
@@ -12,10 +12,11 @@ import {
   testFormValidation,
   testLoadingStates,
   testLoginFlow,
-  testNavigation} from '../utils/test-utils'
+  testNavigation,
+} from "../utils/test-utils"
 
 // Example comprehensive component test
-describe('Comprehensive Component Testing Examples', () => {
+describe("Comprehensive Component Testing Examples", () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -24,7 +25,7 @@ describe('Comprehensive Component Testing Examples', () => {
     vi.restoreAllMocks()
   })
 
-  it('demonstrates basic component testing', async () => {
+  it("demonstrates basic component testing", async () => {
     // Mock component for demonstration
     const TestComponent = ({ loading, error, data }: any) => (
       <div>
@@ -37,18 +38,18 @@ describe('Comprehensive Component Testing Examples', () => {
     // Test different states
     await testLoadingStates(TestComponent, {}, [
       { loading: true },
-      { loading: false }
+      { loading: false },
     ])
 
     await testErrorStates(TestComponent, {}, [
       { error: null },
-      { error: 'Test error' }
+      { error: "Test error" },
     ])
 
-    console.log('✓ Basic component testing completed')
+    console.log("✓ Basic component testing completed")
   })
 
-  it('demonstrates form testing utilities', async () => {
+  it("demonstrates form testing utilities", async () => {
     // Mock form component
     const LoginForm = ({ onSubmit }: any) => (
       <form onSubmit={onSubmit}>
@@ -64,14 +65,18 @@ describe('Comprehensive Component Testing Examples', () => {
 
     // Test form validation
     await testFormValidation([
-      { label: 'Email', value: 'invalid-email', expectedError: 'Invalid email' },
-      { label: 'Password', value: '', expectedError: 'Password required' }
+      {
+        label: "Email",
+        value: "invalid-email",
+        expectedError: "Invalid email",
+      },
+      { label: "Password", value: "", expectedError: "Password required" },
     ])
 
-    console.log('✓ Form testing completed')
+    console.log("✓ Form testing completed")
   })
 
-  it('demonstrates API testing utilities', async () => {
+  it("demonstrates API testing utilities", async () => {
     // Mock API function
     const fetchUser = async (id: string) => {
       const response = await fetch(`/api/users/${id}`)
@@ -80,13 +85,13 @@ describe('Comprehensive Component Testing Examples', () => {
 
     // Test with different responses
     global.fetch = mockFetchResponse(createMockUser())
-    const user = await fetchUser('1')
-    expect(user.email).toBe('test@example.com')
+    const user = await fetchUser("1")
+    expect(user.email).toBe("test@example.com")
 
-    console.log('✓ API testing completed')
+    console.log("✓ API testing completed")
   })
 
-  it('demonstrates authentication testing', async () => {
+  it("demonstrates authentication testing", async () => {
     // Mock authentication component
     const AuthComponent = ({ login }: any) => (
       <div>
@@ -102,14 +107,14 @@ describe('Comprehensive Component Testing Examples', () => {
 
     // Test login flow
     await testLoginFlow(AuthComponent, {
-      email: 'test@example.com',
-      password: 'password123'
+      email: "test@example.com",
+      password: "password123",
     })
 
-    console.log('✓ Authentication testing completed')
+    console.log("✓ Authentication testing completed")
   })
 
-  it('demonstrates router testing utilities', async () => {
+  it("demonstrates router testing utilities", async () => {
     // Mock router component
     const RouterComponent = () => (
       <div>
@@ -122,24 +127,21 @@ describe('Comprehensive Component Testing Examples', () => {
     )
 
     // Test navigation
-    await testNavigation(
-      <RouterComponent />,
-      [
-        {
-          action: async () => {
-            const link = screen.getByText('Dashboard')
-            await userEvent.click(link)
-          },
-          expectedPath: '/dashboard',
-          description: 'Navigate to dashboard'
-        }
-      ]
-    )
+    await testNavigation(<RouterComponent />, [
+      {
+        action: async () => {
+          const link = screen.getByText("Dashboard")
+          await userEvent.click(link)
+        },
+        expectedPath: "/dashboard",
+        description: "Navigate to dashboard",
+      },
+    ])
 
-    console.log('✓ Router testing completed')
+    console.log("✓ Router testing completed")
   })
 
-  it('demonstrates accessibility testing', async () => {
+  it("demonstrates accessibility testing", async () => {
     // Mock accessible component
     const AccessibleComponent = () => (
       <div>
@@ -158,55 +160,52 @@ describe('Comprehensive Component Testing Examples', () => {
     )
 
     // Run comprehensive accessibility tests
-    await runA11yTestSuite(AccessibleComponent, {}, {
-      testKeyboard: true,
-      testScreenReader: true,
-      testFocus: true,
-      testSemantics: true,
-      testForms: true,
-    })
+    await runA11yTestSuite(
+      AccessibleComponent,
+      {},
+      {
+        testKeyboard: true,
+        testScreenReader: true,
+        testFocus: true,
+        testSemantics: true,
+        testForms: true,
+      }
+    )
 
-    console.log('✓ Accessibility testing completed')
+    console.log("✓ Accessibility testing completed")
   })
 
-  it('demonstrates component prop variations testing', async () => {
+  it("demonstrates component prop variations testing", async () => {
     // Mock component with multiple props
     const FlexibleComponent = ({ theme, size, disabled }: any) => (
-      <button
-        className={`btn-${theme} btn-${size}`}
-        disabled={disabled}
-      >
+      <button className={`btn-${theme} btn-${size}`} disabled={disabled}>
         Button
       </button>
     )
 
     // Test with different prop combinations
     const propVariations = [
-      { theme: 'primary', size: 'small', disabled: false },
-      { theme: 'secondary', size: 'large', disabled: true },
-      { theme: 'danger', size: 'medium', disabled: false }
+      { theme: "primary", size: "small", disabled: false },
+      { theme: "secondary", size: "large", disabled: true },
+      { theme: "danger", size: "medium", disabled: false },
     ]
 
-    await testComponentWithProps(
-      FlexibleComponent,
-      propVariations,
-      props => {
-        const button = screen.getByRole('button')
-        expect(button).toHaveClass(`btn-${props.theme}`)
-        expect(button).toHaveClass(`btn-${props.size}`)
+    await testComponentWithProps(FlexibleComponent, propVariations, (props) => {
+      const button = screen.getByRole("button")
+      expect(button).toHaveClass(`btn-${props.theme}`)
+      expect(button).toHaveClass(`btn-${props.size}`)
 
-        if (props.disabled) {
-          expect(button).toBeDisabled()
-        } else {
-          expect(button).toBeEnabled()
-        }
+      if (props.disabled) {
+        expect(button).toBeDisabled()
+      } else {
+        expect(button).toBeEnabled()
       }
-    )
+    })
 
-    console.log('✓ Component prop variations testing completed')
+    console.log("✓ Component prop variations testing completed")
   })
 
-  it('demonstrates performance testing', async () => {
+  it("demonstrates performance testing", async () => {
     // Mock performance-sensitive component
     const PerformanceComponent = ({ items }: any) => (
       <ul>
@@ -218,7 +217,7 @@ describe('Comprehensive Component Testing Examples', () => {
 
     // Test with large dataset
     const largeDataset = Array.from({ length: 1000 }, (_, i) => ({
-      name: `Item ${i}`
+      name: `Item ${i}`,
     }))
 
     const renderTime = await testComponentPerformance(
@@ -231,18 +230,18 @@ describe('Comprehensive Component Testing Examples', () => {
     console.log(`✓ Performance testing completed: ${renderTime.toFixed(2)}ms`)
   })
 
-  it('demonstrates data state testing', async () => {
+  it("demonstrates data state testing", async () => {
     // Mock data component
     const DataComponent = ({ data, loading, error }: any) => {
       if (loading) {
- return <div>Loading...</div> 
-}
+        return <div>Loading...</div>
+      }
       if (error) {
- return <div>Error: {error}</div> 
-}
+        return <div>Error: {error}</div>
+      }
       if (!data || data.length === 0) {
- return <div>No data</div> 
-}
+        return <div>No data</div>
+      }
 
       return (
         <ul>
@@ -255,35 +254,33 @@ describe('Comprehensive Component Testing Examples', () => {
 
     // Test different data states
     await testDataStates(DataComponent, {}, [
-      { data: null, description: 'no data' },
-      { data: [], description: 'empty array' },
-      { data: [createMockPerfume()], description: 'with data' }
+      { data: null, description: "no data" },
+      { data: [], description: "empty array" },
+      { data: [createMockPerfume()], description: "with data" },
     ])
 
-    console.log('✓ Data state testing completed')
+    console.log("✓ Data state testing completed")
   })
 
-  it('demonstrates responsive testing', async () => {
+  it("demonstrates responsive testing", async () => {
     // Mock responsive component
     const ResponsiveComponent = () => (
       <div className="responsive-grid">
-        <div className="col-mobile-12 col-tablet-6 col-desktop-4">
-          Content
-        </div>
+        <div className="col-mobile-12 col-tablet-6 col-desktop-4">Content</div>
       </div>
     )
 
     // Test different screen sizes
     await testResponsiveComponent(ResponsiveComponent, {}, [
-      'mobile',
-      'tablet',
-      'desktop'
+      "mobile",
+      "tablet",
+      "desktop",
     ])
 
-    console.log('✓ Responsive testing completed')
+    console.log("✓ Responsive testing completed")
   })
 
-  it('demonstrates integration testing example', async () => {
+  it("demonstrates integration testing example", async () => {
     // Mock full page component
     const PageComponent = ({ user, onLogin, onLogout }: any) => (
       <div>
@@ -297,13 +294,7 @@ describe('Comprehensive Component Testing Examples', () => {
             <button onClick={onLogin}>Login</button>
           )}
         </header>
-        <main>
-          {user ? (
-            <div>Dashboard Content</div>
-          ) : (
-            <div>Please log in</div>
-          )}
-        </main>
+        <main>{user ? <div>Dashboard Content</div> : <div>Please log in</div>}</main>
       </div>
     )
 
@@ -311,25 +302,25 @@ describe('Comprehensive Component Testing Examples', () => {
     const mockLogin = vi.fn()
     const mockLogout = vi.fn()
 
-    renderWithProviders(<PageComponent
-        user={null}
-        onLogin={mockLogin}
-        onLogout={mockLogout}
-      />)
+    renderWithProviders(
+      <PageComponent user={null} onLogin={mockLogin} onLogout={mockLogout} />
+    )
 
-    expect(screen.getByText('Please log in')).toBeInTheDocument()
-    expect(screen.getByText('Login')).toBeInTheDocument()
+    expect(screen.getByText("Please log in")).toBeInTheDocument()
+    expect(screen.getByText("Login")).toBeInTheDocument()
 
     // Test logged in state
-    const { rerender } = renderWithProviders(<PageComponent
+    const { rerender } = renderWithProviders(
+      <PageComponent
         user={createMockUser()}
         onLogin={mockLogin}
         onLogout={mockLogout}
-      />)
+      />
+    )
 
-    expect(screen.getByText('Welcome, Test User')).toBeInTheDocument()
-    expect(screen.getByText('Dashboard Content')).toBeInTheDocument()
+    expect(screen.getByText("Welcome, Test User")).toBeInTheDocument()
+    expect(screen.getByText("Dashboard Content")).toBeInTheDocument()
 
-    console.log('✓ Integration testing completed')
+    console.log("✓ Integration testing completed")
   })
 })

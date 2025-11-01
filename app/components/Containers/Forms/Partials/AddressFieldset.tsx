@@ -1,9 +1,9 @@
-import type { FieldMetadata } from '@conform-to/react'
-import type { FC, RefObject } from 'react'
+import type { FieldMetadata } from "@conform-to/react"
+import type { FC, RefObject } from "react"
 
-import Input from '~/components/Atoms/Input/Input'
-import Select from '~/components/Atoms/Select/Select'
-import countryData from '~/data/countryList.json'
+import Input from "~/components/Atoms/Input/Input"
+import Select from "~/components/Atoms/Select/Select"
+import countryData from "~/data/countryList.json"
 
 interface AddressFieldsetProps {
   inputRef: RefObject<HTMLInputElement | null>
@@ -25,7 +25,12 @@ const AddressFieldset: FC<AddressFieldsetProps> = ({ inputRef, address, data }) 
         inputId="address"
         defaultValue={data?.address}
       />
-      <Select selectData={countryData} selectId="country" label="country" defaultId={data?.country} />
+      <Select
+        selectData={countryData}
+        selectId="country"
+        label="country"
+        defaultId={data?.country}
+      />
     </div>
   </fieldset>
 )

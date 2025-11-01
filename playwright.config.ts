@@ -1,11 +1,11 @@
-import { defineConfig, devices } from '@playwright/test'
+import { defineConfig, devices } from "@playwright/test"
 
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
   // Test directory
-  testDir: './test/e2e',
+  testDir: "./test/e2e",
 
   // Run tests in files in parallel
   fullyParallel: true,
@@ -21,25 +21,25 @@ export default defineConfig({
 
   // Reporter to use. See https://playwright.dev/docs/test-reporters
   reporter: [
-    ['html'],
-    ['json', { outputFile: 'test-results/e2e-results.json' }],
-    ['junit', { outputFile: 'test-results/e2e-results.xml' }],
-    process.env.CI ? ['github'] : ['list']
+    ["html"],
+    ["json", { outputFile: "test-results/e2e-results.json" }],
+    ["junit", { outputFile: "test-results/e2e-results.xml" }],
+    process.env.CI ? ["github"] : ["list"],
   ],
 
   // Shared settings for all the projects below
   use: {
     // Base URL to use in actions like `await page.goto('/')`
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:2112',
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://localhost:2112",
 
     // Collect trace when retrying the failed test
-    trace: 'on-first-retry',
+    trace: "on-first-retry",
 
     // Take screenshot on failure
-    screenshot: 'only-on-failure',
+    screenshot: "only-on-failure",
 
     // Record video on failure
-    video: 'retain-on-failure',
+    video: "retain-on-failure",
 
     // Global timeout for each action
     actionTimeout: 10000,
@@ -51,56 +51,56 @@ export default defineConfig({
   // Configure projects for major browsers
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
     },
 
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] },
     },
 
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      name: "webkit",
+      use: { ...devices["Desktop Safari"] },
     },
 
     // Test against mobile viewports
     {
-      name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
+      name: "Mobile Chrome",
+      use: { ...devices["Pixel 5"] },
     },
     {
-      name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
+      name: "Mobile Safari",
+      use: { ...devices["iPhone 12"] },
     },
 
     // Test against branded browsers
     {
-      name: 'Microsoft Edge',
-      use: { ...devices['Desktop Edge'], channel: 'msedge' },
+      name: "Microsoft Edge",
+      use: { ...devices["Desktop Edge"], channel: "msedge" },
     },
     {
-      name: 'Google Chrome',
-      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+      name: "Google Chrome",
+      use: { ...devices["Desktop Chrome"], channel: "chrome" },
     },
   ],
 
   // Run your local dev server before starting the tests
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:2112',
+    command: "npm run dev",
+    url: "http://localhost:2112",
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000, // 2 minutes
     env: {
-      NODE_ENV: 'test',
-      PLAYWRIGHT_TEST: 'true'
-    }
+      NODE_ENV: "test",
+      PLAYWRIGHT_TEST: "true",
+    },
   },
 
   // Global setup and teardown
-  globalSetup: './test/e2e/global-setup.ts',
-  globalTeardown: './test/e2e/global-teardown.ts',
+  globalSetup: "./test/e2e/global-setup.ts",
+  globalTeardown: "./test/e2e/global-teardown.ts",
 
   // Test timeout
   timeout: 30 * 1000, // 30 seconds
@@ -111,27 +111,19 @@ export default defineConfig({
   },
 
   // Output directory for test artifacts
-  outputDir: 'test-results/artifacts',
+  outputDir: "test-results/artifacts",
 
   // Test match patterns
-  testMatch: [
-    '**/test/e2e/**/*.test.ts',
-    '**/test/e2e/**/*.spec.ts'
-  ],
+  testMatch: ["**/test/e2e/**/*.test.ts", "**/test/e2e/**/*.spec.ts"],
 
   // Ignore patterns
-  testIgnore: [
-    '**/node_modules/**',
-    '**/build/**',
-    '**/dist/**',
-    '**/coverage/**'
-  ],
+  testIgnore: ["**/node_modules/**", "**/build/**", "**/dist/**", "**/coverage/**"],
 
   // Preserve output directory
-  preserveOutput: 'failures-only',
+  preserveOutput: "failures-only",
 
   // Update snapshots
-  updateSnapshots: process.env.CI ? 'missing' : 'all',
+  updateSnapshots: process.env.CI ? "missing" : "all",
 
   // Maximum failures before stopping
   maxFailures: process.env.CI ? 10 : undefined,

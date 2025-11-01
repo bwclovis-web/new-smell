@@ -1,6 +1,6 @@
-import type { FC, RefObject } from 'react'
+import type { FC, RefObject } from "react"
 
-import Input from '~/components/Atoms/Input/Input'
+import Input from "~/components/Atoms/Input/Input"
 
 interface ContactFieldsetProps {
   inputRef: RefObject<HTMLInputElement | null>

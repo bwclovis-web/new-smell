@@ -1,6 +1,6 @@
-import { type FC } from 'react'
+import { type FC } from "react"
 
-import { type AppError } from '~/utils/errorHandling'
+import { type AppError } from "~/utils/errorHandling"
 
 interface ComponentErrorProps {
   error: AppError
@@ -13,7 +13,7 @@ const ComponentError: FC<ComponentErrorProps> = ({
   error,
   errorId,
   onRetry,
-  onReportError
+  onReportError,
 }) => (
   <div className="bg-red-50 border border-red-200 rounded-lg p-4">
     <div className="flex items-start">

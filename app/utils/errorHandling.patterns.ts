@@ -1,19 +1,19 @@
 /**
  * Standardized Error Handling Patterns
- * 
+ *
  * This module provides standardized patterns for error handling across the application.
  * Use these patterns consistently to ensure reliable error handling, logging, and user feedback.
- * 
+ *
  * @module errorHandling.patterns
  */
 
-import { AppError, createError, ErrorHandler } from './errorHandling'
-import { ServerErrorHandler } from './errorHandling.server'
-import type { LoaderFunctionArgs, ActionFunctionArgs } from '@remix-run/node'
+import { AppError, createError, ErrorHandler } from "./errorHandling"
+import { ServerErrorHandler } from "./errorHandling.server"
+import type { LoaderFunctionArgs, ActionFunctionArgs } from "@remix-run/node"
 
 /**
  * Standard wrapper for route loaders with automatic error handling
- * 
+ *
  * @example
  * export const loader = withLoaderErrorHandling(
  *   async ({ request, params }) => {
@@ -35,14 +35,17 @@ export function withLoaderErrorHandling<T>(
       return await loader(args)
     } catch (error) {
       // Handle redirects (don't treat them as errors)
-      if (error instanceof Response && (error.status === 302 || error.status === 303)) {
+      if (
+        error instanceof Response &&
+        (error.status === 302 || error.status === 303)
+      ) {
         throw error
       }
 
       const appError = ServerErrorHandler.handle(error, {
         route: args.request.url,
         method: args.request.method,
-        ...options?.context
+        ...options?.context,
       })
 
       options?.onError?.(appError)
@@ -54,7 +57,7 @@ export function withLoaderErrorHandling<T>(
 
 /**
  * Standard wrapper for route actions with automatic error handling
- * 
+ *
  * @example
  * export const action = withActionErrorHandling(
  *   async ({ request }) => {
@@ -77,14 +80,17 @@ export function withActionErrorHandling<T>(
       return await action(args)
     } catch (error) {
       // Handle redirects (don't treat them as errors)
-      if (error instanceof Response && (error.status === 302 || error.status === 303)) {
+      if (
+        error instanceof Response &&
+        (error.status === 302 || error.status === 303)
+      ) {
         throw error
       }
 
       const appError = ServerErrorHandler.handle(error, {
         route: args.request.url,
         method: args.request.method,
-        ...options?.context
+        ...options?.context,
       })
 
       options?.onError?.(appError)
@@ -96,7 +102,7 @@ export function withActionErrorHandling<T>(
 
 /**
  * Standard wrapper for database operations with automatic error handling
- * 
+ *
  * @example
  * const user = await withDatabaseErrorHandling(
  *   async () => await db.user.findUnique({ where: { id } }),
@@ -111,15 +117,15 @@ export async function withDatabaseErrorHandling<T>(
     return await operation()
   } catch (error) {
     throw ErrorHandler.handle(error, {
-      type: 'database',
-      ...context
+      type: "database",
+      ...context,
     })
   }
 }
 
 /**
  * Standard wrapper for API calls with automatic error handling
- * 
+ *
  * @example
  * const data = await withApiErrorHandling(
  *   async () => await fetch('/api/endpoint').then(r => r.json()),
@@ -134,15 +140,15 @@ export async function withApiErrorHandling<T>(
     return await apiCall()
   } catch (error) {
     throw ErrorHandler.handle(error, {
-      type: 'api',
-      ...context
+      type: "api",
+      ...context,
     })
   }
 }
 
 /**
  * Standard wrapper for validation operations with automatic error handling
- * 
+ *
  * @example
  * const validData = withValidationErrorHandling(
  *   () => validateSchema(data),
@@ -157,15 +163,15 @@ export function withValidationErrorHandling<T>(
     return validation()
   } catch (error) {
     throw ErrorHandler.handle(error, {
-      type: 'validation',
-      ...context
+      type: "validation",
+      ...context,
     })
   }
 }
 
 /**
  * Standard error handler for authentication operations
- * 
+ *
  * @example
  * try {
  *   await authenticateUser(credentials)
@@ -187,14 +193,14 @@ export function handleAuthenticationError(
   }
 
   return createError.authentication(
-    typeof error === 'string' ? error : 'Authentication failed',
+    typeof error === "string" ? error : "Authentication failed",
     context
   )
 }
 
 /**
  * Standard error handler for authorization operations
- * 
+ *
  * @example
  * try {
  *   checkUserPermission(userId, 'admin')
@@ -216,7 +222,7 @@ export function handleAuthorizationError(
   }
 
   return createError.authorization(
-    typeof error === 'string' ? error : 'Access denied',
+    typeof error === "string" ? error : "Access denied",
     context
   )
 }
@@ -224,7 +230,7 @@ export function handleAuthorizationError(
 /**
  * Standard wrapper for async operations with result pattern (no throwing)
  * Returns [error, null] or [null, result]
- * 
+ *
  * @example
  * const [error, user] = await safeAsync(() => getUser(id))
  * if (error) {
@@ -249,7 +255,7 @@ export async function safeAsync<T>(
 /**
  * Standard wrapper for sync operations with result pattern (no throwing)
  * Returns [error, null] or [null, result]
- * 
+ *
  * @example
  * const [error, data] = safeSync(() => JSON.parse(jsonString))
  * if (error) {
@@ -273,7 +279,7 @@ export function safeSync<T>(
 
 /**
  * Standard retry wrapper with exponential backoff
- * 
+ *
  * @example
  * const data = await withRetry(
  *   async () => await fetchData(),
@@ -295,7 +301,7 @@ export async function withRetry<T>(
     baseDelay = 1000,
     maxDelay = 10000,
     context,
-    onRetry
+    onRetry,
   } = options
 
   let lastError: AppError | null = null
@@ -307,92 +313,110 @@ export async function withRetry<T>(
       lastError = ErrorHandler.handle(error, {
         attempt,
         maxRetries,
-        ...context
+        ...context,
       })
 
       if (attempt < maxRetries) {
         const delay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay)
         onRetry?.(attempt + 1, lastError)
-        await new Promise(resolve => setTimeout(resolve, delay))
+        await new Promise((resolve) => setTimeout(resolve, delay))
       }
     }
   }
 
-  throw lastError || createError.unknown('Retry failed', context)
+  throw lastError || createError.unknown("Retry failed", context)
 }
 
 /**
  * Create a standard "not found" error
- * 
+ *
  * @example
  * const user = await getUser(id)
  * if (!user) {
  *   throw notFoundError('User', { userId: id })
  * }
  */
-export function notFoundError(resourceName: string, context?: Record<string, any>): AppError {
+export function notFoundError(
+  resourceName: string,
+  context?: Record<string, any>
+): AppError {
   return createError.notFound(resourceName, context)
 }
 
 /**
  * Create a standard validation error
- * 
+ *
  * @example
  * if (!isValidEmail(email)) {
  *   throw validationError('Invalid email format', { email, field: 'email' })
  * }
  */
-export function validationError(message: string, context?: Record<string, any>): AppError {
+export function validationError(
+  message: string,
+  context?: Record<string, any>
+): AppError {
   return createError.validation(message, context)
 }
 
 /**
  * Create a standard authentication error
- * 
+ *
  * @example
  * if (!token) {
  *   throw authenticationError('No authentication token provided')
  * }
  */
-export function authenticationError(message?: string, context?: Record<string, any>): AppError {
+export function authenticationError(
+  message?: string,
+  context?: Record<string, any>
+): AppError {
   return createError.authentication(message, context)
 }
 
 /**
  * Create a standard authorization error
- * 
+ *
  * @example
  * if (!hasPermission(user, 'admin')) {
  *   throw authorizationError('Admin permission required', { userId: user.id })
  * }
  */
-export function authorizationError(message?: string, context?: Record<string, any>): AppError {
+export function authorizationError(
+  message?: string,
+  context?: Record<string, any>
+): AppError {
   return createError.authorization(message, context)
 }
 
 /**
  * Create a standard database error
- * 
+ *
  * @example
  * throw databaseError('Failed to connect to database', { host, port })
  */
-export function databaseError(message?: string, context?: Record<string, any>): AppError {
+export function databaseError(
+  message?: string,
+  context?: Record<string, any>
+): AppError {
   return createError.database(message, context)
 }
 
 /**
  * Create a standard network error
- * 
+ *
  * @example
  * throw networkError('Failed to fetch data', { url, timeout })
  */
-export function networkError(message?: string, context?: Record<string, any>): AppError {
+export function networkError(
+  message?: string,
+  context?: Record<string, any>
+): AppError {
   return createError.network(message, context)
 }
 
 /**
  * Helper to check if a value exists, throw notFoundError if not
- * 
+ *
  * @example
  * const user = assertExists(
  *   await getUser(id),
@@ -413,7 +437,7 @@ export function assertExists<T>(
 
 /**
  * Helper to validate a condition, throw validationError if false
- * 
+ *
  * @example
  * assertValid(
  *   email.includes('@'),
@@ -433,7 +457,7 @@ export function assertValid(
 
 /**
  * Helper to check authentication, throw authenticationError if not authenticated
- * 
+ *
  * @example
  * assertAuthenticated(userId, { route: '/admin' })
  */
@@ -442,13 +466,13 @@ export function assertAuthenticated(
   context?: Record<string, any>
 ): asserts userId is string {
   if (!userId) {
-    throw authenticationError('Authentication required', context)
+    throw authenticationError("Authentication required", context)
   }
 }
 
 /**
  * Helper to check authorization, throw authorizationError if not authorized
- * 
+ *
  * @example
  * assertAuthorized(
  *   user.role === 'admin',
@@ -465,4 +489,3 @@ export function assertAuthorized(
     throw authorizationError(message, context)
   }
 }
-

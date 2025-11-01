@@ -1,4 +1,4 @@
-import { type RefObject, useEffect, useRef, useState } from 'react'
+import { type RefObject, useEffect, useRef, useState } from "react"
 
 interface UseInfiniteScrollPerfumesOptions {
   letter: string
@@ -25,14 +25,16 @@ async function fetchPerfumesByLetter(letter: string, skip: number, take: number)
   return response.json()
 }
 
-export function useInfiniteScrollPerfumes(options: UseInfiniteScrollPerfumesOptions): UseInfiniteScrollPerfumesReturn {
+export function useInfiniteScrollPerfumes(
+  options: UseInfiniteScrollPerfumesOptions
+): UseInfiniteScrollPerfumesReturn {
   const {
     letter,
     initialPerfumes,
     scrollContainerRef,
     take = 12,
     threshold = 200,
-    debounceTime = 500
+    debounceTime = 500,
   } = options
 
   const [perfumes, setPerfumes] = useState(initialPerfumes)
@@ -46,15 +48,15 @@ export function useInfiniteScrollPerfumes(options: UseInfiniteScrollPerfumesOpti
 
   const loadMorePerfumes = async () => {
     if (loading || !hasMore) {
- return 
-}
+      return
+    }
 
     setLoading(true)
     try {
       const data = await fetchPerfumesByLetter(letter, skip, take)
       if (data.success && Array.isArray(data.perfumes)) {
-        setPerfumes(prev => [...prev, ...data.perfumes])
-        setSkip(prev => prev + data.perfumes.length)
+        setPerfumes((prev) => [...prev, ...data.perfumes])
+        setSkip((prev) => prev + data.perfumes.length)
         setHasMore(data.meta.hasMore)
         setTotalCount(data.meta.totalCount)
       } else {
@@ -80,19 +82,19 @@ export function useInfiniteScrollPerfumes(options: UseInfiniteScrollPerfumesOpti
     }
 
     if (!scrollContainerRef.current) {
- return 
-}
+      return
+    }
 
     const scrollContainer = scrollContainerRef.current
     const handleScroll = () => {
       if (loading || !hasMore) {
- return 
-}
+        return
+      }
 
       const now = Date.now()
       if (now - lastTriggerTime.current < debounceTime) {
- return 
-}
+        return
+      }
 
       const { scrollTop, scrollHeight, clientHeight } = scrollContainer
       if (scrollTop + clientHeight >= scrollHeight - threshold) {
@@ -101,11 +103,25 @@ export function useInfiniteScrollPerfumes(options: UseInfiniteScrollPerfumesOpti
       }
     }
 
-    scrollContainer.addEventListener('scroll', handleScroll)
-    return () => scrollContainer.removeEventListener('scroll', handleScroll)
+    scrollContainer.addEventListener("scroll", handleScroll)
+    return () => scrollContainer.removeEventListener("scroll", handleScroll)
   }, [
-loading, hasMore, skip, scrollContainerRef.current, debounceTime, threshold, letter
-])
+    loading,
+    hasMore,
+    skip,
+    scrollContainerRef.current,
+    debounceTime,
+    threshold,
+    letter,
+  ])
 
-  return { perfumes, loading, hasMore, totalCount, observerRef, loadMorePerfumes, resetPerfumes }
+  return {
+    perfumes,
+    loading,
+    hasMore,
+    totalCount,
+    observerRef,
+    loadMorePerfumes,
+    resetPerfumes,
+  }
 }

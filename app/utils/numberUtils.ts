@@ -17,18 +17,19 @@ export const roundToDecimal = (value: number, decimals: number): number => {
  */
 export const createSafeStep = (decimalStep: number) => {
   // Find the number of decimal places
-  const decimals = decimalStep.toString().split('.')[1]?.length || 0
+  const decimals = decimalStep.toString().split(".")[1]?.length || 0
   const factor = Math.pow(10, decimals)
 
   return {
     step: 1, // Always use 1 for internal calculations
     factor,
     toInternal: (val: number) => Math.round(val * factor),
-    fromInternal: (val: number) => roundToDecimal(val / factor, decimals)
+    fromInternal: (val: number) => roundToDecimal(val / factor, decimals),
   }
 }
 
-export const formatPrice = (amount: number, locale = 'en-US', currency = 'USD') => new Intl.NumberFormat(locale, {
-  style: 'currency',
-  currency
-}).format(amount)
+export const formatPrice = (amount: number, locale = "en-US", currency = "USD") =>
+  new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency,
+  }).format(amount)

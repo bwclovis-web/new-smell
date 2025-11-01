@@ -17,7 +17,7 @@ export const defaultCompressionOptions: CompressionOptions = {
   chunkSize: 16 * 1024,
   memLevel: 8,
   strategy: 0,
-  windowBits: 15
+  windowBits: 15,
 }
 
 /**
@@ -29,17 +29,17 @@ export function getCompressionHeaders(
   options: CompressionOptions = defaultCompressionOptions
 ): Record<string, string> {
   const jsonString = JSON.stringify(data)
-  const originalSize = Buffer.byteLength(jsonString, 'utf8')
+  const originalSize = Buffer.byteLength(jsonString, "utf8")
 
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    'X-Original-Size': originalSize.toString(),
-    'Vary': 'Accept-Encoding'
+    "Content-Type": "application/json",
+    "X-Original-Size": originalSize.toString(),
+    Vary: "Accept-Encoding",
   }
 
   // Add compression hint if above threshold
   if (originalSize >= (options.threshold || 1024)) {
-    headers['X-Compression-Enabled'] = 'true'
+    headers["X-Compression-Enabled"] = "true"
   }
 
   return headers
@@ -60,7 +60,7 @@ export function getPaginatedMeta<T>(
   return {
     ...meta,
     count: data.length,
-    compressed: true
+    compressed: true,
   }
 }
 
@@ -73,19 +73,15 @@ export function getAnalyticsMeta(data: any) {
     meta: {
       compressed: true,
       timestamp: new Date().toISOString(),
-      version: '1.0'
-    }
+      version: "1.0",
+    },
   }
 }
 
 /**
  * Get search metadata with compression info
  */
-export function getSearchMeta(
-  results: any[],
-  query: string,
-  totalCount: number
-) {
+export function getSearchMeta(results: any[], query: string, totalCount: number) {
   return {
     results,
     query,
@@ -93,8 +89,8 @@ export function getSearchMeta(
     meta: {
       compressed: true,
       searchTime: Date.now(),
-      resultCount: results.length
-    }
+      resultCount: results.length,
+    },
   }
 }
 
@@ -107,12 +103,20 @@ export function shouldCompressResponse(
   threshold: number = 1024
 ): boolean {
   // Don't compress already compressed content
-  if (contentType.includes('gzip') || contentType.includes('deflate') || contentType.includes('br')) {
+  if (
+    contentType.includes("gzip") ||
+    contentType.includes("deflate") ||
+    contentType.includes("br")
+  ) {
     return false
   }
 
   // Don't compress binary content
-  if (contentType.includes('image/') || contentType.includes('video/') || contentType.includes('audio/')) {
+  if (
+    contentType.includes("image/") ||
+    contentType.includes("video/") ||
+    contentType.includes("audio/")
+  ) {
     return false
   }
 
@@ -126,12 +130,12 @@ export function shouldCompressResponse(
 export function getCompressionStats() {
   return {
     enabled: true,
-    algorithm: 'gzip',
+    algorithm: "gzip",
     level: defaultCompressionOptions.level,
     threshold: defaultCompressionOptions.threshold,
     chunkSize: defaultCompressionOptions.chunkSize,
     memLevel: defaultCompressionOptions.memLevel,
     strategy: defaultCompressionOptions.strategy,
-    windowBits: defaultCompressionOptions.windowBits
+    windowBits: defaultCompressionOptions.windowBits,
   }
 }

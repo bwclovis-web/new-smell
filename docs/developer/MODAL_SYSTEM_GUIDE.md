@@ -5,6 +5,7 @@
 The New Smell application uses a unified modal system powered by **Zustand** for state management. All modals throughout the application use the same consistent pattern for opening, closing, and managing modal state.
 
 **Key Components:**
+
 - `useSessionStore` - Zustand store for modal state management
 - `Modal` - Reusable modal component (Organism)
 - `DangerModal` - Specialized modal for dangerous actions
@@ -19,13 +20,17 @@ The modal system is powered by a Zustand store located at `app/stores/sessionSto
 
 ```typescript
 interface SessionState {
-  modalOpen: boolean                      // Is any modal currently open?
-  modalData: ModalData | null            // Data passed to the modal
-  modalId: string | null                 // Unique identifier for the open modal
-  triggerId: RefObject<HTMLButtonElement> | null  // Button that triggered the modal
+  modalOpen: boolean // Is any modal currently open?
+  modalData: ModalData | null // Data passed to the modal
+  modalId: string | null // Unique identifier for the open modal
+  triggerId: RefObject<HTMLButtonElement> | null // Button that triggered the modal
 
   // Actions
-  toggleModal: (id: RefObject<HTMLButtonElement>, modalId: string, data?: ModalData) => void
+  toggleModal: (
+    id: RefObject<HTMLButtonElement>,
+    modalId: string,
+    data?: ModalData
+  ) => void
   closeModal: () => void
   setModalData: (data: ModalData | null) => void
   setModalId: (id: string | null) => void
@@ -33,6 +38,7 @@ interface SessionState {
 ```
 
 **What it does:**
+
 - Manages modal open/close state
 - Handles body overflow (prevents scrolling when modal is open)
 - Restores focus to trigger button when modal closes
@@ -44,21 +50,18 @@ interface SessionState {
 ### Basic Modal Usage
 
 ```typescript
-import { useRef } from 'react'
-import { useSessionStore } from '~/stores/sessionStore'
-import Modal from '~/components/Organisms/Modal'
+import { useRef } from "react"
+import { useSessionStore } from "~/stores/sessionStore"
+import Modal from "~/components/Organisms/Modal"
 
 function MyComponent() {
   const { modalOpen, modalId, toggleModal } = useSessionStore()
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const MODAL_ID = 'my-modal'
+  const MODAL_ID = "my-modal"
 
   return (
     <>
-      <button
-        ref={buttonRef}
-        onClick={() => toggleModal(buttonRef, MODAL_ID)}
-      >
+      <button ref={buttonRef} onClick={() => toggleModal(buttonRef, MODAL_ID)}>
         Open Modal
       </button>
 
@@ -76,14 +79,14 @@ function MyComponent() {
 ### Modal with Data
 
 ```typescript
-import { useRef } from 'react'
-import { useSessionStore } from '~/stores/sessionStore'
-import Modal from '~/components/Organisms/Modal'
+import { useRef } from "react"
+import { useSessionStore } from "~/stores/sessionStore"
+import Modal from "~/components/Organisms/Modal"
 
 function UserModal() {
   const { modalOpen, modalId, modalData, toggleModal } = useSessionStore()
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const MODAL_ID = 'user-modal'
+  const MODAL_ID = "user-modal"
 
   const openWithData = (userId: string) => {
     toggleModal(buttonRef, MODAL_ID, { userId })
@@ -91,7 +94,7 @@ function UserModal() {
 
   return (
     <>
-      <button ref={buttonRef} onClick={() => openWithData('123')}>
+      <button ref={buttonRef} onClick={() => openWithData("123")}>
         View User
       </button>
 
@@ -111,15 +114,15 @@ function UserModal() {
 For dangerous actions (delete, reset, etc.), use the `DangerModal` component:
 
 ```typescript
-import { useRef } from 'react'
-import { useSessionStore } from '~/stores/sessionStore'
-import DangerModal from '~/components/Organisms/DangerModal'
-import Modal from '~/components/Organisms/Modal'
+import { useRef } from "react"
+import { useSessionStore } from "~/stores/sessionStore"
+import DangerModal from "~/components/Organisms/DangerModal"
+import Modal from "~/components/Organisms/Modal"
 
 function DeleteItem() {
   const { modalOpen, modalId, toggleModal, closeModal } = useSessionStore()
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const MODAL_ID = 'delete-item-modal'
+  const MODAL_ID = "delete-item-modal"
 
   const handleDelete = async () => {
     // Perform delete action
@@ -153,6 +156,7 @@ function DeleteItem() {
 ### Modal Component (`app/components/Organisms/Modal/Modal.tsx`)
 
 **Features:**
+
 - Portal rendering to `#modal-portal`
 - Smooth animations (fade in/out)
 - Click outside to close
@@ -165,8 +169,8 @@ function DeleteItem() {
 ```typescript
 interface ModalProps {
   children: ReactNode
-  background?: 'default' | 'dark' | 'light'
-  innerType?: 'default' | 'wide' | 'narrow'
+  background?: "default" | "dark" | "light"
+  innerType?: "default" | "wide" | "narrow"
   animateStart?: boolean
 }
 ```
@@ -195,12 +199,12 @@ Always use a unique, descriptive modal ID:
 
 ```typescript
 // Good
-const MODAL_ID = 'edit-perfume-modal'
+const MODAL_ID = "edit-perfume-modal"
 const MODAL_ID = `delete-comment-${commentId}`
 
 // Bad
-const MODAL_ID = 'modal'
-const MODAL_ID = 'modal1'
+const MODAL_ID = "modal"
+const MODAL_ID = "modal1"
 ```
 
 ### 2. Use Refs for Trigger Buttons
@@ -221,14 +225,14 @@ Always check both conditions before rendering a modal:
 
 ```typescript
 // Good
-{modalOpen && modalId === MODAL_ID && (
-  <Modal>...</Modal>
-)}
+{
+  modalOpen && modalId === MODAL_ID && <Modal>...</Modal>
+}
 
 // Bad - will render all modals when any modal is open
-{modalOpen && (
-  <Modal>...</Modal>
-)}
+{
+  modalOpen && <Modal>...</Modal>
+}
 ```
 
 ### 4. Close Modals After Actions
@@ -238,7 +242,7 @@ Remember to close the modal after completing an action:
 ```typescript
 const handleSubmit = async () => {
   await saveData()
-  closeModal()  // Don't forget this!
+  closeModal() // Don't forget this!
 }
 ```
 
@@ -261,7 +265,7 @@ const handleClose = () => {
 function ConfirmationModal({ onConfirm }: { onConfirm: () => void }) {
   const { modalOpen, modalId, toggleModal, closeModal } = useSessionStore()
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const MODAL_ID = 'confirmation-modal'
+  const MODAL_ID = "confirmation-modal"
 
   const handleConfirm = () => {
     onConfirm()
@@ -294,14 +298,14 @@ function ConfirmationModal({ onConfirm }: { onConfirm: () => void }) {
 function FormModal() {
   const { modalOpen, modalId, toggleModal, closeModal } = useSessionStore()
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const MODAL_ID = 'form-modal'
-  const [formData, setFormData] = useState({ name: '' })
+  const MODAL_ID = "form-modal"
+  const [formData, setFormData] = useState({ name: "" })
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     await saveData(formData)
     closeModal()
-    setFormData({ name: '' }) // Reset form
+    setFormData({ name: "" }) // Reset form
   }
 
   return (
@@ -320,7 +324,9 @@ function FormModal() {
               placeholder="Name"
             />
             <button type="submit">Submit</button>
-            <button type="button" onClick={closeModal}>Cancel</button>
+            <button type="button" onClick={closeModal}>
+              Cancel
+            </button>
           </form>
         </Modal>
       )}
@@ -335,7 +341,7 @@ function FormModal() {
 function DynamicModal() {
   const { modalOpen, modalId, modalData, toggleModal } = useSessionStore()
   const buttonRef = useRef<HTMLButtonElement>(null)
-  const MODAL_ID = 'dynamic-modal'
+  const MODAL_ID = "dynamic-modal"
 
   const openWithItem = (item: Item) => {
     toggleModal(buttonRef, MODAL_ID, { item })
@@ -344,11 +350,7 @@ function DynamicModal() {
   return (
     <>
       {items.map((item) => (
-        <button
-          key={item.id}
-          ref={buttonRef}
-          onClick={() => openWithItem(item)}
-        >
+        <button key={item.id} ref={buttonRef} onClick={() => openWithItem(item)}>
           View {item.name}
         </button>
       ))}
@@ -369,10 +371,10 @@ function DynamicModal() {
 ### Testing Components with Modals
 
 ```typescript
-import { renderHook, act } from '@testing-library/react'
-import { useSessionStore } from '~/stores/sessionStore'
+import { renderHook, act } from "@testing-library/react"
+import { useSessionStore } from "~/stores/sessionStore"
 
-describe('MyModalComponent', () => {
+describe("MyModalComponent", () => {
   beforeEach(() => {
     // Reset modal state before each test
     act(() => {
@@ -385,16 +387,16 @@ describe('MyModalComponent', () => {
     })
   })
 
-  it('should open modal', () => {
+  it("should open modal", () => {
     const { result } = renderHook(() => useSessionStore())
     const buttonRef = createRef<HTMLButtonElement>()
 
     act(() => {
-      result.current.toggleModal(buttonRef, 'test-modal')
+      result.current.toggleModal(buttonRef, "test-modal")
     })
 
     expect(result.current.modalOpen).toBe(true)
-    expect(result.current.modalId).toBe('test-modal')
+    expect(result.current.modalId).toBe("test-modal")
   })
 })
 ```
@@ -407,8 +409,8 @@ If you're migrating from the old `SessionProvider` or `useModal` hook:
 
 ```typescript
 // OLD - Don't use
-import SessionContext from '~/providers/sessionProvider'
-import { useContext } from 'react'
+import SessionContext from "~/providers/sessionProvider"
+import { useContext } from "react"
 
 const { modalOpen, toggleModal } = useContext(SessionContext)
 ```
@@ -417,7 +419,7 @@ const { modalOpen, toggleModal } = useContext(SessionContext)
 
 ```typescript
 // NEW - Use this
-import { useSessionStore } from '~/stores/sessionStore'
+import { useSessionStore } from "~/stores/sessionStore"
 
 const { modalOpen, toggleModal } = useSessionStore()
 ```
@@ -438,12 +440,14 @@ const { modalOpen, toggleModal } = useSessionStore()
 ### Body Still Scrolling
 
 This is handled automatically, but if you encounter issues:
+
 1. Check browser console for errors
 2. Verify modal is properly closed with `closeModal()`
 
 ### Multiple Modals Opening
 
 Only one modal should open at a time. If multiple modals render:
+
 1. Check your modal ID conditions
 2. Ensure you're checking `modalId === YOUR_MODAL_ID`
 
@@ -462,14 +466,14 @@ See these files for real-world examples:
 
 ```typescript
 const {
-  modalOpen,    // boolean - Is any modal open?
-  modalData,    // object | null - Data passed to modal
-  modalId,      // string | null - ID of open modal
-  triggerId,    // RefObject | null - Button that opened modal
-  toggleModal,  // function - Open/close modal
-  closeModal,   // function - Close modal
+  modalOpen, // boolean - Is any modal open?
+  modalData, // object | null - Data passed to modal
+  modalId, // string | null - ID of open modal
+  triggerId, // RefObject | null - Button that opened modal
+  toggleModal, // function - Open/close modal
+  closeModal, // function - Close modal
   setModalData, // function - Update modal data
-  setModalId    // function - Update modal ID
+  setModalId, // function - Update modal ID
 } = useSessionStore()
 ```
 
@@ -478,6 +482,7 @@ const {
 Opens a modal or closes it if already open.
 
 **Parameters:**
+
 - `buttonRef`: RefObject<HTMLButtonElement> - Reference to trigger button
 - `modalId`: string - Unique identifier for the modal
 - `data?`: object - Optional data to pass to the modal
@@ -497,6 +502,7 @@ Closes the currently open modal.
 Updates the data for the currently open modal.
 
 **Parameters:**
+
 - `data`: object | null - New data or null to clear
 
 **Returns:** void
@@ -506,6 +512,7 @@ Updates the data for the currently open modal.
 Updates the modal ID.
 
 **Parameters:**
+
 - `id`: string | null - New modal ID or null to clear
 
 **Returns:** void
@@ -521,4 +528,3 @@ Updates the modal ID.
 - ✅ Fully tested with 22+ comprehensive tests
 
 The unified modal system provides a consistent, accessible, and easy-to-use pattern for all modal interactions throughout the application.
-

@@ -1,21 +1,21 @@
 /**
  * Basic Application Functionality E2E Tests
- * 
+ *
  * Tests core application functionality including:
  * - Home page loading and rendering
  * - Navigation visibility and functionality
  * - Responsive design on mobile devices
  * - Error-free page interactions
- * 
+ *
  * @group e2e
  * @group smoke
  */
 
-import { expect, test } from '@playwright/test'
+import { expect, test } from "@playwright/test"
 
-import { HomePage } from './pages/HomePage'
+import { HomePage } from "./pages/HomePage"
 
-test.describe('Basic Application Functionality', () => {
+test.describe("Basic Application Functionality", () => {
   let homePage: HomePage
 
   test.beforeEach(async ({ page }) => {
@@ -23,7 +23,7 @@ test.describe('Basic Application Functionality', () => {
     await homePage.navigateTo()
   })
 
-  test('should load the home page successfully', async () => {
+  test("should load the home page successfully", async () => {
     // Check that the page loads without errors
     const errors = await homePage.checkForErrors()
     expect(errors).toHaveLength(0)
@@ -37,7 +37,7 @@ test.describe('Basic Application Functionality', () => {
     await homePage.assertPageLoaded()
   })
 
-  test('should have working navigation', async () => {
+  test("should have working navigation", async () => {
     // Check that navigation is visible
     const isNavVisible = await homePage.isNavigationVisible()
     expect(isNavVisible).toBe(true)
@@ -47,7 +47,7 @@ test.describe('Basic Application Functionality', () => {
     expect(isHeroVisible).toBe(true)
   })
 
-  test('should handle page interactions without errors', async () => {
+  test("should handle page interactions without errors", async () => {
     // Wait for the page to be fully loaded
     await homePage.waitForReady()
 
@@ -56,10 +56,10 @@ test.describe('Basic Application Functionality', () => {
     expect(errors).toHaveLength(0)
 
     // Take a screenshot for visual verification
-    await homePage.takeScreenshot('home-page-loaded')
+    await homePage.takeScreenshot("home-page-loaded")
   })
 
-  test('should be responsive on mobile', async ({ page }) => {
+  test("should be responsive on mobile", async ({ page }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 })
 
@@ -72,6 +72,6 @@ test.describe('Basic Application Functionality', () => {
     expect(isNavVisible).toBe(true)
 
     // Take mobile screenshot
-    await homePage.takeScreenshot('home-page-mobile')
+    await homePage.takeScreenshot("home-page-mobile")
   })
 })

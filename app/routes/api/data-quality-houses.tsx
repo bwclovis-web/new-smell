@@ -1,4 +1,4 @@
-import { getAllHouses } from '~/models/house.server'
+import { getAllHouses } from "~/models/house.server"
 
 export async function loader() {
   // Get all houses with all fields needed for CSV export

@@ -1,7 +1,7 @@
-import { Outlet, useLoaderData } from 'react-router'
+import { Outlet, useLoaderData } from "react-router"
 
-import AdminNavigation from '~/components/Molecules/AdminNavigation/AdminNavigation'
-import { sharedLoader } from '~/utils/sharedLoader'
+import AdminNavigation from "~/components/Molecules/AdminNavigation/AdminNavigation"
+import { sharedLoader } from "~/utils/sharedLoader"
 
 export const loader = async ({ request }: { request: Request }) => {
   const user = await sharedLoader(request)

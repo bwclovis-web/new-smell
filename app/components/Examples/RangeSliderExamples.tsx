@@ -14,14 +14,14 @@ export const PriceFilter = () => {
     percentage,
     handleMouseDown,
     handleTrackClick,
-    handleKeyDown
+    handleKeyDown,
   } = useRangeSlider({
     min: 0,
     max: 1000,
     step: 10,
     value: 250,
-    onChange: value => console.log('Price changed to:', value),
-    disabled: false
+    onChange: (value) => console.log("Price changed to:", value),
+    disabled: false,
   })
 
   return (
@@ -78,14 +78,14 @@ export const VolumeControl = () => {
     percentage,
     handleMouseDown,
     handleTrackClick,
-    handleKeyDown
+    handleKeyDown,
   } = useRangeSlider({
     min: 0,
     max: 100,
     step: 1,
     value: 50,
-    onChange: value => console.log('Volume changed to:', value),
-    disabled: false
+    onChange: (value) => console.log("Volume changed to:", value),
+    disabled: false,
   })
 
   return (
@@ -138,7 +138,7 @@ export const PerfumeAmountControl = () => {
         step={0.1}
         value={amount}
         onChange={setAmount}
-        formatValue={value => value.toFixed(1)}
+        formatValue={(value) => value.toFixed(1)}
         label="Amount (ml)"
         showManualInput={true}
         inputPlaceholder="Enter amount (0-10ml)"

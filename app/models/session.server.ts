@@ -1,19 +1,19 @@
 // app/models/session.server.ts
-import cookie from 'cookie'
-import { redirect } from 'react-router'
+import cookie from "cookie"
+import { redirect } from "react-router"
 
-import { ROUTE_PATH as ADMIN_PROFILE } from '~/routes/admin/profilePage'
-import { ROUTE_PATH as SIGN_IN } from '~/routes/login/SignInPage'
+import { ROUTE_PATH as ADMIN_PROFILE } from "~/routes/admin/profilePage"
+import { ROUTE_PATH as SIGN_IN } from "~/routes/login/SignInPage"
 import {
   createSession,
   getActiveSession,
   invalidateAllUserSessions,
   invalidateSession,
   refreshAccessToken,
-  verifyAccessToken
-} from '~/utils/security/session-manager.server'
+  verifyAccessToken,
+} from "~/utils/security/session-manager.server"
 
-import { getUserById } from './user.query'
+import { getUserById } from "./user.query"
 export async function getUser(context: { userSession: any }) {
   const userId = context?.userSession?.userId
   if (!userId) {
@@ -35,9 +35,9 @@ export async function login({
   userId,
   redirectTo = ADMIN_PROFILE,
   userAgent,
-  ipAddress
+  ipAddress,
 }: {
-  context: { req: any, res?: any }
+  context: { req: any; res?: any }
   userId: string
   redirectTo?: string
   userAgent?: string
@@ -47,36 +47,36 @@ export async function login({
   const { accessToken, refreshToken, sessionId } = await createSession({
     userId,
     userAgent,
-    ipAddress
+    ipAddress,
   })
 
   // Set both access and refresh token cookies
-  const accessTokenCookie = cookie.serialize('accessToken', accessToken, {
+  const accessTokenCookie = cookie.serialize("accessToken", accessToken, {
     httpOnly: true,
-    path: '/',
+    path: "/",
     maxAge: 60 * 60, // 60 minutes
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production'
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
   })
 
-  const refreshTokenCookie = cookie.serialize('refreshToken', refreshToken, {
+  const refreshTokenCookie = cookie.serialize("refreshToken", refreshToken, {
     httpOnly: true,
-    path: '/',
+    path: "/",
     maxAge: 60 * 60 * 24 * 7, // 7 days
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production'
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
   })
 
   throw redirect(redirectTo, {
     headers: {
-      'Set-Cookie': [accessTokenCookie, refreshTokenCookie]
-    }
+      "Set-Cookie": [accessTokenCookie, refreshTokenCookie],
+    },
   })
 }
 
 export async function logout({
   context,
-  sessionId
+  sessionId,
 }: {
   context: { res?: any }
   sessionId?: string
@@ -87,33 +87,30 @@ export async function logout({
   }
 
   // Clear both cookies
-  const accessTokenCookie = cookie.serialize('accessToken', '', {
+  const accessTokenCookie = cookie.serialize("accessToken", "", {
     httpOnly: true,
-    path: '/',
+    path: "/",
     maxAge: 0, // Expire immediately
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production'
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
   })
 
-  const refreshTokenCookie = cookie.serialize('refreshToken', '', {
+  const refreshTokenCookie = cookie.serialize("refreshToken", "", {
     httpOnly: true,
-    path: '/',
+    path: "/",
     maxAge: 0, // Expire immediately
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production'
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
   })
 
   throw redirect(SIGN_IN, {
     headers: {
-      'Set-Cookie': [accessTokenCookie, refreshTokenCookie]
-    }
+      "Set-Cookie": [accessTokenCookie, refreshTokenCookie],
+    },
   })
 }
 
-export async function requireRoles(
-  context: { userSession: any },
-  roles: string[]
-) {
+export async function requireRoles(context: { userSession: any }, roles: string[]) {
   const user = await getUser(context)
   if (!user || !roles.includes(user.role)) {
     throw redirect(SIGN_IN) // or custom unauthorized route
@@ -127,7 +124,7 @@ export async function refreshSession(refreshToken: string) {
     const { accessToken, userId, sessionId } = await refreshAccessToken(refreshToken)
     return { accessToken, userId, sessionId }
   } catch (error) {
-    console.error('Session refresh failed:', error)
+    console.error("Session refresh failed:", error)
     return null
   }
 }

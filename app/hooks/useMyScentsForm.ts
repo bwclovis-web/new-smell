@@ -18,12 +18,11 @@ function getInitialPerfumeState(initialPerfume?: UserPerfumeI) {
   return initialPerfume || null
 }
 
-
 const getInitialPerfumeData = (initialPerfume?: UserPerfumeI) => ({
   amount: initialPerfume?.amount || "",
   price: initialPerfume?.price || "",
   placeOfPurchase: initialPerfume?.placeOfPurchase || "",
-  type: initialPerfume?.type || ""
+  type: initialPerfume?.type || "",
 })
 
 // Custom hook to manage perfume form state
@@ -31,8 +30,9 @@ export function useMyScentsForm(initialPerfume?: UserPerfumeI) {
   const submit = useSubmit()
 
   // Initialize state with helper functions
-  const [selectedPerfume, setSelectedPerfume] =
-    useState<UserPerfumeI | null>(getInitialPerfumeState(initialPerfume))
+  const [selectedPerfume, setSelectedPerfume] = useState<UserPerfumeI | null>(
+    getInitialPerfumeState(initialPerfume)
+  )
   const initialData = getInitialPerfumeData(initialPerfume)
   const [perfumeData, setPerfumeData] = useState(initialData)
 
@@ -48,7 +48,7 @@ export function useMyScentsForm(initialPerfume?: UserPerfumeI) {
       amount: item.amount || "",
       price: item.price || "",
       placeOfPurchase: item.placeOfPurchase || "",
-      type: item.type || ""
+      type: item.type || "",
     })
   }, [])
 
@@ -69,17 +69,20 @@ export function useMyScentsForm(initialPerfume?: UserPerfumeI) {
   }, [selectedPerfume, perfumeData])
 
   // Submit the form
-  const handleAddPerfume = useCallback((evt: React.FormEvent) => {
-    evt.preventDefault()
+  const handleAddPerfume = useCallback(
+    (evt: React.FormEvent) => {
+      evt.preventDefault()
 
-    const formData = createFormData()
-    if (!formData) {
-      return
-    }
+      const formData = createFormData()
+      if (!formData) {
+        return
+      }
 
-    submit(formData, { method: "post", action: "/admin/my-scents" })
-    resetForm()
-  }, [createFormData, resetForm, submit])
+      submit(formData, { method: "post", action: "/admin/my-scents" })
+      resetForm()
+    },
+    [createFormData, resetForm, submit]
+  )
 
   // Update state when perfume changes
   useEffect(() => {
@@ -89,7 +92,7 @@ export function useMyScentsForm(initialPerfume?: UserPerfumeI) {
         amount: initialPerfume.amount || "",
         price: initialPerfume.price || "",
         placeOfPurchase: initialPerfume.placeOfPurchase || "",
-        type: initialPerfume.type || ""
+        type: initialPerfume.type || "",
       })
     }
   }, [initialPerfume])
@@ -99,6 +102,6 @@ export function useMyScentsForm(initialPerfume?: UserPerfumeI) {
     perfumeData,
     setPerfumeData,
     handleClick,
-    handleAddPerfume
+    handleAddPerfume,
   }
 }

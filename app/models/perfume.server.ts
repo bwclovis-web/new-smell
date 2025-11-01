@@ -1,43 +1,45 @@
-import { Prisma } from '@prisma/client'
+import { Prisma } from "@prisma/client"
 
-import { prisma } from '~/db.server'
-import { createUrlSlug } from '~/utils/slug'
+import { prisma } from "~/db.server"
+import { createUrlSlug } from "~/utils/slug"
 
-const buildPerfumeOrderBy = (sortBy?: string): Prisma.PerfumeOrderByWithRelationInput => {
+const buildPerfumeOrderBy = (
+  sortBy?: string
+): Prisma.PerfumeOrderByWithRelationInput => {
   if (sortBy) {
     switch (sortBy) {
-      case 'name-asc':
-        return { name: 'asc' }
-      case 'name-desc':
-        return { name: 'desc' }
-      case 'created-asc':
-        return { createdAt: 'asc' }
+      case "name-asc":
+        return { name: "asc" }
+      case "name-desc":
+        return { name: "desc" }
+      case "created-asc":
+        return { createdAt: "asc" }
       default:
-        return { createdAt: 'desc' }
+        return { createdAt: "desc" }
     }
   }
-  return { createdAt: 'desc' }
+  return { createdAt: "desc" }
 }
 export const getAllPerfumes = async () => {
   const perfumes = await prisma.perfume.findMany({
     include: {
-      perfumeHouse: true
-    }
+      perfumeHouse: true,
+    },
   })
   return perfumes
 }
 
 export const getAllPerfumesWithOptions = async (options?: {
-  sortBy?: 'name-asc' | 'name-desc' | 'created-desc' | 'created-asc' | 'type-asc'
+  sortBy?: "name-asc" | "name-desc" | "created-desc" | "created-asc" | "type-asc"
 }) => {
   const { sortBy } = options || {}
   const orderBy = buildPerfumeOrderBy(sortBy)
 
   return prisma.perfume.findMany({
     include: {
-      perfumeHouse: true
+      perfumeHouse: true,
     },
-    orderBy
+    orderBy,
   })
 }
 
@@ -48,8 +50,8 @@ export const getPerfumeBySlug = async (slug: string) => {
       perfumeHouse: true,
       perfumeNotesOpen: true,
       perfumeNotesHeart: true,
-      perfumeNotesClose: true
-    }
+      perfumeNotesClose: true,
+    },
   })
   return house
 }
@@ -61,8 +63,8 @@ export const getPerfumeById = async (id: string) => {
       perfumeHouse: true,
       perfumeNotesOpen: true,
       perfumeNotesHeart: true,
-      perfumeNotesClose: true
-    }
+      perfumeNotesClose: true,
+    },
   })
   return perfume
 }
@@ -70,8 +72,8 @@ export const getPerfumeById = async (id: string) => {
 export const deletePerfume = async (id: string) => {
   const deletedHouse = await prisma.perfume.delete({
     where: {
-      id
-    }
+      id,
+    },
   })
   return deletedHouse
 }
@@ -87,31 +89,31 @@ export const searchPerfumeByName = async (name: string) => {
   const exactMatches = await prisma.perfume.findMany({
     where: {
       OR: [
-        { name: { equals: searchTerm, mode: 'insensitive' } },
-        { name: { startsWith: searchTerm, mode: 'insensitive' } }
-      ]
+        { name: { equals: searchTerm, mode: "insensitive" } },
+        { name: { startsWith: searchTerm, mode: "insensitive" } },
+      ],
     },
     include: {
-      perfumeHouse: true
+      perfumeHouse: true,
     },
-    orderBy: { name: 'asc' },
-    take: 5
+    orderBy: { name: "asc" },
+    take: 5,
   })
 
   // Then, try contains matches (lower priority)
   const containsMatches = await prisma.perfume.findMany({
     where: {
       AND: [
-        { name: { contains: searchTerm, mode: 'insensitive' } },
+        { name: { contains: searchTerm, mode: "insensitive" } },
         // Exclude items already found in exact matches
-        { id: { notIn: exactMatches.map(p => p.id) } }
-      ]
+        { id: { notIn: exactMatches.map((p) => p.id) } },
+      ],
     },
     include: {
-      perfumeHouse: true
+      perfumeHouse: true,
     },
-    orderBy: { name: 'asc' },
-    take: 5
+    orderBy: { name: "asc" },
+    take: 5,
   })
 
   // Combine and rank results
@@ -119,9 +121,9 @@ export const searchPerfumeByName = async (name: string) => {
 
   // Sort by relevance score
   const rankedResults = allResults
-    .map(perfume => ({
+    .map((perfume) => ({
       ...perfume,
-      relevanceScore: calculateRelevanceScore(perfume.name, searchTerm)
+      relevanceScore: calculateRelevanceScore(perfume.name, searchTerm),
     }))
     .sort((a, b) => b.relevanceScore - a.relevanceScore)
     .slice(0, 10)
@@ -130,7 +132,10 @@ export const searchPerfumeByName = async (name: string) => {
 }
 
 // Helper function to calculate relevance score
-const calculateRelevanceScore = (perfumeName: string, searchTerm: string): number => {
+const calculateRelevanceScore = (
+  perfumeName: string,
+  searchTerm: string
+): number => {
   const name = perfumeName.toLowerCase()
   const term = searchTerm.toLowerCase()
 
@@ -153,7 +158,7 @@ const calculateRelevanceScore = (perfumeName: string, searchTerm: string): numbe
   score += Math.max(0, 20 - name.length)
 
   // Bonus for matches at word boundaries
-  const wordBoundaryRegex = new RegExp(`\\b${term}`, 'i')
+  const wordBoundaryRegex = new RegExp(`\\b${term}`, "i")
   if (wordBoundaryRegex.test(name)) {
     score += 20
   }
@@ -163,17 +168,17 @@ const calculateRelevanceScore = (perfumeName: string, searchTerm: string): numbe
 
 export const updatePerfume = async (id: string, data: FormData) => {
   try {
-    const name = sanitizeText(data.get('name') as string)
+    const name = sanitizeText(data.get("name") as string)
 
     // Debug logging
-    const topNotes = data.getAll('notesTop') as string[]
-    const heartNotes = data.getAll('notesHeart') as string[]
-    const baseNotes = data.getAll('notesBase') as string[]
+    const topNotes = data.getAll("notesTop") as string[]
+    const heartNotes = data.getAll("notesHeart") as string[]
+    const baseNotes = data.getAll("notesBase") as string[]
 
-    console.log('UpdatePerfume - Received note data:', {
+    console.log("UpdatePerfume - Received note data:", {
       topNotes,
       heartNotes,
-      baseNotes
+      baseNotes,
     })
 
     const updatedPerfume = await prisma.perfume.update({
@@ -181,31 +186,31 @@ export const updatePerfume = async (id: string, data: FormData) => {
       data: {
         name,
         slug: createUrlSlug(name),
-        description: sanitizeText(data.get('description') as string),
-        image: data.get('image') as string,
+        description: sanitizeText(data.get("description") as string),
+        image: data.get("image") as string,
         perfumeNotesOpen: {
-          set: topNotes.map(id => ({ id }))
+          set: topNotes.map((id) => ({ id })),
         },
         perfumeNotesHeart: {
-          set: heartNotes.map(id => ({ id }))
+          set: heartNotes.map((id) => ({ id })),
         },
         perfumeNotesClose: {
-          set: baseNotes.map(id => ({ id }))
+          set: baseNotes.map((id) => ({ id })),
         },
         perfumeHouse: {
           connect: {
-            id: data.get('house') as string
-          }
-        }
-      }
+            id: data.get("house") as string,
+          },
+        },
+      },
     })
     return { success: true, data: updatedPerfume }
   } catch (err) {
     if (
-      err instanceof Prisma.PrismaClientKnownRequestError
-      && err.code === 'P2002'
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      err.code === "P2002"
     ) {
-      return { success: false, error: 'Perfume already exists' }
+      return { success: false, error: "Perfume already exists" }
     }
     throw err
   }
@@ -214,22 +219,22 @@ export const updatePerfume = async (id: string, data: FormData) => {
 // Helper function to sanitize text input by normalizing Unicode characters
 const sanitizeText = (text: string | null): string => {
   if (!text) {
- return '' 
-}
+    return ""
+  }
 
   return text
-    .normalize('NFD')  // Normalize Unicode
-    .replace(/[\u0300-\u036f]/g, '')  // Remove diacritics
-    .replace(/[\u2013\u2014]/g, '-')  // en dash, em dash → hyphen
-    .replace(/[\u2018\u2019]/g, "'")  // smart single quotes
-    .replace(/[\u201C\u201D]/g, '"')  // smart double quotes
-    .replace(/[\u2026]/g, '...')      // ellipsis
+    .normalize("NFD") // Normalize Unicode
+    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+    .replace(/[\u2013\u2014]/g, "-") // en dash, em dash → hyphen
+    .replace(/[\u2018\u2019]/g, "'") // smart single quotes
+    .replace(/[\u201C\u201D]/g, '"') // smart double quotes
+    .replace(/[\u2026]/g, "...") // ellipsis
 }
 
 export const createPerfume = async (data: FormData) => {
-  const name = sanitizeText(data.get('name') as string)
-  const description = sanitizeText(data.get('description') as string)
-  const image = data.get('image') as string
+  const name = sanitizeText(data.get("name") as string)
+  const description = sanitizeText(data.get("description") as string)
+  const image = data.get("image") as string
 
   const newPerfume = await prisma.perfume.create({
     data: {
@@ -238,20 +243,20 @@ export const createPerfume = async (data: FormData) => {
       description,
       image,
       perfumeNotesOpen: {
-        connect: (data.getAll('notesTop') as string[]).map(id => ({ id }))
+        connect: (data.getAll("notesTop") as string[]).map((id) => ({ id })),
       },
       perfumeNotesHeart: {
-        connect: (data.getAll('notesHeart') as string[]).map(id => ({ id }))
+        connect: (data.getAll("notesHeart") as string[]).map((id) => ({ id })),
       },
       perfumeNotesClose: {
-        connect: (data.getAll('notesBase') as string[]).map(id => ({ id }))
+        connect: (data.getAll("notesBase") as string[]).map((id) => ({ id })),
       },
       perfumeHouse: {
         connect: {
-          id: data.get('house') as string
-        }
-      }
-    }
+          id: data.get("house") as string,
+        },
+      },
+    },
   })
   return newPerfume
 }
@@ -262,18 +267,18 @@ export const getAvailablePerfumesForDecanting = async () => {
       userPerfume: {
         some: {
           available: {
-            not: "0"
-          }
-        }
-      }
+            not: "0",
+          },
+        },
+      },
     },
     include: {
       perfumeHouse: true,
       userPerfume: {
         where: {
           available: {
-            not: "0"
-          }
+            not: "0",
+          },
         },
         include: {
           user: {
@@ -282,20 +287,23 @@ export const getAvailablePerfumesForDecanting = async () => {
               firstName: true,
               lastName: true,
               username: true,
-              email: true
-            }
-          }
-        }
-      }
+              email: true,
+            },
+          },
+        },
+      },
     },
     orderBy: {
-      name: 'asc'
-    }
+      name: "asc",
+    },
   })
   return availablePerfumes
 }
 
-export const getPerfumesByLetterPaginated = async (letter: string, options: { skip: number; take: number }) => {
+export const getPerfumesByLetterPaginated = async (
+  letter: string,
+  options: { skip: number; take: number }
+) => {
   const { skip, take } = options
 
   const [perfumes, totalCount] = await Promise.all([
@@ -303,28 +311,28 @@ export const getPerfumesByLetterPaginated = async (letter: string, options: { sk
       where: {
         name: {
           startsWith: letter,
-          mode: 'insensitive'
-        }
+          mode: "insensitive",
+        },
       },
       include: {
-        perfumeHouse: true
+        perfumeHouse: true,
       },
-      orderBy: { name: 'asc' },
+      orderBy: { name: "asc" },
       skip,
-      take
+      take,
     }),
     prisma.perfume.count({
       where: {
         name: {
           startsWith: letter,
-          mode: 'insensitive'
-        }
-      }
-    })
+          mode: "insensitive",
+        },
+      },
+    }),
   ])
 
   return {
     perfumes,
-    count: totalCount
+    count: totalCount,
   }
 }

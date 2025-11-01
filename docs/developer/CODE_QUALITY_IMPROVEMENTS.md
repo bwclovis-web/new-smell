@@ -43,9 +43,9 @@ Comprehensive code quality enhancement strategies for the New Smell perfume trad
 //TODO: Clean up to standards
 
 // app/routes/api/user-perfumes.tsx:300-321
-console.log("=== FORM DATA PROCESSING DEBUG ===");
+console.log("=== FORM DATA PROCESSING DEBUG ===")
 // ... debug logs
-console.log("=== END FORM DATA PROCESSING DEBUG ===");
+console.log("=== END FORM DATA PROCESSING DEBUG ===")
 
 // app/utils/alert-processors.ts:14,40,126,135
 // TODO: Send email notifications if users have email alerts enabled
@@ -74,13 +74,13 @@ console.log("=== END FORM DATA PROCESSING DEBUG ===");
 //TODO: Update icons to react icons and update styles
 
 // AFTER - Implement proper icons
-import { FiAlertCircle, FiCheckCircle, FiInfo } from "react-icons/fi";
+import { FiAlertCircle, FiCheckCircle, FiInfo } from "react-icons/fi"
 
 const iconMap = {
   error: FiAlertCircle,
   success: FiCheckCircle,
   info: FiInfo,
-};
+}
 ```
 
 2. **FormField Component** (2 hours)
@@ -91,18 +91,13 @@ const iconMap = {
 
 // AFTER - Standardize with atomic design
 interface FormFieldProps {
-  label: string;
-  error?: string;
-  required?: boolean;
-  children: ReactNode;
+  label: string
+  error?: string
+  required?: boolean
+  children: ReactNode
 }
 
-export function FormField({
-  label,
-  error,
-  required,
-  children,
-}: FormFieldProps) {
+export function FormField({ label, error, required, children }: FormFieldProps) {
   // Clean, standardized implementation
 }
 ```
@@ -111,14 +106,11 @@ export function FormField({
 
 ```typescript
 // app/utils/email/notification-sender.server.ts
-import { sendEmail } from "./email.server";
+import { sendEmail } from "./email.server"
 
-export async function sendWishlistNotification(
-  userId: string,
-  perfumeId: string
-) {
-  const user = await getUserById(userId);
-  const perfume = await getPerfumeById(perfumeId);
+export async function sendWishlistNotification(userId: string, perfumeId: string) {
+  const user = await getUserById(userId)
+  const perfume = await getPerfumeById(perfumeId)
 
   if (user.emailNotifications) {
     await sendEmail({
@@ -126,7 +118,7 @@ export async function sendWishlistNotification(
       subject: `${perfume.name} is now available!`,
       template: "wishlist-notification",
       data: { user, perfume },
-    });
+    })
   }
 }
 ```
@@ -230,13 +222,13 @@ git grep -l "Debug info - remove" app/ | xargs sed -i '/Debug info/d'
 // app/routes/admin/CreatePerfumeHousePage.tsx
 
 const handleSubmit = async (e: FormEvent) => {
-  e.preventDefault();
-  const formData = new FormData(e.target as HTMLFormElement);
-  const data = Object.fromEntries(formData);
+  e.preventDefault()
+  const formData = new FormData(e.target as HTMLFormElement)
+  const data = Object.fromEntries(formData)
   // Validation
   // Submit
   // Error handling
-};
+}
 
 // AFTER - Unified hook
 // app/hooks/useFormSubmit.ts
@@ -246,32 +238,32 @@ export function useFormSubmit<T>({
   onSuccess,
   onError,
 }: UseFormSubmitOptions<T>) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+    e.preventDefault()
+    setIsSubmitting(true)
 
     try {
-      const formData = new FormData(e.target as HTMLFormElement);
-      const data = Object.fromEntries(formData) as T;
+      const formData = new FormData(e.target as HTMLFormElement)
+      const data = Object.fromEntries(formData) as T
 
-      const errors = validate?.(data);
+      const errors = validate?.(data)
       if (errors) {
-        onError?.(errors);
-        return;
+        onError?.(errors)
+        return
       }
 
-      const result = await onSubmit(data);
-      onSuccess?.(result);
+      const result = await onSubmit(data)
+      onSuccess?.(result)
     } catch (error) {
-      onError?.(error);
+      onError?.(error)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
-  return { handleSubmit, isSubmitting };
+  return { handleSubmit, isSubmitting }
 }
 ```
 
@@ -279,21 +271,21 @@ export function useFormSubmit<T>({
 
 ```typescript
 // BEFORE - Duplicated across many routes
-const [data, setData] = useState([]);
-const [loading, setLoading] = useState(true);
-const [error, setError] = useState(null);
+const [data, setData] = useState([])
+const [loading, setLoading] = useState(true)
+const [error, setError] = useState(null)
 
 useEffect(() => {
   fetch("/api/endpoint")
     .then((res) => res.json())
     .then(setData)
     .catch(setError)
-    .finally(() => setLoading(false));
-}, []);
+    .finally(() => setLoading(false))
+}, [])
 
 // AFTER - Unified hook (already exists, use it!)
 // app/hooks/useDataFetching.ts
-const { data, loading, error } = useDataFetching("/api/endpoint");
+const { data, loading, error } = useDataFetching("/api/endpoint")
 ```
 
 **3. Modal Logic**
@@ -303,7 +295,7 @@ const { data, loading, error } = useDataFetching("/api/endpoint");
 // Use the existing sessionStore modal system consistently
 
 // app/stores/sessionStore.ts - Already exists! ✅
-const { modalOpen, toggleModal, closeModal } = useSessionStore();
+const { modalOpen, toggleModal, closeModal } = useSessionStore()
 ```
 
 #### Consolidation Checklist
@@ -385,40 +377,40 @@ const { modalOpen, toggleModal, closeModal } = useSessionStore();
 
 ```typescript
 // BEFORE
-const data: any = await fetchData();
-const result: any = processData(data);
+const data: any = await fetchData()
+const result: any = processData(data)
 
 // AFTER
 interface FetchDataResponse {
-  perfumes: Perfume[];
-  count: number;
+  perfumes: Perfume[]
+  count: number
 }
 
-const data: FetchDataResponse = await fetchData();
-const result: ProcessedData = processData(data);
+const data: FetchDataResponse = await fetchData()
+const result: ProcessedData = processData(data)
 ```
 
 **2. Strengthen Prisma Types**
 
 ```typescript
 // app/types/prisma.ts
-import type { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client"
 
 // Create strict types for includes
 export type PerfumeWithHouse = Prisma.PerfumeGetPayload<{
-  include: { perfumeHouse: true };
-}>;
+  include: { perfumeHouse: true }
+}>
 
 export type UserPerfumeWithDetails = Prisma.UserPerfumeGetPayload<{
   include: {
     perfume: {
       include: {
-        perfumeHouse: true;
-      };
-    };
-    comments: true;
-  };
-}>;
+        perfumeHouse: true
+      }
+    }
+    comments: true
+  }
+}>
 
 // Use in models
 export async function getPerfumeWithHouse(
@@ -427,7 +419,7 @@ export async function getPerfumeWithHouse(
   return prisma.perfume.findUnique({
     where: { id },
     include: { perfumeHouse: true },
-  });
+  })
 }
 ```
 
@@ -436,32 +428,32 @@ export async function getPerfumeWithHouse(
 ```typescript
 // app/types/api.ts
 export interface APIResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
+  success: boolean
+  data?: T
+  error?: string
   metadata?: {
-    page?: number;
-    total?: number;
-    hasMore?: boolean;
-  };
+    page?: number
+    total?: number
+    hasMore?: boolean
+  }
 }
 
 // Usage
 export async function loader(): Promise<APIResponse<Perfume[]>> {
   try {
-    const perfumes = await getPerfumes();
+    const perfumes = await getPerfumes()
     return {
       success: true,
       data: perfumes,
       metadata: {
         total: perfumes.length,
       },
-    };
+    }
   } catch (error) {
     return {
       success: false,
       error: error.message,
-    };
+    }
   }
 }
 ```
@@ -556,7 +548,7 @@ export default defineConfig([
       ],
     },
   },
-]);
+])
 ```
 
 #### Prettier Integration
@@ -594,16 +586,16 @@ app/components/
 
 ```typescript
 // Standard component structure
-import { type ReactNode } from "react";
-import { cn } from "~/utils/cn";
-import { buttonVariants, type ButtonVariants } from "./button-variants";
+import { type ReactNode } from "react"
+import { cn } from "~/utils/cn"
+import { buttonVariants, type ButtonVariants } from "./button-variants"
 
 // 1. Types/Interfaces
 interface ButtonProps extends ButtonVariants {
-  children: ReactNode;
-  onClick?: () => void;
-  disabled?: boolean;
-  className?: string;
+  children: ReactNode
+  onClick?: () => void
+  disabled?: boolean
+  className?: string
 }
 
 // 2. Component
@@ -628,14 +620,14 @@ export function Button({
     >
       {children}
     </button>
-  );
+  )
 }
 
 // 7. Display name (for debugging)
-Button.displayName = "Button";
+Button.displayName = "Button"
 
 // 8. Default export (optional)
-export default Button;
+export default Button
 ```
 
 #### Checklist
@@ -676,113 +668,109 @@ npm run test:coverage
 
 ```typescript
 // app/utils/validation.test.ts
-import { describe, it, expect } from "vitest";
-import {
-  validateEmail,
-  validatePassword,
-  validatePerfumeName,
-} from "./validation";
+import { describe, it, expect } from "vitest"
+import { validateEmail, validatePassword, validatePerfumeName } from "./validation"
 
 describe("validateEmail", () => {
   it("should accept valid email addresses", () => {
-    expect(validateEmail("user@example.com")).toBe(true);
-    expect(validateEmail("user+tag@example.co.uk")).toBe(true);
-  });
+    expect(validateEmail("user@example.com")).toBe(true)
+    expect(validateEmail("user+tag@example.co.uk")).toBe(true)
+  })
 
   it("should reject invalid email addresses", () => {
-    expect(validateEmail("invalid")).toBe(false);
-    expect(validateEmail("user@")).toBe(false);
-    expect(validateEmail("@example.com")).toBe(false);
-  });
+    expect(validateEmail("invalid")).toBe(false)
+    expect(validateEmail("user@")).toBe(false)
+    expect(validateEmail("@example.com")).toBe(false)
+  })
 
   it("should handle edge cases", () => {
-    expect(validateEmail("")).toBe(false);
-    expect(validateEmail(null)).toBe(false);
-    expect(validateEmail(undefined)).toBe(false);
-  });
-});
+    expect(validateEmail("")).toBe(false)
+    expect(validateEmail(null)).toBe(false)
+    expect(validateEmail(undefined)).toBe(false)
+  })
+})
 
 describe("validatePassword", () => {
   it("should enforce minimum length", () => {
-    expect(validatePassword("short")).toBe(false);
-    expect(validatePassword("longenough123")).toBe(true);
-  });
+    expect(validatePassword("short")).toBe(false)
+    expect(validatePassword("longenough123")).toBe(true)
+  })
 
   it("should require complexity", () => {
-    expect(validatePassword("alllowercase")).toBe(false);
-    expect(validatePassword("ALLUPPERCASE")).toBe(false);
-    expect(validatePassword("MixedCase123")).toBe(true);
-  });
-});
+    expect(validatePassword("alllowercase")).toBe(false)
+    expect(validatePassword("ALLUPPERCASE")).toBe(false)
+    expect(validatePassword("MixedCase123")).toBe(true)
+  })
+})
 ```
 
 **2. Critical Components (90%+ coverage)**
 
 ```typescript
 // app/components/Atoms/Button/Button.test.tsx
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { Button } from "./Button";
+import { describe, it, expect, vi } from "vitest"
+import { render, screen, fireEvent } from "@testing-library/react"
+import { Button } from "./Button"
 
 describe("Button", () => {
   it("should render children", () => {
-    render(<Button>Click me</Button>);
-    expect(screen.getByText("Click me")).toBeInTheDocument();
-  });
+    render(<Button>Click me</Button>)
+    expect(screen.getByText("Click me")).toBeInTheDocument()
+  })
 
   it("should call onClick when clicked", () => {
-    const handleClick = vi.fn();
-    render(<Button onClick={handleClick}>Click me</Button>);
+    const handleClick = vi.fn()
+    render(<Button onClick={handleClick}>Click me</Button>)
 
-    fireEvent.click(screen.getByText("Click me"));
-    expect(handleClick).toHaveBeenCalledTimes(1);
-  });
+    fireEvent.click(screen.getByText("Click me"))
+    expect(handleClick).toHaveBeenCalledTimes(1)
+  })
 
   it("should not call onClick when disabled", () => {
-    const handleClick = vi.fn();
+    const handleClick = vi.fn()
     render(
       <Button disabled onClick={handleClick}>
         Click me
       </Button>
-    );
+    )
 
-    fireEvent.click(screen.getByText("Click me"));
-    expect(handleClick).not.toHaveBeenCalled();
-  });
+    fireEvent.click(screen.getByText("Click me"))
+    expect(handleClick).not.toHaveBeenCalled()
+  })
 
   it("should apply variant styles", () => {
-    render(<Button variant="primary">Primary</Button>);
-    const button = screen.getByText("Primary");
-    expect(button).toHaveClass("bg-noir-black");
-  });
+    render(<Button variant="primary">Primary</Button>)
+    const button = screen.getByText("Primary")
+    expect(button).toHaveClass("bg-noir-black")
+  })
 
   it("should apply size styles", () => {
-    render(<Button size="large">Large</Button>);
-    const button = screen.getByText("Large");
-    expect(button).toHaveClass("px-6");
-  });
+    render(<Button size="large">Large</Button>)
+    const button = screen.getByText("Large")
+    expect(button).toHaveClass("px-6")
+  })
 
   it("should merge custom className", () => {
-    render(<Button className="custom-class">Custom</Button>);
-    const button = screen.getByText("Custom");
-    expect(button).toHaveClass("custom-class");
-  });
-});
+    render(<Button className="custom-class">Custom</Button>)
+    const button = screen.getByText("Custom")
+    expect(button).toHaveClass("custom-class")
+  })
+})
 ```
 
 **3. Integration Tests**
 
 ```typescript
 // app/routes/perfume.test.tsx
-import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
-import { createMemoryRouter, RouterProvider } from "react-router-dom";
-import PerfumePage from "./perfume";
+import { describe, it, expect, beforeEach } from "vitest"
+import { render, screen, waitFor } from "@testing-library/react"
+import { createMemoryRouter, RouterProvider } from "react-router-dom"
+import PerfumePage from "./perfume"
 
 describe("Perfume Page", () => {
   beforeEach(() => {
     // Setup test data
-  });
+  })
 
   it("should load and display perfume details", async () => {
     const router = createMemoryRouter(
@@ -796,23 +784,23 @@ describe("Perfume Page", () => {
       {
         initialEntries: ["/perfume/santal-33"],
       }
-    );
+    )
 
-    render(<RouterProvider router={router} />);
+    render(<RouterProvider router={router} />)
 
     await waitFor(() => {
-      expect(screen.getByText("Santal 33")).toBeInTheDocument();
-    });
-  });
+      expect(screen.getByText("Santal 33")).toBeInTheDocument()
+    })
+  })
 
   it("should display perfume house information", async () => {
     // Test perfume house display
-  });
+  })
 
   it("should show add to wishlist button", async () => {
     // Test wishlist functionality
-  });
-});
+  })
+})
 ```
 
 **4. E2E Test Expansion** ✅ **COMPLETED**
@@ -903,30 +891,30 @@ describe("Perfume Page", () => {
 // Example from perfume-discovery.test.ts
 test.describe("Perfume Discovery Flows", () => {
   test("should search perfumes by name", async ({ page }) => {
-    const vaultPage = new VaultPage(page);
-    await vaultPage.navigateTo();
-    await vaultPage.waitForPerfumesToLoad();
+    const vaultPage = new VaultPage(page)
+    await vaultPage.navigateTo()
+    await vaultPage.waitForPerfumesToLoad()
 
-    await vaultPage.search("rose");
-    await vaultPage.waitForLoadingComplete();
+    await vaultPage.search("rose")
+    await vaultPage.waitForLoadingComplete()
 
-    const count = await vaultPage.getPerfumeCardCount();
-    expect(count).toBeGreaterThan(0);
-  });
+    const count = await vaultPage.getPerfumeCardCount()
+    expect(count).toBeGreaterThan(0)
+  })
 
   test("should combine filters and sorting", async ({ page }) => {
     // Apply letter filter
-    await vaultPage.clickLetterFilter("A");
-    await vaultPage.waitForLoadingComplete();
+    await vaultPage.clickLetterFilter("A")
+    await vaultPage.waitForLoadingComplete()
 
     // Then sort
-    await vaultPage.selectSort("name-asc");
-    await vaultPage.waitForLoadingComplete();
+    await vaultPage.selectSort("name-asc")
+    await vaultPage.waitForLoadingComplete()
 
-    const count = await vaultPage.getPerfumeCardCount();
-    expect(count).toBeGreaterThanOrEqual(0);
-  });
-});
+    const count = await vaultPage.getPerfumeCardCount()
+    expect(count).toBeGreaterThanOrEqual(0)
+  })
+})
 ```
 
 #### Testing Checklist
@@ -1373,52 +1361,52 @@ test.describe("Perfume Discovery Flows", () => {
 // BEFORE - Unorganized tests
 test("button works", () => {
   // Multiple assertions testing different things
-  expect(button).toBeTruthy();
-  expect(button).toHaveClass("btn");
-  expect(onClick).toHaveBeenCalled();
-});
+  expect(button).toBeTruthy()
+  expect(button).toHaveClass("btn")
+  expect(onClick).toHaveBeenCalled()
+})
 
 // AFTER - Well-organized tests
 describe("Button", () => {
   describe("Rendering", () => {
     it("should render with children", () => {
-      render(<Button>Click me</Button>);
-      expect(screen.getByText("Click me")).toBeInTheDocument();
-    });
+      render(<Button>Click me</Button>)
+      expect(screen.getByText("Click me")).toBeInTheDocument()
+    })
 
     it("should render with icon", () => {
-      render(<Button icon={<Icon />}>Click me</Button>);
-      expect(screen.getByRole("img")).toBeInTheDocument();
-    });
-  });
+      render(<Button icon={<Icon />}>Click me</Button>)
+      expect(screen.getByRole("img")).toBeInTheDocument()
+    })
+  })
 
   describe("Interactions", () => {
     it("should call onClick when clicked", () => {
-      const onClick = vi.fn();
-      render(<Button onClick={onClick}>Click me</Button>);
-      fireEvent.click(screen.getByText("Click me"));
-      expect(onClick).toHaveBeenCalledTimes(1);
-    });
+      const onClick = vi.fn()
+      render(<Button onClick={onClick}>Click me</Button>)
+      fireEvent.click(screen.getByText("Click me"))
+      expect(onClick).toHaveBeenCalledTimes(1)
+    })
 
     it("should not call onClick when disabled", () => {
-      const onClick = vi.fn();
+      const onClick = vi.fn()
       render(
         <Button disabled onClick={onClick}>
           Click me
         </Button>
-      );
-      fireEvent.click(screen.getByText("Click me"));
-      expect(onClick).not.toHaveBeenCalled();
-    });
-  });
+      )
+      fireEvent.click(screen.getByText("Click me"))
+      expect(onClick).not.toHaveBeenCalled()
+    })
+  })
 
   describe("Styling", () => {
     it("should apply variant classes", () => {
-      render(<Button variant="primary">Click me</Button>);
-      expect(screen.getByText("Click me")).toHaveClass("bg-noir-black");
-    });
-  });
-});
+      render(<Button variant="primary">Click me</Button>)
+      expect(screen.getByText("Click me")).toHaveClass("bg-noir-black")
+    })
+  })
+})
 ```
 
 #### Test Data Factories ✅ **COMPLETED** (October 31, 2025)
@@ -1454,36 +1442,32 @@ test/unit/factories/
 
 ```typescript
 // Import from test/factories
-import {
-  createMockPerfume,
-  createMockUser,
-  createMockHouse,
-} from "test/factories";
+import { createMockPerfume, createMockUser, createMockHouse } from "test/factories"
 
 // Create single entity
 const perfume = createMockPerfume({
   name: "Santal 33",
   perfumeHouse: createMockHouse({ type: "niche" }),
-});
+})
 
 // Create batch data
-import { batchGeneration } from "test/factories";
-const users = batchGeneration.users(100);
+import { batchGeneration } from "test/factories"
+const users = batchGeneration.users(100)
 
 // Generate complete datasets
-import { generateBulkTestData } from "test/factories";
+import { generateBulkTestData } from "test/factories"
 const testData = generateBulkTestData({
   users: 50,
   houses: 10,
   perfumesPerHouse: 20,
   ratingsPerPerfume: 5,
   reviewsPerPerfume: 3,
-});
+})
 
 // Use presets for common scenarios
-import { perfumeFactoryPresets, userFactoryPresets } from "test/factories";
-const nichePerfume = perfumeFactoryPresets.nichePerfume();
-const adminUser = userFactoryPresets.newUser();
+import { perfumeFactoryPresets, userFactoryPresets } from "test/factories"
+const nichePerfume = perfumeFactoryPresets.nichePerfume()
+const adminUser = userFactoryPresets.newUser()
 ```
 
 **Key Features:**
@@ -1538,20 +1522,20 @@ test/utils/
    ```typescript
    await testAtViewports(
      (viewport) => {
-       renderWithProviders(<MyComponent />);
+       renderWithProviders(<MyComponent />)
        // Assertions based on viewport
      },
      ["mobile", "tablet", "desktop"]
-   );
+   )
    ```
 
 2. **Modal Testing** - Comprehensive modal interaction testing
 
    ```typescript
-   await testModalOpen("trigger", "Modal content");
-   testModalAccessibility();
-   await testModalFocusTrap("modal");
-   await testModalClose("escape");
+   await testModalOpen("trigger", "Modal content")
+   testModalAccessibility()
+   await testModalFocusTrap("modal")
+   await testModalClose("escape")
    ```
 
 3. **Async Testing** - Test loading states and async operations
@@ -1561,14 +1545,14 @@ test/utils/
      () => component.isLoading,
      async () => await fetchData(),
      1000
-   );
+   )
    ```
 
 4. **Data Display Testing** - Test tables, grids, and lists
    ```typescript
-   testTableRendering(["Name", "Price", "Brand"], 50);
-   await testTableSorting("Price", "desc");
-   await testTableFiltering("niche", 15);
+   testTableRendering(["Name", "Price", "Brand"], 50)
+   await testTableSorting("Price", "desc")
+   await testTableFiltering("niche", 15)
    ```
 
 **Usage Example:**
@@ -1582,16 +1566,16 @@ import {
   testAtViewports,
   testModalAccessibility,
   testLoadingStateSequence,
-} from "test/utils";
+} from "test/utils"
 
 test("complete user flow", async () => {
-  setViewportByName("mobile");
-  const { history } = renderWithRouter(<App />);
+  setViewportByName("mobile")
+  const { history } = renderWithRouter(<App />)
 
-  await testLoginFlow(<LoginPage />, credentials);
-  await testNavigation(<Dashboard />, navigationSteps);
-  await testKeyboardNavigation(<Dashboard />);
-});
+  await testLoginFlow(<LoginPage />, credentials)
+  await testNavigation(<Dashboard />, navigationSteps)
+  await testKeyboardNavigation(<Dashboard />)
+})
 ```
 
 #### Checklist
@@ -1695,17 +1679,17 @@ Comprehensive test lifecycle management utilities have been implemented:
 **Usage Example:**
 
 ```typescript
-import { setupCompositeLifecycle, registerCleanup } from "test/utils";
+import { setupCompositeLifecycle, registerCleanup } from "test/utils"
 
 describe("MyComponent", () => {
-  setupCompositeLifecycle("component");
+  setupCompositeLifecycle("component")
 
   it("should cleanup resources", () => {
-    const resource = createResource();
-    registerCleanup(() => resource.dispose());
+    const resource = createResource()
+    registerCleanup(() => resource.dispose())
     // Test code...
-  });
-});
+  })
+})
 ```
 
 **Benefits:**
@@ -1773,61 +1757,59 @@ test/
 
 ```typescript
 // test/utils/a11y.test.tsx
-import { axe, toHaveNoViolations } from "jest-axe";
-import { render } from "@testing-library/react";
+import { axe, toHaveNoViolations } from "jest-axe"
+import { render } from "@testing-library/react"
 
-expect.extend(toHaveNoViolations);
+expect.extend(toHaveNoViolations)
 
 describe("Button Accessibility", () => {
   it("should have no accessibility violations", async () => {
-    const { container } = render(<Button>Click me</Button>);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-  });
+    const { container } = render(<Button>Click me</Button>)
+    const results = await axe(container)
+    expect(results).toHaveNoViolations()
+  })
 
   it("should have proper ARIA labels", () => {
-    render(<Button aria-label="Submit form">Submit</Button>);
-    expect(screen.getByLabelText("Submit form")).toBeInTheDocument();
-  });
+    render(<Button aria-label="Submit form">Submit</Button>)
+    expect(screen.getByLabelText("Submit form")).toBeInTheDocument()
+  })
 
   it("should be keyboard navigable", () => {
-    render(<Button>Click me</Button>);
-    const button = screen.getByText("Click me");
-    button.focus();
-    expect(button).toHaveFocus();
-  });
-});
+    render(<Button>Click me</Button>)
+    const button = screen.getByText("Click me")
+    button.focus()
+    expect(button).toHaveFocus()
+  })
+})
 ```
 
 #### E2E Accessibility Tests
 
 ```typescript
 // test/e2e/accessibility.test.ts
-import { test, expect } from "@playwright/test";
-import AxeBuilder from "@axe-core/playwright";
+import { test, expect } from "@playwright/test"
+import AxeBuilder from "@axe-core/playwright"
 
 test.describe("Accessibility", () => {
-  test("should not have accessibility violations on home page", async ({
-    page,
-  }) => {
-    await page.goto("/");
+  test("should not have accessibility violations on home page", async ({ page }) => {
+    await page.goto("/")
 
     const accessibilityScanResults = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-      .analyze();
+      .analyze()
 
-    expect(accessibilityScanResults.violations).toEqual([]);
-  });
+    expect(accessibilityScanResults.violations).toEqual([])
+  })
 
   test("should support keyboard navigation", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/")
 
     // Tab through interactive elements
-    await page.keyboard.press("Tab");
-    const focused = await page.evaluate(() => document.activeElement?.tagName);
-    expect(focused).toBe("BUTTON");
-  });
-});
+    await page.keyboard.press("Tab")
+    const focused = await page.evaluate(() => document.activeElement?.tagName)
+    expect(focused).toBe("BUTTON")
+  })
+})
 ```
 
 #### Checklist
@@ -1873,13 +1855,13 @@ test.describe("Accessibility", () => {
 ```typescript
 // app/components/Organisms/Rating/Rating.tsx
 interface RatingProps {
-  value: number;
-  max?: number;
-  readonly?: boolean;
-  size?: "small" | "medium" | "large";
-  variant?: "simple" | "detailed";
-  onChange?: (value: number) => void;
-  showLabel?: boolean;
+  value: number
+  max?: number
+  readonly?: boolean
+  size?: "small" | "medium" | "large"
+  variant?: "simple" | "detailed"
+  onChange?: (value: number) => void
+  showLabel?: boolean
 }
 
 export function Rating({
@@ -1908,13 +1890,13 @@ export function Rating({
 ```typescript
 // app/components/Atoms/Image/Image.tsx
 interface ImageProps {
-  src: string;
-  alt: string;
-  width?: number;
-  height?: number;
-  priority?: boolean;
-  placeholder?: boolean;
-  fallback?: ReactNode;
+  src: string
+  alt: string
+  width?: number
+  height?: number
+  priority?: boolean
+  placeholder?: boolean
+  fallback?: ReactNode
 }
 
 export function Image(props: ImageProps) {
@@ -1934,8 +1916,8 @@ export function Image(props: ImageProps) {
 ```typescript
 // app/components/Molecules/Navigation/Navigation.tsx
 interface NavigationProps {
-  variant: "global" | "admin" | "mobile" | "mobile-bottom";
-  items: NavigationItem[];
+  variant: "global" | "admin" | "mobile" | "mobile-bottom"
+  items: NavigationItem[]
 }
 
 export function Navigation({ variant, items }: NavigationProps) {
@@ -2060,8 +2042,8 @@ export class AppError extends Error {
     public statusCode: number = 500,
     public metadata?: Record<string, any>
   ) {
-    super(message);
-    this.name = "AppError";
+    super(message)
+    this.name = "AppError"
   }
 
   toJSON() {
@@ -2073,7 +2055,7 @@ export class AppError extends Error {
       category: this.category,
       statusCode: this.statusCode,
       metadata: this.metadata,
-    };
+    }
   }
 
   toUserMessage(): string {
@@ -2085,8 +2067,8 @@ export class AppError extends Error {
       NOT_FOUND: "The item you are looking for could not be found.",
       UNAUTHORIZED: "Please log in to continue.",
       // ...
-    };
-    return userMessages[this.code] || "Something went wrong. Please try again.";
+    }
+    return userMessages[this.code] || "Something went wrong. Please try again."
   }
 }
 ```
@@ -2096,14 +2078,14 @@ export class AppError extends Error {
 ```typescript
 // Use existing ErrorBoundary consistently
 // app/components/Containers/ErrorBoundary/
-import { ErrorBoundaryComponent } from "~/components/Containers/ErrorBoundary";
+import { ErrorBoundaryComponent } from "~/components/Containers/ErrorBoundary"
 
 export function MyComponent() {
   return (
     <ErrorBoundaryComponent level="component">
       <MyContent />
     </ErrorBoundaryComponent>
-  );
+  )
 }
 ```
 
@@ -2120,7 +2102,7 @@ export function handleApiError(error: unknown): Response {
         code: error.code,
       },
       { status: error.statusCode }
-    );
+    )
   }
 
   // Unknown errors
@@ -2130,16 +2112,16 @@ export function handleApiError(error: unknown): Response {
       error: "An unexpected error occurred",
     },
     { status: 500 }
-  );
+  )
 }
 
 // Usage in loaders/actions
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
-    const data = await fetchData();
-    return Response.json({ success: true, data });
+    const data = await fetchData()
+    return Response.json({ success: true, data })
   } catch (error) {
-    return handleApiError(error);
+    return handleApiError(error)
   }
 }
 ```
@@ -2371,8 +2353,8 @@ export function Button({ ... }: ButtonProps) {
 
 ```typescript
 // app/components/Atoms/Button/Button.stories.tsx
-import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "./Button";
+import type { Meta, StoryObj } from "@storybook/react"
+import { Button } from "./Button"
 
 const meta: Meta<typeof Button> = {
   title: "Atoms/Button",
@@ -2388,31 +2370,31 @@ const meta: Meta<typeof Button> = {
       options: ["small", "medium", "large"],
     },
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof Button>;
+export default meta
+type Story = StoryObj<typeof Button>
 
 export const Primary: Story = {
   args: {
     children: "Primary Button",
     variant: "primary",
   },
-};
+}
 
 export const Secondary: Story = {
   args: {
     children: "Secondary Button",
     variant: "secondary",
   },
-};
+}
 
 export const Loading: Story = {
   args: {
     children: "Loading Button",
     isLoading: true,
   },
-};
+}
 ```
 
 #### Checklist
@@ -2656,11 +2638,7 @@ npm run dev
 
 ```typescript
 // Import utilities
-import {
-  useFormSubmit,
-  createValidator,
-  commonValidators,
-} from "~/utils/forms";
+import { useFormSubmit, createValidator, commonValidators } from "~/utils/forms"
 
 // Client-side form handling
 const { handleSubmit, isSubmitting, errors } = useFormSubmit<LoginData>({
@@ -2669,18 +2647,18 @@ const { handleSubmit, isSubmitting, errors } = useFormSubmit<LoginData>({
     password: commonValidators.required("Password"),
   }),
   onSuccess: (result) => navigate("/dashboard"),
-});
+})
 
 // Remix action wrapper
 export const action = createFormAction(
   async (data: FormData) => {
-    await saveData(data);
-    return redirect("/success");
+    await saveData(data)
+    return redirect("/success")
   },
   {
     validate: (data) => (!data.email ? { error: "Email required" } : null),
   }
-);
+)
 ```
 
 **Impact:**
@@ -2762,34 +2740,34 @@ import {
   useDataFetching,
   usePaginatedData,
   buildQueryString,
-} from "~/utils/data-fetching";
+} from "~/utils/data-fetching"
 
 // Basic data fetching with caching
 const { data, isLoading, error } = useDataFetching<Perfume[]>({
   url: "/api/perfumes",
   cacheKey: "perfumes-list",
   cacheDuration: 600000, // 10 minutes
-});
+})
 
 // Paginated data
 const { data, nextPage, prevPage, meta } = usePaginatedData<House>({
   baseUrl: "/api/houses",
   pageSize: 20,
   params: { type: houseType },
-});
+})
 
 // Infinite scroll
 const { data, isLoadingMore, nextPage } = usePaginatedData<Perfume>({
   baseUrl: "/api/perfumes",
   accumulate: true, // Combines pages into single list
-});
+})
 
 // With dependencies (refetch on change)
 const { data, refetch } = useDataFetching<Data>({
   url: `/api/data?filter=${filter}`,
   deps: [filter],
   debounceMs: 300, // Debounce rapid changes
-});
+})
 ```
 
 **Impact:**
@@ -3138,7 +3116,7 @@ perfumeSchemas = {
   update, // Updating perfumes
   updateUserPerfume, // User perfume management
   search, // Search/filter parameters
-};
+}
 
 authSchemas = {
   signup, // User registration
@@ -3147,7 +3125,7 @@ authSchemas = {
   forgotPassword, // Password reset request
   resetPassword, // Password reset with token
   updateProfile, // Profile updates
-};
+}
 
 // Similar organization for:
 // - ratingSchemas
@@ -3194,19 +3172,19 @@ authSchemas = {
 #### Using Common Schemas
 
 ```typescript
-import { commonSchemas } from "app/utils/validation";
+import { commonSchemas } from "app/utils/validation"
 
 // Validate an email
-const emailResult = commonSchemas.email.parse("user@example.com");
+const emailResult = commonSchemas.email.parse("user@example.com")
 
 // Validate a rating
-const ratingResult = commonSchemas.rating.parse(4);
+const ratingResult = commonSchemas.rating.parse(4)
 ```
 
 #### Using Domain Schemas
 
 ```typescript
-import { authSchemas, perfumeSchemas } from "app/utils/validation";
+import { authSchemas, perfumeSchemas } from "app/utils/validation"
 
 // Validate user signup
 const signupData = authSchemas.signup.parse({
@@ -3214,29 +3192,29 @@ const signupData = authSchemas.signup.parse({
   password: "SecureP@ss123",
   confirmPassword: "SecureP@ss123",
   acceptTerms: "true",
-});
+})
 
 // Validate perfume creation
 const perfumeData = perfumeSchemas.create.parse({
   name: "Chanel No. 5",
   description: "Iconic fragrance...",
   house: "chanel-id",
-});
+})
 ```
 
 #### Using Validation Utilities
 
 ```typescript
-import { validateData, validateFormData } from "app/utils/validation";
+import { validateData, validateFormData } from "app/utils/validation"
 
 // Validate any data against a schema
-const result = validateData(mySchema, data);
+const result = validateData(mySchema, data)
 if (!result.success) {
-  console.error(result.errors);
+  console.error(result.errors)
 }
 
 // Validate form data from a request
-const formResult = validateFormData(mySchema, formData);
+const formResult = validateFormData(mySchema, formData)
 ```
 
 ### Benefits
@@ -3287,12 +3265,12 @@ const formResult = validateFormData(mySchema, formData);
 Use the organized `validationSchemas` export:
 
 ```typescript
-import { validationSchemas } from "app/utils/validation";
+import { validationSchemas } from "app/utils/validation"
 
 // Access schemas by category
-validationSchemas.auth.login;
-validationSchemas.perfume.create;
-validationSchemas.common.email;
+validationSchemas.auth.login
+validationSchemas.perfume.create
+validationSchemas.common.email
 ```
 
 #### For Existing Code
@@ -3301,7 +3279,7 @@ Legacy exports maintain compatibility:
 
 ```typescript
 // These still work (backward compatible)
-import { UserLogInSchema, CreatePerfumeSchema } from "app/utils/validation";
+import { UserLogInSchema, CreatePerfumeSchema } from "app/utils/validation"
 ```
 
 #### Recommended Migration Path
@@ -3516,23 +3494,23 @@ Successfully standardized error handling across the Voodoo Perfumes application 
 // BEFORE: Manual error handling
 export async function loader({ request }) {
   try {
-    const data = await getData();
-    return Response.json({ data });
+    const data = await getData()
+    return Response.json({ data })
   } catch (error) {
-    const { ErrorHandler } = await import("~/utils/errorHandling");
-    const appError = ErrorHandler.handle(error, { api: "my-api" });
-    return Response.json({ error: appError.userMessage }, { status: 500 });
+    const { ErrorHandler } = await import("~/utils/errorHandling")
+    const appError = ErrorHandler.handle(error, { api: "my-api" })
+    return Response.json({ error: appError.userMessage }, { status: 500 })
   }
 }
 
 // AFTER: Standardized error handling
 export const loader = withLoaderErrorHandling(
   async ({ request }) => {
-    const data = await getData();
-    return Response.json({ data });
+    const data = await getData()
+    return Response.json({ data })
   },
   { context: { api: "my-api", route: "api/my-route" } }
-);
+)
 ```
 
 #### 4. Model Updates
@@ -3555,7 +3533,7 @@ export const loader = withLoaderErrorHandling(
 ```typescript
 // BEFORE: Manual validation
 if (!name || typeof name !== "string" || name.trim().length === 0) {
-  throw new Error("Name is required");
+  throw new Error("Name is required")
 }
 
 // AFTER: Standardized validation
@@ -3563,7 +3541,7 @@ assertValid(
   !!name && typeof name === "string" && name.trim().length > 0,
   "Name is required",
   { field: "name", value: name }
-);
+)
 ```
 
 ### Files Created/Modified
@@ -3631,40 +3609,40 @@ This standardization represents a significant improvement in error handling qual
 #### 1. Route Loader with Auto Error Handling
 
 ```typescript
-import { withLoaderErrorHandling } from "~/utils/errorHandling.patterns";
+import { withLoaderErrorHandling } from "~/utils/errorHandling.patterns"
 
 export const loader = withLoaderErrorHandling(
   async ({ request, params }) => {
-    const data = await fetchData(params.id);
-    return json(data);
+    const data = await fetchData(params.id)
+    return json(data)
   },
   { context: { route: "my-route", operation: "fetchData" } }
-);
+)
 ```
 
 #### 2. Validation with Assertions
 
 ```typescript
-import { assertValid, assertExists } from "~/utils/errorHandling.patterns";
+import { assertValid, assertExists } from "~/utils/errorHandling.patterns"
 
-const userId = assertExists(params.userId, "User ID", { params });
-const email = data.get("email");
+const userId = assertExists(params.userId, "User ID", { params })
+const email = data.get("email")
 assertValid(
   typeof email === "string" && email.includes("@"),
   "Valid email is required",
   { field: "email", value: email }
-);
+)
 ```
 
 #### 3. Safe Async Operations
 
 ```typescript
-import { safeAsync } from "~/utils/errorHandling.patterns";
+import { safeAsync } from "~/utils/errorHandling.patterns"
 
-const [error, user] = await safeAsync(() => getUser(id));
+const [error, user] = await safeAsync(() => getUser(id))
 if (error) {
-  console.error("Failed to get user:", error.message);
-  return defaultUser;
+  console.error("Failed to get user:", error.message)
+  return defaultUser
 }
 // Use user safely here
 ```
@@ -3672,15 +3650,15 @@ if (error) {
 #### 4. Retry Logic
 
 ```typescript
-import { withRetry } from "~/utils/errorHandling.patterns";
+import { withRetry } from "~/utils/errorHandling.patterns"
 
 const data = await withRetry(async () => await fetchExternalAPI(), {
   maxRetries: 3,
   baseDelay: 1000,
   onRetry: (attempt, error) => {
-    console.log(`Retry attempt ${attempt} after error:`, error.message);
+    console.log(`Retry attempt ${attempt} after error:`, error.message)
   },
-});
+})
 ```
 
 ### Next Steps

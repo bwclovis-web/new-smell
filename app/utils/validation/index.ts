@@ -3,13 +3,13 @@
  * Centralized validation system for forms, API endpoints, and data operations
  */
 
-import type { ZodError, ZodSchema } from 'zod'
-import { z } from 'zod'
+import type { ZodError, ZodSchema } from "zod"
+import { z } from "zod"
 
-import { createErrorResponse } from '../response.server'
+import { createErrorResponse } from "../response.server"
 
 // Re-export all schemas for convenience
-export * from './schemas'
+export * from "./schemas"
 
 // Validation result types
 export interface ValidationResult<T = unknown> {
@@ -37,7 +37,7 @@ export interface ValidationOptions {
 const defaultOptions: ValidationOptions = {
   stripUnknown: true,
   abortEarly: false,
-  allowUnknown: false
+  allowUnknown: false,
 }
 
 /**
@@ -53,24 +53,24 @@ export function validateData<T>(
   try {
     const result = schema.parse(data, {
       stripUnknown: opts.stripUnknown,
-      abortEarly: opts.abortEarly
+      abortEarly: opts.abortEarly,
     })
 
     return {
       success: true,
-      data: result
+      data: result,
     }
   } catch (error) {
     if (error instanceof z.ZodError) {
       return {
         success: false,
-        errors: formatZodErrors(error)
+        errors: formatZodErrors(error),
       }
     }
 
     return {
       success: false,
-      error: 'Validation failed with unknown error'
+      error: "Validation failed with unknown error",
     }
   }
 }
@@ -101,7 +101,7 @@ export async function validateJsonData<T>(
   } catch (error) {
     return {
       success: false,
-      error: 'Invalid JSON data'
+      error: "Invalid JSON data",
     }
   }
 }
@@ -122,23 +122,22 @@ export function validateSearchParams<T>(
  * Format Zod errors into a consistent format
  */
 function formatZodErrors(error: ZodError): ValidationError[] {
-  return error.errors.map(err => ({
-    field: err.path.join('.'),
+  return error.errors.map((err) => ({
+    field: err.path.join("."),
     message: err.message,
     code: err.code,
-    value: err.input
+    value: err.input,
   }))
 }
 
 /**
  * Create a validation error response
  */
-export function createValidationErrorResponse(errors: ValidationError[], status = 400) {
-  return createErrorResponse(
-    'Validation failed',
-    status,
-    { errors }
-  )
+export function createValidationErrorResponse(
+  errors: ValidationError[],
+  status = 400
+) {
+  return createErrorResponse("Validation failed", status, { errors })
 }
 
 /**
@@ -160,12 +159,12 @@ export function validateAndTransform<T, R>(
     const transformed = transform(validation.data!)
     return {
       success: true,
-      data: transformed
+      data: transformed,
     }
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Transformation failed'
+      error: error instanceof Error ? error.message : "Transformation failed",
     }
   }
 }
@@ -193,13 +192,13 @@ export function validateFields<T extends Record<string, unknown>>(
   if (errors.length > 0) {
     return {
       success: false,
-      errors
+      errors,
     }
   }
 
   return {
     success: true,
-    data: validatedData
+    data: validatedData,
   }
 }
 
@@ -209,8 +208,8 @@ export function validateFields<T extends Record<string, unknown>>(
 export function sanitizeString(input: string): string {
   return input
     .trim()
-    .replace(/[<>]/g, '') // Remove potential HTML tags
-    .replace(/[\x00-\x1F\x7F]/g, '') // Remove control characters
+    .replace(/[<>]/g, "") // Remove potential HTML tags
+    .replace(/[\x00-\x1F\x7F]/g, "") // Remove control characters
 }
 
 /**
@@ -220,10 +219,12 @@ export function sanitizeObject<T extends Record<string, unknown>>(obj: T): T {
   const sanitized = {} as T
 
   for (const [key, value] of Object.entries(obj)) {
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       sanitized[key as keyof T] = sanitizeString(value) as T[keyof T]
-    } else if (typeof value === 'object' && value !== null) {
-      sanitized[key as keyof T] = sanitizeObject(value as Record<string, unknown>) as T[keyof T]
+    } else if (typeof value === "object" && value !== null) {
+      sanitized[key as keyof T] = sanitizeObject(
+        value as Record<string, unknown>
+      ) as T[keyof T]
     } else {
       sanitized[key as keyof T] = value
     }
@@ -240,9 +241,10 @@ export function validateAndSanitize<T>(
   data: unknown,
   options: ValidationOptions = {}
 ): ValidationResult<T> {
-  const sanitizedData = typeof data === 'object' && data !== null
-    ? sanitizeObject(data as Record<string, unknown>)
-    : data
+  const sanitizedData =
+    typeof data === "object" && data !== null
+      ? sanitizeObject(data as Record<string, unknown>)
+      : data
 
   return validateData(schema, sanitizedData, options)
 }
@@ -255,11 +257,11 @@ export function createValidationMiddleware<T>(
   options: ValidationOptions = {}
 ) {
   return async (request: Request) => {
-    const contentType = request.headers.get('content-type')
+    const contentType = request.headers.get("content-type")
 
     let validation: ValidationResult<T>
 
-    if (contentType?.includes('application/json')) {
+    if (contentType?.includes("application/json")) {
       validation = await validateJsonData(schema, request, options)
     } else {
       const formData = await request.formData()
@@ -270,12 +272,12 @@ export function createValidationMiddleware<T>(
       throw new Response(
         JSON.stringify({
           success: false,
-          error: 'Validation failed',
-          errors: validation.errors
+          error: "Validation failed",
+          errors: validation.errors,
         }),
         {
           status: 400,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { "Content-Type": "application/json" },
         }
       )
     }
@@ -288,15 +290,15 @@ export function createValidationMiddleware<T>(
  * Validate pagination parameters
  */
 export function validatePagination(searchParams: URLSearchParams) {
-  const page = parseInt(searchParams.get('page') || '1', 10)
-  const limit = parseInt(searchParams.get('limit') || '10', 10)
+  const page = parseInt(searchParams.get("page") || "1", 10)
+  const limit = parseInt(searchParams.get("limit") || "10", 10)
 
   if (page < 1) {
-    throw new Error('Page must be 1 or greater')
+    throw new Error("Page must be 1 or greater")
   }
 
   if (limit < 1 || limit > 100) {
-    throw new Error('Limit must be between 1 and 100')
+    throw new Error("Limit must be between 1 and 100")
   }
 
   return { page, limit, offset: (page - 1) * limit }
@@ -305,8 +307,8 @@ export function validatePagination(searchParams: URLSearchParams) {
 /**
  * Validate ID parameter
  */
-export function validateId(id: string | null, fieldName = 'ID'): string {
-  if (!id || id.trim() === '') {
+export function validateId(id: string | null, fieldName = "ID"): string {
+  if (!id || id.trim() === "") {
     throw new Error(`${fieldName} is required`)
   }
 
@@ -324,7 +326,7 @@ export function validateEmail(email: string): string {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
   if (!emailRegex.test(email)) {
-    throw new Error('Invalid email format')
+    throw new Error("Invalid email format")
   }
 
   return email.toLowerCase().trim()
@@ -335,31 +337,31 @@ export function validateEmail(email: string): string {
  */
 export function validatePassword(password: string): void {
   if (password.length < 8) {
-    throw new Error('Password must be at least 8 characters long')
+    throw new Error("Password must be at least 8 characters long")
   }
 
   if (password.length > 128) {
-    throw new Error('Password must be less than 128 characters')
+    throw new Error("Password must be less than 128 characters")
   }
 
   if (!/[a-z]/.test(password)) {
-    throw new Error('Password must contain at least one lowercase letter')
+    throw new Error("Password must contain at least one lowercase letter")
   }
 
   if (!/[A-Z]/.test(password)) {
-    throw new Error('Password must contain at least one uppercase letter')
+    throw new Error("Password must contain at least one uppercase letter")
   }
 
   if (!/[0-9]/.test(password)) {
-    throw new Error('Password must contain at least one number')
+    throw new Error("Password must contain at least one number")
   }
 
   if (!/[^a-zA-Z0-9]/.test(password)) {
-    throw new Error('Password must contain at least one special character')
+    throw new Error("Password must contain at least one special character")
   }
 
-  if (password.includes(' ')) {
-    throw new Error('Password cannot contain spaces')
+  if (password.includes(" ")) {
+    throw new Error("Password cannot contain spaces")
   }
 }
 
@@ -371,7 +373,7 @@ export function validateUrl(url: string): string {
     const urlObj = new URL(url)
     return urlObj.toString()
   } catch {
-    throw new Error('Invalid URL format')
+    throw new Error("Invalid URL format")
   }
 }
 
@@ -382,7 +384,7 @@ export function validatePhone(phone: string): string {
   const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/
 
   if (!phoneRegex.test(phone)) {
-    throw new Error('Invalid phone number format')
+    throw new Error("Invalid phone number format")
   }
 
   return phone.trim()
@@ -395,7 +397,7 @@ export function validateYear(year: string): number {
   const yearNum = parseInt(year, 10)
 
   if (isNaN(yearNum) || yearNum < 1900 || yearNum > 2099) {
-    throw new Error('Year must be between 1900 and 2099')
+    throw new Error("Year must be between 1900 and 2099")
   }
 
   return yearNum
@@ -406,7 +408,7 @@ export function validateYear(year: string): number {
  */
 export function validateRating(rating: number): number {
   if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
-    throw new Error('Rating must be an integer between 1 and 5')
+    throw new Error("Rating must be an integer between 1 and 5")
   }
 
   return rating
@@ -419,11 +421,11 @@ export function validateAmount(amount: string): number {
   const amountNum = parseFloat(amount)
 
   if (isNaN(amountNum) || amountNum < 0) {
-    throw new Error('Amount must be a positive number')
+    throw new Error("Amount must be a positive number")
   }
 
   if (!/^\d+(\.\d{1,2})?$/.test(amount)) {
-    throw new Error('Amount must have at most 2 decimal places')
+    throw new Error("Amount must have at most 2 decimal places")
   }
 
   return amountNum
@@ -435,10 +437,10 @@ export function validateAmount(amount: string): number {
 export function validateEnum<T extends string>(
   value: string,
   allowedValues: readonly T[],
-  fieldName = 'Value'
+  fieldName = "Value"
 ): T {
   if (!allowedValues.includes(value as T)) {
-    throw new Error(`${fieldName} must be one of: ${allowedValues.join(', ')}`)
+    throw new Error(`${fieldName} must be one of: ${allowedValues.join(", ")}`)
   }
 
   return value as T
@@ -450,7 +452,7 @@ export function validateEnum<T extends string>(
 export function validateArray<T>(
   values: unknown[],
   validator: (value: unknown) => T,
-  fieldName = 'Array'
+  fieldName = "Array"
 ): T[] {
   if (!Array.isArray(values)) {
     throw new Error(`${fieldName} must be an array`)
@@ -462,7 +464,11 @@ export function validateArray<T>(
     try {
       validatedValues.push(validator(values[i]))
     } catch (error) {
-      throw new Error(`${fieldName}[${i}]: ${error instanceof Error ? error.message : 'Invalid value'}`)
+      throw new Error(
+        `${fieldName}[${i}]: ${
+          error instanceof Error ? error.message : "Invalid value"
+        }`
+      )
     }
   }
 
@@ -475,9 +481,9 @@ export function validateArray<T>(
 export function validateObject<T extends Record<string, unknown>>(
   obj: unknown,
   validators: Record<keyof T, (value: unknown) => T[keyof T]>,
-  fieldName = 'Object'
+  fieldName = "Object"
 ): T {
-  if (typeof obj !== 'object' || obj === null) {
+  if (typeof obj !== "object" || obj === null) {
     throw new Error(`${fieldName} must be an object`)
   }
 
@@ -487,7 +493,11 @@ export function validateObject<T extends Record<string, unknown>>(
     try {
       validatedObj[key as keyof T] = validator((obj as Record<string, unknown>)[key])
     } catch (error) {
-      throw new Error(`${fieldName}.${key}: ${error instanceof Error ? error.message : 'Invalid value'}`)
+      throw new Error(
+        `${fieldName}.${key}: ${
+          error instanceof Error ? error.message : "Invalid value"
+        }`
+      )
     }
   }
 

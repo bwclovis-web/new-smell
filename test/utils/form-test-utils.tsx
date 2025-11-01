@@ -1,8 +1,8 @@
-import { screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { vi } from 'vitest'
+import { screen, waitFor } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
+import { vi } from "vitest"
 
-import { renderWithProviders } from './test-utils'
+import { renderWithProviders } from "./test-utils"
 
 // Form Testing Utilities
 
@@ -23,9 +23,9 @@ export const fillFormFieldByTestId = async (testId: string, value: string) => {
 }
 
 // Submit form by button text
-export const submitForm = async (buttonText: string = 'Submit') => {
+export const submitForm = async (buttonText: string = "Submit") => {
   const user = userEvent.setup()
-  const submitButton = screen.getByRole('button', { name: buttonText })
+  const submitButton = screen.getByRole("button", { name: buttonText })
   await user.click(submitButton)
 }
 
@@ -36,7 +36,7 @@ export const testFormValidation = async (
     value: string
     expectedError?: string
   }>,
-  submitButtonText = 'Submit'
+  submitButtonText = "Submit"
 ) => {
   const user = userEvent.setup()
 
@@ -65,7 +65,7 @@ export const testFormSuccess = async (
     value: string
   }>,
   successMessage: string,
-  submitButtonText = 'Submit'
+  submitButtonText = "Submit"
 ) => {
   // Fill and submit form
   for (const field of formFields) {
@@ -81,11 +81,13 @@ export const testFormSuccess = async (
 }
 
 // Test form field types
-export const testFieldTypes = async (fieldTests: Array<{
+export const testFieldTypes = async (
+  fieldTests: Array<{
     label: string
     type: string
     value: string
-  }>) => {
+  }>
+) => {
   for (const test of fieldTests) {
     const field = screen.getByLabelText(test.label) as HTMLInputElement
     expect(field.type).toBe(test.type)
@@ -120,17 +122,21 @@ export const testFormStates = async (
 // Mock form submission
 export const mockFormSubmission = (
   success = true,
-  response = { message: 'Success' },
+  response = { message: "Success" },
   delay = 100
-) => vi.fn().mockImplementation(() => new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (success) {
-          resolve(response)
-        } else {
-          reject(new Error(response.message || 'Form submission failed'))
-        }
-      }, delay)
-    }))
+) =>
+  vi.fn().mockImplementation(
+    () =>
+      new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (success) {
+            resolve(response)
+          } else {
+            reject(new Error(response.message || "Form submission failed"))
+          }
+        }, delay)
+      })
+  )
 
 // Test form with file upload
 export const testFileUpload = async (
@@ -178,7 +184,7 @@ export const testDynamicFields = async (
   }
 
   // Check field count
-  const fields = screen.getAllByLabelText(new RegExp(fieldLabel, 'i'))
+  const fields = screen.getAllByLabelText(new RegExp(fieldLabel, "i"))
   expect(fields).toHaveLength(expectedFieldCount)
 
   // Remove a field
@@ -186,28 +192,28 @@ export const testDynamicFields = async (
   await user.click(removeButton)
 
   // Check updated field count
-  const updatedFields = screen.getAllByLabelText(new RegExp(fieldLabel, 'i'))
+  const updatedFields = screen.getAllByLabelText(new RegExp(fieldLabel, "i"))
   expect(updatedFields).toHaveLength(expectedFieldCount - 1)
 }
 
 // Create test files for upload testing
 export const createTestFile = (
-  name: string = 'test.txt',
-  content: string = 'test content',
-  type: string = 'text/plain'
+  name: string = "test.txt",
+  content: string = "test content",
+  type: string = "text/plain"
 ) => new File([content], name, { type })
 
 export const createTestImageFile = (
-  name: string = 'test.jpg',
+  name: string = "test.jpg",
   size: number = 1024
 ) => {
-  const canvas = document.createElement('canvas')
+  const canvas = document.createElement("canvas")
   canvas.width = 100
   canvas.height = 100
 
-  return new Promise<File>(resolve => {
-    canvas.toBlob(blob => {
-      resolve(new File([blob!], name, { type: 'image/jpeg' }))
-    }, 'image/jpeg')
+  return new Promise<File>((resolve) => {
+    canvas.toBlob((blob) => {
+      resolve(new File([blob!], name, { type: "image/jpeg" }))
+    }, "image/jpeg")
   })
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react"
 
 export interface UseDebounceOptions {
   delay?: number
@@ -14,7 +14,7 @@ export interface UseDebounceReturn<T> {
 
 /**
  * Custom hook for debouncing values with configurable options
- * 
+ *
  * @param value - The value to debounce
  * @param options - Configuration options for debouncing
  * @returns Debounced value and utilities
@@ -23,11 +23,7 @@ export const useDebounce = <T>(
   value: T,
   options: UseDebounceOptions = {}
 ): UseDebounceReturn<T> => {
-  const {
-    delay = 300,
-    leading = false,
-    trailing = true
-  } = options
+  const { delay = 300, leading = false, trailing = true } = options
 
   const [debouncedValue, setDebouncedValue] = useState<T>(value)
   const [isDebouncing, setIsDebouncing] = useState(false)
@@ -64,14 +60,12 @@ export const useDebounce = <T>(
     }
 
     return cancel
-  }, [
-value, delay, leading, trailing, debouncedValue, cancel
-])
+  }, [value, delay, leading, trailing, debouncedValue, cancel])
 
   return {
     debouncedValue,
     isDebouncing,
-    cancel
+    cancel,
   }
 }
 

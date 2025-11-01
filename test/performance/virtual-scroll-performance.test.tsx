@@ -1,8 +1,8 @@
-import { fireEvent, render, screen } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { fireEvent, render, screen } from "@testing-library/react"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
-import { VirtualScroll } from '~/components/Atoms/VirtualScroll'
-import { VirtualScrollList } from '~/components/Molecules/VirtualScrollList'
+import { VirtualScroll } from "~/components/Atoms/VirtualScroll"
+import { VirtualScrollList } from "~/components/Molecules/VirtualScrollList"
 
 // Mock performance API
 const mockPerformance = {
@@ -10,20 +10,21 @@ const mockPerformance = {
   mark: vi.fn(),
   measure: vi.fn(),
   getEntriesByName: vi.fn(() => []),
-  getEntriesByType: vi.fn(() => [])
+  getEntriesByType: vi.fn(() => []),
 }
 
-Object.defineProperty(window, 'performance', {
+Object.defineProperty(window, "performance", {
   value: mockPerformance,
-  writable: true
+  writable: true,
 })
 
 // Generate large dataset for testing
-const generateLargeDataset = (size: number) => Array.from({ length: size }, (_, i) => ({
+const generateLargeDataset = (size: number) =>
+  Array.from({ length: size }, (_, i) => ({
     id: i,
     name: `Item ${i}`,
     description: `Description for item ${i}`,
-    value: Math.random() * 1000
+    value: Math.random() * 1000,
   }))
 
 const MockItem = ({ item, index }: { item: any; index: number }) => (
@@ -34,25 +35,27 @@ const MockItem = ({ item, index }: { item: any; index: number }) => (
   </div>
 )
 
-describe('Virtual Scroll Performance Tests', () => {
+describe("Virtual Scroll Performance Tests", () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  describe('VirtualScroll Component', () => {
-    it('renders only visible items for large datasets', () => {
+  describe("VirtualScroll Component", () => {
+    it("renders only visible items for large datasets", () => {
       const largeDataset = generateLargeDataset(1000)
 
       const startTime = performance.now()
 
-      render(<VirtualScroll
+      render(
+        <VirtualScroll
           items={largeDataset}
           itemHeight={50}
           containerHeight={200}
           overscan={5}
         >
           {(item, index) => <MockItem item={item} index={index} />}
-        </VirtualScroll>)
+        </VirtualScroll>
+      )
 
       const endTime = performance.now()
       const renderTime = endTime - startTime
@@ -65,20 +68,22 @@ describe('Virtual Scroll Performance Tests', () => {
       expect(visibleItems.length).toBeLessThanOrEqual(10)
     })
 
-    it('handles scroll events efficiently', () => {
+    it("handles scroll events efficiently", () => {
       const largeDataset = generateLargeDataset(5000)
       const onScroll = vi.fn()
 
-      render(<VirtualScroll
+      render(
+        <VirtualScroll
           items={largeDataset}
           itemHeight={50}
           containerHeight={200}
           onScroll={onScroll}
         >
           {(item, index) => <MockItem item={item} index={index} />}
-        </VirtualScroll>)
+        </VirtualScroll>
+      )
 
-      const scrollContainer = screen.getByRole('generic')
+      const scrollContainer = screen.getByRole("generic")
 
       // Simulate rapid scrolling
       const startTime = performance.now()
@@ -92,19 +97,21 @@ describe('Virtual Scroll Performance Tests', () => {
       expect(onScroll).toHaveBeenCalledTimes(10)
     })
 
-    it('maintains performance with very large datasets', () => {
+    it("maintains performance with very large datasets", () => {
       const veryLargeDataset = generateLargeDataset(10000)
 
       const startTime = performance.now()
 
-      render(<VirtualScroll
+      render(
+        <VirtualScroll
           items={veryLargeDataset}
           itemHeight={50}
           containerHeight={200}
           overscan={3}
         >
           {(item, index) => <MockItem item={item} index={index} />}
-        </VirtualScroll>)
+        </VirtualScroll>
+      )
 
       const endTime = performance.now()
       const renderTime = endTime - startTime
@@ -118,18 +125,20 @@ describe('Virtual Scroll Performance Tests', () => {
     })
   })
 
-  describe('VirtualScrollList Component', () => {
-    it('renders large lists efficiently', () => {
+  describe("VirtualScrollList Component", () => {
+    it("renders large lists efficiently", () => {
       const largeDataset = generateLargeDataset(2000)
 
       const startTime = performance.now()
 
-      render(<VirtualScrollList
+      render(
+        <VirtualScrollList
           items={largeDataset}
           itemHeight={60}
           containerHeight={300}
           renderItem={(item, index) => <MockItem item={item} index={index} />}
-        />)
+        />
+      )
 
       const endTime = performance.now()
       const renderTime = endTime - startTime
@@ -142,59 +151,67 @@ describe('Virtual Scroll Performance Tests', () => {
       expect(visibleItems.length).toBeLessThanOrEqual(8)
     })
 
-    it('handles empty and loading states efficiently', () => {
+    it("handles empty and loading states efficiently", () => {
       const emptyState = <div data-testid="empty">No items</div>
       const loadingState = <div data-testid="loading">Loading...</div>
 
       // Test empty state
-      const { rerender } = render(<VirtualScrollList
+      const { rerender } = render(
+        <VirtualScrollList
           items={[]}
           itemHeight={50}
           containerHeight={200}
           renderItem={(item, index) => <MockItem item={item} index={index} />}
           emptyState={emptyState}
-        />)
+        />
+      )
 
-      expect(screen.getByTestId('empty')).toBeInTheDocument()
+      expect(screen.getByTestId("empty")).toBeInTheDocument()
 
       // Test loading state
-      rerender(<VirtualScrollList
+      rerender(
+        <VirtualScrollList
           items={generateLargeDataset(100)}
           itemHeight={50}
           containerHeight={200}
           renderItem={(item, index) => <MockItem item={item} index={index} />}
           loadingState={loadingState}
           isLoading={true}
-        />)
+        />
+      )
 
-      expect(screen.getByTestId('loading')).toBeInTheDocument()
+      expect(screen.getByTestId("loading")).toBeInTheDocument()
     })
 
-    it('maintains scroll position during data updates', () => {
+    it("maintains scroll position during data updates", () => {
       const initialData = generateLargeDataset(1000)
-      const { rerender } = render(<VirtualScrollList
+      const { rerender } = render(
+        <VirtualScrollList
           items={initialData}
           itemHeight={50}
           containerHeight={200}
           renderItem={(item, index) => <MockItem item={item} index={index} />}
-        />)
+        />
+      )
 
       // Scroll to a specific position
-      const scrollContainer = screen.getByRole('generic')
+      const scrollContainer = screen.getByRole("generic")
       fireEvent.scroll(scrollContainer, { target: { scrollTop: 1000 } })
 
       // Update data
       const updatedData = generateLargeDataset(1000).map((item, index) => ({
         ...item,
-        name: `Updated Item ${index}`
+        name: `Updated Item ${index}`,
       }))
 
-      rerender(<VirtualScrollList
+      rerender(
+        <VirtualScrollList
           items={updatedData}
           itemHeight={50}
           containerHeight={200}
           renderItem={(item, index) => <MockItem item={item} index={index} />}
-        />)
+        />
+      )
 
       // Should still show items (virtual scrolling maintains position)
       const visibleItems = screen.getAllByTestId(/^item-\d+$/)
@@ -202,45 +219,51 @@ describe('Virtual Scroll Performance Tests', () => {
     })
   })
 
-  describe('Memory Usage', () => {
-    it('does not create excessive DOM nodes', () => {
+  describe("Memory Usage", () => {
+    it("does not create excessive DOM nodes", () => {
       const largeDataset = generateLargeDataset(5000)
 
-      render(<VirtualScroll
+      render(
+        <VirtualScroll
           items={largeDataset}
           itemHeight={50}
           containerHeight={200}
           overscan={2}
         >
           {(item, index) => <MockItem item={item} index={index} />}
-        </VirtualScroll>)
+        </VirtualScroll>
+      )
 
       // Count all test elements (should be limited by virtual scrolling)
       const allItems = screen.queryAllByTestId(/^item-\d+$/)
       expect(allItems.length).toBeLessThanOrEqual(6) // 4 visible + 2 overscan
     })
 
-    it('handles rapid data changes without memory leaks', () => {
-      const { rerender } = render(<VirtualScrollList
+    it("handles rapid data changes without memory leaks", () => {
+      const { rerender } = render(
+        <VirtualScrollList
           items={generateLargeDataset(100)}
           itemHeight={50}
           containerHeight={200}
           renderItem={(item, index) => <MockItem item={item} index={index} />}
-        />)
+        />
+      )
 
       // Rapidly change data multiple times
       for (let i = 0; i < 20; i++) {
         const newData = generateLargeDataset(100).map((item, index) => ({
           ...item,
-          name: `Batch ${i} Item ${index}`
+          name: `Batch ${i} Item ${index}`,
         }))
 
-        rerender(<VirtualScrollList
+        rerender(
+          <VirtualScrollList
             items={newData}
             itemHeight={50}
             containerHeight={200}
             renderItem={(item, index) => <MockItem item={item} index={index} />}
-          />)
+          />
+        )
       }
 
       // Should still only render visible items

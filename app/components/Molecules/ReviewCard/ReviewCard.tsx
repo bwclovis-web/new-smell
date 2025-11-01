@@ -1,7 +1,7 @@
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow } from "date-fns"
 
-import { Button } from '~/components/Atoms/Button'
-import { styleMerge } from '~/utils/styleUtils'
+import { Button } from "~/components/Atoms/Button"
+import { styleMerge } from "~/utils/styleUtils"
 
 interface ReviewCardProps {
   review: {
@@ -32,10 +32,10 @@ const ReviewCard = ({
   onEdit,
   onDelete,
   onModerate,
-  showModerationActions = false
+  showModerationActions = false,
 }: ReviewCardProps) => {
   const isOwner = currentUserId === review.user.id
-  const canModerate = currentUserRole === 'admin' || currentUserRole === 'editor'
+  const canModerate = currentUserRole === "admin" || currentUserRole === "editor"
   const canEdit = isOwner || canModerate
   const canDelete = isOwner || canModerate
 
@@ -57,12 +57,16 @@ const ReviewCard = ({
     try {
       return formatDistanceToNow(new Date(dateString), { addSuffix: true })
     } catch {
-      return 'Recently'
+      return "Recently"
     }
   }
 
   return (
-    <div className={styleMerge("bg-white/5 border border-noir-gold rounded-lg p-4 space-y-3")}>
+    <div
+      className={styleMerge(
+        "bg-white/5 border border-noir-gold rounded-lg p-4 space-y-3"
+      )}
+    >
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
@@ -73,7 +77,9 @@ const ReviewCard = ({
           </div>
           <div>
             <p className="text-sm font-medium text-noir-gold">{getDisplayName()}</p>
-            <p className="text-xs text-noir-gold-100">{formatDate(review.createdAt)}</p>
+            <p className="text-xs text-noir-gold-100">
+              {formatDate(review.createdAt)}
+            </p>
           </div>
         </div>
 
@@ -81,11 +87,7 @@ const ReviewCard = ({
         {canEdit && (
           <div className="flex items-center space-x-2">
             {isOwner && onEdit && (
-              <Button
-                onClick={() => onEdit(review.id)}
-                size="sm"
-
-              >
+              <Button onClick={() => onEdit(review.id)} size="sm">
                 Edit
               </Button>
             )}
@@ -121,13 +123,13 @@ const ReviewCard = ({
       <div
         className="prose prose-sm max-w-none text-noir-light"
         dangerouslySetInnerHTML={{ __html: review.review }}
-
       />
 
       {/* Moderation Status */}
       {showModerationActions && (
         <div className="text-xs">
-          Status: {review.isApproved ? (
+          Status:{" "}
+          {review.isApproved ? (
             <span className="font-medium text-green-600">✓ Approved</span>
           ) : (
             <span className="font-medium text-orange-600">⏳ Pending Review</span>

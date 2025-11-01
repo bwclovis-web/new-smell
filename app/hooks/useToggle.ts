@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react"
 
 export interface UseToggleOptions {
   initialValue?: boolean
@@ -15,18 +15,18 @@ export interface UseToggleReturn {
 
 /**
  * Custom hook for managing boolean toggle state
- * 
+ *
  * @param options - Configuration options for the toggle
  * @returns Toggle state and handlers
  */
 export const useToggle = ({
   initialValue = false,
-  onToggle
+  onToggle,
 }: UseToggleOptions = {}): UseToggleReturn => {
   const [value, setValueState] = useState(initialValue)
 
   const toggle = () => {
-    setValueState(prev => {
+    setValueState((prev) => {
       const newValue = !prev
       onToggle?.(newValue)
       return newValue
@@ -53,7 +53,7 @@ export const useToggle = ({
     toggle,
     setTrue,
     setFalse,
-    setValue
+    setValue,
   }
 }
 

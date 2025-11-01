@@ -1,6 +1,6 @@
-import Input from '~/components/Atoms/Input/Input'
-import Select from '~/components/Atoms/Select/Select'
-import { houseTypes } from '~/data/SelectTypes'
+import Input from "~/components/Atoms/Input/Input"
+import Select from "~/components/Atoms/Select/Select"
+import { houseTypes } from "~/data/SelectTypes"
 const InfoFieldset = ({ inputRef, data, actions }) => (
   <fieldset className="flex flex-col gap-2">
     <legend className="text-3xl text-noir-gold-100 font-bold mb-2">Info</legend>
@@ -29,7 +29,12 @@ const InfoFieldset = ({ inputRef, data, actions }) => (
         inputId="founded"
         defaultValue={data?.founded}
       />
-      <Select label="House Type" selectId="type" selectData={houseTypes} defaultId={data?.type} />
+      <Select
+        label="House Type"
+        selectId="type"
+        selectData={houseTypes}
+        defaultId={data?.type}
+      />
     </div>
     <Input
       shading={true}

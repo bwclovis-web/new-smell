@@ -24,6 +24,7 @@ Created a server-side utility using Node.js `AsyncLocalStorage` for context isol
 - **`withCorrelationId(handler)`** - Wrapper that auto-generates and sets correlation ID
 
 **Key Features:**
+
 - Uses AsyncLocalStorage for proper context isolation between concurrent requests
 - Format: `1730390400000_k3j5h7n2m` (timestamp + 9-char random string)
 - Works seamlessly across async operations
@@ -53,6 +54,7 @@ Updated ErrorLogger to automatically capture and include correlation IDs:
 Created comprehensive test suites:
 
 **Unit Tests** (`test/utils/correlationId.server.test.ts`):
+
 - 20+ tests covering ID generation, storage, retrieval
 - Context isolation tests (concurrent requests maintain separate IDs)
 - Async operation tests (ID persists across awaits)
@@ -60,6 +62,7 @@ Created comprehensive test suites:
 - Wrapper function tests
 
 **Integration Tests** (`test/integration/correlationId-errorLogger.test.ts`):
+
 - ErrorLogger integration tests
 - ErrorHandler integration tests
 - Real-world scenario tests (retry logic, nested operations)
@@ -96,7 +99,7 @@ Created comprehensive test suites:
 ```typescript
 // Your existing route loaders/actions work automatically
 export const loader = withLoaderErrorHandling(async ({ request }) => {
-  const data = await fetchData()  // If error, correlation ID auto-logged
+  const data = await fetchData() // If error, correlation ID auto-logged
   return { data }
 })
 ```
@@ -104,17 +107,17 @@ export const loader = withLoaderErrorHandling(async ({ request }) => {
 #### Manual Usage (Advanced)
 
 ```typescript
-import { getCorrelationId } from '~/utils/correlationId.server'
+import { getCorrelationId } from "~/utils/correlationId.server"
 
 export const loader = async ({ request }) => {
   const correlationId = getCorrelationId()
-  console.log('Processing request:', correlationId)
-  
+  console.log("Processing request:", correlationId)
+
   // Use correlation ID for external service calls
   await externalService.call({
-    headers: { 'X-Correlation-ID': correlationId }
+    headers: { "X-Correlation-ID": correlationId },
   })
-  
+
   return { data }
 }
 ```
@@ -122,7 +125,7 @@ export const loader = async ({ request }) => {
 #### Using the Wrapper
 
 ```typescript
-import { withCorrelationId } from '~/utils/correlationId.server'
+import { withCorrelationId } from "~/utils/correlationId.server"
 
 const processRequest = withCorrelationId(async (data) => {
   // Correlation ID automatically generated and available
@@ -136,21 +139,26 @@ const processRequest = withCorrelationId(async (data) => {
 ## Benefits
 
 ### 1. Complete Request Tracing
+
 Every error can now be traced back to its originating request. Search logs by correlation ID to see the complete story of what happened.
 
 ### 2. Better Debugging
+
 When a user reports an error, they can provide the correlation ID from the response headers, allowing you to find all related logs instantly.
 
 ### 3. Production-Ready
+
 - Works in both development and production
 - Zero performance overhead (AsyncLocalStorage is fast)
 - Gracefully degrades on client-side
 - No breaking changes to existing code
 
 ### 4. Distributed Tracing Ready
+
 If you add more services, you can pass the correlation ID between them to maintain a complete trace across your entire system.
 
 ### 5. Support Workflows
+
 Users can reference the correlation ID when contacting support, making issue resolution much faster.
 
 ---
@@ -158,6 +166,7 @@ Users can reference the correlation ID when contacting support, making issue res
 ## Example Log Output
 
 ### Before (without correlation ID)
+
 ```javascript
 [ErrorLogger] {
   id: "error_1730390400000_abc123",
@@ -167,6 +176,7 @@ Users can reference the correlation ID when contacting support, making issue res
 ```
 
 ### After (with correlation ID)
+
 ```javascript
 [ErrorLogger] {
   id: "error_1730390400000_abc123",
@@ -210,8 +220,8 @@ If you later integrate with external monitoring services like Sentry, the correl
 ```typescript
 Sentry.captureException(error, {
   tags: {
-    correlationId: getCorrelationId()
-  }
+    correlationId: getCorrelationId(),
+  },
 })
 ```
 
@@ -222,16 +232,19 @@ This allows you to trace errors across your entire application and external serv
 ## Testing
 
 ### Run Unit Tests
+
 ```bash
 npm run test:run test/utils/correlationId.server.test.ts
 ```
 
 ### Run Integration Tests
+
 ```bash
 npm run test:run test/integration/correlationId-errorLogger.test.ts
 ```
 
 ### Run All Tests
+
 ```bash
 npm run test:run
 ```
@@ -250,14 +263,17 @@ npm run test:run
 ## Future Enhancements
 
 1. **External Monitoring Integration**
+
    - Automatically send correlation IDs to Sentry/DataDog
    - Create dashboards grouped by correlation ID
 
 2. **Request Chaining**
+
    - Pass correlation IDs to external APIs
    - Build complete distributed traces
 
 3. **Analytics**
+
    - Track error patterns by correlation ID
    - Identify cascading failures
 
@@ -285,4 +301,3 @@ Correlation IDs are now fully implemented and integrated into the error handling
 **Status:** ✅ Complete  
 **Progress:** Phase 3 (Monitoring & Observability) - 33% Complete  
 **Next Steps:** Integrate with external monitoring service (Sentry)
-

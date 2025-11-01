@@ -45,9 +45,9 @@ const context = {
   password: "secret123",
   apiKey: "key123",
   preferences: { theme: "dark" },
-};
+}
 
-const sanitized = sanitizeContext(context);
+const sanitized = sanitizeContext(context)
 // Result:
 // {
 //   username: 'john',
@@ -188,7 +188,7 @@ createErrorResponse(error: AppError, status?: number, options?: { headers?: Head
 
 ```typescript
 export class ErrorLogger {
-  private readonly MAX_LOGS = 1000; // Prevent memory leaks
+  private readonly MAX_LOGS = 1000 // Prevent memory leaks
 
   log(error: AppError, userId?: string): void {
     const logEntry = {
@@ -196,13 +196,13 @@ export class ErrorLogger {
       error,
       timestamp: new Date(),
       userId,
-    };
+    }
 
-    this.logs.push(logEntry);
+    this.logs.push(logEntry)
 
     // Remove oldest logs when limit is reached
     if (this.logs.length > this.MAX_LOGS) {
-      this.logs.shift();
+      this.logs.shift()
     }
 
     // Development: Include stack trace
@@ -212,12 +212,12 @@ export class ErrorLogger {
         error: error.toJSON(true), // Include stack in dev
         userId: userId,
         timestamp: logEntry.timestamp.toISOString(),
-      });
+      })
     }
 
     // Production: Sanitized logs without stack traces
     if (process.env.NODE_ENV === "production") {
-      this.sendToExternalLogger(error, userId);
+      this.sendToExternalLogger(error, userId)
     }
   }
 }
@@ -387,7 +387,7 @@ const error = createError.authentication("Login failed", {
   email: "user@example.com",
   password: "secret123", // Will be redacted
   apiKey: "key123", // Will be redacted
-});
+})
 
 // In production response:
 // Only shows: "Please sign in to continue."
@@ -400,10 +400,10 @@ const error = createError.authentication("Login failed", {
 ### Logging Errors Securely
 
 ```typescript
-const logger = ErrorLogger.getInstance();
+const logger = ErrorLogger.getInstance()
 
 // Log with user context
-logger.log(error, "user123");
+logger.log(error, "user123")
 
 // Logs are automatically:
 // - Limited to 1000 entries
@@ -416,14 +416,14 @@ logger.log(error, "user123");
 
 ```typescript
 // Production response - minimal info
-const response = createErrorResponse(error);
+const response = createErrorResponse(error)
 
 // With custom headers
 const response = createErrorResponse(error, 401, {
   headers: {
     "X-Request-ID": requestId,
   },
-});
+})
 
 // Automatically includes:
 // - Cache-Control: no-store
@@ -549,14 +549,14 @@ Create a test route to manually verify security features:
  * DELETE THIS FILE after testing
  */
 
-import type { LoaderFunctionArgs } from "react-router";
+import type { LoaderFunctionArgs } from "react-router"
 
-import { createError } from "~/utils/errorHandling";
-import { ServerErrorHandler } from "~/utils/errorHandling.server";
+import { createError } from "~/utils/errorHandling"
+import { ServerErrorHandler } from "~/utils/errorHandling.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const url = new URL(request.url);
-  const testType = url.searchParams.get("test");
+  const url = new URL(request.url)
+  const testType = url.searchParams.get("test")
 
   try {
     switch (testType) {
@@ -573,7 +573,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
             theme: "dark",
             sessionId: "session-abc-123",
           },
-        });
+        })
 
       case "nested-sensitive":
         // Test nested sensitive data
@@ -591,21 +591,21 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
               secret: "jwt-secret-key",
             },
           },
-        });
+        })
 
       case "validation":
         throw createError.validation("Invalid email address", {
           field: "email",
           value: "invalid-email",
           userId: "12345",
-        });
+        })
 
       case "database":
         throw createError.database("Connection timeout", {
           operation: "SELECT",
           table: "users",
           query: "SELECT * FROM users WHERE id = $1",
-        });
+        })
 
       default:
         return new Response(
@@ -622,17 +622,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
           {
             headers: { "Content-Type": "application/json" },
           }
-        );
+        )
     }
   } catch (error) {
     const appError = ServerErrorHandler.handle(error, {
       testRoute: true,
       requestUrl: request.url,
-    });
+    })
 
-    return ServerErrorHandler.createErrorResponse(appError);
+    return ServerErrorHandler.createErrorResponse(appError)
   }
-};
+}
 ```
 
 ### Test Scenarios
@@ -776,56 +776,50 @@ pragma: no-cache
 
 ```javascript
 async function testSecurityHardening() {
-  console.log("🔒 Testing Security Hardening...\n");
+  console.log("🔒 Testing Security Hardening...\n")
 
   // Test 1: Sensitive Context
-  console.log("Test 1: Sensitive Context Redaction");
-  const res1 = await fetch("/test-security?test=sensitive-context");
-  const data1 = await res1.json();
+  console.log("Test 1: Sensitive Context Redaction")
+  const res1 = await fetch("/test-security?test=sensitive-context")
+  const data1 = await res1.json()
   console.log(
     "✅ Password redacted?",
     data1.error.context?.password === "[REDACTED]"
-  );
-  console.log(
-    "✅ API Key redacted?",
-    data1.error.context?.apiKey === "[REDACTED]"
-  );
-  console.log(
-    "✅ Username visible?",
-    data1.error.context?.username === "johndoe"
-  );
+  )
+  console.log("✅ API Key redacted?", data1.error.context?.apiKey === "[REDACTED]")
+  console.log("✅ Username visible?", data1.error.context?.username === "johndoe")
 
   // Test 2: Cache Headers
-  console.log("\nTest 2: Cache Headers");
+  console.log("\nTest 2: Cache Headers")
   console.log(
     "✅ No-store header?",
     res1.headers.get("cache-control").includes("no-store")
-  );
+  )
 
   // Test 3: Production mode check
-  console.log("\nTest 3: Environment Check");
+  console.log("\nTest 3: Environment Check")
   console.log(
     "NODE_ENV:",
     data1.error.technicalMessage ? "development ✅" : "production ✅"
-  );
+  )
 
   // Test 4: Nested Sensitive Data
-  console.log("\nTest 4: Nested Sensitive Data");
-  const res4 = await fetch("/test-security?test=nested-sensitive");
-  const data4 = await res4.json();
+  console.log("\nTest 4: Nested Sensitive Data")
+  const res4 = await fetch("/test-security?test=nested-sensitive")
+  const data4 = await res4.json()
   console.log(
     "✅ DB password redacted?",
     data4.error.context?.config?.database?.password === "[REDACTED]"
-  );
+  )
   console.log(
     "✅ API key redacted?",
     data4.error.context?.config?.api?.apiKey === "[REDACTED]"
-  );
+  )
 
-  console.log("\n🎉 Security tests completed! Check results above.");
+  console.log("\n🎉 Security tests completed! Check results above.")
 }
 
-testSecurityHardening();
+testSecurityHardening()
 ```
 
 #### 6. HTTP Status Code Testing
@@ -860,24 +854,24 @@ curl -i http://localhost:2112/test-security?test=database
 ```javascript
 // Run in browser console
 async function testMemoryLimit() {
-  console.log("Generating 1100 errors...");
+  console.log("Generating 1100 errors...")
   for (let i = 0; i < 1100; i++) {
-    await fetch("/test-security?test=validation");
-    if (i % 100 === 0) console.log(`Progress: ${i}/1100`);
+    await fetch("/test-security?test=validation")
+    if (i % 100 === 0) console.log(`Progress: ${i}/1100`)
   }
-  console.log("✅ Generated 1100 errors");
-  console.log("Check server - ErrorLogger should only keep 1000");
+  console.log("✅ Generated 1100 errors")
+  console.log("Check server - ErrorLogger should only keep 1000")
 }
 
-testMemoryLimit();
+testMemoryLimit()
 ```
 
 **Verify in server code:**
 
 ```typescript
 // Add temporarily to check
-const logger = ErrorLogger.getInstance();
-console.log("Log count:", logger.getLogCount()); // Should be 1000, not 1100 ✅
+const logger = ErrorLogger.getInstance()
+console.log("Log count:", logger.getLogCount()) // Should be 1000, not 1100 ✅
 ```
 
 ### Manual Testing Checklist

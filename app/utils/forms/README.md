@@ -14,22 +14,24 @@ This directory contains common form handling logic that can be used throughout t
 ## Quick Start
 
 ```typescript
-import { useFormSubmit, createValidator, commonValidators } from '~/utils/forms'
+import { useFormSubmit, createValidator, commonValidators } from "~/utils/forms"
 
 // In your component
 function LoginForm() {
   const { handleSubmit, isSubmitting, errors } = useFormSubmit<LoginData>({
     validate: createValidator({
       email: commonValidators.email,
-      password: commonValidators.required('Password')
+      password: commonValidators.required("Password"),
     }),
-    onSuccess: (result) => navigate('/dashboard')
+    onSuccess: (result) => navigate("/dashboard"),
   })
 
   return (
-    <form onSubmit={handleSubmit(async (data) => {
-      return await loginUser(data)
-    })}>
+    <form
+      onSubmit={handleSubmit(async (data) => {
+        return await loginUser(data)
+      })}
+    >
       {/* form fields */}
       {errors && <div>{errors._form}</div>}
       <button disabled={isSubmitting}>Login</button>
@@ -59,14 +61,14 @@ const { handleSubmit, isSubmitting, errors, clearErrors, setFieldError } = useFo
 ```typescript
 const { handleSubmit, isSubmitting, errors } = useFormSubmit<SignUpData>({
   validate: (data) => {
-    if (!data.email) return { email: 'Email is required' }
+    if (!data.email) return { email: "Email is required" }
     if (data.password !== data.confirmPassword) {
-      return { confirmPassword: 'Passwords must match' }
+      return { confirmPassword: "Passwords must match" }
     }
     return null
   },
-  onSuccess: () => navigate('/welcome'),
-  resetOnSuccess: true
+  onSuccess: () => navigate("/welcome"),
+  resetOnSuccess: true,
 })
 ```
 
@@ -82,16 +84,16 @@ export const action = createFormAction(
   },
   {
     validate: (data) => {
-      if (!data.email) return { error: 'Email is required' }
+      if (!data.email) return { error: "Email is required" }
       return null
     },
     transform: (formData) => {
       // Custom transformation
       return {
-        email: formData.get('email'),
-        password: formData.get('password')
+        email: formData.get("email"),
+        password: formData.get("password"),
       }
-    }
+    },
   }
 )
 ```
@@ -102,10 +104,10 @@ export const action = createFormAction(
 
 ```typescript
 const formData = new FormData()
-const data = extractFormData<{ email: string; password: string }>(
-  formData,
-  ['email', 'password']
-)
+const data = extractFormData<{ email: string; password: string }>(formData, [
+  "email",
+  "password",
+])
 ```
 
 **`formDataToObject`** - Convert FormData to plain object:
@@ -123,14 +125,14 @@ const data = formDataToObject(formData)
 Pre-built validators for common use cases:
 
 ```typescript
-import { commonValidators, createValidator } from '~/utils/forms'
+import { commonValidators, createValidator } from "~/utils/forms"
 
 const validate = createValidator({
   email: commonValidators.email,
   password: commonValidators.password,
-  confirmPassword: commonValidators.confirmPassword('password'),
-  username: commonValidators.required('Username'),
-  bio: commonValidators.maxLength('Bio', 500)
+  confirmPassword: commonValidators.confirmPassword("password"),
+  username: commonValidators.required("Username"),
+  bio: commonValidators.maxLength("Bio", 500),
 })
 ```
 
@@ -148,20 +150,21 @@ Available validators:
 Create custom validators with type safety:
 
 ```typescript
-import { createValidator } from '~/utils/forms'
+import { createValidator } from "~/utils/forms"
 
 const validate = createValidator<SignUpData>({
   username: (value, allValues) => {
-    if (!value) return 'Username is required'
-    if (value.length < 3) return 'Username must be at least 3 characters'
-    if (!/^[a-zA-Z0-9_]+$/.test(value)) return 'Username can only contain letters, numbers, and underscores'
+    if (!value) return "Username is required"
+    if (value.length < 3) return "Username must be at least 3 characters"
+    if (!/^[a-zA-Z0-9_]+$/.test(value))
+      return "Username can only contain letters, numbers, and underscores"
     return null
   },
   email: (value) => {
-    if (!value) return 'Email is required'
-    if (!validateEmail(value)) return 'Invalid email format'
+    if (!value) return "Email is required"
+    if (!validateEmail(value)) return "Invalid email format"
     return null
-  }
+  },
 })
 ```
 
@@ -170,24 +173,24 @@ const validate = createValidator<SignUpData>({
 Low-level validation functions:
 
 ```typescript
-import { validateEmail, validatePassword, validateMatch } from '~/utils/forms'
+import { validateEmail, validatePassword, validateMatch } from "~/utils/forms"
 
 // Email validation
 if (!validateEmail(email)) {
-  setError('Invalid email')
+  setError("Invalid email")
 }
 
 // Password strength
 const result = validatePassword(password, {
   minLength: 10,
-  requireSpecialChars: true
+  requireSpecialChars: true,
 })
 if (!result.valid) {
   setError(result.message)
 }
 
 // Field matching
-const error = validateMatch(password, confirmPassword, 'Passwords')
+const error = validateMatch(password, confirmPassword, "Passwords")
 if (error) {
   setError(error)
 }
@@ -198,12 +201,12 @@ if (error) {
 Validate with Zod schemas:
 
 ```typescript
-import { z } from 'zod'
-import { validateWithZod } from '~/utils/forms'
+import { z } from "zod"
+import { validateWithZod } from "~/utils/forms"
 
 const schema = z.object({
   email: z.string().email(),
-  password: z.string().min(8)
+  password: z.string().min(8),
 })
 
 const result = validateWithZod(schema, data)
@@ -222,7 +225,7 @@ if (!result.success) {
 Protect against XSS attacks:
 
 ```typescript
-import { sanitizeFormInput, sanitizeFormData } from '~/utils/forms'
+import { sanitizeFormInput, sanitizeFormData } from "~/utils/forms"
 
 // Sanitize single input
 const clean = sanitizeFormInput(userInput)
@@ -245,10 +248,10 @@ The sanitization removes:
 Consistent error messages:
 
 ```typescript
-import { VALIDATION_MESSAGES } from '~/utils/forms'
+import { VALIDATION_MESSAGES } from "~/utils/forms"
 
-VALIDATION_MESSAGES.required('Email') // "Email is required"
-VALIDATION_MESSAGES.minLength('Password', 8) // "Password must be at least 8 characters"
+VALIDATION_MESSAGES.required("Email") // "Email is required"
+VALIDATION_MESSAGES.minLength("Password", 8) // "Password must be at least 8 characters"
 VALIDATION_MESSAGES.email // "Please enter a valid email address"
 ```
 
@@ -264,11 +267,12 @@ const { handleSubmit } = useFormSubmit<LoginData>({ ... })
 
 ```typescript
 const validate = createValidator({
-  password: (value) => combineValidationErrors(
-    validateRequired(value, 'Password'),
-    validateMinLength(value, 8, 'Password'),
-    validatePassword(value).valid ? null : 'Password too weak'
-  )
+  password: (value) =>
+    combineValidationErrors(
+      validateRequired(value, "Password"),
+      validateMinLength(value, 8, "Password"),
+      validatePassword(value).valid ? null : "Password too weak"
+    ),
 })
 ```
 
@@ -276,7 +280,7 @@ const validate = createValidator({
 
 ```typescript
 const { handleSubmit } = useFormSubmit({
-  transform: (data) => sanitizeFormData(data)
+  transform: (data) => sanitizeFormData(data),
 })
 ```
 
@@ -288,7 +292,7 @@ const { handleSubmit, errors } = useFormSubmit({
     if (error instanceof AppError) {
       toast.error(error.toUserMessage())
     }
-  }
+  },
 })
 ```
 
@@ -317,17 +321,17 @@ const handleSubmit = async (e: FormEvent) => {
   e.preventDefault()
   const formData = new FormData(e.target as HTMLFormElement)
   const data = Object.fromEntries(formData)
-  
+
   // Validation
   if (!data.email) {
-    setError('Email is required')
+    setError("Email is required")
     return
   }
-  
+
   setIsSubmitting(true)
   try {
     await submitForm(data)
-    navigate('/success')
+    navigate("/success")
   } catch (error) {
     setError(error.message)
   } finally {
@@ -354,6 +358,7 @@ const { handleSubmit, isSubmitting, errors } = useFormSubmit<FormData>({
 ```
 
 Benefits:
+
 - ✅ Less boilerplate code
 - ✅ Consistent error handling
 - ✅ Type safety
@@ -377,4 +382,3 @@ For questions or issues with the form utilities, please:
 2. Review the test files for usage patterns
 3. Read the JSDoc comments in the source code
 4. Consult with the development team
-

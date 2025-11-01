@@ -1,4 +1,4 @@
-import { type FC } from 'react'
+import { type FC } from "react"
 
 interface PasswordMatchIndicatorProps {
   confirmPassword: string
@@ -7,7 +7,7 @@ interface PasswordMatchIndicatorProps {
 
 const PasswordMatchIndicator: FC<PasswordMatchIndicatorProps> = ({
   confirmPassword,
-  newPassword
+  newPassword,
 }) => {
   const passwordsMatch = newPassword === confirmPassword
 

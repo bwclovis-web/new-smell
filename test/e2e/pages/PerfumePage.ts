@@ -1,6 +1,6 @@
-import { Page } from '@playwright/test'
+import { Page } from "@playwright/test"
 
-import { BasePage } from './BasePage'
+import { BasePage } from "./BasePage"
 
 /**
  * Individual perfume page object model
@@ -27,7 +27,7 @@ export class PerfumePage extends BasePage {
     userRating: '[data-testid="user-rating"]',
     loadingSpinner: '[data-testid="loading-spinner"]',
     errorMessage: '[data-testid="error-message"]',
-    successMessage: '[data-testid="success-message"]'
+    successMessage: '[data-testid="success-message"]',
   }
 
   constructor(page: Page) {
@@ -47,7 +47,7 @@ export class PerfumePage extends BasePage {
    */
   async getPerfumeName(): Promise<string> {
     const element = this.page.locator(this.selectors.perfumeName)
-    return await element.textContent() || ''
+    return (await element.textContent()) || ""
   }
 
   /**
@@ -55,7 +55,7 @@ export class PerfumePage extends BasePage {
    */
   async getPerfumeHouse(): Promise<string> {
     const element = this.page.locator(this.selectors.perfumeHouse)
-    return await element.textContent() || ''
+    return (await element.textContent()) || ""
   }
 
   /**
@@ -63,14 +63,16 @@ export class PerfumePage extends BasePage {
    */
   async getPerfumeDescription(): Promise<string> {
     const element = this.page.locator(this.selectors.perfumeDescription)
-    return await element.textContent() || ''
+    return (await element.textContent()) || ""
   }
 
   /**
    * Get perfume notes
    */
   async getPerfumeNotes(): Promise<string[]> {
-    const elements = await this.page.locator(this.selectors.perfumeNotes).allTextContents()
+    const elements = await this.page
+      .locator(this.selectors.perfumeNotes)
+      .allTextContents()
     return elements
   }
 
@@ -88,7 +90,7 @@ export class PerfumePage extends BasePage {
   async isInWishlist(): Promise<boolean> {
     const button = this.page.locator(this.selectors.wishlistButton)
     const text = await button.textContent()
-    return text?.includes('Remove') || text?.includes('Added') || false
+    return text?.includes("Remove") || text?.includes("Added") || false
   }
 
   /**
@@ -96,7 +98,9 @@ export class PerfumePage extends BasePage {
    */
   async ratePerfume(rating: number): Promise<void> {
     // Click on the star rating
-    const star = this.page.locator(`${this.selectors.ratingStars} [data-rating="${rating}"]`)
+    const star = this.page.locator(
+      `${this.selectors.ratingStars} [data-rating="${rating}"]`
+    )
     await star.click()
     await this.waitForReady()
   }
@@ -120,7 +124,7 @@ export class PerfumePage extends BasePage {
    */
   async getAverageRating(): Promise<string> {
     const element = this.page.locator(this.selectors.averageRating)
-    return await element.textContent() || ''
+    return (await element.textContent()) || ""
   }
 
   /**
@@ -128,7 +132,7 @@ export class PerfumePage extends BasePage {
    */
   async getRatingCount(): Promise<string> {
     const element = this.page.locator(this.selectors.ratingCount)
-    return await element.textContent() || ''
+    return (await element.textContent()) || ""
   }
 
   /**
@@ -136,7 +140,7 @@ export class PerfumePage extends BasePage {
    */
   async getUserRating(): Promise<string> {
     const element = this.page.locator(this.selectors.userRating)
-    return await element.textContent() || ''
+    return (await element.textContent()) || ""
   }
 
   /**
@@ -183,7 +187,7 @@ export class PerfumePage extends BasePage {
    */
   async getErrorMessage(): Promise<string> {
     const element = this.page.locator(this.selectors.errorMessage)
-    return await element.textContent() || ''
+    return (await element.textContent()) || ""
   }
 
   /**
@@ -221,11 +225,13 @@ export class PerfumePage extends BasePage {
    * Assert wishlist button state
    */
   async assertWishlistState(isInWishlist: boolean): Promise<void> {
-    const buttonText = await this.page.locator(this.selectors.wishlistButton).textContent()
+    const buttonText = await this.page
+      .locator(this.selectors.wishlistButton)
+      .textContent()
     if (isInWishlist) {
-      expect(buttonText).toContain('Remove')
+      expect(buttonText).toContain("Remove")
     } else {
-      expect(buttonText).toContain('Add')
+      expect(buttonText).toContain("Add")
     }
   }
 

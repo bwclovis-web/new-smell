@@ -1,6 +1,6 @@
-import React, { ComponentType, lazy, Suspense } from 'react'
+import React, { ComponentType, lazy, Suspense } from "react"
 
-import { styleMerge } from '~/utils/styleUtils'
+import { styleMerge } from "~/utils/styleUtils"
 
 interface LazyRouteProps {
   importFn: () => Promise<{ default: ComponentType<any> }>
@@ -20,12 +20,12 @@ const DefaultFallback = () => (
 const LazyRoute: React.FC<LazyRouteProps> = ({
   importFn,
   fallback = <DefaultFallback />,
-  className
+  className,
 }) => {
   const LazyComponent = lazy(importFn)
 
   return (
-    <div className={styleMerge('w-full', className)}>
+    <div className={styleMerge("w-full", className)}>
       <Suspense fallback={fallback}>
         <LazyComponent />
       </Suspense>

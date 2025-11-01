@@ -14,14 +14,14 @@ const BottleAccents = ({ category }: { category: string }) => (
     />
 
     {/* Category-specific decorative elements */}
-    {category === 'longevity' && (
+    {category === "longevity" && (
       <>
         <circle cx="15" cy="17" r="0.6" fill="#F4E4BC" opacity="0.8" />
         <circle cx="15" cy="19" r="0.4" fill="#D4AF37" opacity="0.6" />
       </>
     )}
 
-    {category === 'sillage' && (
+    {category === "sillage" && (
       <>
         <circle cx="14" cy="16" r="0.3" fill="#F4E4BC" opacity="0.6" />
         <circle cx="15" cy="18" r="0.4" fill="#F4E4BC" opacity="0.7" />
@@ -29,18 +29,11 @@ const BottleAccents = ({ category }: { category: string }) => (
       </>
     )}
 
-    {category === 'gender' && (
-      <rect
-        x="14.5"
-        y="16"
-        width="1"
-        height="5"
-        fill="#F4E4BC"
-        opacity="0.7"
-      />
+    {category === "gender" && (
+      <rect x="14.5" y="16" width="1" height="5" fill="#F4E4BC" opacity="0.7" />
     )}
 
-    {category === 'priceValue' && (
+    {category === "priceValue" && (
       <text
         x="15"
         y="19"

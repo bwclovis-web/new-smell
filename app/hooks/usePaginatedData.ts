@@ -2,9 +2,9 @@
  * Hook for paginated data fetching with common pagination patterns
  */
 
-import { useCallback, useState } from 'react'
+import { useCallback, useState } from "react"
 
-import { useDataFetching, UseDataFetchingOptions } from './useDataFetching'
+import { useDataFetching, UseDataFetchingOptions } from "./useDataFetching"
 
 export interface PaginationMeta {
   page: number
@@ -20,7 +20,7 @@ export interface PaginatedResponse<T> {
 }
 
 export interface UsePaginatedDataOptions<T>
-  extends Omit<UseDataFetchingOptions<PaginatedResponse<T>>, 'url' | 'deps'> {
+  extends Omit<UseDataFetchingOptions<PaginatedResponse<T>>, "url" | "deps"> {
   /**
    * Base URL for the API endpoint
    */
@@ -168,12 +168,12 @@ export function usePaginatedData<T = unknown>(
   // Build URL with pagination params
   const buildUrl = useCallback(() => {
     const searchParams = new URLSearchParams()
-    searchParams.set('page', currentPage.toString())
-    searchParams.set('pageSize', pageSize.toString())
+    searchParams.set("page", currentPage.toString())
+    searchParams.set("pageSize", pageSize.toString())
 
     // Add custom params
     Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
+      if (value !== undefined && value !== null && value !== "") {
         searchParams.set(key, String(value))
       }
     })
@@ -188,11 +188,11 @@ export function usePaginatedData<T = unknown>(
     error,
     isError,
     refetch: baseRefetch,
-    clearError
+    clearError,
   } = useDataFetching<PaginatedResponse<T>>({
     url: buildUrl,
     deps: [currentPage, pageSize, params],
-    ...restOptions
+    ...restOptions,
   })
 
   // Handle accumulated data for infinite scroll
@@ -210,10 +210,10 @@ export function usePaginatedData<T = unknown>(
       // Append new page data
       const lastId = accumulatedData[accumulatedData.length - 1]
       const firstNewId = response.data[0]
-      
+
       // Only append if it's actually new data (prevent duplicates)
       if (lastId !== firstNewId) {
-        setAccumulatedData(prev => [...prev, ...response.data])
+        setAccumulatedData((prev) => [...prev, ...response.data])
       }
     }
     setIsLoadingMore(false)
@@ -272,9 +272,8 @@ export function usePaginatedData<T = unknown>(
     prevPage,
     refetch,
     reset,
-    clearError
+    clearError,
   }
 }
 
 export default usePaginatedData
-

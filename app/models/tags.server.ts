@@ -1,4 +1,4 @@
-import { prisma } from '~/db.server'
+import { prisma } from "~/db.server"
 
 export const getAllTags = async () => {
   const tags = await prisma.perfumeNotes.findMany()
@@ -16,25 +16,25 @@ export const getTagsByName = async (name: string) => {
   const exactMatches = await prisma.perfumeNotes.findMany({
     where: {
       OR: [
-        { name: { equals: searchTerm, mode: 'insensitive' } },
-        { name: { startsWith: searchTerm, mode: 'insensitive' } }
-      ]
+        { name: { equals: searchTerm, mode: "insensitive" } },
+        { name: { startsWith: searchTerm, mode: "insensitive" } },
+      ],
     },
-    orderBy: { name: 'asc' },
-    take: 5
+    orderBy: { name: "asc" },
+    take: 5,
   })
 
   // Then, try contains matches (lower priority)
   const containsMatches = await prisma.perfumeNotes.findMany({
     where: {
       AND: [
-        { name: { contains: searchTerm, mode: 'insensitive' } },
+        { name: { contains: searchTerm, mode: "insensitive" } },
         // Exclude items already found in exact matches
-        { id: { notIn: exactMatches.map(t => t.id) } }
-      ]
+        { id: { notIn: exactMatches.map((t) => t.id) } },
+      ],
     },
-    orderBy: { name: 'asc' },
-    take: 5
+    orderBy: { name: "asc" },
+    take: 5,
   })
 
   // Combine and rank results
@@ -42,9 +42,9 @@ export const getTagsByName = async (name: string) => {
 
   // Sort by relevance score
   const rankedResults = allResults
-    .map(tag => ({
+    .map((tag) => ({
       ...tag,
-      relevanceScore: calculateTagRelevanceScore(tag.name, searchTerm)
+      relevanceScore: calculateTagRelevanceScore(tag.name, searchTerm),
     }))
     .sort((a, b) => b.relevanceScore - a.relevanceScore)
     .slice(0, 10)
@@ -76,7 +76,7 @@ const calculateTagRelevanceScore = (tagName: string, searchTerm: string): number
   score += Math.max(0, 20 - name.length)
 
   // Bonus for matches at word boundaries
-  const wordBoundaryRegex = new RegExp(`\\b${term}`, 'i')
+  const wordBoundaryRegex = new RegExp(`\\b${term}`, "i")
   if (wordBoundaryRegex.test(name)) {
     score += 20
   }
@@ -87,8 +87,8 @@ const calculateTagRelevanceScore = (tagName: string, searchTerm: string): number
 export const createTag = async (name: string) => {
   const tag = await prisma.perfumeNotes.create({
     data: {
-      name
-    }
+      name,
+    },
   })
   return tag
 }

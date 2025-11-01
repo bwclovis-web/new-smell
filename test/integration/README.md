@@ -74,41 +74,41 @@ Integration tests use a separate Vitest configuration (`vitest.config.integratio
 ### Basic Structure
 
 ```typescript
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import type { LoaderFunctionArgs } from "react-router";
+import { describe, it, expect, beforeEach, vi } from "vitest"
+import type { LoaderFunctionArgs } from "react-router"
 
-import { loader } from "~/routes/your-route";
-import * as yourModel from "~/models/your-model.server";
+import { loader } from "~/routes/your-route"
+import * as yourModel from "~/models/your-model.server"
 
-vi.mock("~/models/your-model.server");
+vi.mock("~/models/your-model.server")
 
 describe("Your Route Integration Tests", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-  });
+    vi.clearAllMocks()
+  })
 
   describe("Loader", () => {
     it("should load data successfully", async () => {
       // Arrange
-      const mockData = { id: "1", name: "Test" };
-      vi.mocked(yourModel.getData).mockResolvedValue(mockData);
+      const mockData = { id: "1", name: "Test" }
+      vi.mocked(yourModel.getData).mockResolvedValue(mockData)
 
-      const request = new Request("https://example.com/your-route");
+      const request = new Request("https://example.com/your-route")
       const args: LoaderFunctionArgs = {
         request,
         params: {},
         context: {},
-      };
+      }
 
       // Act
-      const result = await loader(args);
+      const result = await loader(args)
 
       // Assert
-      expect(result).toEqual(mockData);
-      expect(yourModel.getData).toHaveBeenCalled();
-    });
-  });
-});
+      expect(result).toEqual(mockData)
+      expect(yourModel.getData).toHaveBeenCalled()
+    })
+  })
+})
 ```
 
 ### Testing Loaders
@@ -118,26 +118,26 @@ describe("Loader", () => {
   it("should load data with authentication", async () => {
     vi.mocked(sessionManager.verifyAccessToken).mockReturnValue({
       userId: "user-123",
-    });
-    vi.mocked(userServer.getUserById).mockResolvedValue(mockUser);
+    })
+    vi.mocked(userServer.getUserById).mockResolvedValue(mockUser)
 
     const request = new Request("https://example.com/route", {
       headers: {
         cookie: cookie.serialize("accessToken", "valid-token"),
       },
-    });
+    })
 
     const args: LoaderFunctionArgs = {
       request,
       params: { id: "123" },
       context: {},
-    };
+    }
 
-    const result = await loader(args);
+    const result = await loader(args)
 
-    expect(result.user).toEqual(mockUser);
-  });
-});
+    expect(result.user).toEqual(mockUser)
+  })
+})
 ```
 
 ### Testing Actions
@@ -145,30 +145,30 @@ describe("Loader", () => {
 ```typescript
 describe("Action", () => {
   it("should handle form submission", async () => {
-    vi.mocked(yourModel.create).mockResolvedValue(mockCreatedItem);
+    vi.mocked(yourModel.create).mockResolvedValue(mockCreatedItem)
 
-    const formData = new FormData();
-    formData.append("name", "Test Name");
-    formData.append("_action", "create");
+    const formData = new FormData()
+    formData.append("name", "Test Name")
+    formData.append("_action", "create")
 
     const request = new Request("https://example.com/route", {
       method: "POST",
       body: formData,
-    });
+    })
 
     const args: ActionFunctionArgs = {
       request,
       params: {},
       context: {},
-    };
+    }
 
-    const response = await action(args);
+    const response = await action(args)
 
     expect(yourModel.create).toHaveBeenCalledWith(
       expect.objectContaining({ name: "Test Name" })
-    );
-  });
-});
+    )
+  })
+})
 ```
 
 ### Testing Error Handling
@@ -177,34 +177,34 @@ describe("Action", () => {
 it("should handle database errors gracefully", async () => {
   vi.mocked(yourModel.getData).mockRejectedValue(
     new Error("Database connection failed")
-  );
+  )
 
-  const request = new Request("https://example.com/route");
+  const request = new Request("https://example.com/route")
   const args: LoaderFunctionArgs = {
     request,
     params: {},
     context: {},
-  };
+  }
 
-  await expect(loader(args)).rejects.toThrow("Database connection failed");
-});
+  await expect(loader(args)).rejects.toThrow("Database connection failed")
+})
 ```
 
 ### Testing Authorization
 
 ```typescript
 it("should deny access to unauthorized users", async () => {
-  vi.mocked(sessionManager.verifyAccessToken).mockReturnValue(null);
+  vi.mocked(sessionManager.verifyAccessToken).mockReturnValue(null)
 
-  const request = new Request("https://example.com/admin/route");
+  const request = new Request("https://example.com/admin/route")
   const args: LoaderFunctionArgs = {
     request,
     params: {},
     context: {},
-  };
+  }
 
-  await expect(loader(args)).rejects.toThrow();
-});
+  await expect(loader(args)).rejects.toThrow()
+})
 ```
 
 ## Best Practices
@@ -230,19 +230,19 @@ const mockAuthRequest = (token: string) =>
     headers: {
       cookie: cookie.serialize("accessToken", token),
     },
-  });
+  })
 ```
 
 ### Form Data Creation
 
 ```typescript
 const createFormData = (data: Record<string, string>) => {
-  const formData = new FormData();
+  const formData = new FormData()
   Object.entries(data).forEach(([key, value]) => {
-    formData.append(key, value);
-  });
-  return formData;
-};
+    formData.append(key, value)
+  })
+  return formData
+}
 ```
 
 ### Mock Data Factories
@@ -256,7 +256,7 @@ const createMockUser = (overrides = {}) => ({
   createdAt: new Date(),
   updatedAt: new Date(),
   ...overrides,
-});
+})
 ```
 
 ## Coverage Goals
@@ -275,7 +275,7 @@ Increase timeout in test:
 ```typescript
 it("should handle long operation", async () => {
   // Test code
-}, 60000); // 60 second timeout
+}, 60000) // 60 second timeout
 ```
 
 ### Mock Not Working
@@ -283,8 +283,8 @@ it("should handle long operation", async () => {
 Ensure mock is declared before import:
 
 ```typescript
-vi.mock("~/models/your-model.server");
-import { loader } from "~/routes/your-route";
+vi.mock("~/models/your-model.server")
+import { loader } from "~/routes/your-route"
 ```
 
 ### Database Connection Errors

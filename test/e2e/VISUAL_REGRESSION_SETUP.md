@@ -41,10 +41,10 @@ The tests use placeholder selectors (e.g., `data-testid="perfume-card"`). You'll
 
 ```typescript
 // Example adjustments needed:
-'[data-testid="search-input"]'; // Update to match your search input
-'[data-testid="perfume-card"]'; // Update to match your perfume card
-'[data-testid="mobile-navigation"]'; // Update to match your mobile nav
-'[data-testid="modal-trigger"]'; // Update to match your modal buttons
+'[data-testid="search-input"]' // Update to match your search input
+'[data-testid="perfume-card"]' // Update to match your perfume card
+'[data-testid="mobile-navigation"]' // Update to match your mobile nav
+'[data-testid="modal-trigger"]' // Update to match your modal buttons
 // etc.
 ```
 
@@ -116,16 +116,16 @@ On first run (creating baselines):
 ### Before (Generic)
 
 ```typescript
-const perfumeCard = page.locator('[data-testid="perfume-card"]').first();
+const perfumeCard = page.locator('[data-testid="perfume-card"]').first()
 ```
 
 ### After (Adjusted to Your App)
 
 ```typescript
 // If your app uses different selectors:
-const perfumeCard = page.locator("[data-perfume-id]").first();
+const perfumeCard = page.locator("[data-perfume-id]").first()
 // OR
-const perfumeCard = page.locator(".perfume-card").first();
+const perfumeCard = page.locator(".perfume-card").first()
 ```
 
 ## Adding data-testid Attributes
@@ -137,15 +137,11 @@ If components don't have data-testid attributes, add them:
 export function PerfumeCard({ perfume }: Props) {
   return (
     <div data-testid="perfume-card" className="...">
-      <img
-        data-testid="perfume-card-image"
-        src={perfume.image}
-        alt={perfume.name}
-      />
+      <img data-testid="perfume-card-image" src={perfume.image} alt={perfume.name} />
       <h3 data-testid="perfume-card-title">{perfume.name}</h3>
       <p data-testid="perfume-card-house">{perfume.house.name}</p>
     </div>
-  );
+  )
 }
 ```
 
@@ -155,9 +151,9 @@ export function PerfumeCard({ perfume }: Props) {
 
 ```typescript
 // Check if element exists before testing
-const element = page.locator('[data-testid="element"]').first();
+const element = page.locator('[data-testid="element"]').first()
 if ((await element.count()) > 0) {
-  await expect(element).toHaveScreenshot("element.png");
+  await expect(element).toHaveScreenshot("element.png")
 }
 ```
 

@@ -1,4 +1,4 @@
-import { type FC } from 'react'
+import { type FC } from "react"
 
 interface PasswordInputProps {
   id: string
@@ -21,19 +21,20 @@ const PasswordInput: FC<PasswordInputProps> = ({
   showPassword,
   onToggleVisibility,
   hasError = false,
-  required = false
+  required = false,
 }) => (
   <div className="relative">
     <input
-      type={showPassword ? 'text' : 'password'}
+      type={showPassword ? "text" : "password"}
       id={id}
       name={name}
       value={value}
       onChange={onChange}
-      className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${hasError
-          ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-          : 'border-gray-300'
-        }`}
+      className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+        hasError
+          ? "border-red-300 focus:ring-red-500 focus:border-red-500"
+          : "border-gray-300"
+      }`}
       placeholder={placeholder}
       required={required}
     />
@@ -42,7 +43,7 @@ const PasswordInput: FC<PasswordInputProps> = ({
       onClick={onToggleVisibility}
       className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
     >
-      {showPassword ? '🙈' : '👁️'}
+      {showPassword ? "🙈" : "👁️"}
     </button>
   </div>
 )

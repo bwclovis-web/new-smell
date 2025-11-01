@@ -1,14 +1,14 @@
-import { type FC, type HTMLProps, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { type FC, type HTMLProps, useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 
-import Modal from '~/components/Organisms/Modal'
-import { useSessionStore } from '~/stores/sessionStore'
-import { styleMerge } from '~/utils/styleUtils'
+import Modal from "~/components/Organisms/Modal"
+import { useSessionStore } from "~/stores/sessionStore"
+import { styleMerge } from "~/utils/styleUtils"
 
-import MobileHeader from './components/MobileHeader'
-import NavigationLinks from './components/NavigationLinks'
-import QuickActions from './components/QuickActions'
-import UserSection from './components/UserSection'
+import MobileHeader from "./components/MobileHeader"
+import NavigationLinks from "./components/NavigationLinks"
+import QuickActions from "./components/QuickActions"
+import UserSection from "./components/UserSection"
 
 interface MobileNavigationProps extends HTMLProps<HTMLDivElement> {
   user?: {
@@ -21,13 +21,13 @@ interface MobileNavigationProps extends HTMLProps<HTMLDivElement> {
 const MobileNavigation = ({
   className,
   user,
-  onMenuClose
+  onMenuClose,
 }: MobileNavigationProps) => {
   const { t, ready } = useTranslation()
   const [isClientReady, setIsClientReady] = useState(false)
   const { toggleModal, modalOpen, modalId } = useSessionStore()
   const menuButtonRef = useRef<HTMLButtonElement>(null)
-  const MOBILE_MENU_ID = 'mobile-navigation-menu'
+  const MOBILE_MENU_ID = "mobile-navigation-menu"
 
   // Ensure client-side hydration consistency
   useEffect(() => {
@@ -44,10 +44,11 @@ const MobileNavigation = ({
     toggleModal(menuButtonRef, MOBILE_MENU_ID)
   }
 
-  const logoText = ready && isClientReady ? t('navigation.logo') : 'Shadow and Sillage'
+  const logoText =
+    ready && isClientReady ? t("navigation.logo") : "Shadow and Sillage"
 
   return (
-    <div className={styleMerge('mobile-nav md:hidden fixed w-full z-30', className)}>
+    <div className={styleMerge("mobile-nav md:hidden fixed w-full z-30", className)}>
       <MobileHeader
         logoText={logoText}
         menuButtonRef={menuButtonRef}
@@ -59,11 +60,7 @@ const MobileNavigation = ({
 
       {/* Mobile Menu Modal */}
       {modalOpen && modalId === MOBILE_MENU_ID && (
-        <Modal
-          animateStart="left"
-          background="default"
-          innerType="dark"
-        >
+        <Modal animateStart="left" background="default" innerType="dark">
           <div className="flex flex-col h-full max-h-[90vh] mobile-safe-top mobile-safe-bottom pointer-events-auto overflow-y-auto">
             {/* Header */}
             <div className="flex justify-between items-center p-4 border-b border-noir-light/20 mb-4 sticky top-0 bg-noir-black/95 backdrop-blur-sm">
@@ -78,10 +75,7 @@ const MobileNavigation = ({
             />
 
             {/* User Section */}
-            <UserSection
-              user={user}
-              onNavClick={handleNavClick}
-            />
+            <UserSection user={user} onNavClick={handleNavClick} />
 
             {/* Quick Actions */}
             <QuickActions onNavClick={handleNavClick} />
@@ -93,4 +87,3 @@ const MobileNavigation = ({
 }
 
 export default MobileNavigation
-

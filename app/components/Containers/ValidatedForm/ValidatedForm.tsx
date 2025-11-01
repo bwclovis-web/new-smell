@@ -3,10 +3,10 @@
  * Integrates with the validation system and provides form state management
  */
 
-import React, { useCallback, useEffect } from 'react'
-import type { ZodSchema } from 'zod'
+import React, { useCallback, useEffect } from "react"
+import type { ZodSchema } from "zod"
 
-import { useValidation } from '~/hooks/useValidation'
+import { useValidation } from "~/hooks/useValidation"
 
 export interface ValidatedFormProps<T extends Record<string, unknown>> {
   schema: ZodSchema<T>
@@ -55,8 +55,8 @@ function ValidatedForm<T extends Record<string, unknown>>({
   validateOnSubmit = true,
   debounceMs = 300,
   transform,
-  className = '',
-  children
+  className = "",
+  children,
 }: ValidatedFormProps<T>) {
   const form = useValidation({
     schema,
@@ -65,7 +65,7 @@ function ValidatedForm<T extends Record<string, unknown>>({
     validateOnBlur,
     validateOnSubmit,
     debounceMs,
-    transform
+    transform,
   })
 
   const handleSubmit = useCallback(
@@ -92,22 +92,16 @@ function ValidatedForm<T extends Record<string, unknown>>({
           onReset()
         }
       } catch (error) {
-        console.error('Form submission error:', error)
+        console.error("Form submission error:", error)
       } finally {
         form.setSubmitting(false)
       }
     },
-    [
-form, validateOnSubmit, onSubmit, onReset
-]
+    [form, validateOnSubmit, onSubmit, onReset]
   )
 
   return (
-    <form
-      className={`space-y-6 ${className}`}
-      onSubmit={handleSubmit}
-      noValidate
-    >
+    <form className={`space-y-6 ${className}`} onSubmit={handleSubmit} noValidate>
       {children({
         values: form.values,
         errors: form.errors,
@@ -130,7 +124,7 @@ form, validateOnSubmit, onSubmit, onReset
         handleBlur: form.handleBlur,
         handleSubmit,
         reset: form.reset,
-        resetToValues: form.resetToValues
+        resetToValues: form.resetToValues,
       })}
     </form>
   )

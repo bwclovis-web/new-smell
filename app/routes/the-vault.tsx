@@ -1,19 +1,19 @@
-export const ROUTE_PATH = '/the-vault'
-import { useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { type MetaFunction, useLocation } from 'react-router'
+export const ROUTE_PATH = "/the-vault"
+import { useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
+import { type MetaFunction, useLocation } from "react-router"
 
-import AlphabeticalNav from '~/components/Organisms/AlphabeticalNav'
-import DataDisplaySection from '~/components/Organisms/DataDisplaySection'
-import DataFilters from '~/components/Organisms/DataFilters'
-import TitleBanner from '~/components/Organisms/TitleBanner'
-import useDataByLetter from '~/hooks/useDataByLetter'
-import { useInfiniteScrollPerfumes } from '~/hooks/useInfiniteScrollPerfumes'
-import useLetterSelection from '~/hooks/useLetterSelection'
-import { getDefaultSortOptions } from '~/utils/sortUtils'
+import AlphabeticalNav from "~/components/Organisms/AlphabeticalNav"
+import DataDisplaySection from "~/components/Organisms/DataDisplaySection"
+import DataFilters from "~/components/Organisms/DataFilters"
+import TitleBanner from "~/components/Organisms/TitleBanner"
+import useDataByLetter from "~/hooks/useDataByLetter"
+import { useInfiniteScrollPerfumes } from "~/hooks/useInfiniteScrollPerfumes"
+import useLetterSelection from "~/hooks/useLetterSelection"
+import { getDefaultSortOptions } from "~/utils/sortUtils"
 
 // No server imports needed for client component
-import banner from '../images/vault.webp'
+import banner from "../images/vault.webp"
 
 export const loader = async () =>
   // Don't load all perfumes upfront - we'll load by letter on demand
@@ -22,24 +22,26 @@ export const loader = async () =>
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
   return [
-    { title: t('allPerfumes.meta.title') },
-    { name: 'description', content: t('allPerfumes.meta.description') }
+    { title: t("allPerfumes.meta.title") },
+    { name: "description", content: t("allPerfumes.meta.description") },
   ]
 }
 
 const AllPerfumesPage = () => {
   const { t } = useTranslation()
   const location = useLocation()
-  const [selectedSort, setSelectedSort] = useState('created-desc')
+  const [selectedSort, setSelectedSort] = useState("created-desc")
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // Get selectedLetter from navigation state
-  const initialSelectedLetter =
-    (location.state as { selectedLetter?: string })?.selectedLetter
+  const initialSelectedLetter = (location.state as { selectedLetter?: string })
+    ?.selectedLetter
 
   const sortOptions = getDefaultSortOptions(t)
-  const data = useDataByLetter({ endpoint: '/api/perfumes-by-letter', itemName: 'perfumes' })
-
+  const data = useDataByLetter({
+    endpoint: "/api/perfumes-by-letter",
+    itemName: "perfumes",
+  })
 
   // Track if we've already processed the initial letter selection
   const [hasProcessedInitialLetter, setHasProcessedInitialLetter] = useState(false)
@@ -50,12 +52,16 @@ const AllPerfumesPage = () => {
     resetData: (perfumes, totalCount) => {
       // This will be called when letter changes
       resetPerfumes(perfumes, totalCount)
-    }
+    },
   })
 
   // Handle initial letter selection from navigation state
   useEffect(() => {
-    if (initialSelectedLetter && initialSelectedLetter !== selectedLetter && !hasProcessedInitialLetter) {
+    if (
+      initialSelectedLetter &&
+      initialSelectedLetter !== selectedLetter &&
+      !hasProcessedInitialLetter
+    ) {
       setHasProcessedInitialLetter(true)
       handleLetterClick(initialSelectedLetter)
     }
@@ -69,12 +75,12 @@ const AllPerfumesPage = () => {
     totalCount,
     observerRef,
     loadMorePerfumes,
-    resetPerfumes
+    resetPerfumes,
   } = useInfiniteScrollPerfumes({
-    letter: selectedLetter || '',
+    letter: selectedLetter || "",
     initialPerfumes: data.initialData,
     scrollContainerRef,
-    take: 12
+    take: 12,
   })
 
   if (data.error) {
@@ -85,15 +91,15 @@ const AllPerfumesPage = () => {
     <section>
       <TitleBanner
         image={banner}
-        heading={t('allPerfumes.heading')}
-        subheading={t('allPerfumes.subheading')}
+        heading={t("allPerfumes.heading")}
+        subheading={t("allPerfumes.subheading")}
       />
 
       <DataFilters
         searchType="perfume"
         sortOptions={sortOptions}
         selectedSort={selectedSort as any}
-        onSortChange={evt => setSelectedSort(evt.target.value)}
+        onSortChange={(evt) => setSelectedSort(evt.target.value)}
         className="mb-8"
       />
 

@@ -5,13 +5,14 @@
 When navigating to the Data Quality Dashboard, the following error occurred:
 
 ```
-Error: Canvas is already in use. Chart with ID 'X' must be destroyed 
+Error: Canvas is already in use. Chart with ID 'X' must be destroyed
 before the canvas with ID '' can be reused.
 ```
 
 ## Root Cause
 
 This error happens with `react-chartjs-2` when:
+
 1. Chart components re-render without properly destroying previous chart instances
 2. React's reconciliation tries to reuse canvas elements
 3. Chart.js attempts to create a new chart on a canvas that already has one
@@ -19,6 +20,7 @@ This error happens with `react-chartjs-2` when:
 ## Solution Applied
 
 ### 1. Register Chart.js Components Globally
+
 Created `utils/chartSetup.ts` to register Chart.js components once:
 
 ```tsx
@@ -40,6 +42,7 @@ ChartJS.register(
 **Why this works**: Ensures Chart.js plugins are registered before any charts render, preventing initialization errors.
 
 ### 2. Added Unique Keys AND IDs
+
 Each chart now has both a unique React key AND a Chart.js ID based on timeframe:
 
 ```tsx
@@ -48,12 +51,14 @@ const chartId = `missing-data-chart-${timeframe}`
 <Bar key={chartId} id={chartId} ... />
 ```
 
-**Why this works**: 
+**Why this works**:
+
 - React `key` ensures proper component lifecycle management
 - Chart.js `id` ensures each chart instance has a unique canvas identifier
 - When timeframe changes, both key and ID change, forcing complete recreation
 
 ### 3. Removed `redraw={true}` Prop
+
 Removed the `redraw` prop which was causing issues on initial load:
 
 ```tsx
@@ -67,6 +72,7 @@ Removed the `redraw` prop which was causing issues on initial load:
 **Why this works**: The `redraw` prop forces recreation on EVERY render, even the initial one, which can cause race conditions. Using keys is more predictable.
 
 ### 3. Passed Timeframe to Chart Components
+
 Updated component interfaces to receive the timeframe prop:
 
 - `ChartVisualizations` now accepts `timeframe` prop
@@ -76,14 +82,17 @@ Updated component interfaces to receive the timeframe prop:
 ## Files Modified
 
 1. ✅ `utils/chartSetup.ts` (NEW)
+
    - Registers all Chart.js components globally
    - Prevents initialization errors
    - Imported in main dashboard component
 
 2. ✅ `utils/index.ts`
+
    - Exports chartSetup module
 
 3. ✅ `components/ChartVisualizations.tsx`
+
    - Added `timeframe` prop to interface
    - Generates unique IDs for each chart
    - Adds both `key` and `id` props to Bar charts
@@ -91,6 +100,7 @@ Updated component interfaces to receive the timeframe prop:
    - Added React import
 
 4. ✅ `components/TrendChart.tsx`
+
    - Added `timeframe` prop to interface
    - Generates unique ID for chart
    - Adds both `key` and `id` props to Line chart
@@ -98,10 +108,12 @@ Updated component interfaces to receive the timeframe prop:
    - Added React import
 
 5. ✅ `components/DashboardContent.tsx`
+
    - Passes `timeframe` to ChartVisualizations
    - Passes `timeframe` to TrendChart
 
 6. ✅ `DataQualityDashboardRefactored.tsx`
+
    - Imports './utils/chartSetup' to register Chart.js
 
 7. ✅ `DataQualityDashboard.test.tsx`
@@ -155,12 +167,15 @@ To verify the fix:
 ## Alternative Approaches (Considered but Not Used)
 
 ### 1. Using `redraw={true}` Prop ❌
+
 ```tsx
 <Bar redraw={true} ... />
 ```
+
 **Why not used**: Causes issues on initial load, forces recreation on EVERY render including the first mount, leading to race conditions
 
 ### 2. Manual Chart Destruction
+
 ```tsx
 useEffect(() => {
   return () => {
@@ -168,23 +183,29 @@ useEffect(() => {
   }
 }, [])
 ```
+
 **Why not used**: More complex, less declarative, harder to maintain
 
 ### 3. Single Static Key
+
 ```tsx
 <Bar key="static-chart-key" />
 ```
+
 **Why not used**: Doesn't help with canvas reuse on timeframe changes
 
 ### 4. Random Keys
+
 ```tsx
 <Bar key={Math.random()} />
 ```
+
 **Why not used**: Recreates charts unnecessarily on every render, terrible performance
 
 ## React Strict Mode Compatibility
 
 The solution works correctly in React Strict Mode (development):
+
 - Strict Mode causes double mounting to detect side effects
 - Our approach using unique `key` + `id` handles this gracefully
 - Each mount gets a unique chart instance
@@ -226,4 +247,3 @@ The solution works correctly in React Strict Mode (development):
 **Date**: October 29, 2024
 **Impact**: High (prevents runtime errors)
 **Testing**: Required (manual verification)
-

@@ -1,6 +1,6 @@
-import { Page } from '@playwright/test'
+import { Page } from "@playwright/test"
 
-import { BasePage } from './BasePage'
+import { BasePage } from "./BasePage"
 
 /**
  * Sign up page object model
@@ -20,7 +20,7 @@ export class SignUpPage extends BasePage {
     loadingSpinner: '[data-testid="loading-spinner"]',
     form: '[data-testid="signup-form"]',
     passwordStrengthIndicator: '[data-testid="password-strength"]',
-    termsCheckbox: '[data-testid="terms-checkbox"]'
+    termsCheckbox: '[data-testid="terms-checkbox"]',
   }
 
   constructor(page: Page) {
@@ -31,7 +31,7 @@ export class SignUpPage extends BasePage {
    * Navigate to the sign up page
    */
   async navigateTo(): Promise<void> {
-    await this.helpers.navigateTo('/login')
+    await this.helpers.navigateTo("/login")
     await this.waitForReady()
     await this.clickSignUpTab()
   }
@@ -56,7 +56,10 @@ export class SignUpPage extends BasePage {
   }): Promise<void> {
     await this.helpers.fillField(this.selectors.emailInput, data.email)
     await this.helpers.fillField(this.selectors.passwordInput, data.password)
-    await this.helpers.fillField(this.selectors.confirmPasswordInput, data.confirmPassword)
+    await this.helpers.fillField(
+      this.selectors.confirmPasswordInput,
+      data.confirmPassword
+    )
     await this.helpers.fillField(this.selectors.firstNameInput, data.firstName)
     await this.helpers.fillField(this.selectors.lastNameInput, data.lastName)
   }
@@ -111,7 +114,7 @@ export class SignUpPage extends BasePage {
    */
   async getErrorMessage(): Promise<string> {
     const element = this.page.locator(this.selectors.errorMessage)
-    return await element.textContent() || ''
+    return (await element.textContent()) || ""
   }
 
   /**
@@ -133,7 +136,7 @@ export class SignUpPage extends BasePage {
    */
   async getPasswordStrength(): Promise<string> {
     const element = this.page.locator(this.selectors.passwordStrengthIndicator)
-    return await element.textContent() || ''
+    return (await element.textContent()) || ""
   }
 
   /**
@@ -162,13 +165,16 @@ export class SignUpPage extends BasePage {
    */
   async assertSignUpSuccess(): Promise<void> {
     // Should redirect away from sign up page
-    await this.helpers.assertURL('/(?!login)')
+    await this.helpers.assertURL("/(?!login)")
   }
 
   /**
    * Assert password strength indicator shows expected level
    */
   async assertPasswordStrength(expectedLevel: string): Promise<void> {
-    await this.helpers.assertText(this.selectors.passwordStrengthIndicator, expectedLevel)
+    await this.helpers.assertText(
+      this.selectors.passwordStrengthIndicator,
+      expectedLevel
+    )
   }
 }

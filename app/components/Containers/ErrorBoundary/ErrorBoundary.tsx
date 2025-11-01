@@ -1,6 +1,11 @@
-import React, { Component, type ErrorInfo, type ReactNode } from 'react'
+import React, { Component, type ErrorInfo, type ReactNode } from "react"
 
-import { AppError, type ErrorBoundaryProps, type ErrorBoundaryState, ErrorHandler } from '~/utils/errorHandling'
+import {
+  AppError,
+  type ErrorBoundaryProps,
+  type ErrorBoundaryState,
+  ErrorHandler,
+} from "~/utils/errorHandling"
 
 interface ErrorBoundaryState {
   hasError: boolean
@@ -12,10 +17,13 @@ interface ErrorBoundaryProps {
   children: ReactNode
   fallback?: (error: AppError, errorId: string) => ReactNode
   onError?: (error: AppError, errorInfo: ErrorInfo) => void
-  level?: 'page' | 'component' | 'critical'
+  level?: "page" | "component" | "critical"
 }
 
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   private retryCount = 0
 
   private maxRetries = 3
@@ -27,23 +35,23 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     // Update state so the next render will show the fallback UI
-    const appError = ErrorHandler.handle(error, { component: 'ErrorBoundary' })
+    const appError = ErrorHandler.handle(error, { component: "ErrorBoundary" })
     const errorId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
 
     return {
       hasError: true,
       error: appError,
-      errorId
+      errorId,
     }
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     const appError = ErrorHandler.handle(error, {
-      component: 'ErrorBoundary',
+      component: "ErrorBoundary",
       errorInfo: {
         componentStack: errorInfo.componentStack,
-        errorBoundary: errorInfo.errorBoundary
-      }
+        errorBoundary: errorInfo.errorBoundary,
+      },
     })
 
     // Call the onError callback if provided
@@ -54,7 +62,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     // Update state with the handled error
     this.setState({
       error: appError,
-      errorId: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      errorId: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     })
   }
 
@@ -72,13 +80,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   private handleReportError = () => {
     if (this.state.error && this.state.errorId) {
       // In a real app, you would send this to your error reporting service
-      console.error('Error reported:', {
+      console.error("Error reported:", {
         errorId: this.state.errorId,
-        error: this.state.error.toJSON()
+        error: this.state.error.toJSON(),
       })
 
       // Show user feedback
-      alert('Error has been reported. Thank you for your feedback!')
+      alert("Error has been reported. Thank you for your feedback!")
     }
   }
 
@@ -97,13 +105,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   private renderDefaultFallback(error: AppError, errorId: string) {
-    const { level = 'component' } = this.props
+    const { level = "component" } = this.props
 
-    if (level === 'critical') {
+    if (level === "critical") {
       return this.renderCriticalError(error, errorId)
     }
 
-    if (level === 'page') {
+    if (level === "page") {
       return this.renderPageError(error, errorId)
     }
 
@@ -117,7 +125,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           <div className="text-6xl mb-4">🚨</div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Critical Error</h1>
           <p className="text-gray-600 mb-4">
-            A critical error has occurred. Please refresh the page or contact support.
+            A critical error has occurred. Please refresh the page or contact
+            support.
           </p>
           <div className="space-y-2">
             <button
@@ -145,7 +154,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-6">
           <div className="text-center mb-6">
             <div className="text-4xl mb-4">⚠️</div>
-            <h1 className="text-xl font-bold text-gray-900 mb-2">Something went wrong</h1>
+            <h1 className="text-xl font-bold text-gray-900 mb-2">
+              Something went wrong
+            </h1>
             <p className="text-gray-600">{error.userMessage}</p>
           </div>
 
@@ -170,7 +181,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             </button>
           </div>
 
-          <p className="text-xs text-gray-500 mt-4 text-center">Error ID: {errorId}</p>
+          <p className="text-xs text-gray-500 mt-4 text-center">
+            Error ID: {errorId}
+          </p>
         </div>
       </div>
     )

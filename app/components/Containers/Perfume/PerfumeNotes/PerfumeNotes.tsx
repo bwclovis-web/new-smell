@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from "react-i18next"
 
 interface PerfumeNote {
   id: string
@@ -14,17 +14,19 @@ interface PerfumeNotesProps {
 const renderSingleNotesList = (notes: PerfumeNote[], t: any) => (
   <div className="p-4 bg-noir-dark text-noir-gold-100 flex gap-4">
     <div className="flex flex-col items-start gap-2">
-      <span className='font-medium  tracking-wide pb-1 text-2xl text-noir-gold'>{t('singlePerfume.notes.general')}: </span>
+      <span className="font-medium  tracking-wide pb-1 text-2xl text-noir-gold">
+        {t("singlePerfume.notes.general")}:{" "}
+      </span>
       <ul className="flex font-semibold capitalize flex-wrap ">
         {notes.map((note, idx) => (
           <li key={note.id}>
             {note.name}
-            {idx + 1 < notes.length && <span className='pr-1 pl-0'>, </span>}
+            {idx + 1 < notes.length && <span className="pr-1 pl-0">, </span>}
           </li>
         ))}
       </ul>
     </div>
-  </div >
+  </div>
 )
 
 interface CategorizedNotesProps {
@@ -44,17 +46,19 @@ const renderCategorizedNotes = ({
   hasOpen,
   hasHeart,
   hasClose,
-  t
+  t,
 }: CategorizedNotesProps) => (
   <div className=" p-4 bg-noir-dark text-noir-gold-100 flex flex-col md:flex-row gap-4">
     {hasOpen && (
       <div className="flex flex-col items-start gap-1 border-r-4 md:border-r-noir-gold pr-4">
-        <span className='font-medium tracking-wide pb-1 text-2xl text-noir-gold'>{t('singlePerfume.notes.opening')}</span>
+        <span className="font-medium tracking-wide pb-1 text-2xl text-noir-gold">
+          {t("singlePerfume.notes.opening")}
+        </span>
         <ul className="flex capitalize flex-wrap mb-2.5">
           {perfumeNotesOpen.map((note, idx) => (
             <li key={note.id}>
               {note.name}
-              {idx + 1 < perfumeNotesOpen.length && <span className='pr-1'>,</span>}
+              {idx + 1 < perfumeNotesOpen.length && <span className="pr-1">,</span>}
             </li>
           ))}
         </ul>
@@ -62,33 +66,35 @@ const renderCategorizedNotes = ({
     )}
     {hasHeart && (
       <div className="flex flex-col items-start border-r-2 md:border-r-noir-gold-100 pr-4 last-of-type:border-r-0">
-        <span className='font-medium tracking-wide pb-1 text-2xl text-noir-gold'>{t('singlePerfume.notes.mid')}</span>
+        <span className="font-medium tracking-wide pb-1 text-2xl text-noir-gold">
+          {t("singlePerfume.notes.mid")}
+        </span>
         <ul className="flex font-semibold capitalize flex-wrap mb-2">
           {perfumeNotesHeart.map((note, idx) => (
             <li key={note.id}>
               {note.name}
-              {idx + 1 < perfumeNotesHeart.length && <span className='pr-1'>,</span>}
+              {idx + 1 < perfumeNotesHeart.length && <span className="pr-1">,</span>}
             </li>
           ))}
         </ul>
       </div>
     )}
-    {
-      hasClose && (
-        <div className="flex flex-col items-start border-r-2 md:border-r-noir-gold-100 pr-4 last-of-type:border-r-0">
-          <span className='font-medium tracking-wide pb-1 text-2xl text-noir-gold'>{t('singlePerfume.notes.end')} </span>
-          <ul className="flex  font-semibold capitalize flex-wrap">
-            {perfumeNotesClose.map((note, idx) => (
-              <li key={note.id}>
-                {note.name}
-                {idx + 1 < perfumeNotesClose.length && <span className='pr-1'>,</span>}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )
-    }
-  </div >
+    {hasClose && (
+      <div className="flex flex-col items-start border-r-2 md:border-r-noir-gold-100 pr-4 last-of-type:border-r-0">
+        <span className="font-medium tracking-wide pb-1 text-2xl text-noir-gold">
+          {t("singlePerfume.notes.end")}{" "}
+        </span>
+        <ul className="flex  font-semibold capitalize flex-wrap">
+          {perfumeNotesClose.map((note, idx) => (
+            <li key={note.id}>
+              {note.name}
+              {idx + 1 < perfumeNotesClose.length && <span className="pr-1">,</span>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
 )
 
 const useNotesLogic = (
@@ -107,7 +113,7 @@ const useNotesLogic = (
 const PerfumeNotes = ({
   perfumeNotesOpen,
   perfumeNotesHeart,
-  perfumeNotesClose
+  perfumeNotesClose,
 }: PerfumeNotesProps) => {
   const { t } = useTranslation()
   const { hasOpen, hasHeart, hasClose, noteTypesCount } = useNotesLogic(
@@ -120,7 +126,7 @@ const PerfumeNotes = ({
     const allNotes = [
       ...perfumeNotesOpen,
       ...perfumeNotesHeart,
-      ...perfumeNotesClose
+      ...perfumeNotesClose,
     ]
     return renderSingleNotesList(allNotes, t)
   }
@@ -133,7 +139,7 @@ const PerfumeNotes = ({
     hasOpen,
     hasHeart,
     hasClose,
-    t
+    t,
   })
 }
 

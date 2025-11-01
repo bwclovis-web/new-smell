@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { BsBell, BsEnvelope, BsGear, BsX } from 'react-icons/bs'
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
+import { BsBell, BsEnvelope, BsGear, BsX } from "react-icons/bs"
 
-import { Button } from '~/components/Atoms/Button/Button'
-import VooDooDetails from '~/components/Atoms/VooDooDetails/VooDooDetails'
-import type { UserAlertPreferences } from '~/types/database'
+import { Button } from "~/components/Atoms/Button/Button"
+import VooDooDetails from "~/components/Atoms/VooDooDetails/VooDooDetails"
+import type { UserAlertPreferences } from "~/types/database"
 
 interface AlertPreferencesProps {
   preferences: UserAlertPreferences
@@ -13,7 +13,7 @@ interface AlertPreferencesProps {
 
 export const AlertPreferences = ({
   preferences,
-  onPreferencesChange
+  onPreferencesChange,
 }: AlertPreferencesProps) => {
   const { t } = useTranslation()
   const [isEditing, setIsEditing] = useState(false)
@@ -29,16 +29,19 @@ export const AlertPreferences = ({
     setIsEditing(false)
   }
 
-  const updatePreference = (key: keyof UserAlertPreferences, value: boolean | number) => {
-    setTempPreferences(prev => ({
+  const updatePreference = (
+    key: keyof UserAlertPreferences,
+    value: boolean | number
+  ) => {
+    setTempPreferences((prev) => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }))
   }
 
   return (
     <VooDooDetails
-      summary={t('alerts.preferences', 'Alert Preferences')}
+      summary={t("alerts.preferences", "Alert Preferences")}
       className="justify-around text-noir-gold"
       name="alert-preferences"
     >
@@ -46,12 +49,15 @@ export const AlertPreferences = ({
         {isEditing ? (
           <div className="space-y-4">
             <div className="text-sm text-noir-gold-100 mb-4">
-              {t('alerts.preferencesDescription', 'Configure how and when you receive alerts.')}
+              {t(
+                "alerts.preferencesDescription",
+                "Configure how and when you receive alerts."
+              )}
             </div>
             <div className="space-y-3">
               <h4 className="font-medium text-gray-900 flex items-center gap-2">
                 <BsBell className="h-4 w-4" />
-                {t('alerts.alertTypes', 'Alert Types')}
+                {t("alerts.alertTypes", "Alert Types")}
               </h4>
 
               <div className="space-y-2 ml-6">
@@ -59,15 +65,20 @@ export const AlertPreferences = ({
                   <input
                     type="checkbox"
                     checked={tempPreferences.wishlistAlertsEnabled}
-                    onChange={e => updatePreference('wishlistAlertsEnabled', e.target.checked)}
+                    onChange={(e) =>
+                      updatePreference("wishlistAlertsEnabled", e.target.checked)
+                    }
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <div>
                     <div className="font-medium text-gray-900">
-                      {t('alerts.wishlistAlerts', 'Wishlist Alerts')}
+                      {t("alerts.wishlistAlerts", "Wishlist Alerts")}
                     </div>
                     <div className="text-sm text-gray-600">
-                      {t('alerts.wishlistAlertsDescription', 'Get notified when items from your wishlist become available for trade')}
+                      {t(
+                        "alerts.wishlistAlertsDescription",
+                        "Get notified when items from your wishlist become available for trade"
+                      )}
                     </div>
                   </div>
                 </label>
@@ -76,15 +87,20 @@ export const AlertPreferences = ({
                   <input
                     type="checkbox"
                     checked={tempPreferences.decantAlertsEnabled}
-                    onChange={e => updatePreference('decantAlertsEnabled', e.target.checked)}
+                    onChange={(e) =>
+                      updatePreference("decantAlertsEnabled", e.target.checked)
+                    }
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <div>
                     <div className="font-medium text-gray-900">
-                      {t('alerts.decantAlerts', 'Decant Interest Alerts')}
+                      {t("alerts.decantAlerts", "Decant Interest Alerts")}
                     </div>
                     <div className="text-sm text-gray-600">
-                      {t('alerts.decantAlertsDescription', 'Get notified when someone shows interest in your decants')}
+                      {t(
+                        "alerts.decantAlertsDescription",
+                        "Get notified when someone shows interest in your decants"
+                      )}
                     </div>
                   </div>
                 </label>
@@ -95,7 +111,7 @@ export const AlertPreferences = ({
             <div className="space-y-3">
               <h4 className="font-medium text-gray-900 flex items-center gap-2">
                 <BsEnvelope className="h-4 w-4" />
-                {t('alerts.emailNotifications', 'Email Notifications')}
+                {t("alerts.emailNotifications", "Email Notifications")}
               </h4>
 
               <div className="space-y-2 ml-6">
@@ -103,15 +119,20 @@ export const AlertPreferences = ({
                   <input
                     type="checkbox"
                     checked={tempPreferences.emailWishlistAlerts}
-                    onChange={e => updatePreference('emailWishlistAlerts', e.target.checked)}
+                    onChange={(e) =>
+                      updatePreference("emailWishlistAlerts", e.target.checked)
+                    }
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <div>
                     <div className="font-medium text-gray-900">
-                      {t('alerts.emailWishlistAlerts', 'Email Wishlist Alerts')}
+                      {t("alerts.emailWishlistAlerts", "Email Wishlist Alerts")}
                     </div>
                     <div className="text-sm text-gray-600">
-                      {t('alerts.emailWishlistAlertsDescription', 'Receive email notifications for wishlist alerts')}
+                      {t(
+                        "alerts.emailWishlistAlertsDescription",
+                        "Receive email notifications for wishlist alerts"
+                      )}
                     </div>
                   </div>
                 </label>
@@ -120,15 +141,20 @@ export const AlertPreferences = ({
                   <input
                     type="checkbox"
                     checked={tempPreferences.emailDecantAlerts}
-                    onChange={e => updatePreference('emailDecantAlerts', e.target.checked)}
+                    onChange={(e) =>
+                      updatePreference("emailDecantAlerts", e.target.checked)
+                    }
                     className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                   />
                   <div>
                     <div className="font-medium text-gray-900">
-                      {t('alerts.emailDecantAlerts', 'Email Decant Alerts')}
+                      {t("alerts.emailDecantAlerts", "Email Decant Alerts")}
                     </div>
                     <div className="text-sm text-gray-600">
-                      {t('alerts.emailDecantAlertsDescription', 'Receive email notifications for decant interest alerts')}
+                      {t(
+                        "alerts.emailDecantAlertsDescription",
+                        "Receive email notifications for decant interest alerts"
+                      )}
                     </div>
                   </div>
                 </label>
@@ -138,20 +164,25 @@ export const AlertPreferences = ({
             {/* Alert Limits */}
             <div className="space-y-3">
               <h4 className="font-medium text-gray-900">
-                {t('alerts.alertLimits', 'Alert Limits')}
+                {t("alerts.alertLimits", "Alert Limits")}
               </h4>
 
               <div className="ml-6">
                 <label className="block">
                   <div className="font-medium text-gray-900 mb-1">
-                    {t('alerts.maxAlerts', 'Maximum Alerts to Keep')}
+                    {t("alerts.maxAlerts", "Maximum Alerts to Keep")}
                   </div>
                   <div className="text-sm text-gray-600 mb-2">
-                    {t('alerts.maxAlertsDescription', 'Older alerts will be automatically dismissed when this limit is reached')}
+                    {t(
+                      "alerts.maxAlertsDescription",
+                      "Older alerts will be automatically dismissed when this limit is reached"
+                    )}
                   </div>
                   <select
                     value={tempPreferences.maxAlerts}
-                    onChange={e => updatePreference('maxAlerts', parseInt(e.target.value))}
+                    onChange={(e) =>
+                      updatePreference("maxAlerts", parseInt(e.target.value))
+                    }
                     className="rounded border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
                   >
                     <option value={5}>5 alerts</option>
@@ -189,7 +220,10 @@ export const AlertPreferences = ({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="text-sm text-gray-600">
-                {t('alerts.preferencesDescription', 'Configure how and when you receive alerts.')}
+                {t(
+                  "alerts.preferencesDescription",
+                  "Configure how and when you receive alerts."
+                )}
               </div>
               <Button
                 variant="secondary"
@@ -207,31 +241,37 @@ export const AlertPreferences = ({
               <div className="space-y-3">
                 <h4 className="font-medium text-gray-900 flex items-center gap-2">
                   <BsBell className="h-4 w-4" />
-                  {t('alerts.alertTypes', 'Alert Types')}
+                  {t("alerts.alertTypes", "Alert Types")}
                 </h4>
 
                 <div className="space-y-2 ml-6">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-700">
-                      {t('alerts.wishlistAlerts', 'Wishlist Alerts')}
+                      {t("alerts.wishlistAlerts", "Wishlist Alerts")}
                     </span>
-                    <span className={`text-xs px-2 py-1 rounded ${preferences.wishlistAlertsEnabled
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-800'
-                      }`}>
-                      {preferences.wishlistAlertsEnabled ? 'Enabled' : 'Disabled'}
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${
+                        preferences.wishlistAlertsEnabled
+                          ? "bg-green-100 text-green-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {preferences.wishlistAlertsEnabled ? "Enabled" : "Disabled"}
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-700">
-                      {t('alerts.decantAlerts', 'Decant Interest Alerts')}
+                      {t("alerts.decantAlerts", "Decant Interest Alerts")}
                     </span>
-                    <span className={`text-xs px-2 py-1 rounded ${preferences.decantAlertsEnabled
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-800'
-                      }`}>
-                      {preferences.decantAlertsEnabled ? 'Enabled' : 'Disabled'}
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${
+                        preferences.decantAlertsEnabled
+                          ? "bg-green-100 text-green-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {preferences.decantAlertsEnabled ? "Enabled" : "Disabled"}
                     </span>
                   </div>
                 </div>
@@ -240,37 +280,43 @@ export const AlertPreferences = ({
               <div className="space-y-3">
                 <h4 className="font-medium text-gray-900 flex items-center gap-2">
                   <BsEnvelope className="h-4 w-4" />
-                  {t('alerts.emailNotifications', 'Email Notifications')}
+                  {t("alerts.emailNotifications", "Email Notifications")}
                 </h4>
 
                 <div className="space-y-2 ml-6">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-700">
-                      {t('alerts.emailWishlistAlerts', 'Email Wishlist Alerts')}
+                      {t("alerts.emailWishlistAlerts", "Email Wishlist Alerts")}
                     </span>
-                    <span className={`text-xs px-2 py-1 rounded ${preferences.emailWishlistAlerts
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-800'
-                      }`}>
-                      {preferences.emailWishlistAlerts ? 'Enabled' : 'Disabled'}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">
-                      {t('alerts.emailDecantAlerts', 'Email Decant Alerts')}
-                    </span>
-                    <span className={`text-xs px-2 py-1 rounded ${preferences.emailDecantAlerts
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-800'
-                      }`}>
-                      {preferences.emailDecantAlerts ? 'Enabled' : 'Disabled'}
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${
+                        preferences.emailWishlistAlerts
+                          ? "bg-green-100 text-green-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {preferences.emailWishlistAlerts ? "Enabled" : "Disabled"}
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-700">
-                      {t('alerts.maxAlerts', 'Max Alerts')}
+                      {t("alerts.emailDecantAlerts", "Email Decant Alerts")}
+                    </span>
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${
+                        preferences.emailDecantAlerts
+                          ? "bg-green-100 text-green-800"
+                          : "bg-gray-100 text-gray-800"
+                      }`}
+                    >
+                      {preferences.emailDecantAlerts ? "Enabled" : "Disabled"}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-700">
+                      {t("alerts.maxAlerts", "Max Alerts")}
                     </span>
                     <span className="text-xs px-2 py-1 rounded bg-blue-100 text-blue-800">
                       {preferences.maxAlerts}

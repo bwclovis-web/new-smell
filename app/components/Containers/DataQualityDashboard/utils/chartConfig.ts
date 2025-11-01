@@ -2,11 +2,11 @@ export const createChartConfig = () => ({
   responsive: true,
   plugins: {
     legend: {
-      position: 'top' as const,
+      position: "top" as const,
     },
     title: {
       display: true,
-      text: 'Data Quality Metrics',
+      text: "Data Quality Metrics",
     },
   },
   scales: {

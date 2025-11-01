@@ -3,7 +3,13 @@
  * Provides type safety for all API endpoints
  */
 
-import type { SafeUser, SafeUserPerfume, SafeUserPerfumeComment, SafeUserPerfumeRating, SafeUserPerfumeReview } from './database'
+import type {
+  SafeUser,
+  SafeUserPerfume,
+  SafeUserPerfumeComment,
+  SafeUserPerfumeRating,
+  SafeUserPerfumeReview,
+} from "./database"
 
 // Base API response structure
 export interface ApiResponse<T = unknown> {
@@ -69,7 +75,7 @@ export interface SearchParams {
 
 export interface SortParams {
   field: string
-  direction: 'asc' | 'desc'
+  direction: "asc" | "desc"
 }
 
 // Authentication API types
@@ -139,7 +145,7 @@ export interface GetPerfumesRequest extends PaginationParams, SearchParams {
 
 export interface GetPerfumesResponse {
   perfumes: SafeUserPerfume[]
-  pagination: PaginatedResponse<SafeUserPerfume>['pagination']
+  pagination: PaginatedResponse<SafeUserPerfume>["pagination"]
 }
 
 export interface GetPerfumeRequest {
@@ -166,7 +172,7 @@ export interface CreatePerfumeRequest {
   price?: string
   placeOfPurchase?: string
   tradePrice?: string
-  tradePreference?: 'cash' | 'trade' | 'both'
+  tradePreference?: "cash" | "trade" | "both"
   tradeOnly?: boolean
   type?: string
 }
@@ -182,7 +188,7 @@ export interface UpdatePerfumeRequest {
   price?: string
   placeOfPurchase?: string
   tradePrice?: string
-  tradePreference?: 'cash' | 'trade' | 'both'
+  tradePreference?: "cash" | "trade" | "both"
   tradeOnly?: boolean
   type?: string
 }
@@ -288,7 +294,7 @@ export interface RemoveFromWishlistResponse {
 
 export interface GetWishlistResponse {
   wishlist: SafeUserPerfume[]
-  pagination: PaginatedResponse<SafeUserPerfume>['pagination']
+  pagination: PaginatedResponse<SafeUserPerfume>["pagination"]
 }
 
 // Data Quality API types
@@ -340,7 +346,7 @@ export interface SecurityEvent {
   path: string | null
   method: string | null
   details: Record<string, unknown>
-  severity: 'low' | 'medium' | 'high' | 'critical'
+  severity: "low" | "medium" | "high" | "critical"
   timestamp: string
 }
 
@@ -378,7 +384,7 @@ export interface ApiError {
 }
 
 export interface ValidationError extends ApiError {
-  code: 'VALIDATION_ERROR'
+  code: "VALIDATION_ERROR"
   field: string
   details: {
     value: unknown
@@ -387,17 +393,17 @@ export interface ValidationError extends ApiError {
 }
 
 export interface AuthenticationError extends ApiError {
-  code: 'AUTHENTICATION_ERROR' | 'AUTHORIZATION_ERROR'
+  code: "AUTHENTICATION_ERROR" | "AUTHORIZATION_ERROR"
 }
 
 export interface NotFoundError extends ApiError {
-  code: 'NOT_FOUND'
+  code: "NOT_FOUND"
 }
 
 export interface ConflictError extends ApiError {
-  code: 'CONFLICT'
+  code: "CONFLICT"
 }
 
 export interface ServerError extends ApiError {
-  code: 'INTERNAL_SERVER_ERROR'
+  code: "INTERNAL_SERVER_ERROR"
 }

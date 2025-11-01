@@ -1,10 +1,10 @@
-import { useState } from 'react'
-import { BsBell, BsX } from 'react-icons/bs'
+import { useState } from "react"
+import { BsBell, BsX } from "react-icons/bs"
 
-import { Button } from '~/components/Atoms/Button/Button'
-import type { UserAlert } from '~/types/database'
+import { Button } from "~/components/Atoms/Button/Button"
+import type { UserAlert } from "~/types/database"
 
-import { AlertItem } from './AlertItem'
+import { AlertItem } from "./AlertItem"
 
 interface AlertBellProps {
   unreadCount: number
@@ -19,7 +19,7 @@ export const AlertBell = ({
   userId,
   alerts,
   onMarkAsRead,
-  onDismissAlert
+  onDismissAlert,
 }: AlertBellProps) => {
   const [isOpen, setIsOpen] = useState(false)
   const recentAlerts = alerts.slice(0, 5) // Show only 5 most recent
@@ -32,12 +32,14 @@ export const AlertBell = ({
         size="lg"
         onClick={() => setIsOpen(!isOpen)}
         className="relative p-2 border-0"
-        aria-label={`Notifications ${unreadCount > 0 ? `(${unreadCount} unread)` : ''}`}
+        aria-label={`Notifications ${
+          unreadCount > 0 ? `(${unreadCount} unread)` : ""
+        }`}
       >
         <BsBell size={34} />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-            {unreadCount > 9 ? '9+' : unreadCount}
+            {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </Button>
@@ -51,8 +53,8 @@ export const AlertBell = ({
             onClick={() => setIsOpen(false)}
             role="button"
             tabIndex={0}
-            onKeyDown={evt => {
-              if (evt.key === 'Enter' || evt.key === ' ') {
+            onKeyDown={(evt) => {
+              if (evt.key === "Enter" || evt.key === " ") {
                 evt.preventDefault()
                 setIsOpen(false)
               }
@@ -65,7 +67,9 @@ export const AlertBell = ({
               <h3 className="font-semibold text-noir-gold">
                 Notifications
                 {unreadCount > 0 && (
-                  <span className="ml-2 text-sm text-noir-dark font-sans">({unreadCount} new)</span>
+                  <span className="ml-2 text-sm text-noir-dark font-sans">
+                    ({unreadCount} new)
+                  </span>
                 )}
               </h3>
               <Button
@@ -87,7 +91,7 @@ export const AlertBell = ({
                 </div>
               ) : (
                 <div className="divide-y divide-gray-100">
-                  {recentAlerts.map(alert => (
+                  {recentAlerts.map((alert) => (
                     <div key={alert.id} className="p-3 hover:bg-gray-50">
                       <AlertItem
                         alert={alert}
@@ -122,7 +126,7 @@ export const AlertBell = ({
           </div>
         </>
       )}
-    </div >
+    </div>
   )
 }
 

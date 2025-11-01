@@ -5,9 +5,11 @@ This directory contains active developer guides and best practices for the New S
 ## Available Guides
 
 ### Code Quality
+
 **[code-quality.md](./code-quality.md)**
 
 Comprehensive guide to code quality standards, patterns, and best practices including:
+
 - TypeScript best practices
 - Component patterns
 - Testing standards
@@ -15,9 +17,11 @@ Comprehensive guide to code quality standards, patterns, and best practices incl
 - Architecture patterns
 
 ### Performance
+
 **[performance.md](./performance.md)**
 
 Complete guide to optimizing application performance:
+
 - Performance monitoring
 - Core Web Vitals optimization
 - Bundle optimization
@@ -26,9 +30,11 @@ Complete guide to optimizing application performance:
 - Database query optimization
 
 ### Security
+
 **[security.md](./security.md)**
 
 Security best practices and hardening measures:
+
 - Authentication & authorization
 - CSRF protection
 - Rate limiting
@@ -37,9 +43,11 @@ Security best practices and hardening measures:
 - Environment security
 
 ### Infrastructure
+
 **[infrastructure.md](./infrastructure.md)**
 
 Infrastructure setup, deployment, and operational improvements:
+
 - Deployment configuration
 - Environment setup
 - CI/CD pipelines
@@ -47,9 +55,11 @@ Infrastructure setup, deployment, and operational improvements:
 - Database management
 
 ### Implementation Checklist
+
 **[implementation-checklist.md](./implementation-checklist.md)**
 
 Step-by-step checklist for implementing new features:
+
 - Pre-implementation planning
 - Development workflow
 - Testing requirements
@@ -59,6 +69,7 @@ Step-by-step checklist for implementing new features:
 ## Quick Start
 
 New developers should review these guides in order:
+
 1. **Code Quality** - Understand coding standards
 2. **Implementation Checklist** - Learn the development workflow
 3. **Security** - Know security requirements
@@ -67,5 +78,4 @@ New developers should review these guides in order:
 
 ---
 
-*Last Updated: November 1, 2025*
-
+_Last Updated: November 1, 2025_

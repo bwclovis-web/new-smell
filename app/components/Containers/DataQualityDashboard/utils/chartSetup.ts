@@ -8,7 +8,7 @@ import {
   PointElement,
   Title,
   Tooltip,
-} from 'chart.js'
+} from "chart.js"
 
 // Register Chart.js components globally
 ChartJS.register(
@@ -23,5 +23,3 @@ ChartJS.register(
 )
 
 export { ChartJS }
-
-

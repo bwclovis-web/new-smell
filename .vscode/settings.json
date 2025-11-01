@@ -24,6 +24,8 @@
     "gsap",
     "isbot",
     "languagedetector",
+    "NOLOWERCASE",
+    "nouppercase",
     "Parfum",
     "Pipeable",
     "pycache",

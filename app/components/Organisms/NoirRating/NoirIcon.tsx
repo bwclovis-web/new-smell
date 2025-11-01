@@ -1,12 +1,12 @@
-import { useGSAP } from '@gsap/react'
-import { gsap } from 'gsap'
-import React, { useEffect, useRef, useState } from 'react'
+import { useGSAP } from "@gsap/react"
+import { gsap } from "gsap"
+import React, { useEffect, useRef, useState } from "react"
 
-import BottleAccents from './BottleAccents'
-import NoirGradients from './NoirGradients'
-import NoirShadows from './NoirShadows'
-import OverallBottle from './OverallBottle'
-import PerfumeBottle from './PerfumeBottle'
+import BottleAccents from "./BottleAccents"
+import NoirGradients from "./NoirGradients"
+import NoirShadows from "./NoirShadows"
+import OverallBottle from "./OverallBottle"
+import PerfumeBottle from "./PerfumeBottle"
 
 interface NoirIconProps {
   filled: boolean
@@ -19,7 +19,7 @@ const NoirIcon = ({
   filled,
   category,
   animated = false,
-  rating = 1
+  rating = 1,
 }: NoirIconProps) => {
   const liquidRef = useRef<SVGRectElement>(null)
   const [isClient, setIsClient] = useState(false)
@@ -29,16 +29,11 @@ const NoirIcon = ({
   }, [])
 
   useGSAP(() => {
-    if (!isClient || category !== 'overall' || !liquidRef.current) {
+    if (!isClient || category !== "overall" || !liquidRef.current) {
       return
     }
     animateLiquid(liquidRef.current, filled, rating)
-  }, [
-    filled,
-    rating,
-    category,
-    isClient
-  ])
+  }, [filled, rating, category, isClient])
 
   const animateLiquid = (
     element: SVGRectElement,
@@ -60,14 +55,14 @@ const NoirIcon = ({
         element,
         {
           opacity: 0,
-          attr: { height: 0, y: bottomY } // Start at bottom
+          attr: { height: 0, y: bottomY }, // Start at bottom
         },
         {
           opacity: 0.85,
           attr: { height: fillHeight, y: bottomY - fillHeight }, // Fill upward
           duration: 1.2,
-          ease: 'power3.out',
-          delay: 0.2
+          ease: "power3.out",
+          delay: 0.2,
         }
       )
     } else {
@@ -76,12 +71,12 @@ const NoirIcon = ({
         opacity: 0,
         attr: { height: 0, y: 26 },
         duration: 0.5,
-        ease: 'power2.in'
+        ease: "power2.in",
       })
     }
   }
 
-  if (category === 'overall') {
+  if (category === "overall") {
     return (
       <svg
         viewBox="0 0 30 40"

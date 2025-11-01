@@ -1,13 +1,13 @@
-import type { ActionFunctionArgs } from 'react-router'
+import type { ActionFunctionArgs } from "react-router"
 
-import { processWishlistNotifications } from '~/utils/wishlist-notification-processor'
+import { processWishlistNotifications } from "~/utils/wishlist-notification-processor"
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  if (request.method !== 'POST') {
-    return new Response(
-      JSON.stringify({ error: 'Method not allowed' }),
-      { status: 405, headers: { 'Content-Type': 'application/json' } }
-    )
+  if (request.method !== "POST") {
+    return new Response(JSON.stringify({ error: "Method not allowed" }), {
+      status: 405,
+      headers: { "Content-Type": "application/json" },
+    })
   }
 
   try {
@@ -17,20 +17,22 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       JSON.stringify({
         success: true,
         processed: results.length,
-        notifications: results
+        notifications: results,
       }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+      { status: 200, headers: { "Content-Type": "application/json" } }
     )
   } catch (error) {
-    const { ErrorHandler } = await import('~/utils/errorHandling')
-    const appError = ErrorHandler.handle(error, { api: 'process-wishlist-notifications' })
+    const { ErrorHandler } = await import("~/utils/errorHandling")
+    const appError = ErrorHandler.handle(error, {
+      api: "process-wishlist-notifications",
+    })
 
     return new Response(
       JSON.stringify({
         success: false,
-        error: appError.userMessage
+        error: appError.userMessage,
       }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { "Content-Type": "application/json" } }
     )
   }
 }

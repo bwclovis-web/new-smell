@@ -125,51 +125,51 @@ Successfully implemented comprehensive integration tests for the New Smell perfu
 ```typescript
 describe("Route/API Name", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-  });
+    vi.clearAllMocks()
+  })
 
   describe("Feature Group", () => {
     it("should handle specific scenario", async () => {
       // Arrange: Set up mocks
       // Act: Call loader/action
       // Assert: Verify behavior
-    });
-  });
-});
+    })
+  })
+})
 ```
 
 ### 3. Loader Testing Pattern
 
 ```typescript
-const request = new Request("https://example.com/path");
+const request = new Request("https://example.com/path")
 const args: LoaderFunctionArgs = {
   request,
   params: { slug: "test" },
   context: {},
-};
-const result = await loader(args);
-expect(result).toEqual(expectedData);
+}
+const result = await loader(args)
+expect(result).toEqual(expectedData)
 ```
 
 ### 4. Action Testing Pattern
 
 ```typescript
-const formData = new FormData();
-formData.append("key", "value");
+const formData = new FormData()
+formData.append("key", "value")
 
 const request = new Request("https://example.com/path", {
   method: "POST",
   body: formData,
-});
+})
 
 const args: ActionFunctionArgs = {
   request,
   params: {},
   context: {},
-};
+}
 
-const response = await action(args);
-expect(response).toBeDefined();
+const response = await action(args)
+expect(response).toBeDefined()
 ```
 
 ## Key Achievements

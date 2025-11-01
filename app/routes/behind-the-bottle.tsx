@@ -1,20 +1,20 @@
-import { type RefObject, useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { type MetaFunction, useLocation } from 'react-router'
+import { type RefObject, useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
+import { type MetaFunction, useLocation } from "react-router"
 
-import AlphabeticalNav from '~/components/Organisms/AlphabeticalNav'
-import DataDisplaySection from '~/components/Organisms/DataDisplaySection'
-import DataFilters from '~/components/Organisms/DataFilters'
-import TitleBanner from '~/components/Organisms/TitleBanner'
-import useDataByLetter from '~/hooks/useDataByLetter'
-import { useInfiniteScrollHouses } from '~/hooks/useInfiniteScrollHouses'
-import useLetterSelection from '~/hooks/useLetterSelection'
-import { getDefaultSortOptions } from '~/utils/sortUtils'
+import AlphabeticalNav from "~/components/Organisms/AlphabeticalNav"
+import DataDisplaySection from "~/components/Organisms/DataDisplaySection"
+import DataFilters from "~/components/Organisms/DataFilters"
+import TitleBanner from "~/components/Organisms/TitleBanner"
+import useDataByLetter from "~/hooks/useDataByLetter"
+import { useInfiniteScrollHouses } from "~/hooks/useInfiniteScrollHouses"
+import useLetterSelection from "~/hooks/useLetterSelection"
+import { getDefaultSortOptions } from "~/utils/sortUtils"
 
 // No server imports needed for client component
-import banner from '../images/behind.webp'
+import banner from "../images/behind.webp"
 
-export const ROUTE_PATH = '/behind-the-bottle'
+export const ROUTE_PATH = "/behind-the-bottle"
 
 export const loader = async () =>
   // Don't load all houses upfront - we'll load by letter on demand
@@ -23,19 +23,55 @@ export const loader = async () =>
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
   return [
-    { title: t('allHouses.meta.title') },
-    { name: 'description', content: t('allHouses.meta.description') }
+    { title: t("allHouses.meta.title") },
+    { name: "description", content: t("allHouses.meta.description") },
   ]
 }
 
-const useHouseFilters = (t: ReturnType<typeof useTranslation>['t']) => {
+const useHouseFilters = (t: ReturnType<typeof useTranslation>["t"]) => {
   const houseTypeOptions = [
-    { id: 'all', value: 'all', label: t('allHouses.houseTypes.all'), name: 'houseType', defaultChecked: true },
-    { id: 'niche', value: 'niche', label: t('allHouses.houseTypes.niche'), name: 'houseType', defaultChecked: false },
-    { id: 'designer', value: 'designer', label: t('allHouses.houseTypes.designer'), name: 'houseType', defaultChecked: false },
-    { id: 'indie', value: 'indie', label: t('allHouses.houseTypes.indie'), name: 'houseType', defaultChecked: false },
-    { id: 'celebrity', value: 'celebrity', label: t('allHouses.houseTypes.celebrity'), name: 'houseType', defaultChecked: false },
-    { id: 'drugstore', value: 'drugstore', label: t('allHouses.houseTypes.drugstore'), name: 'houseType', defaultChecked: false }
+    {
+      id: "all",
+      value: "all",
+      label: t("allHouses.houseTypes.all"),
+      name: "houseType",
+      defaultChecked: true,
+    },
+    {
+      id: "niche",
+      value: "niche",
+      label: t("allHouses.houseTypes.niche"),
+      name: "houseType",
+      defaultChecked: false,
+    },
+    {
+      id: "designer",
+      value: "designer",
+      label: t("allHouses.houseTypes.designer"),
+      name: "houseType",
+      defaultChecked: false,
+    },
+    {
+      id: "indie",
+      value: "indie",
+      label: t("allHouses.houseTypes.indie"),
+      name: "houseType",
+      defaultChecked: false,
+    },
+    {
+      id: "celebrity",
+      value: "celebrity",
+      label: t("allHouses.houseTypes.celebrity"),
+      name: "houseType",
+      defaultChecked: false,
+    },
+    {
+      id: "drugstore",
+      value: "drugstore",
+      label: t("allHouses.houseTypes.drugstore"),
+      name: "houseType",
+      defaultChecked: false,
+    },
   ]
 
   const sortOptions = getDefaultSortOptions(t)
@@ -43,10 +79,7 @@ const useHouseFilters = (t: ReturnType<typeof useTranslation>['t']) => {
   return { houseTypeOptions, sortOptions }
 }
 
-const useHouseHandlers = (
-  setSelectedHouseType: any,
-  setSelectedSort: any
-) => {
+const useHouseHandlers = (setSelectedHouseType: any, setSelectedSort: any) => {
   const handleHouseTypeChange = (evt: { target: { value: string } }) => {
     setSelectedHouseType(evt.target.value)
   }
@@ -61,31 +94,38 @@ const useHouseHandlers = (
 const AllHousesPage = () => {
   const { t } = useTranslation()
   const location = useLocation()
-  const [selectedHouseType, setSelectedHouseType] = useState('all')
-  const [selectedSort, setSelectedSort] = useState<any>('created-desc')
+  const [selectedHouseType, setSelectedHouseType] = useState("all")
+  const [selectedSort, setSelectedSort] = useState<any>("created-desc")
   const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const initialSelectedLetter =
-    (location.state as { selectedLetter?: string })?.selectedLetter
+  const initialSelectedLetter = (location.state as { selectedLetter?: string })
+    ?.selectedLetter
 
   const filters = useHouseFilters(t)
-  const data = useDataByLetter({ endpoint: '/api/houses-by-letter-paginated', itemName: 'houses', houseType: selectedHouseType })
+  const data = useDataByLetter({
+    endpoint: "/api/houses-by-letter-paginated",
+    itemName: "houses",
+    houseType: selectedHouseType,
+  })
   const handlers = useHouseHandlers(setSelectedHouseType, setSelectedSort)
 
   const [hasProcessedInitialLetter, setHasProcessedInitialLetter] = useState(false)
   const [lastResetLetter, setLastResetLetter] = useState<string | null>(null)
-  const [lastResetHouseType, setLastResetHouseType] = useState<string>('all')
+  const [lastResetHouseType, setLastResetHouseType] = useState<string>("all")
 
   const { selectedLetter, handleLetterClick } = useLetterSelection({
     loadDataByLetter: data.loadDataByLetter,
     resetData: (houses, totalCount) => {
       resetHouses(houses, totalCount)
-    }
+    },
   })
 
   useEffect(() => {
-    if (initialSelectedLetter &&
-      initialSelectedLetter !== selectedLetter && !hasProcessedInitialLetter) {
+    if (
+      initialSelectedLetter &&
+      initialSelectedLetter !== selectedLetter &&
+      !hasProcessedInitialLetter
+    ) {
       setHasProcessedInitialLetter(true)
       handleLetterClick(initialSelectedLetter)
     }
@@ -98,18 +138,18 @@ const AllHousesPage = () => {
     totalCount,
     observerRef,
     loadMoreHouses,
-    resetHouses
+    resetHouses,
   } = useInfiniteScrollHouses({
-    letter: selectedLetter || '',
+    letter: selectedLetter || "",
     initialHouses: data.initialData,
     scrollContainerRef,
     take: 12,
-    houseType: selectedHouseType
+    houseType: selectedHouseType,
   })
 
   useEffect(() => {
-    const shouldReset = (selectedLetter !== lastResetLetter) ||
-      (selectedHouseType !== lastResetHouseType)
+    const shouldReset =
+      selectedLetter !== lastResetLetter || selectedHouseType !== lastResetHouseType
     if (data.initialData.length > 0 && shouldReset) {
       resetHouses(data.initialData, data.totalCount)
       setLastResetLetter(selectedLetter)
@@ -122,7 +162,7 @@ const AllHousesPage = () => {
     selectedLetter,
     selectedHouseType,
     lastResetLetter,
-    lastResetHouseType
+    lastResetHouseType,
   ])
 
   if (data.error) {
@@ -133,8 +173,8 @@ const AllHousesPage = () => {
     <section>
       <TitleBanner
         image={banner}
-        heading={t('allHouses.heading')}
-        subheading={t('allHouses.subheading')}
+        heading={t("allHouses.heading")}
+        subheading={t("allHouses.subheading")}
       />
 
       <DataFilters

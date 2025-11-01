@@ -1,9 +1,9 @@
-import NoirButton from './NoirButton'
+import NoirButton from "./NoirButton"
 
 type StarRatingProps = {
   currentValue: number
   category: string
-  size: 'sm' | 'md' | 'lg'
+  size: "sm" | "md" | "lg"
   isInteractive: boolean
   hoverValue: number | null
   onChange?: (rating: number) => void
@@ -19,16 +19,10 @@ const StarRating = ({
   hoverValue,
   onChange,
   onHover,
-  onLeave
+  onLeave,
 }: StarRatingProps) => (
   <div className="flex items-center gap-0.5 min-h-0 flex-shrink-0">
-    {[
-      1,
-      2,
-      3,
-      4,
-      5
-    ].map(rating => (
+    {[1, 2, 3, 4, 5].map((rating) => (
       <NoirButton
         key={rating}
         rating={rating}

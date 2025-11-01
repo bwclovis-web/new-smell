@@ -1,1 +1,1 @@
-export { default } from './MyScentsModal'
+export { default } from "./MyScentsModal"

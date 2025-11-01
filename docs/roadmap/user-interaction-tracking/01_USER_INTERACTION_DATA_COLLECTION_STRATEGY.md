@@ -185,13 +185,13 @@ interface ExplicitInteraction {
     | "COLLECTION_ADD" // Adds to collection
     | "COLLECTION_UPDATE" // Updates collection item
     | "TRADE_OFFER" // Makes trade offer
-    | "PURCHASE"; // Purchases perfume
+    | "PURCHASE" // Purchases perfume
 
-  perfumeId: string;
-  userId: string;
-  timestamp: Date;
-  value?: number; // For ratings
-  metadata: Record<string, any>;
+  perfumeId: string
+  userId: string
+  timestamp: Date
+  value?: number // For ratings
+  metadata: Record<string, any>
 }
 ```
 
@@ -216,13 +216,13 @@ interface ImplicitInteraction {
     | "NOTE_EXPAND" // Expands notes section
     | "HOUSE_VIEW" // Views house page
     | "SIMILAR_VIEW" // Views similar perfumes
-    | "COLLECTION_VIEW"; // Views user collection
+    | "COLLECTION_VIEW" // Views user collection
 
-  perfumeId?: string;
-  userId: string;
-  timestamp: Date;
-  duration?: number; // Time spent
-  metadata: Record<string, any>;
+  perfumeId?: string
+  userId: string
+  timestamp: Date
+  duration?: number // Time spent
+  metadata: Record<string, any>
 }
 ```
 
@@ -245,13 +245,13 @@ interface NegativeSignal {
     | "COLLECTION_REMOVE" // Removes from collection
     | "HIDE" // Hides perfume
     | "REPORT" // Reports content
-    | "LOW_RATING"; // Rates poorly
+    | "LOW_RATING" // Rates poorly
 
-  perfumeId: string;
-  userId: string;
-  timestamp: Date;
-  reason?: string;
-  metadata: Record<string, any>;
+  perfumeId: string
+  userId: string
+  timestamp: Date
+  reason?: string
+  metadata: Record<string, any>
 }
 ```
 
@@ -268,18 +268,18 @@ Environmental factors that influence behavior:
 
 ```typescript
 interface ContextualSignal {
-  userId: string;
-  timestamp: Date;
+  userId: string
+  timestamp: Date
   context: {
-    device: "mobile" | "tablet" | "desktop";
-    location?: string;
-    timeOfDay: string;
-    dayOfWeek: string;
-    season: string;
-    sessionId: string;
-    referrer?: string;
-    userAgent: string;
-  };
+    device: "mobile" | "tablet" | "desktop"
+    location?: string
+    timeOfDay: string
+    dayOfWeek: string
+    season: string
+    sessionId: string
+    referrer?: string
+    userAgent: string
+  }
 }
 ```
 
@@ -345,7 +345,7 @@ export const pageTrackingEvents = {
       resultsCount: number,
     },
   },
-};
+}
 ```
 
 #### Interaction Events
@@ -414,7 +414,7 @@ export const interactionTrackingEvents = {
       timeToWrite: number,
     },
   },
-};
+}
 ```
 
 #### Engagement Events
@@ -460,7 +460,7 @@ export const engagementTrackingEvents = {
       source: "perfume_page" | "search" | "direct",
     },
   },
-};
+}
 ```
 
 ### Backend Tracking
@@ -488,7 +488,7 @@ export const apiTrackingEvents = {
     resourceId: string,
     duration: number,
   },
-};
+}
 ```
 
 ---
@@ -531,22 +531,22 @@ export const apiTrackingEvents = {
 ```typescript
 // app/models/user-privacy.server.ts
 export interface UserPrivacySettings {
-  userId: string;
+  userId: string
 
   // Consent flags
-  analyticsConsent: boolean;
-  personalizationConsent: boolean;
-  marketingConsent: boolean;
+  analyticsConsent: boolean
+  personalizationConsent: boolean
+  marketingConsent: boolean
 
   // Data retention
-  dataRetentionDays: number;
+  dataRetentionDays: number
 
   // Rights
-  lastDataExport?: Date;
-  lastDataDeletion?: Date;
+  lastDataExport?: Date
+  lastDataDeletion?: Date
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date
+  updatedAt: Date
 }
 ```
 

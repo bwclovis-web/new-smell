@@ -8,7 +8,12 @@ import { useCSRF } from "~/hooks/useCSRF"
 import { styleMerge } from "~/utils/styleUtils"
 import { safeAsync } from "~/utils/errorHandling.patterns"
 
-import { wishlistAddedVariants, wishlistHouseVariants, wishlistVariants, wishlistVisibilityVariants } from "./wishlist-variants"
+import {
+  wishlistAddedVariants,
+  wishlistHouseVariants,
+  wishlistVariants,
+  wishlistVisibilityVariants,
+} from "./wishlist-variants"
 import WishListAvailabilityInfo from "./WishlistAvbalibilityInfo"
 
 interface WishlistItemCardProps {
@@ -20,7 +25,7 @@ interface WishlistItemCardProps {
 const WishlistItemCard = ({
   item,
   isAvailable,
-  availableAmount
+  availableAmount,
 }: WishlistItemCardProps) => {
   const [isPublic, setIsPublic] = useState(item.isPublic)
   const { addToHeaders } = useCSRF()
@@ -32,29 +37,27 @@ const WishlistItemCard = ({
     setIsPublic(newVisibility)
 
     const formData = new FormData()
-    formData.append('perfumeId', item.perfume.id)
-    formData.append('action', 'updateVisibility')
-    formData.append('isPublic', newVisibility.toString())
+    formData.append("perfumeId", item.perfume.id)
+    formData.append("action", "updateVisibility")
+    formData.append("isPublic", newVisibility.toString())
 
-    const [error, response] = await safeAsync(() => 
-      fetch('/api/wishlist', {
-        method: 'POST',
+    const [error, response] = await safeAsync(() =>
+      fetch("/api/wishlist", {
+        method: "POST",
         headers: addToHeaders(),
-        body: formData
+        body: formData,
       })
     )
 
     if (error || !response.ok) {
       // Revert on error
-      console.error('Error updating wishlist visibility:', error)
+      console.error("Error updating wishlist visibility:", error)
       setIsPublic(!newVisibility)
     }
   }
 
   return (
-    <div
-      className={styleMerge(wishlistVariants({ isAvailable }))}
-    >
+    <div className={styleMerge(wishlistVariants({ isAvailable }))}>
       <Form method="post" className="absolute top-2 right-2 z-10">
         <input type="hidden" name="intent" value="remove" />
         <input type="hidden" name="perfumeId" value={item.perfume.id} />
@@ -69,11 +72,11 @@ const WishlistItemCard = ({
 
       {isAvailable && (
         <div className="bg-noir-light text-noir-dark text-xs font-bold px-3 py-1 text-center animate-pulse">
-          {t('wishlist.itemCard.available')}
+          {t("wishlist.itemCard.available")}
         </div>
       )}
       <img
-        src={item.perfume.image || '/placeholder-perfume.jpg'}
+        src={item.perfume.image || "/placeholder-perfume.jpg"}
         alt={item.perfume.name}
         className="w-full h-48 object-cover"
       />
@@ -83,9 +86,7 @@ const WishlistItemCard = ({
         </h3>
         <div className="px-4 pb-2">
           <p className={styleMerge(wishlistHouseVariants({ isAvailable }))}>
-            by
-            {' '}
-            {item.perfume.perfumeHouse?.name || 'Unknown House'}
+            by {item.perfume.perfumeHouse?.name || "Unknown House"}
           </p>
 
           {isAvailable && (
@@ -98,9 +99,7 @@ const WishlistItemCard = ({
 
           <div className="flex items-center justify-between mt-4">
             <span className={styleMerge(wishlistAddedVariants({ isAvailable }))}>
-              Added on
-              {' '}
-              {new Date(item.createdAt).toLocaleDateString()}
+              Added on {new Date(item.createdAt).toLocaleDateString()}
             </span>
             <div className="flex items-center gap-2">
               <NavLink
@@ -114,28 +113,27 @@ const WishlistItemCard = ({
 
           <div className="mt-3 pt-3 border-t border-noir-gold-200">
             <div className="flex items-center justify-between pb-4">
-              <span className=
-                {styleMerge(wishlistVisibilityVariants({ isAvailable }))}>
-                {t('wishlist.itemCard.visibility')}:
+              <span
+                className={styleMerge(wishlistVisibilityVariants({ isAvailable }))}
+              >
+                {t("wishlist.itemCard.visibility")}:
               </span>
               <VooDooCheck
                 checked={isPublic}
                 onChange={handleVisibilityToggle}
-                labelChecked={t('wishlist.itemCard.public')}
-                labelUnchecked={t('wishlist.itemCard.private')}
+                labelChecked={t("wishlist.itemCard.public")}
+                labelUnchecked={t("wishlist.itemCard.private")}
               />
             </div>
             <p className={styleMerge(wishlistVisibilityVariants({ isAvailable }))}>
               {isPublic
-                ? t('wishlist.itemCard.availableMessage')
-                : t('wishlist.itemCard.unavailableMessage')
-              }
+                ? t("wishlist.itemCard.availableMessage")
+                : t("wishlist.itemCard.unavailableMessage")}
             </p>
           </div>
         </div>
       </div>
-
-    </div >
+    </div>
   )
 }
 

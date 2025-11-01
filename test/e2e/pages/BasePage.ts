@@ -1,6 +1,6 @@
-import { Page } from '@playwright/test'
+import { Page } from "@playwright/test"
 
-import { TestHelpers } from '../utils/test-helpers'
+import { TestHelpers } from "../utils/test-helpers"
 
 /**
  * Base page class for all page objects

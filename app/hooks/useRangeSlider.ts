@@ -1,5 +1,4 @@
- 
-import { useGSAP } from '@gsap/react'
+import { useGSAP } from "@gsap/react"
 import React, {
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
@@ -7,18 +6,18 @@ import React, {
   useCallback,
   useEffect,
   useRef,
-  useState
-} from 'react'
+  useState,
+} from "react"
 
 import {
   calculatePercentage,
   calculateValueFromPosition,
   getKeyboardValue,
   setupHoverListeners,
-  sliderAnimations
-} from '~/utils/rangeSliderUtils'
+  sliderAnimations,
+} from "~/utils/rangeSliderUtils"
 
-import { useDragState } from './useDragState'
+import { useDragState } from "./useDragState"
 
 interface UseRangeSliderOptions {
   min?: number
@@ -54,7 +53,7 @@ export const useRangeSlider = ({
   step = 1,
   value = 0,
   onChange,
-  disabled = false
+  disabled = false,
 }: UseRangeSliderOptions): UseRangeSliderReturn => {
   const trackRef = useRef<HTMLDivElement>(null)
   const fillRef = useRef<HTMLDivElement>(null)
@@ -64,28 +63,29 @@ export const useRangeSlider = ({
 
   const percentage = calculatePercentage(internalValue, min, max)
 
-  const updateValue = useCallback((newValue: number) => {
-    setInternalValue(newValue)
-    onChange?.(newValue)
-  }, [onChange])
+  const updateValue = useCallback(
+    (newValue: number) => {
+      setInternalValue(newValue)
+      onChange?.(newValue)
+    },
+    [onChange]
+  )
 
-  const calculateValue = useCallback((clientX: number) => {
-    if (!trackRef.current) {
-      return internalValue
-    }
-    return calculateValueFromPosition({
-      clientX,
-      trackElement: trackRef.current,
-      min,
-      max,
-      step
-    })
-  }, [
-    internalValue,
-    min,
-    max,
-    step
-  ])
+  const calculateValue = useCallback(
+    (clientX: number) => {
+      if (!trackRef.current) {
+        return internalValue
+      }
+      return calculateValueFromPosition({
+        clientX,
+        trackElement: trackRef.current,
+        min,
+        max,
+        step,
+      })
+    },
+    [internalValue, min, max, step]
+  )
 
   // Animation effects
   useGSAP(() => {
@@ -111,7 +111,7 @@ export const useRangeSlider = ({
   const { startDragging } = useDragState({
     onValueChange: updateValue,
     calculateValue,
-    thumbRef
+    thumbRef,
   })
 
   // Event handlers
@@ -142,9 +142,11 @@ export const useRangeSlider = ({
   }
 
   const handleTrackTouch = (event: ReactTouchEvent) => {
-    if (disabled ||
+    if (
+      disabled ||
       event.touches.length === 0 ||
-      event.target === thumbRef.current) {
+      event.target === thumbRef.current
+    ) {
       return
     }
     event.preventDefault() // Prevent scrolling
@@ -162,7 +164,7 @@ export const useRangeSlider = ({
       currentValue: internalValue,
       min,
       max,
-      step
+      step,
     })
     if (newValue !== null) {
       event.preventDefault()
@@ -186,6 +188,6 @@ export const useRangeSlider = ({
     handleTouchStart,
     handleTrackClick,
     handleTrackTouch,
-    handleKeyDown
+    handleKeyDown,
   }
 }

@@ -1,15 +1,15 @@
- 
-import { type FieldMetadata, getInputProps } from '@conform-to/react'
-import { type VariantProps } from 'class-variance-authority'
-import { type HTMLProps, type RefObject } from 'react'
+import { type FieldMetadata, getInputProps } from "@conform-to/react"
+import { type VariantProps } from "class-variance-authority"
+import { type HTMLProps, type RefObject } from "react"
 
-import { styleMerge } from '~/utils/styleUtils'
+import { styleMerge } from "~/utils/styleUtils"
 
-import { inputVariants, inputWrapperVariants } from './input-variants'
+import { inputVariants, inputWrapperVariants } from "./input-variants"
 
-interface InputProps extends Omit<HTMLProps<HTMLInputElement>, 'action'>,
-  VariantProps<typeof inputVariants> {
-  inputType: 'email' | 'password' | 'text' | string
+interface InputProps
+  extends Omit<HTMLProps<HTMLInputElement>, "action">,
+    VariantProps<typeof inputVariants> {
+  inputType: "email" | "password" | "text" | string
   inputId?: string
   label?: string
   placeholder?: string
@@ -38,25 +38,46 @@ const Input = ({
 }: InputProps) => {
   const inputProps = action
     ? {
-      ...getInputProps(action, { ariaAttributes: true, type: inputType }),
-      id: inputId,
-      placeholder,
-      autoComplete: autoComplete || (inputType === 'password' ? 'current-password' : inputType === 'email' ? 'email' : undefined)
-    }
-    : { id: inputId, type: inputType, placeholder, autoComplete: autoComplete || (inputType === 'password' ? 'current-password' : inputType === 'email' ? 'email' : undefined) }
+        ...getInputProps(action, { ariaAttributes: true, type: inputType }),
+        id: inputId,
+        placeholder,
+        autoComplete:
+          autoComplete ||
+          (inputType === "password"
+            ? "current-password"
+            : inputType === "email"
+            ? "email"
+            : undefined),
+      }
+    : {
+        id: inputId,
+        type: inputType,
+        placeholder,
+        autoComplete:
+          autoComplete ||
+          (inputType === "password"
+            ? "current-password"
+            : inputType === "email"
+            ? "email"
+            : undefined),
+      }
 
   return (
-    <div className={styleMerge(inputWrapperVariants({ className }))} data-cy="Input" {...props}>
+    <div
+      className={styleMerge(inputWrapperVariants({ className }))}
+      data-cy="Input"
+      {...props}
+    >
       <label
         htmlFor={inputId}
-        className='font-semibold text-2xl mb-1 capitalize text-noir-gold text-shadow-lg text-shadow-noir-black/60 tracking-wide'
+        className="font-semibold text-2xl mb-1 capitalize text-noir-gold text-shadow-lg text-shadow-noir-black/60 tracking-wide"
       >
         {label ? label : action?.name}
       </label>
       <input
         name={action?.name}
         ref={inputRef}
-        defaultValue={defaultValue ? defaultValue : ''}
+        defaultValue={defaultValue ? defaultValue : ""}
         aria-invalid={actionData?.errors?.action ? true : undefined}
         aria-describedby={`${inputId}-error`}
         className={styleMerge(inputVariants({ shading }))}

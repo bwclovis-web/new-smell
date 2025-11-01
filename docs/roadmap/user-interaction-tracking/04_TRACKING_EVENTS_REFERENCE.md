@@ -10,6 +10,7 @@
 ## Quick Access
 
 Jump to section:
+
 - [View Events](#view-events)
 - [Search Events](#search-events)
 - [Filter Events](#filter-events)
@@ -28,23 +29,23 @@ Jump to section:
 ### How to Track an Event
 
 ```typescript
-import { analytics } from '~/utils/analytics/analytics-sdk'
+import { analytics } from "~/utils/analytics/analytics-sdk"
 
 // Simple tracking
 analytics.track({
-  eventType: 'PAGE_VIEW',
-  eventCategory: 'VIEW',
-  path: window.location.pathname
+  eventType: "PAGE_VIEW",
+  eventCategory: "VIEW",
+  path: window.location.pathname,
 })
 
 // With additional data
 analytics.track({
-  eventType: 'PERFUME_VIEW',
-  eventCategory: 'VIEW',
+  eventType: "PERFUME_VIEW",
+  eventCategory: "VIEW",
   path: window.location.pathname,
-  perfumeId: 'perfume-123',
-  eventData: { source: 'search' },
-  duration: 5000
+  perfumeId: "perfume-123",
+  eventData: { source: "search" },
+  duration: 5000,
 })
 ```
 
@@ -55,22 +56,22 @@ All events follow this structure:
 ```typescript
 interface TrackingEvent {
   // Required
-  eventType: InteractionEventType      // What happened
-  eventCategory: InteractionCategory   // Category grouping
-  path: string                         // Current URL path
-  
+  eventType: InteractionEventType // What happened
+  eventCategory: InteractionCategory // Category grouping
+  path: string // Current URL path
+
   // Optional but recommended
-  perfumeId?: string                   // Related perfume
-  houseId?: string                     // Related house
-  eventData?: Record<string, any>      // Additional context
-  duration?: number                    // Duration in ms
-  value?: number                       // Numeric value
-  
+  perfumeId?: string // Related perfume
+  houseId?: string // Related house
+  eventData?: Record<string, any> // Additional context
+  duration?: number // Duration in ms
+  value?: number // Numeric value
+
   // Auto-populated
-  userId?: string                      // Logged in user
-  sessionId: string                    // Session ID
-  timestamp: Date                      // Event time
-  userAgent?: string                   // Browser info
+  userId?: string // Logged in user
+  sessionId: string // Session ID
+  timestamp: Date // Event time
+  userAgent?: string // Browser info
 }
 ```
 
@@ -86,9 +87,9 @@ interface TrackingEvent {
 
 ```typescript
 analytics.track({
-  eventType: 'PAGE_VIEW',
-  eventCategory: 'VIEW',
-  path: '/perfume/aventus'
+  eventType: "PAGE_VIEW",
+  eventCategory: "VIEW",
+  path: "/perfume/aventus",
 })
 ```
 
@@ -102,10 +103,11 @@ analytics.track({
 trackPerfumeView(perfumeId, path, source)
 
 // Example
-trackPerfumeView('perfume-123', '/perfume/aventus', 'search')
+trackPerfumeView("perfume-123", "/perfume/aventus", "search")
 ```
 
 **Event Data:**
+
 ```typescript
 {
   source?: 'search' | 'recommendation' | 'direct' | 'related' | 'house'
@@ -121,11 +123,11 @@ trackPerfumeView('perfume-123', '/perfume/aventus', 'search')
 
 ```typescript
 analytics.track({
-  eventType: 'HOUSE_VIEW',
-  eventCategory: 'VIEW',
-  path: '/house/creed',
-  houseId: 'house-456',
-  eventData: { source: 'perfume_page' }
+  eventType: "HOUSE_VIEW",
+  eventCategory: "VIEW",
+  path: "/house/creed",
+  houseId: "house-456",
+  eventData: { source: "perfume_page" },
 })
 ```
 
@@ -136,13 +138,13 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'COLLECTION_VIEW',
-  eventCategory: 'VIEW',
-  path: '/collection/user-123',
+  eventType: "COLLECTION_VIEW",
+  eventCategory: "VIEW",
+  path: "/collection/user-123",
   eventData: {
-    targetUserId: 'user-123',
-    perfumeCount: 45
-  }
+    targetUserId: "user-123",
+    perfumeCount: 45,
+  },
 })
 ```
 
@@ -160,14 +162,15 @@ trackSearch(query, filters, resultsCount, path)
 
 // Example
 trackSearch(
-  'woody oriental',
-  { houses: ['creed'], priceRange: { min: 0, max: 100 } },
+  "woody oriental",
+  { houses: ["creed"], priceRange: { min: 0, max: 100 } },
   23,
-  '/the-vault'
+  "/the-vault"
 )
 ```
 
 **Event Data:**
+
 ```typescript
 {
   query: string              // Search text
@@ -191,15 +194,15 @@ trackSearch(
 
 ```typescript
 analytics.track({
-  eventType: 'SEARCH_RESULT_CLICKED',
-  eventCategory: 'SEARCH',
-  path: '/the-vault',
-  perfumeId: 'perfume-123',
+  eventType: "SEARCH_RESULT_CLICKED",
+  eventCategory: "SEARCH",
+  path: "/the-vault",
+  perfumeId: "perfume-123",
   eventData: {
-    query: 'woody oriental',
-    position: 3,              // Position in results (1-based)
-    totalResults: 23
-  }
+    query: "woody oriental",
+    position: 3, // Position in results (1-based)
+    totalResults: 23,
+  },
 })
 ```
 
@@ -210,15 +213,15 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'SEARCH_REFINED',
-  eventCategory: 'SEARCH',
-  path: '/the-vault',
+  eventType: "SEARCH_REFINED",
+  eventCategory: "SEARCH",
+  path: "/the-vault",
   eventData: {
-    originalQuery: 'woody',
-    newQuery: 'woody oriental',
+    originalQuery: "woody",
+    newQuery: "woody oriental",
     originalFilters: {},
-    newFilters: { houses: ['creed'] }
-  }
+    newFilters: { houses: ["creed"] },
+  },
 })
 ```
 
@@ -229,13 +232,13 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'SEARCH_NO_RESULTS',
-  eventCategory: 'SEARCH',
-  path: '/the-vault',
+  eventType: "SEARCH_NO_RESULTS",
+  eventCategory: "SEARCH",
+  path: "/the-vault",
   eventData: {
-    query: 'very-rare-perfume',
-    filters: {}
-  }
+    query: "very-rare-perfume",
+    filters: {},
+  },
 })
 ```
 
@@ -250,15 +253,15 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'FILTER_APPLIED',
-  eventCategory: 'FILTER',
-  path: '/the-vault',
+  eventType: "FILTER_APPLIED",
+  eventCategory: "FILTER",
+  path: "/the-vault",
   eventData: {
-    filterType: 'house',
-    filterValue: 'creed',
+    filterType: "house",
+    filterValue: "creed",
     resultsCount: 45,
-    previousResultsCount: 1250
-  }
+    previousResultsCount: 1250,
+  },
 })
 ```
 
@@ -269,14 +272,14 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'FILTER_REMOVED',
-  eventCategory: 'FILTER',
-  path: '/the-vault',
+  eventType: "FILTER_REMOVED",
+  eventCategory: "FILTER",
+  path: "/the-vault",
   eventData: {
-    filterType: 'house',
-    filterValue: 'creed',
-    resultsCount: 1250
-  }
+    filterType: "house",
+    filterValue: "creed",
+    resultsCount: 1250,
+  },
 })
 ```
 
@@ -287,16 +290,16 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'FILTER_CLEARED',
-  eventCategory: 'FILTER',
-  path: '/the-vault',
+  eventType: "FILTER_CLEARED",
+  eventCategory: "FILTER",
+  path: "/the-vault",
   eventData: {
     previousFilters: {
-      houses: ['creed', 'tom-ford'],
-      priceRange: { min: 0, max: 100 }
+      houses: ["creed", "tom-ford"],
+      priceRange: { min: 0, max: 100 },
     },
-    resultsCount: 1250
-  }
+    resultsCount: 1250,
+  },
 })
 ```
 
@@ -311,13 +314,13 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'RATING_STARTED',
-  eventCategory: 'RATING',
-  path: '/perfume/aventus',
-  perfumeId: 'perfume-123',
+  eventType: "RATING_STARTED",
+  eventCategory: "RATING",
+  path: "/perfume/aventus",
+  perfumeId: "perfume-123",
   eventData: {
-    category: 'longevity'
-  }
+    category: "longevity",
+  },
 })
 ```
 
@@ -329,23 +332,24 @@ analytics.track({
 
 ```typescript
 trackRating({
-  userId: 'user-123',
-  sessionId: 'session-456',
-  perfumeId: 'perfume-789',
+  userId: "user-123",
+  sessionId: "session-456",
+  perfumeId: "perfume-789",
   ratings: {
     overall: 4,
     longevity: 5,
     sillage: 4,
     priceValue: 3,
-    gender: 4
+    gender: 4,
   },
-  timeToComplete: 45000,  // 45 seconds
+  timeToComplete: 45000, // 45 seconds
   userAgent: navigator.userAgent,
-  path: '/perfume/aventus'
+  path: "/perfume/aventus",
 })
 ```
 
 **Event Data:**
+
 ```typescript
 {
   ratings: {
@@ -368,15 +372,15 @@ trackRating({
 
 ```typescript
 analytics.track({
-  eventType: 'RATING_UPDATED',
-  eventCategory: 'RATING',
-  path: '/perfume/aventus',
-  perfumeId: 'perfume-123',
+  eventType: "RATING_UPDATED",
+  eventCategory: "RATING",
+  path: "/perfume/aventus",
+  perfumeId: "perfume-123",
   eventData: {
     previousRatings: { overall: 3, longevity: 4 },
     newRatings: { overall: 4, longevity: 5 },
-    changedCategories: ['overall', 'longevity']
-  }
+    changedCategories: ["overall", "longevity"],
+  },
 })
 ```
 
@@ -391,10 +395,10 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'REVIEW_STARTED',
-  eventCategory: 'REVIEW',
-  path: '/perfume/aventus',
-  perfumeId: 'perfume-123'
+  eventType: "REVIEW_STARTED",
+  eventCategory: "REVIEW",
+  path: "/perfume/aventus",
+  perfumeId: "perfume-123",
 })
 ```
 
@@ -405,15 +409,15 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'REVIEW_SUBMITTED',
-  eventCategory: 'REVIEW',
-  path: '/perfume/aventus',
-  perfumeId: 'perfume-123',
+  eventType: "REVIEW_SUBMITTED",
+  eventCategory: "REVIEW",
+  path: "/perfume/aventus",
+  perfumeId: "perfume-123",
   eventData: {
-    reviewLength: 245,      // Character count
-    timeToWrite: 120000,    // 2 minutes in ms
-    wordCount: 45
-  }
+    reviewLength: 245, // Character count
+    timeToWrite: 120000, // 2 minutes in ms
+    wordCount: 45,
+  },
 })
 ```
 
@@ -424,15 +428,15 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'REVIEW_UPDATED',
-  eventCategory: 'REVIEW',
-  path: '/perfume/aventus',
-  perfumeId: 'perfume-123',
+  eventType: "REVIEW_UPDATED",
+  eventCategory: "REVIEW",
+  path: "/perfume/aventus",
+  perfumeId: "perfume-123",
   eventData: {
     previousLength: 200,
     newLength: 245,
-    timeSinceOriginal: 86400000  // 1 day
-  }
+    timeSinceOriginal: 86400000, // 1 day
+  },
 })
 ```
 
@@ -451,16 +455,16 @@ trackCollectionAdd(perfumeId, path)
 
 // Or with details
 analytics.track({
-  eventType: 'COLLECTION_ADD',
-  eventCategory: 'COLLECTION',
-  path: '/perfume/aventus',
-  perfumeId: 'perfume-123',
+  eventType: "COLLECTION_ADD",
+  eventCategory: "COLLECTION",
+  path: "/perfume/aventus",
+  perfumeId: "perfume-123",
   eventData: {
-    source: 'detail_page',
-    amount: '100ml',
-    price: '350',
-    tradePreference: 'both'
-  }
+    source: "detail_page",
+    amount: "100ml",
+    price: "350",
+    tradePreference: "both",
+  },
 })
 ```
 
@@ -471,15 +475,15 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'COLLECTION_UPDATE',
-  eventCategory: 'COLLECTION',
-  path: '/my-collection',
-  perfumeId: 'perfume-123',
+  eventType: "COLLECTION_UPDATE",
+  eventCategory: "COLLECTION",
+  path: "/my-collection",
+  perfumeId: "perfume-123",
   eventData: {
-    changedFields: ['available', 'price'],
-    previousValues: { available: '50ml', price: '350' },
-    newValues: { available: '30ml', price: '300' }
-  }
+    changedFields: ["available", "price"],
+    previousValues: { available: "50ml", price: "350" },
+    newValues: { available: "30ml", price: "300" },
+  },
 })
 ```
 
@@ -490,14 +494,14 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'COLLECTION_REMOVE',
-  eventCategory: 'COLLECTION',
-  path: '/my-collection',
-  perfumeId: 'perfume-123',
+  eventType: "COLLECTION_REMOVE",
+  eventCategory: "COLLECTION",
+  path: "/my-collection",
+  perfumeId: "perfume-123",
   eventData: {
-    timeInCollection: 2592000000,  // 30 days in ms
-    reason: 'sold'
-  }
+    timeInCollection: 2592000000, // 30 days in ms
+    reason: "sold",
+  },
 })
 ```
 
@@ -515,10 +519,11 @@ analytics.track({
 trackWishlistAdd(perfumeId, path, source)
 
 // Example
-trackWishlistAdd('perfume-123', '/perfume/aventus', 'detail_page')
+trackWishlistAdd("perfume-123", "/perfume/aventus", "detail_page")
 ```
 
 **Event Data:**
+
 ```typescript
 {
   source: 'detail_page' | 'search' | 'recommendation' | 'related'
@@ -534,14 +539,14 @@ trackWishlistAdd('perfume-123', '/perfume/aventus', 'detail_page')
 
 ```typescript
 analytics.track({
-  eventType: 'WISHLIST_REMOVE',
-  eventCategory: 'WISHLIST',
-  path: '/my-wishlist',
-  perfumeId: 'perfume-123',
+  eventType: "WISHLIST_REMOVE",
+  eventCategory: "WISHLIST",
+  path: "/my-wishlist",
+  perfumeId: "perfume-123",
   eventData: {
-    timeInWishlist: 604800000,  // 7 days in ms
-    reason: 'purchased' | 'not_interested' | 'found_alternative'
-  }
+    timeInWishlist: 604800000, // 7 days in ms
+    reason: "purchased" | "not_interested" | "found_alternative",
+  },
 })
 ```
 
@@ -556,15 +561,15 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'IMAGE_VIEWED',
-  eventCategory: 'ENGAGEMENT',
-  path: '/perfume/aventus',
-  perfumeId: 'perfume-123',
+  eventType: "IMAGE_VIEWED",
+  eventCategory: "ENGAGEMENT",
+  path: "/perfume/aventus",
+  perfumeId: "perfume-123",
   eventData: {
     imageIndex: 0,
-    viewDuration: 3000,  // 3 seconds
-    zoomed: false
-  }
+    viewDuration: 3000, // 3 seconds
+    zoomed: false,
+  },
 })
 ```
 
@@ -575,14 +580,14 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'IMAGE_ZOOMED',
-  eventCategory: 'ENGAGEMENT',
-  path: '/perfume/aventus',
-  perfumeId: 'perfume-123',
+  eventType: "IMAGE_ZOOMED",
+  eventCategory: "ENGAGEMENT",
+  path: "/perfume/aventus",
+  perfumeId: "perfume-123",
   eventData: {
     imageIndex: 0,
-    zoomLevel: 2.5
-  }
+    zoomLevel: 2.5,
+  },
 })
 ```
 
@@ -593,14 +598,14 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'NOTES_EXPANDED',
-  eventCategory: 'ENGAGEMENT',
-  path: '/perfume/aventus',
-  perfumeId: 'perfume-123',
+  eventType: "NOTES_EXPANDED",
+  eventCategory: "ENGAGEMENT",
+  path: "/perfume/aventus",
+  perfumeId: "perfume-123",
   eventData: {
-    noteType: 'heart',  // 'open', 'heart', 'base'
-    expandDuration: 8000  // How long expanded (ms)
-  }
+    noteType: "heart", // 'open', 'heart', 'base'
+    expandDuration: 8000, // How long expanded (ms)
+  },
 })
 ```
 
@@ -611,15 +616,15 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'SIMILAR_CLICKED',
-  eventCategory: 'ENGAGEMENT',
-  path: '/perfume/aventus',
-  perfumeId: 'perfume-123',  // Source perfume
+  eventType: "SIMILAR_CLICKED",
+  eventCategory: "ENGAGEMENT",
+  path: "/perfume/aventus",
+  perfumeId: "perfume-123", // Source perfume
   eventData: {
-    targetPerfumeId: 'perfume-456',  // Clicked perfume
+    targetPerfumeId: "perfume-456", // Clicked perfume
     position: 2,
-    similarityReason: 'same_notes'
-  }
+    similarityReason: "same_notes",
+  },
 })
 ```
 
@@ -630,14 +635,14 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'HOUSE_LINK_CLICKED',
-  eventCategory: 'ENGAGEMENT',
-  path: '/perfume/aventus',
-  perfumeId: 'perfume-123',
-  houseId: 'house-456',
+  eventType: "HOUSE_LINK_CLICKED",
+  eventCategory: "ENGAGEMENT",
+  path: "/perfume/aventus",
+  perfumeId: "perfume-123",
+  houseId: "house-456",
   eventData: {
-    location: 'header' | 'details' | 'breadcrumb'
-  }
+    location: "header" | "details" | "breadcrumb",
+  },
 })
 ```
 
@@ -652,14 +657,14 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'NAVIGATION_CLICK',
-  eventCategory: 'NAVIGATION',
-  path: '/current-page',
+  eventType: "NAVIGATION_CLICK",
+  eventCategory: "NAVIGATION",
+  path: "/current-page",
   eventData: {
-    linkText: 'The Vault',
-    targetPath: '/the-vault',
-    menuType: 'main' | 'footer' | 'mobile'
-  }
+    linkText: "The Vault",
+    targetPath: "/the-vault",
+    menuType: "main" | "footer" | "mobile",
+  },
 })
 ```
 
@@ -670,13 +675,13 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'BACK_BUTTON',
-  eventCategory: 'NAVIGATION',
-  path: '/perfume/aventus',
+  eventType: "BACK_BUTTON",
+  eventCategory: "NAVIGATION",
+  path: "/perfume/aventus",
   eventData: {
-    previousPath: '/the-vault',
-    timeOnPage: 15000  // 15 seconds
-  }
+    previousPath: "/the-vault",
+    timeOnPage: 15000, // 15 seconds
+  },
 })
 ```
 
@@ -687,13 +692,13 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'EXTERNAL_LINK',
-  eventCategory: 'NAVIGATION',
-  path: '/perfume/aventus',
+  eventType: "EXTERNAL_LINK",
+  eventCategory: "NAVIGATION",
+  path: "/perfume/aventus",
   eventData: {
-    url: 'https://external-site.com',
-    linkText: 'Buy Now'
-  }
+    url: "https://external-site.com",
+    linkText: "Buy Now",
+  },
 })
 ```
 
@@ -708,13 +713,13 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'PROFILE_VIEWED',
-  eventCategory: 'SOCIAL',
-  path: '/profile/user-123',
+  eventType: "PROFILE_VIEWED",
+  eventCategory: "SOCIAL",
+  path: "/profile/user-123",
   eventData: {
-    targetUserId: 'user-123',
-    source: 'collection' | 'review' | 'trade' | 'search'
-  }
+    targetUserId: "user-123",
+    source: "collection" | "review" | "trade" | "search",
+  },
 })
 ```
 
@@ -725,13 +730,13 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'COLLECTION_SHARED',
-  eventCategory: 'SOCIAL',
-  path: '/my-collection',
+  eventType: "COLLECTION_SHARED",
+  eventCategory: "SOCIAL",
+  path: "/my-collection",
   eventData: {
-    method: 'link' | 'email' | 'social',
-    platform: 'twitter' | 'facebook' | 'instagram'
-  }
+    method: "link" | "email" | "social",
+    platform: "twitter" | "facebook" | "instagram",
+  },
 })
 ```
 
@@ -742,15 +747,15 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'TRADE_INQUIRY',
-  eventCategory: 'SOCIAL',
-  path: '/collection/user-123',
-  perfumeId: 'perfume-123',
+  eventType: "TRADE_INQUIRY",
+  eventCategory: "SOCIAL",
+  path: "/collection/user-123",
+  perfumeId: "perfume-123",
   eventData: {
-    targetUserId: 'user-123',
-    offerType: 'cash' | 'trade' | 'both',
-    message: boolean  // Did they include a message?
-  }
+    targetUserId: "user-123",
+    offerType: "cash" | "trade" | "both",
+    message: boolean, // Did they include a message?
+  },
 })
 ```
 
@@ -765,16 +770,16 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'TRADE_OFFERED',
-  eventCategory: 'CONVERSION',
-  path: '/trade/new',
-  perfumeId: 'perfume-123',
-  value: 350,  // Offer value
+  eventType: "TRADE_OFFERED",
+  eventCategory: "CONVERSION",
+  path: "/trade/new",
+  perfumeId: "perfume-123",
+  value: 350, // Offer value
   eventData: {
-    targetUserId: 'user-456',
-    offerType: 'cash' | 'trade',
-    perfumesOffered?: ['perfume-789']
-  }
+    targetUserId: "user-456",
+    offerType: "cash" | "trade",
+    perfumesOffered: ["perfume-789"],
+  },
 })
 ```
 
@@ -785,15 +790,15 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'TRADE_ACCEPTED',
-  eventCategory: 'CONVERSION',
-  path: '/trade/123',
-  perfumeId: 'perfume-123',
+  eventType: "TRADE_ACCEPTED",
+  eventCategory: "CONVERSION",
+  path: "/trade/123",
+  perfumeId: "perfume-123",
   value: 350,
   eventData: {
-    tradeId: 'trade-123',
-    timeToAccept: 3600000  // 1 hour
-  }
+    tradeId: "trade-123",
+    timeToAccept: 3600000, // 1 hour
+  },
 })
 ```
 
@@ -804,15 +809,15 @@ analytics.track({
 
 ```typescript
 analytics.track({
-  eventType: 'TRADE_DECLINED',
-  eventCategory: 'CONVERSION',
-  path: '/trade/123',
-  perfumeId: 'perfume-123',
+  eventType: "TRADE_DECLINED",
+  eventCategory: "CONVERSION",
+  path: "/trade/123",
+  perfumeId: "perfume-123",
   eventData: {
-    tradeId: 'trade-123',
-    reason: 'price' | 'not_interested' | 'other',
-    counterOffer: boolean
-  }
+    tradeId: "trade-123",
+    reason: "price" | "not_interested" | "other",
+    counterOffer: boolean,
+  },
 })
 ```
 
@@ -884,22 +889,22 @@ useTimeTracking(callback: (duration: number) => void)
 ```typescript
 // ❌ Bad - minimal context
 analytics.track({
-  eventType: 'PERFUME_VIEW',
-  eventCategory: 'VIEW',
-  path: '/perfume/aventus'
+  eventType: "PERFUME_VIEW",
+  eventCategory: "VIEW",
+  path: "/perfume/aventus",
 })
 
 // ✅ Good - rich context
 analytics.track({
-  eventType: 'PERFUME_VIEW',
-  eventCategory: 'VIEW',
-  path: '/perfume/aventus',
-  perfumeId: 'perfume-123',
+  eventType: "PERFUME_VIEW",
+  eventCategory: "VIEW",
+  path: "/perfume/aventus",
+  perfumeId: "perfume-123",
   eventData: {
-    source: 'search',
-    query: 'woody oriental',
-    position: 3
-  }
+    source: "search",
+    query: "woody oriental",
+    position: 3,
+  },
 })
 ```
 
@@ -908,15 +913,15 @@ analytics.track({
 ```typescript
 // ❌ Manual tracking (more code, more mistakes)
 analytics.track({
-  eventType: 'WISHLIST_ADD',
-  eventCategory: 'WISHLIST',
+  eventType: "WISHLIST_ADD",
+  eventCategory: "WISHLIST",
   path: window.location.pathname,
   perfumeId: perfume.id,
-  eventData: { source: 'detail_page' }
+  eventData: { source: "detail_page" },
 })
 
 // ✅ Use helper (less code, consistent)
-trackWishlistAdd(perfume.id, window.location.pathname, 'detail_page')
+trackWishlistAdd(perfume.id, window.location.pathname, "detail_page")
 ```
 
 ### 3. Use React Hooks for Pages
@@ -937,15 +942,15 @@ usePageTracking()
 // Track both the action AND the outcome
 const handleSearch = async (query) => {
   const results = await searchPerfumes(query)
-  
+
   trackSearch(query, filters, results.length, pathname)
-  
+
   if (results.length === 0) {
     analytics.track({
-      eventType: 'SEARCH_NO_RESULTS',
-      eventCategory: 'SEARCH',
+      eventType: "SEARCH_NO_RESULTS",
+      eventCategory: "SEARCH",
       path: pathname,
-      eventData: { query, filters }
+      eventData: { query, filters },
     })
   }
 }
@@ -971,7 +976,7 @@ router.push('/next-page')
 
 ```typescript
 // In browser console
-sessionStorage.getItem('analyticsSessionId')
+sessionStorage.getItem("analyticsSessionId")
 
 // Check network tab for /api/analytics calls
 // Look for batched events every 5 seconds
@@ -980,14 +985,14 @@ sessionStorage.getItem('analyticsSessionId')
 ### Manual Event Trigger
 
 ```typescript
-import { analytics } from '~/utils/analytics/analytics-sdk'
+import { analytics } from "~/utils/analytics/analytics-sdk"
 
 // Trigger test event
 analytics.track({
-  eventType: 'PAGE_VIEW',
-  eventCategory: 'VIEW',
-  path: '/test',
-  eventData: { test: true }
+  eventType: "PAGE_VIEW",
+  eventCategory: "VIEW",
+  path: "/test",
+  eventData: { test: true },
 })
 
 // Force flush immediately (instead of waiting)
@@ -1032,4 +1037,3 @@ analytics.flush()
 
 **Last Updated:** 2025-11-01  
 **Maintained By:** Development Team
-

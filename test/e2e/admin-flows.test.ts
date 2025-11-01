@@ -1,39 +1,39 @@
 /**
  * Admin Flows E2E Tests
- * 
+ *
  * Tests administrator-specific functionality:
  * - Admin dashboard access
  * - Security monitoring
  * - User management
  * - Data quality monitoring
  * - Perfume and house management
- * 
+ *
  * Requires admin-level authentication before each test.
- * 
+ *
  * @group e2e
  * @group admin
  */
 
-import { expect, test } from '@playwright/test'
+import { expect, test } from "@playwright/test"
 
-import { AdminPage } from './pages/AdminPage'
-import { LoginPage } from './pages/LoginPage'
-import { VaultPage } from './pages/VaultPage'
+import { AdminPage } from "./pages/AdminPage"
+import { LoginPage } from "./pages/LoginPage"
+import { VaultPage } from "./pages/VaultPage"
 
-test.describe('Admin Flows', () => {
+test.describe("Admin Flows", () => {
   test.beforeEach(async ({ page }) => {
     // Login as admin user before each test
     const loginPage = new LoginPage(page)
     await loginPage.navigateTo()
 
     // Use admin credentials (you may need to adjust these based on your test data)
-    await loginPage.login('admin@example.com', 'AdminPassword123!')
+    await loginPage.login("admin@example.com", "AdminPassword123!")
 
     // Verify login was successful
     await expect(page).toHaveURL(/\/(?!login)/)
   })
 
-  test('should allow admin to access admin dashboard', async ({ page }) => {
+  test("should allow admin to access admin dashboard", async ({ page }) => {
     const adminPage = new AdminPage(page)
     await adminPage.navigateTo()
 
@@ -41,7 +41,7 @@ test.describe('Admin Flows', () => {
     await adminPage.assertDashboardLoaded()
   })
 
-  test('should allow admin to navigate to security monitor', async ({ page }) => {
+  test("should allow admin to navigate to security monitor", async ({ page }) => {
     const adminPage = new AdminPage(page)
     await adminPage.navigateTo()
 
@@ -52,7 +52,7 @@ test.describe('Admin Flows', () => {
     await expect(page).toHaveURL(/security-monitor/)
   })
 
-  test('should allow admin to navigate to data quality', async ({ page }) => {
+  test("should allow admin to navigate to data quality", async ({ page }) => {
     const adminPage = new AdminPage(page)
     await adminPage.navigateTo()
 
@@ -63,7 +63,7 @@ test.describe('Admin Flows', () => {
     await expect(page).toHaveURL(/data-quality/)
   })
 
-  test('should allow admin to create new perfume', async ({ page }) => {
+  test("should allow admin to create new perfume", async ({ page }) => {
     const adminPage = new AdminPage(page)
     await adminPage.navigateTo()
 
@@ -74,7 +74,7 @@ test.describe('Admin Flows', () => {
     await expect(page).toHaveURL(/create-perfume/)
   })
 
-  test('should allow admin to create new perfume house', async ({ page }) => {
+  test("should allow admin to create new perfume house", async ({ page }) => {
     const adminPage = new AdminPage(page)
     await adminPage.navigateTo()
 
@@ -85,20 +85,20 @@ test.describe('Admin Flows', () => {
     await expect(page).toHaveURL(/create-house/)
   })
 
-  test('should redirect non-admin users from admin pages', async ({ page }) => {
+  test("should redirect non-admin users from admin pages", async ({ page }) => {
     // Login as regular user
     const loginPage = new LoginPage(page)
     await loginPage.navigateTo()
-    await loginPage.login('user@example.com', 'UserPassword123!')
+    await loginPage.login("user@example.com", "UserPassword123!")
 
     // Try to access admin page
-    await page.goto('/admin')
+    await page.goto("/admin")
 
     // Should be redirected away from admin page
     await expect(page).toHaveURL(/\/(?!admin)/)
   })
 
-  test('should allow admin to logout', async ({ page }) => {
+  test("should allow admin to logout", async ({ page }) => {
     const adminPage = new AdminPage(page)
     await adminPage.navigateTo()
 

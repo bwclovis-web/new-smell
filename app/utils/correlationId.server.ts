@@ -1,17 +1,17 @@
 /**
  * Correlation ID Utilities
- * 
+ *
  * This module provides utilities for generating and managing correlation IDs
- * for distributed tracing and error tracking. Correlation IDs help track a 
+ * for distributed tracing and error tracking. Correlation IDs help track a
  * single user request across multiple services, database calls, and logs.
- * 
+ *
  * Usage:
  * - Correlation IDs are automatically generated for each request in entry.server.tsx
  * - Use getCorrelationId() anywhere in your server code to retrieve the current ID
  * - All error logs automatically include the correlation ID
  */
 
-import { AsyncLocalStorage } from 'async_hooks'
+import { AsyncLocalStorage } from "async_hooks"
 
 // AsyncLocalStorage provides a way to store data that persists across
 // asynchronous operations within the same request context
@@ -47,7 +47,7 @@ export function getCorrelationId(): string | undefined {
 /**
  * Run a function with a specific correlation ID
  * This creates a proper async context that will be maintained across all async operations
- * 
+ *
  * Usage:
  * ```typescript
  * await runWithCorrelationId(correlationId, async () => {
@@ -66,7 +66,7 @@ export function runWithCorrelationId<T>(
 /**
  * Wrapper function to execute a handler with a correlation ID
  * This automatically generates and sets a correlation ID for the handler
- * 
+ *
  * Usage:
  * ```typescript
  * const wrappedHandler = withCorrelationId(async (request) => {
@@ -76,10 +76,10 @@ export function runWithCorrelationId<T>(
  * ```
  */
 export function withCorrelationId<T extends (...args: any[]) => Promise<any>>(
-  handler: T): T {
+  handler: T
+): T {
   return (async (...args: any[]) => {
     const correlationId = generateCorrelationId()
     return correlationIdStorage.run(correlationId, async () => handler(...args))
   }) as T
 }
-

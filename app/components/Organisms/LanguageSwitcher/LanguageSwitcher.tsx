@@ -1,14 +1,14 @@
-import { type ChangeEvent } from 'react'
-import { useTranslation } from 'react-i18next'
+import { type ChangeEvent } from "react"
+import { useTranslation } from "react-i18next"
 
-import Select from '~/components/Atoms/Select'
+import Select from "~/components/Atoms/Select"
 
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation()
 
   const languageOptions = [
-    { id: 'en', label: 'English', name: 'en' },
-    { id: 'es', label: 'Español', name: 'es' },
+    { id: "en", label: "English", name: "en" },
+    { id: "es", label: "Español", name: "es" },
   ]
 
   const handleLanguageChange = (evt: ChangeEvent<HTMLSelectElement>) => {

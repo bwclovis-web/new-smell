@@ -1,12 +1,13 @@
-import { vi } from 'vitest'
+import { vi } from "vitest"
 
 // API Testing Utilities
 
 // Mock fetch responses
-export const mockFetchResponse = (data: any, status = 200, headers = {}) => vi.fn().mockResolvedValue({
+export const mockFetchResponse = (data: any, status = 200, headers = {}) =>
+  vi.fn().mockResolvedValue({
     ok: status >= 200 && status < 300,
     status,
-    statusText: status === 200 ? 'OK' : 'Error',
+    statusText: status === 200 ? "OK" : "Error",
     headers: new Headers(headers),
     json: () => Promise.resolve(data),
     text: () => Promise.resolve(JSON.stringify(data)),
@@ -14,27 +15,40 @@ export const mockFetchResponse = (data: any, status = 200, headers = {}) => vi.f
   })
 
 // Mock fetch error
-export const mockFetchError = (message = 'Network error', status = 500) => vi.fn().mockRejectedValue(Object.assign(new Error(message), { status }))
+export const mockFetchError = (message = "Network error", status = 500) =>
+  vi.fn().mockRejectedValue(Object.assign(new Error(message), { status }))
 
 // Mock API endpoints
 export const mockAPIEndpoints = {
   users: {
-    get: mockFetchResponse({ id: 1, name: 'Test User', email: 'test@example.com' }),
-    post: mockFetchResponse({ id: 1, message: 'User created' }, 201),
-    put: mockFetchResponse({ id: 1, message: 'User updated' }),
-    delete: mockFetchResponse({ message: 'User deleted' }, 204),
+    get: mockFetchResponse({
+      id: 1,
+      name: "Test User",
+      email: "test@example.com",
+    }),
+    post: mockFetchResponse({ id: 1, message: "User created" }, 201),
+    put: mockFetchResponse({ id: 1, message: "User updated" }),
+    delete: mockFetchResponse({ message: "User deleted" }, 204),
   },
   perfumes: {
-    get: mockFetchResponse({ id: 1, name: 'Test Perfume', brand: 'Test Brand' }),
-    post: mockFetchResponse({ id: 1, message: 'Perfume created' }, 201),
-    put: mockFetchResponse({ id: 1, message: 'Perfume updated' }),
-    delete: mockFetchResponse({ message: 'Perfume deleted' }, 204),
+    get: mockFetchResponse({
+      id: 1,
+      name: "Test Perfume",
+      brand: "Test Brand",
+    }),
+    post: mockFetchResponse({ id: 1, message: "Perfume created" }, 201),
+    put: mockFetchResponse({ id: 1, message: "Perfume updated" }),
+    delete: mockFetchResponse({ message: "Perfume deleted" }, 204),
   },
   houses: {
-    get: mockFetchResponse({ id: 1, name: 'Test House', description: 'Test description' }),
-    post: mockFetchResponse({ id: 1, message: 'House created' }, 201),
-    put: mockFetchResponse({ id: 1, message: 'House updated' }),
-    delete: mockFetchResponse({ message: 'House deleted' }, 204),
+    get: mockFetchResponse({
+      id: 1,
+      name: "Test House",
+      description: "Test description",
+    }),
+    post: mockFetchResponse({ id: 1, message: "House created" }, 201),
+    put: mockFetchResponse({ id: 1, message: "House updated" }),
+    delete: mockFetchResponse({ message: "House deleted" }, 204),
   },
 }
 
@@ -68,7 +82,7 @@ export const testAPICall = async (
 export const testHTTPMethods = async (
   baseUrl: string,
   endpoints: Array<{
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
+    method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH"
     path: string
     data?: any
     expectedStatus: number
@@ -76,7 +90,7 @@ export const testHTTPMethods = async (
 ) => {
   for (const endpoint of endpoints) {
     const mockResponse = mockFetchResponse(
-      { message: 'success' },
+      { message: "success" },
       endpoint.expectedStatus
     )
     global.fetch = mockResponse
@@ -84,11 +98,13 @@ export const testHTTPMethods = async (
     const response = await fetch(`${baseUrl}${endpoint.path}`, {
       method: endpoint.method,
       body: endpoint.data ? JSON.stringify(endpoint.data) : undefined,
-      headers: endpoint.data ? { 'Content-Type': 'application/json' } : undefined,
+      headers: endpoint.data ? { "Content-Type": "application/json" } : undefined,
     })
 
     expect(response.status).toBe(endpoint.expectedStatus)
-    console.log(`✓ ${endpoint.method} ${endpoint.path} returned ${endpoint.expectedStatus}`)
+    console.log(
+      `✓ ${endpoint.method} ${endpoint.path} returned ${endpoint.expectedStatus}`
+    )
   }
 }
 
@@ -104,8 +120,8 @@ export const testAPIAuthentication = async (
 ) => {
   for (const scenario of scenarios) {
     const mockResponse = scenario.shouldSucceed
-      ? mockFetchResponse({ data: 'success' }, scenario.expectedStatus)
-      : mockFetchError('Unauthorized', scenario.expectedStatus)
+      ? mockFetchResponse({ data: "success" }, scenario.expectedStatus)
+      : mockFetchError("Unauthorized", scenario.expectedStatus)
 
     global.fetch = mockResponse
 
@@ -147,7 +163,7 @@ export const testAPICaching = async (
   apiFunction: () => Promise<any>,
   cacheKey: string
 ) => {
-  const mockResponse = mockFetchResponse({ data: 'cached' })
+  const mockResponse = mockFetchResponse({ data: "cached" })
   global.fetch = mockResponse
 
   // First call should hit the API
@@ -168,9 +184,8 @@ export const testAPIPagination = async (
   const totalPages = Math.ceil(totalItems / pageSize)
 
   for (let page = 1; page <= totalPages; page++) {
-    const expectedItems = page === totalPages
-      ? totalItems - (page - 1) * pageSize
-      : pageSize
+    const expectedItems =
+      page === totalPages ? totalItems - (page - 1) * pageSize : pageSize
 
     const mockResponse = mockFetchResponse({
       data: Array(expectedItems).fill({ id: 1 }),
@@ -178,8 +193,8 @@ export const testAPIPagination = async (
         page,
         limit: pageSize,
         total: totalItems,
-        totalPages
-      }
+        totalPages,
+      },
     })
 
     global.fetch = mockResponse
@@ -197,14 +212,14 @@ export const testAPIErrorHandling = async (
     name: string
     status: number
     message: string
-    expectedBehavior: 'throw' | 'return_error'
+    expectedBehavior: "throw" | "return_error"
   }>
 ) => {
   for (const scenario of errorScenarios) {
     const mockError = mockFetchError(scenario.message, scenario.status)
     global.fetch = mockError
 
-    if (scenario.expectedBehavior === 'throw') {
+    if (scenario.expectedBehavior === "throw") {
       await expect(apiFunction()).rejects.toThrow(scenario.message)
     } else {
       const result = await apiFunction()
@@ -220,13 +235,20 @@ export const testAPILoadingStates = async (
   apiFunction: () => Promise<any>,
   getLoadingState: () => boolean
 ) => {
-  const slowMockResponse = vi.fn().mockImplementation(() => new Promise(resolve => {
-      setTimeout(() => resolve({
-        ok: true,
-        status: 200,
-        json: () => Promise.resolve({ data: 'success' })
-      }), 100)
-    }))
+  const slowMockResponse = vi.fn().mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        setTimeout(
+          () =>
+            resolve({
+              ok: true,
+              status: 200,
+              json: () => Promise.resolve({ data: "success" }),
+            }),
+          100
+        )
+      })
+  )
 
   global.fetch = slowMockResponse
 
@@ -242,15 +264,16 @@ export const testAPILoadingStates = async (
 }
 
 // Create mock server responses
-export const createMockServer = (responses: Record<string, any>) => vi.fn().mockImplementation((url: string, options: any = {}) => {
-    const method = options.method || 'GET'
+export const createMockServer = (responses: Record<string, any>) =>
+  vi.fn().mockImplementation((url: string, options: any = {}) => {
+    const method = options.method || "GET"
     const key = `${method} ${url}`
 
     if (responses[key]) {
       return Promise.resolve({
         ok: true,
         status: 200,
-        json: () => Promise.resolve(responses[key])
+        json: () => Promise.resolve(responses[key]),
       })
     }
 
@@ -271,19 +294,17 @@ export const testAPIContentTypes = async (
     global.fetch = mockResponse
 
     await fetch(`${baseUrl}${test.endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type': test.type },
-      body: test.type === 'application/json'
-        ? JSON.stringify(test.data)
-        : test.data
+      method: "POST",
+      headers: { "Content-Type": test.type },
+      body: test.type === "application/json" ? JSON.stringify(test.data) : test.data,
     })
 
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining(test.endpoint),
       expect.objectContaining({
         headers: expect.objectContaining({
-          'Content-Type': test.type
-        })
+          "Content-Type": test.type,
+        }),
       })
     )
   }

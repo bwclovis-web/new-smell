@@ -1,6 +1,6 @@
-import { Page } from '@playwright/test'
+import { Page } from "@playwright/test"
 
-import { BasePage } from './BasePage'
+import { BasePage } from "./BasePage"
 
 /**
  * Admin page object model
@@ -20,7 +20,7 @@ export class AdminPage extends BasePage {
     dataQuality: '[data-testid="data-quality"]',
     userManagement: '[data-testid="user-management"]',
     navigation: '[data-testid="admin-navigation"]',
-    logoutButton: '[data-testid="logout-button"]'
+    logoutButton: '[data-testid="logout-button"]',
   }
 
   constructor(page: Page) {
@@ -31,7 +31,7 @@ export class AdminPage extends BasePage {
    * Navigate to admin dashboard
    */
   async navigateTo(): Promise<void> {
-    await this.helpers.navigateTo('/admin')
+    await this.helpers.navigateTo("/admin")
     await this.waitForReady()
   }
 

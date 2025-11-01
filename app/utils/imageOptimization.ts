@@ -4,10 +4,10 @@
 
 export interface ImageOptimizationOptions {
   quality?: number
-  format?: 'webp' | 'avif' | 'jpeg' | 'png'
+  format?: "webp" | "avif" | "jpeg" | "png"
   width?: number
   height?: number
-  fit?: 'cover' | 'contain' | 'fill' | 'inside' | 'outside'
+  fit?: "cover" | "contain" | "fill" | "inside" | "outside"
 }
 
 /**
@@ -19,17 +19,11 @@ export const getOptimizedImageUrl = (
   src: string,
   options: ImageOptimizationOptions = {}
 ): string => {
-  const {
-    quality = 75,
-    format = 'webp',
-    width,
-    height,
-    fit = 'cover'
-  } = options
+  const { quality = 75, format = "webp", width, height, fit = "cover" } = options
 
   // For local images, return as-is for now
   // In production, this would integrate with an image optimization service
-  if (src.startsWith('/') || src.startsWith('./')) {
+  if (src.startsWith("/") || src.startsWith("./")) {
     return src
   }
 
@@ -48,70 +42,72 @@ export const getOptimizedImageUrl = (
  */
 export const generateResponsiveSrcSet = (
   baseSrc: string,
-  sizes: number[] = [
-320, 640, 768, 1024, 1280, 1536, 1920
-]
+  sizes: number[] = [320, 640, 768, 1024, 1280, 1536, 1920]
 ): string => {
   if (!baseSrc) {
- return '' 
-}
+    return ""
+  }
 
-  const baseUrl = baseSrc.replace(/\.[^/.]+$/, '')
-  const extension = baseSrc.split('.').pop() || 'jpg'
+  const baseUrl = baseSrc.replace(/\.[^/.]+$/, "")
+  const extension = baseSrc.split(".").pop() || "jpg"
 
-  return sizes
-    .map(size => `${baseUrl}-${size}w.${extension} ${size}w`)
-    .join(', ')
+  return sizes.map((size) => `${baseUrl}-${size}w.${extension} ${size}w`).join(", ")
 }
 
 /**
  * Generates appropriate sizes attribute for responsive images
  */
-export const generateSizesAttribute = (breakpoints: { maxWidth: number; size: string }[] = [
-    { maxWidth: 640, size: '100vw' },
-    { maxWidth: 768, size: '50vw' },
-    { maxWidth: 1024, size: '33vw' },
-    { maxWidth: 1280, size: '25vw' }
-  ]): string => breakpoints
-    .map(bp => `(max-width: ${bp.maxWidth}px) ${bp.size}`)
-    .join(', ') + ', 20vw'
+export const generateSizesAttribute = (
+  breakpoints: { maxWidth: number; size: string }[] = [
+    { maxWidth: 640, size: "100vw" },
+    { maxWidth: 768, size: "50vw" },
+    { maxWidth: 1024, size: "33vw" },
+    { maxWidth: 1280, size: "25vw" },
+  ]
+): string =>
+  breakpoints.map((bp) => `(max-width: ${bp.maxWidth}px) ${bp.size}`).join(", ") +
+  ", 20vw"
 
 /**
  * Determines if an image should be loaded with priority
  */
 export const shouldLoadWithPriority = (
   src: string,
-  context: 'hero' | 'above-fold' | 'below-fold' | 'lazy' = 'lazy'
-): boolean => context === 'hero' || context === 'above-fold'
+  context: "hero" | "above-fold" | "below-fold" | "lazy" = "lazy"
+): boolean => context === "hero" || context === "above-fold"
 
 /**
  * Generates a blur data URL for placeholder images
  */
-export const generateBlurDataURL = (width: number = 10, height: number = 10): string => {
-  const canvas = document.createElement('canvas')
+export const generateBlurDataURL = (
+  width: number = 10,
+  height: number = 10
+): string => {
+  const canvas = document.createElement("canvas")
   canvas.width = width
   canvas.height = height
 
-  const ctx = canvas.getContext('2d')
+  const ctx = canvas.getContext("2d")
   if (!ctx) {
- return '' 
-}
+    return ""
+  }
 
   // Create a simple gradient blur
   const gradient = ctx.createLinearGradient(0, 0, width, height)
-  gradient.addColorStop(0, '#f3f4f6')
-  gradient.addColorStop(1, '#e5e7eb')
+  gradient.addColorStop(0, "#f3f4f6")
+  gradient.addColorStop(1, "#e5e7eb")
 
   ctx.fillStyle = gradient
   ctx.fillRect(0, 0, width, height)
 
-  return canvas.toDataURL('image/jpeg', 0.1)
+  return canvas.toDataURL("image/jpeg", 0.1)
 }
 
 /**
  * Preloads critical images
  */
-export const preloadImage = (src: string): Promise<void> => new Promise((resolve, reject) => {
+export const preloadImage = (src: string): Promise<void> =>
+  new Promise((resolve, reject) => {
     const img = new Image()
     img.onload = () => resolve()
     img.onerror = () => reject(new Error(`Failed to preload image: ${src}`))
@@ -129,18 +125,18 @@ export const preloadImages = async (srcs: string[]): Promise<void> => {
 /**
  * Gets the appropriate image format based on browser support
  */
-export const getOptimalImageFormat = (): 'webp' | 'avif' | 'jpeg' => {
+export const getOptimalImageFormat = (): "webp" | "avif" | "jpeg" => {
   // Check for AVIF support
-  if (typeof window !== 'undefined' && 'createImageBitmap' in window) {
-    const canvas = document.createElement('canvas')
+  if (typeof window !== "undefined" && "createImageBitmap" in window) {
+    const canvas = document.createElement("canvas")
     canvas.width = 1
     canvas.height = 1
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext("2d")
     if (ctx) {
       try {
         ctx.drawImage(new Image(), 0, 0)
         // AVIF is supported
-        return 'avif'
+        return "avif"
       } catch (e) {
         // AVIF not supported, check for WebP
       }
@@ -148,14 +144,16 @@ export const getOptimalImageFormat = (): 'webp' | 'avif' | 'jpeg' => {
   }
 
   // Check for WebP support
-  if (typeof window !== 'undefined') {
-    const canvas = document.createElement('canvas')
+  if (typeof window !== "undefined") {
+    const canvas = document.createElement("canvas")
     canvas.width = 1
     canvas.height = 1
-    return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0 ? 'webp' : 'jpeg'
+    return canvas.toDataURL("image/webp").indexOf("data:image/webp") === 0
+      ? "webp"
+      : "jpeg"
   }
 
-  return 'jpeg'
+  return "jpeg"
 }
 
 /**
@@ -166,6 +164,6 @@ export const calculateOptimalDimensions = (
   containerHeight: number,
   devicePixelRatio: number = 1
 ): { width: number; height: number } => ({
-    width: Math.ceil(containerWidth * devicePixelRatio),
-    height: Math.ceil(containerHeight * devicePixelRatio)
-  })
+  width: Math.ceil(containerWidth * devicePixelRatio),
+  height: Math.ceil(containerHeight * devicePixelRatio),
+})

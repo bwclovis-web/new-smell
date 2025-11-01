@@ -1,24 +1,24 @@
 /**
  * Tests for sessionStore (modal state management)
- * 
+ *
  * Tests the Zustand store that manages modal state including:
  * - Opening and closing modals
  * - Managing modal data
  * - Focus management
  * - Body overflow handling
- * 
+ *
  * @group unit
  * @group stores
  * @group modal
  */
 
-import { createRef } from 'react'
-import { act, renderHook } from '@testing-library/react'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createRef } from "react"
+import { act, renderHook } from "@testing-library/react"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 
-import { useSessionStore } from '~/stores/sessionStore'
+import { useSessionStore } from "~/stores/sessionStore"
 
-describe('sessionStore - Modal Management', () => {
+describe("sessionStore - Modal Management", () => {
   beforeEach(() => {
     // Reset the store before each test
     act(() => {
@@ -31,11 +31,11 @@ describe('sessionStore - Modal Management', () => {
     })
 
     // Reset document overflow
-    document.documentElement.style.overflow = 'auto'
+    document.documentElement.style.overflow = "auto"
   })
 
-  describe('Initial State', () => {
-    it('should have correct initial state', () => {
+  describe("Initial State", () => {
+    it("should have correct initial state", () => {
       const { result } = renderHook(() => useSessionStore())
 
       expect(result.current.modalOpen).toBe(false)
@@ -45,60 +45,60 @@ describe('sessionStore - Modal Management', () => {
     })
   })
 
-  describe('toggleModal', () => {
-    it('should open a modal', () => {
+  describe("toggleModal", () => {
+    it("should open a modal", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef = createRef<HTMLButtonElement>()
 
       act(() => {
-        result.current.toggleModal(buttonRef, 'test-modal')
+        result.current.toggleModal(buttonRef, "test-modal")
       })
 
       expect(result.current.modalOpen).toBe(true)
-      expect(result.current.modalId).toBe('test-modal')
+      expect(result.current.modalId).toBe("test-modal")
       expect(result.current.triggerId).toBe(buttonRef)
       expect(result.current.modalData).toBe(null)
     })
 
-    it('should open a modal with data', () => {
+    it("should open a modal with data", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef = createRef<HTMLButtonElement>()
-      const testData = { userId: '123', name: 'Test' }
+      const testData = { userId: "123", name: "Test" }
 
       act(() => {
-        result.current.toggleModal(buttonRef, 'test-modal', testData)
+        result.current.toggleModal(buttonRef, "test-modal", testData)
       })
 
       expect(result.current.modalOpen).toBe(true)
-      expect(result.current.modalId).toBe('test-modal')
+      expect(result.current.modalId).toBe("test-modal")
       expect(result.current.modalData).toEqual(testData)
     })
 
-    it('should set body overflow to hidden when opening', () => {
+    it("should set body overflow to hidden when opening", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef = createRef<HTMLButtonElement>()
 
       act(() => {
-        result.current.toggleModal(buttonRef, 'test-modal')
+        result.current.toggleModal(buttonRef, "test-modal")
       })
 
-      expect(document.documentElement.style.overflow).toBe('hidden')
+      expect(document.documentElement.style.overflow).toBe("hidden")
     })
 
-    it('should close modal when toggling the same modal ID', () => {
+    it("should close modal when toggling the same modal ID", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef = createRef<HTMLButtonElement>()
 
       // Open modal
       act(() => {
-        result.current.toggleModal(buttonRef, 'test-modal')
+        result.current.toggleModal(buttonRef, "test-modal")
       })
 
       expect(result.current.modalOpen).toBe(true)
 
       // Toggle same modal - should close
       act(() => {
-        result.current.toggleModal(buttonRef, 'test-modal')
+        result.current.toggleModal(buttonRef, "test-modal")
       })
 
       expect(result.current.modalOpen).toBe(false)
@@ -107,64 +107,64 @@ describe('sessionStore - Modal Management', () => {
       expect(result.current.triggerId).toBe(null)
     })
 
-    it('should restore body overflow when closing via toggle', () => {
+    it("should restore body overflow when closing via toggle", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef = createRef<HTMLButtonElement>()
 
       // Open modal
       act(() => {
-        result.current.toggleModal(buttonRef, 'test-modal')
+        result.current.toggleModal(buttonRef, "test-modal")
       })
 
-      expect(document.documentElement.style.overflow).toBe('hidden')
+      expect(document.documentElement.style.overflow).toBe("hidden")
 
       // Close modal
       act(() => {
-        result.current.toggleModal(buttonRef, 'test-modal')
+        result.current.toggleModal(buttonRef, "test-modal")
       })
 
-      expect(document.documentElement.style.overflow).toBe('auto')
+      expect(document.documentElement.style.overflow).toBe("auto")
     })
 
-    it('should switch to different modal when toggling different ID', () => {
+    it("should switch to different modal when toggling different ID", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef1 = createRef<HTMLButtonElement>()
       const buttonRef2 = createRef<HTMLButtonElement>()
 
       // Open first modal
       act(() => {
-        result.current.toggleModal(buttonRef1, 'modal-1')
+        result.current.toggleModal(buttonRef1, "modal-1")
       })
 
-      expect(result.current.modalId).toBe('modal-1')
+      expect(result.current.modalId).toBe("modal-1")
 
       // Open second modal
       act(() => {
-        result.current.toggleModal(buttonRef2, 'modal-2')
+        result.current.toggleModal(buttonRef2, "modal-2")
       })
 
       expect(result.current.modalOpen).toBe(true)
-      expect(result.current.modalId).toBe('modal-2')
+      expect(result.current.modalId).toBe("modal-2")
       expect(result.current.triggerId).toBe(buttonRef2)
     })
 
-    it('should focus trigger button when closing', () => {
+    it("should focus trigger button when closing", () => {
       const { result } = renderHook(() => useSessionStore())
-      const button = document.createElement('button')
+      const button = document.createElement("button")
       document.body.appendChild(button)
       const buttonRef = createRef<HTMLButtonElement>()
       // @ts-expect-error - setting current for test
       buttonRef.current = button
 
-      const focusSpy = vi.spyOn(button, 'focus')
+      const focusSpy = vi.spyOn(button, "focus")
 
       // Open and close modal
       act(() => {
-        result.current.toggleModal(buttonRef, 'test-modal')
+        result.current.toggleModal(buttonRef, "test-modal")
       })
 
       act(() => {
-        result.current.toggleModal(buttonRef, 'test-modal')
+        result.current.toggleModal(buttonRef, "test-modal")
       })
 
       expect(focusSpy).toHaveBeenCalled()
@@ -174,14 +174,14 @@ describe('sessionStore - Modal Management', () => {
     })
   })
 
-  describe('closeModal', () => {
-    it('should close the modal', () => {
+  describe("closeModal", () => {
+    it("should close the modal", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef = createRef<HTMLButtonElement>()
 
       // Open modal first
       act(() => {
-        result.current.toggleModal(buttonRef, 'test-modal')
+        result.current.toggleModal(buttonRef, "test-modal")
       })
 
       expect(result.current.modalOpen).toBe(true)
@@ -197,26 +197,26 @@ describe('sessionStore - Modal Management', () => {
       expect(result.current.triggerId).toBe(null)
     })
 
-    it('should restore body overflow when closing', () => {
+    it("should restore body overflow when closing", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef = createRef<HTMLButtonElement>()
 
       // Open modal
       act(() => {
-        result.current.toggleModal(buttonRef, 'test-modal')
+        result.current.toggleModal(buttonRef, "test-modal")
       })
 
-      expect(document.documentElement.style.overflow).toBe('hidden')
+      expect(document.documentElement.style.overflow).toBe("hidden")
 
       // Close modal
       act(() => {
         result.current.closeModal()
       })
 
-      expect(document.documentElement.style.overflow).toBe('auto')
+      expect(document.documentElement.style.overflow).toBe("auto")
     })
 
-    it('should be safe to call when no modal is open', () => {
+    it("should be safe to call when no modal is open", () => {
       const { result } = renderHook(() => useSessionStore())
 
       expect(() => {
@@ -229,10 +229,10 @@ describe('sessionStore - Modal Management', () => {
     })
   })
 
-  describe('setModalData', () => {
-    it('should update modal data', () => {
+  describe("setModalData", () => {
+    it("should update modal data", () => {
       const { result } = renderHook(() => useSessionStore())
-      const newData = { key: 'value' }
+      const newData = { key: "value" }
 
       act(() => {
         result.current.setModalData(newData)
@@ -241,12 +241,12 @@ describe('sessionStore - Modal Management', () => {
       expect(result.current.modalData).toEqual(newData)
     })
 
-    it('should clear modal data when set to null', () => {
+    it("should clear modal data when set to null", () => {
       const { result } = renderHook(() => useSessionStore())
 
       // Set data first
       act(() => {
-        result.current.setModalData({ key: 'value' })
+        result.current.setModalData({ key: "value" })
       })
 
       expect(result.current.modalData).not.toBe(null)
@@ -260,26 +260,26 @@ describe('sessionStore - Modal Management', () => {
     })
   })
 
-  describe('setModalId', () => {
-    it('should update modal ID', () => {
+  describe("setModalId", () => {
+    it("should update modal ID", () => {
       const { result } = renderHook(() => useSessionStore())
 
       act(() => {
-        result.current.setModalId('new-modal-id')
+        result.current.setModalId("new-modal-id")
       })
 
-      expect(result.current.modalId).toBe('new-modal-id')
+      expect(result.current.modalId).toBe("new-modal-id")
     })
 
-    it('should clear modal ID when set to null', () => {
+    it("should clear modal ID when set to null", () => {
       const { result } = renderHook(() => useSessionStore())
 
       // Set ID first
       act(() => {
-        result.current.setModalId('test-id')
+        result.current.setModalId("test-id")
       })
 
-      expect(result.current.modalId).toBe('test-id')
+      expect(result.current.modalId).toBe("test-id")
 
       // Clear ID
       act(() => {
@@ -290,23 +290,23 @@ describe('sessionStore - Modal Management', () => {
     })
   })
 
-  describe('Integration Scenarios', () => {
-    it('should handle complete modal lifecycle', () => {
+  describe("Integration Scenarios", () => {
+    it("should handle complete modal lifecycle", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef = createRef<HTMLButtonElement>()
-      const modalData = { userId: '123' }
+      const modalData = { userId: "123" }
 
       // Open modal
       act(() => {
-        result.current.toggleModal(buttonRef, 'user-modal', modalData)
+        result.current.toggleModal(buttonRef, "user-modal", modalData)
       })
 
       expect(result.current.modalOpen).toBe(true)
-      expect(result.current.modalId).toBe('user-modal')
+      expect(result.current.modalId).toBe("user-modal")
       expect(result.current.modalData).toEqual(modalData)
 
       // Update data
-      const updatedData = { userId: '456' }
+      const updatedData = { userId: "456" }
       act(() => {
         result.current.setModalData(updatedData)
       })
@@ -322,109 +322,108 @@ describe('sessionStore - Modal Management', () => {
       expect(result.current.modalData).toBe(null)
     })
 
-    it('should handle switching between modals', () => {
+    it("should handle switching between modals", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef1 = createRef<HTMLButtonElement>()
       const buttonRef2 = createRef<HTMLButtonElement>()
 
       // Open first modal
       act(() => {
-        result.current.toggleModal(buttonRef1, 'modal-1', { data: 1 })
+        result.current.toggleModal(buttonRef1, "modal-1", { data: 1 })
       })
 
-      expect(result.current.modalId).toBe('modal-1')
+      expect(result.current.modalId).toBe("modal-1")
       expect(result.current.modalData).toEqual({ data: 1 })
 
       // Open second modal
       act(() => {
-        result.current.toggleModal(buttonRef2, 'modal-2', { data: 2 })
+        result.current.toggleModal(buttonRef2, "modal-2", { data: 2 })
       })
 
-      expect(result.current.modalId).toBe('modal-2')
+      expect(result.current.modalId).toBe("modal-2")
       expect(result.current.modalData).toEqual({ data: 2 })
       expect(result.current.modalOpen).toBe(true)
     })
 
-    it('should maintain body overflow state correctly across multiple operations', () => {
+    it("should maintain body overflow state correctly across multiple operations", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef = createRef<HTMLButtonElement>()
 
       // Initial state
-      expect(document.documentElement.style.overflow).toBe('auto')
+      expect(document.documentElement.style.overflow).toBe("auto")
 
       // Open modal
       act(() => {
-        result.current.toggleModal(buttonRef, 'modal-1')
+        result.current.toggleModal(buttonRef, "modal-1")
       })
-      expect(document.documentElement.style.overflow).toBe('hidden')
+      expect(document.documentElement.style.overflow).toBe("hidden")
 
       // Switch modal
       act(() => {
-        result.current.toggleModal(buttonRef, 'modal-2')
+        result.current.toggleModal(buttonRef, "modal-2")
       })
-      expect(document.documentElement.style.overflow).toBe('hidden')
+      expect(document.documentElement.style.overflow).toBe("hidden")
 
       // Close modal
       act(() => {
         result.current.closeModal()
       })
-      expect(document.documentElement.style.overflow).toBe('auto')
+      expect(document.documentElement.style.overflow).toBe("auto")
     })
   })
 
-  describe('Edge Cases', () => {
-    it('should handle toggle with null button ref gracefully', () => {
+  describe("Edge Cases", () => {
+    it("should handle toggle with null button ref gracefully", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef = createRef<HTMLButtonElement>()
       // buttonRef.current is null
 
       expect(() => {
         act(() => {
-          result.current.toggleModal(buttonRef, 'test-modal')
+          result.current.toggleModal(buttonRef, "test-modal")
         })
       }).not.toThrow()
     })
 
-    it('should handle rapid toggle calls', () => {
+    it("should handle rapid toggle calls", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef = createRef<HTMLButtonElement>()
 
       act(() => {
-        result.current.toggleModal(buttonRef, 'modal-1')
-        result.current.toggleModal(buttonRef, 'modal-1')
-        result.current.toggleModal(buttonRef, 'modal-1')
+        result.current.toggleModal(buttonRef, "modal-1")
+        result.current.toggleModal(buttonRef, "modal-1")
+        result.current.toggleModal(buttonRef, "modal-1")
       })
 
       // Should be open after odd number of toggles
       expect(result.current.modalOpen).toBe(true)
     })
 
-    it('should handle empty modal data object', () => {
+    it("should handle empty modal data object", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef = createRef<HTMLButtonElement>()
 
       act(() => {
-        result.current.toggleModal(buttonRef, 'test-modal', {})
+        result.current.toggleModal(buttonRef, "test-modal", {})
       })
 
       expect(result.current.modalData).toEqual({})
     })
 
-    it('should handle complex modal data objects', () => {
+    it("should handle complex modal data objects", () => {
       const { result } = renderHook(() => useSessionStore())
       const buttonRef = createRef<HTMLButtonElement>()
       const complexData = {
-        user: { id: '123', name: 'Test' },
-        settings: { theme: 'dark', lang: 'en' },
+        user: { id: "123", name: "Test" },
+        settings: { theme: "dark", lang: "en" },
         nested: { deeply: { nested: { value: true } } },
       }
 
       act(() => {
-        result.current.toggleModal(buttonRef, 'test-modal', complexData)
+        result.current.toggleModal(buttonRef, "test-modal", complexData)
       })
 
       expect(result.current.modalData).toEqual(complexData)
     })
   })
 })
-

@@ -1,6 +1,6 @@
-import DOMPurify from 'isomorphic-dompurify'
+import DOMPurify from "isomorphic-dompurify"
 
-import { prisma } from '~/db.server'
+import { prisma } from "~/db.server"
 
 export interface CreateReviewData {
   userId: string
@@ -30,9 +30,22 @@ export async function createPerfumeReview(data: CreateReviewData) {
   // Sanitize HTML content for security
   const sanitizedReview = DOMPurify.sanitize(data.review, {
     ALLOWED_TAGS: [
-      'p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
+      "p",
+      "br",
+      "strong",
+      "em",
+      "u",
+      "ul",
+      "ol",
+      "li",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
     ],
-    ALLOWED_ATTR: []
+    ALLOWED_ATTR: [],
   })
 
   const review = await prisma.userPerfumeReview.create({
@@ -40,7 +53,7 @@ export async function createPerfumeReview(data: CreateReviewData) {
       userId: data.userId,
       perfumeId: data.perfumeId,
       review: sanitizedReview,
-      isApproved: false // Require moderation approval before showing publicly
+      isApproved: false, // Require moderation approval before showing publicly
     },
     include: {
       user: {
@@ -49,17 +62,17 @@ export async function createPerfumeReview(data: CreateReviewData) {
           username: true,
           firstName: true,
           lastName: true,
-          email: true
-        }
+          email: true,
+        },
       },
       perfume: {
         select: {
           id: true,
           name: true,
-          slug: true
-        }
-      }
-    }
+          slug: true,
+        },
+      },
+    },
   })
 
   return review
@@ -68,32 +81,49 @@ export async function createPerfumeReview(data: CreateReviewData) {
 /**
  * Update an existing perfume review
  */
-export async function updatePerfumeReview(reviewId: string, data: UpdateReviewData, userId: string) {
+export async function updatePerfumeReview(
+  reviewId: string,
+  data: UpdateReviewData,
+  userId: string
+) {
   // Sanitize HTML content for security
   const sanitizedReview = DOMPurify.sanitize(data.review, {
     ALLOWED_TAGS: [
-      'p', 'br', 'strong', 'em', 'u', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'
+      "p",
+      "br",
+      "strong",
+      "em",
+      "u",
+      "ul",
+      "ol",
+      "li",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
     ],
-    ALLOWED_ATTR: []
+    ALLOWED_ATTR: [],
   })
 
   // Verify the user owns this review
   const existingReview = await prisma.userPerfumeReview.findFirst({
     where: {
       id: reviewId,
-      userId: userId
-    }
+      userId: userId,
+    },
   })
 
   if (!existingReview) {
-    throw new Error('Review not found or you do not have permission to edit it')
+    throw new Error("Review not found or you do not have permission to edit it")
   }
 
   const review = await prisma.userPerfumeReview.update({
     where: { id: reviewId },
     data: {
       review: sanitizedReview,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     },
     include: {
       user: {
@@ -102,17 +132,17 @@ export async function updatePerfumeReview(reviewId: string, data: UpdateReviewDa
           username: true,
           firstName: true,
           lastName: true,
-          email: true
-        }
+          email: true,
+        },
       },
       perfume: {
         select: {
           id: true,
           name: true,
-          slug: true
-        }
-      }
-    }
+          slug: true,
+        },
+      },
+    },
   })
 
   return review
@@ -121,24 +151,28 @@ export async function updatePerfumeReview(reviewId: string, data: UpdateReviewDa
 /**
  * Delete a perfume review
  */
-export async function deletePerfumeReview(reviewId: string, userId: string, userRole?: string) {
+export async function deletePerfumeReview(
+  reviewId: string,
+  userId: string,
+  userRole?: string
+) {
   // Check if user owns the review or is admin/editor
   const existingReview = await prisma.userPerfumeReview.findFirst({
     where: {
       id: reviewId,
       OR: [
         { userId: userId }, // User owns the review
-        ...(userRole === 'admin' || userRole === 'editor' ? [{}] : []) // Admin/editor can delete any review
-      ]
-    }
+        ...(userRole === "admin" || userRole === "editor" ? [{}] : []), // Admin/editor can delete any review
+      ],
+    },
   })
 
   if (!existingReview) {
-    throw new Error('Review not found or you do not have permission to delete it')
+    throw new Error("Review not found or you do not have permission to delete it")
   }
 
   await prisma.userPerfumeReview.delete({
-    where: { id: reviewId }
+    where: { id: reviewId },
   })
 
   return { success: true }
@@ -157,7 +191,7 @@ export async function getPerfumeReviews(
 
   const where = {
     perfumeId,
-    ...filters
+    ...filters,
   }
 
   const [reviews, totalCount] = await Promise.all([
@@ -170,17 +204,17 @@ export async function getPerfumeReviews(
             username: true,
             firstName: true,
             lastName: true,
-            email: true
-          }
-        }
+            email: true,
+          },
+        },
       },
       orderBy: {
-        createdAt: 'desc'
+        createdAt: "desc",
       },
       skip,
-      take: limit
+      take: limit,
     }),
-    prisma.userPerfumeReview.count({ where })
+    prisma.userPerfumeReview.count({ where }),
   ])
 
   return {
@@ -191,8 +225,8 @@ export async function getPerfumeReviews(
       totalCount,
       totalPages: Math.ceil(totalCount / limit),
       hasNextPage: page * limit < totalCount,
-      hasPrevPage: page > 1
-    }
+      hasPrevPage: page > 1,
+    },
   }
 }
 
@@ -209,17 +243,17 @@ export async function getPerfumeReview(reviewId: string) {
           username: true,
           firstName: true,
           lastName: true,
-          email: true
-        }
+          email: true,
+        },
       },
       perfume: {
         select: {
           id: true,
           name: true,
-          slug: true
-        }
-      }
-    }
+          slug: true,
+        },
+      },
+    },
   })
 
   return review
@@ -232,7 +266,7 @@ export async function getUserPerfumeReview(userId: string, perfumeId: string) {
   const review = await prisma.userPerfumeReview.findFirst({
     where: {
       userId,
-      perfumeId
+      perfumeId,
     },
     include: {
       user: {
@@ -241,17 +275,17 @@ export async function getUserPerfumeReview(userId: string, perfumeId: string) {
           username: true,
           firstName: true,
           lastName: true,
-          email: true
-        }
+          email: true,
+        },
       },
       perfume: {
         select: {
           id: true,
           name: true,
-          slug: true
-        }
-      }
-    }
+          slug: true,
+        },
+      },
+    },
   })
 
   return review
@@ -260,7 +294,10 @@ export async function getUserPerfumeReview(userId: string, perfumeId: string) {
 /**
  * Get all reviews by a specific user
  */
-export async function getUserReviews(userId: string, pagination: PaginationOptions = {}) {
+export async function getUserReviews(
+  userId: string,
+  pagination: PaginationOptions = {}
+) {
   const { page = 1, limit = 10 } = pagination
   const skip = (page - 1) * limit
 
@@ -278,19 +315,19 @@ export async function getUserReviews(userId: string, pagination: PaginationOptio
               select: {
                 id: true,
                 name: true,
-                slug: true
-              }
-            }
-          }
-        }
+                slug: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
-        createdAt: 'desc'
+        createdAt: "desc",
       },
       skip,
-      take: limit
+      take: limit,
     }),
-    prisma.userPerfumeReview.count({ where: { userId } })
+    prisma.userPerfumeReview.count({ where: { userId } }),
   ])
 
   return {
@@ -301,8 +338,8 @@ export async function getUserReviews(userId: string, pagination: PaginationOptio
       totalCount,
       totalPages: Math.ceil(totalCount / limit),
       hasNextPage: page * limit < totalCount,
-      hasPrevPage: page > 1
-    }
+      hasPrevPage: page > 1,
+    },
   }
 }
 
@@ -320,17 +357,17 @@ export async function moderatePerfumeReview(reviewId: string, isApproved: boolea
           username: true,
           firstName: true,
           lastName: true,
-          email: true
-        }
+          email: true,
+        },
       },
       perfume: {
         select: {
           id: true,
           name: true,
-          slug: true
-        }
-      }
-    }
+          slug: true,
+        },
+      },
+    },
   })
 
   return review
@@ -353,24 +390,24 @@ export async function getPendingReviews(pagination: PaginationOptions = {}) {
             username: true,
             firstName: true,
             lastName: true,
-            email: true
-          }
+            email: true,
+          },
         },
         perfume: {
           select: {
             id: true,
             name: true,
-            slug: true
-          }
-        }
+            slug: true,
+          },
+        },
       },
       orderBy: {
-        createdAt: 'desc'
+        createdAt: "desc",
       },
       skip,
-      take: limit
+      take: limit,
     }),
-    prisma.userPerfumeReview.count({ where: { isApproved: false } })
+    prisma.userPerfumeReview.count({ where: { isApproved: false } }),
   ])
 
   return {
@@ -381,7 +418,7 @@ export async function getPendingReviews(pagination: PaginationOptions = {}) {
       totalCount,
       totalPages: Math.ceil(totalCount / limit),
       hasNextPage: page * limit < totalCount,
-      hasPrevPage: page > 1
-    }
+      hasPrevPage: page > 1,
+    },
   }
 }

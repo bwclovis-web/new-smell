@@ -1,35 +1,40 @@
-import { type LoaderFunctionArgs, type MetaFunction, redirect, useLoaderData } from 'react-router'
-import { Link } from 'react-router'
+import {
+  type LoaderFunctionArgs,
+  type MetaFunction,
+  redirect,
+  useLoaderData,
+} from "react-router"
+import { Link } from "react-router"
 
-import { getUserReviews } from '~/models/perfumeReview.server'
-import { authenticateUser } from '~/utils/auth.server'
+import { getUserReviews } from "~/models/perfumeReview.server"
+import { authenticateUser } from "~/utils/auth.server"
 
-export const ROUTE_PATH = '/my-reviews'
+export const ROUTE_PATH = "/my-reviews"
 
 export const meta: MetaFunction = () => [
-  { title: 'My Reviews - New Smell' },
-  { name: 'description', content: 'View and manage your perfume reviews' }
+  { title: "My Reviews - New Smell" },
+  { name: "description", content: "View and manage your perfume reviews" },
 ]
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const authResult = await authenticateUser(request)
 
   if (!authResult.success || !authResult.user) {
-    throw redirect('/login')
+    throw redirect("/login")
   }
 
   const user = authResult.user
 
   const url = new URL(request.url)
-  const page = parseInt(url.searchParams.get('page') || '1', 10)
-  const limit = parseInt(url.searchParams.get('limit') || '10', 10)
+  const page = parseInt(url.searchParams.get("page") || "1", 10)
+  const limit = parseInt(url.searchParams.get("limit") || "10", 10)
 
   const reviewsData = await getUserReviews(user.id, { page, limit })
 
   return {
     user,
     reviews: reviewsData.reviews,
-    pagination: reviewsData.pagination
+    pagination: reviewsData.pagination,
   }
 }
 
@@ -51,8 +56,11 @@ const MyReviewsPage = () => {
           {/* Reviews List */}
           {reviews.length > 0 ? (
             <div className="space-y-6">
-              {reviews.map(review => (
-                <div key={review.id} className="bg-white/5 border border-gray-300 rounded-lg p-6">
+              {reviews.map((review) => (
+                <div
+                  key={review.id}
+                  className="bg-white/5 border border-gray-300 rounded-lg p-6"
+                >
                   <div className="flex items-start justify-between mb-4">
                     <div>
                       <Link
@@ -124,9 +132,12 @@ const MyReviewsPage = () => {
           ) : (
             <div className="text-center py-12">
               <div className="text-6xl mb-4">📝</div>
-              <h2 className="text-2xl font-semibold text-gray-300 mb-2">No Reviews Yet</h2>
+              <h2 className="text-2xl font-semibold text-gray-300 mb-2">
+                No Reviews Yet
+              </h2>
               <p className="text-gray-400 mb-6">
-                You haven't written any reviews yet. Start sharing your thoughts about perfumes!
+                You haven't written any reviews yet. Start sharing your thoughts
+                about perfumes!
               </p>
               <Link
                 to="/the-vault"

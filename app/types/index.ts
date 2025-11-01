@@ -4,15 +4,15 @@
  */
 
 // Re-export all types from specialized modules
-export * from './api'
-export * from './comments'
-export * from './components'
-export * from './database'
-export * from './forms'
-export * from './utils'
+export * from "./api"
+export * from "./comments"
+export * from "./components"
+export * from "./database"
+export * from "./forms"
+export * from "./utils"
 
 // Legacy types for backward compatibility
-import type { UserRole } from '@prisma/client'
+import type { UserRole } from "@prisma/client"
 
 /**
  * @deprecated Use types from './database' instead
@@ -58,7 +58,7 @@ export function createSafeUser(user: User | null): SafeUser | null {
     firstName: user.firstName,
     lastName: user.lastName,
     username: user.username,
-    role: user.role
+    role: user.role,
   }
 }
 
@@ -128,7 +128,7 @@ export interface UserPerfumeI {
   type?: string
   placeOfPurchase?: string
   tradePrice?: string
-  tradePreference?: 'cash' | 'trade' | 'both'
+  tradePreference?: "cash" | "trade" | "both"
   tradeOnly?: boolean
   comments?: {
     id: string

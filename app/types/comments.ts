@@ -1,4 +1,4 @@
-import type { UserPerfumeI } from '~/types'
+import type { UserPerfumeI } from "~/types"
 
 export interface Comment {
   id: string

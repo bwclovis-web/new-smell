@@ -1,12 +1,13 @@
-import '@testing-library/jest-dom/vitest'
+import "@testing-library/jest-dom/vitest"
 
-import { vi } from 'vitest'
+import { vi } from "vitest"
 
 // Mock environment variables for testing
-process.env.NODE_ENV = 'test'
-process.env.JWT_SECRET = 'test-jwt-secret-minimum-32-characters-long-for-testing'
-process.env.SESSION_SECRET = 'test-session-secret-minimum-32-characters-long-for-testing'
-process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test_db'
+process.env.NODE_ENV = "test"
+process.env.JWT_SECRET = "test-jwt-secret-minimum-32-characters-long-for-testing"
+process.env.SESSION_SECRET =
+  "test-session-secret-minimum-32-characters-long-for-testing"
+process.env.DATABASE_URL = "postgresql://test:test@localhost:5432/test_db"
 
 // Mock console methods to reduce noise in tests
 global.console = {
@@ -36,7 +37,7 @@ global.IntersectionObserver = vi.fn().mockImplementation((callback, options) => 
     unobserve: vi.fn(),
     disconnect: vi.fn(),
     root: options?.root || null,
-    rootMargin: options?.rootMargin || '0px',
+    rootMargin: options?.rootMargin || "0px",
     thresholds: options?.threshold || [0],
     takeRecords: vi.fn(() => []),
   }
@@ -52,9 +53,9 @@ global.IntersectionObserver = vi.fn().mockImplementation((callback, options) => 
 })
 
 // Mock matchMedia
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
-  value: vi.fn().mockImplementation(query => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -67,7 +68,7 @@ Object.defineProperty(window, 'matchMedia', {
 })
 
 // Mock scrollTo
-Object.defineProperty(window, 'scrollTo', {
+Object.defineProperty(window, "scrollTo", {
   writable: true,
   value: vi.fn(),
 })
@@ -79,7 +80,7 @@ const localStorageMock = {
   removeItem: vi.fn(),
   clear: vi.fn(),
 }
-Object.defineProperty(window, 'localStorage', {
+Object.defineProperty(window, "localStorage", {
   value: localStorageMock,
 })
 
@@ -90,6 +91,6 @@ const sessionStorageMock = {
   removeItem: vi.fn(),
   clear: vi.fn(),
 }
-Object.defineProperty(window, 'sessionStorage', {
+Object.defineProperty(window, "sessionStorage", {
   value: sessionStorageMock,
 })

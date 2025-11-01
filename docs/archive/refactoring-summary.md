@@ -85,13 +85,13 @@ Successfully extracted duplicate code between `behind-the-bottle.tsx` and `the-v
 // Before: Duplicate code in each file
 const handleLetterClick = async (letter: string | null) => {
   // 20+ lines of duplicate logic
-};
+}
 
 // After: Clean, reusable hook
 const { selectedLetter, handleLetterClick } = useLetterSelection({
   loadDataByLetter: data.loadDataByLetter,
   resetData: resetHouses,
-});
+})
 ```
 
 ## Next Steps

@@ -158,8 +158,8 @@
 const appError = AuthErrorHandler.handle(error, {
   formData: formData ? Object.fromEntries(formData) : {},
   action: "signIn",
-});
-return { error: appError.userMessage };
+})
+return { error: appError.userMessage }
 ```
 
 ### ⚠️ Weaknesses & Gaps
@@ -429,25 +429,19 @@ catch (error) {
 
 ```typescript
 // BEFORE
-export const createErrorResponse = (
-  error: AppError,
-  status?: number
-): Response => {
+export const createErrorResponse = (error: AppError, status?: number): Response => {
   return new Response(
     JSON.stringify({
       success: false,
       error: error.toJSON(), // Exposes full error details including stack
     }),
     { status: status || 500 }
-  );
-};
+  )
+}
 
 // AFTER
-export const createErrorResponse = (
-  error: AppError,
-  status?: number
-): Response => {
-  const isProduction = process.env.NODE_ENV === "production";
+export const createErrorResponse = (error: AppError, status?: number): Response => {
+  const isProduction = process.env.NODE_ENV === "production"
 
   return new Response(
     JSON.stringify({
@@ -474,8 +468,8 @@ export const createErrorResponse = (
         "Cache-Control": "no-store", // Don't cache error responses
       },
     }
-  );
-};
+  )
+}
 
 // Helper to map error types to HTTP status codes
 function getHttpStatusFromError(error: AppError): number {
@@ -489,8 +483,8 @@ function getHttpStatusFromError(error: AppError): number {
     DATABASE: 500,
     NETWORK: 502,
     UNKNOWN: 500,
-  };
-  return statusMap[error.type] || 500;
+  }
+  return statusMap[error.type] || 500
 }
 ```
 
@@ -509,21 +503,21 @@ function getHttpStatusFromError(error: AppError): number {
 // test/utils/errorHandling.server.test.ts
 describe("createErrorResponse", () => {
   it("should not expose stack traces in production", () => {
-    process.env.NODE_ENV = "production";
-    const error = createError.server("Test error");
-    const response = createErrorResponse(error);
-    const json = JSON.parse(response.body);
-    expect(json.error.stack).toBeUndefined();
-  });
+    process.env.NODE_ENV = "production"
+    const error = createError.server("Test error")
+    const response = createErrorResponse(error)
+    const json = JSON.parse(response.body)
+    expect(json.error.stack).toBeUndefined()
+  })
 
   it("should expose stack traces in development", () => {
-    process.env.NODE_ENV = "development";
-    const error = createError.server("Test error");
-    const response = createErrorResponse(error);
-    const json = JSON.parse(response.body);
-    expect(json.error.stack).toBeDefined();
-  });
-});
+    process.env.NODE_ENV = "development"
+    const error = createError.server("Test error")
+    const response = createErrorResponse(error)
+    const json = JSON.parse(response.body)
+    expect(json.error.stack).toBeDefined()
+  })
+})
 ```
 
 #### 1.2 Sanitize Error Context
@@ -572,47 +566,45 @@ The `sanitizeContext` function has been implemented with the following features:
 export function withLoaderErrorHandling<T extends LoaderFunction>(
   loaderFn: T,
   options?: {
-    context?: Record<string, any>;
-    redirectOnAuth?: string;
-    redirectOnAuthz?: string;
+    context?: Record<string, any>
+    redirectOnAuth?: string
+    redirectOnAuthz?: string
   }
 ): T {
   return (async (args: LoaderFunctionArgs) => {
     try {
-      return await loaderFn(args);
+      return await loaderFn(args)
     } catch (error) {
       // Handle redirects (don't catch them)
       if (error instanceof Response && [302, 303].includes(error.status)) {
-        throw error;
+        throw error
       }
 
       const appError = ServerErrorHandler.handle(error, {
         ...options?.context,
         loader: true,
         path: args.request.url,
-      });
+      })
 
       // Handle authentication errors
       if (appError.type === "AUTHENTICATION") {
-        throw redirect(
-          options?.redirectOnAuth || "/sign-in?error=auth_required"
-        );
+        throw redirect(options?.redirectOnAuth || "/sign-in?error=auth_required")
       }
 
       // Handle authorization errors
       if (appError.type === "AUTHORIZATION") {
-        throw redirect(options?.redirectOnAuthz || "/unauthorized");
+        throw redirect(options?.redirectOnAuthz || "/unauthorized")
       }
 
       // For critical errors, redirect to error page
       if (appError.severity === "CRITICAL") {
-        throw redirect("/error?type=critical");
+        throw redirect("/error?type=critical")
       }
 
       // For other errors, return error response
-      return ServerErrorHandler.createErrorResponse(appError);
+      return ServerErrorHandler.createErrorResponse(appError)
     }
-  }) as T;
+  }) as T
 }
 
 /**
@@ -628,32 +620,32 @@ export function withLoaderErrorHandling<T extends LoaderFunction>(
 export function withActionErrorHandling<T extends ActionFunction>(
   actionFn: T,
   options?: {
-    context?: Record<string, any>;
+    context?: Record<string, any>
   }
 ): T {
   return (async (args: ActionFunctionArgs) => {
     try {
-      return await actionFn(args);
+      return await actionFn(args)
     } catch (error) {
       // Handle redirects (don't catch them)
       if (error instanceof Response && [302, 303].includes(error.status)) {
-        throw error;
+        throw error
       }
 
       const appError = ServerErrorHandler.handle(error, {
         ...options?.context,
         action: true,
         path: args.request.url,
-      });
+      })
 
       // Return user-friendly error
       return {
         success: false,
         error: appError.userMessage,
         code: appError.code,
-      };
+      }
     }
-  }) as T;
+  }) as T
 }
 ```
 
@@ -664,12 +656,12 @@ export function withActionErrorHandling<T extends ActionFunction>(
 ```typescript
 // BEFORE
 export const loader = async ({ request }: { request: Request }) => {
-  const url = new URL(request.url);
-  const timeframe = url.searchParams.get("timeframe") || "month";
-  const force = url.searchParams.get("force") === "true";
+  const url = new URL(request.url)
+  const timeframe = url.searchParams.get("timeframe") || "month"
+  const force = url.searchParams.get("force") === "true"
 
   try {
-    const reportData = await generateDataQualityReport(timeframe, force);
+    const reportData = await generateDataQualityReport(timeframe, force)
     return new Response(JSON.stringify(reportData), {
       headers: {
         "Content-Type": "application/json",
@@ -677,9 +669,9 @@ export const loader = async ({ request }: { request: Request }) => {
         Pragma: "no-cache",
         Expires: "0",
       },
-    });
+    })
   } catch (error) {
-    console.error("[DATA QUALITY API] Error:", error);
+    console.error("[DATA QUALITY API] Error:", error)
     return new Response(
       JSON.stringify({
         error: `Critical error processing request: ${
@@ -692,18 +684,18 @@ export const loader = async ({ request }: { request: Request }) => {
         status: 500,
         headers: { "Content-Type": "application/json" },
       }
-    );
+    )
   }
-};
+}
 
 // AFTER
 export const loader = withLoaderErrorHandling(
   async ({ request }: { request: Request }) => {
-    const url = new URL(request.url);
-    const timeframe = url.searchParams.get("timeframe") || "month";
-    const force = url.searchParams.get("force") === "true";
+    const url = new URL(request.url)
+    const timeframe = url.searchParams.get("timeframe") || "month"
+    const force = url.searchParams.get("force") === "true"
 
-    const reportData = await generateDataQualityReport(timeframe, force);
+    const reportData = await generateDataQualityReport(timeframe, force)
 
     return ServerErrorHandler.createSuccessResponse(reportData, {
       headers: {
@@ -711,12 +703,12 @@ export const loader = withLoaderErrorHandling(
         Pragma: "no-cache",
         Expires: "0",
       },
-    });
+    })
   },
   {
     context: { api: "data-quality" },
   }
-);
+)
 ```
 
 **Example 2: app/routes/admin/rate-limit-stats.tsx**
@@ -725,15 +717,15 @@ export const loader = withLoaderErrorHandling(
 // BEFORE
 export const loader = async () => {
   try {
-    const stats = getRateLimitStats();
+    const stats = getRateLimitStats()
     return Response.json({
       success: true,
       stats,
       timestamp: new Date().toISOString(),
-    });
+    })
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
-      console.error("Failed to get rate limit stats:", error);
+      console.error("Failed to get rate limit stats:", error)
     }
     return Response.json(
       {
@@ -746,23 +738,23 @@ export const loader = async () => {
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
-    );
+    )
   }
-};
+}
 
 // AFTER
 export const loader = withLoaderErrorHandling(
   async () => {
-    const stats = getRateLimitStats();
+    const stats = getRateLimitStats()
     return ServerErrorHandler.createSuccessResponse({
       stats,
       timestamp: new Date().toISOString(),
-    });
+    })
   },
   {
     context: { api: "rate-limit-stats" },
   }
-);
+)
 ```
 
 **Example 3: app/routes/admin/users.tsx**
@@ -770,38 +762,38 @@ export const loader = withLoaderErrorHandling(
 ```typescript
 // BEFORE
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const user = await sharedLoader(request);
+  const user = await sharedLoader(request)
 
   if (!user || user.role !== "admin") {
-    throw new Response("Unauthorized", { status: 403 });
+    throw new Response("Unauthorized", { status: 403 })
   }
 
   try {
-    const users = await getAllUsersWithCounts();
-    return { users, currentUser: user };
+    const users = await getAllUsersWithCounts()
+    return { users, currentUser: user }
   } catch (error) {
-    console.error("Error loading users:", error);
-    return { users: [], currentUser: user }; // Silent failure
+    console.error("Error loading users:", error)
+    return { users: [], currentUser: user } // Silent failure
   }
-};
+}
 
 // AFTER
 export const loader = withLoaderErrorHandling(
   async ({ request }: LoaderFunctionArgs) => {
-    const user = await sharedLoader(request);
+    const user = await sharedLoader(request)
 
     if (!user || user.role !== "admin") {
-      throw createError.authorization("Admin access required");
+      throw createError.authorization("Admin access required")
     }
 
-    const users = await getAllUsersWithCounts();
-    return { users, currentUser: user };
+    const users = await getAllUsersWithCounts()
+    return { users, currentUser: user }
   },
   {
     context: { page: "admin-users" },
     redirectOnAuthz: "/unauthorized",
   }
-);
+)
 ```
 
 #### 2.3 Route Refactoring Checklist
@@ -849,32 +841,32 @@ find app/routes -type f -name "*.tsx" -o -name "*.ts"
 
 ```typescript
 // scripts/migrate-console-errors.ts
-import { readFileSync, writeFileSync } from "fs";
-import { glob } from "glob";
+import { readFileSync, writeFileSync } from "fs"
+import { glob } from "glob"
 
 const filesToMigrate = glob.sync("app/**/*.{ts,tsx}", {
   ignore: ["**/*.test.ts", "**/*.test.tsx", "**/node_modules/**"],
-});
+})
 
 filesToMigrate.forEach((file) => {
-  let content = readFileSync(file, "utf8");
+  let content = readFileSync(file, "utf8")
 
   // Check if file uses console.error
   if (!content.includes("console.error")) {
-    return;
+    return
   }
 
   // Add import if not present
   if (!content.includes("import") || !content.includes("ErrorLogger")) {
     // Find the first import statement or add at top
-    const importMatch = content.match(/^import .* from .*$/m);
+    const importMatch = content.match(/^import .* from .*$/m)
     if (importMatch) {
       content = content.replace(
         importMatch[0],
         `${importMatch[0]}\nimport { ErrorLogger } from '~/utils/errorHandling'`
-      );
+      )
     } else {
-      content = `import { ErrorLogger } from '~/utils/errorHandling'\n\n${content}`;
+      content = `import { ErrorLogger } from '~/utils/errorHandling'\n\n${content}`
     }
   }
 
@@ -882,11 +874,11 @@ filesToMigrate.forEach((file) => {
   content = content.replace(
     /console\.error\((.*?)\)/g,
     "ErrorLogger.getInstance().logError($1)"
-  );
+  )
 
-  writeFileSync(file, content);
-  console.log(`✅ Migrated: ${file}`);
-});
+  writeFileSync(file, content)
+  console.log(`✅ Migrated: ${file}`)
+})
 ```
 
 **Manual Review Required:**
@@ -903,14 +895,14 @@ filesToMigrate.forEach((file) => {
 
 ```typescript
 export class ErrorLogger {
-  private static instance: ErrorLogger;
-  private logs: ErrorLogEntry[] = [];
-  private logService?: ExternalLogService; // For production
+  private static instance: ErrorLogger
+  private logs: ErrorLogEntry[] = []
+  private logService?: ExternalLogService // For production
 
   private constructor() {
     // Initialize external logging service in production
     if (process.env.NODE_ENV === "production") {
-      this.initializeProductionLogging();
+      this.initializeProductionLogging()
     }
   }
 
@@ -929,9 +921,9 @@ export class ErrorLogger {
 
   static getInstance(): ErrorLogger {
     if (!ErrorLogger.instance) {
-      ErrorLogger.instance = new ErrorLogger();
+      ErrorLogger.instance = new ErrorLogger()
     }
-    return ErrorLogger.instance;
+    return ErrorLogger.instance
   }
 
   log(error: AppError, userId?: string): void {
@@ -943,25 +935,25 @@ export class ErrorLogger {
         ...error.toJSON(),
         context: sanitizeContext(error.context),
       },
-    };
+    }
 
     // Store in memory (for development and as fallback)
-    this.logs.push(logEntry);
+    this.logs.push(logEntry)
     if (this.logs.length > 1000) {
-      this.logs.shift();
+      this.logs.shift()
     }
 
     // Send to external service in production
     if (this.logService) {
       this.logService.send(logEntry).catch((err) => {
         // Fallback: log to console if external service fails
-        console.error("Failed to send error to logging service:", err);
-      });
+        console.error("Failed to send error to logging service:", err)
+      })
     }
 
     // Also log to console in development
     if (process.env.NODE_ENV === "development") {
-      console.error("[ErrorLogger]", logEntry);
+      console.error("[ErrorLogger]", logEntry)
     }
   }
 
@@ -969,7 +961,7 @@ export class ErrorLogger {
 }
 
 interface ExternalLogService {
-  send(logEntry: ErrorLogEntry): Promise<void>;
+  send(logEntry: ErrorLogEntry): Promise<void>
 }
 ```
 
@@ -988,7 +980,7 @@ npm install @sentry/react @sentry/remix
 **File:** `app/utils/errorMonitoring.server.ts`
 
 ```typescript
-import * as Sentry from "@sentry/remix";
+import * as Sentry from "@sentry/remix"
 
 // Initialize Sentry (call this in entry.server.tsx)
 export function initializeErrorMonitoring() {
@@ -1013,11 +1005,11 @@ export function initializeErrorMonitoring() {
       // Filter sensitive data
       beforeSend(event, hint) {
         // Don't send events for certain errors
-        const error = hint.originalException;
+        const error = hint.originalException
         if (error instanceof Error) {
           // Don't report validation errors
           if (error.message.includes("VALIDATION_ERROR")) {
-            return null;
+            return null
           }
         }
 
@@ -1025,15 +1017,15 @@ export function initializeErrorMonitoring() {
         if (event.breadcrumbs) {
           event.breadcrumbs = event.breadcrumbs.map((breadcrumb) => {
             if (breadcrumb.data) {
-              breadcrumb.data = sanitizeContext(breadcrumb.data);
+              breadcrumb.data = sanitizeContext(breadcrumb.data)
             }
-            return breadcrumb;
-          });
+            return breadcrumb
+          })
         }
 
-        return event;
+        return event
       },
-    });
+    })
   }
 }
 
@@ -1051,7 +1043,7 @@ export function captureError(error: AppError, context?: Record<string, any>) {
         userMessage: error.userMessage,
       },
     },
-  });
+  })
 }
 
 function getSentryLevel(severity: ErrorSeverity): Sentry.SeverityLevel {
@@ -1060,15 +1052,15 @@ function getSentryLevel(severity: ErrorSeverity): Sentry.SeverityLevel {
     MEDIUM: "warning",
     HIGH: "error",
     CRITICAL: "fatal",
-  };
-  return levelMap[severity] || "error";
+  }
+  return levelMap[severity] || "error"
 }
 ```
 
 **Update ErrorLogger:**
 
 ```typescript
-import { captureError } from "./errorMonitoring.server";
+import { captureError } from "./errorMonitoring.server"
 
 export class ErrorLogger {
   log(error: AppError, userId?: string): void {
@@ -1076,7 +1068,7 @@ export class ErrorLogger {
 
     // Send to Sentry in production
     if (process.env.NODE_ENV === "production") {
-      captureError(error, { userId, ...error.context });
+      captureError(error, { userId, ...error.context })
     }
   }
 }
@@ -1087,29 +1079,29 @@ export class ErrorLogger {
 **File:** `app/utils/correlationId.server.ts`
 
 ```typescript
-import { AsyncLocalStorage } from "async_hooks";
+import { AsyncLocalStorage } from "async_hooks"
 
-const correlationIdStorage = new AsyncLocalStorage<string>();
+const correlationIdStorage = new AsyncLocalStorage<string>()
 
 export function generateCorrelationId(): string {
-  return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
 }
 
 export function setCorrelationId(id: string) {
-  correlationIdStorage.enterWith(id);
+  correlationIdStorage.enterWith(id)
 }
 
 export function getCorrelationId(): string | undefined {
-  return correlationIdStorage.getStore();
+  return correlationIdStorage.getStore()
 }
 
 // Middleware to set correlation ID
 export function withCorrelationId(handler: Function) {
   return async (...args: any[]) => {
-    const correlationId = generateCorrelationId();
-    setCorrelationId(correlationId);
-    return handler(...args);
-  };
+    const correlationId = generateCorrelationId()
+    setCorrelationId(correlationId)
+    return handler(...args)
+  }
 }
 ```
 
@@ -1119,7 +1111,7 @@ export function withCorrelationId(handler: Function) {
 import {
   generateCorrelationId,
   setCorrelationId,
-} from "./utils/correlationId.server";
+} from "./utils/correlationId.server"
 
 export default function handleRequest(
   request: Request,
@@ -1129,11 +1121,11 @@ export default function handleRequest(
 ) {
   // Generate and set correlation ID
   const correlationId =
-    request.headers.get("X-Correlation-ID") || generateCorrelationId();
-  setCorrelationId(correlationId);
+    request.headers.get("X-Correlation-ID") || generateCorrelationId()
+  setCorrelationId(correlationId)
 
   // Add to response headers
-  responseHeaders.set("X-Correlation-ID", correlationId);
+  responseHeaders.set("X-Correlation-ID", correlationId)
 
   // ... rest of handler
 }
@@ -1142,7 +1134,7 @@ export default function handleRequest(
 **Update ErrorLogger to include correlation ID:**
 
 ```typescript
-import { getCorrelationId } from "./correlationId.server";
+import { getCorrelationId } from "./correlationId.server"
 
 export class ErrorLogger {
   log(error: AppError, userId?: string): void {
@@ -1155,7 +1147,7 @@ export class ErrorLogger {
         ...error.toJSON(),
         context: sanitizeContext(error.context),
       },
-    };
+    }
     // ... rest of logging
   }
 }
@@ -1176,11 +1168,11 @@ export class ErrorLogger {
 export const USER_ERROR_MESSAGES: Record<
   string,
   {
-    title: string;
-    message: string;
-    suggestion: string;
-    action?: string;
-    actionText?: string;
+    title: string
+    message: string
+    suggestion: string
+    action?: string
+    actionText?: string
   }
 > = {
   // Authentication Errors
@@ -1251,10 +1243,10 @@ export const USER_ERROR_MESSAGES: Record<
     action: "retry",
     actionText: "Try Again",
   },
-};
+}
 
 export function getUserErrorMessage(error: AppError) {
-  return USER_ERROR_MESSAGES[error.code] || USER_ERROR_MESSAGES.UNKNOWN_ERROR;
+  return USER_ERROR_MESSAGES[error.code] || USER_ERROR_MESSAGES.UNKNOWN_ERROR
 }
 ```
 
@@ -1263,15 +1255,15 @@ export function getUserErrorMessage(error: AppError) {
 **File:** `app/components/Organisms/ErrorDisplay/ErrorDisplay.tsx`
 
 ```typescript
-import { Link } from "react-router";
-import { FiAlertCircle, FiRefreshCw, FiHome } from "react-icons/fi";
-import { AppError } from "~/utils/errorHandling";
-import { getUserErrorMessage } from "~/utils/errorMessages";
+import { Link } from "react-router"
+import { FiAlertCircle, FiRefreshCw, FiHome } from "react-icons/fi"
+import { AppError } from "~/utils/errorHandling"
+import { getUserErrorMessage } from "~/utils/errorMessages"
 
 interface ErrorDisplayProps {
-  error: AppError;
-  onRetry?: () => void;
-  showDetails?: boolean;
+  error: AppError
+  onRetry?: () => void
+  showDetails?: boolean
 }
 
 export function ErrorDisplay({
@@ -1279,7 +1271,7 @@ export function ErrorDisplay({
   onRetry,
   showDetails = false,
 }: ErrorDisplayProps) {
-  const errorInfo = getUserErrorMessage(error);
+  const errorInfo = getUserErrorMessage(error)
 
   return (
     <div className="flex min-h-[400px] items-center justify-center p-8">
@@ -1290,9 +1282,7 @@ export function ErrorDisplay({
         </div>
 
         {/* Title */}
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          {errorInfo.title}
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">{errorInfo.title}</h2>
 
         {/* Message */}
         <p className="text-gray-600 mb-4">{errorInfo.message}</p>
@@ -1346,7 +1336,7 @@ export function ErrorDisplay({
         )}
       </div>
     </div>
-  );
+  )
 }
 ```
 
@@ -1356,10 +1346,10 @@ export function ErrorDisplay({
 
 ```typescript
 export interface RetryOptions {
-  maxRetries?: number;
-  delay?: number;
-  backoff?: "linear" | "exponential";
-  retryCondition?: (error: unknown) => boolean;
+  maxRetries?: number
+  delay?: number
+  backoff?: "linear" | "exponential"
+  retryCondition?: (error: unknown) => boolean
 }
 
 export async function withRetry<T>(
@@ -1371,38 +1361,38 @@ export async function withRetry<T>(
     delay = 1000,
     backoff = "exponential",
     retryCondition = isRetryableError,
-  } = options;
+  } = options
 
-  let lastError: unknown;
+  let lastError: unknown
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-      return await fn();
+      return await fn()
     } catch (error) {
-      lastError = error;
+      lastError = error
 
       // Don't retry if we've exhausted attempts
       if (attempt === maxRetries) {
-        break;
+        break
       }
 
       // Don't retry if error is not retryable
       if (!retryCondition(error)) {
-        throw error;
+        throw error
       }
 
       // Calculate delay
       const waitTime =
         backoff === "exponential"
           ? delay * Math.pow(2, attempt)
-          : delay * (attempt + 1);
+          : delay * (attempt + 1)
 
       // Wait before retry
-      await new Promise((resolve) => setTimeout(resolve, waitTime));
+      await new Promise((resolve) => setTimeout(resolve, waitTime))
     }
   }
 
-  throw lastError;
+  throw lastError
 }
 
 function isRetryableError(error: unknown): boolean {
@@ -1411,15 +1401,15 @@ function isRetryableError(error: unknown): boolean {
     return (
       error.type === "NETWORK" ||
       (error.type === "SERVER" && error.severity !== "CRITICAL")
-    );
+    )
   }
 
   if (error instanceof Response) {
     // Retry 5xx errors except 501 (Not Implemented)
-    return error.status >= 500 && error.status !== 501;
+    return error.status >= 500 && error.status !== 501
   }
 
-  return false;
+  return false
 }
 ```
 
@@ -1427,10 +1417,10 @@ function isRetryableError(error: unknown): boolean {
 
 ```typescript
 // app/hooks/useApiErrorHandler.ts
-import { withRetry } from "~/utils/retry";
+import { withRetry } from "~/utils/retry"
 
 export const useApiWithRetry = () => {
-  const { handleApiError } = useApiErrorHandler();
+  const { handleApiError } = useApiErrorHandler()
 
   const fetchWithRetry = useCallback(
     async <T>(
@@ -1438,17 +1428,17 @@ export const useApiWithRetry = () => {
       retryOptions?: RetryOptions
     ): Promise<T | null> => {
       try {
-        return await withRetry(fetchFn, retryOptions);
+        return await withRetry(fetchFn, retryOptions)
       } catch (error) {
-        handleApiError(error);
-        return null;
+        handleApiError(error)
+        return null
       }
     },
     [handleApiError]
-  );
+  )
 
-  return { fetchWithRetry };
-};
+  return { fetchWithRetry }
+}
 ```
 
 ---
@@ -1470,66 +1460,66 @@ export const useApiWithRetry = () => {
 describe("Error Handling Security", () => {
   describe("sanitizeContext", () => {
     it("should redact password fields", () => {
-      const context = { password: "secret123", username: "user" };
-      const sanitized = sanitizeContext(context);
-      expect(sanitized.password).toBe("[REDACTED]");
-      expect(sanitized.username).toBe("user");
-    });
+      const context = { password: "secret123", username: "user" }
+      const sanitized = sanitizeContext(context)
+      expect(sanitized.password).toBe("[REDACTED]")
+      expect(sanitized.username).toBe("user")
+    })
 
     it("should redact nested sensitive fields", () => {
       const context = {
         user: { password: "secret", apiKey: "key123" },
         data: { value: "safe" },
-      };
-      const sanitized = sanitizeContext(context);
-      expect(sanitized.user.password).toBe("[REDACTED]");
-      expect(sanitized.user.apiKey).toBe("[REDACTED]");
-      expect(sanitized.data.value).toBe("safe");
-    });
-  });
+      }
+      const sanitized = sanitizeContext(context)
+      expect(sanitized.user.password).toBe("[REDACTED]")
+      expect(sanitized.user.apiKey).toBe("[REDACTED]")
+      expect(sanitized.data.value).toBe("safe")
+    })
+  })
 
   describe("createErrorResponse", () => {
     it("should not expose stack traces in production", () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = "production";
+      const originalEnv = process.env.NODE_ENV
+      process.env.NODE_ENV = "production"
 
-      const error = createError.server("Test error");
-      const response = createErrorResponse(error);
-      const body = JSON.parse(await response.text());
+      const error = createError.server("Test error")
+      const response = createErrorResponse(error)
+      const body = JSON.parse(await response.text())
 
-      expect(body.error.stack).toBeUndefined();
-      expect(body.error.message).toBe("Server error occurred");
+      expect(body.error.stack).toBeUndefined()
+      expect(body.error.message).toBe("Server error occurred")
 
-      process.env.NODE_ENV = originalEnv;
-    });
-  });
-});
+      process.env.NODE_ENV = originalEnv
+    })
+  })
+})
 
 describe("Retry Mechanism", () => {
   it("should retry on network errors", async () => {
-    let attempts = 0;
+    let attempts = 0
     const fn = jest.fn(() => {
-      attempts++;
+      attempts++
       if (attempts < 3) {
-        throw createError.network("Network error");
+        throw createError.network("Network error")
       }
-      return Promise.resolve("success");
-    });
+      return Promise.resolve("success")
+    })
 
-    const result = await withRetry(fn, { maxRetries: 3, delay: 10 });
-    expect(result).toBe("success");
-    expect(attempts).toBe(3);
-  });
+    const result = await withRetry(fn, { maxRetries: 3, delay: 10 })
+    expect(result).toBe("success")
+    expect(attempts).toBe(3)
+  })
 
   it("should not retry on validation errors", async () => {
     const fn = jest.fn(() => {
-      throw createError.validation("Invalid input");
-    });
+      throw createError.validation("Invalid input")
+    })
 
-    await expect(withRetry(fn, { maxRetries: 3 })).rejects.toThrow();
-    expect(fn).toHaveBeenCalledTimes(1);
-  });
-});
+    await expect(withRetry(fn, { maxRetries: 3 })).rejects.toThrow()
+    expect(fn).toHaveBeenCalledTimes(1)
+  })
+})
 ```
 
 ### 2. Integration Tests
@@ -1543,25 +1533,25 @@ describe("Route Error Handling", () => {
     // Mock database failure
     jest
       .spyOn(prisma.perfume, "findMany")
-      .mockRejectedValueOnce(new Error("Connection timeout"));
+      .mockRejectedValueOnce(new Error("Connection timeout"))
 
-    const response = await fetch("/api/perfumes");
-    expect(response.status).toBe(500);
+    const response = await fetch("/api/perfumes")
+    expect(response.status).toBe(500)
 
-    const body = await response.json();
-    expect(body.success).toBe(false);
-    expect(body.error.message).toContain("database");
-    expect(body.error.stack).toBeUndefined(); // No stack in production
-  });
+    const body = await response.json()
+    expect(body.success).toBe(false)
+    expect(body.error.message).toContain("database")
+    expect(body.error.stack).toBeUndefined() // No stack in production
+  })
 
   it("should include correlation ID in error response", async () => {
     const response = await fetch("/api/perfumes", {
       headers: { "X-Correlation-ID": "test-123" },
-    });
+    })
 
-    expect(response.headers.get("X-Correlation-ID")).toBe("test-123");
-  });
-});
+    expect(response.headers.get("X-Correlation-ID")).toBe("test-123")
+  })
+})
 ```
 
 ### 3. E2E Tests
@@ -1575,30 +1565,30 @@ test.describe("Error Handling UX", () => {
     page,
   }) => {
     // Simulate network failure
-    await page.route("**/api/perfumes", (route) => route.abort("failed"));
+    await page.route("**/api/perfumes", (route) => route.abort("failed"))
 
-    await page.goto("/perfumes");
+    await page.goto("/perfumes")
 
     // Check error message is user-friendly
-    await expect(page.locator("text=Connection Error")).toBeVisible();
+    await expect(page.locator("text=Connection Error")).toBeVisible()
     await expect(
       page.locator("text=Please check your internet connection")
-    ).toBeVisible();
+    ).toBeVisible()
 
     // Check retry button is present
-    const retryButton = page.locator('button:has-text("Retry")');
-    await expect(retryButton).toBeVisible();
-  });
+    const retryButton = page.locator('button:has-text("Retry")')
+    await expect(retryButton).toBeVisible()
+  })
 
   test("should not expose technical details to users", async ({ page }) => {
     // Trigger error
-    await page.goto("/api/error-test");
+    await page.goto("/api/error-test")
 
     // Technical details should not be visible
-    await expect(page.locator("text=stack trace")).not.toBeVisible();
-    await expect(page.locator("text=Error:")).not.toBeVisible();
-  });
-});
+    await expect(page.locator("text=stack trace")).not.toBeVisible()
+    await expect(page.locator("text=Error:")).not.toBeVisible()
+  })
+})
 ```
 
 ---
@@ -2539,16 +2529,16 @@ GET /api/error-analytics?timeRange=week&format=export
 **Service Usage:**
 
 ```typescript
-import { errorAnalytics } from "~/utils/errorAnalytics.server";
+import { errorAnalytics } from "~/utils/errorAnalytics.server"
 
 // Generate report
-const report = errorAnalytics.generateReport({ timeRange: "day" });
+const report = errorAnalytics.generateReport({ timeRange: "day" })
 
 // Get error rate data
-const rateData = errorAnalytics.getErrorRate({ timeRange: "week" });
+const rateData = errorAnalytics.getErrorRate({ timeRange: "week" })
 
 // Export data
-const json = errorAnalytics.exportData({ timeRange: "month" });
+const json = errorAnalytics.exportData({ timeRange: "month" })
 ```
 
 ### 📈 Analytics Report Structure
@@ -2685,10 +2675,10 @@ const json = errorAnalytics.exportData({ timeRange: "month" });
 **Usage in Components:**
 
 ```typescript
-import { getUserErrorMessage } from "~/utils/errorMessages";
+import { getUserErrorMessage } from "~/utils/errorMessages"
 
 // In ErrorDisplay component
-const errorMessage = getUserErrorMessage(error); // AppError or string code
+const errorMessage = getUserErrorMessage(error) // AppError or string code
 
 // Displays:
 // Title: "Authentication Required"

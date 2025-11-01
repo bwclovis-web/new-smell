@@ -3,11 +3,16 @@
  * Provides comprehensive validation for API endpoints
  */
 
-import { z } from 'zod'
+import { z } from "zod"
 
-import { createErrorResponse } from './response.server'
-import type { ValidationResult } from './validation'
-import { validateData, validateFormData, validateJsonData, validateSearchParams } from './validation'
+import { createErrorResponse } from "./response.server"
+import type { ValidationResult } from "./validation"
+import {
+  validateData,
+  validateFormData,
+  validateJsonData,
+  validateSearchParams,
+} from "./validation"
 
 // API validation middleware types
 export interface ApiValidationOptions {
@@ -29,13 +34,15 @@ export interface ValidatedRequest<T = unknown> {
 // Validation error response
 export function createValidationErrorResponse(
   errors: any[],
-  message = 'Validation failed'
+  message = "Validation failed"
 ) {
   return createErrorResponse(message, 400, { errors })
 }
 
 // Generic API validation middleware
-export function createApiValidationMiddleware<T extends Record<string, unknown>>(options: ApiValidationOptions) {
+export function createApiValidationMiddleware<T extends Record<string, unknown>>(
+  options: ApiValidationOptions
+) {
   return async (request: Request): Promise<ValidatedRequest<T>> => {
     const validated: ValidatedRequest<T> = {}
     const errors: any[] = []
@@ -43,12 +50,12 @@ export function createApiValidationMiddleware<T extends Record<string, unknown>>
     try {
       // Validate request body
       if (options.body) {
-        const contentType = request.headers.get('content-type')
+        const contentType = request.headers.get("content-type")
 
-        if (contentType?.includes('application/json')) {
+        if (contentType?.includes("application/json")) {
           const bodyValidation = await validateJsonData(options.body, request, {
             stripUnknown: options.stripUnknown,
-            abortEarly: options.abortEarly
+            abortEarly: options.abortEarly,
           })
 
           if (bodyValidation.success) {
@@ -60,7 +67,7 @@ export function createApiValidationMiddleware<T extends Record<string, unknown>>
           const formData = await request.formData()
           const bodyValidation = validateFormData(options.body, formData, {
             stripUnknown: options.stripUnknown,
-            abortEarly: options.abortEarly
+            abortEarly: options.abortEarly,
           })
 
           if (bodyValidation.success) {
@@ -74,10 +81,14 @@ export function createApiValidationMiddleware<T extends Record<string, unknown>>
       // Validate query parameters
       if (options.query) {
         const url = new URL(request.url)
-        const queryValidation = validateSearchParams(options.query, url.searchParams, {
-          stripUnknown: options.stripUnknown,
-          abortEarly: options.abortEarly
-        })
+        const queryValidation = validateSearchParams(
+          options.query,
+          url.searchParams,
+          {
+            stripUnknown: options.stripUnknown,
+            abortEarly: options.abortEarly,
+          }
+        )
 
         if (queryValidation.success) {
           validated.query = queryValidation.data
@@ -97,7 +108,7 @@ export function createApiValidationMiddleware<T extends Record<string, unknown>>
         const headersData = Object.fromEntries(request.headers.entries())
         const headersValidation = validateData(options.headers, headersData, {
           stripUnknown: options.stripUnknown,
-          abortEarly: options.abortEarly
+          abortEarly: options.abortEarly,
         })
 
         if (headersValidation.success) {
@@ -112,12 +123,12 @@ export function createApiValidationMiddleware<T extends Record<string, unknown>>
         throw new Response(
           JSON.stringify({
             success: false,
-            error: 'Validation failed',
-            errors
+            error: "Validation failed",
+            errors,
           }),
           {
             status: 400,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { "Content-Type": "application/json" },
           }
         )
       }
@@ -128,15 +139,15 @@ export function createApiValidationMiddleware<T extends Record<string, unknown>>
         throw error
       }
 
-      console.error('API validation error:', error)
+      console.error("API validation error:", error)
       throw new Response(
         JSON.stringify({
           success: false,
-          error: 'Internal validation error'
+          error: "Internal validation error",
         }),
         {
           status: 500,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { "Content-Type": "application/json" },
         }
       )
     }
@@ -146,75 +157,83 @@ export function createApiValidationMiddleware<T extends Record<string, unknown>>
 // Specific validation middleware for common patterns
 export const validatePerfumeId = createApiValidationMiddleware({
   query: z.object({
-    id: z.string().min(1, 'Perfume ID is required')
-  })
+    id: z.string().min(1, "Perfume ID is required"),
+  }),
 })
 
 export const validateUserAction = createApiValidationMiddleware({
   body: z.object({
-    action: z.enum(['add', 'remove', 'update'], {
-      errorMap: () => ({ message: 'Action must be add, remove, or update' })
+    action: z.enum(["add", "remove", "update"], {
+      errorMap: () => ({ message: "Action must be add, remove, or update" }),
     }),
-    perfumeId: z.string().min(1, 'Perfume ID is required')
-  })
+    perfumeId: z.string().min(1, "Perfume ID is required"),
+  }),
 })
 
 export const validateRatingSubmission = createApiValidationMiddleware({
-  body: z.object({
-    perfumeId: z.string().min(1, 'Perfume ID is required'),
-    longevity: z.number().min(1).max(5).optional(),
-    sillage: z.number().min(1).max(5).optional(),
-    gender: z.number().min(1).max(5).optional(),
-    priceValue: z.number().min(1).max(5).optional(),
-    overall: z.number().min(1).max(5).optional()
-  }).refine(data => {
-    const ratings = [
-      data.longevity, data.sillage, data.gender, data.priceValue, data.overall
-    ]
-    return ratings.some(rating => rating !== undefined)
-  }, {
-    message: 'At least one rating is required'
-  })
+  body: z
+    .object({
+      perfumeId: z.string().min(1, "Perfume ID is required"),
+      longevity: z.number().min(1).max(5).optional(),
+      sillage: z.number().min(1).max(5).optional(),
+      gender: z.number().min(1).max(5).optional(),
+      priceValue: z.number().min(1).max(5).optional(),
+      overall: z.number().min(1).max(5).optional(),
+    })
+    .refine(
+      (data) => {
+        const ratings = [
+          data.longevity,
+          data.sillage,
+          data.gender,
+          data.priceValue,
+          data.overall,
+        ]
+        return ratings.some((rating) => rating !== undefined)
+      },
+      {
+        message: "At least one rating is required",
+      }
+    ),
 })
 
 export const validateCommentSubmission = createApiValidationMiddleware({
   body: z.object({
-    perfumeId: z.string().min(1, 'Perfume ID is required'),
-    userPerfumeId: z.string().min(1, 'User perfume ID is required'),
-    comment: z.string()
-      .min(1, 'Comment is required')
-      .max(1000, 'Comment must be less than 1000 characters')
+    perfumeId: z.string().min(1, "Perfume ID is required"),
+    userPerfumeId: z.string().min(1, "User perfume ID is required"),
+    comment: z
+      .string()
+      .min(1, "Comment is required")
+      .max(1000, "Comment must be less than 1000 characters")
       .trim(),
-    isPublic: z.boolean().optional()
-  })
+    isPublic: z.boolean().optional(),
+  }),
 })
 
 export const validateSearchQuery = createApiValidationMiddleware({
   query: z.object({
-    q: z.string().max(100, 'Search query too long').optional(),
+    q: z.string().max(100, "Search query too long").optional(),
     page: z.string().regex(/^\d+$/).transform(Number).optional(),
     limit: z.string().regex(/^\d+$/).transform(Number).optional(),
-    sortBy: z.enum([
-      'name', 'price', 'rating', 'createdAt'
-    ]).optional(),
-    sortOrder: z.enum(['asc', 'desc']).optional()
-  })
+    sortBy: z.enum(["name", "price", "rating", "createdAt"]).optional(),
+    sortOrder: z.enum(["asc", "desc"]).optional(),
+  }),
 })
 
 // Pagination validation
 export function validatePaginationParams(searchParams: URLSearchParams) {
-  const page = parseInt(searchParams.get('page') || '1', 10)
-  const limit = parseInt(searchParams.get('limit') || '10', 10)
+  const page = parseInt(searchParams.get("page") || "1", 10)
+  const limit = parseInt(searchParams.get("limit") || "10", 10)
 
   if (page < 1) {
     throw new Response(
       JSON.stringify({
         success: false,
-        error: 'Page must be 1 or greater'
+        error: "Page must be 1 or greater",
       }),
       {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "Content-Type": "application/json" },
       }
     )
   }
@@ -223,11 +242,11 @@ export function validatePaginationParams(searchParams: URLSearchParams) {
     throw new Response(
       JSON.stringify({
         success: false,
-        error: 'Limit must be between 1 and 100'
+        error: "Limit must be between 1 and 100",
       }),
       {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "Content-Type": "application/json" },
       }
     )
   }
@@ -237,30 +256,30 @@ export function validatePaginationParams(searchParams: URLSearchParams) {
 
 // Authentication validation
 export function validateAuthHeaders(request: Request) {
-  const authHeader = request.headers.get('authorization')
+  const authHeader = request.headers.get("authorization")
 
   if (!authHeader) {
     throw new Response(
       JSON.stringify({
         success: false,
-        error: 'Authorization header is required'
+        error: "Authorization header is required",
       }),
       {
         status: 401,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "Content-Type": "application/json" },
       }
     )
   }
 
-  if (!authHeader.startsWith('Bearer ')) {
+  if (!authHeader.startsWith("Bearer ")) {
     throw new Response(
       JSON.stringify({
         success: false,
-        error: 'Invalid authorization format'
+        error: "Invalid authorization format",
       }),
       {
         status: 401,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "Content-Type": "application/json" },
       }
     )
   }
@@ -270,32 +289,32 @@ export function validateAuthHeaders(request: Request) {
 
 // Content-Type validation
 export function validateContentType(request: Request, expectedTypes: string[]) {
-  const contentType = request.headers.get('content-type')
+  const contentType = request.headers.get("content-type")
 
   if (!contentType) {
     throw new Response(
       JSON.stringify({
         success: false,
-        error: 'Content-Type header is required'
+        error: "Content-Type header is required",
       }),
       {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "Content-Type": "application/json" },
       }
     )
   }
 
-  const isValidType = expectedTypes.some(type => contentType.includes(type))
+  const isValidType = expectedTypes.some((type) => contentType.includes(type))
 
   if (!isValidType) {
     throw new Response(
       JSON.stringify({
         success: false,
-        error: `Content-Type must be one of: ${expectedTypes.join(', ')}`
+        error: `Content-Type must be one of: ${expectedTypes.join(", ")}`,
       }),
       {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "Content-Type": "application/json" },
       }
     )
   }
@@ -324,15 +343,15 @@ export function validateRateLimit(
     throw new Response(
       JSON.stringify({
         success: false,
-        error: 'Rate limit exceeded',
-        retryAfter: Math.ceil((current.resetTime - now) / 1000)
+        error: "Rate limit exceeded",
+        retryAfter: Math.ceil((current.resetTime - now) / 1000),
       }),
       {
         status: 429,
         headers: {
-          'Content-Type': 'application/json',
-          'Retry-After': Math.ceil((current.resetTime - now) / 1000).toString()
-        }
+          "Content-Type": "application/json",
+          "Retry-After": Math.ceil((current.resetTime - now) / 1000).toString(),
+        },
       }
     )
   }
@@ -342,17 +361,17 @@ export function validateRateLimit(
 
 // CSRF validation
 export function validateCSRFToken(request: Request, sessionToken: string) {
-  const csrfToken = request.headers.get('x-csrf-token')
+  const csrfToken = request.headers.get("x-csrf-token")
 
   if (!csrfToken) {
     throw new Response(
       JSON.stringify({
         success: false,
-        error: 'CSRF token is required'
+        error: "CSRF token is required",
       }),
       {
         status: 403,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "Content-Type": "application/json" },
       }
     )
   }
@@ -361,11 +380,11 @@ export function validateCSRFToken(request: Request, sessionToken: string) {
     throw new Response(
       JSON.stringify({
         success: false,
-        error: 'Invalid CSRF token'
+        error: "Invalid CSRF token",
       }),
       {
         status: 403,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "Content-Type": "application/json" },
       }
     )
   }
@@ -380,17 +399,21 @@ export function validateFileUpload(
     allowedExtensions?: string[]
   } = {}
 ) {
-  const { maxSize = 5 * 1024 * 1024, allowedTypes = [], allowedExtensions = [] } = options
+  const {
+    maxSize = 5 * 1024 * 1024,
+    allowedTypes = [],
+    allowedExtensions = [],
+  } = options
 
   if (file.size > maxSize) {
     throw new Response(
       JSON.stringify({
         success: false,
-        error: `File size must be less than ${Math.round(maxSize / 1024 / 1024)}MB`
+        error: `File size must be less than ${Math.round(maxSize / 1024 / 1024)}MB`,
       }),
       {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "Content-Type": "application/json" },
       }
     )
   }
@@ -399,26 +422,26 @@ export function validateFileUpload(
     throw new Response(
       JSON.stringify({
         success: false,
-        error: `File type must be one of: ${allowedTypes.join(', ')}`
+        error: `File type must be one of: ${allowedTypes.join(", ")}`,
       }),
       {
         status: 400,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { "Content-Type": "application/json" },
       }
     )
   }
 
   if (allowedExtensions.length > 0) {
-    const extension = file.name.split('.').pop()?.toLowerCase()
+    const extension = file.name.split(".").pop()?.toLowerCase()
     if (!extension || !allowedExtensions.includes(extension)) {
       throw new Response(
         JSON.stringify({
           success: false,
-          error: `File extension must be one of: ${allowedExtensions.join(', ')}`
+          error: `File extension must be one of: ${allowedExtensions.join(", ")}`,
         }),
         {
           status: 400,
-          headers: { 'Content-Type': 'application/json' }
+          headers: { "Content-Type": "application/json" },
         }
       )
     }
@@ -427,16 +450,16 @@ export function validateFileUpload(
 
 // Export common validation schemas for reuse
 export const commonApiSchemas = {
-  id: z.string().min(1, 'ID is required'),
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  url: z.string().url('Invalid URL format'),
-  phone: z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number'),
-  year: z.string().regex(/^(19|20)\d{2}$/, 'Invalid year format'),
-  rating: z.number().min(1).max(5, 'Rating must be between 1 and 5'),
-  amount: z.string().regex(/^\d+(\.\d{1,2})?$/, 'Invalid amount format'),
+  id: z.string().min(1, "ID is required"),
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  url: z.string().url("Invalid URL format"),
+  phone: z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, "Invalid phone number"),
+  year: z.string().regex(/^(19|20)\d{2}$/, "Invalid year format"),
+  rating: z.number().min(1).max(5, "Rating must be between 1 and 5"),
+  amount: z.string().regex(/^\d+(\.\d{1,2})?$/, "Invalid amount format"),
   pagination: z.object({
-    page: z.number().min(1, 'Page must be 1 or greater'),
-    limit: z.number().min(1).max(100, 'Limit must be between 1 and 100')
-  })
+    page: z.number().min(1, "Page must be 1 or greater"),
+    limit: z.number().min(1).max(100, "Limit must be between 1 and 100"),
+  }),
 } as const

@@ -3,9 +3,9 @@
  * Provides real-time validation, error handling, and form state management
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import type { ZodError, ZodSchema } from 'zod'
-import { z } from 'zod'
+import { useCallback, useEffect, useMemo, useState } from "react"
+import type { ZodError, ZodSchema } from "zod"
+import { z } from "zod"
 
 // Validation hook types
 export interface UseValidationOptions<T> {
@@ -38,7 +38,9 @@ export interface UseValidationReturn<T> {
   validateField: <K extends keyof T>(field: K) => Promise<boolean>
   handleChange: <K extends keyof T>(field: K) => (value: T[K]) => void
   handleBlur: <K extends keyof T>(field: K) => () => void
-  handleSubmit: (onSubmit: (data: T) => Promise<void> | void) => (e?: React.FormEvent) => Promise<void>
+  handleSubmit: (
+    onSubmit: (data: T) => Promise<void> | void
+  ) => (e?: React.FormEvent) => Promise<void>
   reset: () => void
   resetToValues: (values: T) => void
 }
@@ -70,11 +72,15 @@ export function useValidation<T extends Record<string, unknown>>({
   validateOnBlur = true,
   validateOnSubmit = true,
   debounceMs = 300,
-  transform
+  transform,
 }: UseValidationOptions<T>): UseValidationReturn<T> {
   const [values, setValues] = useState<T>(initialValues)
-  const [errors, setErrors] = useState<Record<keyof T, string>>({} as Record<keyof T, string>)
-  const [touched, setTouched] = useState<Record<keyof T, boolean>>({} as Record<keyof T, boolean>)
+  const [errors, setErrors] = useState<Record<keyof T, string>>(
+    {} as Record<keyof T, string>
+  )
+  const [touched, setTouched] = useState<Record<keyof T, boolean>>(
+    {} as Record<keyof T, boolean>
+  )
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isValidating, setIsValidating] = useState(false)
 
@@ -82,48 +88,61 @@ export function useValidation<T extends Record<string, unknown>>({
   const debouncedValues = useDebounce(values, debounceMs)
 
   // Check if form is dirty
-  const isDirty = useMemo(() => JSON.stringify(values) !== JSON.stringify(initialValues), [values, initialValues])
+  const isDirty = useMemo(
+    () => JSON.stringify(values) !== JSON.stringify(initialValues),
+    [values, initialValues]
+  )
 
   // Check if form is valid
-  const isValid = useMemo(() => Object.keys(errors).length === 0 && Object.values(values).every(value => value !== null && value !== undefined && value !== ''), [errors, values])
+  const isValid = useMemo(
+    () =>
+      Object.keys(errors).length === 0 &&
+      Object.values(values).every(
+        (value) => value !== null && value !== undefined && value !== ""
+      ),
+    [errors, values]
+  )
 
   // Validate a single field
-  const validateField = useCallback(async <K extends keyof T>(field: K): Promise<boolean> => {
-    try {
-      setIsValidating(true)
+  const validateField = useCallback(
+    async <K extends keyof T>(field: K): Promise<boolean> => {
+      try {
+        setIsValidating(true)
 
-      // Create a partial schema for the field
-      const fieldSchema = schema.pick({ [field]: true } as any)
-      const fieldData = { [field]: values[field] } as Pick<T, K>
+        // Create a partial schema for the field
+        const fieldSchema = schema.pick({ [field]: true } as any)
+        const fieldData = { [field]: values[field] } as Pick<T, K>
 
-      // Transform data if transform function is provided
-      const dataToValidate = transform ? transform(fieldData as T) : fieldData
+        // Transform data if transform function is provided
+        const dataToValidate = transform ? transform(fieldData as T) : fieldData
 
-      await fieldSchema.parseAsync(dataToValidate)
+        await fieldSchema.parseAsync(dataToValidate)
 
-      // Clear error for this field
-      setErrors(prev => {
-        const newErrors = { ...prev }
-        delete newErrors[field]
-        return newErrors
-      })
+        // Clear error for this field
+        setErrors((prev) => {
+          const newErrors = { ...prev }
+          delete newErrors[field]
+          return newErrors
+        })
 
-      return true
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldError = error.errors.find(err => err.path[0] === field)
-        if (fieldError) {
-          setErrors(prev => ({
-            ...prev,
-            [field]: fieldError.message
-          }))
+        return true
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          const fieldError = error.errors.find((err) => err.path[0] === field)
+          if (fieldError) {
+            setErrors((prev) => ({
+              ...prev,
+              [field]: fieldError.message,
+            }))
+          }
         }
+        return false
+      } finally {
+        setIsValidating(false)
       }
-      return false
-    } finally {
-      setIsValidating(false)
-    }
-  }, [schema, values, transform])
+    },
+    [schema, values, transform]
+  )
 
   // Validate entire form
   const validate = useCallback(async (): Promise<boolean> => {
@@ -142,7 +161,7 @@ export function useValidation<T extends Record<string, unknown>>({
       if (error instanceof z.ZodError) {
         const newErrors = {} as Record<keyof T, string>
 
-        error.errors.forEach(err => {
+        error.errors.forEach((err) => {
           const field = err.path[0] as keyof T
           if (field) {
             newErrors[field] = err.message
@@ -158,49 +177,52 @@ export function useValidation<T extends Record<string, unknown>>({
   }, [schema, values, transform])
 
   // Set individual field value
-  const setValue = useCallback(<K extends keyof T>(field: K, value: T[K]) => {
-    setValues(prev => ({
-      ...prev,
-      [field]: value
-    }))
+  const setValue = useCallback(
+    <K extends keyof T>(field: K, value: T[K]) => {
+      setValues((prev) => ({
+        ...prev,
+        [field]: value,
+      }))
 
-    // Clear error for this field when user starts typing
-    if (errors[field]) {
-      setErrors(prev => {
-        const newErrors = { ...prev }
-        delete newErrors[field]
-        return newErrors
-      })
-    }
-  }, [errors])
+      // Clear error for this field when user starts typing
+      if (errors[field]) {
+        setErrors((prev) => {
+          const newErrors = { ...prev }
+          delete newErrors[field]
+          return newErrors
+        })
+      }
+    },
+    [errors]
+  )
 
   // Set multiple field values
   const setValues = useCallback((newValues: Partial<T>) => {
-    setValues(prev => ({
+    setValues((prev) => ({
       ...prev,
-      ...newValues
+      ...newValues,
     }))
   }, [])
 
   // Set individual field error
   const setError = useCallback(<K extends keyof T>(field: K, error: string) => {
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
-      [field]: error
+      [field]: error,
     }))
   }, [])
 
   // Set multiple field errors
   const setErrors = useCallback((newErrors: Partial<Record<keyof T, string>>) => {
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
-      ...newErrors
+      ...newErrors,
     }))
   }, [])
 
   // Clear individual field error
   const clearError = useCallback(<K extends keyof T>(field: K) => {
-    setErrors(prev => {
+    setErrors((prev) => {
       const newErrors = { ...prev }
       delete newErrors[field]
       return newErrors
@@ -214,63 +236,75 @@ export function useValidation<T extends Record<string, unknown>>({
 
   // Set individual field touched state
   const setTouched = useCallback(<K extends keyof T>(field: K, touched: boolean) => {
-    setTouched(prev => ({
+    setTouched((prev) => ({
       ...prev,
-      [field]: touched
+      [field]: touched,
     }))
   }, [])
 
   // Set all fields touched state
-  const setAllTouched = useCallback((touched: boolean) => {
-    const newTouched = {} as Record<keyof T, boolean>
-    Object.keys(values).forEach(key => {
-      newTouched[key as keyof T] = touched
-    })
-    setTouched(newTouched)
-  }, [values])
+  const setAllTouched = useCallback(
+    (touched: boolean) => {
+      const newTouched = {} as Record<keyof T, boolean>
+      Object.keys(values).forEach((key) => {
+        newTouched[key as keyof T] = touched
+      })
+      setTouched(newTouched)
+    },
+    [values]
+  )
 
   // Handle field change
-  const handleChange = useCallback(<K extends keyof T>(field: K) => (value: T[K]) => {
-    setValue(field, value)
-  }, [setValue])
+  const handleChange = useCallback(
+    <K extends keyof T>(field: K) =>
+      (value: T[K]) => {
+        setValue(field, value)
+      },
+    [setValue]
+  )
 
   // Handle field blur
-  const handleBlur = useCallback(<K extends keyof T>(field: K) => () => {
-    setTouched(field, true)
+  const handleBlur = useCallback(
+    <K extends keyof T>(field: K) =>
+      () => {
+        setTouched(field, true)
 
-    if (validateOnBlur) {
-      validateField(field)
-    }
-  }, [validateOnBlur, validateField, setTouched])
+        if (validateOnBlur) {
+          validateField(field)
+        }
+      },
+    [validateOnBlur, validateField, setTouched]
+  )
 
   // Handle form submission
-  const handleSubmit = useCallback((onSubmit: (data: T) => Promise<void> | void) => async (e?: React.FormEvent) => {
-    if (e) {
-      e.preventDefault()
-    }
-
-    // Mark all fields as touched
-    setAllTouched(true)
-
-    // Validate form if validation on submit is enabled
-    if (validateOnSubmit) {
-      const isValid = await validate()
-      if (!isValid) {
-        return
+  const handleSubmit = useCallback(
+    (onSubmit: (data: T) => Promise<void> | void) => async (e?: React.FormEvent) => {
+      if (e) {
+        e.preventDefault()
       }
-    }
 
-    setIsSubmitting(true)
-    try {
-      await onSubmit(values)
-    } catch (error) {
-      console.error('Form submission error:', error)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }, [
-validateOnSubmit, validate, values, setAllTouched
-])
+      // Mark all fields as touched
+      setAllTouched(true)
+
+      // Validate form if validation on submit is enabled
+      if (validateOnSubmit) {
+        const isValid = await validate()
+        if (!isValid) {
+          return
+        }
+      }
+
+      setIsSubmitting(true)
+      try {
+        await onSubmit(values)
+      } catch (error) {
+        console.error("Form submission error:", error)
+      } finally {
+        setIsSubmitting(false)
+      }
+    },
+    [validateOnSubmit, validate, values, setAllTouched]
+  )
 
   // Reset form to initial values
   const reset = useCallback(() => {
@@ -297,9 +331,7 @@ validateOnSubmit, validate, values, setAllTouched
 
       return () => clearTimeout(timeoutId)
     }
-  }, [
-debouncedValues, validateOnChange, isDirty, validate, debounceMs
-])
+  }, [debouncedValues, validateOnChange, isDirty, validate, debounceMs])
 
   // Update values when initialValues change
   useEffect(() => {
@@ -328,7 +360,7 @@ debouncedValues, validateOnChange, isDirty, validate, debounceMs
     handleBlur,
     handleSubmit,
     reset,
-    resetToValues
+    resetToValues,
   }
 }
 
@@ -344,7 +376,7 @@ export function useFieldValidation<T, K extends keyof T>(
     debounceMs?: number
   } = {}
 ) {
-  const [error, setError] = useState<string>('')
+  const [error, setError] = useState<string>("")
   const [isValidating, setIsValidating] = useState(false)
 
   const debouncedValue = useDebounce(value, options.debounceMs || 300)
@@ -358,11 +390,11 @@ export function useFieldValidation<T, K extends keyof T>(
       const fieldData = { [field]: debouncedValue } as Pick<T, K>
 
       await fieldSchema.parseAsync(fieldData)
-      setError('')
+      setError("")
       return true
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const fieldError = error.errors.find(err => err.path[0] === field)
+        const fieldError = error.errors.find((err) => err.path[0] === field)
         if (fieldError) {
           setError(fieldError.message)
         }
@@ -382,7 +414,7 @@ export function useFieldValidation<T, K extends keyof T>(
   return {
     error,
     isValidating,
-    validate: validateField
+    validate: validateField,
   }
 }
 
@@ -398,7 +430,9 @@ export function useFormValidation<T>(
     debounceMs?: number
   } = {}
 ) {
-  const [errors, setErrors] = useState<Record<keyof T, string>>({} as Record<keyof T, string>)
+  const [errors, setErrors] = useState<Record<keyof T, string>>(
+    {} as Record<keyof T, string>
+  )
   const [isValidating, setIsValidating] = useState(false)
   const [isValid, setIsValid] = useState(false)
 
@@ -415,7 +449,7 @@ export function useFormValidation<T>(
       if (error instanceof z.ZodError) {
         const newErrors = {} as Record<keyof T, string>
 
-        error.errors.forEach(err => {
+        error.errors.forEach((err) => {
           const field = err.path[0] as keyof T
           if (field) {
             newErrors[field] = err.message
@@ -441,6 +475,6 @@ export function useFormValidation<T>(
     errors,
     isValidating,
     isValid,
-    validate
+    validate,
   }
 }

@@ -1,8 +1,7 @@
-
-import { useRef } from 'react'
-import { useTranslation } from 'react-i18next'
-import { GrEdit } from 'react-icons/gr'
-import { MdDeleteForever } from 'react-icons/md'
+import { useRef } from "react"
+import { useTranslation } from "react-i18next"
+import { GrEdit } from "react-icons/gr"
+import { MdDeleteForever } from "react-icons/md"
 import {
   type LoaderFunctionArgs,
   type MetaFunction,
@@ -10,24 +9,26 @@ import {
   useLoaderData,
   useLocation,
   useNavigate,
-  useOutletContext
-} from 'react-router'
+  useOutletContext,
+} from "react-router"
 
-import { Button, VooDooLink } from '~/components/Atoms/Button/Button'
-import PerfumeHouseAddressBlock from '~/components/Containers/PerfumeHouse/AddressBlock/PerfumeHouseAddressBlock'
-import { useInfiniteScroll } from '~/hooks/useInfiniteScroll'
-import { getPerfumeHouseBySlug } from '~/models/house.server'
+import { Button, VooDooLink } from "~/components/Atoms/Button/Button"
+import PerfumeHouseAddressBlock from "~/components/Containers/PerfumeHouse/AddressBlock/PerfumeHouseAddressBlock"
+import { useInfiniteScroll } from "~/hooks/useInfiniteScroll"
+import { getPerfumeHouseBySlug } from "~/models/house.server"
 
-const ALL_HOUSES = '/behind-the-bottle'
-const BEHIND_THE_BOTTLE = '/behind-the-bottle'
+const ALL_HOUSES = "/behind-the-bottle"
+const BEHIND_THE_BOTTLE = "/behind-the-bottle"
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!params.houseSlug) {
-    throw new Error('House slug is required')
+    throw new Error("House slug is required")
   }
-  const perfumeHouse =
-    await getPerfumeHouseBySlug(params.houseSlug, { skip: 0, take: 9 })
+  const perfumeHouse = await getPerfumeHouseBySlug(params.houseSlug, {
+    skip: 0,
+    take: 9,
+  })
   if (!perfumeHouse) {
-    throw new Response('House not found', { status: 404 })
+    throw new Response("House not found", { status: 404 })
   }
   return { perfumeHouse }
 }
@@ -36,12 +37,12 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
   return [
-    { title: t('singleHouse.meta.title') },
-    { name: 'description', content: t('singleHouse.meta.description') }
+    { title: t("singleHouse.meta.title") },
+    { name: "description", content: t("singleHouse.meta.description") },
   ]
 }
 
-export const ROUTE_PATH = '/perfume-house'
+export const ROUTE_PATH = "/perfume-house"
 
 // Types
 type OutletContextType = {
@@ -61,17 +62,12 @@ const HouseDetailPage = () => {
   // Get selectedLetter from navigation state
   const selectedLetter = (location.state as { selectedLetter?: string })
     ?.selectedLetter
-  const {
-    perfumes,
-    loading,
-    hasMore,
-    observerRef,
-    loadMorePerfumes
-  } = useInfiniteScroll({
-    houseSlug: perfumeHouse.slug,
-    initialPerfumes: (perfumeHouse.perfumes || []) as any,
-    scrollContainerRef
-  })
+  const { perfumes, loading, hasMore, observerRef, loadMorePerfumes } =
+    useInfiniteScroll({
+      houseSlug: perfumeHouse.slug,
+      initialPerfumes: (perfumeHouse.perfumes || []) as any,
+      scrollContainerRef,
+    })
 
   // Handle delete house
   const handleDelete = async () => {
@@ -83,78 +79,81 @@ const HouseDetailPage = () => {
   }
 
   return (
-    <section className='relative z-10 my-4'>
+    <section className="relative z-10 my-4">
       {/* Back Button */}
-
 
       <header className="flex items-end justify-center mb-10 relative h-[600px]">
         <img
-          src={perfumeHouse.image || ''}
+          src={perfumeHouse.image || ""}
           alt={perfumeHouse.name}
           // height={600}
           // width={300}
           className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 details-title filter contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-screen mask-linear-gradient-to-b"
           style={{
             viewTransitionName: `perfume-image-${perfumeHouse.id}`,
-            contain: 'layout style paint'
+            contain: "layout style paint",
           }}
         />
 
-        <div className='relative z-10 px-8 text-center filter w-full rounded-lg py-4 text-shadow-lg text-shadow-noir-black/90'>
-          <h1 className='text-noir-gold'>{perfumeHouse.name}</h1>
+        <div className="relative z-10 px-8 text-center filter w-full rounded-lg py-4 text-shadow-lg text-shadow-noir-black/90">
+          <h1 className="text-noir-gold">{perfumeHouse.name}</h1>
         </div>
       </header>
 
       <div className="flex flex-col gap-20 mx-auto max-w-6xl">
-        {user?.role === 'admin'
-          && (
-            <div>
-              <h3 className='text-lg font-semibold text-center text-noir-gold-500 mb-2'>Admin</h3>
-              <div className='flex flex-col items-center justify-between gap-2'>
-                <VooDooLink
-                  aria-label={`edit ${perfumeHouse.name}`}
-                  variant="icon"
-                  background={'gold'}
-                  size={'sm'}
-                  className='flex items-center justify-between gap-2'
-                  url={`/admin/perfume-house/${perfumeHouse.slug}/edit`}
-                >
-                  <span>Edit Perfume</span>
-                  <GrEdit size={22} />
-                </VooDooLink>
-                <Button
-                  onClick={() => handleDelete()}
-                  aria-label={`delete ${perfumeHouse.name}`}
-                  variant="icon"
-                  className='flex items-center justify-between gap-2'
-                  background={'gold'}
-                  size={'sm'}
-                >
-                  <span>Delete Perfume</span>
-                  <MdDeleteForever size={22} />
-                </Button>
-              </div>
+        {user?.role === "admin" && (
+          <div>
+            <h3 className="text-lg font-semibold text-center text-noir-gold-500 mb-2">
+              Admin
+            </h3>
+            <div className="flex flex-col items-center justify-between gap-2">
+              <VooDooLink
+                aria-label={`edit ${perfumeHouse.name}`}
+                variant="icon"
+                background={"gold"}
+                size={"sm"}
+                className="flex items-center justify-between gap-2"
+                url={`/admin/perfume-house/${perfumeHouse.slug}/edit`}
+              >
+                <span>Edit Perfume</span>
+                <GrEdit size={22} />
+              </VooDooLink>
+              <Button
+                onClick={() => handleDelete()}
+                aria-label={`delete ${perfumeHouse.name}`}
+                variant="icon"
+                className="flex items-center justify-between gap-2"
+                background={"gold"}
+                size={"sm"}
+              >
+                <span>Delete Perfume</span>
+                <MdDeleteForever size={22} />
+              </Button>
             </div>
-          )
-        }
+          </div>
+        )}
         <div className="noir-border relative bg-white/5 text-noir-gold-500">
-
           <PerfumeHouseAddressBlock perfumeHouse={perfumeHouse} />
-          <p className='p-4 mb-8'>{perfumeHouse.description}</p>
+          <p className="p-4 mb-8">{perfumeHouse.description}</p>
           <span className="tag absolute">{perfumeHouse.type}</span>
           <Button
-            onClick={() => navigate(BEHIND_THE_BOTTLE, {
-              state: selectedLetter ? { selectedLetter } : {}
-            })}
+            onClick={() =>
+              navigate(BEHIND_THE_BOTTLE, {
+                state: selectedLetter ? { selectedLetter } : {},
+              })
+            }
             variant="primary"
             background="gold"
             size="sm"
             className="gap-2 max-w-max ml-2 mb-2"
-            aria-label={selectedLetter ? `Back to houses starting with ${selectedLetter}` : 'Back to houses'}
+            aria-label={
+              selectedLetter
+                ? `Back to houses starting with ${selectedLetter}`
+                : "Back to houses"
+            }
           >
-            ← Back to {selectedLetter || 'Houses'}
+            ← Back to {selectedLetter || "Houses"}
           </Button>
-
         </div>
         {perfumes.length > 0 && (
           <div
@@ -171,7 +170,8 @@ const HouseDetailPage = () => {
                     state={selectedLetter ? { selectedLetter } : {}}
                     className="block p-2 h-full noir-border relative w-full transition-colors duration-300 ease-in-out"
                   >
-                    <h3 className="
+                    <h3
+                      className="
                       text-center block text-lg tracking-wide py-2
                       font-semibold text-noir-gold  leading-6 capitalize"
                     >
@@ -183,10 +183,9 @@ const HouseDetailPage = () => {
                       className="w-48 h-48 object-cover rounded-lg mb-2 mx-auto details-title dark:brightness-90"
                       style={{
                         viewTransitionName: `perfume-image-${perfume.id}`,
-                        contain: 'layout style paint'
+                        contain: "layout style paint",
                       }}
                     />
-
                   </NavLink>
                 </li>
               ))}

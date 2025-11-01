@@ -1,36 +1,25 @@
-import { type VariantProps } from 'class-variance-authority'
-import {
-  type FC,
-  type HTMLProps,
-  useCallback,
-  useEffect,
-  useState
-} from 'react'
+import { type VariantProps } from "class-variance-authority"
+import { type FC, type HTMLProps, useCallback, useEffect, useState } from "react"
 
-import { Button } from '~/components/Atoms/Button/Button'
-import Input from '~/components/Atoms/Input/Input'
-import { useDebouncedSearch } from '~/hooks/useDebouncedSearch'
-import { highlightSearchTerm } from '~/utils/highlightSearchTerm'
-import { styleMerge } from '~/utils/styleUtils'
+import { Button } from "~/components/Atoms/Button/Button"
+import Input from "~/components/Atoms/Input/Input"
+import { useDebouncedSearch } from "~/hooks/useDebouncedSearch"
+import { highlightSearchTerm } from "~/utils/highlightSearchTerm"
+import { styleMerge } from "~/utils/styleUtils"
 
-import CreateTagButton from './Partials/CreateTagButton'
-import TagList from './Partials/TagList'
-import { tagSearchVariants } from './tagsearch-variants'
+import CreateTagButton from "./Partials/CreateTagButton"
+import TagList from "./Partials/TagList"
+import { tagSearchVariants } from "./tagsearch-variants"
 
 interface TagSearchProps
-  extends Omit<HTMLProps<HTMLDivElement>, 'onChange' | 'data'>,
-  VariantProps<typeof tagSearchVariants> {
+  extends Omit<HTMLProps<HTMLDivElement>, "onChange" | "data">,
+    VariantProps<typeof tagSearchVariants> {
   onChange?: Function
   label?: string
   data?: any[]
 }
 
-const TagSearch: FC<TagSearchProps> = ({
-  className,
-  onChange,
-  label,
-  data
-}) => {
+const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => {
   const initialTags = Array.isArray(data) ? data : []
   const [selectedTags, setSelectedTags] = useState<any[]>(initialTags)
 
@@ -43,10 +32,10 @@ const TagSearch: FC<TagSearchProps> = ({
 
   // Create search function for the debounced hook
   const searchFunction = useCallback(async (query: string) => {
-    const url = '/api/getTag'
+    const url = "/api/getTag"
     const res = await fetch(`${url}?tag=${encodeURIComponent(query)}`)
     if (!res.ok) {
-      throw new Error('Tag search request failed')
+      throw new Error("Tag search request failed")
     }
     return await res.json()
   }, [])
@@ -58,7 +47,7 @@ const TagSearch: FC<TagSearchProps> = ({
     results,
     isLoading,
     error,
-    clearResults
+    clearResults,
   } = useDebouncedSearch(searchFunction, { delay: 300, minLength: 1 })
 
   const openDropdown =
@@ -69,29 +58,29 @@ const TagSearch: FC<TagSearchProps> = ({
 
   const handleItemClick = (item: any) => {
     // eslint-disable-next-line no-console
-    console.log('TagSearch - handleItemClick called with:', item)
-    if (!selectedTags.find(t => t.id === item.id)) {
+    console.log("TagSearch - handleItemClick called with:", item)
+    if (!selectedTags.find((t) => t.id === item.id)) {
       const newTags = [...selectedTags, item]
       // eslint-disable-next-line no-console
-      console.log('TagSearch - updating tags:', {
+      console.log("TagSearch - updating tags:", {
         old: selectedTags,
-        new: newTags
+        new: newTags,
       })
       setSelectedTags(newTags)
       onChange?.(newTags)
     } else {
       // eslint-disable-next-line no-console
-      console.log('TagSearch - tag already exists in selection')
+      console.log("TagSearch - tag already exists in selection")
     }
     clearResults()
   }
 
   const handleRemoveTag = (tagId: string) => {
     // eslint-disable-next-line no-console
-    console.log('Removing tag:', tagId, 'from:', selectedTags)
-    const newTags = selectedTags.filter(tag => tag.id !== tagId)
+    console.log("Removing tag:", tagId, "from:", selectedTags)
+    const newTags = selectedTags.filter((tag) => tag.id !== tagId)
     // eslint-disable-next-line no-console
-    console.log('New tags after removal:', newTags)
+    console.log("New tags after removal:", newTags)
     setSelectedTags(newTags)
     onChange?.(newTags)
   }
@@ -102,7 +91,7 @@ const TagSearch: FC<TagSearchProps> = ({
       data-cy="TagSearch"
     >
       <div className="flex flex-col mb-6">
-        <label htmlFor="tag-search" className='block-label'>
+        <label htmlFor="tag-search" className="block-label">
           {`${label} search`}
         </label>
         <Input
@@ -111,10 +100,10 @@ const TagSearch: FC<TagSearchProps> = ({
           autoComplete="off"
           id="tag-search"
           value={inputValue}
-          onChange={evt => {
+          onChange={(evt) => {
             setInputValue((evt.target as HTMLInputElement).value)
           }}
-          inputType={''}
+          inputType={""}
           inputRef={null as any}
         />
         {openDropdown && (
@@ -129,23 +118,25 @@ const TagSearch: FC<TagSearchProps> = ({
                 <span>Search error: {error}</span>
               </li>
             )}
-            {!isLoading && !error && results.map((item: any) => (
-              <li
-                key={item.id}
-                className={
-                  'p-2 hover:bg-noir-gray hover:text-noir-light ' +
-                  'cursor-pointer last-of-type:rounded-b-md'
-                }
-              >
-                <Button
-                  className="block w-full h-full"
-                  type="button"
-                  onClick={() => handleItemClick(item)}
+            {!isLoading &&
+              !error &&
+              results.map((item: any) => (
+                <li
+                  key={item.id}
+                  className={
+                    "p-2 hover:bg-noir-gray hover:text-noir-light " +
+                    "cursor-pointer last-of-type:rounded-b-md"
+                  }
                 >
-                  {highlightSearchTerm(item.name, inputValue)}
-                </Button>
-              </li>
-            ))}
+                  <Button
+                    className="block w-full h-full"
+                    type="button"
+                    onClick={() => handleItemClick(item)}
+                  >
+                    {highlightSearchTerm(item.name, inputValue)}
+                  </Button>
+                </li>
+              ))}
             {!isLoading &&
               !error &&
               results.length === 0 &&
@@ -156,8 +147,8 @@ const TagSearch: FC<TagSearchProps> = ({
               )}
             <li
               className={
-                'p-2 hover:bg-noir-gray hover:text-noir-light ' +
-                'cursor-pointer last-of-type:rounded-b-md'
+                "p-2 hover:bg-noir-gray hover:text-noir-light " +
+                "cursor-pointer last-of-type:rounded-b-md"
               }
             >
               <CreateTagButton

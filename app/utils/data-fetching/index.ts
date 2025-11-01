@@ -1,67 +1,67 @@
 /**
  * Consolidated data fetching utilities
- * 
+ *
  * This module exports unified data fetching patterns that replace
  * scattered implementations across the codebase. Use these utilities
  * for consistent data loading, error handling, caching, and pagination.
- * 
+ *
  * @module data-fetching
- * 
+ *
  * @example Basic data fetching
  * ```tsx
  * import { useDataFetching } from '~/utils/data-fetching'
- * 
+ *
  * const { data, isLoading, error } = useDataFetching<User[]>({
  *   url: '/api/users'
  * })
  * ```
- * 
+ *
  * @example Paginated data
  * ```tsx
  * import { usePaginatedData } from '~/utils/data-fetching'
- * 
+ *
  * const { data, nextPage, prevPage, meta } = usePaginatedData<Perfume>({
  *   baseUrl: '/api/perfumes',
  *   pageSize: 20
  * })
  * ```
- * 
+ *
  * @example Helper functions
  * ```tsx
  * import { buildQueryString, withCache } from '~/utils/data-fetching'
- * 
+ *
  * const url = buildQueryString('/api/perfumes', { type: 'niche', page: 1 })
  * const cachedFetch = withCache(fetchFunction, 'perfumes-cache', 300000)
  * ```
  */
 
 // Re-export hooks
-export { useDataFetching } from '~/hooks/useDataFetching'
+export { useDataFetching } from "~/hooks/useDataFetching"
 export type {
   UseDataFetchingOptions,
-  UseDataFetchingReturn
-} from '~/hooks/useDataFetching'
+  UseDataFetchingReturn,
+} from "~/hooks/useDataFetching"
 
-export { usePaginatedData } from '~/hooks/usePaginatedData'
+export { usePaginatedData } from "~/hooks/usePaginatedData"
 export type {
   UsePaginatedDataOptions,
   UsePaginatedDataReturn,
   PaginatedResponse,
-  PaginationMeta
-} from '~/hooks/usePaginatedData'
+  PaginationMeta,
+} from "~/hooks/usePaginatedData"
 
 // Re-export related utilities
-export { useApiWithRetry } from '~/hooks/useApiWithRetry'
+export { useApiWithRetry } from "~/hooks/useApiWithRetry"
 export type {
   UseApiWithRetryOptions,
-  UseApiWithRetryReturn
-} from '~/hooks/useApiWithRetry'
+  UseApiWithRetryReturn,
+} from "~/hooks/useApiWithRetry"
 
-export { useDebouncedSearch } from '~/hooks/useDebouncedSearch'
+export { useDebouncedSearch } from "~/hooks/useDebouncedSearch"
 
 /**
  * Build a query string from an object of parameters
- * 
+ *
  * @example
  * ```ts
  * buildQueryString('/api/perfumes', { type: 'niche', page: 1 })
@@ -75,7 +75,7 @@ export function buildQueryString(
   const searchParams = new URLSearchParams()
 
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
+    if (value !== undefined && value !== null && value !== "") {
       searchParams.set(key, String(value))
     }
   })
@@ -86,7 +86,7 @@ export function buildQueryString(
 
 /**
  * Wrap a fetch function with caching
- * 
+ *
  * @example
  * ```ts
  * const cachedFetch = withCache(
@@ -103,7 +103,7 @@ export function withCache<T>(
 ): () => Promise<T> {
   return async () => {
     // Check cache
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       try {
         const cached = localStorage.getItem(`data-fetch-${cacheKey}`)
         if (cached) {
@@ -121,7 +121,7 @@ export function withCache<T>(
     const data = await fetchFn()
 
     // Store in cache
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       try {
         localStorage.setItem(
           `data-fetch-${cacheKey}`,
@@ -149,7 +149,7 @@ export interface ApiResponse<T> {
 
 /**
  * Parse API response and handle errors
- * 
+ *
  * @example
  * ```ts
  * const result = await parseApiResponse<User[]>(
@@ -169,11 +169,11 @@ export async function parseApiResponse<T>(
   const json: ApiResponse<T> = await response.json()
 
   if (!json.success) {
-    throw new Error(json.error || json.message || 'API request failed')
+    throw new Error(json.error || json.message || "API request failed")
   }
 
   if (json.data === undefined) {
-    throw new Error('API response missing data field')
+    throw new Error("API response missing data field")
   }
 
   return json.data
@@ -181,14 +181,14 @@ export async function parseApiResponse<T>(
 
 /**
  * Create a fetch function with default options
- * 
+ *
  * @example
  * ```ts
  * const apiFetch = createFetchFn({
  *   baseUrl: '/api',
  *   headers: { 'X-Custom-Header': 'value' }
  * })
- * 
+ *
  * const data = await apiFetch('/users')
  * ```
  */
@@ -197,18 +197,18 @@ export function createFetchFn(options: {
   headers?: Record<string, string>
   credentials?: RequestCredentials
 }) {
-  const { baseUrl = '', headers = {}, credentials = 'same-origin' } = options
+  const { baseUrl = "", headers = {}, credentials = "same-origin" } = options
 
   return async <T>(endpoint: string, init?: RequestInit): Promise<T> => {
     const url = `${baseUrl}${endpoint}`
     const response = await fetch(url, {
       ...init,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...headers,
-        ...init?.headers
+        ...init?.headers,
       },
-      credentials
+      credentials,
     })
 
     return parseApiResponse<T>(response)
@@ -218,7 +218,7 @@ export function createFetchFn(options: {
 /**
  * Retry a fetch function with exponential backoff
  * (Use useApiWithRetry hook for React components)
- * 
+ *
  * @example
  * ```ts
  * const data = await retryFetch(
@@ -240,7 +240,7 @@ export async function retryFetch<T>(
     maxAttempts = 3,
     initialDelay = 1000,
     maxDelay = 30000,
-    backoffFactor = 2
+    backoffFactor = 2,
   } = options
 
   let lastError: Error | null = null
@@ -256,7 +256,7 @@ export async function retryFetch<T>(
       if (attempt === maxAttempts) break
 
       // Wait before retry
-      await new Promise(resolve => setTimeout(resolve, delay))
+      await new Promise((resolve) => setTimeout(resolve, delay))
 
       // Exponential backoff
       delay = Math.min(delay * backoffFactor, maxDelay)
@@ -270,11 +270,11 @@ export async function retryFetch<T>(
  * Clear all cached data
  */
 export function clearAllCache(): void {
-  if (typeof window === 'undefined') return
+  if (typeof window === "undefined") return
 
   const keys = Object.keys(localStorage)
-  keys.forEach(key => {
-    if (key.startsWith('data-fetch-')) {
+  keys.forEach((key) => {
+    if (key.startsWith("data-fetch-")) {
       localStorage.removeItem(key)
     }
   })
@@ -288,12 +288,12 @@ export function getCacheStats(): {
   totalSize: number
   keys: string[]
 } {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return { count: 0, totalSize: 0, keys: [] }
   }
 
-  const keys = Object.keys(localStorage).filter(key =>
-    key.startsWith('data-fetch-')
+  const keys = Object.keys(localStorage).filter((key) =>
+    key.startsWith("data-fetch-")
   )
 
   const totalSize = keys.reduce((acc, key) => {
@@ -304,7 +304,6 @@ export function getCacheStats(): {
   return {
     count: keys.length,
     totalSize,
-    keys: keys.map(k => k.replace('data-fetch-', ''))
+    keys: keys.map((k) => k.replace("data-fetch-", "")),
   }
 }
-

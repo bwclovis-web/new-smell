@@ -1,9 +1,12 @@
-import type { ActionFunction } from 'react-router'
+import type { ActionFunction } from "react-router"
 
-import { createPerfumeRating, getUserPerfumeRating, updatePerfumeRating } from '~/models/perfumeRating.server'
-import { authenticateUser } from '~/utils/auth.server'
-import { createErrorResponse, createSuccessResponse } from '~/utils/response.server'
-
+import {
+  createPerfumeRating,
+  getUserPerfumeRating,
+  updatePerfumeRating,
+} from "~/models/perfumeRating.server"
+import { authenticateUser } from "~/utils/auth.server"
+import { createErrorResponse, createSuccessResponse } from "~/utils/response.server"
 
 async function saveRating(
   userId: string,
@@ -15,13 +18,13 @@ async function saveRating(
 
   if (existingRating) {
     await updatePerfumeRating(existingRating.id, {
-      [category]: rating
+      [category]: rating,
     })
   } else {
     await createPerfumeRating({
       userId,
       perfumeId,
-      [category]: rating
+      [category]: rating,
     })
   }
 }
@@ -38,33 +41,42 @@ export const action: ActionFunction = async ({ request }) => {
     const formData = await request.formData()
 
     // Extract data from form (no need to validate userId since we get it from auth)
-    const category = formData.get('category') as string
-    const rating = parseInt(formData.get('rating') as string, 10)
-    const perfumeId = formData.get('perfumeId') as string
+    const category = formData.get("category") as string
+    const rating = parseInt(formData.get("rating") as string, 10)
+    const perfumeId = formData.get("perfumeId") as string
 
     // Validate required fields (userId comes from auth)
     if (!perfumeId || !category || isNaN(rating)) {
-      return createErrorResponse('Missing required fields', 400)
+      return createErrorResponse("Missing required fields", 400)
     }
 
     // Validate rating value
     if (rating < 1 || rating > 5) {
-      return createErrorResponse('Rating must be between 1 and 5', 400)
+      return createErrorResponse("Rating must be between 1 and 5", 400)
     }
 
     // Validate category
     const validCategories = [
-      'longevity', 'sillage', 'gender', 'priceValue', 'overall'
+      "longevity",
+      "sillage",
+      "gender",
+      "priceValue",
+      "overall",
     ]
     if (!validCategories.includes(category)) {
-      return createErrorResponse('Invalid rating category', 400)
+      return createErrorResponse("Invalid rating category", 400)
     }
 
     await saveRating(authResult.user.id, perfumeId, category, rating)
     return createSuccessResponse()
   } catch (error) {
-    const { ErrorHandler } = await import('~/utils/errorHandling')
-    const appError = ErrorHandler.handle(error, { api: 'ratings', perfumeId, category, userId: authResult.user.id })
+    const { ErrorHandler } = await import("~/utils/errorHandling")
+    const appError = ErrorHandler.handle(error, {
+      api: "ratings",
+      perfumeId,
+      category,
+      userId: authResult.user.id,
+    })
     return createErrorResponse(appError.userMessage, 500)
   }
 }

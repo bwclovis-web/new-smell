@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from "react"
 
 interface UseDebouncedSearchOptions {
   delay?: number
@@ -19,7 +19,7 @@ export function useDebouncedSearch<T>(
   options: UseDebouncedSearchOptions = {}
 ): UseDebouncedSearchReturn<T> {
   const { delay = 300, minLength = 2 } = options
-  const [searchValue, setSearchValue] = useState('')
+  const [searchValue, setSearchValue] = useState("")
   const [results, setResults] = useState<T[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -39,7 +39,7 @@ export function useDebouncedSearch<T>(
         const searchResults = await searchFunction(query)
         setResults(searchResults)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Search failed')
+        setError(err instanceof Error ? err.message : "Search failed")
         setResults([])
       } finally {
         setIsLoading(false)
@@ -58,7 +58,7 @@ export function useDebouncedSearch<T>(
 
   const clearResults = useCallback(() => {
     setResults([])
-    setSearchValue('')
+    setSearchValue("")
     setError(null)
   }, [])
 
@@ -68,6 +68,6 @@ export function useDebouncedSearch<T>(
     results,
     isLoading,
     error,
-    clearResults
+    clearResults,
   }
 }

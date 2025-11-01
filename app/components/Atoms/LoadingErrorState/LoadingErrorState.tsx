@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react"
 
-import ErrorDisplay from '~/components/Containers/ErrorDisplay'
+import ErrorDisplay from "~/components/Containers/ErrorDisplay"
 
 interface LoadingErrorStateProps {
   isLoading?: boolean
@@ -17,13 +17,13 @@ interface LoadingErrorStateProps {
 const LoadingErrorState = ({
   isLoading = false,
   error,
-  loadingText = 'Loading...',
+  loadingText = "Loading...",
   errorTitle,
   showErrorDetails = false,
   onRetry,
   onDismiss,
-  className = '',
-  children
+  className = "",
+  children,
 }: LoadingErrorStateProps) => {
   if (error) {
     return (

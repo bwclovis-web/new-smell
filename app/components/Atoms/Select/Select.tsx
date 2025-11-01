@@ -1,18 +1,19 @@
-import { type VariantProps } from 'class-variance-authority'
-import { type ChangeEvent, type HTMLProps } from 'react'
+import { type VariantProps } from "class-variance-authority"
+import { type ChangeEvent, type HTMLProps } from "react"
 
-import { styleMerge } from '~/utils/styleUtils'
+import { styleMerge } from "~/utils/styleUtils"
 
-import { selectVariants, selectWrapperVariants } from './select-variants'
+import { selectVariants, selectWrapperVariants } from "./select-variants"
 
-interface SelectProps extends Omit<HTMLProps<HTMLSelectElement>, 'action' | 'size'>,
-  VariantProps<typeof selectWrapperVariants> {
+interface SelectProps
+  extends Omit<HTMLProps<HTMLSelectElement>, "action" | "size">,
+    VariantProps<typeof selectWrapperVariants> {
   selectId: string
   // eslint-disable-next-line no-unused-vars
   action?: (evt: ChangeEvent<HTMLSelectElement>) => void
   defaultId?: string | number
   ariaLabel?: string
-  size?: 'default' | 'compact' | 'expanded'
+  size?: "default" | "compact" | "expanded"
   selectData: Array<{
     label: string
     id: string | number
@@ -21,8 +22,15 @@ interface SelectProps extends Omit<HTMLProps<HTMLSelectElement>, 'action' | 'siz
 }
 
 const Select = ({
-  className, label, selectId, selectData, defaultId, action, ariaLabel, size }:
-  SelectProps) => {
+  className,
+  label,
+  selectId,
+  selectData,
+  defaultId,
+  action,
+  ariaLabel,
+  size,
+}: SelectProps) => {
   const handleChange = (evt: ChangeEvent<HTMLSelectElement>) => {
     if (action) {
       action(evt)
@@ -34,16 +42,28 @@ const Select = ({
       className={styleMerge(selectWrapperVariants({ className }))}
       data-cy="Select"
     >
-      {!ariaLabel && <label className='font-semibold text-2xl mb-1 capitalize text-noir-gold text-shadow-lg text-shadow-noir-black/60 tracking-wide' htmlFor={selectId}>{label}</label>}
+      {!ariaLabel && (
+        <label
+          className="font-semibold text-2xl mb-1 capitalize text-noir-gold text-shadow-lg text-shadow-noir-black/60 tracking-wide"
+          htmlFor={selectId}
+        >
+          {label}
+        </label>
+      )}
       <select
-        onChange={evt => handleChange(evt)}
+        onChange={(evt) => handleChange(evt)}
         id={selectId}
         aria-label={ariaLabel ?? undefined}
         name={selectId}
         className={styleMerge(selectVariants({ className, size }))}
       >
-        {selectData.map(item => (
-          <option key={item.id} value={item.id} selected={item.id === defaultId} className="bg-noir-dark">
+        {selectData.map((item) => (
+          <option
+            key={item.id}
+            value={item.id}
+            selected={item.id === defaultId}
+            className="bg-noir-dark"
+          >
             {item.label}
           </option>
         ))}

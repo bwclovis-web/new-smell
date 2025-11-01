@@ -1,13 +1,13 @@
-import { type ReactElement, type ReactNode } from 'react'
+import { type ReactElement, type ReactNode } from "react"
 
-import { styleMerge } from '~/utils/styleUtils'
+import { styleMerge } from "~/utils/styleUtils"
 
-import { tabsPanelVariants } from '../tabs-variants'
+import { tabsPanelVariants } from "../tabs-variants"
 interface TabPanelProps {
   idx: number
   child: ReactElement<{ content: ReactNode }>
   activeTab: number
-  type: 'secondary'
+  type: "secondary"
 }
 
 const TabPanel = ({ idx, child, activeTab, type }: TabPanelProps) => (

@@ -1,4 +1,4 @@
-import { gsap } from 'gsap'
+import { gsap } from "gsap"
 
 /**
  * Calculates the percentage position of a value within a range
@@ -17,7 +17,7 @@ export const calculateValueFromPosition = ({
   trackElement,
   min,
   max,
-  step
+  step,
 }: {
   clientX: number
   trackElement: HTMLElement
@@ -26,10 +26,7 @@ export const calculateValueFromPosition = ({
   step: number
 }): number => {
   const rect = trackElement.getBoundingClientRect()
-  const newPercentage = Math.max(
-    0,
-    Math.min(1, (clientX - rect.left) / rect.width)
-  )
+  const newPercentage = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
   const rawValue = min + newPercentage * (max - min)
   const steppedValue = Math.round(rawValue / step) * step
   return Math.max(min, Math.min(max, steppedValue))
@@ -43,7 +40,7 @@ export const getKeyboardValue = ({
   currentValue,
   min,
   max,
-  step
+  step,
 }: {
   key: string
   currentValue: number
@@ -52,15 +49,15 @@ export const getKeyboardValue = ({
   step: number
 }): number | null => {
   switch (key) {
-    case 'ArrowLeft':
-    case 'ArrowDown':
+    case "ArrowLeft":
+    case "ArrowDown":
       return Math.max(min, currentValue - step)
-    case 'ArrowRight':
-    case 'ArrowUp':
+    case "ArrowRight":
+    case "ArrowUp":
       return Math.min(max, currentValue + step)
-    case 'Home':
+    case "Home":
       return min
-    case 'End':
+    case "End":
       return max
     default:
       return null
@@ -83,13 +80,13 @@ export const sliderAnimations = {
     gsap.to(thumbElement, {
       x: `${percentage}%`,
       duration,
-      ease
+      ease,
     })
 
     gsap.to(fillElement, {
       width: `${percentage}%`,
       duration,
-      ease
+      ease,
     })
   },
 
@@ -97,9 +94,9 @@ export const sliderAnimations = {
     gsap.to(element, {
       scale,
       duration,
-      ease: "power2.out"
+      ease: "power2.out",
     })
-  }
+  },
 }
 
 /**
@@ -122,11 +119,11 @@ export const setupHoverListeners = (
     }
   }
 
-  thumbElement.addEventListener('mouseenter', handleMouseEnter)
-  thumbElement.addEventListener('mouseleave', handleMouseLeave)
+  thumbElement.addEventListener("mouseenter", handleMouseEnter)
+  thumbElement.addEventListener("mouseleave", handleMouseLeave)
 
   return () => {
-    thumbElement.removeEventListener('mouseenter', handleMouseEnter)
-    thumbElement.removeEventListener('mouseleave', handleMouseLeave)
+    thumbElement.removeEventListener("mouseenter", handleMouseEnter)
+    thumbElement.removeEventListener("mouseleave", handleMouseLeave)
   }
 }

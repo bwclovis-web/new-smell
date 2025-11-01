@@ -1,7 +1,7 @@
 // Image conversion utilities using Sharp
-import { promises as fs } from 'fs'
-import { basename, dirname, extname, join } from 'path'
-import sharp from 'sharp'
+import { promises as fs } from "fs"
+import { basename, dirname, extname, join } from "path"
+import sharp from "sharp"
 
 export interface ConversionOptions {
   quality?: number // 1-100, default 80
@@ -12,8 +12,17 @@ export interface ConversionOptions {
   resize?: {
     width?: number
     height?: number
-    fit?: 'cover' | 'contain' | 'fill' | 'inside' | 'outside'
-    position?: 'top' | 'right top' | 'right' | 'right bottom' | 'bottom' | 'left bottom' | 'left' | 'left top' | 'center'
+    fit?: "cover" | "contain" | "fill" | "inside" | "outside"
+    position?:
+      | "top"
+      | "right top"
+      | "right"
+      | "right bottom"
+      | "bottom"
+      | "left bottom"
+      | "left"
+      | "left top"
+      | "center"
   }
 }
 
@@ -41,13 +50,13 @@ export async function convertPngToWebP(
     effort = 4,
     metadata = false,
     progressive = false,
-    resize
+    resize,
   } = options
 
   try {
     // Validate input file
-    if (!inputPath || !inputPath.toLowerCase().endsWith('.png')) {
-      throw new Error('Input must be a PNG file')
+    if (!inputPath || !inputPath.toLowerCase().endsWith(".png")) {
+      throw new Error("Input must be a PNG file")
     }
 
     // Check if input file exists
@@ -72,8 +81,8 @@ export async function convertPngToWebP(
     // Apply resize if specified
     if (resize && (resize.width || resize.height)) {
       pipeline = pipeline.resize(resize.width, resize.height, {
-        fit: resize.fit || 'cover',
-        position: resize.position || 'center'
+        fit: resize.fit || "cover",
+        position: resize.position || "center",
       })
     }
 
@@ -82,7 +91,7 @@ export async function convertPngToWebP(
       quality,
       effort,
       lossless,
-      progressive
+      progressive,
     }
 
     // Remove metadata if requested
@@ -104,17 +113,17 @@ export async function convertPngToWebP(
       originalSize,
       convertedSize,
       compressionRatio,
-      success: true
+      success: true,
     }
   } catch (error) {
     return {
       inputPath,
-      outputPath: outputPath || '',
+      outputPath: outputPath || "",
       originalSize: 0,
       convertedSize: 0,
       compressionRatio: 0,
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      error: error instanceof Error ? error.message : "Unknown error",
     }
   }
 }
@@ -159,7 +168,7 @@ export async function findPngFiles(directory: string): Promise<string[]> {
 
         if (entry.isDirectory()) {
           await scanDirectory(fullPath)
-        } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.png')) {
+        } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".png")) {
           pngFiles.push(fullPath)
         }
       }
@@ -175,16 +184,18 @@ export async function findPngFiles(directory: string): Promise<string[]> {
 /**
  * Get optimized conversion options for different use cases
  */
-export function getOptimizedOptions(useCase: 'web' | 'mobile' | 'print' | 'thumbnail'): ConversionOptions {
+export function getOptimizedOptions(
+  useCase: "web" | "mobile" | "print" | "thumbnail"
+): ConversionOptions {
   switch (useCase) {
-    case 'web':
+    case "web":
       return {
         quality: 85,
         effort: 6,
         progressive: true,
-        metadata: false
+        metadata: false,
       }
-    case 'mobile':
+    case "mobile":
       return {
         quality: 75,
         effort: 6,
@@ -192,17 +203,17 @@ export function getOptimizedOptions(useCase: 'web' | 'mobile' | 'print' | 'thumb
         metadata: false,
         resize: {
           width: 800,
-          fit: 'inside'
-        }
+          fit: "inside",
+        },
       }
-    case 'print':
+    case "print":
       return {
         quality: 95,
         effort: 6,
         lossless: false,
-        metadata: true
+        metadata: true,
       }
-    case 'thumbnail':
+    case "thumbnail":
       return {
         quality: 70,
         effort: 4,
@@ -210,8 +221,8 @@ export function getOptimizedOptions(useCase: 'web' | 'mobile' | 'print' | 'thumb
         resize: {
           width: 200,
           height: 200,
-          fit: 'cover'
-        }
+          fit: "cover",
+        },
       }
     default:
       return {}
@@ -222,14 +233,16 @@ export function getOptimizedOptions(useCase: 'web' | 'mobile' | 'print' | 'thumb
  * Generate a summary report of conversion results
  */
 export function generateConversionReport(results: ConversionResult[]): string {
-  const successful = results.filter(r => r.success)
-  const failed = results.filter(r => !r.success)
+  const successful = results.filter((r) => r.success)
+  const failed = results.filter((r) => !r.success)
 
   const totalOriginalSize = successful.reduce((sum, r) => sum + r.originalSize, 0)
   const totalConvertedSize = successful.reduce((sum, r) => sum + r.convertedSize, 0)
-  const avgCompressionRatio = successful.length > 0
-    ? successful.reduce((sum, r) => sum + r.compressionRatio, 0) / successful.length
-    : 0
+  const avgCompressionRatio =
+    successful.length > 0
+      ? successful.reduce((sum, r) => sum + r.compressionRatio, 0) /
+        successful.length
+      : 0
 
   return `
 📊 PNG to WebP Conversion Report
@@ -245,10 +258,14 @@ export function generateConversionReport(results: ConversionResult[]): string {
    Average compression: ${avgCompressionRatio.toFixed(1)}%
    Total space saved: ${formatBytes(totalOriginalSize - totalConvertedSize)}
 
-${failed.length > 0 ? `
+${
+  failed.length > 0
+    ? `
 ❌ Failed Conversions:
-${failed.map(f => `   - ${f.inputPath}: ${f.error}`).join('\n')}
-` : ''}
+${failed.map((f) => `   - ${f.inputPath}: ${f.error}`).join("\n")}
+`
+    : ""
+}
   `.trim()
 }
 
@@ -257,16 +274,14 @@ ${failed.map(f => `   - ${f.inputPath}: ${f.error}`).join('\n')}
  */
 function formatBytes(bytes: number): string {
   if (bytes === 0) {
- return '0 Bytes' 
-}
+    return "0 Bytes"
+  }
 
   const k = 1024
-  const sizes = [
-'Bytes', 'KB', 'MB', 'GB'
-]
+  const sizes = ["Bytes", "KB", "MB", "GB"]
   const i = Math.floor(Math.log(bytes) / Math.log(k))
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
 }
 
 /**
@@ -280,15 +295,15 @@ export async function validateWebPSupport(): Promise<boolean> {
         width: 10,
         height: 10,
         channels: 3,
-        background: { r: 255, g: 0, b: 0 }
-      }
+        background: { r: 255, g: 0, b: 0 },
+      },
     })
       .webp()
       .toBuffer()
 
     return testBuffer.length > 0
   } catch (error) {
-    console.error('WebP support validation failed:', error)
+    console.error("WebP support validation failed:", error)
     return false
   }
 }

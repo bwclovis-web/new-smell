@@ -1,12 +1,12 @@
 /**
  * Common form utilities
- * 
+ *
  * Centralized form handling logic to reduce duplication across the application.
- * 
+ *
  * @example Form submission hook
  * ```typescript
  * import { useFormSubmit, commonValidators } from '~/utils/forms'
- * 
+ *
  * const { handleSubmit, isSubmitting, errors } = useFormSubmit<LoginData>({
  *   validate: createValidator({
  *     email: commonValidators.email,
@@ -14,11 +14,11 @@
  *   })
  * })
  * ```
- * 
+ *
  * @example Remix action wrapper
  * ```typescript
  * import { createFormAction } from '~/utils/forms'
- * 
+ *
  * export const action = createFormAction(
  *   async (data: FormData) => {
  *     await saveData(data)
@@ -38,8 +38,8 @@ export {
   formDataToObject,
   createFormAction,
   type UseFormSubmitOptions,
-  type UseFormSubmitReturn
-} from './formSubmit'
+  type UseFormSubmitReturn,
+} from "./formSubmit"
 
 // Form validation utilities
 export {
@@ -56,6 +56,5 @@ export {
   sanitizeFormInput,
   sanitizeFormData,
   VALIDATION_MESSAGES,
-  type ValidationResult
-} from './formValidation'
-
+  type ValidationResult,
+} from "./formValidation"

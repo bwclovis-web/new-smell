@@ -4,11 +4,11 @@
  * like caching, debouncing, and retry logic.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from "react"
 
-import { RetryOptions, retryPresets } from '~/utils/retry'
+import { RetryOptions, retryPresets } from "~/utils/retry"
 
-import { useApiWithRetry } from './useApiWithRetry'
+import { useApiWithRetry } from "./useApiWithRetry"
 
 export interface UseDataFetchingOptions<T> {
   /**
@@ -138,11 +138,11 @@ interface CachedData<T> {
   timestamp: number
 }
 
-const CACHE_PREFIX = 'data-fetch-'
+const CACHE_PREFIX = "data-fetch-"
 
 function getCachedData<T>(cacheKey: string): CachedData<T> | null {
-  if (typeof window === 'undefined') return null
-  
+  if (typeof window === "undefined") return null
+
   try {
     const cached = localStorage.getItem(`${CACHE_PREFIX}${cacheKey}`)
     return cached ? JSON.parse(cached) : null
@@ -152,8 +152,8 @@ function getCachedData<T>(cacheKey: string): CachedData<T> | null {
 }
 
 function setCachedData<T>(cacheKey: string, data: T): void {
-  if (typeof window === 'undefined') return
-  
+  if (typeof window === "undefined") return
+
   try {
     localStorage.setItem(
       `${CACHE_PREFIX}${cacheKey}`,
@@ -225,7 +225,7 @@ export function useDataFetching<T = unknown>(
     onSuccess,
     onError,
     transform,
-    staleWhileRevalidate = false
+    staleWhileRevalidate = false,
   } = options
 
   const [data, setDataState] = useState<T | null>(null)
@@ -236,7 +236,7 @@ export function useDataFetching<T = unknown>(
 
   const { fetchWithRetry } = useApiWithRetry({
     userId,
-    defaultRetryOptions: retryOptions || retryPresets.standard
+    defaultRetryOptions: retryOptions || retryPresets.standard,
   })
 
   const abortControllerRef = useRef<AbortController | null>(null)
@@ -249,7 +249,7 @@ export function useDataFetching<T = unknown>(
       if (cached && !isCacheExpired(cached.timestamp, cacheDuration)) {
         setDataState(cached.data)
         setIsInitialLoading(false)
-        
+
         // If stale-while-revalidate, refetch in background
         if (staleWhileRevalidate && enabled) {
           setIsRefetching(true)
@@ -278,10 +278,10 @@ export function useDataFetching<T = unknown>(
         if (fetchFn) {
           fetchFunction = fetchFn
         } else if (url) {
-          const urlString = typeof url === 'function' ? url() : url
+          const urlString = typeof url === "function" ? url() : url
           fetchFunction = async () => {
             const response = await fetch(urlString, {
-              signal: abortControllerRef.current?.signal
+              signal: abortControllerRef.current?.signal,
             })
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`)
@@ -289,12 +289,12 @@ export function useDataFetching<T = unknown>(
             return response.json()
           }
         } else {
-          throw new Error('Either url or fetchFn must be provided')
+          throw new Error("Either url or fetchFn must be provided")
         }
 
         // Execute with retry
         const result = await fetchWithRetry(fetchFunction, {
-          endpoint: typeof url === 'function' ? url() : url
+          endpoint: typeof url === "function" ? url() : url,
         })
 
         if (result !== null) {
@@ -313,11 +313,11 @@ export function useDataFetching<T = unknown>(
         }
       } catch (err) {
         // Ignore abort errors
-        if (err instanceof Error && err.name === 'AbortError') {
+        if (err instanceof Error && err.name === "AbortError") {
           return
         }
 
-        const error = err instanceof Error ? err : new Error('Fetch failed')
+        const error = err instanceof Error ? err : new Error("Fetch failed")
         setError(error)
         onError?.(error)
       } finally {
@@ -341,7 +341,7 @@ export function useDataFetching<T = unknown>(
   }, [])
 
   const clearCache = useCallback(() => {
-    if (cacheKey && typeof window !== 'undefined') {
+    if (cacheKey && typeof window !== "undefined") {
       localStorage.removeItem(`${CACHE_PREFIX}${cacheKey}`)
     }
   }, [cacheKey])
@@ -383,9 +383,8 @@ export function useDataFetching<T = unknown>(
     refetch,
     setData: setDataState,
     clearError,
-    clearCache
+    clearCache,
   }
 }
 
 export default useDataFetching
-

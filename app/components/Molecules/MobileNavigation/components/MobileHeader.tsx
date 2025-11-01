@@ -1,9 +1,9 @@
-import { type FC, type RefObject } from 'react'
-import { AiFillHome } from 'react-icons/ai'
-import { FaBars } from 'react-icons/fa6'
-import { NavLink } from 'react-router'
+import { type FC, type RefObject } from "react"
+import { AiFillHome } from "react-icons/ai"
+import { FaBars } from "react-icons/fa6"
+import { NavLink } from "react-router"
 
-import { styleMerge } from '~/utils/styleUtils'
+import { styleMerge } from "~/utils/styleUtils"
 
 interface MobileHeaderProps {
   logoText: string
@@ -20,7 +20,7 @@ const MobileHeader: FC<MobileHeaderProps> = ({
   modalOpen,
   modalId,
   onMenuToggle,
-  onNavClick
+  onNavClick,
 }) => (
   <div className="flex justify-between items-center w-full py-4 px-4 mobile-safe-top bg-noir-dark/60 backdrop-blur-md">
     <NavLink
@@ -38,7 +38,7 @@ const MobileHeader: FC<MobileHeaderProps> = ({
       onClick={onMenuToggle}
       className="text-noir-gold hover:text-noir-light p-3 transition-colors duration-200 mobile-touch-target rounded-lg hover:bg-noir-black/30"
       aria-label="Open menu"
-      aria-expanded={modalOpen && modalId === 'mobile-navigation-menu'}
+      aria-expanded={modalOpen && modalId === "mobile-navigation-menu"}
     >
       <FaBars size={24} />
     </button>

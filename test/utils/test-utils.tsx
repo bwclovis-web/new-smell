@@ -1,16 +1,16 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, type RenderOptions, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { createMemoryHistory } from 'history'
-import React, { type ReactElement, type ReactNode } from 'react'
-import { MemoryRouter, Router } from 'react-router'
-import { expect, vi } from 'vitest'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { render, type RenderOptions, screen, waitFor } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
+import { createMemoryHistory } from "history"
+import React, { type ReactElement, type ReactNode } from "react"
+import { MemoryRouter, Router } from "react-router"
+import { expect, vi } from "vitest"
 
 // ============================================================================
 // TYPES & INTERFACES
 // ============================================================================
 
-interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
+interface CustomRenderOptions extends Omit<RenderOptions, "wrapper"> {
   queryClient?: QueryClient
   initialEntries?: string[]
   initialIndex?: number
@@ -50,18 +50,19 @@ interface MockHouse {
 // QUERY CLIENT SETUP
 // ============================================================================
 
-const createTestQueryClient = () => new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-      gcTime: 0,
-      staleTime: 0,
+const createTestQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        gcTime: 0,
+        staleTime: 0,
+      },
+      mutations: {
+        retry: false,
+      },
     },
-    mutations: {
-      retry: false,
-    },
-  },
-})
+  })
 
 // ============================================================================
 // RENDER UTILITIES
@@ -71,16 +72,18 @@ export const renderWithProviders = (
   component: ReactElement,
   {
     queryClient = createTestQueryClient(),
-    initialEntries = ['/'],
+    initialEntries = ["/"],
     initialIndex = 0,
     history,
     ...renderOptions
   }: CustomRenderOptions = {}
 ) => {
-  const testHistory = history || createMemoryHistory({
-    initialEntries,
-    initialIndex
-  })
+  const testHistory =
+    history ||
+    createMemoryHistory({
+      initialEntries,
+      initialIndex,
+    })
 
   const Wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient}>
@@ -101,15 +104,11 @@ export const renderWithMemoryRouter = (
   component: ReactElement,
   options: CustomRenderOptions = {}
 ) => {
-  const { initialEntries = ['/'], ...renderOptions } = options
+  const { initialEntries = ["/"], ...renderOptions } = options
 
   const Wrapper = ({ children }: { children: ReactNode }) => (
-    <QueryClientProvider
-      client={options.queryClient || createTestQueryClient()}
-    >
-      <MemoryRouter initialEntries={initialEntries}>
-        {children}
-      </MemoryRouter>
+    <QueryClientProvider client={options.queryClient || createTestQueryClient()}>
+      <MemoryRouter initialEntries={initialEntries}>{children}</MemoryRouter>
     </QueryClientProvider>
   )
 
@@ -128,9 +127,9 @@ export const renderWithMemoryRouter = (
  * Legacy mock user generator - kept for backward compatibility
  */
 export const createMockUser = (overrides: Partial<MockUser> = {}): MockUser => ({
-  id: '1',
-  email: 'test@example.com',
-  name: 'Test User',
+  id: "1",
+  email: "test@example.com",
+  name: "Test User",
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   ...overrides,
@@ -140,13 +139,15 @@ export const createMockUser = (overrides: Partial<MockUser> = {}): MockUser => (
  * @deprecated Use createMockPerfume from test/factories instead
  * Legacy mock perfume generator - kept for backward compatibility
  */
-export const createMockPerfume = (overrides: Partial<MockPerfume> = {}): MockPerfume => ({
-  id: '1',
-  name: 'Test Perfume',
-  brand: 'Test Brand',
-  description: 'Test description',
+export const createMockPerfume = (
+  overrides: Partial<MockPerfume> = {}
+): MockPerfume => ({
+  id: "1",
+  name: "Test Perfume",
+  brand: "Test Brand",
+  description: "Test description",
   price: 100,
-  size: '50ml',
+  size: "50ml",
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   ...overrides,
@@ -157,10 +158,10 @@ export const createMockPerfume = (overrides: Partial<MockPerfume> = {}): MockPer
  * Legacy mock house generator - kept for backward compatibility
  */
 export const createMockHouse = (overrides: Partial<MockHouse> = {}): MockHouse => ({
-  id: '1',
-  name: 'Test House',
-  description: 'Test house description',
-  website: 'https://test.com',
+  id: "1",
+  name: "Test House",
+  description: "Test house description",
+  website: "https://test.com",
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   ...overrides,
@@ -170,12 +171,13 @@ export const createMockHouse = (overrides: Partial<MockHouse> = {}): MockHouse =
 // MOCK FUNCTIONS
 // ============================================================================
 
-export const mockFetch = (data: any, status = 200) => vi.fn().mockResolvedValue({
-  ok: status >= 200 && status < 300,
-  status,
-  json: () => Promise.resolve(data),
-  text: () => Promise.resolve(JSON.stringify(data)),
-})
+export const mockFetch = (data: any, status = 200) =>
+  vi.fn().mockResolvedValue({
+    ok: status >= 200 && status < 300,
+    status,
+    json: () => Promise.resolve(data),
+    text: () => Promise.resolve(JSON.stringify(data)),
+  })
 
 // Note: mockFetchError has been moved to api-test-utils.ts for better organization
 
@@ -192,7 +194,7 @@ const createStorageMock = () => {
       delete store[key]
     }),
     clear: vi.fn(() => {
-      Object.keys(store).forEach(key => {
+      Object.keys(store).forEach((key) => {
         delete store[key]
       })
     }),
@@ -233,9 +235,9 @@ export const mockResizeObserver = () => {
 }
 
 export const mockMatchMedia = (matches = false) => {
-  Object.defineProperty(window, 'matchMedia', {
+  Object.defineProperty(window, "matchMedia", {
     writable: true,
-    value: vi.fn().mockImplementation(query => ({
+    value: vi.fn().mockImplementation((query) => ({
       matches,
       media: query,
       onchange: null,
@@ -249,7 +251,7 @@ export const mockMatchMedia = (matches = false) => {
 }
 
 export const mockScrollTo = () => {
-  Object.defineProperty(window, 'scrollTo', {
+  Object.defineProperty(window, "scrollTo", {
     writable: true,
     value: vi.fn(),
   })
@@ -262,38 +264,44 @@ export const mockScrollTo = () => {
 /**
  * @deprecated Use factories from test/factories instead
  * Legacy test data factories - kept for backward compatibility
- * 
+ *
  * For new tests, use:
  * - import { createMockUser, createMockPerfume, createMockHouse } from 'test/factories'
  * - import { batchGeneration, generateBulkTestData } from 'test/factories'
  */
 export const createTestData = {
-  users: (count: number) => Array.from({ length: count }, (_, i) => createMockUser({ id: `${i + 1}` })),
-  perfumes: (count: number) => Array.from({ length: count }, (_, i) => createMockPerfume({ id: `${i + 1}` })),
-  houses: (count: number) => Array.from({ length: count }, (_, i) => createMockHouse({ id: `${i + 1}` })),
+  users: (count: number) =>
+    Array.from({ length: count }, (_, i) => createMockUser({ id: `${i + 1}` })),
+  perfumes: (count: number) =>
+    Array.from({ length: count }, (_, i) => createMockPerfume({ id: `${i + 1}` })),
+  houses: (count: number) =>
+    Array.from({ length: count }, (_, i) => createMockHouse({ id: `${i + 1}` })),
 }
 
 // Re-export new factories for convenience
-export * from '../factories'
+export * from "../factories"
 
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
 
-export const wait = (milliseconds: number) => new Promise(resolve => {
-  setTimeout(resolve, milliseconds)
-})
+export const wait = (milliseconds: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, milliseconds)
+  })
 
 export const createTestUser = () => userEvent.setup()
 
-export const waitForElement = async (selector: string, timeout = 5000) => waitFor(() => screen.getByTestId(selector), { timeout })
+export const waitForElement = async (selector: string, timeout = 5000) =>
+  waitFor(() => screen.getByTestId(selector), { timeout })
 
-export const waitForElementToDisappear = async (
-  selector: string,
-  timeout = 5000
-) => waitFor(() => {
-  expect(screen.queryByTestId(selector)).not.toBeInTheDocument()
-}, { timeout })
+export const waitForElementToDisappear = async (selector: string, timeout = 5000) =>
+  waitFor(
+    () => {
+      expect(screen.queryByTestId(selector)).not.toBeInTheDocument()
+    },
+    { timeout }
+  )
 
 // ============================================================================
 // CUSTOM MATCHERS
@@ -301,35 +309,39 @@ export const waitForElementToDisappear = async (
 
 export const customMatchers = {
   toBeInTheDocument: (received: any) => {
-    const pass = received &&
+    const pass =
+      received &&
       received.ownerDocument &&
       received.ownerDocument.body.contains(received)
     return {
       pass,
-      message: () => `expected element ${pass ? 'not ' : ''}to be in the document`,
+      message: () => `expected element ${pass ? "not " : ""}to be in the document`,
     }
   },
 
   toHaveClass: (received: any, className: string) => {
-    const pass = received &&
-      received.classList &&
-      received.classList.contains(className)
+    const pass =
+      received && received.classList && received.classList.contains(className)
     return {
       pass,
-      message: () => `expected element ${pass ? 'not ' : ''}to have class "${className}"`,
+      message: () =>
+        `expected element ${pass ? "not " : ""}to have class "${className}"`,
     }
   },
 
   toHaveAttribute: (received: any, attribute: string, value?: string) => {
-    const hasAttribute = received &&
-      received.hasAttribute &&
-      received.hasAttribute(attribute)
-    const hasValue = value ?
-      received && received.getAttribute(attribute) === value : true
+    const hasAttribute =
+      received && received.hasAttribute && received.hasAttribute(attribute)
+    const hasValue = value
+      ? received && received.getAttribute(attribute) === value
+      : true
     const pass = hasAttribute && hasValue
     return {
       pass,
-      message: () => `expected element ${pass ? 'not ' : ''}to have attribute "${attribute}"${value ? ` with value "${value}"` : ''}`,
+      message: () =>
+        `expected element ${pass ? "not " : ""}to have attribute "${attribute}"${
+          value ? ` with value "${value}"` : ""
+        }`,
     }
   },
 }
@@ -354,7 +366,7 @@ export const testErrorBoundary = async (
   Component: React.ComponentType<any>,
   errorProps: any
 ) => {
-  const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+  const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {
     // Mock implementation
   })
 
@@ -374,11 +386,15 @@ export const testAccessibility = async (
   const { container } = renderWithProviders(<Component {...props} />)
 
   // Test for basic accessibility attributes
-  const elements = container.querySelectorAll('[role], [aria-label], [aria-labelledby]')
+  const elements = container.querySelectorAll(
+    "[role], [aria-label], [aria-labelledby]"
+  )
   expect(elements.length).toBeGreaterThan(0)
 
   // Test for keyboard navigation
-  const focusableElements = container.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+  const focusableElements = container.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  )
   expect(focusableElements.length).toBeGreaterThan(0)
 }
 
@@ -387,5 +403,5 @@ export const testAccessibility = async (
 // ============================================================================
 
 // Re-export everything from testing library
-export * from '@testing-library/react'
-export { default as userEvent } from '@testing-library/user-event'
+export * from "@testing-library/react"
+export { default as userEvent } from "@testing-library/user-event"

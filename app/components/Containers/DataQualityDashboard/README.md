@@ -54,23 +54,27 @@ Access the dashboard at `/admin/data-quality`. This page is restricted to admini
 ### Features Available
 
 #### Summary Statistics
+
 - Total missing information count
 - Total duplicate entries
 - Missing house info count
 - Houses with no perfumes
 
 #### Data Visualizations
+
 - Top 10 brands with missing data (bar chart)
 - Top 10 brands with duplicates (bar chart)
 - Top 10 houses missing info (bar chart with breakdown)
 - Historical trends (line chart)
 
 #### Admin Controls
+
 - **Download CSV**: Export house information for editing
 - **Upload CSV**: Bulk update house information
 - **Refresh Data**: Manually trigger data refresh
 
 #### Timeframe Selection
+
 - Last Week
 - Last Month (default)
 - All Time
@@ -99,6 +103,7 @@ Set up a cron job to run the report generation script regularly:
 ### Main Component (`DataQualityDashboardRefactored.tsx`)
 
 The main component is now just 50 lines and handles:
+
 - Timeframe state management
 - Data fetching via custom hook
 - Upload completion callbacks
@@ -107,6 +112,7 @@ The main component is now just 50 lines and handles:
 ### Custom Hook (`useFetchDataQualityStats`)
 
 Manages all data fetching logic:
+
 - **Debouncing**: Prevents excessive API calls (5-second cooldown)
 - **Cache busting**: Ensures fresh data on refresh
 - **Error handling**: Catches and displays API errors
@@ -115,6 +121,7 @@ Manages all data fetching logic:
 ### Components
 
 All components are pure and focused:
+
 - **Presentational components**: Display data, no business logic
 - **Reusable**: Can be used in other parts of the application
 - **Testable**: Easy to unit test in isolation
@@ -137,6 +144,7 @@ User Action → DataQualityDashboard
 ### API Endpoint
 
 The `/api/data-quality` endpoint:
+
 - Accepts `timeframe` parameter (week/month/all)
 - Accepts `force=true` for immediate regeneration
 - Returns data quality statistics in JSON format
@@ -145,6 +153,7 @@ The `/api/data-quality` endpoint:
 ### CSV Handlers
 
 Located in `bones/csvHandlers/`:
+
 - **csvDownload**: Exports current house data
 - **csvUploader**: Validates and imports CSV updates
 - Uses CSRF tokens for security
@@ -162,6 +171,7 @@ Located in `bones/csvHandlers/`:
 See `DataQualityDashboard.test.tsx` for component tests.
 
 ### Test Coverage
+
 - Unit tests for utility functions
 - Component integration tests
 - Hook behavior tests
@@ -170,6 +180,7 @@ See `DataQualityDashboard.test.tsx` for component tests.
 ## Performance
 
 The refactored architecture provides several performance benefits:
+
 - **Debouncing**: Prevents API spam
 - **Code splitting**: Components can be lazy-loaded
 - **Memoization**: Individual components can be memoized

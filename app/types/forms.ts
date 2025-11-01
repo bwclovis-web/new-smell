@@ -3,9 +3,9 @@
  * Provides type safety for all form operations
  */
 
-import type { FormEvent } from 'react'
+import type { FormEvent } from "react"
 
-import type { HouseType, PerfumeType, TradePreference, UserRole } from './database'
+import type { HouseType, PerfumeType, TradePreference, UserRole } from "./database"
 
 // Base form types
 export interface BaseFormState {
@@ -69,7 +69,7 @@ export interface UserProfileFormData {
 }
 
 export interface UserPreferencesFormData {
-  theme: 'light' | 'dark' | 'system'
+  theme: "light" | "dark" | "system"
   language: string
   notifications: {
     email: boolean
@@ -113,8 +113,8 @@ export interface PerfumeSearchFormData {
     max: number
   }
   notes?: string[]
-  sortBy?: 'name' | 'price' | 'rating' | 'createdAt'
-  sortOrder?: 'asc' | 'desc'
+  sortBy?: "name" | "price" | "rating" | "createdAt"
+  sortOrder?: "asc" | "desc"
 }
 
 export interface PerfumeFilterFormData {
@@ -179,7 +179,7 @@ export interface ReviewFormProps {
 // Wishlist forms
 export interface WishlistFormData {
   notes?: string
-  priority: 'low' | 'medium' | 'high'
+  priority: "low" | "medium" | "high"
   notifyOnPriceDrop?: boolean
   notifyOnAvailability?: boolean
 }
@@ -208,9 +208,9 @@ export interface AdminPerfumeHouseFormData {
 }
 
 export interface AdminDataQualityFormData {
-  timeframe: '7d' | '30d' | '90d' | '1y' | 'all'
+  timeframe: "7d" | "30d" | "90d" | "1y" | "all"
   includeHistory: boolean
-  exportFormat: 'csv' | 'json' | 'xlsx'
+  exportFormat: "csv" | "json" | "xlsx"
 }
 
 // Form validation types
@@ -236,7 +236,7 @@ export interface ValidationResult {
 
 // Form field types
 export interface TextFieldProps extends FormFieldProps<string> {
-  type?: 'text' | 'email' | 'password' | 'tel' | 'url'
+  type?: "text" | "email" | "password" | "tel" | "url"
   placeholder?: string
   maxLength?: number
   minLength?: number
@@ -271,7 +271,7 @@ export interface RadioFieldProps<T = string> extends FormFieldProps<T> {
     label: string
     disabled?: boolean
   }>
-  orientation?: 'horizontal' | 'vertical'
+  orientation?: "horizontal" | "vertical"
 }
 
 export interface TextAreaFieldProps extends FormFieldProps<string> {
@@ -280,7 +280,7 @@ export interface TextAreaFieldProps extends FormFieldProps<string> {
   placeholder?: string
   maxLength?: number
   minLength?: number
-  resize?: 'none' | 'both' | 'horizontal' | 'vertical'
+  resize?: "none" | "both" | "horizontal" | "vertical"
 }
 
 export interface FileFieldProps extends FormFieldProps<FileList | null> {

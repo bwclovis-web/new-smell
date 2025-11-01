@@ -1,18 +1,18 @@
-import { expect, Page } from '@playwright/test'
+import { expect, Page } from "@playwright/test"
 
 /**
  * Common test utilities for E2E tests
  */
 
 export class TestHelpers {
-  constructor(private page: Page) { }
+  constructor(private page: Page) {}
 
   /**
    * Wait for the page to be fully loaded
    */
   async waitForPageLoad() {
-    await this.page.waitForLoadState('networkidle')
-    await this.page.waitForLoadState('domcontentloaded')
+    await this.page.waitForLoadState("networkidle")
+    await this.page.waitForLoadState("domcontentloaded")
   }
 
   /**
@@ -27,8 +27,8 @@ export class TestHelpers {
    * Wait for an element to be visible and clickable
    */
   async waitForClickable(selector: string, timeout = 10000) {
-    await this.page.waitForSelector(selector, { state: 'visible', timeout })
-    await this.page.waitForSelector(selector, { state: 'attached', timeout })
+    await this.page.waitForSelector(selector, { state: "visible", timeout })
+    await this.page.waitForSelector(selector, { state: "attached", timeout })
   }
 
   /**
@@ -36,10 +36,7 @@ export class TestHelpers {
    */
   async clickAndWait(selector: string, waitForNavigation = false) {
     if (waitForNavigation) {
-      await Promise.all([
-        this.page.waitForNavigation(),
-        this.page.click(selector)
-      ])
+      await Promise.all([this.page.waitForNavigation(), this.page.click(selector)])
     } else {
       await this.page.click(selector)
     }
@@ -49,7 +46,7 @@ export class TestHelpers {
    * Fill a form field
    */
   async fillField(selector: string, value: string) {
-    await this.page.waitForSelector(selector, { state: 'visible' })
+    await this.page.waitForSelector(selector, { state: "visible" })
     await this.page.fill(selector, value)
   }
 
@@ -57,7 +54,7 @@ export class TestHelpers {
    * Select an option from a dropdown
    */
   async selectOption(selector: string, value: string) {
-    await this.page.waitForSelector(selector, { state: 'visible' })
+    await this.page.waitForSelector(selector, { state: "visible" })
     await this.page.selectOption(selector, value)
   }
 
@@ -86,7 +83,7 @@ export class TestHelpers {
   async takeScreenshot(name: string) {
     await this.page.screenshot({
       path: `test-results/screenshots/${name}-${Date.now()}.png`,
-      fullPage: true
+      fullPage: true,
     })
   }
 
@@ -94,9 +91,9 @@ export class TestHelpers {
    * Wait for API response
    */
   async waitForAPIResponse(urlPattern: string | RegExp) {
-    return await this.page.waitForResponse(response => {
+    return await this.page.waitForResponse((response) => {
       const url = response.url()
-      if (typeof urlPattern === 'string') {
+      if (typeof urlPattern === "string") {
         return url.includes(urlPattern)
       }
       return urlPattern.test(url)
@@ -109,8 +106,8 @@ export class TestHelpers {
   async checkForConsoleErrors() {
     const errors: string[] = []
 
-    this.page.on('console', msg => {
-      if (msg.type() === 'error') {
+    this.page.on("console", (msg) => {
+      if (msg.type() === "error") {
         errors.push(msg.text())
       }
     })
@@ -125,14 +122,17 @@ export class TestHelpers {
     // Wait for common loading indicators to disappear
     const loadingSelectors = [
       '[data-testid="loading"]',
-      '.loading',
-      '.spinner',
-      '[aria-label="Loading"]'
+      ".loading",
+      ".spinner",
+      '[aria-label="Loading"]',
     ]
 
     for (const selector of loadingSelectors) {
       try {
-        await this.page.waitForSelector(selector, { state: 'hidden', timeout: 5000 })
+        await this.page.waitForSelector(selector, {
+          state: "hidden",
+          timeout: 5000,
+        })
       } catch {
         // Ignore if selector doesn't exist
       }

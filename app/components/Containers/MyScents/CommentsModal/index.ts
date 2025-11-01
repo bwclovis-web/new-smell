@@ -1,1 +1,1 @@
-export { default } from './CommentsModal'
+export { default } from "./CommentsModal"

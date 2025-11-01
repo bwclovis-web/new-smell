@@ -1,9 +1,9 @@
-import { cva, type VariantProps } from 'class-variance-authority'
+import { cva, type VariantProps } from "class-variance-authority"
 
 export type MobileNavigationVariants = VariantProps<typeof mobileNavigationVariants>
 
-export const mobileNavigationVariants = cva([''], {
+export const mobileNavigationVariants = cva([""], {
   compoundVariants: [{}],
   defaultVariants: {},
-  variants: {}
+  variants: {},
 })

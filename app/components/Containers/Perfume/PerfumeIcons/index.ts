@@ -1,1 +1,1 @@
-export { default } from './PerfumeIcons'
+export { default } from "./PerfumeIcons"

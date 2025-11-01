@@ -6,11 +6,11 @@
  * Only creates new notes when needed
  */
 
-import { PrismaClient } from '@prisma/client'
-import { parse } from 'csv-parse/sync'
-import fs from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
+import { PrismaClient } from "@prisma/client"
+import { parse } from "csv-parse/sync"
+import fs from "fs"
+import path from "path"
+import { fileURLToPath } from "url"
 
 const prisma = new PrismaClient()
 
@@ -19,33 +19,36 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 function parseNotes(notesString) {
-  if (!notesString || notesString.trim() === '' || notesString === '[]') {
+  if (!notesString || notesString.trim() === "" || notesString === "[]") {
     return []
   }
 
   try {
     // The CSV library returns the value as-is, so we just need to parse JSON
     const parsed = JSON.parse(notesString)
-    return Array.isArray(parsed) ? parsed.filter(note => note && note.trim()) : []
+    return Array.isArray(parsed) ? parsed.filter((note) => note && note.trim()) : []
   } catch (error) {
     console.log(`  ⚠️  Failed to parse notes: ${notesString}`)
     // If JSON parsing fails, try to split by comma
-    return notesString.split(',').map(note => note.trim()).filter(note => note.length > 0)
+    return notesString
+      .split(",")
+      .map((note) => note.trim())
+      .filter((note) => note.length > 0)
   }
 }
 
 async function createOrGetPerfumeHouse(houseName) {
-  if (!houseName || houseName.trim() === '') {
+  if (!houseName || houseName.trim() === "") {
     return null
   }
 
   const existingHouse = await prisma.perfumeHouse.findFirst({
-    where: { 
+    where: {
       name: {
         equals: houseName.trim(),
-        mode: 'insensitive'
-      }
-    }
+        mode: "insensitive",
+      },
+    },
   })
 
   if (existingHouse) {
@@ -55,14 +58,14 @@ async function createOrGetPerfumeHouse(houseName) {
   return await prisma.perfumeHouse.create({
     data: {
       name: houseName.trim(),
-      slug: houseName.trim().toLowerCase().replace(/\s+/g, '-'),
-      type: 'niche' // Andrea Maack is a niche house
-    }
+      slug: houseName.trim().toLowerCase().replace(/\s+/g, "-"),
+      type: "niche", // Andrea Maack is a niche house
+    },
   })
 }
 
 async function createOrGetPerfumeNote(noteName, perfumeId, noteType) {
-  if (!noteName || noteName.trim() === '') {
+  if (!noteName || noteName.trim() === "") {
     return null
   }
 
@@ -70,12 +73,12 @@ async function createOrGetPerfumeNote(noteName, perfumeId, noteType) {
 
   // First, try to find existing note with the same name
   const existingNote = await prisma.perfumeNotes.findFirst({
-    where: { 
+    where: {
       name: {
         equals: cleanNoteName,
-        mode: 'insensitive'
-      }
-    }
+        mode: "insensitive",
+      },
+    },
   })
 
   if (existingNote) {
@@ -85,12 +88,12 @@ async function createOrGetPerfumeNote(noteName, perfumeId, noteType) {
   } else {
     // Create new note
     const noteData = {
-      name: cleanNoteName
+      name: cleanNoteName,
     }
 
     console.log(`  ✨ Creating new note: ${cleanNoteName}`)
     return await prisma.perfumeNotes.create({
-      data: noteData
+      data: noteData,
     })
   }
 }
@@ -98,18 +101,18 @@ async function createOrGetPerfumeNote(noteName, perfumeId, noteType) {
 async function createSlug(name) {
   return name
     .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim('-')
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim("-")
 }
 
 async function checkForDuplicateInSameHouse(perfumeName, houseId) {
   return await prisma.perfume.findFirst({
     where: {
       name: perfumeName,
-      perfumeHouseId: houseId
-    }
+      perfumeHouseId: houseId,
+    },
   })
 }
 
@@ -118,18 +121,18 @@ async function checkForDuplicateInOtherHouses(perfumeName, houseId) {
     where: {
       name: perfumeName,
       perfumeHouseId: {
-        not: houseId
-      }
+        not: houseId,
+      },
     },
     include: {
-      perfumeHouse: true
-    }
+      perfumeHouse: true,
+    },
   })
 }
 
 async function importAndreaMaackPerfumesData() {
-  const csvFile = 'perfumes_andreamaack.csv'
-  const filePath = path.join(__dirname, '../csv', csvFile)
+  const csvFile = "perfumes_andreamaack.csv"
+  const filePath = path.join(__dirname, "../csv", csvFile)
 
   if (!fs.existsSync(filePath)) {
     console.log(`❌ File not found: ${csvFile}`)
@@ -137,21 +140,21 @@ async function importAndreaMaackPerfumesData() {
   }
 
   console.log(`📁 Reading ${csvFile}...`)
-  const content = fs.readFileSync(filePath, { encoding: 'utf-8' })
-  
+  const content = fs.readFileSync(filePath, { encoding: "utf-8" })
+
   // Use csv-parse library for proper CSV parsing
   const records = parse(content, {
     columns: true,
     skip_empty_lines: true,
     relax_quotes: true,
     escape: '"',
-    quote: '"'
+    quote: '"',
   })
 
   console.log(`📊 Found ${records.length} records to import`)
 
   // Create or get Andrea Maack house
-  const perfumeHouse = await createOrGetPerfumeHouse('Andrea Maack')
+  const perfumeHouse = await createOrGetPerfumeHouse("Andrea Maack")
   console.log(`🏠 Perfume house: ${perfumeHouse.name} (${perfumeHouse.id})`)
 
   let imported = 0
@@ -161,10 +164,10 @@ async function importAndreaMaackPerfumesData() {
 
   for (let i = 0; i < records.length; i++) {
     const data = records[i]
-    
+
     try {
       // Skip if name is empty
-      if (!data.name || data.name.trim() === '') {
+      if (!data.name || data.name.trim() === "") {
         console.log(`⚠️  Skipping record ${i + 1}: No name`)
         skipped++
         continue
@@ -177,40 +180,55 @@ async function importAndreaMaackPerfumesData() {
       console.log(`\n🔍 Processing: ${originalName}`)
 
       // Check for duplicate in same house
-      const duplicateInSameHouse = await checkForDuplicateInSameHouse(originalName, perfumeHouse.id)
-      
+      const duplicateInSameHouse = await checkForDuplicateInSameHouse(
+        originalName,
+        perfumeHouse.id
+      )
+
       if (duplicateInSameHouse) {
         // Check which has more data (description, image, notes)
-        const currentDataScore = (data.description ? 1 : 0) + (data.image ? 1 : 0) + 
-                                (parseNotes(data.openNotes || '').length + parseNotes(data.heartNotes || '').length + parseNotes(data.baseNotes || '').length)
-        
-        const existingDataScore = (duplicateInSameHouse.description ? 1 : 0) + (duplicateInSameHouse.image ? 1 : 0)
-        
+        const currentDataScore =
+          (data.description ? 1 : 0) +
+          (data.image ? 1 : 0) +
+          (parseNotes(data.openNotes || "").length +
+            parseNotes(data.heartNotes || "").length +
+            parseNotes(data.baseNotes || "").length)
+
+        const existingDataScore =
+          (duplicateInSameHouse.description ? 1 : 0) +
+          (duplicateInSameHouse.image ? 1 : 0)
+
         if (currentDataScore > existingDataScore) {
           // Update existing perfume with better data
           await prisma.perfume.update({
             where: { id: duplicateInSameHouse.id },
             data: {
               description: data.description || duplicateInSameHouse.description,
-              image: data.image || duplicateInSameHouse.image
-            }
+              image: data.image || duplicateInSameHouse.image,
+            },
           })
-          console.log(`🔄 Updated existing perfume with better data: ${originalName}`)
-          
+          console.log(
+            `🔄 Updated existing perfume with better data: ${originalName}`
+          )
+
           // Process and update notes
-          const openNotes = parseNotes(data.openNotes || '')
-          const heartNotes = parseNotes(data.heartNotes || '')
-          const baseNotes = parseNotes(data.baseNotes || '')
+          const openNotes = parseNotes(data.openNotes || "")
+          const heartNotes = parseNotes(data.heartNotes || "")
+          const baseNotes = parseNotes(data.baseNotes || "")
 
           const noteConnections = {
             perfumeNotesOpen: { connect: [] },
             perfumeNotesHeart: { connect: [] },
-            perfumeNotesClose: { connect: [] }
+            perfumeNotesClose: { connect: [] },
           }
 
           // Process open notes
           for (const noteName of openNotes) {
-            const note = await createOrGetPerfumeNote(noteName, duplicateInSameHouse.id, 'open')
+            const note = await createOrGetPerfumeNote(
+              noteName,
+              duplicateInSameHouse.id,
+              "open"
+            )
             if (note) {
               noteConnections.perfumeNotesOpen.connect.push({ id: note.id })
             }
@@ -218,7 +236,11 @@ async function importAndreaMaackPerfumesData() {
 
           // Process heart notes
           for (const noteName of heartNotes) {
-            const note = await createOrGetPerfumeNote(noteName, duplicateInSameHouse.id, 'heart')
+            const note = await createOrGetPerfumeNote(
+              noteName,
+              duplicateInSameHouse.id,
+              "heart"
+            )
             if (note) {
               noteConnections.perfumeNotesHeart.connect.push({ id: note.id })
             }
@@ -226,7 +248,11 @@ async function importAndreaMaackPerfumesData() {
 
           // Process base notes
           for (const noteName of baseNotes) {
-            const note = await createOrGetPerfumeNote(noteName, duplicateInSameHouse.id, 'base')
+            const note = await createOrGetPerfumeNote(
+              noteName,
+              duplicateInSameHouse.id,
+              "base"
+            )
             if (note) {
               noteConnections.perfumeNotesClose.connect.push({ id: note.id })
             }
@@ -235,36 +261,45 @@ async function importAndreaMaackPerfumesData() {
           // Update perfume with note connections
           await prisma.perfume.update({
             where: { id: duplicateInSameHouse.id },
-            data: noteConnections
+            data: noteConnections,
           })
 
           updated++
         } else {
-          console.log(`⚠️  Perfume "${originalName}" already exists in same house with equal or better data, skipping...`)
+          console.log(
+            `⚠️  Perfume "${originalName}" already exists in same house with equal or better data, skipping...`
+          )
           skipped++
         }
         continue
       }
 
       // Check for duplicate in other houses
-      const duplicateInOtherHouse = await checkForDuplicateInOtherHouses(originalName, perfumeHouse.id)
-      
+      const duplicateInOtherHouse = await checkForDuplicateInOtherHouses(
+        originalName,
+        perfumeHouse.id
+      )
+
       if (duplicateInOtherHouse) {
         finalName = `${originalName} - ${perfumeHouse.name}`
         slug = await createSlug(finalName)
-        
+
         // Check if the modified name also exists
         const modifiedExists = await prisma.perfume.findFirst({
-          where: { name: finalName }
+          where: { name: finalName },
         })
-        
+
         if (modifiedExists) {
-          console.log(`⚠️  Perfume "${originalName}" already exists with house suffix, skipping...`)
+          console.log(
+            `⚠️  Perfume "${originalName}" already exists with house suffix, skipping...`
+          )
           skipped++
           continue
         }
-        
-        console.log(`🔄 Duplicate found in other house (${duplicateInOtherHouse.perfumeHouse.name}): "${originalName}" -> "${finalName}"`)
+
+        console.log(
+          `🔄 Duplicate found in other house (${duplicateInOtherHouse.perfumeHouse.name}): "${originalName}" -> "${finalName}"`
+        )
         duplicates++
       }
 
@@ -275,27 +310,27 @@ async function importAndreaMaackPerfumesData() {
           slug: slug,
           description: data.description || null,
           image: data.image || null,
-          perfumeHouseId: perfumeHouse.id
-        }
+          perfumeHouseId: perfumeHouse.id,
+        },
       })
 
       console.log(`✅ Created: ${finalName}`)
 
       // Process notes
-      const openNotes = parseNotes(data.openNotes || '')
-      const heartNotes = parseNotes(data.heartNotes || '')
-      const baseNotes = parseNotes(data.baseNotes || '')
+      const openNotes = parseNotes(data.openNotes || "")
+      const heartNotes = parseNotes(data.heartNotes || "")
+      const baseNotes = parseNotes(data.baseNotes || "")
 
       // Create note connections
       const noteConnections = {
         perfumeNotesOpen: { connect: [] },
         perfumeNotesHeart: { connect: [] },
-        perfumeNotesClose: { connect: [] }
+        perfumeNotesClose: { connect: [] },
       }
 
       // Process open notes
       for (const noteName of openNotes) {
-        const note = await createOrGetPerfumeNote(noteName, perfume.id, 'open')
+        const note = await createOrGetPerfumeNote(noteName, perfume.id, "open")
         if (note) {
           noteConnections.perfumeNotesOpen.connect.push({ id: note.id })
         }
@@ -303,7 +338,7 @@ async function importAndreaMaackPerfumesData() {
 
       // Process heart notes
       for (const noteName of heartNotes) {
-        const note = await createOrGetPerfumeNote(noteName, perfume.id, 'heart')
+        const note = await createOrGetPerfumeNote(noteName, perfume.id, "heart")
         if (note) {
           noteConnections.perfumeNotesHeart.connect.push({ id: note.id })
         }
@@ -311,7 +346,7 @@ async function importAndreaMaackPerfumesData() {
 
       // Process base notes
       for (const noteName of baseNotes) {
-        const note = await createOrGetPerfumeNote(noteName, perfume.id, 'base')
+        const note = await createOrGetPerfumeNote(noteName, perfume.id, "base")
         if (note) {
           noteConnections.perfumeNotesClose.connect.push({ id: note.id })
         }
@@ -320,19 +355,18 @@ async function importAndreaMaackPerfumesData() {
       // Update perfume with note connections
       await prisma.perfume.update({
         where: { id: perfume.id },
-        data: noteConnections
+        data: noteConnections,
       })
 
       imported++
-
     } catch (error) {
       console.error(`❌ Error processing record ${i + 1}:`, error.message)
-      console.error('Record data:', data)
+      console.error("Record data:", data)
       skipped++
     }
   }
 
-  console.log('\n📈 Import Summary:')
+  console.log("\n📈 Import Summary:")
   console.log(`✅ Imported: ${imported}`)
   console.log(`🔄 Updated existing: ${updated}`)
   console.log(`🔄 Duplicates handled: ${duplicates}`)
@@ -341,13 +375,13 @@ async function importAndreaMaackPerfumesData() {
 }
 
 async function main() {
-  console.log('🚀 Starting Andrea Maack Perfumes import...')
-  
+  console.log("🚀 Starting Andrea Maack Perfumes import...")
+
   try {
     await importAndreaMaackPerfumesData()
-    console.log('✅ Andrea Maack Perfumes import completed!')
+    console.log("✅ Andrea Maack Perfumes import completed!")
   } catch (error) {
-    console.error('❌ Import failed:', error)
+    console.error("❌ Import failed:", error)
     process.exit(1)
   } finally {
     await prisma.$disconnect()
@@ -355,4 +389,3 @@ async function main() {
 }
 
 main()
-

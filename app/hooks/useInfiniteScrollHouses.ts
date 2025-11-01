@@ -1,4 +1,4 @@
-import { type RefObject, useEffect, useRef, useState } from 'react'
+import { type RefObject, useEffect, useRef, useState } from "react"
 
 interface UseInfiniteScrollHousesOptions {
   letter: string
@@ -20,13 +20,20 @@ interface UseInfiniteScrollHousesReturn {
   resetHouses: (newHouses: any[], newTotalCount: number) => void
 }
 
-async function fetchHousesByLetter(letter: string, skip: number, take: number, houseType: string = 'all') {
+async function fetchHousesByLetter(
+  letter: string,
+  skip: number,
+  take: number,
+  houseType: string = "all"
+) {
   const url = `/api/houses-by-letter-paginated?letter=${letter}&skip=${skip}&take=${take}&houseType=${houseType}`
   const response = await fetch(url)
   return response.json()
 }
 
-export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions): UseInfiniteScrollHousesReturn {
+export function useInfiniteScrollHouses(
+  options: UseInfiniteScrollHousesOptions
+): UseInfiniteScrollHousesReturn {
   const {
     letter,
     initialHouses,
@@ -34,7 +41,7 @@ export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions)
     take = 12,
     threshold = 200,
     debounceTime = 500,
-    houseType = 'all'
+    houseType = "all",
   } = options
 
   const [houses, setHouses] = useState(initialHouses)
@@ -49,15 +56,15 @@ export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions)
 
   const loadMoreHouses = async () => {
     if (loading || !hasMore) {
- return 
-}
+      return
+    }
 
     setLoading(true)
     try {
       const data = await fetchHousesByLetter(letter, skip, take, houseType)
       if (data.success && Array.isArray(data.houses)) {
-        setHouses(prev => [...prev, ...data.houses])
-        setSkip(prev => prev + data.houses.length)
+        setHouses((prev) => [...prev, ...data.houses])
+        setSkip((prev) => prev + data.houses.length)
         setHasMore(data.meta.hasMore)
         setTotalCount(data.meta.totalCount)
       } else {
@@ -92,19 +99,19 @@ export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions)
     }
 
     if (!scrollContainerRef.current) {
- return 
-}
+      return
+    }
 
     const scrollContainer = scrollContainerRef.current
     const handleScroll = () => {
       if (loading || !hasMore) {
- return 
-}
+        return
+      }
 
       const now = Date.now()
       if (now - lastTriggerTime.current < debounceTime) {
- return 
-}
+        return
+      }
 
       const { scrollTop, scrollHeight, clientHeight } = scrollContainer
       if (scrollTop + clientHeight >= scrollHeight - threshold) {
@@ -113,11 +120,26 @@ export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions)
       }
     }
 
-    scrollContainer.addEventListener('scroll', handleScroll)
-    return () => scrollContainer.removeEventListener('scroll', handleScroll)
+    scrollContainer.addEventListener("scroll", handleScroll)
+    return () => scrollContainer.removeEventListener("scroll", handleScroll)
   }, [
-loading, hasMore, skip, scrollContainerRef.current, debounceTime, threshold, letter, houseType
-])
+    loading,
+    hasMore,
+    skip,
+    scrollContainerRef.current,
+    debounceTime,
+    threshold,
+    letter,
+    houseType,
+  ])
 
-  return { houses, loading, hasMore, totalCount, observerRef, loadMoreHouses, resetHouses }
+  return {
+    houses,
+    loading,
+    hasMore,
+    totalCount,
+    observerRef,
+    loadMoreHouses,
+    resetHouses,
+  }
 }

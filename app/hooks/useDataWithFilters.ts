@@ -1,6 +1,11 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from "react"
 
-import { filterBySearchQuery, filterByType, sortItems, type SortOption } from '~/utils/sortUtils'
+import {
+  filterBySearchQuery,
+  filterByType,
+  sortItems,
+  type SortOption,
+} from "~/utils/sortUtils"
 
 interface UseDataWithFiltersOptions<T> {
   initialData: T[]
@@ -22,21 +27,23 @@ interface UseDataWithFiltersReturn<T> {
   resetFilters: () => void
 }
 
-export function useDataWithFilters<T extends { id: string; name: string; createdAt: Date; type?: string }>({
+export function useDataWithFilters<
+  T extends { id: string; name: string; createdAt: Date; type?: string }
+>({
   initialData,
-  defaultSort = 'created-desc',
-  defaultType = 'all'
+  defaultSort = "created-desc",
+  defaultType = "all",
 }: UseDataWithFiltersOptions<T>): UseDataWithFiltersReturn<T> {
   const [selectedSort, setSelectedSort] = useState<SortOption>(defaultSort)
   const [selectedType, setSelectedType] = useState<string>(defaultType)
   const [selectedLetter, setSelectedLetter] = useState<string | null>(null)
-  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState<string>("")
 
   const filteredData = useMemo(() => {
     let filtered = [...initialData]
 
     // Apply type filter
-    if (selectedType && selectedType !== 'all') {
+    if (selectedType && selectedType !== "all") {
       filtered = filterByType(filtered, selectedType)
     }
 
@@ -49,15 +56,13 @@ export function useDataWithFilters<T extends { id: string; name: string; created
     filtered = sortItems(filtered, selectedSort)
 
     return filtered
-  }, [
-initialData, selectedSort, selectedType, searchQuery
-])
+  }, [initialData, selectedSort, selectedType, searchQuery])
 
   const resetFilters = useCallback(() => {
     setSelectedSort(defaultSort)
     setSelectedType(defaultType)
     setSelectedLetter(null)
-    setSearchQuery('')
+    setSearchQuery("")
   }, [defaultSort, defaultType])
 
   return {
@@ -71,6 +76,6 @@ initialData, selectedSort, selectedType, searchQuery
     setSelectedType,
     setSelectedLetter,
     setSearchQuery,
-    resetFilters
+    resetFilters,
   }
 }

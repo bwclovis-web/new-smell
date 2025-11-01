@@ -1,19 +1,19 @@
-import cookie from 'cookie'
-import { Suspense } from 'react'
-import { type LoaderFunctionArgs, Outlet, useLoaderData } from 'react-router'
+import cookie from "cookie"
+import { Suspense } from "react"
+import { type LoaderFunctionArgs, Outlet, useLoaderData } from "react-router"
 
-import GlobalNavigation from '~/components/Molecules/GlobalNavigation/GlobalNavigation'
-import MobileBottomNavigation from '~/components/Molecules/MobileBottomNavigation/MobileBottomNavigation'
-import MobileNavigation from '~/components/Molecules/MobileNavigation/MobileNavigation'
+import GlobalNavigation from "~/components/Molecules/GlobalNavigation/GlobalNavigation"
+import MobileBottomNavigation from "~/components/Molecules/MobileBottomNavigation/MobileBottomNavigation"
+import MobileNavigation from "~/components/Molecules/MobileNavigation/MobileNavigation"
 // Performance monitoring only in development
 // import { DevPerformanceLoader } from '~/components/Performance'
-import { getUserById } from '~/models/user.server'
-import { createSafeUser } from '~/types'
-import { verifyAccessToken } from '~/utils/security/session-manager.server'
+import { getUserById } from "~/models/user.server"
+import { createSafeUser } from "~/types"
+import { verifyAccessToken } from "~/utils/security/session-manager.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   // Get cookies from the request
-  const cookieHeader = request.headers.get('cookie') || ''
+  const cookieHeader = request.headers.get("cookie") || ""
   const cookies = cookie.parse(cookieHeader)
 
   let user = null
@@ -48,9 +48,7 @@ const RootLayout = () => {
         <MobileNavigation user={user} />
         <MobileBottomNavigation user={user} />
         <main className="w-full min-h-screen relative mb-28 md:mb-0">
-          <Outlet
-            context={{ user }}
-          />
+          <Outlet context={{ user }} />
         </main>
         {/* <DevPerformanceLoader /> */}
       </div>

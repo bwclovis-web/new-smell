@@ -1,20 +1,20 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from "@playwright/test"
 
-import { LoginPage } from './pages/LoginPage'
-import { PerfumePage } from './pages/PerfumePage'
-import { VaultPage } from './pages/VaultPage'
+import { LoginPage } from "./pages/LoginPage"
+import { PerfumePage } from "./pages/PerfumePage"
+import { VaultPage } from "./pages/VaultPage"
 
-test.describe('Reviews and Ratings', () => {
+test.describe("Reviews and Ratings", () => {
   test.beforeEach(async ({ page }) => {
     // Login before each test
     const loginPage = new LoginPage(page)
     await loginPage.navigateTo()
-    await loginPage.login('test@example.com', 'TestPassword123!')
+    await loginPage.login("test@example.com", "TestPassword123!")
     await expect(page).toHaveURL(/\/(?!login)/)
   })
 
-  test.describe('Rating Perfumes', () => {
-    test('should rate a perfume', async ({ page }) => {
+  test.describe("Rating Perfumes", () => {
+    test("should rate a perfume", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -31,7 +31,7 @@ test.describe('Reviews and Ratings', () => {
       await perfumePage.assertRatingDisplayed(5)
     })
 
-    test('should change existing rating', async ({ page }) => {
+    test("should change existing rating", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -52,7 +52,7 @@ test.describe('Reviews and Ratings', () => {
       await perfumePage.assertRatingDisplayed(5)
     })
 
-    test('should rate with half stars', async ({ page }) => {
+    test("should rate with half stars", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -71,7 +71,7 @@ test.describe('Reviews and Ratings', () => {
       }
     })
 
-    test('should display average rating', async ({ page }) => {
+    test("should display average rating", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -85,7 +85,7 @@ test.describe('Reviews and Ratings', () => {
       await expect(page.locator('[data-testid="average-rating"]')).toBeVisible()
     })
 
-    test('should show rating count', async ({ page }) => {
+    test("should show rating count", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -99,7 +99,7 @@ test.describe('Reviews and Ratings', () => {
       await expect(page.locator('[data-testid="rating-count"]')).toBeVisible()
     })
 
-    test('should show hover preview when rating', async ({ page }) => {
+    test("should show hover preview when rating", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -117,8 +117,8 @@ test.describe('Reviews and Ratings', () => {
     })
   })
 
-  test.describe('Writing Reviews', () => {
-    test('should write a review', async ({ page }) => {
+  test.describe("Writing Reviews", () => {
+    test("should write a review", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -132,20 +132,20 @@ test.describe('Reviews and Ratings', () => {
       await page.click('[data-testid="write-review"]')
 
       // Fill review form
-      await page.fill('[name="reviewTitle"]', 'Excellent Perfume')
+      await page.fill('[name="reviewTitle"]', "Excellent Perfume")
       await page.fill(
         '[name="reviewText"]',
-        'This is a detailed review of the perfume. It smells amazing!'
+        "This is a detailed review of the perfume. It smells amazing!"
       )
 
       // Submit review
       await page.click('button:has-text("Submit")')
 
       // Should show success
-      await expect(page.locator('text=/review.*submitted|thank you/i')).toBeVisible()
+      await expect(page.locator("text=/review.*submitted|thank you/i")).toBeVisible()
     })
 
-    test('should rate while writing review', async ({ page }) => {
+    test("should rate while writing review", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -162,17 +162,17 @@ test.describe('Reviews and Ratings', () => {
       await page.click('[data-testid="review-rating-5"]')
 
       // Fill review
-      await page.fill('[name="reviewTitle"]', 'Great!')
-      await page.fill('[name="reviewText"]', 'Wonderful perfume')
+      await page.fill('[name="reviewTitle"]', "Great!")
+      await page.fill('[name="reviewText"]', "Wonderful perfume")
 
       // Submit
       await page.click('button:has-text("Submit")')
 
       // Should submit successfully
-      await expect(page.locator('text=/submitted|success/i')).toBeVisible()
+      await expect(page.locator("text=/submitted|success/i")).toBeVisible()
     })
 
-    test('should enforce minimum review length', async ({ page }) => {
+    test("should enforce minimum review length", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -186,16 +186,18 @@ test.describe('Reviews and Ratings', () => {
       await page.click('[data-testid="write-review"]')
 
       // Enter too short review
-      await page.fill('[name="reviewText"]', 'Too short')
+      await page.fill('[name="reviewText"]', "Too short")
 
       // Try to submit
       await page.click('button:has-text("Submit")')
 
       // Should show error
-      await expect(page.locator('text=/minimum|too short|more characters/i')).toBeVisible()
+      await expect(
+        page.locator("text=/minimum|too short|more characters/i")
+      ).toBeVisible()
     })
 
-    test('should require rating with review', async ({ page }) => {
+    test("should require rating with review", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -209,17 +211,19 @@ test.describe('Reviews and Ratings', () => {
       await page.click('[data-testid="write-review"]')
 
       // Fill review without rating
-      await page.fill('[name="reviewTitle"]', 'Good perfume')
-      await page.fill('[name="reviewText"]', 'This is a review without rating')
+      await page.fill('[name="reviewTitle"]', "Good perfume")
+      await page.fill('[name="reviewText"]', "This is a review without rating")
 
       // Try to submit
       await page.click('button:has-text("Submit")')
 
       // Should show error about missing rating
-      await expect(page.locator('text=/rating.*required|please.*rate/i')).toBeVisible()
+      await expect(
+        page.locator("text=/rating.*required|please.*rate/i")
+      ).toBeVisible()
     })
 
-    test('should save draft review', async ({ page }) => {
+    test("should save draft review", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -231,19 +235,19 @@ test.describe('Reviews and Ratings', () => {
 
       // Start writing review
       await page.click('[data-testid="write-review"]')
-      await page.fill('[name="reviewTitle"]', 'Draft review')
-      await page.fill('[name="reviewText"]', 'This is a draft')
+      await page.fill('[name="reviewTitle"]', "Draft review")
+      await page.fill('[name="reviewText"]', "This is a draft")
 
       // Save as draft
       const saveDraftButton = page.locator('button:has-text("Save Draft")')
 
       if (await saveDraftButton.isVisible()) {
         await saveDraftButton.click()
-        await expect(page.locator('text=/draft.*saved/i')).toBeVisible()
+        await expect(page.locator("text=/draft.*saved/i")).toBeVisible()
       }
     })
 
-    test('should cancel review', async ({ page }) => {
+    test("should cancel review", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -255,7 +259,7 @@ test.describe('Reviews and Ratings', () => {
 
       // Start writing review
       await page.click('[data-testid="write-review"]')
-      await page.fill('[name="reviewText"]', 'Canceling this')
+      await page.fill('[name="reviewText"]', "Canceling this")
 
       // Click cancel
       await page.click('button:has-text("Cancel")')
@@ -265,8 +269,8 @@ test.describe('Reviews and Ratings', () => {
     })
   })
 
-  test.describe('Viewing Reviews', () => {
-    test('should display all reviews for a perfume', async ({ page }) => {
+  test.describe("Viewing Reviews", () => {
+    test("should display all reviews for a perfume", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -280,7 +284,7 @@ test.describe('Reviews and Ratings', () => {
       await expect(page.locator('[data-testid="reviews-section"]')).toBeVisible()
     })
 
-    test('should sort reviews by date', async ({ page }) => {
+    test("should sort reviews by date", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -291,13 +295,13 @@ test.describe('Reviews and Ratings', () => {
       await perfumePage.waitForPerfumeData()
 
       // Sort reviews
-      await page.selectOption('[data-testid="review-sort"]', 'date-desc')
+      await page.selectOption('[data-testid="review-sort"]', "date-desc")
 
       // Should reorder reviews
       await page.waitForTimeout(500)
     })
 
-    test('should sort reviews by rating', async ({ page }) => {
+    test("should sort reviews by rating", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -308,13 +312,13 @@ test.describe('Reviews and Ratings', () => {
       await perfumePage.waitForPerfumeData()
 
       // Sort by rating
-      await page.selectOption('[data-testid="review-sort"]', 'rating-desc')
+      await page.selectOption('[data-testid="review-sort"]', "rating-desc")
 
       // Should reorder
       await page.waitForTimeout(500)
     })
 
-    test('should filter reviews by rating', async ({ page }) => {
+    test("should filter reviews by rating", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -331,7 +335,7 @@ test.describe('Reviews and Ratings', () => {
       await page.waitForTimeout(500)
     })
 
-    test('should paginate reviews', async ({ page }) => {
+    test("should paginate reviews", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -350,7 +354,7 @@ test.describe('Reviews and Ratings', () => {
       }
     })
 
-    test('should show verified purchase badge', async ({ page }) => {
+    test("should show verified purchase badge", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -364,13 +368,13 @@ test.describe('Reviews and Ratings', () => {
       const verifiedBadge = page.locator('[data-testid="verified-purchase"]')
 
       if (await verifiedBadge.isVisible()) {
-        expect(await verifiedBadge.textContent()).toContain('Verified')
+        expect(await verifiedBadge.textContent()).toContain("Verified")
       }
     })
   })
 
-  test.describe('Editing Reviews', () => {
-    test('should edit own review', async ({ page }) => {
+  test.describe("Editing Reviews", () => {
+    test("should edit own review", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -387,19 +391,17 @@ test.describe('Reviews and Ratings', () => {
         await editButton.click()
 
         // Update review
-        await page.fill('[name="reviewText"]', 'Updated review text')
+        await page.fill('[name="reviewText"]', "Updated review text")
 
         // Save
         await page.click('button:has-text("Save")')
 
         // Should show success
-        await expect(page.locator('text=/updated|saved/i')).toBeVisible()
+        await expect(page.locator("text=/updated|saved/i")).toBeVisible()
       }
     })
 
-    test('should not show edit button for other users reviews', async ({
-      page,
-    }) => {
+    test("should not show edit button for other users reviews", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -415,16 +417,14 @@ test.describe('Reviews and Ratings', () => {
 
       if (count > 0) {
         // Should not have edit button on other users' reviews
-        const editButtons = await page
-          .locator('[data-testid="edit-review"]')
-          .count()
+        const editButtons = await page.locator('[data-testid="edit-review"]').count()
 
         // Should only have edit button on own review or none at all
         expect(editButtons).toBeLessThanOrEqual(1)
       }
     })
 
-    test('should update rating when editing review', async ({ page }) => {
+    test("should update rating when editing review", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -446,13 +446,13 @@ test.describe('Reviews and Ratings', () => {
         await page.click('button:has-text("Save")')
 
         // Should update
-        await expect(page.locator('text=/updated/i')).toBeVisible()
+        await expect(page.locator("text=/updated/i")).toBeVisible()
       }
     })
   })
 
-  test.describe('Deleting Reviews', () => {
-    test('should delete own review', async ({ page }) => {
+  test.describe("Deleting Reviews", () => {
+    test("should delete own review", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -471,11 +471,11 @@ test.describe('Reviews and Ratings', () => {
         await page.click('button:has-text("Delete")')
 
         // Should show success
-        await expect(page.locator('text=/deleted|removed/i')).toBeVisible()
+        await expect(page.locator("text=/deleted|removed/i")).toBeVisible()
       }
     })
 
-    test('should confirm before deleting review', async ({ page }) => {
+    test("should confirm before deleting review", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -491,11 +491,11 @@ test.describe('Reviews and Ratings', () => {
         await deleteButton.click()
 
         // Should show confirmation
-        await expect(page.locator('text=/confirm|sure|delete/i')).toBeVisible()
+        await expect(page.locator("text=/confirm|sure|delete/i")).toBeVisible()
       }
     })
 
-    test('should cancel review deletion', async ({ page }) => {
+    test("should cancel review deletion", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -519,8 +519,8 @@ test.describe('Reviews and Ratings', () => {
     })
   })
 
-  test.describe('Review Interactions', () => {
-    test('should mark review as helpful', async ({ page }) => {
+  test.describe("Review Interactions", () => {
+    test("should mark review as helpful", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -541,7 +541,7 @@ test.describe('Reviews and Ratings', () => {
       }
     })
 
-    test('should report review', async ({ page }) => {
+    test("should report review", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -558,11 +558,11 @@ test.describe('Reviews and Ratings', () => {
         await reportButton.click()
 
         // Should show report dialog
-        await expect(page.locator('text=/report|reason/i')).toBeVisible()
+        await expect(page.locator("text=/report|reason/i")).toBeVisible()
       }
     })
 
-    test('should reply to review', async ({ page }) => {
+    test("should reply to review", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -579,21 +579,21 @@ test.describe('Reviews and Ratings', () => {
         await replyButton.click()
 
         // Fill reply
-        await page.fill('[name="replyText"]', 'Thanks for the review!')
+        await page.fill('[name="replyText"]', "Thanks for the review!")
 
         // Submit
         await page.click('button:has-text("Reply")')
 
         // Should post reply
-        await expect(page.locator('text=/reply.*posted/i')).toBeVisible()
+        await expect(page.locator("text=/reply.*posted/i")).toBeVisible()
       }
     })
   })
 
-  test.describe('Mobile Reviews and Ratings', () => {
+  test.describe("Mobile Reviews and Ratings", () => {
     test.use({ viewport: { width: 375, height: 667 } })
 
-    test('should rate perfume on mobile', async ({ page }) => {
+    test("should rate perfume on mobile", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -610,7 +610,7 @@ test.describe('Reviews and Ratings', () => {
       await perfumePage.assertRatingDisplayed(5)
     })
 
-    test('should write review on mobile', async ({ page }) => {
+    test("should write review on mobile", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -622,17 +622,17 @@ test.describe('Reviews and Ratings', () => {
 
       // Write review on mobile
       await page.click('[data-testid="write-review"]')
-      await page.fill('[name="reviewTitle"]', 'Mobile review')
-      await page.fill('[name="reviewText"]', 'This is a review from mobile')
+      await page.fill('[name="reviewTitle"]', "Mobile review")
+      await page.fill('[name="reviewText"]', "This is a review from mobile")
       await page.click('[data-testid="review-rating-5"]')
 
       await page.click('button:has-text("Submit")')
 
       // Should submit
-      await expect(page.locator('text=/submitted|success/i')).toBeVisible()
+      await expect(page.locator("text=/submitted|success/i")).toBeVisible()
     })
 
-    test('should view reviews on mobile', async ({ page }) => {
+    test("should view reviews on mobile", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -647,4 +647,3 @@ test.describe('Reviews and Ratings', () => {
     })
   })
 })
-

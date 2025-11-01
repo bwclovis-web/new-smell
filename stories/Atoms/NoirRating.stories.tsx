@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState } from "react"
 
-import NoirRating from '~/components/Organisms/NoirRating/NoirRating'
+import NoirRating from "~/components/Organisms/NoirRating/NoirRating"
 
 // Demo component to showcase NoirRating functionality
 function NoirRatingDemo() {
@@ -20,9 +20,7 @@ function NoirRatingDemo() {
         <div className="bg-noir-dark-800 rounded-lg p-6 space-y-8">
           <div className="grid gap-6">
             <div className="flex flex-col items-center">
-              <h3 className="mb-3 font-medium">
-                Longevity
-              </h3>
+              <h3 className="mb-3 font-medium">Longevity</h3>
               <NoirRating
                 category="longevity"
                 value={longevityRating}
@@ -33,9 +31,7 @@ function NoirRatingDemo() {
             </div>
 
             <div className="flex flex-col items-center">
-              <h3 className="mb-3">
-                Sillage
-              </h3>
+              <h3 className="mb-3">Sillage</h3>
               <NoirRating
                 category="sillage"
                 value={sillageRating}
@@ -46,9 +42,7 @@ function NoirRatingDemo() {
             </div>
 
             <div className="flex flex-col items-center">
-              <h3 className="mb-3">
-                Gender Appeal
-              </h3>
+              <h3 className="mb-3">Gender Appeal</h3>
               <NoirRating
                 category="gender"
                 value={genderRating}
@@ -59,9 +53,7 @@ function NoirRatingDemo() {
             </div>
 
             <div className="flex flex-col items-center">
-              <h3 className="mb-3">
-                Price Value
-              </h3>
+              <h3 className="mb-3">Price Value</h3>
               <NoirRating
                 category="priceValue"
                 value={priceValueRating}
@@ -72,9 +64,7 @@ function NoirRatingDemo() {
             </div>
 
             <div className="flex flex-col items-center">
-              <h3 className="mb-3">
-                Overall Rating
-              </h3>
+              <h3 className="mb-3">Overall Rating</h3>
               <NoirRating
                 category="overall"
                 value={overallRating}
@@ -86,9 +76,7 @@ function NoirRatingDemo() {
           </div>
 
           <div className="border-t border-noir-dark-600 pt-6">
-            <h3 className="mb-4 text-center">
-              Read-Only Example (Different Sizes)
-            </h3>
+            <h3 className="mb-4 text-center">Read-Only Example (Different Sizes)</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-noir-gold-300 text-sm">Small:</span>

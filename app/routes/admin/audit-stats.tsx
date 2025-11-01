@@ -1,7 +1,7 @@
-import { ServerErrorHandler } from '~/utils/errorHandling.server'
-import { getAuditStats } from '~/utils/security/audit-logger.server'
+import { ServerErrorHandler } from "~/utils/errorHandling.server"
+import { getAuditStats } from "~/utils/security/audit-logger.server"
 
-export const ROUTE_PATH = '/admin/audit-stats' as const
+export const ROUTE_PATH = "/admin/audit-stats" as const
 
 export const loader = async () => {
   try {
@@ -9,12 +9,12 @@ export const loader = async () => {
 
     return ServerErrorHandler.createSuccessResponse({
       stats,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     })
   } catch (error) {
     const appError = ServerErrorHandler.handle(error, {
-      api: 'audit-stats',
-      operation: 'getAuditStats'
+      api: "audit-stats",
+      operation: "getAuditStats",
     })
 
     return ServerErrorHandler.createErrorResponse(appError)

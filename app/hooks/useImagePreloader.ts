@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react"
 
 interface UseImagePreloaderOptions {
   images: string[]
@@ -15,7 +15,7 @@ interface UseImagePreloaderReturn {
 
 export const useImagePreloader = ({
   images,
-  priority = false
+  priority = false,
 }: UseImagePreloaderOptions): UseImagePreloaderReturn => {
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set())
   const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set())
@@ -23,15 +23,16 @@ export const useImagePreloader = ({
 
   useEffect(() => {
     if (images.length === 0) {
- return 
-}
+      return
+    }
 
-    const loadImage = (src: string): Promise<void> => new Promise((resolve, reject) => {
+    const loadImage = (src: string): Promise<void> =>
+      new Promise((resolve, reject) => {
         const img = new Image()
 
         img.onload = () => {
-          setLoadedImages(prev => new Set([...prev, src]))
-          setLoadingImages(prev => {
+          setLoadedImages((prev) => new Set([...prev, src]))
+          setLoadingImages((prev) => {
             const newSet = new Set(prev)
             newSet.delete(src)
             return newSet
@@ -40,8 +41,8 @@ export const useImagePreloader = ({
         }
 
         img.onerror = () => {
-          setFailedImages(prev => new Set([...prev, src]))
-          setLoadingImages(prev => {
+          setFailedImages((prev) => new Set([...prev, src]))
+          setLoadingImages((prev) => {
             const newSet = new Set(prev)
             newSet.delete(src)
             return newSet
@@ -49,7 +50,7 @@ export const useImagePreloader = ({
           reject(new Error(`Failed to load image: ${src}`))
         }
 
-        setLoadingImages(prev => new Set([...prev, src]))
+        setLoadingImages((prev) => new Set([...prev, src]))
         img.src = src
       })
 
@@ -69,7 +70,7 @@ export const useImagePreloader = ({
           }
         }
       } catch (error) {
-        console.warn('Image preloading failed:', error)
+        console.warn("Image preloading failed:", error)
       }
     }
 
@@ -84,6 +85,6 @@ export const useImagePreloader = ({
     loadingImages,
     failedImages,
     isLoaded,
-    progress
+    progress,
   }
 }

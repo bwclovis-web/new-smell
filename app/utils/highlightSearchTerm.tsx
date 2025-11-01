@@ -9,7 +9,10 @@ export function highlightSearchTerm(text: string, searchTerm: string): JSX.Eleme
     return <span>{text}</span>
   }
 
-  const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
+  const regex = new RegExp(
+    `(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
+    "gi"
+  )
   const parts = text.split(regex)
 
   return (

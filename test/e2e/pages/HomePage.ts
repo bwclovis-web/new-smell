@@ -1,6 +1,6 @@
-import { Page } from '@playwright/test'
+import { Page } from "@playwright/test"
 
-import { BasePage } from './BasePage'
+import { BasePage } from "./BasePage"
 
 /**
  * Home page object model
@@ -17,7 +17,7 @@ export class HomePage extends BasePage {
     loadMoreButton: '[data-testid="load-more"]',
     languageSwitch: '[data-testid="language-switch"]',
     loginButton: '[data-testid="login-button"]',
-    registerButton: '[data-testid="register-button"]'
+    registerButton: '[data-testid="register-button"]',
   }
 
   constructor(page: Page) {
@@ -28,7 +28,7 @@ export class HomePage extends BasePage {
    * Navigate to the home page
    */
   async navigateTo(): Promise<void> {
-    await this.helpers.navigateTo('/')
+    await this.helpers.navigateTo("/")
     await this.waitForReady()
   }
 

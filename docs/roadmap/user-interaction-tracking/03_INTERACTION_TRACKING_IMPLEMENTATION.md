@@ -248,27 +248,27 @@ npx prisma migrate dev --name add_interaction_tracking
 Create `app/models/analytics/interaction-tracking.server.ts`:
 
 ```typescript
-import { prisma } from "~/db.server";
-import type { InteractionEventType, InteractionCategory } from "@prisma/client";
+import { prisma } from "~/db.server"
+import type { InteractionEventType, InteractionCategory } from "@prisma/client"
 
 export interface TrackEventParams {
-  userId?: string;
-  sessionId: string;
-  eventType: InteractionEventType;
-  eventCategory: InteractionCategory;
+  userId?: string
+  sessionId: string
+  eventType: InteractionEventType
+  eventCategory: InteractionCategory
 
-  perfumeId?: string;
-  houseId?: string;
+  perfumeId?: string
+  houseId?: string
 
-  eventData?: Record<string, any>;
+  eventData?: Record<string, any>
 
-  deviceType?: string;
-  userAgent?: string;
-  referrer?: string;
-  path: string;
+  deviceType?: string
+  userAgent?: string
+  referrer?: string
+  path: string
 
-  duration?: number;
-  value?: number;
+  duration?: number
+  value?: number
 }
 
 export class InteractionTracker {
@@ -298,23 +298,23 @@ export class InteractionTracker {
           duration: params.duration,
           value: params.value,
         },
-      });
+      })
 
       // Update session metrics asynchronously
-      this.updateSessionMetrics(params.sessionId).catch(console.error);
+      this.updateSessionMetrics(params.sessionId).catch(console.error)
 
       // Update perfume stats if applicable
       if (params.perfumeId) {
         this.updatePerfumeStats(params.perfumeId, params.eventType).catch(
           console.error
-        );
+        )
       }
 
-      return event;
+      return event
     } catch (error) {
-      console.error("Failed to track event:", error);
+      console.error("Failed to track event:", error)
       // Don't throw - tracking errors shouldn't break user experience
-      return null;
+      return null
     }
   }
 
@@ -341,12 +341,12 @@ export class InteractionTracker {
           value: params.value,
         })),
         skipDuplicates: true,
-      });
+      })
 
-      return result;
+      return result
     } catch (error) {
-      console.error("Failed to batch track events:", error);
-      return null;
+      console.error("Failed to batch track events:", error)
+      return null
     }
   }
 
@@ -357,23 +357,21 @@ export class InteractionTracker {
     const events = await prisma.userInteractionEvent.findMany({
       where: { sessionId },
       orderBy: { timestamp: "asc" },
-    });
+    })
 
-    if (events.length === 0) return;
+    if (events.length === 0) return
 
-    const pageViews = events.filter((e) => e.eventCategory === "VIEW").length;
+    const pageViews = events.filter((e) => e.eventCategory === "VIEW").length
     const perfumesViewed = new Set(
       events.filter((e) => e.perfumeId).map((e) => e.perfumeId)
-    ).size;
+    ).size
     const interactions = events.filter((e) =>
       ["RATING", "REVIEW", "COLLECTION", "WISHLIST"].includes(e.eventCategory)
-    ).length;
+    ).length
 
-    const startTime = events[0].timestamp;
-    const endTime = events[events.length - 1].timestamp;
-    const duration = Math.floor(
-      (endTime.getTime() - startTime.getTime()) / 1000
-    );
+    const startTime = events[0].timestamp
+    const endTime = events[events.length - 1].timestamp
+    const duration = Math.floor((endTime.getTime() - startTime.getTime()) / 1000)
 
     await prisma.userSession.upsert({
       where: { sessionId },
@@ -397,7 +395,7 @@ export class InteractionTracker {
         perfumesViewed,
         interactions,
       },
-    });
+    })
   }
 
   /**
@@ -409,25 +407,25 @@ export class InteractionTracker {
   ) {
     const updates: Record<string, any> = {
       updatedAt: new Date(),
-    };
+    }
 
     switch (eventType) {
       case "PERFUME_VIEW":
-        updates.totalViews = { increment: 1 };
-        updates.lastViewedAt = new Date();
-        break;
+        updates.totalViews = { increment: 1 }
+        updates.lastViewedAt = new Date()
+        break
       case "WISHLIST_ADD":
-        updates.inWishlistCount = { increment: 1 };
-        break;
+        updates.inWishlistCount = { increment: 1 }
+        break
       case "WISHLIST_REMOVE":
-        updates.inWishlistCount = { decrement: 1 };
-        break;
+        updates.inWishlistCount = { decrement: 1 }
+        break
       case "COLLECTION_ADD":
-        updates.inCollectionCount = { increment: 1 };
-        break;
+        updates.inCollectionCount = { increment: 1 }
+        break
       case "RATING_COMPLETED":
-        updates.totalRatings = { increment: 1 };
-        break;
+        updates.totalRatings = { increment: 1 }
+        break
     }
 
     await prisma.perfumeInteractionStats.upsert({
@@ -442,36 +440,36 @@ export class InteractionTracker {
           ])
         ),
       },
-    });
+    })
   }
 
   /**
    * Parse browser from user agent
    */
   private static parseBrowser(userAgent?: string): string {
-    if (!userAgent) return "unknown";
+    if (!userAgent) return "unknown"
 
-    if (userAgent.includes("Chrome")) return "Chrome";
-    if (userAgent.includes("Firefox")) return "Firefox";
-    if (userAgent.includes("Safari")) return "Safari";
-    if (userAgent.includes("Edge")) return "Edge";
+    if (userAgent.includes("Chrome")) return "Chrome"
+    if (userAgent.includes("Firefox")) return "Firefox"
+    if (userAgent.includes("Safari")) return "Safari"
+    if (userAgent.includes("Edge")) return "Edge"
 
-    return "other";
+    return "other"
   }
 
   /**
    * Parse OS from user agent
    */
   private static parseOS(userAgent?: string): string {
-    if (!userAgent) return "unknown";
+    if (!userAgent) return "unknown"
 
-    if (userAgent.includes("Windows")) return "Windows";
-    if (userAgent.includes("Mac")) return "macOS";
-    if (userAgent.includes("Linux")) return "Linux";
-    if (userAgent.includes("Android")) return "Android";
-    if (userAgent.includes("iOS")) return "iOS";
+    if (userAgent.includes("Windows")) return "Windows"
+    if (userAgent.includes("Mac")) return "macOS"
+    if (userAgent.includes("Linux")) return "Linux"
+    if (userAgent.includes("Android")) return "Android"
+    if (userAgent.includes("iOS")) return "iOS"
 
-    return "other";
+    return "other"
   }
 }
 
@@ -479,30 +477,30 @@ export class InteractionTracker {
  * Convenience functions for common tracking scenarios
  */
 export const trackPerfumeView = (params: {
-  userId?: string;
-  sessionId: string;
-  perfumeId: string;
-  duration?: number;
-  source?: string;
-  userAgent?: string;
-  path: string;
+  userId?: string
+  sessionId: string
+  perfumeId: string
+  duration?: number
+  source?: string
+  userAgent?: string
+  path: string
 }) => {
   return InteractionTracker.trackEvent({
     ...params,
     eventType: "PERFUME_VIEW",
     eventCategory: "VIEW",
     eventData: { source: params.source },
-  });
-};
+  })
+}
 
 export const trackSearch = (params: {
-  userId?: string;
-  sessionId: string;
-  query: string;
-  filters: Record<string, any>;
-  resultsCount: number;
-  userAgent?: string;
-  path: string;
+  userId?: string
+  sessionId: string
+  query: string
+  filters: Record<string, any>
+  resultsCount: number
+  userAgent?: string
+  path: string
 }) => {
   return InteractionTracker.trackEvent({
     ...params,
@@ -513,17 +511,17 @@ export const trackSearch = (params: {
       filters: params.filters,
       resultsCount: params.resultsCount,
     },
-  });
-};
+  })
+}
 
 export const trackRating = (params: {
-  userId: string;
-  sessionId: string;
-  perfumeId: string;
-  ratings: Record<string, number>;
-  timeToComplete?: number;
-  userAgent?: string;
-  path: string;
+  userId: string
+  sessionId: string
+  perfumeId: string
+  ratings: Record<string, number>
+  timeToComplete?: number
+  userAgent?: string
+  path: string
 }) => {
   return InteractionTracker.trackEvent({
     ...params,
@@ -534,8 +532,8 @@ export const trackRating = (params: {
       timeToComplete: params.timeToComplete,
     },
     value: params.ratings.overall,
-  });
-};
+  })
+}
 ```
 
 ### Step 3: API Endpoints
@@ -543,21 +541,21 @@ export const trackRating = (params: {
 Create `app/routes/api/analytics.tsx`:
 
 ```typescript
-import { json, type ActionFunctionArgs } from "@remix-run/node";
-import { InteractionTracker } from "~/models/analytics/interaction-tracking.server";
-import { getSessionId } from "~/utils/session.server";
-import { getUserId } from "~/utils/auth.server";
+import { json, type ActionFunctionArgs } from "@remix-run/node"
+import { InteractionTracker } from "~/models/analytics/interaction-tracking.server"
+import { getSessionId } from "~/utils/session.server"
+import { getUserId } from "~/utils/auth.server"
 
 export async function action({ request }: ActionFunctionArgs) {
   if (request.method !== "POST") {
-    return json({ error: "Method not allowed" }, { status: 405 });
+    return json({ error: "Method not allowed" }, { status: 405 })
   }
 
   try {
-    const sessionId = await getSessionId(request);
-    const userId = await getUserId(request);
-    const userAgent = request.headers.get("user-agent") || undefined;
-    const body = await request.json();
+    const sessionId = await getSessionId(request)
+    const userId = await getUserId(request)
+    const userAgent = request.headers.get("user-agent") || undefined
+    const body = await request.json()
 
     // Single event
     if (body.event) {
@@ -566,9 +564,9 @@ export async function action({ request }: ActionFunctionArgs) {
         sessionId,
         userAgent,
         ...body.event,
-      });
+      })
 
-      return json({ success: true, eventId: result?.id });
+      return json({ success: true, eventId: result?.id })
     }
 
     // Batch events
@@ -580,15 +578,15 @@ export async function action({ request }: ActionFunctionArgs) {
           userAgent,
           ...event,
         }))
-      );
+      )
 
-      return json({ success: true, count: result?.count });
+      return json({ success: true, count: result?.count })
     }
 
-    return json({ error: "Invalid request body" }, { status: 400 });
+    return json({ error: "Invalid request body" }, { status: 400 })
   } catch (error) {
-    console.error("Analytics API error:", error);
-    return json({ error: "Internal server error" }, { status: 500 });
+    console.error("Analytics API error:", error)
+    return json({ error: "Internal server error" }, { status: 500 })
   }
 }
 ```
@@ -602,38 +600,38 @@ export async function action({ request }: ActionFunctionArgs) {
 Create `app/utils/analytics/analytics-sdk.ts`:
 
 ```typescript
-import type { InteractionEventType, InteractionCategory } from "@prisma/client";
+import type { InteractionEventType, InteractionCategory } from "@prisma/client"
 
 interface AnalyticsEvent {
-  eventType: InteractionEventType;
-  eventCategory: InteractionCategory;
-  path: string;
-  perfumeId?: string;
-  houseId?: string;
-  eventData?: Record<string, any>;
-  duration?: number;
-  value?: number;
+  eventType: InteractionEventType
+  eventCategory: InteractionCategory
+  path: string
+  perfumeId?: string
+  houseId?: string
+  eventData?: Record<string, any>
+  duration?: number
+  value?: number
 }
 
 class AnalyticsSDK {
-  private queue: AnalyticsEvent[] = [];
-  private flushInterval: number = 5000; // 5 seconds
-  private maxQueueSize: number = 10;
-  private timer: NodeJS.Timeout | null = null;
-  private sessionId: string;
+  private queue: AnalyticsEvent[] = []
+  private flushInterval: number = 5000 // 5 seconds
+  private maxQueueSize: number = 10
+  private timer: NodeJS.Timeout | null = null
+  private sessionId: string
 
   constructor() {
-    this.sessionId = this.getOrCreateSessionId();
-    this.startFlushTimer();
+    this.sessionId = this.getOrCreateSessionId()
+    this.startFlushTimer()
 
     // Flush on page unload
     if (typeof window !== "undefined") {
-      window.addEventListener("beforeunload", () => this.flush());
+      window.addEventListener("beforeunload", () => this.flush())
       window.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "hidden") {
-          this.flush();
+          this.flush()
         }
-      });
+      })
     }
   }
 
@@ -641,11 +639,11 @@ class AnalyticsSDK {
    * Track an event
    */
   track(event: AnalyticsEvent) {
-    this.queue.push(event);
+    this.queue.push(event)
 
     // Flush if queue is full
     if (this.queue.length >= this.maxQueueSize) {
-      this.flush();
+      this.flush()
     }
   }
 
@@ -653,30 +651,30 @@ class AnalyticsSDK {
    * Flush queued events to server
    */
   async flush() {
-    if (this.queue.length === 0) return;
+    if (this.queue.length === 0) return
 
-    const events = [...this.queue];
-    this.queue = [];
+    const events = [...this.queue]
+    this.queue = []
 
     try {
       // Use sendBeacon for reliability on page unload
       if (typeof navigator !== "undefined" && navigator.sendBeacon) {
         const blob = new Blob([JSON.stringify({ events })], {
           type: "application/json",
-        });
-        navigator.sendBeacon("/api/analytics", blob);
+        })
+        navigator.sendBeacon("/api/analytics", blob)
       } else {
         // Fallback to fetch
         await fetch("/api/analytics", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ events }),
-        });
+        })
       }
     } catch (error) {
-      console.error("Failed to send analytics events:", error);
+      console.error("Failed to send analytics events:", error)
       // Re-queue events on error
-      this.queue.unshift(...events);
+      this.queue.unshift(...events)
     }
   }
 
@@ -684,34 +682,32 @@ class AnalyticsSDK {
    * Start automatic flush timer
    */
   private startFlushTimer() {
-    if (this.timer) clearInterval(this.timer);
+    if (this.timer) clearInterval(this.timer)
 
     this.timer = setInterval(() => {
-      this.flush();
-    }, this.flushInterval);
+      this.flush()
+    }, this.flushInterval)
   }
 
   /**
    * Get or create session ID
    */
   private getOrCreateSessionId(): string {
-    if (typeof window === "undefined") return "server";
+    if (typeof window === "undefined") return "server"
 
-    let sessionId = sessionStorage.getItem("analyticsSessionId");
+    let sessionId = sessionStorage.getItem("analyticsSessionId")
 
     if (!sessionId) {
-      sessionId = `session_${Date.now()}_${Math.random()
-        .toString(36)
-        .substr(2, 9)}`;
-      sessionStorage.setItem("analyticsSessionId", sessionId);
+      sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      sessionStorage.setItem("analyticsSessionId", sessionId)
     }
 
-    return sessionId;
+    return sessionId
   }
 }
 
 // Singleton instance
-export const analytics = new AnalyticsSDK();
+export const analytics = new AnalyticsSDK()
 
 /**
  * Convenience tracking functions
@@ -722,8 +718,8 @@ export const trackPageView = (path: string, perfumeId?: string) => {
     eventCategory: "VIEW",
     path,
     perfumeId,
-  });
-};
+  })
+}
 
 export const trackPerfumeView = (
   perfumeId: string,
@@ -736,8 +732,8 @@ export const trackPerfumeView = (
     path,
     perfumeId,
     eventData: { source },
-  });
-};
+  })
+}
 
 export const trackSearch = (
   query: string,
@@ -750,8 +746,8 @@ export const trackSearch = (
     eventCategory: "SEARCH",
     path,
     eventData: { query, filters, resultsCount },
-  });
-};
+  })
+}
 
 export const trackWishlistAdd = (
   perfumeId: string,
@@ -764,8 +760,8 @@ export const trackWishlistAdd = (
     path,
     perfumeId,
     eventData: { source },
-  });
-};
+  })
+}
 
 export const trackCollectionAdd = (perfumeId: string, path: string) => {
   analytics.track({
@@ -773,8 +769,8 @@ export const trackCollectionAdd = (perfumeId: string, path: string) => {
     eventCategory: "COLLECTION",
     path,
     perfumeId,
-  });
-};
+  })
+}
 ```
 
 ### Step 2: React Hooks
@@ -840,17 +836,17 @@ export function useTimeTracking(callback: (duration: number) => void) {
 Update `app/root.tsx`:
 
 ```typescript
-import { usePageTracking } from "~/hooks/useAnalytics";
+import { usePageTracking } from "~/hooks/useAnalytics"
 
 export default function App() {
   // Track all page views
-  usePageTracking();
+  usePageTracking()
 
   return (
     <Document>
       <Outlet />
     </Document>
-  );
+  )
 }
 ```
 
@@ -891,28 +887,28 @@ export default function PerfumeDetail() {
 Create `scripts/analytics/aggregate-daily.ts`:
 
 ```typescript
-import { prisma } from "../app/db.server";
+import { prisma } from "../app/db.server"
 
 async function aggregateDailyStats() {
-  console.log("Starting daily aggregation...");
+  console.log("Starting daily aggregation...")
 
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  yesterday.setHours(0, 0, 0, 0);
+  const yesterday = new Date()
+  yesterday.setDate(yesterday.getDate() - 1)
+  yesterday.setHours(0, 0, 0, 0)
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
   // Update user behavior profiles
-  await updateUserBehaviorProfiles(yesterday, today);
+  await updateUserBehaviorProfiles(yesterday, today)
 
   // Update perfume statistics
-  await updatePerfumeStatistics(yesterday, today);
+  await updatePerfumeStatistics(yesterday, today)
 
   // Calculate trending scores
-  await calculateTrendingScores();
+  await calculateTrendingScores()
 
-  console.log("Daily aggregation completed");
+  console.log("Daily aggregation completed")
 }
 
 async function updateUserBehaviorProfiles(startDate: Date, endDate: Date) {
@@ -924,43 +920,39 @@ async function updateUserBehaviorProfiles(startDate: Date, endDate: Date) {
     },
     select: { userId: true },
     distinct: ["userId"],
-  });
+  })
 
   for (const { userId } of activeUsers) {
-    if (!userId) continue;
+    if (!userId) continue
 
     // Aggregate user's last 30 days of activity
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const thirtyDaysAgo = new Date()
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
     const events = await prisma.userInteractionEvent.findMany({
       where: {
         userId,
         timestamp: { gte: thirtyDaysAgo },
       },
-    });
+    })
 
     // Calculate metrics
-    const totalPageViews = events.filter(
-      (e) => e.eventCategory === "VIEW"
-    ).length;
-    const totalSearches = events.filter(
-      (e) => e.eventCategory === "SEARCH"
-    ).length;
+    const totalPageViews = events.filter((e) => e.eventCategory === "VIEW").length
+    const totalSearches = events.filter((e) => e.eventCategory === "SEARCH").length
     const totalPerfumesViewed = new Set(
       events.filter((e) => e.perfumeId).map((e) => e.perfumeId)
-    ).size;
+    ).size
 
     // Get ratings
     const ratings = await prisma.userPerfumeRating.findMany({
       where: { userId },
-    });
+    })
 
     // Get collection/wishlist
-    const collection = await prisma.userPerfume.count({ where: { userId } });
+    const collection = await prisma.userPerfume.count({ where: { userId } })
     const wishlist = await prisma.userPerfumeWishlist.count({
       where: { userId },
-    });
+    })
 
     // Update profile
     await prisma.userBehaviorProfile.upsert({
@@ -972,8 +964,7 @@ async function updateUserBehaviorProfiles(startDate: Date, endDate: Date) {
         totalRatings: ratings.length,
         avgRatingValue:
           ratings.length > 0
-            ? ratings.reduce((sum, r) => sum + (r.overall || 0), 0) /
-              ratings.length
+            ? ratings.reduce((sum, r) => sum + (r.overall || 0), 0) / ratings.length
             : null,
         collectionSize: collection,
         wishlistSize: wishlist,
@@ -991,15 +982,14 @@ async function updateUserBehaviorProfiles(startDate: Date, endDate: Date) {
         totalRatings: ratings.length,
         avgRatingValue:
           ratings.length > 0
-            ? ratings.reduce((sum, r) => sum + (r.overall || 0), 0) /
-              ratings.length
+            ? ratings.reduce((sum, r) => sum + (r.overall || 0), 0) / ratings.length
             : null,
         collectionSize: collection,
         wishlistSize: wishlist,
         engagementScore: 0,
         lastActiveDate: new Date(),
       },
-    });
+    })
   }
 }
 
@@ -1018,9 +1008,9 @@ if (require.main === module) {
   aggregateDailyStats()
     .then(() => process.exit(0))
     .catch((error) => {
-      console.error(error);
-      process.exit(1);
-    });
+      console.error(error)
+      process.exit(1)
+    })
 }
 ```
 
@@ -1042,15 +1032,15 @@ Add to `package.json`:
 
 ```typescript
 // app/models/analytics/__tests__/interaction-tracking.test.ts
-import { describe, it, expect, beforeEach } from "vitest";
-import { InteractionTracker } from "../interaction-tracking.server";
-import { prisma } from "~/db.server";
+import { describe, it, expect, beforeEach } from "vitest"
+import { InteractionTracker } from "../interaction-tracking.server"
+import { prisma } from "~/db.server"
 
 describe("InteractionTracker", () => {
   beforeEach(async () => {
     // Clean up test data
-    await prisma.userInteractionEvent.deleteMany();
-  });
+    await prisma.userInteractionEvent.deleteMany()
+  })
 
   it("tracks page view event", async () => {
     const event = await InteractionTracker.trackEvent({
@@ -1058,11 +1048,11 @@ describe("InteractionTracker", () => {
       eventType: "PAGE_VIEW",
       eventCategory: "VIEW",
       path: "/perfume/test",
-    });
+    })
 
-    expect(event).toBeTruthy();
-    expect(event?.eventType).toBe("PAGE_VIEW");
-  });
+    expect(event).toBeTruthy()
+    expect(event?.eventType).toBe("PAGE_VIEW")
+  })
 
   it("tracks perfume view with metadata", async () => {
     const event = await InteractionTracker.trackEvent({
@@ -1073,11 +1063,11 @@ describe("InteractionTracker", () => {
       perfumeId: "perfume-123",
       eventData: { source: "search" },
       duration: 5000,
-    });
+    })
 
-    expect(event?.perfumeId).toBe("perfume-123");
-    expect(event?.duration).toBe(5000);
-  });
+    expect(event?.perfumeId).toBe("perfume-123")
+    expect(event?.duration).toBe(5000)
+  })
 
   it("handles tracking errors gracefully", async () => {
     const event = await InteractionTracker.trackEvent({
@@ -1085,40 +1075,40 @@ describe("InteractionTracker", () => {
       eventType: "PAGE_VIEW" as any,
       eventCategory: "INVALID" as any,
       path: "/test",
-    });
+    })
 
-    expect(event).toBeNull();
-  });
-});
+    expect(event).toBeNull()
+  })
+})
 ```
 
 ### Integration Tests
 
 ```typescript
 // test/integration/analytics.test.ts
-import { test, expect } from "@playwright/test";
+import { test, expect } from "@playwright/test"
 
 test.describe("Analytics Integration", () => {
   test("tracks page view on navigation", async ({ page }) => {
-    await page.goto("/perfume/test-perfume");
+    await page.goto("/perfume/test-perfume")
 
     // Wait for analytics to be sent
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1000)
 
     // Verify event was tracked
     // (Would need to check database or mock API)
-  });
+  })
 
   test("tracks wishlist add", async ({ page }) => {
-    await page.goto("/perfume/test-perfume");
-    await page.click('[data-testid="wishlist-add"]');
+    await page.goto("/perfume/test-perfume")
+    await page.click('[data-testid="wishlist-add"]')
 
     // Wait for analytics
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(1000)
 
     // Verify tracking
-  });
-});
+  })
+})
 ```
 
 ---

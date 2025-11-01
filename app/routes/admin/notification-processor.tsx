@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState } from "react"
 
-import { useCSRF } from '~/hooks/useCSRF'
-import type { NotificationResult } from '~/utils/wishlist-notification-processor'
+import { useCSRF } from "~/hooks/useCSRF"
+import type { NotificationResult } from "~/utils/wishlist-notification-processor"
 
 export default function NotificationProcessor() {
   const [isProcessing, setIsProcessing] = useState(false)
@@ -11,12 +11,12 @@ export default function NotificationProcessor() {
 
   const handleApiCall = async () => {
     const headers = addToHeaders({
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     })
 
-    const response = await fetch('/api/process-wishlist-notifications', {
-      method: 'POST',
-      headers
+    const response = await fetch("/api/process-wishlist-notifications", {
+      method: "POST",
+      headers,
     })
 
     return response.json()
@@ -26,7 +26,7 @@ export default function NotificationProcessor() {
     if (data.success) {
       setResults(data.notifications)
     } else {
-      setError(data.error || 'Unknown error occurred')
+      setError(data.error || "Unknown error occurred")
     }
   }
 
@@ -39,7 +39,7 @@ export default function NotificationProcessor() {
       const data = await handleApiCall()
       handleResults(data)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Network error occurred')
+      setError(err instanceof Error ? err.message : "Network error occurred")
     } finally {
       setIsProcessing(false)
     }
@@ -55,7 +55,7 @@ export default function NotificationProcessor() {
           disabled={isProcessing}
           className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white px-4 py-2 rounded"
         >
-          {isProcessing ? 'Processing...' : 'Process Notifications'}
+          {isProcessing ? "Processing..." : "Process Notifications"}
         </button>
       </div>
 
@@ -72,8 +72,11 @@ export default function NotificationProcessor() {
           </h2>
 
           <div className="space-y-4">
-            {results.map(result => (
-              <div key={`${result.userId}-${result.perfumeId}`} className="border border-gray-200 rounded p-4 bg-gray-50">
+            {results.map((result) => (
+              <div
+                key={`${result.userId}-${result.perfumeId}`}
+                className="border border-gray-200 rounded p-4 bg-gray-50"
+              >
                 <h3 className="font-medium text-lg">{result.perfumeName}</h3>
                 <p className="text-sm text-gray-600 mb-2">
                   Notification sent to user: {result.userId}
@@ -81,7 +84,7 @@ export default function NotificationProcessor() {
                 <div>
                   <p className="text-sm font-medium">Available from:</p>
                   <ul className="text-sm text-gray-600 ml-4">
-                    {result.sellers.map(seller => (
+                    {result.sellers.map((seller) => (
                       <li key={seller.userId}>
                         {seller.email} ({seller.userId})
                       </li>

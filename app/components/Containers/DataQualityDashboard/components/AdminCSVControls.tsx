@@ -1,9 +1,9 @@
-import { type FC, useRef } from 'react'
+import { type FC, useRef } from "react"
 
-import { useCSRFToken } from '~/components/Molecules/CSRFToken'
+import { useCSRFToken } from "~/components/Molecules/CSRFToken"
 
-import { handleDownloadCSV } from '../bones/csvHandlers/csvDownload'
-import { createHandleUploadCSV } from '../bones/csvHandlers/csvUploader'
+import { handleDownloadCSV } from "../bones/csvHandlers/csvDownload"
+import { createHandleUploadCSV } from "../bones/csvHandlers/csvUploader"
 
 interface AdminCSVControlsProps {
   onUploadComplete: () => void
@@ -17,7 +17,9 @@ const AdminCSVControls: FC<AdminCSVControlsProps> = ({ onUploadComplete }) => {
   const handleUploadCSV = createHandleUploadCSV(csrfToken)
 
   // Wrap the upload handler to refresh dashboard after upload
-  const handleUploadAndRefresh: React.ChangeEventHandler<HTMLInputElement> = async e => {
+  const handleUploadAndRefresh: React.ChangeEventHandler<HTMLInputElement> = async (
+    e
+  ) => {
     try {
       await handleUploadCSV(e)
       // Force refresh by updating lastFetch to 0 (or Date.now())
@@ -25,7 +27,7 @@ const AdminCSVControls: FC<AdminCSVControlsProps> = ({ onUploadComplete }) => {
     } catch (err) {
       // Optionally handle error
       // eslint-disable-next-line no-console
-      console.error('CSV upload failed', err)
+      console.error("CSV upload failed", err)
     }
   }
 
@@ -41,7 +43,7 @@ const AdminCSVControls: FC<AdminCSVControlsProps> = ({ onUploadComplete }) => {
         type="file"
         accept=".csv"
         ref={fileInputRef}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
         onChange={handleUploadAndRefresh}
       />
       <button

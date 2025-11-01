@@ -1,4 +1,4 @@
-import { prisma } from '~/db.server'
+import { prisma } from "~/db.server"
 
 const checkItemNeedsNotification = async (wishlistItem: any) => {
   if (wishlistItem.perfume.userPerfume.length === 0) {
@@ -8,8 +8,8 @@ const checkItemNeedsNotification = async (wishlistItem: any) => {
   const existingNotification = await prisma.wishlistNotification.findFirst({
     where: {
       userId: wishlistItem.userId,
-      perfumeId: wishlistItem.perfumeId
-    }
+      perfumeId: wishlistItem.perfumeId,
+    },
   })
 
   return !existingNotification
@@ -25,8 +25,8 @@ export const checkAndNotifyWishlistAvailability = async () => {
           userPerfume: {
             where: {
               available: {
-                not: "0"
-              }
+                not: "0",
+              },
             },
             include: {
               user: {
@@ -35,14 +35,14 @@ export const checkAndNotifyWishlistAvailability = async () => {
                   firstName: true,
                   lastName: true,
                   username: true,
-                  email: true
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   })
 
   // Filter to only items that have availability and haven't been notified yet
@@ -62,26 +62,26 @@ export async function markAsNotified(userId: string, perfumeId: string) {
   return await prisma.wishlistNotification.create({
     data: {
       userId,
-      perfumeId
-    }
+      perfumeId,
+    },
   })
 }
 
 export async function getWishlistNotifications(userId: string) {
   return await prisma.wishlistNotification.findMany({
     where: {
-      userId
+      userId,
     },
     include: {
       perfume: {
         include: {
-          perfumeHouse: true
-        }
-      }
+          perfumeHouse: true,
+        },
+      },
     },
     orderBy: {
-      notifiedAt: 'desc'
-    }
+      notifiedAt: "desc",
+    },
   })
 }
 
@@ -89,7 +89,7 @@ export async function clearNotification(userId: string, perfumeId: string) {
   return await prisma.wishlistNotification.deleteMany({
     where: {
       userId,
-      perfumeId
-    }
+      perfumeId,
+    },
   })
 }

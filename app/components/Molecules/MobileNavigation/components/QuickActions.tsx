@@ -1,7 +1,7 @@
-import { type FC } from 'react'
-import { AiFillHome } from 'react-icons/ai'
-import { LuSearch } from 'react-icons/lu'
-import { NavLink } from 'react-router'
+import { type FC } from "react"
+import { AiFillHome } from "react-icons/ai"
+import { LuSearch } from "react-icons/lu"
+import { NavLink } from "react-router"
 
 interface QuickActionsProps {
   onNavClick: () => void
@@ -21,7 +21,9 @@ const QuickActions: FC<QuickActionsProps> = ({ onNavClick }) => (
       <button
         onClick={() => {
           // Focus on search if available, or navigate to search page
-          const searchInput = document.querySelector('input[type="search"], input[placeholder*="search"], input[placeholder*="Search"]') as HTMLInputElement
+          const searchInput = document.querySelector(
+            'input[type="search"], input[placeholder*="search"], input[placeholder*="Search"]'
+          ) as HTMLInputElement
           if (searchInput) {
             searchInput.focus()
             onNavClick()

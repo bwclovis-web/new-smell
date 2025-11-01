@@ -27,10 +27,16 @@ export type Reducer<T, R> = (accumulator: R, currentValue: T) => R
 
 // Event handler types
 export type EventHandler<T = Event> = (event: T) => void
-export type ChangeEventHandler<T = HTMLInputElement> = (event: React.ChangeEvent<T>) => void
+export type ChangeEventHandler<T = HTMLInputElement> = (
+  event: React.ChangeEvent<T>
+) => void
 export type ClickEventHandler<T = HTMLElement> = (event: React.MouseEvent<T>) => void
-export type SubmitEventHandler<T = HTMLFormElement> = (event: React.FormEvent<T>) => void
-export type KeyboardEventHandler<T = HTMLElement> = (event: React.KeyboardEvent<T>) => void
+export type SubmitEventHandler<T = HTMLFormElement> = (
+  event: React.FormEvent<T>
+) => void
+export type KeyboardEventHandler<T = HTMLElement> = (
+  event: React.KeyboardEvent<T>
+) => void
 export type FocusEventHandler<T = HTMLElement> = (event: React.FocusEvent<T>) => void
 export type BlurEventHandler<T = HTMLElement> = (event: React.FocusEvent<T>) => void
 
@@ -40,9 +46,28 @@ export type StateUpdater<T> = (prevState: T) => T
 export type StateAction<T> = T | StateUpdater<T>
 
 // API types
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 'OPTIONS'
-export type HttpStatus = 200 | 201 | 204 | 400 | 401 | 403 | 404 | 409 | 422 | 500 | 502 | 503
-export type RequestStatus = 'idle' | 'loading' | 'success' | 'error'
+export type HttpMethod =
+  | "GET"
+  | "POST"
+  | "PUT"
+  | "PATCH"
+  | "DELETE"
+  | "HEAD"
+  | "OPTIONS"
+export type HttpStatus =
+  | 200
+  | 201
+  | 204
+  | 400
+  | 401
+  | 403
+  | 404
+  | 409
+  | 422
+  | 500
+  | 502
+  | 503
+export type RequestStatus = "idle" | "loading" | "success" | "error"
 
 // Form types
 export type FormFieldValue = string | number | boolean | FileList | null
@@ -99,27 +124,67 @@ export type ErrorBoundaryProps = {
 }
 
 // Theme types
-export type Theme = 'light' | 'dark' | 'system'
-export type ColorScheme = 'light' | 'dark'
-export type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-export type Variant = 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info'
+export type Theme = "light" | "dark" | "system"
+export type ColorScheme = "light" | "dark"
+export type Size = "xs" | "sm" | "md" | "lg" | "xl"
+export type Variant =
+  | "primary"
+  | "secondary"
+  | "success"
+  | "warning"
+  | "error"
+  | "info"
 
 // Layout types
-export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
-export type Orientation = 'horizontal' | 'vertical'
-export type Alignment = 'start' | 'center' | 'end' | 'stretch'
-export type JustifyContent = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'
+export type Breakpoint = "xs" | "sm" | "md" | "lg" | "xl" | "2xl"
+export type Orientation = "horizontal" | "vertical"
+export type Alignment = "start" | "center" | "end" | "stretch"
+export type JustifyContent =
+  | "start"
+  | "center"
+  | "end"
+  | "between"
+  | "around"
+  | "evenly"
 
 // Animation types
-export type AnimationDuration = 'fast' | 'normal' | 'slow'
-export type AnimationEasing = 'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out'
-export type AnimationDirection = 'normal' | 'reverse' | 'alternate' | 'alternate-reverse'
+export type AnimationDuration = "fast" | "normal" | "slow"
+export type AnimationEasing =
+  | "linear"
+  | "ease"
+  | "ease-in"
+  | "ease-out"
+  | "ease-in-out"
+export type AnimationDirection =
+  | "normal"
+  | "reverse"
+  | "alternate"
+  | "alternate-reverse"
 
 // Data types
-export type SortDirection = 'asc' | 'desc'
+export type SortDirection = "asc" | "desc"
 export type SortField<T> = keyof T | string
-export type FilterOperator = 'eq' | 'ne' | 'gt' | 'gte' | 'lt' | 'lte' | 'in' | 'nin' | 'contains' | 'startsWith' | 'endsWith'
-export type FilterValue = string | number | boolean | Date | string[] | number[] | boolean[] | Date[]
+export type FilterOperator =
+  | "eq"
+  | "ne"
+  | "gt"
+  | "gte"
+  | "lt"
+  | "lte"
+  | "in"
+  | "nin"
+  | "contains"
+  | "startsWith"
+  | "endsWith"
+export type FilterValue =
+  | string
+  | number
+  | boolean
+  | Date
+  | string[]
+  | number[]
+  | boolean[]
+  | Date[]
 
 // Utility functions
 export type ValueOf<T> = T[keyof T]
@@ -131,15 +196,15 @@ export type OmitByType<T, U> = Omit<T, KeysOfType<T, U>>
 
 // Brand types for better type safety
 export type Brand<T, B> = T & { __brand: B }
-export type UserId = Brand<string, 'UserId'>
-export type PerfumeId = Brand<string, 'PerfumeId'>
-export type PerfumeHouseId = Brand<string, 'PerfumeHouseId'>
-export type CommentId = Brand<string, 'CommentId'>
-export type RatingId = Brand<string, 'RatingId'>
+export type UserId = Brand<string, "UserId">
+export type PerfumeId = Brand<string, "PerfumeId">
+export type PerfumeHouseId = Brand<string, "PerfumeHouseId">
+export type CommentId = Brand<string, "CommentId">
+export type RatingId = Brand<string, "RatingId">
 
 // Union types
-export type Status = 'idle' | 'loading' | 'success' | 'error'
-export type LoadingState = 'idle' | 'loading' | 'success' | 'error'
+export type Status = "idle" | "loading" | "success" | "error"
+export type LoadingState = "idle" | "loading" | "success" | "error"
 export type AsyncState<T> = {
   data: T | null
   loading: boolean
@@ -156,18 +221,19 @@ export type IsNumber<T> = T extends number ? true : false
 export type IsBoolean<T> = T extends boolean ? true : false
 
 // Template literal types
-export type CamelCase<S extends string> = S extends `${infer P1}_${infer P2}${infer P3}`
-  ? `${P1}${Uppercase<P2>}${CamelCase<P3>}`
-  : S
+export type CamelCase<S extends string> =
+  S extends `${infer P1}_${infer P2}${infer P3}`
+    ? `${P1}${Uppercase<P2>}${CamelCase<P3>}`
+    : S
 export type SnakeCase<S extends string> = S extends `${infer P1}${infer P2}`
   ? P2 extends Uncapitalize<P2>
-  ? `${Uncapitalize<P1>}${SnakeCase<P2>}`
-  : `${Uncapitalize<P1>}_${SnakeCase<Uncapitalize<P2>>}`
+    ? `${Uncapitalize<P1>}${SnakeCase<P2>}`
+    : `${Uncapitalize<P1>}_${SnakeCase<Uncapitalize<P2>>}`
   : S
 export type KebabCase<S extends string> = S extends `${infer P1}${infer P2}`
   ? P2 extends Uncapitalize<P2>
-  ? `${Uncapitalize<P1>}${KebabCase<P2>}`
-  : `${Uncapitalize<P1>}-${KebabCase<Uncapitalize<P2>>}`
+    ? `${Uncapitalize<P1>}${KebabCase<P2>}`
+    : `${Uncapitalize<P1>}-${KebabCase<Uncapitalize<P2>>}`
   : S
 
 // Type guards
@@ -178,7 +244,9 @@ export type TypePredicate<T> = (value: unknown) => value is T
 export type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 export type RequiredBy<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 export type ReadonlyBy<T, K extends keyof T> = Omit<T, K> & Readonly<Pick<T, K>>
-export type MutableBy<T, K extends keyof T> = Omit<T, K> & { -readonly [P in K]: T[P] }
+export type MutableBy<T, K extends keyof T> = Omit<T, K> & {
+  -readonly [P in K]: T[P]
+}
 
 // Recursive types
 export type RecursivePartial<T> = {
@@ -192,12 +260,33 @@ export type RecursiveReadonly<T> = {
 }
 
 // Tuple types
-export type Head<T extends readonly unknown[]> = T extends readonly [infer H, ...unknown[]] ? H : never
-export type Tail<T extends readonly unknown[]> = T extends readonly [unknown, ...infer T] ? T : []
-export type Last<T extends readonly unknown[]> = T extends readonly [...unknown[], infer L] ? L : never
-export type Length<T extends readonly unknown[]> = T['length']
+export type Head<T extends readonly unknown[]> = T extends readonly [
+  infer H,
+  ...unknown[]
+]
+  ? H
+  : never
+export type Tail<T extends readonly unknown[]> = T extends readonly [
+  unknown,
+  ...infer T
+]
+  ? T
+  : []
+export type Last<T extends readonly unknown[]> = T extends readonly [
+  ...unknown[],
+  infer L
+]
+  ? L
+  : never
+export type Length<T extends readonly unknown[]> = T["length"]
 
 // String manipulation types
-export type Trim<S extends string> = S extends ` ${infer T}` | `${infer T} ` ? Trim<T> : S
-export type Capitalize<S extends string> = S extends `${infer F}${infer R}` ? `${Uppercase<F>}${R}` : S
-export type Uncapitalize<S extends string> = S extends `${infer F}${infer R}` ? `${Lowercase<F>}${R}` : S
+export type Trim<S extends string> = S extends ` ${infer T}` | `${infer T} `
+  ? Trim<T>
+  : S
+export type Capitalize<S extends string> = S extends `${infer F}${infer R}`
+  ? `${Uppercase<F>}${R}`
+  : S
+export type Uncapitalize<S extends string> = S extends `${infer F}${infer R}`
+  ? `${Lowercase<F>}${R}`
+  : S

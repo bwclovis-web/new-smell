@@ -47,9 +47,9 @@ export const getUserPerfumes = async (userId: string) => {
         orderBy: { createdAt: "desc" },
       },
     },
-  });
-  return userPerfumes;
-};
+  })
+  return userPerfumes
+}
 ```
 
 ```typescript
@@ -78,9 +78,9 @@ export const getUserPerfumes = async (userId: string) => {
         },
       },
     },
-  });
-  return userPerfumes;
-};
+  })
+  return userPerfumes
+}
 ```
 
 #### Identified N+1 Patterns
@@ -192,11 +192,11 @@ ON "UserPerfumeRating"("perfumeId", "overall");
 
 ```typescript
 // app/utils/cache/query-cache.server.ts
-import { LRUCache } from "lru-cache";
+import { LRUCache } from "lru-cache"
 
 interface CacheOptions {
-  ttl: number; // Time to live in ms
-  max: number; // Max items in cache
+  ttl: number // Time to live in ms
+  max: number // Max items in cache
 }
 
 const queryCache = new LRUCache<string, any>({
@@ -204,20 +204,20 @@ const queryCache = new LRUCache<string, any>({
   ttl: 1000 * 60 * 5, // 5 minutes
   updateAgeOnGet: true,
   updateAgeOnHas: true,
-});
+})
 
 export const withCache = async <T>(
   key: string,
   fetcher: () => Promise<T>,
   ttl?: number
 ): Promise<T> => {
-  const cached = queryCache.get(key);
-  if (cached) return cached;
+  const cached = queryCache.get(key)
+  if (cached) return cached
 
-  const fresh = await fetcher();
-  queryCache.set(key, fresh, { ttl });
-  return fresh;
-};
+  const fresh = await fetcher()
+  queryCache.set(key, fresh, { ttl })
+  return fresh
+}
 
 // Usage
 export const getPerfumeHouseBySlug = async (slug: string) => {
@@ -234,8 +234,8 @@ export const getPerfumeHouseBySlug = async (slug: string) => {
         },
       }),
     1000 * 60 * 10 // Cache for 10 minutes
-  );
-};
+  )
+}
 ```
 
 #### Cache Invalidation Strategy
@@ -244,31 +244,31 @@ export const getPerfumeHouseBySlug = async (slug: string) => {
 // app/utils/cache/invalidation.server.ts
 export const invalidateCache = {
   perfume: (perfumeId: string) => {
-    queryCache.delete(`perfume:${perfumeId}`);
-    queryCache.delete(`perfume:slug:*`);
+    queryCache.delete(`perfume:${perfumeId}`)
+    queryCache.delete(`perfume:slug:*`)
   },
 
   house: (houseId: string) => {
-    queryCache.delete(`house:${houseId}`);
-    queryCache.delete(`house:slug:*`);
+    queryCache.delete(`house:${houseId}`)
+    queryCache.delete(`house:slug:*`)
   },
 
   userPerfumes: (userId: string) => {
-    queryCache.delete(`user:${userId}:perfumes`);
-    queryCache.delete(`user:${userId}:wishlist`);
+    queryCache.delete(`user:${userId}:perfumes`)
+    queryCache.delete(`user:${userId}:wishlist`)
   },
-};
+}
 
 // Invalidate on mutations
 export const updatePerfume = async (id: string, data: any) => {
   const updated = await prisma.perfume.update({
     where: { id },
     data,
-  });
+  })
 
-  invalidateCache.perfume(id);
-  return updated;
-};
+  invalidateCache.perfume(id)
+  return updated
+}
 ```
 
 #### Caching Layers
@@ -297,7 +297,7 @@ export const updatePerfume = async (id: string, data: any) => {
 
 ```typescript
 // app/db.server.ts
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient({
   datasources: {
@@ -306,9 +306,7 @@ const prisma = new PrismaClient({
     },
   },
   log:
-    process.env.NODE_ENV === "development"
-      ? ["query", "error", "warn"]
-      : ["error"],
+    process.env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
 
   // Connection pool configuration
   __internal: {
@@ -317,7 +315,7 @@ const prisma = new PrismaClient({
       pool_timeout: 10, // Connection timeout (seconds)
     },
   },
-});
+})
 
 // Prisma Accelerate for edge caching
 // Use when DATABASE_URL includes prisma://
@@ -408,14 +406,14 @@ export default defineConfig({
   optimizeDeps: {
     include: ["react", "react-dom", "react-router-dom"],
   },
-});
+})
 ```
 
 #### Code Splitting Strategy
 
 ```typescript
 // app/routes.ts
-import { lazy } from "react";
+import { lazy } from "react"
 
 export default [
   layout("routes/RootLayout.tsx", [
@@ -434,7 +432,7 @@ export default [
     // Keep critical routes eager
     route("login/*", "routes/login/LoginLayout.tsx"),
   ]),
-];
+]
 ```
 
 #### Remove Unused Dependencies
@@ -475,7 +473,7 @@ export default [
 
 ```typescript
 // vite.config.ts
-import babel from "vite-plugin-babel";
+import babel from "vite-plugin-babel"
 
 export default defineConfig({
   plugins: [
@@ -496,7 +494,7 @@ export default defineConfig({
     }),
     reactRouter(),
   ],
-});
+})
 ```
 
 #### Component Optimization Patterns
@@ -504,11 +502,11 @@ export default defineConfig({
 ```typescript
 // ❌ BEFORE: Unnecessary re-renders
 export function PerfumeList({ perfumes }: Props) {
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState("")
 
   const filteredPerfumes = perfumes.filter((p) =>
     p.name.toLowerCase().includes(filter.toLowerCase())
-  ); // Runs on every render!
+  ) // Runs on every render!
 
   return (
     <div>
@@ -517,25 +515,23 @@ export function PerfumeList({ perfumes }: Props) {
         <PerfumeCard key={p.id} perfume={p} />
       ))}
     </div>
-  );
+  )
 }
 
 // ✅ AFTER: Optimized with useMemo and React.memo
 export const PerfumeList = memo(function PerfumeList({ perfumes }: Props) {
-  const [filter, setFilter] = useState("");
+  const [filter, setFilter] = useState("")
 
   const filteredPerfumes = useMemo(
     () =>
-      perfumes.filter((p) =>
-        p.name.toLowerCase().includes(filter.toLowerCase())
-      ),
+      perfumes.filter((p) => p.name.toLowerCase().includes(filter.toLowerCase())),
     [perfumes, filter] // Only recompute when these change
-  );
+  )
 
   const handleFilterChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => setFilter(e.target.value),
     []
-  );
+  )
 
   return (
     <div>
@@ -544,36 +540,30 @@ export const PerfumeList = memo(function PerfumeList({ perfumes }: Props) {
         <PerfumeCard key={p.id} perfume={p} />
       ))}
     </div>
-  );
-});
+  )
+})
 
 // Memoize child components
-const PerfumeCard = memo(function PerfumeCard({
-  perfume,
-}: {
-  perfume: Perfume;
-}) {
-  return <div>{perfume.name}</div>;
-});
+const PerfumeCard = memo(function PerfumeCard({ perfume }: { perfume: Perfume }) {
+  return <div>{perfume.name}</div>
+})
 ```
 
 #### Virtual Scrolling for Large Lists
 
 ```typescript
 // app/components/Organisms/VirtualizedPerfumeList.tsx
-import { VirtualScroll } from "~/components/Atoms/VirtualScroll";
+import { VirtualScroll } from "~/components/Atoms/VirtualScroll"
 
 export function VirtualizedPerfumeList({ perfumes }: Props) {
   return (
     <VirtualScroll
       items={perfumes}
       itemHeight={120}
-      renderItem={(perfume) => (
-        <PerfumeCard key={perfume.id} perfume={perfume} />
-      )}
+      renderItem={(perfume) => <PerfumeCard key={perfume.id} perfume={perfume} />}
       overscan={5}
     />
-  );
+  )
 }
 ```
 
@@ -599,12 +589,12 @@ export function VirtualizedPerfumeList({ perfumes }: Props) {
 ```typescript
 // app/components/Atoms/OptimizedImage/OptimizedImage.tsx
 interface OptimizedImageProps {
-  src: string;
-  alt: string;
-  width?: number;
-  height?: number;
-  priority?: boolean;
-  sizes?: string;
+  src: string
+  alt: string
+  width?: number
+  height?: number
+  priority?: boolean
+  sizes?: string
 }
 
 export function OptimizedImage({
@@ -615,13 +605,13 @@ export function OptimizedImage({
   priority = false,
   sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
 }: OptimizedImageProps) {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [error, setError] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [error, setError] = useState(false)
 
   // Generate responsive image URLs
   const srcSet = [320, 640, 768, 1024, 1280]
     .map((w) => `${src}?w=${w} ${w}w`)
-    .join(", ");
+    .join(", ")
 
   return (
     <div className="relative">
@@ -645,7 +635,7 @@ export function OptimizedImage({
 
       {error && <ImageErrorFallback />}
     </div>
-  );
+  )
 }
 ```
 
@@ -653,26 +643,26 @@ export function OptimizedImage({
 
 ```typescript
 // app/utils/image-cdn.ts
-const IMAGE_CDN = process.env.IMAGE_CDN_URL || "";
+const IMAGE_CDN = process.env.IMAGE_CDN_URL || ""
 
 export function generateImageUrl(
   path: string,
   options: {
-    width?: number;
-    height?: number;
-    quality?: number;
-    format?: "webp" | "avif" | "jpeg";
+    width?: number
+    height?: number
+    quality?: number
+    format?: "webp" | "avif" | "jpeg"
   } = {}
 ) {
-  const { width, height, quality = 80, format = "webp" } = options;
+  const { width, height, quality = 80, format = "webp" } = options
 
-  const params = new URLSearchParams();
-  if (width) params.set("w", width.toString());
-  if (height) params.set("h", height.toString());
-  params.set("q", quality.toString());
-  params.set("f", format);
+  const params = new URLSearchParams()
+  if (width) params.set("w", width.toString())
+  if (height) params.set("h", height.toString())
+  params.set("q", quality.toString())
+  params.set("f", format)
 
-  return `${IMAGE_CDN}${path}?${params.toString()}`;
+  return `${IMAGE_CDN}${path}?${params.toString()}`
 }
 ```
 
@@ -724,7 +714,7 @@ export default {
     container: false, // If not using
     float: false, // If not using
   },
-};
+}
 ```
 
 #### Critical CSS Extraction
@@ -745,7 +735,7 @@ export const links: Route.LinksFunction = () => [
     as: "style",
     onload: "this.onload=null;this.rel='stylesheet'",
   },
-];
+]
 ```
 
 #### Checklist
@@ -771,10 +761,10 @@ export const links: Route.LinksFunction = () => [
 ```typescript
 // app/routes/api/perfumes-by-letter.ts
 export async function loader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
-  const letter = url.searchParams.get("letter");
+  const url = new URL(request.url)
+  const letter = url.searchParams.get("letter")
 
-  const perfumes = await getPerfumesByLetter(letter);
+  const perfumes = await getPerfumesByLetter(letter)
 
   return Response.json(perfumes, {
     headers: {
@@ -791,7 +781,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       // CORS if needed
       "Access-Control-Allow-Origin": "*",
     },
-  });
+  })
 }
 ```
 
@@ -799,33 +789,30 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 ```typescript
 // app/utils/server/etag.server.ts
-import crypto from "crypto";
+import crypto from "crypto"
 
 export function generateETag(data: any): string {
-  const hash = crypto
-    .createHash("md5")
-    .update(JSON.stringify(data))
-    .digest("hex");
-  return `"${hash}"`;
+  const hash = crypto.createHash("md5").update(JSON.stringify(data)).digest("hex")
+  return `"${hash}"`
 }
 
 export function checkETag(request: Request, etag: string): boolean {
-  const ifNoneMatch = request.headers.get("if-none-match");
-  return ifNoneMatch === etag;
+  const ifNoneMatch = request.headers.get("if-none-match")
+  return ifNoneMatch === etag
 }
 
 // Usage in loader
 export async function loader({ request }: LoaderFunctionArgs) {
-  const data = await fetchData();
-  const etag = generateETag(data);
+  const data = await fetchData()
+  const etag = generateETag(data)
 
   if (checkETag(request, etag)) {
-    return new Response(null, { status: 304 });
+    return new Response(null, { status: 304 })
   }
 
   return Response.json(data, {
     headers: { ETag: etag },
-  });
+  })
 }
 ```
 
@@ -838,15 +825,15 @@ app.use(
     threshold: 1024,
     level: 6,
     filter: (req, res) => {
-      if (req.headers["x-no-compression"]) return false;
-      return compression.filter(req, res);
+      if (req.headers["x-no-compression"]) return false
+      return compression.filter(req, res)
     },
     memLevel: 8,
     strategy: 0,
     windowBits: 15,
     chunkSize: 16 * 1024,
   })
-);
+)
 
 // Enhance for specific routes
 app.use(
@@ -855,7 +842,7 @@ app.use(
     level: 7, // Higher compression for API responses
     threshold: 512, // Compress smaller responses
   })
-);
+)
 ```
 
 #### Checklist
@@ -879,16 +866,16 @@ app.use(
 ```typescript
 // app/routes/api/perfumes.ts
 interface PaginationParams {
-  page: number;
-  limit: number;
-  cursor?: string;
+  page: number
+  limit: number
+  cursor?: string
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
-  const page = parseInt(url.searchParams.get("page") || "1");
-  const limit = Math.min(parseInt(url.searchParams.get("limit") || "20"), 100);
-  const cursor = url.searchParams.get("cursor");
+  const url = new URL(request.url)
+  const page = parseInt(url.searchParams.get("page") || "1")
+  const limit = Math.min(parseInt(url.searchParams.get("limit") || "20"), 100)
+  const cursor = url.searchParams.get("cursor")
 
   // Cursor-based pagination (more efficient)
   const perfumes = await prisma.perfume.findMany({
@@ -908,11 +895,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
         },
       },
     },
-  });
+  })
 
-  const hasMore = perfumes.length > limit;
-  const items = hasMore ? perfumes.slice(0, -1) : perfumes;
-  const nextCursor = hasMore ? items[items.length - 1].id : null;
+  const hasMore = perfumes.length > limit
+  const items = hasMore ? perfumes.slice(0, -1) : perfumes
+  const nextCursor = hasMore ? items[items.length - 1].id : null
 
   return Response.json({
     items,
@@ -921,7 +908,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       hasMore,
       limit,
     },
-  });
+  })
 }
 ```
 
@@ -930,20 +917,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
 ```typescript
 // Allow clients to specify fields
 export async function loader({ request }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
-  const fields = url.searchParams.get("fields")?.split(",");
+  const url = new URL(request.url)
+  const fields = url.searchParams.get("fields")?.split(",")
 
   const select = fields?.reduce((acc, field) => {
-    acc[field] = true;
-    return acc;
+    acc[field] = true
+    return acc
   }, {} as any) || {
     id: true,
     name: true,
     slug: true,
-  };
+  }
 
-  const perfumes = await prisma.perfume.findMany({ select });
-  return Response.json(perfumes);
+  const perfumes = await prisma.perfume.findMany({ select })
+  return Response.json(perfumes)
 }
 ```
 
@@ -969,8 +956,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 // Enhancements:
 
 // 1. Sliding window rate limiting
-import { rateLimit } from "express-rate-limit";
-import RedisStore from "rate-limit-redis";
+import { rateLimit } from "express-rate-limit"
+import RedisStore from "rate-limit-redis"
 
 const slidingWindowRateLimit = rateLimit({
   store: new RedisStore({
@@ -984,28 +971,28 @@ const slidingWindowRateLimit = rateLimit({
   // Sliding window
   skipSuccessfulRequests: false,
   skipFailedRequests: false,
-});
+})
 
 // 2. User-tier based limits
 const tierBasedRateLimit = (req, res, next) => {
-  const user = req.user;
+  const user = req.user
   const limits = {
     free: 100,
     premium: 1000,
     admin: 10000,
-  };
+  }
 
-  const max = limits[user?.tier || "free"];
+  const max = limits[user?.tier || "free"]
 
-  return rateLimit({ max })(req, res, next);
-};
+  return rateLimit({ max })(req, res, next)
+}
 
 // 3. Endpoint-specific limits
 const endpointLimits = {
   "/api/search": { max: 50, windowMs: 60 * 1000 },
   "/api/perfumes": { max: 100, windowMs: 60 * 1000 },
   "/api/ratings": { max: 20, windowMs: 5 * 60 * 1000 },
-};
+}
 ```
 
 #### Checklist
@@ -1062,7 +1049,7 @@ export default defineConfig({
     target: "es2022",
     logLevel: "error",
   },
-});
+})
 ```
 
 #### Checklist
@@ -1126,12 +1113,12 @@ export default defineConfig({
 // app/routes/api/perfume-search.edge.ts
 export const config = {
   runtime: "edge",
-};
+}
 
 export async function GET(request: Request) {
   // Runs on edge, closer to users
-  const perfumes = await searchPerfumes(query);
-  return Response.json(perfumes);
+  const perfumes = await searchPerfumes(query)
+  return Response.json(perfumes)
 }
 ```
 
@@ -1156,21 +1143,21 @@ export async function GET(request: Request) {
 
 ```typescript
 // app/entry.client.tsx
-import { onCLS, onFID, onFCP, onLCP, onTTFB } from "web-vitals";
+import { onCLS, onFID, onFCP, onLCP, onTTFB } from "web-vitals"
 
 function sendToAnalytics(metric: Metric) {
   // Send to your analytics service
   fetch("/api/analytics", {
     method: "POST",
     body: JSON.stringify(metric),
-  });
+  })
 }
 
-onCLS(sendToAnalytics);
-onFID(sendToAnalytics);
-onFCP(sendToAnalytics);
-onLCP(sendToAnalytics);
-onTTFB(sendToAnalytics);
+onCLS(sendToAnalytics)
+onFID(sendToAnalytics)
+onFCP(sendToAnalytics)
+onLCP(sendToAnalytics)
+onTTFB(sendToAnalytics)
 ```
 
 #### Performance Budget
@@ -1184,20 +1171,20 @@ export default defineConfig({
       output: {
         manualChunks: (id) => {
           if (id.includes("node_modules")) {
-            return "vendor";
+            return "vendor"
           }
         },
       },
       // Performance budget
       onwarn(warning, warn) {
         if (warning.code === "FILE_SIZE_WARNING") {
-          console.error("Bundle size exceeded!");
+          console.error("Bundle size exceeded!")
         }
-        warn(warning);
+        warn(warning)
       },
     },
   },
-});
+})
 ```
 
 #### Checklist

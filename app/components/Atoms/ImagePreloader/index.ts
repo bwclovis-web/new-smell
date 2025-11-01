@@ -1,1 +1,1 @@
-export { default } from './ImagePreloader'
+export { default } from "./ImagePreloader"

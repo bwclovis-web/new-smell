@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
-import { styleMerge } from '~/utils/styleUtils'
+import { styleMerge } from "~/utils/styleUtils"
 
-import type { VirtualScrollProps } from './types'
+import type { VirtualScrollProps } from "./types"
 
 const VirtualScroll: React.FC<VirtualScrollProps> = ({
   items,
@@ -13,7 +13,7 @@ const VirtualScroll: React.FC<VirtualScrollProps> = ({
   children,
   onScroll,
   scrollToIndex,
-  scrollToAlignment = 'start'
+  scrollToAlignment = "start",
 }) => {
   const [scrollTop, setScrollTop] = useState(0)
   const scrollElementRef = useRef<HTMLDivElement>(null)
@@ -26,9 +26,7 @@ const VirtualScroll: React.FC<VirtualScrollProps> = ({
       Math.ceil((scrollTop + containerHeight) / itemHeight) + overscan
     )
     return { startIndex, endIndex }
-  }, [
-scrollTop, itemHeight, containerHeight, items.length, overscan
-])
+  }, [scrollTop, itemHeight, containerHeight, items.length, overscan])
 
   // Get visible items
   const visibleItems = useMemo(() => {
@@ -36,16 +34,19 @@ scrollTop, itemHeight, containerHeight, items.length, overscan
     return items.slice(startIndex, endIndex + 1).map((item, index) => ({
       item,
       index: startIndex + index,
-      top: (startIndex + index) * itemHeight
+      top: (startIndex + index) * itemHeight,
     }))
   }, [items, visibleRange, itemHeight])
 
   // Handle scroll events
-  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    const newScrollTop = e.currentTarget.scrollTop
-    setScrollTop(newScrollTop)
-    onScroll?.(newScrollTop)
-  }, [onScroll])
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const newScrollTop = e.currentTarget.scrollTop
+      setScrollTop(newScrollTop)
+      onScroll?.(newScrollTop)
+    },
+    [onScroll]
+  )
 
   // Scroll to specific index
   useEffect(() => {
@@ -54,13 +55,14 @@ scrollTop, itemHeight, containerHeight, items.length, overscan
       let scrollTop: number
 
       switch (scrollToAlignment) {
-        case 'start':
+        case "start":
           scrollTop = scrollToIndex * itemHeight
           break
-        case 'center':
-          scrollTop = scrollToIndex * itemHeight - containerHeight / 2 + itemHeight / 2
+        case "center":
+          scrollTop =
+            scrollToIndex * itemHeight - containerHeight / 2 + itemHeight / 2
           break
-        case 'end':
+        case "end":
           scrollTop = scrollToIndex * itemHeight - containerHeight + itemHeight
           break
         default:
@@ -69,29 +71,27 @@ scrollTop, itemHeight, containerHeight, items.length, overscan
 
       element.scrollTop = Math.max(0, scrollTop)
     }
-  }, [
-scrollToIndex, scrollToAlignment, itemHeight, containerHeight
-])
+  }, [scrollToIndex, scrollToAlignment, itemHeight, containerHeight])
 
   const totalHeight = items.length * itemHeight
 
   return (
     <div
       ref={scrollElementRef}
-      className={styleMerge('overflow-auto', className)}
+      className={styleMerge("overflow-auto", className)}
       style={{ height: containerHeight }}
       onScroll={handleScroll}
     >
-      <div style={{ height: totalHeight, position: 'relative' }}>
+      <div style={{ height: totalHeight, position: "relative" }}>
         {visibleItems.map(({ item, index, top }) => (
           <div
             key={index}
             style={{
-              position: 'absolute',
+              position: "absolute",
               top,
               left: 0,
               right: 0,
-              height: itemHeight
+              height: itemHeight,
             }}
           >
             {children(item, index)}

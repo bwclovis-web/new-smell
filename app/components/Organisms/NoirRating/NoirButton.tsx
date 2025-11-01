@@ -1,18 +1,18 @@
-import React from 'react'
+import React from "react"
 
-import NoirIcon from './NoirIcon'
+import NoirIcon from "./NoirIcon"
 
 const SIZES = {
-  sm: 'w-12 h-16',
-  md: 'w-16 h-20',
-  lg: 'w-20 h-24'
+  sm: "w-12 h-16",
+  md: "w-16 h-20",
+  lg: "w-20 h-24",
 }
 
 interface NoirButtonProps {
   rating: number
   filled: boolean
   category: string
-  size: 'sm' | 'md' | 'lg'
+  size: "sm" | "md" | "lg"
   isInteractive: boolean
   isAnimated: boolean
   onClick: () => void
@@ -29,12 +29,12 @@ const NoirButton = ({
   isAnimated,
   onClick,
   onHover,
-  onLeave
+  onLeave,
 }: NoirButtonProps) => (
   <button
     type="button"
     disabled={!isInteractive}
-    onClick={event => {
+    onClick={(event) => {
       event.preventDefault()
       event.stopPropagation()
       onClick()
@@ -45,7 +45,7 @@ const NoirButton = ({
       ${SIZES[size]} 
       transition-opacity duration-300 
       cursor-pointer
-      ${isInteractive ? 'hover:opacity-80' : ''}
+      ${isInteractive ? "hover:opacity-80" : ""}
       flex-shrink-0
     `}
   >

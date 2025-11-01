@@ -1,5 +1,5 @@
-import bcrypt from 'bcryptjs'
-import crypto from 'crypto'
+import bcrypt from "bcryptjs"
+import crypto from "crypto"
 
 // Password security configuration
 export const PASSWORD_CONFIG = {
@@ -23,11 +23,11 @@ export const PASSWORD_CONFIG = {
 
 // Password strength levels
 export enum PasswordStrength {
-  WEAK = 'weak',
-  FAIR = 'fair',
-  GOOD = 'good',
-  STRONG = 'strong',
-  VERY_STRONG = 'very_strong'
+  WEAK = "weak",
+  FAIR = "fair",
+  GOOD = "good",
+  STRONG = "strong",
+  VERY_STRONG = "very_strong",
 }
 
 // Password strength scoring
@@ -41,86 +41,86 @@ export function calculatePasswordStrength(password: string): {
 
   // Length scoring
   if (password.length >= 8) {
- score += 1 
-} else {
- feedback.push('Use at least 8 characters') 
-}
+    score += 1
+  } else {
+    feedback.push("Use at least 8 characters")
+  }
 
   if (password.length >= 12) {
- score += 1 
-}
+    score += 1
+  }
   if (password.length >= 16) {
- score += 1 
-}
+    score += 1
+  }
 
   // Character variety scoring
   if (/[a-z]/.test(password)) {
- score += 1 
-} else {
- feedback.push('Add lowercase letters') 
-}
+    score += 1
+  } else {
+    feedback.push("Add lowercase letters")
+  }
 
   if (/[A-Z]/.test(password)) {
- score += 1 
-} else {
- feedback.push('Add uppercase letters') 
-}
+    score += 1
+  } else {
+    feedback.push("Add uppercase letters")
+  }
 
   if (/[0-9]/.test(password)) {
- score += 1 
-} else {
- feedback.push('Add numbers') 
-}
+    score += 1
+  } else {
+    feedback.push("Add numbers")
+  }
 
   if (/[^a-zA-Z0-9]/.test(password)) {
- score += 1 
-} else {
- feedback.push('Add special characters (!@#$%^&*)') 
-}
+    score += 1
+  } else {
+    feedback.push("Add special characters (!@#$%^&*)")
+  }
 
   // Pattern penalties
   if (/(.)\1{2,}/.test(password)) {
     score -= 1
-    feedback.push('Avoid repeated characters')
+    feedback.push("Avoid repeated characters")
   }
 
   if (/123|abc|qwe|asd|zxc/i.test(password)) {
     score -= 1
-    feedback.push('Avoid common sequences')
+    feedback.push("Avoid common sequences")
   }
 
   // Common password check
   const commonPasswords = [
-    'password',
-'123456',
-'123456789',
-'qwerty',
-'abc123',
-    'password123',
-'admin',
-'letmein',
-'welcome',
-'monkey'
+    "password",
+    "123456",
+    "123456789",
+    "qwerty",
+    "abc123",
+    "password123",
+    "admin",
+    "letmein",
+    "welcome",
+    "monkey",
   ]
 
-  if (commonPasswords.some(common => password.toLowerCase().includes(common))) {
+  if (commonPasswords.some((common) => password.toLowerCase().includes(common))) {
     score -= 2
-    feedback.push('Avoid common passwords')
+    feedback.push("Avoid common passwords")
   }
 
   // Determine strength level
   let strength: PasswordStrength
   if (score <= 2) {
- strength = PasswordStrength.WEAK 
-} else if (score <= 4) {
- strength = PasswordStrength.FAIR 
-} else if (score <= 6) {
- strength = PasswordStrength.GOOD 
-} else if (score <= 8) {
- strength = PasswordStrength.STRONG 
-} else {
- strength = PasswordStrength.VERY_STRONG 
-}
+    strength = PasswordStrength.WEAK
+  } else if (score <= 4) {
+    strength = PasswordStrength.FAIR
+  } else if (score <= 6) {
+    strength = PasswordStrength.GOOD
+  } else if (score <= 8) {
+    strength = PasswordStrength.STRONG
+  } else {
+    strength = PasswordStrength.VERY_STRONG
+  }
 
   return { score, strength, feedback }
 }
@@ -128,7 +128,7 @@ export function calculatePasswordStrength(password: string): {
 // Enhanced password hashing with additional security
 export async function hashPassword(password: string): Promise<string> {
   // Generate a random salt for additional security
-  const salt = crypto.randomBytes(16).toString('hex')
+  const salt = crypto.randomBytes(16).toString("hex")
 
   // Hash the password with bcrypt
   const hashedPassword = await bcrypt.hash(password, PASSWORD_CONFIG.SALT_ROUNDS)
@@ -138,18 +138,21 @@ export async function hashPassword(password: string): Promise<string> {
 }
 
 // Enhanced password verification
-export async function verifyPassword(password: string, storedPassword: string): Promise<boolean> {
+export async function verifyPassword(
+  password: string,
+  storedPassword: string
+): Promise<boolean> {
   try {
     // Check if it's the new format (salt:hash) or old format (just hash)
-    if (storedPassword.includes(':')) {
-      const [salt, hash] = storedPassword.split(':')
+    if (storedPassword.includes(":")) {
+      const [salt, hash] = storedPassword.split(":")
       return await bcrypt.compare(password, hash)
     } else {
       // Legacy format - direct bcrypt comparison
       return await bcrypt.compare(password, storedPassword)
     }
   } catch (error) {
-    console.error('Password verification error:', error)
+    console.error("Password verification error:", error)
     return false
   }
 }
@@ -162,54 +165,61 @@ export function validatePasswordComplexity(password: string): {
   const errors: string[] = []
 
   if (password.length < PASSWORD_CONFIG.MIN_LENGTH) {
-    errors.push(`Password must be at least ${PASSWORD_CONFIG.MIN_LENGTH} characters long`)
+    errors.push(
+      `Password must be at least ${PASSWORD_CONFIG.MIN_LENGTH} characters long`
+    )
   }
 
   if (password.length > PASSWORD_CONFIG.MAX_LENGTH) {
-    errors.push(`Password must be less than ${PASSWORD_CONFIG.MAX_LENGTH} characters`)
+    errors.push(
+      `Password must be less than ${PASSWORD_CONFIG.MAX_LENGTH} characters`
+    )
   }
 
   if (!/[a-z]/.test(password)) {
-    errors.push('Password must contain at least one lowercase letter')
+    errors.push("Password must contain at least one lowercase letter")
   }
 
   if (!/[A-Z]/.test(password)) {
-    errors.push('Password must contain at least one uppercase letter')
+    errors.push("Password must contain at least one uppercase letter")
   }
 
   if (!/[0-9]/.test(password)) {
-    errors.push('Password must contain at least one number')
+    errors.push("Password must contain at least one number")
   }
 
   if (!/[^a-zA-Z0-9]/.test(password)) {
-    errors.push('Password must contain at least one special character')
+    errors.push("Password must contain at least one special character")
   }
 
-  if (password.includes(' ')) {
-    errors.push('Password cannot contain spaces')
+  if (password.includes(" ")) {
+    errors.push("Password cannot contain spaces")
   }
 
   // Check for common patterns
   if (/(.)\1{2,}/.test(password)) {
-    errors.push('Password cannot contain more than 2 consecutive identical characters')
+    errors.push(
+      "Password cannot contain more than 2 consecutive identical characters"
+    )
   }
 
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
   }
 }
 
 // Generate a secure random password
 export function generateSecurePassword(length: number = 16): string {
-  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
-  let password = ''
+  const charset =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*"
+  let password = ""
 
   // Ensure at least one character from each required category
-  password += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)] // uppercase
-  password += 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)] // lowercase
-  password += '0123456789'[Math.floor(Math.random() * 10)] // number
-  password += '!@#$%^&*'[Math.floor(Math.random() * 8)] // special char
+  password += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * 26)] // uppercase
+  password += "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)] // lowercase
+  password += "0123456789"[Math.floor(Math.random() * 10)] // number
+  password += "!@#$%^&*"[Math.floor(Math.random() * 8)] // special char
 
   // Fill the rest randomly
   for (let i = 4; i < length; i++) {
@@ -217,14 +227,17 @@ export function generateSecurePassword(length: number = 16): string {
   }
 
   // Shuffle the password
-  return password.split('').sort(() => Math.random() - 0.5).join('')
+  return password
+    .split("")
+    .sort(() => Math.random() - 0.5)
+    .join("")
 }
 
 // Check if password is expired
 export function isPasswordExpired(lastPasswordChange: Date): boolean {
   if (PASSWORD_CONFIG.PASSWORD_EXPIRY_DAYS === 0) {
- return false 
-}
+    return false
+  }
 
   const expiryDate = new Date(lastPasswordChange)
   expiryDate.setDate(expiryDate.getDate() + PASSWORD_CONFIG.PASSWORD_EXPIRY_DAYS)
@@ -235,8 +248,8 @@ export function isPasswordExpired(lastPasswordChange: Date): boolean {
 // Calculate days until password expires
 export function getDaysUntilPasswordExpiry(lastPasswordChange: Date): number {
   if (PASSWORD_CONFIG.PASSWORD_EXPIRY_DAYS === 0) {
- return Infinity 
-}
+    return Infinity
+  }
 
   const expiryDate = new Date(lastPasswordChange)
   expiryDate.setDate(expiryDate.getDate() + PASSWORD_CONFIG.PASSWORD_EXPIRY_DAYS)
@@ -267,20 +280,24 @@ export function checkAccountLockout(
     if (timeSinceLastAttempt > PASSWORD_CONFIG.LOCKOUT_DURATION) {
       return {
         isLocked: false,
-        attemptsRemaining: PASSWORD_CONFIG.MAX_LOGIN_ATTEMPTS
+        attemptsRemaining: PASSWORD_CONFIG.MAX_LOGIN_ATTEMPTS,
       }
     }
   }
 
-  const attemptsRemaining = Math.max(0, PASSWORD_CONFIG.MAX_LOGIN_ATTEMPTS - failedAttempts)
+  const attemptsRemaining = Math.max(
+    0,
+    PASSWORD_CONFIG.MAX_LOGIN_ATTEMPTS - failedAttempts
+  )
   const isLocked = failedAttempts >= PASSWORD_CONFIG.MAX_LOGIN_ATTEMPTS
 
   return {
     isLocked,
     attemptsRemaining,
-    lockoutExpiresAt: isLocked && lastFailedAttempt
-      ? new Date(lastFailedAttempt.getTime() + PASSWORD_CONFIG.LOCKOUT_DURATION)
-      : undefined
+    lockoutExpiresAt:
+      isLocked && lastFailedAttempt
+        ? new Date(lastFailedAttempt.getTime() + PASSWORD_CONFIG.LOCKOUT_DURATION)
+        : undefined,
   }
 }
 
@@ -293,7 +310,7 @@ export function validatePasswordHistory(
     if (bcrypt.compareSync(newPassword, oldPassword)) {
       return {
         isValid: false,
-        error: `Cannot reuse any of your last ${PASSWORD_CONFIG.PASSWORD_HISTORY_LIMIT} passwords`
+        error: `Cannot reuse any of your last ${PASSWORD_CONFIG.PASSWORD_HISTORY_LIMIT} passwords`,
       }
     }
   }
@@ -308,34 +325,33 @@ export function getSecurityRecommendations(strength: PasswordStrength): string[]
   switch (strength) {
     case PasswordStrength.WEAK:
       recommendations.push(
-        'Use a password manager to generate and store secure passwords',
-        'Enable two-factor authentication for additional security',
-        'Avoid using personal information in passwords'
+        "Use a password manager to generate and store secure passwords",
+        "Enable two-factor authentication for additional security",
+        "Avoid using personal information in passwords"
       )
       break
     case PasswordStrength.FAIR:
       recommendations.push(
-        'Consider using a password manager',
-        'Enable two-factor authentication',
-        'Make passwords longer for better security'
+        "Consider using a password manager",
+        "Enable two-factor authentication",
+        "Make passwords longer for better security"
       )
       break
     case PasswordStrength.GOOD:
       recommendations.push(
-        'Enable two-factor authentication for maximum security',
-        'Consider using a password manager for convenience'
+        "Enable two-factor authentication for maximum security",
+        "Consider using a password manager for convenience"
       )
       break
     case PasswordStrength.STRONG:
     case PasswordStrength.VERY_STRONG:
       recommendations.push(
-        'Excellent password strength!',
-        'Enable two-factor authentication for additional security',
-        'Keep your password secure and don\'t share it'
+        "Excellent password strength!",
+        "Enable two-factor authentication for additional security",
+        "Keep your password secure and don't share it"
       )
       break
   }
 
   return recommendations
 }
-

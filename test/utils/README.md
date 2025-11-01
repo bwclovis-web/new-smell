@@ -28,7 +28,7 @@ import {
   testFormValidation,
   mockFetch,
   testAccessibility,
-} from 'test/utils'
+} from "test/utils"
 ```
 
 ---
@@ -44,11 +44,11 @@ import {
 Renders a component with all necessary providers (React Query, Router).
 
 ```typescript
-import { renderWithProviders } from 'test/utils'
+import { renderWithProviders } from "test/utils"
 
-test('renders component', () => {
+test("renders component", () => {
   renderWithProviders(<MyComponent />)
-  expect(screen.getByText('Hello')).toBeInTheDocument()
+  expect(screen.getByText("Hello")).toBeInTheDocument()
 })
 ```
 
@@ -58,7 +58,7 @@ Renders a component with MemoryRouter.
 
 ```typescript
 renderWithMemoryRouter(<MyComponent />, {
-  initialEntries: ['/perfume/santal-33']
+  initialEntries: ["/perfume/santal-33"],
 })
 ```
 
@@ -69,7 +69,7 @@ renderWithMemoryRouter(<MyComponent />, {
 Creates a mock fetch function.
 
 ```typescript
-global.fetch = mockFetch({ id: 1, name: 'Test' }, 200)
+global.fetch = mockFetch({ id: 1, name: "Test" }, 200)
 ```
 
 #### `mockLocalStorage()` / `mockSessionStorage()`
@@ -78,8 +78,8 @@ Mocks browser storage APIs.
 
 ```typescript
 const storage = mockLocalStorage()
-storage.setItem('key', 'value')
-expect(storage.getItem('key')).toBe('value')
+storage.setItem("key", "value")
+expect(storage.getItem("key")).toBe("value")
 ```
 
 ### Browser API Mocks
@@ -100,18 +100,18 @@ Utilities for managing test setup and cleanup with `beforeEach` and `afterEach`.
 ### Quick Start
 
 ```typescript
-import { setupTestLifecycle, registerCleanup } from 'test/utils'
+import { setupTestLifecycle, registerCleanup } from "test/utils"
 
-describe('MyComponent', () => {
+describe("MyComponent", () => {
   // Setup standard lifecycle
   setupTestLifecycle()
 
-  it('should render correctly', () => {
+  it("should render correctly", () => {
     const resource = createResource()
-    
+
     // Register cleanup for this specific test
     registerCleanup(() => resource.dispose())
-    
+
     // Test code...
   })
 })
@@ -122,26 +122,26 @@ describe('MyComponent', () => {
 For common testing scenarios, use pre-configured lifecycle setups:
 
 ```typescript
-import { setupCompositeLifecycle } from 'test/utils'
+import { setupCompositeLifecycle } from "test/utils"
 
-describe('Component Tests', () => {
+describe("Component Tests", () => {
   // Sets up: mock clearing, proper cleanup
-  setupCompositeLifecycle('component')
+  setupCompositeLifecycle("component")
 })
 
-describe('Integration Tests', () => {
+describe("Integration Tests", () => {
   // Sets up: mocks, DOM reset, storage clearing, proper cleanup
-  setupCompositeLifecycle('integration')
+  setupCompositeLifecycle("integration")
 })
 
-describe('API Tests', () => {
+describe("API Tests", () => {
   // Sets up: API mocking, fetch restoration
-  setupCompositeLifecycle('api')
+  setupCompositeLifecycle("api")
 })
 
-describe('E2E Tests', () => {
+describe("E2E Tests", () => {
   // Sets up: minimal interference, cleanup only
-  setupCompositeLifecycle('e2e')
+  setupCompositeLifecycle("e2e")
 })
 ```
 
@@ -150,16 +150,16 @@ describe('E2E Tests', () => {
 Register cleanup functions to be executed after each test:
 
 ```typescript
-import { registerCleanup } from 'test/utils'
+import { registerCleanup } from "test/utils"
 
-it('should cleanup resources', async () => {
+it("should cleanup resources", async () => {
   const connection = await openConnection()
-  
+
   // Register cleanup - will be called automatically
   registerCleanup(async () => {
     await connection.close()
   })
-  
+
   // Test code...
 })
 ```
@@ -169,24 +169,24 @@ it('should cleanup resources', async () => {
 Create a test context that persists across `beforeEach`/`afterEach`:
 
 ```typescript
-import { createTestContext } from 'test/utils'
+import { createTestContext } from "test/utils"
 
-describe('Stateful Tests', () => {
+describe("Stateful Tests", () => {
   type TestContext = {
     user: User
     posts: Post[]
   }
-  
+
   const ctx = createTestContext<TestContext>()
-  
+
   beforeEach(() => {
     ctx.set({
       user: createMockUser(),
-      posts: []
+      posts: [],
     })
   })
-  
-  it('should have access to context', () => {
+
+  it("should have access to context", () => {
     const { user } = ctx.get()
     expect(user).toBeDefined()
   })
@@ -217,10 +217,10 @@ Renders component with router context.
 
 ```typescript
 const { history } = renderWithRouter(<MyPage />, {
-  initialEntries: ['/perfume/123']
+  initialEntries: ["/perfume/123"],
 })
 
-expect(history.location.pathname).toBe('/perfume/123')
+expect(history.location.pathname).toBe("/perfume/123")
 ```
 
 ### Advanced Router Testing
@@ -237,10 +237,10 @@ expect(history.location.pathname).toBe('/perfume/123')
 ```typescript
 await testNavigation(<App />, [
   {
-    action: () => user.click(screen.getByText('Profile')),
-    expectedPath: '/profile',
-    description: 'Navigate to profile'
-  }
+    action: () => user.click(screen.getByText("Profile")),
+    expectedPath: "/profile",
+    description: "Navigate to profile",
+  },
 ])
 ```
 
@@ -257,7 +257,7 @@ await testNavigation(<App />, [
 Fill a form field by label.
 
 ```typescript
-await fillFormField('Email', 'test@example.com')
+await fillFormField("Email", "test@example.com")
 ```
 
 #### `submitForm(buttonText)`
@@ -265,7 +265,7 @@ await fillFormField('Email', 'test@example.com')
 Submit a form.
 
 ```typescript
-await submitForm('Sign Up')
+await submitForm("Sign Up")
 ```
 
 ### Advanced Form Testing
@@ -282,15 +282,15 @@ await submitForm('Sign Up')
 ```typescript
 await testFormValidation([
   {
-    label: 'Email',
-    value: 'invalid-email',
-    expectedError: 'Please enter a valid email'
+    label: "Email",
+    value: "invalid-email",
+    expectedError: "Please enter a valid email",
   },
   {
-    label: 'Password',
-    value: '123',
-    expectedError: 'Password must be at least 8 characters'
-  }
+    label: "Password",
+    value: "123",
+    expectedError: "Password must be at least 8 characters",
+  },
 ])
 ```
 
@@ -308,8 +308,8 @@ Create mock user data.
 
 ```typescript
 const user = createMockAuthUser({
-  role: 'admin',
-  permissions: ['read', 'write', 'delete']
+  role: "admin",
+  permissions: ["read", "write", "delete"],
 })
 ```
 
@@ -334,19 +334,19 @@ Predefined auth states (authenticated, unauthenticated, admin, guest).
 ```typescript
 await testRoleBasedAccess(<Dashboard />, [
   {
-    role: 'admin',
-    permissions: ['read', 'write', 'delete'],
-    expectedElements: ['Delete User', 'Edit Settings'],
+    role: "admin",
+    permissions: ["read", "write", "delete"],
+    expectedElements: ["Delete User", "Edit Settings"],
     hiddenElements: [],
-    description: 'Admin has full access'
+    description: "Admin has full access",
   },
   {
-    role: 'user',
-    permissions: ['read'],
-    expectedElements: ['View Profile'],
-    hiddenElements: ['Delete User', 'Edit Settings'],
-    description: 'User has read-only access'
-  }
+    role: "user",
+    permissions: ["read"],
+    expectedElements: ["View Profile"],
+    hiddenElements: ["Delete User", "Edit Settings"],
+    description: "User has read-only access",
+  },
 ])
 ```
 
@@ -363,7 +363,7 @@ await testRoleBasedAccess(<Dashboard />, [
 Mock successful API response.
 
 ```typescript
-global.fetch = mockFetchResponse({ id: 1, name: 'Test' }, 200)
+global.fetch = mockFetchResponse({ id: 1, name: "Test" }, 200)
 ```
 
 #### `mockFetchError(message, status)`
@@ -371,7 +371,7 @@ global.fetch = mockFetchResponse({ id: 1, name: 'Test' }, 200)
 Mock API error.
 
 ```typescript
-global.fetch = mockFetchError('Network error', 500)
+global.fetch = mockFetchError("Network error", 500)
 ```
 
 #### `mockAPIEndpoints`
@@ -392,18 +392,18 @@ Predefined mocks for common endpoints (users, perfumes, houses).
 
 ```typescript
 await testAPICall(
-  () => fetchPerfume('123'),
+  () => fetchPerfume("123"),
   [
     {
-      name: 'Success',
-      mockResponse: mockFetchResponse({ id: '123', name: 'Santal 33' }),
-      expectedResult: { id: '123', name: 'Santal 33' }
+      name: "Success",
+      mockResponse: mockFetchResponse({ id: "123", name: "Santal 33" }),
+      expectedResult: { id: "123", name: "Santal 33" },
     },
     {
-      name: 'Not Found',
-      mockResponse: mockFetchError('Not found', 404),
-      shouldThrow: true
-    }
+      name: "Not Found",
+      mockResponse: mockFetchError("Not found", 404),
+      shouldThrow: true,
+    },
   ]
 )
 ```
@@ -435,13 +435,17 @@ await testAPICall(
 ### Comprehensive Test Suite
 
 ```typescript
-await runA11yTestSuite(<MyComponent />, {}, {
-  testKeyboard: true,
-  testScreenReader: true,
-  testFocus: true,
-  testSemantics: true,
-  testForms: true,
-})
+await runA11yTestSuite(
+  <MyComponent />,
+  {},
+  {
+    testKeyboard: true,
+    testScreenReader: true,
+    testFocus: true,
+    testSemantics: true,
+    testForms: true,
+  }
+)
 ```
 
 ---
@@ -476,7 +480,7 @@ setViewport(375, 667) // Mobile
 Set viewport by preset name.
 
 ```typescript
-setViewportByName('tablet')
+setViewportByName("tablet")
 ```
 
 #### `testAtViewports(testFn, viewports)`
@@ -489,7 +493,7 @@ await testAtViewports(
     renderWithProviders(<MyComponent />)
     // Assertions based on viewport
   },
-  ['mobile', 'tablet', 'desktop']
+  ["mobile", "tablet", "desktop"]
 )
 ```
 
@@ -526,13 +530,13 @@ await testAtViewports(
 
 ```typescript
 // Test opening modal
-await testModalOpen('open-dialog-button', 'Are you sure?')
+await testModalOpen("open-dialog-button", "Are you sure?")
 
 // Test closing with escape key
-await testModalClose('escape')
+await testModalClose("escape")
 
 // Test focus trap
-await testModalFocusTrap('confirmation-modal')
+await testModalFocusTrap("confirmation-modal")
 ```
 
 ---
@@ -548,11 +552,7 @@ await testModalFocusTrap('confirmation-modal')
 Wait for a condition to be true.
 
 ```typescript
-await waitForCondition(
-  () => data.isLoaded,
-  5000,
-  'Data failed to load'
-)
+await waitForCondition(() => data.isLoaded, 5000, "Data failed to load")
 ```
 
 #### `mockAsyncOperation(data, delay, shouldFail)`
@@ -613,14 +613,11 @@ await testWithFakeTimers(async () => {
 **Example:**
 
 ```typescript
-testTableRendering(
-  ['Name', 'Price', 'Brand'],
-  10
-)
+testTableRendering(["Name", "Price", "Brand"], 10)
 
-await testTableSorting('Name', 'asc')
+await testTableSorting("Name", "asc")
 
-await testTableFiltering('santal', 3)
+await testTableFiltering("santal", 3)
 ```
 
 ### List and Grid Testing
@@ -644,11 +641,11 @@ await testTableFiltering('santal', 3)
 
 ```typescript
 // Test table with all features
-testTableRendering(['Name', 'Price', 'Brand'], 50)
-await testTableSorting('Price', 'desc')
-await testTableFiltering('niche', 15)
-await testColumnVisibility('Brand', false)
-await testDataGrouping('Type', ['Eau de Parfum', 'Eau de Toilette'])
+testTableRendering(["Name", "Price", "Brand"], 50)
+await testTableSorting("Price", "desc")
+await testTableFiltering("niche", 15)
+await testColumnVisibility("Brand", false)
+await testDataGrouping("Type", ["Eau de Parfum", "Eau de Toilette"])
 ```
 
 ---
@@ -659,27 +656,27 @@ await testDataGrouping('Type', ['Eau de Parfum', 'Eau de Toilette'])
 
 ```typescript
 // ✅ Good
-import { renderWithProviders, testFormValidation } from 'test/utils'
+import { renderWithProviders, testFormValidation } from "test/utils"
 
 // ❌ Bad
-import { renderWithProviders } from 'test/utils/test-utils'
-import { testFormValidation } from 'test/utils/form-test-utils'
+import { renderWithProviders } from "test/utils/test-utils"
+import { testFormValidation } from "test/utils/form-test-utils"
 ```
 
 ### 2. Combine Utilities
 
 ```typescript
-test('complete user flow', async () => {
+test("complete user flow", async () => {
   // Setup
-  setViewportByName('mobile')
+  setViewportByName("mobile")
   const { history } = renderWithRouter(<App />)
-  
+
   // Test auth
   await testLoginFlow(<LoginPage />, credentials)
-  
+
   // Test navigation
   await testNavigation(<Dashboard />, navigationSteps)
-  
+
   // Test accessibility
   await testKeyboardNavigation(<Dashboard />)
 })
@@ -688,46 +685,43 @@ test('complete user flow', async () => {
 ### 3. Use Factories with Utilities
 
 ```typescript
-import { createMockPerfume, testTableRendering } from 'test/utils'
+import { createMockPerfume, testTableRendering } from "test/utils"
 
-test('perfume list', () => {
-  const perfumes = Array.from({ length: 10 }, (_, i) => 
+test("perfume list", () => {
+  const perfumes = Array.from({ length: 10 }, (_, i) =>
     createMockPerfume({ id: `${i}` })
   )
-  
+
   renderWithProviders(<PerfumeList perfumes={perfumes} />)
-  testTableRendering(['Name', 'Brand', 'Price'], 10)
+  testTableRendering(["Name", "Brand", "Price"], 10)
 })
 ```
 
 ### 4. Async Testing
 
 ```typescript
-test('data loading', async () => {
+test("data loading", async () => {
   const mockFetch = mockAsyncOperation(data, 100)
-  
-  await testLoadingStateSequence(
-    () => component.loading,
-    mockFetch
-  )
+
+  await testLoadingStateSequence(() => component.loading, mockFetch)
 })
 ```
 
 ### 5. Comprehensive Testing
 
 ```typescript
-test('modal component', async () => {
+test("modal component", async () => {
   // Test opening
-  await testModalOpen('trigger', 'Modal content')
-  
+  await testModalOpen("trigger", "Modal content")
+
   // Test accessibility
   testModalAccessibility()
-  
+
   // Test focus trap
-  await testModalFocusTrap('modal')
-  
+  await testModalFocusTrap("modal")
+
   // Test closing
-  await testModalClose('escape')
+  await testModalClose("escape")
 })
 ```
 
@@ -762,7 +756,7 @@ When adding new utilities:
 **Solution:** Ensure you're importing from the index:
 
 ```typescript
-import { renderWithProviders } from 'test/utils'
+import { renderWithProviders } from "test/utils"
 ```
 
 ### Issue: Mock not working
@@ -799,4 +793,3 @@ When contributing new test utilities:
 4. Update this README
 5. Ensure TypeScript types are correct
 6. Write tests for the utility functions themselves
-

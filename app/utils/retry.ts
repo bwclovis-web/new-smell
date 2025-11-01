@@ -1,14 +1,13 @@
 /**
  * Retry utility for handling transient failures
- * 
+ *
  * Provides exponential backoff retry mechanism for API calls and other operations
  * that may fail transiently due to network issues or temporary service unavailability.
  */
 
-import { AppError } from './errorHandling'
+import { AppError } from "./errorHandling"
 
 export interface RetryOptions {
-
   /**
    * Maximum number of retry attempts
    * @default 3
@@ -27,7 +26,7 @@ export interface RetryOptions {
    * - exponential: delay * 2^attempt
    * @default 'exponential'
    */
-  backoff?: 'linear' | 'exponential'
+  backoff?: "linear" | "exponential"
 
   /**
    * Custom function to determine if error is retryable
@@ -54,12 +53,12 @@ export interface RetryOptions {
 
 /**
  * Retry an async operation with configurable backoff strategy
- * 
+ *
  * @param fn - The async function to retry
  * @param options - Retry configuration options
  * @returns Promise resolving to the function result
  * @throws The last error if all retry attempts fail
- * 
+ *
  * @example
  * ```typescript
  * const data = await withRetry(
@@ -75,11 +74,11 @@ export async function withRetry<T>(
   const {
     maxRetries = 3,
     delay = 1000,
-    backoff = 'exponential',
+    backoff = "exponential",
     retryCondition = isRetryableError,
     maxDelay = 30000,
     onRetry,
-    onMaxRetriesReached
+    onMaxRetriesReached,
   } = options
 
   let lastError: unknown
@@ -104,9 +103,10 @@ export async function withRetry<T>(
       }
 
       // Calculate delay with backoff
-      const calculatedDelay = backoff === 'exponential'
-        ? delay * Math.pow(2, attempt - 1)
-        : delay * attempt
+      const calculatedDelay =
+        backoff === "exponential"
+          ? delay * Math.pow(2, attempt - 1)
+          : delay * attempt
 
       // Cap the delay at maxDelay
       const nextDelay = Math.min(calculatedDelay, maxDelay)
@@ -115,7 +115,7 @@ export async function withRetry<T>(
       onRetry?.(error, attempt, nextDelay)
 
       // Wait before retry
-      await new Promise(resolve => setTimeout(resolve, nextDelay))
+      await new Promise((resolve) => setTimeout(resolve, nextDelay))
     }
   }
 
@@ -125,13 +125,13 @@ export async function withRetry<T>(
 
 /**
  * Determines if an error is retryable
- * 
+ *
  * By default, retries:
  * - Network errors (AppError with type 'NETWORK')
  * - Temporary server errors (AppError with type 'SERVER' and not CRITICAL severity)
  * - HTTP 5xx errors (except 501 Not Implemented)
  * - Network-related native errors (TypeError, fetch failures)
- * 
+ *
  * Does NOT retry:
  * - Authentication errors (401)
  * - Authorization errors (403)
@@ -139,7 +139,7 @@ export async function withRetry<T>(
  * - Not Found errors (404)
  * - Client errors (4xx except 408, 429)
  * - Critical errors
- * 
+ *
  * @param error - The error to check
  * @returns true if error should be retried
  */
@@ -147,12 +147,12 @@ export function isRetryableError(error: unknown): boolean {
   // Handle AppError instances
   if (error instanceof AppError) {
     // Retry network errors
-    if (error.type === 'NETWORK') {
+    if (error.type === "NETWORK") {
       return true
     }
 
     // Retry server errors that are not critical
-    if (error.type === 'SERVER' && error.severity !== 'CRITICAL') {
+    if (error.type === "SERVER" && error.severity !== "CRITICAL") {
       return true
     }
 
@@ -170,7 +170,8 @@ export function isRetryableError(error: unknown): boolean {
     }
 
     // Retry specific 4xx errors that are temporary
-    if (status === 408 || status === 429) { // Request Timeout, Too Many Requests
+    if (status === 408 || status === 429) {
+      // Request Timeout, Too Many Requests
       return true
     }
 
@@ -184,19 +185,19 @@ export function isRetryableError(error: unknown): boolean {
 
     // Retry network-related errors
     const networkErrorPatterns = [
-      'network',
-      'fetch',
-      'timeout',
-      'econnrefused',
-      'econnreset',
-      'etimedout',
-      'enotfound',
-      'unable to connect',
-      'connection refused',
-      'socket hang up'
+      "network",
+      "fetch",
+      "timeout",
+      "econnrefused",
+      "econnreset",
+      "etimedout",
+      "enotfound",
+      "unable to connect",
+      "connection refused",
+      "socket hang up",
     ]
 
-    return networkErrorPatterns.some(pattern => errorMessage.includes(pattern))
+    return networkErrorPatterns.some((pattern) => errorMessage.includes(pattern))
   }
 
   // For unknown error types, don't retry by default
@@ -205,18 +206,18 @@ export function isRetryableError(error: unknown): boolean {
 
 /**
  * Create a retryable version of an async function
- * 
+ *
  * @param fn - The async function to make retryable
  * @param options - Default retry options
  * @returns A new function that automatically retries on failure
- * 
+ *
  * @example
  * ```typescript
  * const fetchWithRetry = createRetryable(
  *   (url: string) => fetch(url).then(r => r.json()),
  *   { maxRetries: 3 }
  * )
- * 
+ *
  * const data = await fetchWithRetry('/api/data')
  * ```
  */
@@ -231,7 +232,6 @@ export function createRetryable<TArgs extends any[], TReturn>(
  * Retry configuration presets for common scenarios
  */
 export const retryPresets = {
-
   /**
    * Conservative retry: 2 attempts, 2s initial delay, exponential backoff
    * Good for user-facing operations where quick failure is better than long waits
@@ -239,8 +239,8 @@ export const retryPresets = {
   conservative: {
     maxRetries: 2,
     delay: 2000,
-    backoff: 'exponential' as const,
-    maxDelay: 8000
+    backoff: "exponential" as const,
+    maxDelay: 8000,
   },
 
   /**
@@ -250,8 +250,8 @@ export const retryPresets = {
   standard: {
     maxRetries: 3,
     delay: 1000,
-    backoff: 'exponential' as const,
-    maxDelay: 15000
+    backoff: "exponential" as const,
+    maxDelay: 15000,
   },
 
   /**
@@ -261,8 +261,8 @@ export const retryPresets = {
   aggressive: {
     maxRetries: 5,
     delay: 500,
-    backoff: 'exponential' as const,
-    maxDelay: 30000
+    backoff: "exponential" as const,
+    maxDelay: 30000,
   },
 
   /**
@@ -272,8 +272,7 @@ export const retryPresets = {
   quick: {
     maxRetries: 3,
     delay: 100,
-    backoff: 'linear' as const,
-    maxDelay: 1000
-  }
+    backoff: "linear" as const,
+    maxDelay: 1000,
+  },
 } as const
-

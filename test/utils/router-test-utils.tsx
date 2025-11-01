@@ -1,11 +1,12 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, RenderOptions, screen, waitFor } from '@testing-library/react'
-import { createMemoryHistory, MemoryRouter, Router } from 'history'
-import { ReactElement } from 'react'
-import { vi } from 'vitest'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { render, RenderOptions, screen, waitFor } from "@testing-library/react"
+import { createMemoryHistory, MemoryRouter, Router } from "history"
+import { ReactElement } from "react"
+import { vi } from "vitest"
 
 // Mock providers for router testing
-const createTestQueryClient = () => new QueryClient({
+const createTestQueryClient = () =>
+  new QueryClient({
     defaultOptions: {
       queries: {
         retry: false,
@@ -18,7 +19,7 @@ const createTestQueryClient = () => new QueryClient({
     },
   })
 
-interface RouterRenderOptions extends Omit<RenderOptions, 'wrapper'> {
+interface RouterRenderOptions extends Omit<RenderOptions, "wrapper"> {
   queryClient?: QueryClient
   initialEntries?: string[]
   initialIndex?: number
@@ -30,13 +31,14 @@ export const renderWithRouter = (
   ui: ReactElement,
   {
     queryClient = createTestQueryClient(),
-    initialEntries = ['/'],
+    initialEntries = ["/"],
     initialIndex = 0,
     history,
     ...renderOptions
   }: RouterRenderOptions = {}
 ) => {
-  const testHistory = history || createMemoryHistory({ initialEntries, initialIndex })
+  const testHistory =
+    history || createMemoryHistory({ initialEntries, initialIndex })
 
   const Wrapper = ({ children }: { children: React.ReactNode }) => (
     <QueryClientProvider client={queryClient}>
@@ -86,7 +88,7 @@ export const testRouteParams = async (
   for (const { path, expectedParams, description } of routeParams) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     // Test that component receives correct params
@@ -108,7 +110,7 @@ export const testQueryParams = async (
   for (const { path, expectedQuery, description } of queryParams) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     const searchParams = new URLSearchParams(history.location.search)
@@ -132,14 +134,16 @@ export const testRouteGuards = async (
   for (const { initialPath, expectedPath, description } of guardTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [initialPath]
+      initialEntries: [initialPath],
     })
 
     await waitFor(() => {
       expect(history.location.pathname).toBe(expectedPath)
     })
 
-    console.log(`✓ ${description}: redirected from ${initialPath} to ${expectedPath}`)
+    console.log(
+      `✓ ${description}: redirected from ${initialPath} to ${expectedPath}`
+    )
   }
 }
 
@@ -156,7 +160,7 @@ export const testRouteLoading = async (
   for (const { path, shouldLoad, description } of loadingTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     if (shouldLoad) {
@@ -185,7 +189,7 @@ export const testRouteErrors = async (
   for (const { path, shouldError, expectedError, description } of errorTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     if (shouldError) {
@@ -217,7 +221,7 @@ export const testRouteDataFetching = async (
   for (const { path, expectedData, description } of dataTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     await waitFor(() => {
@@ -241,7 +245,7 @@ export const testRouteBreadcrumbs = async (
   for (const { path, expectedBreadcrumbs, description } of breadcrumbTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     for (const breadcrumb of expectedBreadcrumbs) {
@@ -265,7 +269,7 @@ export const testRouteTitles = async (
   for (const { path, expectedTitle, description } of titleTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     await waitFor(() => {
@@ -289,12 +293,12 @@ export const testRouteMetaTags = async (
   for (const { path, expectedMeta, description } of metaTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     for (const [name, content] of Object.entries(expectedMeta)) {
       const metaTag = document.querySelector(`meta[name="${name}"]`)
-      expect(metaTag).toHaveAttribute('content', content)
+      expect(metaTag).toHaveAttribute("content", content)
     }
 
     console.log(`✓ ${description}: meta tags correct`)
@@ -314,7 +318,7 @@ export const testRouteScrollBehavior = async (
   for (const { path, expectedScrollPosition, description } of scrollTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     await waitFor(() => {
@@ -338,12 +342,12 @@ export const testRouteFocusManagement = async (
   for (const { path, expectedFocusElement, description } of focusTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     await waitFor(() => {
       const focusedElement = document.activeElement
-      expect(focusedElement).toHaveAttribute('data-testid', expectedFocusElement)
+      expect(focusedElement).toHaveAttribute("data-testid", expectedFocusElement)
     })
 
     console.log(`✓ ${description}: focus management correct`)
@@ -363,11 +367,11 @@ export const testRouteAnimations = async (
   for (const { path, expectedAnimation, description } of animationTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     await waitFor(() => {
-      const animatedElement = screen.getByTestId('animated-element')
+      const animatedElement = screen.getByTestId("animated-element")
       expect(animatedElement).toHaveClass(expectedAnimation)
     })
 
@@ -388,19 +392,19 @@ export const testRouteCaching = async (
   for (const { path, shouldCache, description } of cacheTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     // Navigate away and back
-    history.push('/other')
+    history.push("/other")
     history.push(path)
 
     if (shouldCache) {
       // Component should be cached and not re-render
-      expect(screen.getByText('Cached content')).toBeInTheDocument()
+      expect(screen.getByText("Cached content")).toBeInTheDocument()
     } else {
       // Component should re-render
-      expect(screen.getByText('Fresh content')).toBeInTheDocument()
+      expect(screen.getByText("Fresh content")).toBeInTheDocument()
     }
 
     console.log(`✓ ${description}: caching behavior correct`)
@@ -420,7 +424,7 @@ export const testRoutePreloading = async (
   for (const { path, shouldPreload, description } of preloadTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     // Test preloading behavior
@@ -446,7 +450,7 @@ export const testRouteMiddleware = async (
   for (const { path, expectedMiddleware, description } of middlewareTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     // Test that middleware was executed
@@ -469,10 +473,15 @@ export const testRouteTransitions = async (
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { fromPath, toPath, expectedTransition, description } of transitionTests) {
+  for (const {
+    fromPath,
+    toPath,
+    expectedTransition,
+    description,
+  } of transitionTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [fromPath]
+      initialEntries: [fromPath],
     })
 
     // Navigate to new path
@@ -498,14 +507,14 @@ export const testRouteDeepLinking = async (
 ) => {
   for (const { url, expectedPath, description } of deepLinkTests) {
     // Mock window.location
-    Object.defineProperty(window, 'location', {
+    Object.defineProperty(window, "location", {
       value: { href: url },
       writable: true,
     })
 
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [expectedPath]
+      initialEntries: [expectedPath],
     })
 
     expect(history.location.pathname).toBe(expectedPath)
@@ -532,7 +541,7 @@ export const testRouteSEO = async (
   for (const { path, expectedSEO, description } of seoTests) {
     const { history } = renderWithRouter(Component, {
       ...options,
-      initialEntries: [path]
+      initialEntries: [path],
     })
 
     // Test title
@@ -540,21 +549,21 @@ export const testRouteSEO = async (
 
     // Test meta description
     const metaDescription = document.querySelector('meta[name="description"]')
-    expect(metaDescription).toHaveAttribute('content', expectedSEO.description)
+    expect(metaDescription).toHaveAttribute("content", expectedSEO.description)
 
     // Test meta keywords
     const metaKeywords = document.querySelector('meta[name="keywords"]')
-    expect(metaKeywords).toHaveAttribute('content', expectedSEO.keywords.join(', '))
+    expect(metaKeywords).toHaveAttribute("content", expectedSEO.keywords.join(", "))
 
     // Test Open Graph tags
     if (expectedSEO.ogTitle) {
       const ogTitle = document.querySelector('meta[property="og:title"]')
-      expect(ogTitle).toHaveAttribute('content', expectedSEO.ogTitle)
+      expect(ogTitle).toHaveAttribute("content", expectedSEO.ogTitle)
     }
 
     if (expectedSEO.ogDescription) {
       const ogDescription = document.querySelector('meta[property="og:description"]')
-      expect(ogDescription).toHaveAttribute('content', expectedSEO.ogDescription)
+      expect(ogDescription).toHaveAttribute("content", expectedSEO.ogDescription)
     }
 
     console.log(`✓ ${description}: SEO correct`)
@@ -562,5 +571,5 @@ export const testRouteSEO = async (
 }
 
 // Re-export everything from testing library
-export * from '@testing-library/react'
-export { default as userEvent } from '@testing-library/user-event'
+export * from "@testing-library/react"
+export { default as userEvent } from "@testing-library/user-event"

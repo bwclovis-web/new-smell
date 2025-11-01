@@ -1,6 +1,6 @@
-import { Page } from '@playwright/test'
+import { Page } from "@playwright/test"
 
-import { BasePage } from './BasePage'
+import { BasePage } from "./BasePage"
 
 /**
  * The Vault (perfume collection) page object model
@@ -23,7 +23,7 @@ export class VaultPage extends BasePage {
     noResultsMessage: '[data-testid="no-results"]',
     resultsCount: '[data-testid="results-count"]',
     wishlistButton: '[data-testid="wishlist-button"]',
-    ratingStars: '[data-testid="rating-stars"]'
+    ratingStars: '[data-testid="rating-stars"]',
   }
 
   constructor(page: Page) {
@@ -34,7 +34,7 @@ export class VaultPage extends BasePage {
    * Navigate to the vault page
    */
   async navigateTo(): Promise<void> {
-    await this.helpers.navigateTo('/the-vault')
+    await this.helpers.navigateTo("/the-vault")
     await this.waitForReady()
   }
 
@@ -67,7 +67,9 @@ export class VaultPage extends BasePage {
    * Click on a letter filter
    */
   async clickLetterFilter(letter: string): Promise<void> {
-    const letterButton = this.page.locator(`${this.selectors.letterFilter}[data-letter="${letter}"]`)
+    const letterButton = this.page.locator(
+      `${this.selectors.letterFilter}[data-letter="${letter}"]`
+    )
     await letterButton.click()
     await this.waitForReady()
   }
@@ -93,7 +95,7 @@ export class VaultPage extends BasePage {
    */
   async getPerfumeCardTitle(index: number): Promise<string> {
     const title = this.page.locator(this.selectors.perfumeCardTitle).nth(index)
-    return await title.textContent() || ''
+    return (await title.textContent()) || ""
   }
 
   /**
@@ -132,7 +134,7 @@ export class VaultPage extends BasePage {
    */
   async getResultsCount(): Promise<string> {
     const element = this.page.locator(this.selectors.resultsCount)
-    return await element.textContent() || ''
+    return (await element.textContent()) || ""
   }
 
   /**
@@ -149,7 +151,10 @@ export class VaultPage extends BasePage {
     await this.helpers.waitForLoadingToComplete()
     // Wait for loading spinner to disappear
     try {
-      await this.page.waitForSelector(this.selectors.loadingSpinner, { state: 'hidden', timeout: 5000 })
+      await this.page.waitForSelector(this.selectors.loadingSpinner, {
+        state: "hidden",
+        timeout: 5000,
+      })
     } catch {
       // Ignore if spinner doesn't exist
     }
@@ -182,7 +187,9 @@ export class VaultPage extends BasePage {
    * Assert specific perfume is in results
    */
   async assertPerfumeInResults(perfumeName: string): Promise<void> {
-    const titles = await this.page.locator(this.selectors.perfumeCardTitle).allTextContents()
+    const titles = await this.page
+      .locator(this.selectors.perfumeCardTitle)
+      .allTextContents()
     expect(titles).toContain(perfumeName)
   }
 }

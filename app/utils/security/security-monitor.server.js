@@ -8,17 +8,17 @@ const suspiciousActivities = new Map()
  * Security event types
  */
 export const SECURITY_EVENT_TYPES = {
-  AUTH_FAILURE: 'AUTH_FAILURE',
-  RATE_LIMIT_EXCEEDED: 'RATE_LIMIT_EXCEEDED',
-  CSRF_VIOLATION: 'CSRF_VIOLATION',
-  SUSPICIOUS_ACTIVITY: 'SUSPICIOUS_ACTIVITY',
-  IP_BLOCKED: 'IP_BLOCKED',
-  INVALID_TOKEN: 'INVALID_TOKEN',
-  UNAUTHORIZED_ACCESS: 'UNAUTHORIZED_ACCESS',
-  SQL_INJECTION_ATTEMPT: 'SQL_INJECTION_ATTEMPT',
-  XSS_ATTEMPT: 'XSS_ATTEMPT',
-  BRUTE_FORCE_ATTEMPT: 'BRUTE_FORCE_ATTEMPT',
-  DATA_BREACH_ATTEMPT: 'DATA_BREACH_ATTEMPT'
+  AUTH_FAILURE: "AUTH_FAILURE",
+  RATE_LIMIT_EXCEEDED: "RATE_LIMIT_EXCEEDED",
+  CSRF_VIOLATION: "CSRF_VIOLATION",
+  SUSPICIOUS_ACTIVITY: "SUSPICIOUS_ACTIVITY",
+  IP_BLOCKED: "IP_BLOCKED",
+  INVALID_TOKEN: "INVALID_TOKEN",
+  UNAUTHORIZED_ACCESS: "UNAUTHORIZED_ACCESS",
+  SQL_INJECTION_ATTEMPT: "SQL_INJECTION_ATTEMPT",
+  XSS_ATTEMPT: "XSS_ATTEMPT",
+  BRUTE_FORCE_ATTEMPT: "BRUTE_FORCE_ATTEMPT",
+  DATA_BREACH_ATTEMPT: "DATA_BREACH_ATTEMPT",
 }
 
 /**
@@ -33,7 +33,7 @@ export function logSecurityEvent(event) {
     path = null,
     method = null,
     details = {},
-    severity = 'medium'
+    severity = "medium",
   } = event
 
   const securityEvent = {
@@ -46,14 +46,14 @@ export function logSecurityEvent(event) {
     method,
     details,
     severity,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   }
 
   // Store event
   const key = `${ipAddress}-${type}`
   const events = securityEvents.get(key) || []
   events.push(securityEvent)
-  
+
   // Keep only last 50 events per IP/type
   if (events.length > 50) {
     events.shift()
@@ -68,7 +68,7 @@ export function logSecurityEvent(event) {
     type,
     ip: ipAddress,
     path,
-    timestamp: securityEvent.timestamp
+    timestamp: securityEvent.timestamp,
   })
 
   return securityEvent
@@ -83,11 +83,11 @@ function analyzeSecurityEvent(event) {
   // Track suspicious activities
   const suspiciousKey = `${ipAddress}-suspicious`
   const activities = suspiciousActivities.get(suspiciousKey) || []
-  
+
   activities.push({
     type,
     path,
-    timestamp: event.timestamp
+    timestamp: event.timestamp,
   })
 
   // Keep only last 20 activities per IP
@@ -113,25 +113,27 @@ function analyzeSecurityEvent(event) {
  */
 function checkBruteForceAttempt(ipAddress, activities) {
   const now = new Date()
-  const recentAuthFailures = activities.filter(activity => {
+  const recentAuthFailures = activities.filter((activity) => {
     const activityTime = new Date(activity.timestamp)
-    return activity.type === SECURITY_EVENT_TYPES.AUTH_FAILURE && 
-           (now - activityTime) < 15 * 60 * 1000 // Last 15 minutes
+    return (
+      activity.type === SECURITY_EVENT_TYPES.AUTH_FAILURE &&
+      now - activityTime < 15 * 60 * 1000
+    ) // Last 15 minutes
   })
 
   if (recentAuthFailures.length >= 5) {
     const alertKey = `${ipAddress}-brute-force`
     if (!securityAlerts.has(alertKey)) {
       securityAlerts.add(alertKey)
-      
+
       logSecurityEvent({
         type: SECURITY_EVENT_TYPES.BRUTE_FORCE_ATTEMPT,
         ipAddress,
         details: {
           failureCount: recentAuthFailures.length,
-          timeWindow: '15 minutes'
+          timeWindow: "15 minutes",
         },
-        severity: 'high'
+        severity: "high",
       })
     }
   }
@@ -142,51 +144,51 @@ function checkBruteForceAttempt(ipAddress, activities) {
  */
 function checkSuspiciousPatterns(ipAddress, activities) {
   const now = new Date()
-  const recentActivities = activities.filter(activity => {
+  const recentActivities = activities.filter((activity) => {
     const activityTime = new Date(activity.timestamp)
-    return (now - activityTime) < 60 * 60 * 1000 // Last hour
+    return now - activityTime < 60 * 60 * 1000 // Last hour
   })
 
   // Check for rapid-fire requests
-  const rapidRequests = recentActivities.filter(activity => {
+  const rapidRequests = recentActivities.filter((activity) => {
     const activityTime = new Date(activity.timestamp)
-    return (now - activityTime) < 60 * 1000 // Last minute
+    return now - activityTime < 60 * 1000 // Last minute
   })
 
   if (rapidRequests.length >= 20) {
     const alertKey = `${ipAddress}-rapid-requests`
     if (!securityAlerts.has(alertKey)) {
       securityAlerts.add(alertKey)
-      
+
       logSecurityEvent({
         type: SECURITY_EVENT_TYPES.SUSPICIOUS_ACTIVITY,
         ipAddress,
         details: {
-          activityType: 'rapid_requests',
+          activityType: "rapid_requests",
           requestCount: rapidRequests.length,
-          timeWindow: '1 minute'
+          timeWindow: "1 minute",
         },
-        severity: 'medium'
+        severity: "medium",
       })
     }
   }
 
   // Check for scanning behavior
-  const uniquePaths = new Set(recentActivities.map(a => a.path))
+  const uniquePaths = new Set(recentActivities.map((a) => a.path))
   if (uniquePaths.size >= 10) {
     const alertKey = `${ipAddress}-scanning`
     if (!securityAlerts.has(alertKey)) {
       securityAlerts.add(alertKey)
-      
+
       logSecurityEvent({
         type: SECURITY_EVENT_TYPES.SUSPICIOUS_ACTIVITY,
         ipAddress,
         details: {
-          activityType: 'path_scanning',
+          activityType: "path_scanning",
           uniquePaths: uniquePaths.size,
-          timeWindow: '1 hour'
+          timeWindow: "1 hour",
         },
-        severity: 'medium'
+        severity: "medium",
       })
     }
   }
@@ -196,28 +198,28 @@ function checkSuspiciousPatterns(ipAddress, activities) {
  * Check for data breach attempts
  */
 function checkDataBreachAttempts(ipAddress, activities) {
-  const sensitivePaths = [
-'/admin', '/api/users', '/api/auth', '/api/ratings'
-]
-  const recentSensitiveAccess = activities.filter(activity => {
+  const sensitivePaths = ["/admin", "/api/users", "/api/auth", "/api/ratings"]
+  const recentSensitiveAccess = activities.filter((activity) => {
     const activityTime = new Date(activity.timestamp)
-    return sensitivePaths.some(path => activity.path.startsWith(path)) &&
-           (new Date() - activityTime) < 30 * 60 * 1000 // Last 30 minutes
+    return (
+      sensitivePaths.some((path) => activity.path.startsWith(path)) &&
+      new Date() - activityTime < 30 * 60 * 1000
+    ) // Last 30 minutes
   })
 
   if (recentSensitiveAccess.length >= 5) {
     const alertKey = `${ipAddress}-data-breach`
     if (!securityAlerts.has(alertKey)) {
       securityAlerts.add(alertKey)
-      
+
       logSecurityEvent({
         type: SECURITY_EVENT_TYPES.DATA_BREACH_ATTEMPT,
         ipAddress,
         details: {
           sensitiveAccessCount: recentSensitiveAccess.length,
-          timeWindow: '30 minutes'
+          timeWindow: "30 minutes",
         },
-        severity: 'high'
+        severity: "high",
       })
     }
   }
@@ -237,13 +239,14 @@ export function getSecurityStats() {
     recentEvents: [],
     activeAlerts: securityAlerts ? securityAlerts.size : 0,
     suspiciousIPs: suspiciousActivities ? suspiciousActivities.size : 0,
-    serverlessMode: false
+    serverlessMode: false,
   }
 
   // Check if we're in a serverless environment where storage might be empty
   if (!securityEvents || securityEvents.size === 0) {
     stats.serverlessMode = true
-    stats.message = 'Security monitoring is running in serverless mode. Data resets between function invocations.'
+    stats.message =
+      "Security monitoring is running in serverless mode. Data resets between function invocations."
     return stats
   }
 
@@ -251,17 +254,18 @@ export function getSecurityStats() {
   const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000)
 
   for (const [key, events] of securityEvents) {
-    const [ip] = key.split('-')
+    const [ip] = key.split("-")
     stats.uniqueIPs.add(ip)
     stats.totalEvents += events.length
 
-    events.forEach(event => {
+    events.forEach((event) => {
       // Count by type
       stats.eventsByType[event.type] = (stats.eventsByType[event.type] || 0) + 1
-      
+
       // Count by severity
-      stats.eventsBySeverity[event.severity] = (stats.eventsBySeverity[event.severity] || 0) + 1
-      
+      stats.eventsBySeverity[event.severity] =
+        (stats.eventsBySeverity[event.severity] || 0) + 1
+
       // Get recent events
       if (new Date(event.timestamp) > oneHourAgo) {
         stats.recentEvents.push(event)
@@ -282,13 +286,13 @@ export function getSecurityStats() {
  */
 export function getEventsForIP(ipAddress) {
   const events = []
-  
+
   for (const [key, ipEvents] of securityEvents) {
     if (key.startsWith(`${ipAddress}-`)) {
       events.push(...ipEvents)
     }
   }
-  
+
   return events.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
 }
 
@@ -298,17 +302,19 @@ export function getEventsForIP(ipAddress) {
 export function cleanupOldEvents() {
   const now = new Date()
   const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
-  
+
   for (const [key, events] of securityEvents) {
-    const recentEvents = events.filter(event => new Date(event.timestamp) > oneDayAgo)
-    
+    const recentEvents = events.filter(
+      (event) => new Date(event.timestamp) > oneDayAgo
+    )
+
     if (recentEvents.length === 0) {
       securityEvents.delete(key)
     } else {
       securityEvents.set(key, recentEvents)
     }
   }
-  
+
   // Clear old alerts
   securityAlerts.clear()
 }

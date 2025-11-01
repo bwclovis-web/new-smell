@@ -1,20 +1,23 @@
 import { useTranslation } from "react-i18next"
 import { type LoaderFunctionArgs, useLoaderData } from "react-router"
 
-import { ItemsSearchingFor, ItemsToTrade } from "~/components/Containers/TraderProfile"
+import {
+  ItemsSearchingFor,
+  ItemsToTrade,
+} from "~/components/Containers/TraderProfile"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import { getTraderById } from "~/models/user.server"
 import { getTraderDisplayName } from "~/utils/user"
 
-import banner from '../images/trade.webp'
+import banner from "../images/trade.webp"
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!params.id) {
-    throw new Error('Note ID is required')
+    throw new Error("Note ID is required")
   }
   const trader = await getTraderById(params.id)
   if (!trader) {
-    throw new Error('Trader not found')
+    throw new Error("Trader not found")
   }
   return { trader }
 }
@@ -37,10 +40,7 @@ const TraderProfilePage = () => {
           {trader.UserPerfume.length > 0 ? (
             <ul className="mt-6">
               {trader.UserPerfume.map((userPerfume: any) => (
-                <ItemsToTrade
-                  key={userPerfume.id}
-                  userPerfume={userPerfume}
-                />
+                <ItemsToTrade key={userPerfume.id} userPerfume={userPerfume} />
               ))}
             </ul>
           ) : (
@@ -50,12 +50,10 @@ const TraderProfilePage = () => {
         <div className="noir-border relative md:w-1/2 w-full p-4">
           <h2>{t("traderProfile.itemsSearchingFor")}</h2>
           <ItemsSearchingFor
-            wishlistItems={
-              (trader.UserPerfumeWishlist || []).map((item: any) => ({
-                ...item,
-                user: trader,
-              }))
-            }
+            wishlistItems={(trader.UserPerfumeWishlist || []).map((item: any) => ({
+              ...item,
+              user: trader,
+            }))}
           />
         </div>
       </div>

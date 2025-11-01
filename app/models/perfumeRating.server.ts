@@ -1,4 +1,4 @@
-import { prisma } from '~/db.server'
+import { prisma } from "~/db.server"
 
 export async function createPerfumeRating(data: {
   userId: string
@@ -17,8 +17,8 @@ export async function createPerfumeRating(data: {
       sillage: data.sillage,
       gender: data.gender,
       priceValue: data.priceValue,
-      overall: data.overall
-    }
+      overall: data.overall,
+    },
   })
 
   return rating
@@ -36,21 +36,18 @@ export async function updatePerfumeRating(
 ) {
   const updatedRating = await prisma.userPerfumeRating.update({
     where: { id: ratingId },
-    data: updates
+    data: updates,
   })
 
   return updatedRating
 }
 
-export async function getUserPerfumeRating(
-  userId: string,
-  perfumeId: string
-) {
+export async function getUserPerfumeRating(userId: string, perfumeId: string) {
   const rating = await prisma.userPerfumeRating.findFirst({
     where: {
       userId,
-      perfumeId
-    }
+      perfumeId,
+    },
   })
 
   return rating
@@ -58,22 +55,22 @@ export async function getUserPerfumeRating(
 
 export async function getPerfumeRatings(perfumeId: string) {
   const ratings = await prisma.userPerfumeRating.findMany({
-    where: { perfumeId }
+    where: { perfumeId },
   })
 
   // Calculate averages
   const categories = [
-    'longevity',
-    'sillage',
-    'gender',
-    'priceValue',
-    'overall'
+    "longevity",
+    "sillage",
+    "gender",
+    "priceValue",
+    "overall",
   ] as const
   const averages: Record<string, number | null> = {}
 
-  categories.forEach(category => {
+  categories.forEach((category) => {
     const validRatings = ratings
-      .map(rating => rating[category])
+      .map((rating) => rating[category])
       .filter((value): value is number => value !== null)
 
     if (validRatings.length > 0) {
@@ -92,13 +89,13 @@ export async function getPerfumeRatings(perfumeId: string) {
       gender: averages.gender,
       priceValue: averages.priceValue,
       overall: averages.overall,
-      totalRatings: ratings.length
-    }
+      totalRatings: ratings.length,
+    },
   }
 }
 
 export async function deletePerfumeRating(ratingId: string): Promise<void> {
   await prisma.userPerfumeRating.delete({
-    where: { id: ratingId }
+    where: { id: ratingId },
   })
 }

@@ -1,19 +1,19 @@
-import { getFormProps, useForm } from '@conform-to/react'
-import { getZodConstraint, parseWithZod } from '@conform-to/zod'
-import { useEffect, useRef, useState } from 'react'
-import { Form } from 'react-router'
+import { getFormProps, useForm } from "@conform-to/react"
+import { getZodConstraint, parseWithZod } from "@conform-to/zod"
+import { useEffect, useRef, useState } from "react"
+import { Form } from "react-router"
 
-import { Button } from '~/components/Atoms/Button/Button'
-import { CSRFToken } from '~/components/Molecules/CSRFToken'
-import { FORM_TYPES } from '~/utils/constants'
-import { CreatePerfumeHouseSchema } from '~/utils/formValidationSchemas'
+import { Button } from "~/components/Atoms/Button/Button"
+import { CSRFToken } from "~/components/Molecules/CSRFToken"
+import { FORM_TYPES } from "~/utils/constants"
+import { CreatePerfumeHouseSchema } from "~/utils/formValidationSchemas"
 
-import AddressFieldset from './Partials/AddressFieldset'
-import ContactFieldset from './Partials/ContactFiledset'
-import InfoFieldset from './Partials/InfoFieldset'
+import AddressFieldset from "./Partials/AddressFieldset"
+import ContactFieldset from "./Partials/ContactFiledset"
+import InfoFieldset from "./Partials/InfoFieldset"
 
 interface PerfumeHouseFormProps {
-  formType: typeof FORM_TYPES[keyof typeof FORM_TYPES]
+  formType: (typeof FORM_TYPES)[keyof typeof FORM_TYPES]
   lastResult: any
   data?: any
 }
@@ -28,14 +28,14 @@ const PerfumeHouseForm = ({ formType, lastResult, data }: PerfumeHouseFormProps)
   }, [lastResult])
   const [
     form,
-    { name, description, image, website, email, phone, address, founded }
+    { name, description, image, website, email, phone, address, founded },
   ] = useForm({
     id: formType,
     lastResult: lastResult && lastResult.success ? lastResult : null,
     constraint: getZodConstraint(CreatePerfumeHouseSchema),
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: CreatePerfumeHouseSchema })
-    }
+    },
   })
 
   return (
@@ -64,7 +64,9 @@ const PerfumeHouseForm = ({ formType, lastResult, data }: PerfumeHouseFormProps)
       <CSRFToken />
       <input type="hidden" name="houseId" value={data?.id} />
       <Button type="submit" className="mt-4 max-w-max">
-        {formType === FORM_TYPES.CREATE_HOUSE_FORM ? 'Create Perfume House' : 'Submit Changes'}
+        {formType === FORM_TYPES.CREATE_HOUSE_FORM
+          ? "Create Perfume House"
+          : "Submit Changes"}
       </Button>
     </Form>
   )

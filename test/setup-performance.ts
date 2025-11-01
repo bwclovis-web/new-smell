@@ -1,4 +1,4 @@
-import { vi } from 'vitest'
+import { vi } from "vitest"
 
 // Performance test specific setup
 export const performanceTestSetup = () => {
@@ -14,27 +14,28 @@ export const performanceTestSetup = () => {
     memory: {
       usedJSHeapSize: 1000000,
       totalJSHeapSize: 2000000,
-      jsHeapSizeLimit: 4000000
-    }
+      jsHeapSizeLimit: 4000000,
+    },
   }
 
-  Object.defineProperty(window, 'performance', {
+  Object.defineProperty(window, "performance", {
     value: mockPerformance,
-    writable: true
+    writable: true,
   })
 
   // Mock requestIdleCallback
-  global.requestIdleCallback = vi.fn(callback => setTimeout(callback, 0))
+  global.requestIdleCallback = vi.fn((callback) => setTimeout(callback, 0))
 
-  global.cancelIdleCallback = vi.fn(id => {
+  global.cancelIdleCallback = vi.fn((id) => {
     clearTimeout(id)
   })
 
   // Mock requestAnimationFrame
-  global.requestAnimationFrame = vi.fn(callback => setTimeout(callback, 16) // ~60fps
+  global.requestAnimationFrame = vi.fn(
+    (callback) => setTimeout(callback, 16) // ~60fps
   )
 
-  global.cancelAnimationFrame = vi.fn(id => {
+  global.cancelAnimationFrame = vi.fn((id) => {
     clearTimeout(id)
   })
 
@@ -69,7 +70,7 @@ export const performanceTestSetup = () => {
       return {
         used: performance.memory.usedJSHeapSize,
         total: performance.memory.totalJSHeapSize,
-        limit: performance.memory.jsHeapSizeLimit
+        limit: performance.memory.jsHeapSizeLimit,
       }
     }
     return null

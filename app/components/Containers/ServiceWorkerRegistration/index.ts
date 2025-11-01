@@ -1,1 +1,1 @@
-export { default } from './ServiceWorkerRegistration'
+export { default } from "./ServiceWorkerRegistration"

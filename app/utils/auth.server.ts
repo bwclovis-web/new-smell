@@ -1,7 +1,7 @@
-import cookie from 'cookie'
+import cookie from "cookie"
 
-import { getUserById } from '~/models/user.server'
-import { verifyAccessToken } from '~/utils/security/session-manager.server'
+import { getUserById } from "~/models/user.server"
+import { verifyAccessToken } from "~/utils/security/session-manager.server"
 
 export type AuthResult = {
   success: boolean
@@ -11,7 +11,7 @@ export type AuthResult = {
 }
 
 const getTokenFromRequest = (request: Request) => {
-  const cookieHeader = request.headers.get('cookie') || ''
+  const cookieHeader = request.headers.get("cookie") || ""
   const cookies = cookie.parse(cookieHeader)
 
   // Try access token first
@@ -27,12 +27,12 @@ const getTokenFromRequest = (request: Request) => {
 
 const validateToken = (token: string | undefined) => {
   if (!token) {
-    return { valid: false, error: 'User not authenticated' }
+    return { valid: false, error: "User not authenticated" }
   }
 
   const payload = verifyAccessToken(token)
   if (!payload || !payload.userId) {
-    return { valid: false, error: 'Invalid authentication token' }
+    return { valid: false, error: "Invalid authentication token" }
   }
 
   return { valid: true, userId: payload.userId }
@@ -51,7 +51,7 @@ const getUserFromValidation = async (validation: ValidationResult) => {
 
   const user = await getUserById(validation.userId)
   if (!user) {
-    return { success: false, error: 'User not found', status: 401 }
+    return { success: false, error: "User not found", status: 401 }
   }
 
   return { success: true, user }
@@ -64,7 +64,7 @@ export const authenticateUser = async (request: Request): Promise<AuthResult> =>
     return await getUserFromValidation(validation)
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Authentication error:', error)
-    return { success: false, error: 'Authentication failed', status: 500 }
+    console.error("Authentication error:", error)
+    return { success: false, error: "Authentication failed", status: 500 }
   }
 }

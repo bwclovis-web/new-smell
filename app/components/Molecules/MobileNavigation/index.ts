@@ -1,2 +1,2 @@
-export { default } from './MobileNavigation'
-export type { MobileNavigationVariants } from './mobileNavigation-variants'
+export { default } from "./MobileNavigation"
+export type { MobileNavigationVariants } from "./mobileNavigation-variants"

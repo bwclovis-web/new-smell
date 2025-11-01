@@ -37,8 +37,8 @@ import {
   withActionErrorHandling,
   withDatabaseErrorHandling,
   withApiErrorHandling,
-  withValidationErrorHandling
-} from '~/utils/errorHandling.patterns'
+  withValidationErrorHandling,
+} from "~/utils/errorHandling.patterns"
 
 // Route Loader
 export const loader = withLoaderErrorHandling(
@@ -46,7 +46,7 @@ export const loader = withLoaderErrorHandling(
     const data = await fetchData(params.id)
     return json(data)
   },
-  { context: { route: 'my-route', operation: 'fetchData' } }
+  { context: { route: "my-route", operation: "fetchData" } }
 )
 
 // Route Action
@@ -54,33 +54,33 @@ export const action = withActionErrorHandling(
   async ({ request }) => {
     const formData = await request.formData()
     await saveData(formData)
-    return redirect('/success')
+    return redirect("/success")
   },
-  { context: { action: 'save-data' } }
+  { context: { action: "save-data" } }
 )
 
 // Database Operation
 async function getUser(id: string) {
   return withDatabaseErrorHandling(
     async () => await prisma.user.findUnique({ where: { id } }),
-    { operation: 'getUser', context: { id } }
+    { operation: "getUser", context: { id } }
   )
 }
 
 // API Call
 async function fetchExternalData() {
   return withApiErrorHandling(
-    async () => await fetch('/external/api').then(r => r.json()),
-    { api: 'external-service' }
+    async () => await fetch("/external/api").then((r) => r.json()),
+    { api: "external-service" }
   )
 }
 
 // Validation
 function validateUserData(data: unknown) {
-  return withValidationErrorHandling(
-    () => userSchema.parse(data),
-    { schema: 'user', data }
-  )
+  return withValidationErrorHandling(() => userSchema.parse(data), {
+    schema: "user",
+    data,
+  })
 }
 ```
 
@@ -89,12 +89,12 @@ function validateUserData(data: unknown) {
 Non-throwing alternatives for predictable error handling:
 
 ```typescript
-import { safeAsync, safeSync } from '~/utils/errorHandling.patterns'
+import { safeAsync, safeSync } from "~/utils/errorHandling.patterns"
 
 // Async operations
 const [error, user] = await safeAsync(() => getUser(id))
 if (error) {
-  console.error('Failed to get user:', error.message)
+  console.error("Failed to get user:", error.message)
   return defaultUser
 }
 // Use user safely here
@@ -115,31 +115,31 @@ import {
   assertExists,
   assertValid,
   assertAuthenticated,
-  assertAuthorized
-} from '~/utils/errorHandling.patterns'
+  assertAuthorized,
+} from "~/utils/errorHandling.patterns"
 
 // Check existence (throws notFoundError if null/undefined)
-const userId = assertExists(params.userId, 'User ID', { params })
-const user = assertExists(await getUser(userId), 'User', { userId })
+const userId = assertExists(params.userId, "User ID", { params })
+const user = assertExists(await getUser(userId), "User", { userId })
 
 // Validate conditions (throws validationError if false)
 assertValid(
-  typeof email === 'string' && email.includes('@'),
-  'Valid email is required',
-  { field: 'email', value: email }
+  typeof email === "string" && email.includes("@"),
+  "Valid email is required",
+  { field: "email", value: email }
 )
 
 // Check authentication (throws authenticationError if not authenticated)
 const session = assertAuthenticated(
   await getSession(request),
-  'You must be logged in'
+  "You must be logged in"
 )
 
 // Check authorization (throws authorizationError if not authorized)
 assertAuthorized(
-  user.role === 'admin',
-  'You must be an admin to perform this action',
-  { userId: user.id, requiredRole: 'admin' }
+  user.role === "admin",
+  "You must be an admin to perform this action",
+  { userId: user.id, requiredRole: "admin" }
 )
 ```
 
@@ -154,57 +154,54 @@ import {
   authenticationError,
   authorizationError,
   databaseError,
-  networkError
-} from '~/utils/errorHandling.patterns'
+  networkError,
+} from "~/utils/errorHandling.patterns"
 
 // Not found error
-throw notFoundError('User not found', { userId })
+throw notFoundError("User not found", { userId })
 
 // Validation error
-throw validationError('Invalid email format', {
-  field: 'email',
-  value: email
+throw validationError("Invalid email format", {
+  field: "email",
+  value: email,
 })
 
 // Authentication error
-throw authenticationError('Session expired')
+throw authenticationError("Session expired")
 
 // Authorization error
-throw authorizationError('Insufficient permissions', {
-  requiredRole: 'admin',
-  userRole: 'user'
+throw authorizationError("Insufficient permissions", {
+  requiredRole: "admin",
+  userRole: "user",
 })
 
 // Database error
-throw databaseError('Failed to connect to database', {
-  operation: 'connect'
+throw databaseError("Failed to connect to database", {
+  operation: "connect",
 })
 
 // Network error
-throw networkError('External API unavailable', {
-  api: 'stripe',
-  statusCode: 503
+throw networkError("External API unavailable", {
+  api: "stripe",
+  statusCode: 503,
 })
 ```
 
 #### 5. Advanced Features
 
 ```typescript
-import { withRetry } from '~/utils/errorHandling.patterns'
+import { withRetry } from "~/utils/errorHandling.patterns"
 
 // Retry logic with exponential backoff
-const data = await withRetry(
-  async () => await fetchExternalAPI(),
-  {
-    maxRetries: 3,
-    baseDelay: 1000,
-    maxDelay: 30000,
-    backoffFactor: 2,
-    onRetry: (attempt, error) => {
-      console.log(`Retry attempt ${attempt}:`, error.message)
-    }
-  }
-)
+const data = await withRetry(async () => await fetchExternalAPI(), {
+  maxRetries: 3,
+  baseDelay: 1000,
+  maxDelay: 30000,
+  backoffFactor: 2,
+  onRetry: (attempt, error) => {
+    console.log(`Retry attempt ${attempt}:`, error.message)
+  },
+})
 ```
 
 ### Benefits
@@ -222,6 +219,7 @@ const data = await withRetry(
 **Location:** `app/utils/errorHandling.patterns.test.ts`
 
 Run tests:
+
 ```bash
 npm test -- app/utils/errorHandling.patterns.test.ts
 ```
@@ -243,7 +241,7 @@ Comprehensive validation utilities with Zod schemas for consistent data validati
 All validation schemas organized by domain:
 
 ```typescript
-import { validationSchemas } from '~/utils/validation'
+import { validationSchemas } from "~/utils/validation"
 
 // Access schemas by category
 const userSchema = validationSchemas.auth.signup
@@ -256,20 +254,20 @@ const emailSchema = validationSchemas.common.email
 Reusable primitive schemas:
 
 ```typescript
-import { commonSchemas } from '~/utils/validation'
+import { commonSchemas } from "~/utils/validation"
 
 // Primitive validation
-commonSchemas.id          // UUID validation
-commonSchemas.email       // Email format
-commonSchemas.password    // Password strength
-commonSchemas.username    // Username format
-commonSchemas.url         // URL format
-commonSchemas.phone       // Phone number
-commonSchemas.rating      // 1-5 star rating
-commonSchemas.year        // Year (1900-2099)
-commonSchemas.page        // Pagination page (1+)
-commonSchemas.limit       // Pagination limit (1-100)
-commonSchemas.boolean     // Boolean or string boolean
+commonSchemas.id // UUID validation
+commonSchemas.email // Email format
+commonSchemas.password // Password strength
+commonSchemas.username // Username format
+commonSchemas.url // URL format
+commonSchemas.phone // Phone number
+commonSchemas.rating // 1-5 star rating
+commonSchemas.year // Year (1900-2099)
+commonSchemas.page // Pagination page (1+)
+commonSchemas.limit // Pagination limit (1-100)
+commonSchemas.boolean // Boolean or string boolean
 ```
 
 #### 3. Domain-Specific Schemas
@@ -285,8 +283,8 @@ import {
   commentSchemas,
   wishlistSchemas,
   apiSchemas,
-  adminSchemas
-} from '~/utils/validation'
+  adminSchemas,
+} from "~/utils/validation"
 
 // Authentication
 authSchemas.signup
@@ -344,8 +342,8 @@ import {
   validateEmail,
   validatePassword,
   validateUrl,
-  validatePagination
-} from '~/utils/validation'
+  validatePagination,
+} from "~/utils/validation"
 
 // Validate any data against a schema
 const result = validateData(mySchema, data)
@@ -370,30 +368,29 @@ const clean = sanitizeString('<script>alert("xss")</script>Hello')
 
 // Sanitize objects
 const cleanData = sanitizeObject({
-  name: 'John',
-  bio: '<script>bad</script>Good bio'
+  name: "John",
+  bio: "<script>bad</script>Good bio",
 })
 // Returns: { name: 'John', bio: 'Good bio' }
 
 // Validate with transformation
-const { data, errors } = validateAndTransform(
-  userSchema,
-  formData,
-  (valid) => ({ ...valid, createdAt: new Date() })
-)
+const { data, errors } = validateAndTransform(userSchema, formData, (valid) => ({
+  ...valid,
+  createdAt: new Date(),
+}))
 
 // Field validators
-const isValidEmail = validateEmail('user@example.com')
-const passwordResult = validatePassword('SecureP@ss123', {
+const isValidEmail = validateEmail("user@example.com")
+const passwordResult = validatePassword("SecureP@ss123", {
   minLength: 8,
   requireNumbers: true,
-  requireSpecialChars: true
+  requireSpecialChars: true,
 })
-const isValidUrl = validateUrl('https://example.com')
+const isValidUrl = validateUrl("https://example.com")
 
 // Pagination validation
 const { page, limit, offset } = validatePagination(
-  { page: '2', limit: '20' },
+  { page: "2", limit: "20" },
   { maxLimit: 100 }
 )
 ```
@@ -403,74 +400,74 @@ const { page, limit, offset } = validatePagination(
 #### Route Loader Validation
 
 ```typescript
-import { withLoaderErrorHandling } from '~/utils/errorHandling.patterns'
-import { apiSchemas, assertValid } from '~/utils/validation'
+import { withLoaderErrorHandling } from "~/utils/errorHandling.patterns"
+import { apiSchemas, assertValid } from "~/utils/validation"
 
 export const loader = withLoaderErrorHandling(
   async ({ request }) => {
     const url = new URL(request.url)
     const params = Object.fromEntries(url.searchParams)
-    
+
     // Validate pagination params
     const { page, limit } = apiSchemas.pagination.parse(params)
-    
+
     const data = await getPaginatedData(page, limit)
     return json(data)
   },
-  { context: { route: 'paginated-list' } }
+  { context: { route: "paginated-list" } }
 )
 ```
 
 #### Route Action Validation
 
 ```typescript
-import { withActionErrorHandling } from '~/utils/errorHandling.patterns'
-import { perfumeSchemas, validateFormData } from '~/utils/validation'
+import { withActionErrorHandling } from "~/utils/errorHandling.patterns"
+import { perfumeSchemas, validateFormData } from "~/utils/validation"
 
 export const action = withActionErrorHandling(
   async ({ request }) => {
     const formData = await request.formData()
-    
+
     // Validate form data
     const result = await validateFormData(perfumeSchemas.create, formData)
     if (!result.success) {
       return json({ errors: result.errors }, { status: 400 })
     }
-    
+
     const perfume = await createPerfume(result.data)
     return redirect(`/perfume/${perfume.id}`)
   },
-  { context: { action: 'create-perfume' } }
+  { context: { action: "create-perfume" } }
 )
 ```
 
 #### Component Validation
 
 ```typescript
-import { authSchemas } from '~/utils/validation'
+import { authSchemas } from "~/utils/validation"
 
 function SignUpForm() {
   const [errors, setErrors] = useState<Record<string, string>>({})
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
     const data = Object.fromEntries(formData)
-    
+
     // Validate on client side
     const result = authSchemas.signup.safeParse(data)
     if (!result.success) {
       setErrors(result.error.flatten().fieldErrors)
       return
     }
-    
+
     // Submit valid data
-    await fetch('/api/signup', {
-      method: 'POST',
-      body: JSON.stringify(result.data)
+    await fetch("/api/signup", {
+      method: "POST",
+      body: JSON.stringify(result.data),
     })
   }
-  
+
   return <form onSubmit={handleSubmit}>...</form>
 }
 ```
@@ -488,12 +485,14 @@ function SignUpForm() {
 ### Testing
 
 **Locations:**
+
 - `app/utils/validation/schemas.ts` (Schema definitions)
 - `app/utils/validation/schemas.test.ts` (Schema tests)
 - `app/utils/validation/index.ts` (Helper functions)
 - `app/utils/validation/index.test.ts` (Helper function tests)
 
 Run tests:
+
 ```bash
 npm test -- app/utils/validation/
 ```
@@ -517,33 +516,36 @@ Reusable form handling utilities to reduce duplication and improve consistency.
 Client-side form handling with validation and error handling:
 
 ```typescript
-import { useFormSubmit, createValidator, commonValidators } from '~/utils/forms'
+import { useFormSubmit, createValidator, commonValidators } from "~/utils/forms"
 
 function LoginForm() {
-  const { handleSubmit, isSubmitting, errors, clearErrors } = useFormSubmit<LoginData>({
-    validate: createValidator({
-      email: commonValidators.email,
-      password: commonValidators.required('Password')
-    }),
-    onSuccess: (result) => navigate('/dashboard'),
-    onError: (error) => console.error(error),
-    resetOnSuccess: true
-  })
+  const { handleSubmit, isSubmitting, errors, clearErrors } =
+    useFormSubmit<LoginData>({
+      validate: createValidator({
+        email: commonValidators.email,
+        password: commonValidators.required("Password"),
+      }),
+      onSuccess: (result) => navigate("/dashboard"),
+      onError: (error) => console.error(error),
+      resetOnSuccess: true,
+    })
 
   return (
-    <form onSubmit={handleSubmit(async (data) => {
-      return await loginUser(data)
-    })}>
+    <form
+      onSubmit={handleSubmit(async (data) => {
+        return await loginUser(data)
+      })}
+    >
       <input type="email" name="email" />
       {errors.email && <span>{errors.email}</span>}
-      
+
       <input type="password" name="password" />
       {errors.password && <span>{errors.password}</span>}
-      
+
       {errors._form && <div>{errors._form}</div>}
-      
+
       <button disabled={isSubmitting}>
-        {isSubmitting ? 'Logging in...' : 'Login'}
+        {isSubmitting ? "Logging in..." : "Login"}
       </button>
     </form>
   )
@@ -555,19 +557,20 @@ function LoginForm() {
 Pre-built validators for common use cases:
 
 ```typescript
-import { commonValidators, createValidator } from '~/utils/forms'
+import { commonValidators, createValidator } from "~/utils/forms"
 
 const validate = createValidator({
   email: commonValidators.email,
   password: commonValidators.password,
-  confirmPassword: commonValidators.confirmPassword('password'),
-  username: commonValidators.required('Username'),
-  bio: commonValidators.maxLength('Bio', 500),
-  age: commonValidators.minValue('Age', 18)
+  confirmPassword: commonValidators.confirmPassword("password"),
+  username: commonValidators.required("Username"),
+  bio: commonValidators.maxLength("Bio", 500),
+  age: commonValidators.minValue("Age", 18),
 })
 ```
 
 Available validators:
+
 - `email` - Email format validation
 - `password` - Password strength validation
 - `confirmPassword(field)` - Password confirmation matching
@@ -582,7 +585,7 @@ Available validators:
 Type-safe wrapper for Remix actions:
 
 ```typescript
-import { createFormAction } from '~/utils/forms'
+import { createFormAction } from "~/utils/forms"
 
 export const action = createFormAction(
   async (data: FormData) => {
@@ -591,13 +594,13 @@ export const action = createFormAction(
   },
   {
     validate: (data) => {
-      if (!data.email) return { error: 'Email is required' }
+      if (!data.email) return { error: "Email is required" }
       return null
     },
     transform: (formData) => ({
-      email: formData.get('email'),
-      password: formData.get('password')
-    })
+      email: formData.get("email"),
+      password: formData.get("password"),
+    }),
   }
 )
 ```
@@ -612,14 +615,14 @@ import {
   sanitizeFormData,
   validateEmail,
   validatePassword,
-  validateMatch
-} from '~/utils/forms'
+  validateMatch,
+} from "~/utils/forms"
 
 // Extract specific fields
-const data = extractFormData<{ email: string; password: string }>(
-  formData,
-  ['email', 'password']
-)
+const data = extractFormData<{ email: string; password: string }>(formData, [
+  "email",
+  "password",
+])
 
 // Convert FormData to object
 const obj = formDataToObject(formData)
@@ -630,20 +633,20 @@ const cleanData = sanitizeFormData(formData)
 
 // Validate email
 if (!validateEmail(email)) {
-  setError('Invalid email')
+  setError("Invalid email")
 }
 
 // Validate password strength
 const result = validatePassword(password, {
   minLength: 10,
-  requireSpecialChars: true
+  requireSpecialChars: true,
 })
 if (!result.valid) {
   setError(result.message)
 }
 
 // Validate field matching
-const error = validateMatch(password, confirmPassword, 'Passwords')
+const error = validateMatch(password, confirmPassword, "Passwords")
 if (error) {
   setError(error)
 }
@@ -661,6 +664,7 @@ if (error) {
 ### Testing
 
 Run tests:
+
 ```bash
 npm test -- test/unit/utils/formSubmit.test.ts test/unit/utils/formValidation.test.ts
 ```
@@ -682,23 +686,25 @@ Consolidated data fetching utilities for consistent data loading, error handling
 Simple data fetching with loading and error states:
 
 ```typescript
-import { useDataFetching } from '~/utils/data-fetching'
+import { useDataFetching } from "~/utils/data-fetching"
 
 function UserList() {
   const { data, isLoading, error, refetch } = useDataFetching<User[]>({
-    url: '/api/users',
+    url: "/api/users",
     options: {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    }
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    },
   })
 
   if (isLoading) return <Loading />
   if (error) return <Error message={error.message} />
-  
+
   return (
     <div>
-      {data?.map(user => <UserCard key={user.id} user={user} />)}
+      {data?.map((user) => (
+        <UserCard key={user.id} user={user} />
+      ))}
       <button onClick={refetch}>Refresh</button>
     </div>
   )
@@ -710,27 +716,22 @@ function UserList() {
 Handle paginated data easily:
 
 ```typescript
-import { usePaginatedData } from '~/utils/data-fetching'
+import { usePaginatedData } from "~/utils/data-fetching"
 
 function PerfumeList() {
-  const {
-    data,
-    isLoading,
-    error,
-    nextPage,
-    prevPage,
-    goToPage,
-    meta
-  } = usePaginatedData<Perfume>({
-    baseUrl: '/api/perfumes',
-    pageSize: 20,
-    initialPage: 1
-  })
+  const { data, isLoading, error, nextPage, prevPage, goToPage, meta } =
+    usePaginatedData<Perfume>({
+      baseUrl: "/api/perfumes",
+      pageSize: 20,
+      initialPage: 1,
+    })
 
   return (
     <div>
-      {data?.map(perfume => <PerfumeCard key={perfume.id} perfume={perfume} />)}
-      
+      {data?.map((perfume) => (
+        <PerfumeCard key={perfume.id} perfume={perfume} />
+      ))}
+
       <Pagination
         currentPage={meta.currentPage}
         totalPages={meta.totalPages}
@@ -748,22 +749,22 @@ function PerfumeList() {
 Automatic retry logic for unreliable APIs:
 
 ```typescript
-import { useApiWithRetry } from '~/utils/data-fetching'
+import { useApiWithRetry } from "~/utils/data-fetching"
 
 function ExternalData() {
   const { data, isLoading, error, retry } = useApiWithRetry<ApiData>({
-    fetchFn: () => fetch('/external/api').then(r => r.json()),
+    fetchFn: () => fetch("/external/api").then((r) => r.json()),
     maxAttempts: 3,
     initialDelay: 1000,
     onRetry: (attempt) => {
       console.log(`Retry attempt ${attempt}`)
-    }
+    },
   })
 
   if (error) {
     return <button onClick={retry}>Retry</button>
   }
-  
+
   return <div>{data && <DisplayData data={data} />}</div>
 }
 ```
@@ -778,42 +779,40 @@ import {
   createFetchFn,
   retryFetch,
   clearAllCache,
-  getCacheStats
-} from '~/utils/data-fetching'
+  getCacheStats,
+} from "~/utils/data-fetching"
 
 // Build query strings
-const url = buildQueryString('/api/perfumes', {
-  type: 'niche',
+const url = buildQueryString("/api/perfumes", {
+  type: "niche",
   page: 1,
-  limit: 20
+  limit: 20,
 })
 // Returns: '/api/perfumes?type=niche&page=1&limit=20'
 
 // Cache wrapper
 const cachedFetch = withCache(
-  () => fetch('/api/data').then(r => r.json()),
-  'my-cache-key',
+  () => fetch("/api/data").then((r) => r.json()),
+  "my-cache-key",
   300000 // 5 minutes
 )
 
 // Parse API responses
-const data = await parseApiResponse<User[]>(
-  fetch('/api/users')
-)
+const data = await parseApiResponse<User[]>(fetch("/api/users"))
 
 // Create custom fetch function
 const apiFetch = createFetchFn({
-  baseUrl: '/api',
-  headers: { 'X-Custom-Header': 'value' },
-  credentials: 'include'
+  baseUrl: "/api",
+  headers: { "X-Custom-Header": "value" },
+  credentials: "include",
 })
-const users = await apiFetch<User[]>('/users')
+const users = await apiFetch<User[]>("/users")
 
 // Retry with exponential backoff
-const data = await retryFetch(
-  () => fetch('/api/data').then(r => r.json()),
-  { maxAttempts: 3, initialDelay: 1000 }
-)
+const data = await retryFetch(() => fetch("/api/data").then((r) => r.json()), {
+  maxAttempts: 3,
+  initialDelay: 1000,
+})
 
 // Cache management
 clearAllCache()
@@ -826,15 +825,15 @@ console.log(`Cached items: ${stats.count}, Total size: ${stats.totalSize}`)
 Optimize search queries:
 
 ```typescript
-import { useDebouncedSearch } from '~/utils/data-fetching'
+import { useDebouncedSearch } from "~/utils/data-fetching"
 
 function SearchBar() {
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState("")
   const debouncedQuery = useDebouncedSearch(query, 300)
 
   const { data, isLoading } = useDataFetching<SearchResult[]>({
     url: `/api/search?q=${debouncedQuery}`,
-    enabled: debouncedQuery.length > 2
+    enabled: debouncedQuery.length > 2,
   })
 
   return (
@@ -869,42 +868,44 @@ function SearchBar() {
 ### 1. Error Handling
 
 **DO:**
+
 ```typescript
 // Use standardized wrappers
-export const loader = withLoaderErrorHandling(
-  async () => await getData(),
-  { context: { route: 'my-route' } }
-)
+export const loader = withLoaderErrorHandling(async () => await getData(), {
+  context: { route: "my-route" },
+})
 
 // Use assertion helpers
-const user = assertExists(await getUser(id), 'User', { id })
+const user = assertExists(await getUser(id), "User", { id })
 
 // Use result pattern for optional operations
 const [error, data] = await safeAsync(() => tryOperation())
 ```
 
 **DON'T:**
+
 ```typescript
 // Don't use plain try-catch everywhere
 try {
   const data = await getData()
   return json(data)
 } catch (error) {
-  return json({ error: 'Something went wrong' }, { status: 500 })
+  return json({ error: "Something went wrong" }, { status: 500 })
 }
 
 // Don't throw generic errors
 if (!user) {
-  throw new Error('User not found')
+  throw new Error("User not found")
 }
 ```
 
 ### 2. Validation
 
 **DO:**
+
 ```typescript
 // Use organized schemas
-import { perfumeSchemas } from '~/utils/validation'
+import { perfumeSchemas } from "~/utils/validation"
 const result = perfumeSchemas.create.safeParse(data)
 
 // Validate at boundaries (routes, API endpoints)
@@ -915,10 +916,11 @@ const clean = sanitizeString(userInput)
 ```
 
 **DON'T:**
+
 ```typescript
 // Don't duplicate validation logic
-if (!email || !email.includes('@')) {
-  throw new Error('Invalid email')
+if (!email || !email.includes("@")) {
+  throw new Error("Invalid email")
 }
 
 // Don't skip validation
@@ -931,12 +933,13 @@ const html = `<div>${userInput}</div>` // XSS risk!
 ### 3. Forms
 
 **DO:**
+
 ```typescript
 // Use form utilities
 const { handleSubmit, isSubmitting, errors } = useFormSubmit({
   validate: createValidator({
-    email: commonValidators.email
-  })
+    email: commonValidators.email,
+  }),
 })
 
 // Sanitize form data
@@ -944,6 +947,7 @@ const clean = sanitizeFormData(formData)
 ```
 
 **DON'T:**
+
 ```typescript
 // Don't reinvent form handling
 const [loading, setLoading] = useState(false)
@@ -958,31 +962,33 @@ const handleSubmit = async (e) => {
 ### 4. Data Fetching
 
 **DO:**
+
 ```typescript
 // Use data fetching hooks
 const { data, isLoading, error } = useDataFetching<User[]>({
-  url: '/api/users'
+  url: "/api/users",
 })
 
 // Cache expensive operations
-const cachedFetch = withCache(fetchFn, 'cache-key', 300000)
+const cachedFetch = withCache(fetchFn, "cache-key", 300000)
 
 // Use pagination for large datasets
 const { data, nextPage, meta } = usePaginatedData({
-  baseUrl: '/api/items',
-  pageSize: 20
+  baseUrl: "/api/items",
+  pageSize: 20,
 })
 ```
 
 **DON'T:**
+
 ```typescript
 // Don't fetch data manually every time
 const [data, setData] = useState(null)
 const [loading, setLoading] = useState(false)
 useEffect(() => {
   setLoading(true)
-  fetch('/api/data')
-    .then(r => r.json())
+  fetch("/api/data")
+    .then((r) => r.json())
     .then(setData)
     .finally(() => setLoading(false))
 }, [])
@@ -991,6 +997,7 @@ useEffect(() => {
 ### 5. Type Safety
 
 **DO:**
+
 ```typescript
 // Define interfaces for your data structures
 interface User {
@@ -1008,6 +1015,7 @@ type CreatePerfumeInput = z.infer<typeof perfumeSchemas.create>
 ```
 
 **DON'T:**
+
 ```typescript
 // Don't use 'any'
 const data: any = await fetchData()
@@ -1116,53 +1124,57 @@ clearAllCache()
 ### Migrating to Error Handling Patterns
 
 **Before:**
+
 ```typescript
 export async function loader({ params }: LoaderFunctionArgs) {
   try {
     const data = await getData(params.id)
     return json(data)
   } catch (error) {
-    return json({ error: 'Failed to load data' }, { status: 500 })
+    return json({ error: "Failed to load data" }, { status: 500 })
   }
 }
 ```
 
 **After:**
+
 ```typescript
 export const loader = withLoaderErrorHandling(
   async ({ params }) => {
     const data = await getData(params.id)
     return json(data)
   },
-  { context: { route: 'my-route', operation: 'getData' } }
+  { context: { route: "my-route", operation: "getData" } }
 )
 ```
 
 ### Migrating to Validation Patterns
 
 **Before:**
+
 ```typescript
-if (!email || typeof email !== 'string' || !email.includes('@')) {
-  throw new Error('Invalid email')
+if (!email || typeof email !== "string" || !email.includes("@")) {
+  throw new Error("Invalid email")
 }
 ```
 
 **After:**
+
 ```typescript
-import { commonSchemas, assertValid } from '~/utils/validation'
+import { commonSchemas, assertValid } from "~/utils/validation"
 
 const validEmail = commonSchemas.email.parse(email)
 // or
-assertValid(
-  commonSchemas.email.safeParse(email).success,
-  'Invalid email',
-  { field: 'email', value: email }
-)
+assertValid(commonSchemas.email.safeParse(email).success, "Invalid email", {
+  field: "email",
+  value: email,
+})
 ```
 
 ### Migrating to Form Utilities
 
 **Before:**
+
 ```typescript
 const [loading, setLoading] = useState(false)
 const [errors, setErrors] = useState<Record<string, string>>({})
@@ -1171,21 +1183,21 @@ const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault()
   setLoading(true)
   setErrors({})
-  
+
   const formData = new FormData(e.currentTarget as HTMLFormElement)
-  const email = formData.get('email')
-  
+  const email = formData.get("email")
+
   if (!email) {
-    setErrors({ email: 'Email is required' })
+    setErrors({ email: "Email is required" })
     setLoading(false)
     return
   }
-  
+
   try {
     await submitForm(formData)
-    navigate('/success')
+    navigate("/success")
   } catch (error) {
-    setErrors({ _form: 'Submission failed' })
+    setErrors({ _form: "Submission failed" })
   } finally {
     setLoading(false)
   }
@@ -1193,6 +1205,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 ```
 
 **After:**
+
 ```typescript
 const { handleSubmit, isSubmitting, errors } = useFormSubmit<FormData>({
   validate: createValidator({
@@ -1228,4 +1241,3 @@ For questions or issues with these patterns:
 
 **Last Updated:** November 1, 2025  
 **Version:** 1.0.0
-

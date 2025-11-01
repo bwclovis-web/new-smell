@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from "react"
 
 interface UseInViewOptions {
   threshold?: number | number[]
@@ -13,28 +13,25 @@ export function useInView<T extends Element = Element>(
   const [isInView, setIsInView] = useState(false)
   const observerRef = useRef<IntersectionObserver | null>(null)
 
-  const { threshold = 0, rootMargin = '0px', root = null } = options
+  const { threshold = 0, rootMargin = "0px", root = null } = options
 
-  const callback = useCallback(
-    (entries: IntersectionObserverEntry[]) => {
-      const [entry] = entries
-      setIsInView(entry.isIntersecting)
-    },
-    []
-  )
+  const callback = useCallback((entries: IntersectionObserverEntry[]) => {
+    const [entry] = entries
+    setIsInView(entry.isIntersecting)
+  }, [])
 
   useEffect(() => {
     const element = ref.current
     if (!element) {
- return 
-}
+      return
+    }
 
     // Create observer if it doesn't exist
     if (!observerRef.current) {
       observerRef.current = new IntersectionObserver(callback, {
         threshold,
         rootMargin,
-        root
+        root,
       })
     }
 
@@ -48,9 +45,7 @@ export function useInView<T extends Element = Element>(
         observerRef.current = null
       }
     }
-  }, [
-ref, callback, threshold, rootMargin, root
-])
+  }, [ref, callback, threshold, rootMargin, root])
 
   return isInView
 }

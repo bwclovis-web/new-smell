@@ -1,24 +1,31 @@
-import type { LoaderFunctionArgs } from 'react-router'
+import type { LoaderFunctionArgs } from "react-router"
 
-import { getHousesByLetterPaginated } from '~/models/house.server'
+import { getHousesByLetterPaginated } from "~/models/house.server"
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
-  const letter = url.searchParams.get('letter')
-  const houseType = url.searchParams.get('houseType') || 'all'
-  const skip = parseInt(url.searchParams.get('skip') || '0', 10)
-  const take = parseInt(url.searchParams.get('take') || '12', 10)
+  const letter = url.searchParams.get("letter")
+  const houseType = url.searchParams.get("houseType") || "all"
+  const skip = parseInt(url.searchParams.get("skip") || "0", 10)
+  const take = parseInt(url.searchParams.get("take") || "12", 10)
 
   if (!letter || !/^[A-Za-z]$/.test(letter)) {
-    return Response.json({
-      success: false,
-      message: 'Valid letter parameter is required',
-      houses: []
-    }, { status: 400 })
+    return Response.json(
+      {
+        success: false,
+        message: "Valid letter parameter is required",
+        houses: [],
+      },
+      { status: 400 }
+    )
   }
 
   try {
-    const houses = await getHousesByLetterPaginated(letter.toUpperCase(), { skip, take, houseType })
+    const houses = await getHousesByLetterPaginated(letter.toUpperCase(), {
+      skip,
+      take,
+      houseType,
+    })
 
     return Response.json({
       success: true,
@@ -30,16 +37,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
         skip,
         take,
         hasMore: skip + houses.houses.length < houses.count,
-        totalCount: houses.count
-      }
+        totalCount: houses.count,
+      },
     })
   } catch (error) {
-    const { ErrorHandler } = await import('~/utils/errorHandling')
-    const appError = ErrorHandler.handle(error, { api: 'houses-by-letter-paginated', letter, houseType, skip, take })
-    return Response.json({
-      success: false,
-      message: appError.userMessage,
-      houses: []
-    }, { status: 500 })
+    const { ErrorHandler } = await import("~/utils/errorHandling")
+    const appError = ErrorHandler.handle(error, {
+      api: "houses-by-letter-paginated",
+      letter,
+      houseType,
+      skip,
+      take,
+    })
+    return Response.json(
+      {
+        success: false,
+        message: appError.userMessage,
+        houses: [],
+      },
+      { status: 500 }
+    )
   }
 }

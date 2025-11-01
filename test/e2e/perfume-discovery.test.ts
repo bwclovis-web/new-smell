@@ -1,17 +1,17 @@
-import { expect, test } from '@playwright/test'
+import { expect, test } from "@playwright/test"
 
-import { PerfumePage } from './pages/PerfumePage'
-import { VaultPage } from './pages/VaultPage'
+import { PerfumePage } from "./pages/PerfumePage"
+import { VaultPage } from "./pages/VaultPage"
 
-test.describe('Perfume Discovery Flows', () => {
-  test.describe('Advanced Search', () => {
-    test('should search perfumes by name', async ({ page }) => {
+test.describe("Perfume Discovery Flows", () => {
+  test.describe("Advanced Search", () => {
+    test("should search perfumes by name", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
       await vaultPage.waitForPerfumesToLoad()
 
       // Search for a specific perfume
-      await vaultPage.search('rose')
+      await vaultPage.search("rose")
       await vaultPage.waitForLoadingComplete()
 
       // Verify results contain the search term
@@ -19,10 +19,10 @@ test.describe('Perfume Discovery Flows', () => {
       expect(count).toBeGreaterThan(0)
 
       // Take screenshot for visual verification
-      await vaultPage.takeScreenshot('search-by-name')
+      await vaultPage.takeScreenshot("search-by-name")
     })
 
-    test('should search perfumes with special characters', async ({ page }) => {
+    test("should search perfumes with special characters", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
 
@@ -34,12 +34,12 @@ test.describe('Perfume Discovery Flows', () => {
       await vaultPage.assertPageLoaded()
     })
 
-    test('should handle empty search', async ({ page }) => {
+    test("should handle empty search", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
 
       // Search with empty string
-      await vaultPage.search('')
+      await vaultPage.search("")
       await vaultPage.waitForLoadingComplete()
 
       // Should show all perfumes
@@ -47,16 +47,16 @@ test.describe('Perfume Discovery Flows', () => {
       expect(count).toBeGreaterThan(0)
     })
 
-    test('should clear search results', async ({ page }) => {
+    test("should clear search results", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
 
       // Perform search
-      await vaultPage.search('rose')
+      await vaultPage.search("rose")
       await vaultPage.waitForLoadingComplete()
 
       // Clear search
-      await vaultPage.search('')
+      await vaultPage.search("")
       await vaultPage.waitForLoadingComplete()
 
       // Should show all perfumes again
@@ -64,17 +64,17 @@ test.describe('Perfume Discovery Flows', () => {
       expect(count).toBeGreaterThan(0)
     })
 
-    test('should search and then filter results', async ({ page }) => {
+    test("should search and then filter results", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
 
       // First search
-      await vaultPage.search('perfume')
+      await vaultPage.search("perfume")
       await vaultPage.waitForLoadingComplete()
       const searchCount = await vaultPage.getPerfumeCardCount()
 
       // Then apply letter filter
-      await vaultPage.clickLetterFilter('A')
+      await vaultPage.clickLetterFilter("A")
       await vaultPage.waitForLoadingComplete()
       const filteredCount = await vaultPage.getPerfumeCardCount()
 
@@ -83,14 +83,14 @@ test.describe('Perfume Discovery Flows', () => {
     })
   })
 
-  test.describe('Filtering & Sorting', () => {
-    test('should filter perfumes alphabetically', async ({ page }) => {
+  test.describe("Filtering & Sorting", () => {
+    test("should filter perfumes alphabetically", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
       await vaultPage.waitForPerfumesToLoad()
 
       // Test different letter filters
-      const letters = ['A', 'B', 'C']
+      const letters = ["A", "B", "C"]
 
       for (const letter of letters) {
         await vaultPage.clickLetterFilter(letter)
@@ -103,51 +103,55 @@ test.describe('Perfume Discovery Flows', () => {
       }
     })
 
-    test('should sort perfumes by name ascending', async ({ page }) => {
+    test("should sort perfumes by name ascending", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
       await vaultPage.waitForPerfumesToLoad()
 
       // Sort by name ascending
-      await vaultPage.selectSort('name-asc')
+      await vaultPage.selectSort("name-asc")
       await vaultPage.waitForLoadingComplete()
 
       // Get all perfume names
-      const names = await page.$$eval('[data-testid="perfume-card"]', cards => cards.map(card => card.textContent?.trim() || ''))
+      const names = await page.$$eval('[data-testid="perfume-card"]', (cards) =>
+        cards.map((card) => card.textContent?.trim() || "")
+      )
 
       // Verify they are sorted
       const sortedNames = [...names].sort()
       expect(names).toEqual(sortedNames)
     })
 
-    test('should sort perfumes by name descending', async ({ page }) => {
+    test("should sort perfumes by name descending", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
       await vaultPage.waitForPerfumesToLoad()
 
       // Sort by name descending
-      await vaultPage.selectSort('name-desc')
+      await vaultPage.selectSort("name-desc")
       await vaultPage.waitForLoadingComplete()
 
       // Get all perfume names
-      const names = await page.$$eval('[data-testid="perfume-card"]', cards => cards.map(card => card.textContent?.trim() || ''))
+      const names = await page.$$eval('[data-testid="perfume-card"]', (cards) =>
+        cards.map((card) => card.textContent?.trim() || "")
+      )
 
       // Verify they are sorted in descending order
       const sortedNames = [...names].sort().reverse()
       expect(names).toEqual(sortedNames)
     })
 
-    test('should combine filters and sorting', async ({ page }) => {
+    test("should combine filters and sorting", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
       await vaultPage.waitForPerfumesToLoad()
 
       // Apply letter filter first
-      await vaultPage.clickLetterFilter('A')
+      await vaultPage.clickLetterFilter("A")
       await vaultPage.waitForLoadingComplete()
 
       // Then sort
-      await vaultPage.selectSort('name-asc')
+      await vaultPage.selectSort("name-asc")
       await vaultPage.waitForLoadingComplete()
 
       // Should have filtered and sorted results
@@ -156,8 +160,8 @@ test.describe('Perfume Discovery Flows', () => {
     })
   })
 
-  test.describe('Perfume Navigation', () => {
-    test('should navigate from vault to perfume detail', async ({ page }) => {
+  test.describe("Perfume Navigation", () => {
+    test("should navigate from vault to perfume detail", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -176,7 +180,7 @@ test.describe('Perfume Discovery Flows', () => {
       expect(name.length).toBeGreaterThan(0)
     })
 
-    test('should navigate between perfumes', async ({ page }) => {
+    test("should navigate between perfumes", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -201,7 +205,7 @@ test.describe('Perfume Discovery Flows', () => {
       expect(firstName).not.toEqual(secondName)
     })
 
-    test('should preserve filter state when returning from detail', async ({
+    test("should preserve filter state when returning from detail", async ({
       page,
     }) => {
       const vaultPage = new VaultPage(page)
@@ -211,7 +215,7 @@ test.describe('Perfume Discovery Flows', () => {
       await vaultPage.waitForPerfumesToLoad()
 
       // Apply filter
-      await vaultPage.clickLetterFilter('A')
+      await vaultPage.clickLetterFilter("A")
       await vaultPage.waitForLoadingComplete()
 
       // Click on a perfume
@@ -224,12 +228,12 @@ test.describe('Perfume Discovery Flows', () => {
       // Filter should still be applied
       await vaultPage.assertPageLoaded()
       const url = page.url()
-      expect(url).toContain('A')
+      expect(url).toContain("A")
     })
   })
 
-  test.describe('Perfume Details', () => {
-    test('should display perfume information', async ({ page }) => {
+  test.describe("Perfume Details", () => {
+    test("should display perfume information", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -244,10 +248,10 @@ test.describe('Perfume Discovery Flows', () => {
       expect(name).toBeTruthy()
 
       // Take screenshot
-      await perfumePage.takeScreenshot('perfume-details')
+      await perfumePage.takeScreenshot("perfume-details")
     })
 
-    test('should show perfume house information', async ({ page }) => {
+    test("should show perfume house information", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -258,11 +262,13 @@ test.describe('Perfume Discovery Flows', () => {
       await perfumePage.waitForPerfumeData()
 
       // Check that perfume house is displayed
-      const hasHouse = await page.locator('[data-testid="perfume-house"]').isVisible()
+      const hasHouse = await page
+        .locator('[data-testid="perfume-house"]')
+        .isVisible()
       expect(hasHouse).toBeTruthy()
     })
 
-    test('should display perfume image', async ({ page }) => {
+    test("should display perfume image", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -277,21 +283,21 @@ test.describe('Perfume Discovery Flows', () => {
       await expect(image).toBeVisible()
     })
 
-    test('should handle missing perfume data gracefully', async ({ page }) => {
+    test("should handle missing perfume data gracefully", async ({ page }) => {
       const perfumePage = new PerfumePage(page)
 
       // Navigate to non-existent perfume
-      await page.goto('/perfume/non-existent-perfume-12345')
+      await page.goto("/perfume/non-existent-perfume-12345")
 
       // Should show error or not found message
-      await expect(page.locator('text=not found')).toBeVisible({
+      await expect(page.locator("text=not found")).toBeVisible({
         timeout: 10000,
       })
     })
   })
 
-  test.describe('Pagination & Lazy Loading', () => {
-    test('should load more perfumes on scroll', async ({ page }) => {
+  test.describe("Pagination & Lazy Loading", () => {
+    test("should load more perfumes on scroll", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
       await vaultPage.waitForPerfumesToLoad()
@@ -308,7 +314,7 @@ test.describe('Perfume Discovery Flows', () => {
       expect(newCount).toBeGreaterThanOrEqual(initialCount)
     })
 
-    test('should handle rapid scrolling', async ({ page }) => {
+    test("should handle rapid scrolling", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
       await vaultPage.waitForPerfumesToLoad()
@@ -324,32 +330,28 @@ test.describe('Perfume Discovery Flows', () => {
     })
   })
 
-  test.describe('No Results Scenarios', () => {
-    test('should show no results message for invalid search', async ({
-      page,
-    }) => {
+  test.describe("No Results Scenarios", () => {
+    test("should show no results message for invalid search", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
 
       // Search for something that doesn't exist
-      await vaultPage.search('xyznonexistentperfume999')
+      await vaultPage.search("xyznonexistentperfume999")
       await vaultPage.waitForLoadingComplete()
 
       // Should show no results message
       const hasNoResults = await vaultPage.hasNoResultsMessage()
       expect(hasNoResults).toBe(true)
 
-      await vaultPage.takeScreenshot('no-results')
+      await vaultPage.takeScreenshot("no-results")
     })
 
-    test('should provide search suggestions when no results', async ({
-      page,
-    }) => {
+    test("should provide search suggestions when no results", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
 
       // Search for something that doesn't exist
-      await vaultPage.search('xyznonexistentperfume999')
+      await vaultPage.search("xyznonexistentperfume999")
       await vaultPage.waitForLoadingComplete()
 
       // Should show the page without errors
@@ -357,10 +359,10 @@ test.describe('Perfume Discovery Flows', () => {
     })
   })
 
-  test.describe('Mobile Perfume Discovery', () => {
+  test.describe("Mobile Perfume Discovery", () => {
     test.use({ viewport: { width: 375, height: 667 } })
 
-    test('should work correctly on mobile', async ({ page }) => {
+    test("should work correctly on mobile", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
       await vaultPage.waitForPerfumesToLoad()
@@ -369,33 +371,33 @@ test.describe('Perfume Discovery Flows', () => {
       const count = await vaultPage.getPerfumeCardCount()
       expect(count).toBeGreaterThan(0)
 
-      await vaultPage.takeScreenshot('mobile-vault')
+      await vaultPage.takeScreenshot("mobile-vault")
     })
 
-    test('should search on mobile', async ({ page }) => {
+    test("should search on mobile", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
 
-      await vaultPage.search('rose')
+      await vaultPage.search("rose")
       await vaultPage.waitForLoadingComplete()
 
       const count = await vaultPage.getPerfumeCardCount()
       expect(count).toBeGreaterThan(0)
     })
 
-    test('should filter on mobile', async ({ page }) => {
+    test("should filter on mobile", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       await vaultPage.navigateTo()
       await vaultPage.waitForPerfumesToLoad()
 
-      await vaultPage.clickLetterFilter('A')
+      await vaultPage.clickLetterFilter("A")
       await vaultPage.waitForLoadingComplete()
 
       const count = await vaultPage.getPerfumeCardCount()
       expect(count).toBeGreaterThanOrEqual(0)
     })
 
-    test('should navigate to perfume detail on mobile', async ({ page }) => {
+    test("should navigate to perfume detail on mobile", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -409,8 +411,8 @@ test.describe('Perfume Discovery Flows', () => {
     })
   })
 
-  test.describe('Performance', () => {
-    test('should load vault page within acceptable time', async ({ page }) => {
+  test.describe("Performance", () => {
+    test("should load vault page within acceptable time", async ({ page }) => {
       const startTime = Date.now()
 
       const vaultPage = new VaultPage(page)
@@ -423,9 +425,7 @@ test.describe('Perfume Discovery Flows', () => {
       expect(loadTime).toBeLessThan(5000)
     })
 
-    test('should load perfume detail within acceptable time', async ({
-      page,
-    }) => {
+    test("should load perfume detail within acceptable time", async ({ page }) => {
       const vaultPage = new VaultPage(page)
       const perfumePage = new PerfumePage(page)
 
@@ -442,4 +442,3 @@ test.describe('Perfume Discovery Flows', () => {
     })
   })
 })
-

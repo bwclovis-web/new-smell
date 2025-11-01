@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react"
 
 export interface UseFormStateOptions<T> {
   initialValues: T
@@ -26,7 +26,7 @@ export interface UseFormStateReturn<T> {
 
 /**
  * Custom hook for managing form state with validation
- * 
+ *
  * @param options - Configuration options for the form
  * @returns Form state and handlers
  */
@@ -34,7 +34,7 @@ export const useFormState = <T extends Record<string, any>>({
   initialValues,
   validate,
   onSubmit,
-  resetOnSubmit = false
+  resetOnSubmit = false,
 }: UseFormStateOptions<T>): UseFormStateReturn<T> => {
   const [values, setValuesState] = useState<T>(initialValues)
   const [errors, setErrorsState] = useState<Partial<Record<keyof T, string>>>({})
@@ -46,7 +46,7 @@ export const useFormState = <T extends Record<string, any>>({
 
   // Set individual field value
   const setValue = <K extends keyof T>(field: K, value: T[K]) => {
-    setValuesState(prev => {
+    setValuesState((prev) => {
       const newValues = { ...prev, [field]: value }
       setIsDirty(true)
       return newValues
@@ -54,7 +54,7 @@ export const useFormState = <T extends Record<string, any>>({
 
     // Clear error for this field when user starts typing
     if (errors[field]) {
-      setErrorsState(prev => {
+      setErrorsState((prev) => {
         const newErrors = { ...prev }
         delete newErrors[field]
         return newErrors
@@ -64,7 +64,7 @@ export const useFormState = <T extends Record<string, any>>({
 
   // Set multiple field values
   const setValues = (newValues: Partial<T>) => {
-    setValuesState(prev => {
+    setValuesState((prev) => {
       const updated = { ...prev, ...newValues }
       setIsDirty(true)
       return updated
@@ -73,23 +73,23 @@ export const useFormState = <T extends Record<string, any>>({
 
   // Set individual field error
   const setError = <K extends keyof T>(field: K, error: string) => {
-    setErrorsState(prev => ({
+    setErrorsState((prev) => ({
       ...prev,
-      [field]: error
+      [field]: error,
     }))
   }
 
   // Set multiple field errors
   const setErrors = (newErrors: Partial<Record<keyof T, string>>) => {
-    setErrorsState(prev => ({
+    setErrorsState((prev) => ({
       ...prev,
-      ...newErrors
+      ...newErrors,
     }))
   }
 
   // Clear individual field error
   const clearError = <K extends keyof T>(field: K) => {
-    setErrorsState(prev => {
+    setErrorsState((prev) => {
       const newErrors = { ...prev }
       delete newErrors[field]
       return newErrors
@@ -104,8 +104,8 @@ export const useFormState = <T extends Record<string, any>>({
   // Validate form
   const validateForm = (): boolean => {
     if (!validate) {
- return true 
-}
+      return true
+    }
 
     const validationErrors = validate(values)
     const hasErrors = Object.keys(validationErrors).length > 0
@@ -130,8 +130,8 @@ export const useFormState = <T extends Record<string, any>>({
     }
 
     if (!onSubmit) {
- return 
-}
+      return
+    }
 
     setIsSubmitting(true)
     try {
@@ -140,7 +140,7 @@ export const useFormState = <T extends Record<string, any>>({
         reset()
       }
     } catch (error) {
-      console.error('Form submission error:', error)
+      console.error("Form submission error:", error)
     } finally {
       setIsSubmitting(false)
     }
@@ -174,7 +174,7 @@ export const useFormState = <T extends Record<string, any>>({
     clearErrors,
     handleSubmit,
     reset,
-    validate: validateForm
+    validate: validateForm,
   }
 }
 

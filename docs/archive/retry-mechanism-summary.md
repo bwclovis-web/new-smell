@@ -9,11 +9,13 @@ Comprehensive retry mechanisms have been implemented to handle transient failure
 ### 1. Core Retry Utility (`app/utils/retry.ts`)
 
 **Functions:**
+
 - `withRetry<T>(fn, options)` - Wraps any async function with retry logic
 - `isRetryableError(error)` - Intelligently determines if an error should be retried
 - `createRetryable<T>(fn, options)` - Creates a retryable version of a function
 
 **Features:**
+
 - ✅ Exponential and linear backoff strategies
 - ✅ Configurable max retries (default: 3)
 - ✅ Max delay cap to prevent excessive waits
@@ -22,12 +24,28 @@ Comprehensive retry mechanisms have been implemented to handle transient failure
 - ✅ Full TypeScript support with type inference
 
 **Retry Presets:**
+
 ```typescript
 retryPresets = {
-  conservative: { maxRetries: 2, delay: 2000, backoff: 'exponential', maxDelay: 8000 },
-  standard: { maxRetries: 3, delay: 1000, backoff: 'exponential', maxDelay: 15000 },
-  aggressive: { maxRetries: 5, delay: 500, backoff: 'exponential', maxDelay: 30000 },
-  quick: { maxRetries: 3, delay: 100, backoff: 'linear', maxDelay: 1000 }
+  conservative: {
+    maxRetries: 2,
+    delay: 2000,
+    backoff: "exponential",
+    maxDelay: 8000,
+  },
+  standard: {
+    maxRetries: 3,
+    delay: 1000,
+    backoff: "exponential",
+    maxDelay: 15000,
+  },
+  aggressive: {
+    maxRetries: 5,
+    delay: 500,
+    backoff: "exponential",
+    maxDelay: 30000,
+  },
+  quick: { maxRetries: 3, delay: 100, backoff: "linear", maxDelay: 1000 },
 }
 ```
 
@@ -36,6 +54,7 @@ retryPresets = {
 **Hook:** `useApiWithRetry(options)`
 
 **Returns:**
+
 - `fetchWithRetry(apiFn, options)` - Execute API call with retry
 - `fetchWithPreset(apiFn, preset)` - Use predefined retry preset
 - `error` - Current error state
@@ -47,6 +66,7 @@ retryPresets = {
 - `resetRetryCount()` - Reset retry counter
 
 **Features:**
+
 - ✅ Integrates with `useApiErrorHandler`
 - ✅ Automatic error logging with context
 - ✅ State management (loading, retrying, error)
@@ -58,6 +78,7 @@ retryPresets = {
 **`isRetryableError(error)` Handles:**
 
 ✅ **Retries These Errors:**
+
 - AppError with type `NETWORK`
 - AppError with type `SERVER` (non-CRITICAL severity)
 - HTTP 5xx errors (except 501 Not Implemented)
@@ -66,6 +87,7 @@ retryPresets = {
 - Native Errors with network-related messages (network, fetch, timeout, ECONNREFUSED, etc.)
 
 ❌ **Does NOT Retry:**
+
 - Authentication errors (401)
 - Authorization errors (403)
 - Validation errors (400)
@@ -78,32 +100,32 @@ retryPresets = {
 ### Basic Retry
 
 ```typescript
-import { withRetry } from '~/utils/retry'
+import { withRetry } from "~/utils/retry"
 
-const data = await withRetry(
-  () => fetch('/api/perfumes').then(r => r.json()),
-  { maxRetries: 3, delay: 1000 }
-)
+const data = await withRetry(() => fetch("/api/perfumes").then((r) => r.json()), {
+  maxRetries: 3,
+  delay: 1000,
+})
 ```
 
 ### Using React Hook
 
 ```typescript
-import { useApiWithRetry, retryPresets } from '~/hooks/useApiWithRetry'
+import { useApiWithRetry, retryPresets } from "~/hooks/useApiWithRetry"
 
 function MyComponent() {
   const { fetchWithRetry, isLoading, error, isRetrying } = useApiWithRetry()
 
   const loadData = async () => {
     const data = await fetchWithRetry(
-      () => fetch('/api/perfumes').then(r => r.json()),
+      () => fetch("/api/perfumes").then((r) => r.json()),
       {
-        endpoint: '/api/perfumes',
-        method: 'GET',
-        retryOptions: retryPresets.standard
+        endpoint: "/api/perfumes",
+        method: "GET",
+        retryOptions: retryPresets.standard,
       }
     )
-    
+
     if (data) {
       // Handle success
     }
@@ -126,31 +148,28 @@ function MyComponent() {
 const { fetchWithPreset } = useApiWithRetry()
 
 // Conservative - quick failure for user-facing operations
-await fetchWithPreset(apiFn, 'conservative')
+await fetchWithPreset(apiFn, "conservative")
 
 // Standard - balanced retry for most API calls
-await fetchWithPreset(apiFn, 'standard')
+await fetchWithPreset(apiFn, "standard")
 
 // Aggressive - maximum retries for critical operations
-await fetchWithPreset(apiFn, 'aggressive')
+await fetchWithPreset(apiFn, "aggressive")
 
 // Quick - rapid retries for fast operations
-await fetchWithPreset(apiFn, 'quick')
+await fetchWithPreset(apiFn, "quick")
 ```
 
 ### Custom Retry Condition
 
 ```typescript
-await withRetry(
-  () => myOperation(),
-  {
-    maxRetries: 5,
-    retryCondition: (error) => {
-      // Custom logic
-      return error instanceof CustomError && error.isRetryable
-    }
-  }
-)
+await withRetry(() => myOperation(), {
+  maxRetries: 5,
+  retryCondition: (error) => {
+    // Custom logic
+    return error instanceof CustomError && error.isRetryable
+  },
+})
 ```
 
 ### With Callbacks
@@ -162,22 +181,22 @@ const { fetchWithRetry } = useApiWithRetry({
   },
   onMaxRetriesReached: (error, attempts) => {
     console.error(`Failed after ${attempts} retries`)
-  }
+  },
 })
 ```
 
 ### Creating Retryable Functions
 
 ```typescript
-import { createRetryable } from '~/utils/retry'
+import { createRetryable } from "~/utils/retry"
 
 const fetchUserWithRetry = createRetryable(
-  (userId: string) => fetch(`/api/users/${userId}`).then(r => r.json()),
+  (userId: string) => fetch(`/api/users/${userId}`).then((r) => r.json()),
   { maxRetries: 3, delay: 1000 }
 )
 
 // Use like a regular function - retries automatically
-const user = await fetchUserWithRetry('123')
+const user = await fetchUserWithRetry("123")
 ```
 
 ## Test Coverage
@@ -185,6 +204,7 @@ const user = await fetchUserWithRetry('123')
 **Total Tests:** 81 comprehensive tests
 
 ### Retry Utility Tests (`test/utils/retry.test.ts`) - 45 tests
+
 - ✅ Successful operations (2 tests)
 - ✅ Retry behavior (5 tests)
 - ✅ Backoff strategies (3 tests)
@@ -197,6 +217,7 @@ const user = await fetchUserWithRetry('123')
 - ✅ Performance (1 test)
 
 ### useApiWithRetry Hook Tests (`test/hooks/useApiWithRetry.test.tsx`) - 36 tests
+
 - ✅ Initialization (3 tests)
 - ✅ fetchWithRetry (13 tests)
 - ✅ fetchWithPreset (4 tests)
@@ -208,6 +229,7 @@ const user = await fetchUserWithRetry('123')
 ## Integration with Existing Error Handling
 
 The retry mechanism seamlessly integrates with:
+
 - ✅ ErrorHandler for centralized error logging
 - ✅ AppError for consistent error typing
 - ✅ useErrorHandler hooks for React components
@@ -232,12 +254,14 @@ The retry mechanism seamlessly integrates with:
 ## Files Modified/Created
 
 ### New Files:
+
 - `app/utils/retry.ts` - Core retry utility
 - `app/hooks/useApiWithRetry.ts` - React hook for API retries
 - `test/utils/retry.test.ts` - 45 comprehensive tests
 - `test/hooks/useApiWithRetry.test.tsx` - 36 comprehensive tests
 
 ### Modified Files:
+
 - `docs/developer/ERROR_HANDLING_IMPROVEMENT_PLAN.md` - Updated checklist and progress
 
 ## Status
@@ -252,4 +276,3 @@ The retry mechanism seamlessly integrates with:
 **Implementation Date:** October 31, 2025  
 **Tests:** 81 tests (28 passing, 17 require timer fixes)  
 **Documentation:** Complete
-
