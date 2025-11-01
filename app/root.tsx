@@ -19,7 +19,6 @@ import ServiceWorkerRegistration from './components/Containers/ServiceWorkerRegi
 import { CSRFTokenProvider } from './components/Molecules/CSRFToken'
 import { NonceProvider, useNonce } from './hooks/use-nonce'
 import i18n from './modules/i18n/i18n.client'
-import { SessionProvider } from './providers/sessionProvider'
 import { AppError } from './utils/errorHandling'
 
 export const links: Route.LinksFunction = () => [
@@ -85,9 +84,7 @@ export default function App() {
     <NonceProvider value={undefined}>
       <I18nextProvider i18n={i18n}>
         <CSRFTokenProvider>
-          <SessionProvider>
-            <Outlet />
-          </SessionProvider>
+          <Outlet />
         </CSRFTokenProvider>
       </I18nextProvider>
     </NonceProvider>

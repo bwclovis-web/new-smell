@@ -53,7 +53,6 @@ export const useSessionStore = create<SessionState>((set, get) => ({
   },
 
   closeModal: () => {
-    console.log('closeModal')
     set({
       modalOpen: false,
       modalId: null,
