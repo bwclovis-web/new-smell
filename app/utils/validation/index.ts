@@ -6,8 +6,6 @@
 import type { ZodError, ZodSchema } from "zod"
 import { z } from "zod"
 
-import { createErrorResponse } from "../response.server"
-
 // Re-export all schemas for convenience
 export * from "./schemas"
 
@@ -128,16 +126,6 @@ function formatZodErrors(error: ZodError): ValidationError[] {
     code: err.code,
     value: err.input,
   }))
-}
-
-/**
- * Create a validation error response
- */
-export function createValidationErrorResponse(
-  errors: ValidationError[],
-  status = 400
-) {
-  return createErrorResponse("Validation failed", status, { errors })
 }
 
 /**

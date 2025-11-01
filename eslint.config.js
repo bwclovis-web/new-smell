@@ -88,6 +88,72 @@ export default defineConfig([
     rules: {
       "@typescript-eslint/no-require-imports": ["error", { allowAsImport: true }],
       "@typescript-eslint/no-var-requires": "off",
+      // Enforce naming conventions
+      "@typescript-eslint/naming-convention": [
+        "error",
+        // Variables and function parameters: camelCase
+        {
+          selector: "variable",
+          format: ["camelCase", "PascalCase", "UPPER_CASE"],
+          filter: {
+            regex: "^_",
+            match: false,
+          },
+        },
+        // Functions: camelCase
+        {
+          selector: "function",
+          format: ["camelCase", "PascalCase"],
+        },
+        // Classes: PascalCase
+        {
+          selector: "class",
+          format: ["PascalCase"],
+        },
+        // Interfaces: PascalCase (no "I" prefix - modern TypeScript style)
+        {
+          selector: "interface",
+          format: ["PascalCase"],
+        },
+        // Type aliases: PascalCase
+        {
+          selector: "typeAlias",
+          format: ["PascalCase"],
+        },
+        // Enums: PascalCase
+        {
+          selector: "enum",
+          format: ["PascalCase"],
+        },
+        // Enum members: PascalCase or UPPER_CASE (allow both)
+        {
+          selector: "enumMember",
+          format: ["PascalCase", "UPPER_CASE"],
+        },
+        // Private class members: allow leading underscore
+        {
+          selector: "classProperty",
+          modifiers: ["private"],
+          format: ["camelCase"],
+          leadingUnderscore: "allow",
+        },
+        {
+          selector: "classMethod",
+          modifiers: ["private"],
+          format: ["camelCase"],
+          leadingUnderscore: "allow",
+        },
+        // Constants: UPPER_CASE (const declarations that are not reassigned)
+        {
+          selector: "variable",
+          modifiers: ["const"],
+          format: ["camelCase", "PascalCase", "UPPER_CASE"],
+          filter: {
+            regex: "^_",
+            match: false,
+          },
+        },
+      ],
     },
   },
   { files: ["**/*.{jsx,tsx}"], ...jsxA11y.flatConfigs.recommended },

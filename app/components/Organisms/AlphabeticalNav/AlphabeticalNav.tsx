@@ -3,7 +3,7 @@ import { getAlphabetLetters } from "~/utils/sortUtils"
 
 interface AlphabeticalNavProps {
   selectedLetter: string | null
-  // eslint-disable-next-line no-unused-vars
+   
   onLetterSelect: (letter: string | null) => void
   className?: string
 }

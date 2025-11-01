@@ -3,7 +3,7 @@ import { Button } from "~/components/Atoms/Button/Button"
 interface TagListProps {
   selectedTags: any[]
   label?: string
-  // eslint-disable-next-line no-unused-vars
+   
   onRemoveTag?: (tagId: string) => void
 }
 

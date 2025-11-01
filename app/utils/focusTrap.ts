@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+ 
 
 type FocusTrapFunction = (
   root: HTMLDivElement | HTMLUListElement | null,

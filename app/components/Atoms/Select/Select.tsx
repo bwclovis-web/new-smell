@@ -9,7 +9,7 @@ interface SelectProps
   extends Omit<HTMLProps<HTMLSelectElement>, "action" | "size">,
     VariantProps<typeof selectWrapperVariants> {
   selectId: string
-  // eslint-disable-next-line no-unused-vars
+   
   action?: (evt: ChangeEvent<HTMLSelectElement>) => void
   defaultId?: string | number
   ariaLabel?: string
