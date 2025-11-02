@@ -62,7 +62,7 @@ const Select = ({
             key={item.id}
             value={item.id}
             selected={item.id === defaultId}
-            className="bg-noir-dark"
+            className="bg-noir-dark w-full"
           >
             {item.label}
           </option>
