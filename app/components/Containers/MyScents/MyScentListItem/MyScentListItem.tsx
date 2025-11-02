@@ -39,7 +39,8 @@ const MyScentsListItem = ({
   const isSubmitting = navigation.state === "submitting"
 
   const updateUserPerfumeState = (amount: string) => {
-    setUserPerfumes(prev => prev.map(perfume => perfume.id === userPerfume.id ? { ...perfume, available: amount } : perfume))
+    setUserPerfumes(prev =>  prev.map(perfume => perfume.id === userPerfume.id ? 
+        { ...perfume, available: amount } : perfume))
   }
 
   const createDecantFormData = (data: DeStashData, perfumeId: string) => {

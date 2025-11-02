@@ -11,6 +11,7 @@ import { ROUTE_PATH as ADMIN_PATH } from "~/routes/admin/profilePage"
 import { ROUTE_PATH as SIGN_IN } from "~/routes/login/SignInPage"
 import { styleMerge } from "~/utils/styleUtils"
 
+import logo from "../../../images/navlogo.webp"
 import AboutDropdown from "../AboutDropdown/AboutDropdown"
 import LogoutButton from "../LogoutButton/LogoutButton"
 import { globalNavigationVariants } from "./globalNavigation-variants"
@@ -25,7 +26,7 @@ interface GlobalNavigationProps
 }
 
 const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
-  const { t, ready } = useTranslation()
+  const { t, ready } = useTranslation() 
   const [isClientReady, setIsClientReady] = useState(false)
 
   useEffect(() => {
@@ -60,14 +61,14 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
         
       </div>
       <nav
-        className="hidden md:flex justify-between inner-container py-5"
+        className="hidden md:flex justify-between inner-container"
         data-cy="GlobalNavigation"
       >
         <NavLink
           to="/"
-          className="text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400"
+          className="text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 border border-transparent transition-colors duration-400"
         >
-          {logoText}
+          <img src={logo} alt={logoText} className="w-40 h-25" />
         </NavLink>
         <ul className="flex gap-4 items-center tracking-wide max-w-max">
         <li>
