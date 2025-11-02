@@ -12,11 +12,14 @@ import {
   useOutletContext,
 } from "react-router"
 
-import { Button, VooDooLink } from "~/components/Atoms/Button/Button"
+  import { VooDooLink } from "~/components/Atoms/Button"
 import PerfumeHouseAddressBlock from "~/components/Containers/PerfumeHouse/AddressBlock/PerfumeHouseAddressBlock"
 import { useInfiniteScroll } from "~/hooks/useInfiniteScroll"
 import { getPerfumeHouseBySlug } from "~/models/house.server"
-
+import { useSessionStore } from "~/stores/sessionStore"
+import Modal from "~/components/Organisms/Modal"
+import DangerModal from "~/components/Organisms/DangerModal"
+import { Button } from "~/components/Atoms/Button"
 const ALL_HOUSES = "/behind-the-bottle"
 const BEHIND_THE_BOTTLE = "/behind-the-bottle"
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -58,7 +61,7 @@ const HouseDetailPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-
+  const { modalOpen, toggleModal, modalId,closeModal } = useSessionStore()
   // Get selectedLetter from navigation state
   const selectedLetter = (location.state as { selectedLetter?: string })
     ?.selectedLetter
@@ -74,11 +77,22 @@ const HouseDetailPage = () => {
     const url = `/api/deleteHouse?id=${perfumeHouse.id}`
     const res = await fetch(url)
     if (res.ok) {
+      closeModal()
       navigate(ALL_HOUSES)
     }
   }
 
   return (
+    <>
+    {modalOpen && modalId === "delete-perfume-house-item" && (
+      <Modal innerType="dark" animateStart="top">
+        <DangerModal
+        heading="Are you sure you want to delete this perfume house?"
+        description="Once deleted, you will lose all perfumes and history associated with this house."
+        action={handleDelete} />
+
+      </Modal>
+    )} 
     <section className="relative z-10 my-4">
       {/* Back Button */}
 
@@ -119,7 +133,10 @@ const HouseDetailPage = () => {
                 <GrEdit size={22} />
               </VooDooLink>
               <Button
-                onClick={() => handleDelete()}
+                onClick={() => {
+                  const buttonRef = { current: document.createElement("button") }
+                  toggleModal(buttonRef as any, "delete-perfume-house-item", "delete-perfume-house-item")
+                }}
                 aria-label={`delete ${perfumeHouse.name}`}
                 variant="icon"
                 className="flex items-center justify-between gap-2"
@@ -214,6 +231,7 @@ const HouseDetailPage = () => {
         )}
       </div>
     </section>
+    </>
   )
 }
 

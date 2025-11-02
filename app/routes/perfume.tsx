@@ -29,6 +29,7 @@ import { verifyAccessToken } from "~/utils/security/session-manager.server"
 
 import { ROUTE_PATH as HOUSE_PATH } from "./perfume-house"
 import { ROUTE_PATH as ALL_PERFUMES } from "./the-vault"
+import { useSessionStore } from "~/stores/sessionStore"
 export const ROUTE_PATH = "/perfume"
 
 const getUserFromRequest = async (request: Request) => {
@@ -157,7 +158,7 @@ const PerfumePage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { t } = useTranslation()
-
+  const { closeModal } = useSessionStore()
   // Get selectedLetter and sourcePage from navigation state
   const selectedLetter = (location.state as { selectedLetter?: string })
     ?.selectedLetter
@@ -167,6 +168,7 @@ const PerfumePage = () => {
     const url = `/api/deletePerfume?id=${perfume.id}`
     const res = await fetch(url)
     if (res.ok) {
+      closeModal()
       navigate(ALL_PERFUMES)
     }
   }

@@ -2,11 +2,13 @@ import { useState } from "react"
 import { BsHeartFill, BsHearts } from "react-icons/bs"
 import { GrEdit } from "react-icons/gr"
 import { MdDeleteForever } from "react-icons/md"
-
+import DangerModal from "~/components/Organisms/DangerModal"
 import { Button, VooDooLink } from "~/components/Atoms/Button"
 import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 import AddToCollectionModal from "~/components/Organisms/AddToCollectionModal"
 import { useCSRF } from "~/hooks/useCSRF"
+import Modal from "~/components/Organisms/Modal"
+import { useSessionStore } from "~/stores/sessionStore"
 
 interface Perfume {
   id: string
@@ -28,10 +30,10 @@ const PerfumeIcons = ({
   isInWishlist,
 }: PerfumeIconsProps) => {
   const [inWishlist, setInWishlist] = useState(isInWishlist)
+  const { modalOpen, toggleModal, modalId } = useSessionStore()
   const [isPublic, setIsPublic] = useState(false)
   const [showWishlistForm, setShowWishlistForm] = useState(false)
   const { addToHeaders } = useCSRF()
-
   const revertWishlistState = () => {
     setInWishlist(!inWishlist)
   }
@@ -88,6 +90,15 @@ const PerfumeIcons = ({
   }
 
   return (
+    <>
+    {modalOpen && modalId === "delete-perfume-item" && (
+        <Modal innerType="dark" animateStart="top">
+          <DangerModal
+          heading="Are you sure you want to delete this perfume?"
+          description="Once deleted, you will lose all history, notes and entries in the exchange."
+          action={handleDelete} />
+        </Modal>
+      )}    
     <div className="grid grid-cols-1 gap-2 noir-border relative p-4">
       {!showWishlistForm ? (
         <Button
@@ -161,7 +172,10 @@ const PerfumeIcons = ({
               <GrEdit size={22} />
             </VooDooLink>
             <Button
-              onClick={() => handleDelete()}
+              onClick={() => {
+                const buttonRef = { current: document.createElement("button") }
+                toggleModal(buttonRef as any, "delete-perfume-item", "delete-perfume-item")
+              }}
               aria-label={`delete ${perfume.name}`}
               variant="icon"
               className="flex items-center justify-between gap-2"
@@ -175,7 +189,7 @@ const PerfumeIcons = ({
         </div>
       )}
     </div>
+    </>
   )
 }
-
 export default PerfumeIcons

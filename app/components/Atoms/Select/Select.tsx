@@ -39,7 +39,7 @@ const Select = ({
 
   return (
     <div
-      className={styleMerge(selectWrapperVariants({ className }))}
+      className={styleMerge(selectWrapperVariants({ className, size }))}
       data-cy="Select"
     >
       {!ariaLabel && (

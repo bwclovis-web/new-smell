@@ -1,12 +1,22 @@
-import type { ReactNode } from "react"
+import { Button } from "~/components/Atoms/Button"
+interface DangerModalProps {
+  heading: string
+  description: string
+  action: () => void
+}
 
-const DangerModal = ({ children }: { children?: ReactNode }) => (
+const DangerModal = ({ heading, description, action }: DangerModalProps) => (
   <div className="text-center mx-auto">
-    <h2>Are you sure you want to Remove?</h2>
+    <h2>{heading}</h2>
     <p className="text-noir-gold-100 text-xl">
-      Once Removed you will lose all history, notes and entries in the exchange.
+      {description}
     </p>
-    <div className="mt-4">{children}</div>
+    <Button
+      className="bg-red-500 animate-pulse hover:bg-red-600 border-2 border-red-600 text-noir-light hover:animate-none focus:bg-red-700 disabled:bg-red-400 mt-4"
+        onClick={() => action()}
+        >
+        Remove
+      </Button>
   </div>
 )
 export default DangerModal

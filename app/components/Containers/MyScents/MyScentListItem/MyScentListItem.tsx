@@ -35,7 +35,7 @@ const MyScentsListItem = ({
   const { t } = useTranslation()
   const fetcher = useFetcher()
   const navigation = useNavigation()
-  const { modalOpen, toggleModal, modalId } = useSessionStore()
+  const { modalOpen, toggleModal, modalId, closeModal } = useSessionStore()
   const isSubmitting = navigation.state === "submitting"
 
   const updateUserPerfumeState = (amount: string) => {
@@ -77,9 +77,19 @@ const MyScentsListItem = ({
     formData.append("perfumeId", perfumeId)
     formData.append("action", "remove")
     fetcher.submit(formData, { method: "post", action: "/admin/my-scents" })
+    closeModal()
   }
 
   return (
+    <>
+    {modalOpen && modalId === "delete-item" && (
+      <Modal innerType="dark" animateStart="top">
+        <DangerModal 
+        heading="Are you sure you want to remove this perfume?"
+        description="Once removed, you will lose all history, notes and entries in the exchange."
+        action={() => handleRemovePerfume(userPerfume.perfume.id)} />
+      </Modal>
+    )}
     <li
       key={userPerfume.id}
       className="border p-4 flex flex-col w-full bg-noir-dark/60 text-noir-gold mb-4 last-of-type:mb-0"
@@ -155,20 +165,9 @@ const MyScentsListItem = ({
         </VooDooDetails>
       </VooDooDetails>
 
-      {modalOpen && modalId === "delete-item" && (
-        <Modal innerType="dark" animateStart="top">
-          <DangerModal>
-            <Button
-              className="bg-red-500/20 hover:bg-red-600/50 focus:bg-red-700 disabled:bg-red-400"
-              onClick={() => handleRemovePerfume(userPerfume.perfume.id)}
-              disabled={isSubmitting}
-            >
-              Remove
-            </Button>
-          </DangerModal>
-        </Modal>
-      )}
+      
     </li>
+    </>
   )
 }
 

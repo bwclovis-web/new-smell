@@ -36,8 +36,28 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
 
   return (
     <header className="fixed z-30  w-full h-auto bg-noir-dark/60 backdrop-blur-md">
-      <div className="flex justify-end items-center px-30 bg-noir-black/60 backdrop-blur-md w-full">
-        <LanguageSwitcher />
+      <div className="flex justify-end items-center px-30 bg-noir-black/60 backdrop-blur-md w-full gap-4">
+      <LanguageSwitcher />
+      <div>
+        {!user ? (
+          <NavLink
+            viewTransition
+            to={SIGN_IN}
+            className={({ isActive }) => styleMerge(
+                "text-noir-gold hover:text-noir-light dark:text-noir-light/70 dark:hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400 flex",
+                isActive &&
+                  isClientReady &&
+                  "text-noir-light bg-noir-black/30 rounded-full border-noir-light/90"
+              )
+            }
+          >
+            <FaUser size={20} title="Sign In" />
+          </NavLink>
+          ) : (
+            <LogoutButton />
+          )}
+          </div>
+        
       </div>
       <nav
         className="hidden md:flex justify-between inner-container py-5"
@@ -88,25 +108,7 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
               </NavLink>
             </li>
           )}
-          <li>
-            {!user ? (
-              <NavLink
-                viewTransition
-                to={SIGN_IN}
-                className={({ isActive }) => styleMerge(
-                    "text-noir-gold hover:text-noir-light dark:text-noir-light/70 dark:hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400 flex",
-                    isActive &&
-                      isClientReady &&
-                      "text-noir-light bg-noir-black/30 rounded-full border-noir-light/90"
-                  )
-                }
-              >
-                <FaUser size={24} title="Sign In" />
-              </NavLink>
-            ) : (
-              <LogoutButton />
-            )}
-          </li>
+         
         </ul>
       </nav>
     </header>
