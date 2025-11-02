@@ -6,5 +6,8 @@
   // Configure Prisma extension to only process the main schema
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
-  }
+  },
+  "cSpell.words": [
+    "gsap"
+  ]
 }

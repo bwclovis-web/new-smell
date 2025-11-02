@@ -47,6 +47,7 @@ const MyScentsModal = ({ perfume }: MyScentsModalProps) => {
         </div>
         {modalData === "create" && !perfume && (
           <SearchBar
+            variant="animated"
             searchType="perfume"
             className="mt-4"
             action={(item: any) => handleClick(item as UserPerfumeI)}

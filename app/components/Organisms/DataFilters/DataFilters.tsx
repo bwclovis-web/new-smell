@@ -40,7 +40,7 @@ const DataFilters = ({
         className={`space-y-6 inner-container py-4 flex flex-col gap-6 md:flex-row md:justify-between md:items-center noir-border ${className}`}
       >
         <div className="w-full md:w-1/4 mb-0">
-          <SearchBar searchType={searchType} />
+          <SearchBar searchType={searchType} variant="animated" />
         </div>
 
         <div className="flex gap-6 w-full md:w-3/4 justify-start md:justify-end items-end md:items-center">

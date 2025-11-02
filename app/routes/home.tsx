@@ -107,7 +107,7 @@ export default function Home() {
             />
             <SearchBar
               searchType={searchType}
-              variant="flat"
+              variant="home"
               className="mt-2 md:mt-8"
             />
           </div>
