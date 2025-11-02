@@ -1,4 +1,3 @@
-import { type FC } from "react"
 import { useTranslation } from "react-i18next"
 import { NavLink } from "react-router"
 
@@ -17,16 +16,19 @@ interface NavigationLinksProps {
   onNavClick: () => void
 }
 
-const NavigationLinks: FC<NavigationLinksProps> = ({
+const NavigationLinks  = ({
   user,
   isClientReady,
   onNavClick,
-}) => {
+}: NavigationLinksProps) => {
   const { t, ready } = useTranslation()
 
   return (
     <nav className="flex-1 px-4 pb-4">
       <ul className="space-y-2">
+        <li>
+          <AboutDropdown variant="mobile" />
+        </li>
         {mainNavigation.map(item => (
           <li key={item.id}>
             <NavLink
@@ -46,10 +48,7 @@ const NavigationLinks: FC<NavigationLinksProps> = ({
           </li>
         ))}
 
-        <li>
-          <AboutDropdown variant="mobile" onNavClick={onNavClick} />
-        </li>
-
+        
         {user && (
           <li>
             <NavLink
