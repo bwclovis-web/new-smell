@@ -22,6 +22,7 @@ import {
 import { getUserPerfumeReview } from "~/models/perfumeReview.server"
 import { getUserById } from "~/models/user.server"
 import { isInWishlist } from "~/models/wishlist.server"
+import { useSessionStore } from "~/stores/sessionStore"
 import { createSafeUser } from "~/types"
 import { assertExists } from "~/utils/errorHandling.patterns"
 import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
@@ -29,7 +30,6 @@ import { verifyAccessToken } from "~/utils/security/session-manager.server"
 
 import { ROUTE_PATH as HOUSE_PATH } from "./perfume-house"
 import { ROUTE_PATH as ALL_PERFUMES } from "./the-vault"
-import { useSessionStore } from "~/stores/sessionStore"
 export const ROUTE_PATH = "/perfume"
 
 const getUserFromRequest = async (request: Request) => {
