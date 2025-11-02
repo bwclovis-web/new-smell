@@ -1,5 +1,5 @@
-import { cx, VariantProps } from "class-variance-authority"
-import { FC, HTMLProps, ReactElement, useRef, useState } from "react"
+import { cx, type VariantProps } from "class-variance-authority"
+import { type HTMLProps, type ReactElement, type ReactNode, useRef, useState } from "react"
 
 import { styleMerge } from "~/utils/styleUtils"
 
@@ -11,17 +11,17 @@ interface TabsProps
     VariantProps<typeof tabsVariants> {
   children: ReactElement[]
   auxComponent?: ReactElement
-  type?: "default" | "secondary"
+  type: "default" | "secondary"
 }
 
-const TabContainer: FC<TabsProps> = ({
+const TabContainer  = ({
   className,
   children,
   background,
   size = "md",
   auxComponent,
   type,
-}) => {
+}: TabsProps) => {
   const [activeTab, setActiveTab] = useState(0)
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
 
@@ -90,14 +90,16 @@ const TabContainer: FC<TabsProps> = ({
                   onKeyDown={onKeyDown}
                   onClick={() => handleClick(idx)}
                   role="tab"
-                  ref={ele => (tabRefs.current[idx] = ele)}
+                  ref={ele => {
+                    tabRefs.current[idx] = ele
+                  }}
                   aria-selected={activeTab === idx}
                   aria-controls={`panel-${idx}`}
                   className={tabClasses}
                   tabIndex={activeTab === idx ? 0 : -1}
                   onFocus={() => setActiveTab(idx)}
                 >
-                  {child.props.label}
+                  {(child as ReactElement<{ label: ReactNode }>).props.label}
                 </button>
               )
             })}
@@ -110,8 +112,8 @@ const TabContainer: FC<TabsProps> = ({
             key={`panel-${idx}`}
             idx={idx}
             activeTab={activeTab}
-            child={child}
-            type={type}
+            child={child as ReactElement<{ content: ReactNode }>  }
+            type={type as "secondary"}
           />
         ))}
     </>

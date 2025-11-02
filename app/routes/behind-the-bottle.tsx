@@ -1,14 +1,19 @@
-import { type RefObject, useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { type MetaFunction, useLocation } from "react-router"
+import {
+  type MetaFunction,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router"
 
 import AlphabeticalNav from "~/components/Organisms/AlphabeticalNav"
 import DataDisplaySection from "~/components/Organisms/DataDisplaySection"
 import DataFilters from "~/components/Organisms/DataFilters"
 import TitleBanner from "~/components/Organisms/TitleBanner"
-import useDataByLetter from "~/hooks/useDataByLetter"
-import { useInfiniteScrollHouses } from "~/hooks/useInfiniteScrollHouses"
-import useLetterSelection from "~/hooks/useLetterSelection"
+import { useLetterPagination } from "~/hooks/useLetterPagination"
+import { useScrollToDataList } from "~/hooks/useScrollToDataList"
+import { useSyncPaginationUrl } from "~/hooks/useSyncPaginationUrl"
 import { getDefaultSortOptions } from "~/utils/sortUtils"
 
 // No server imports needed for client component
@@ -16,9 +21,9 @@ import banner from "../images/behind.webp"
 
 export const ROUTE_PATH = "/behind-the-bottle"
 
-export const loader = async () =>
+export const loader = async () => ({
   // Don't load all houses upfront - we'll load by letter on demand
-  ({})
+})
 
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
@@ -93,80 +98,94 @@ const useHouseHandlers = (setSelectedHouseType: any, setSelectedSort: any) => {
 
 const AllHousesPage = () => {
   const { t } = useTranslation()
-  const location = useLocation()
+  const params = useParams()
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
+  
   const [selectedHouseType, setSelectedHouseType] = useState("all")
   const [selectedSort, setSelectedSort] = useState<any>("created-desc")
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  const initialSelectedLetter = (location.state as { selectedLetter?: string })
-    ?.selectedLetter
+  // Get letter from URL params
+  const letterFromUrl = params.letter || null
+  
+  // Get page from search params, default to 1
+  const pageFromUrl = parseInt(searchParams.get("pg") || "1", 10)
 
   const filters = useHouseFilters(t)
-  const data = useDataByLetter({
-    endpoint: "/api/houses-by-letter-paginated",
-    itemName: "houses",
-    houseType: selectedHouseType,
-  })
   const handlers = useHouseHandlers(setSelectedHouseType, setSelectedSort)
 
-  const [hasProcessedInitialLetter, setHasProcessedInitialLetter] = useState(false)
-  const [lastResetLetter, setLastResetLetter] = useState<string | null>(null)
-  const [lastResetHouseType, setLastResetHouseType] = useState<string>("all")
-
-  const { selectedLetter, handleLetterClick } = useLetterSelection({
-    loadDataByLetter: data.loadDataByLetter,
-    resetData: (houses, totalCount) => {
-      resetHouses(houses, totalCount)
-    },
-  })
-
-  useEffect(() => {
-    if (
-      initialSelectedLetter &&
-      initialSelectedLetter !== selectedLetter &&
-      !hasProcessedInitialLetter
-    ) {
-      setHasProcessedInitialLetter(true)
-      handleLetterClick(initialSelectedLetter)
-    }
-  }, [initialSelectedLetter, selectedLetter, hasProcessedInitialLetter])
-
+  // Pagination hook
   const {
-    houses,
-    loading: infiniteLoading,
-    hasMore,
-    totalCount,
-    observerRef,
-    loadMoreHouses,
-    resetHouses,
-  } = useInfiniteScrollHouses({
-    letter: selectedLetter || "",
-    initialHouses: data.initialData,
-    scrollContainerRef,
-    take: 12,
+    data: houses,
+    loading,
+    error,
+    pagination,
+    nextPage: paginationNextPage,
+    prevPage: paginationPrevPage,
+  } = useLetterPagination({
+    letter: letterFromUrl,
+    endpoint: "/api/houses-by-letter-paginated",
+    itemName: "houses",
+    pageSize: 16,
     houseType: selectedHouseType,
+    initialPage: pageFromUrl,
   })
 
+  // Preserve scroll position during loading to prevent jump to top
   useEffect(() => {
-    const shouldReset =
-      selectedLetter !== lastResetLetter || selectedHouseType !== lastResetHouseType
-    if (data.initialData.length > 0 && shouldReset) {
-      resetHouses(data.initialData, data.totalCount)
-      setLastResetLetter(selectedLetter)
-      setLastResetHouseType(selectedHouseType)
+    if (loading) {
+      const savedPosition = window.scrollY || document.documentElement.scrollTop
+      // Prevent automatic scroll to top during loading
+      if (savedPosition > 0) {
+        window.scrollTo(0, savedPosition)
+      }
     }
-  }, [
-    data.initialData,
-    data.totalCount,
-    resetHouses,
-    selectedLetter,
-    selectedHouseType,
-    lastResetLetter,
-    lastResetHouseType,
-  ])
+  }, [loading])
 
-  if (data.error) {
-    return <div>Error loading houses: {data.error}</div>
+  // Sync URL when page changes from pagination (but not on letter change)
+  useSyncPaginationUrl({
+    currentPage: pagination.currentPage,
+    pageFromUrl,
+    letter: letterFromUrl,
+    basePath: "/behind-the-bottle",
+  })
+
+  const handleLetterClick = (letter: string | null) => {
+    if (letter) {
+      navigate(`/behind-the-bottle/${letter.toLowerCase()}`, {
+        preventScrollReset: true,
+      })
+    } else {
+      navigate("/behind-the-bottle", { preventScrollReset: true })
+    }
+  }
+
+  // Scroll when letter changes (wait for data to load)
+  useScrollToDataList({
+    trigger: letterFromUrl,
+    enabled: !!letterFromUrl,
+    isLoading: loading,
+    hasData: houses.length > 0,
+  })
+
+  // Scroll when pagination changes (wait for data to load)
+  useScrollToDataList({
+    trigger: pagination.currentPage,
+    enabled: !!letterFromUrl && !!pagination.currentPage,
+    isLoading: loading,
+    hasData: houses.length > 0,
+  })
+
+  const handleNextPage = async () => {
+    await paginationNextPage()
+  }
+
+  const handlePrevPage = async () => {
+    await paginationPrevPage()
+  }
+
+  if (error) {
+    return <div>Error loading houses: {error}</div>
   }
 
   return (
@@ -189,7 +208,7 @@ const AllHousesPage = () => {
       />
 
       <AlphabeticalNav
-        selectedLetter={selectedLetter}
+        selectedLetter={letterFromUrl}
         onLetterSelect={handleLetterClick}
         className="mb-8"
       />
@@ -197,20 +216,13 @@ const AllHousesPage = () => {
       {/* Houses Display */}
       <DataDisplaySection
         data={houses}
-        isLoading={data.isLoading}
-        infiniteLoading={infiniteLoading}
-        hasMore={hasMore}
-        totalCount={totalCount}
-        observerRef={observerRef as RefObject<HTMLDivElement>}
-        onLoadMore={loadMoreHouses}
+        isLoading={loading}
         type="house"
-        selectedLetter={selectedLetter}
-        scrollContainerRef={scrollContainerRef as RefObject<HTMLDivElement>}
+        selectedLetter={letterFromUrl}
         sourcePage="behind-the-bottle"
-        useVirtualScrolling={true}
-        virtualScrollThreshold={20}
-        itemHeight={320}
-        containerHeight={600}
+        pagination={pagination}
+        onNextPage={handleNextPage}
+        onPrevPage={handlePrevPage}
       />
     </section>
   )

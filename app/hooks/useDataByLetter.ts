@@ -30,7 +30,7 @@ const useDataByLetter = <T>({
 
   const fetchData = useCallback(
     async (letter: string, currentHouseType: string = houseType) => {
-      const url = `${endpoint}?letter=${letter}&skip=0&take=12&houseType=${currentHouseType}`
+      const url = `${endpoint}?letter=${letter}&skip=0&take=16&houseType=${currentHouseType}`
       const response = await fetch(url)
       if (!response.ok) {
         throw new Error(`Failed to fetch ${itemName}: ${response.status} ${response.statusText}`)

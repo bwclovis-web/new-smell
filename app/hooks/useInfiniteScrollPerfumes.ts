@@ -30,7 +30,7 @@ export function useInfiniteScrollPerfumes(options: UseInfiniteScrollPerfumesOpti
     letter,
     initialPerfumes,
     scrollContainerRef,
-    take = 12,
+    take = 16,
     threshold = 200,
     debounceTime = 500,
   } = options

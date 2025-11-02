@@ -1894,12 +1894,12 @@ test.describe("Accessibility", () => {
 #### Checklist
 
 - [x] Add axe-core to tests
-- [ ] Test keyboard navigation
-- [ ] Test screen reader support
-- [ ] Test color contrast
-- [ ] Test focus management
-- [ ] Test ARIA labels
-- [ ] Add A11y E2E tests
+- [x] Test keyboard navigation
+- [x] Test screen reader support
+- [x] Test color contrast
+- [x] Test focus management
+- [x] Test ARIA labels
+- [x] Add A11y E2E tests
 - [ ] Document A11y standards
 
 ---

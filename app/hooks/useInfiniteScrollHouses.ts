@@ -36,7 +36,7 @@ export function useInfiniteScrollHouses(options: UseInfiniteScrollHousesOptions)
     letter,
     initialHouses,
     scrollContainerRef,
-    take = 12,
+    take = 16,
     threshold = 200,
     debounceTime = 500,
     houseType = "all",

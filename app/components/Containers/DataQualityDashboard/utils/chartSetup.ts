@@ -23,3 +23,5 @@ ChartJS.register(
 )
 
 export { ChartJS }
+
+

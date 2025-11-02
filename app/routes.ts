@@ -3,10 +3,10 @@ import { index, layout, route, type RouteConfig } from "@react-router/dev/routes
 export default [
   layout("routes/RootLayout.tsx", [
     index("routes/home.tsx"),
-    route("behind-the-bottle", "routes/behind-the-bottle.tsx"),
+    route("behind-the-bottle/:letter?", "routes/behind-the-bottle.tsx"),
     route("perfume-house/:houseSlug", "routes/perfume-house.tsx"),
 
-    route("the-vault", "routes/the-vault.tsx"),
+    route("the-vault/:letter?", "routes/the-vault.tsx"),
     route("trader/:id", "routes/trader-profile.tsx"),
     route("the-exchange", "routes/the-exchange.tsx"),
     route("perfume/:perfumeSlug", "routes/perfume.tsx"),

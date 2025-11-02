@@ -1,15 +1,20 @@
 export const ROUTE_PATH = "/the-vault"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { type MetaFunction, useLocation } from "react-router"
+import {
+  type MetaFunction,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router"
 
 import AlphabeticalNav from "~/components/Organisms/AlphabeticalNav"
 import DataDisplaySection from "~/components/Organisms/DataDisplaySection"
 import DataFilters from "~/components/Organisms/DataFilters"
 import TitleBanner from "~/components/Organisms/TitleBanner"
-import useDataByLetter from "~/hooks/useDataByLetter"
-import { useInfiniteScrollPerfumes } from "~/hooks/useInfiniteScrollPerfumes"
-import useLetterSelection from "~/hooks/useLetterSelection"
+import { useLetterPagination } from "~/hooks/useLetterPagination"
+import { useScrollToDataList } from "~/hooks/useScrollToDataList"
+import { useSyncPaginationUrl } from "~/hooks/useSyncPaginationUrl"
 import { getDefaultSortOptions } from "~/utils/sortUtils"
 
 // No server imports needed for client component
@@ -29,62 +34,91 @@ export const meta: MetaFunction = () => {
 
 const AllPerfumesPage = () => {
   const { t } = useTranslation()
-  const location = useLocation()
+  const params = useParams()
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
+  
   const [selectedSort, setSelectedSort] = useState("created-desc")
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
-  // Get selectedLetter from navigation state
-  const initialSelectedLetter = (location.state as { selectedLetter?: string })
-    ?.selectedLetter
+  // Get letter from URL params
+  const letterFromUrl = params.letter || null
+  
+  // Get page from search params, default to 1
+  const pageFromUrl = parseInt(searchParams.get("pg") || "1", 10)
 
   const sortOptions = getDefaultSortOptions(t)
-  const data = useDataByLetter({
+
+  // Pagination hook
+  const {
+    data: perfumes,
+    loading,
+    error,
+    pagination,
+    nextPage: paginationNextPage,
+    prevPage: paginationPrevPage,
+  } = useLetterPagination({
+    letter: letterFromUrl,
     endpoint: "/api/perfumes-by-letter",
     itemName: "perfumes",
+    pageSize: 16,
+    initialPage: pageFromUrl,
   })
 
-  // Track if we've already processed the initial letter selection
-  const [hasProcessedInitialLetter, setHasProcessedInitialLetter] = useState(false)
-
-  // Get letter selection first
-  const { selectedLetter, handleLetterClick } = useLetterSelection({
-    loadDataByLetter: data.loadDataByLetter,
-    resetData: (perfumes, totalCount) => {
-      // This will be called when letter changes
-      resetPerfumes(perfumes, totalCount)
-    },
-  })
-
-  // Handle initial letter selection from navigation state
+  // Preserve scroll position during loading to prevent jump to top
   useEffect(() => {
-    if (
-      initialSelectedLetter &&
-      initialSelectedLetter !== selectedLetter &&
-      !hasProcessedInitialLetter
-    ) {
-      setHasProcessedInitialLetter(true)
-      handleLetterClick(initialSelectedLetter)
+    if (loading) {
+      const savedPosition = window.scrollY || document.documentElement.scrollTop
+      // Prevent automatic scroll to top during loading
+      if (savedPosition > 0) {
+        window.scrollTo(0, savedPosition)
+      }
     }
-  }, [initialSelectedLetter, selectedLetter, hasProcessedInitialLetter])
+  }, [loading])
 
-  // Infinite scroll hook for perfumes - now properly initialized with selected letter
-  const {
-    perfumes,
-    loading: infiniteLoading,
-    hasMore,
-    totalCount,
-    observerRef,
-    loadMorePerfumes,
-    resetPerfumes,
-  } = useInfiniteScrollPerfumes({
-    letter: selectedLetter || "",
-    initialPerfumes: data.initialData,
-    scrollContainerRef,
-    take: 12,
+  // Sync URL when page changes from pagination (but not on letter change)
+  useSyncPaginationUrl({
+    currentPage: pagination.currentPage,
+    pageFromUrl,
+    letter: letterFromUrl,
+    basePath: "/the-vault",
   })
 
-  if (data.error) {
-    return <div>Error loading perfumes: {data.error}</div>
+  const handleLetterClick = (letter: string | null) => {
+    if (letter) {
+      navigate(`/the-vault/${letter.toLowerCase()}`, {
+        preventScrollReset: true,
+      })
+    } else {
+      navigate("/the-vault", { preventScrollReset: true })
+    }
+  }
+
+  // Scroll when letter changes (wait for data to load)
+  useScrollToDataList({
+    trigger: letterFromUrl,
+    enabled: !!letterFromUrl,
+    isLoading: loading,
+    hasData: perfumes.length > 0,
+  })
+
+  // Scroll when pagination changes (wait for data to load)
+  useScrollToDataList({
+    trigger: pagination.currentPage,
+    enabled: !!letterFromUrl && !!pagination.currentPage,
+    isLoading: loading,
+    hasData: perfumes.length > 0,
+  })
+
+  const handleNextPage = async () => {
+    await paginationNextPage()
+  }
+
+  const handlePrevPage = async () => {
+    await paginationPrevPage()
+  }
+
+  if (error) {
+    return <div>Error loading perfumes: {error}</div>
   }
 
   return (
@@ -104,7 +138,7 @@ const AllPerfumesPage = () => {
       />
 
       <AlphabeticalNav
-        selectedLetter={selectedLetter}
+        selectedLetter={letterFromUrl}
         onLetterSelect={handleLetterClick}
         className="mb-8"
       />
@@ -112,20 +146,13 @@ const AllPerfumesPage = () => {
       {/* Perfumes Display */}
       <DataDisplaySection
         data={perfumes}
-        isLoading={data.isLoading}
-        infiniteLoading={infiniteLoading}
-        hasMore={hasMore}
-        totalCount={totalCount}
-        observerRef={observerRef}
-        onLoadMore={loadMorePerfumes}
+        isLoading={loading}
         type="perfume"
-        selectedLetter={selectedLetter}
-        scrollContainerRef={scrollContainerRef}
+        selectedLetter={letterFromUrl}
         sourcePage="vault"
-        useVirtualScrolling={true}
-        virtualScrollThreshold={30}
-        itemHeight={300}
-        containerHeight={600}
+        pagination={pagination}
+        onNextPage={handleNextPage}
+        onPrevPage={handlePrevPage}
       />
     </section>
   )

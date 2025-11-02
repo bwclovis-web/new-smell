@@ -9,7 +9,7 @@ export const loader = withLoaderErrorHandling(
     const url = new URL(request.url)
     const letter = url.searchParams.get("letter")
     const skip = parseInt(url.searchParams.get("skip") || "0", 10)
-    const take = parseInt(url.searchParams.get("take") || "12", 10)
+    const take = parseInt(url.searchParams.get("take") || "16", 10)
 
     assertValid(
       !!letter && /^[A-Za-z]$/.test(letter),

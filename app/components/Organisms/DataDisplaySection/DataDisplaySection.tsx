@@ -8,37 +8,33 @@ import LinkCard from "../LinkCard/LinkCard"
 interface DataDisplaySectionProps {
   data: any[]
   isLoading: boolean
-  infiniteLoading: boolean
-  hasMore: boolean
-  totalCount: number
-  observerRef: RefObject<HTMLDivElement>
-  onLoadMore: () => void
   type: "house" | "perfume"
   selectedLetter: string | null
-  scrollContainerRef: RefObject<HTMLDivElement>
   sourcePage?: string
-  useVirtualScrolling?: boolean
-  virtualScrollThreshold?: number
-  itemHeight?: number
-  containerHeight?: number
+  pagination?: {
+    currentPage: number
+    totalPages: number
+    hasNextPage: boolean
+    hasPrevPage: boolean
+  }
+  onPageChange?: (page: number) => void
+  onNextPage?: () => void
+  onPrevPage?: () => void
 }
 
 const DataDisplaySection = ({
   data,
   isLoading,
-  infiniteLoading,
-  hasMore,
-  totalCount,
-  observerRef,
-  onLoadMore,
   type,
   selectedLetter,
-  scrollContainerRef,
   sourcePage,
+  pagination,
+  onPageChange,
+  onNextPage,
+  onPrevPage,
 }: DataDisplaySectionProps) => {
   const { t } = useTranslation()
   const itemName = type === "house" ? "houses" : "perfumes"
-  // const itemNameSingular = type === 'house' ? 'house' : 'perfume'
 
   if (!selectedLetter && data.length === 0) {
     return (
@@ -54,10 +50,7 @@ const DataDisplaySection = ({
   }
 
   return (
-    <div
-      ref={scrollContainerRef}
-      className="inner-container my-6 overflow-y-auto style-scroll"
-    >
+    <div className="inner-container my-6" id="data-list">
       <ul className="grid grid-cols-2 gap-6 md:grid-cols-2 2xl:grid-cols-4 auto-rows-fr">
         {isLoading ? (
           <div className="col-span-full text-center py-8">
@@ -80,29 +73,34 @@ const DataDisplaySection = ({
         )}
       </ul>
 
-      <div
-        ref={observerRef}
-        aria-live="polite"
-        aria-busy={infiniteLoading}
-        role="status"
-        className="sticky bottom-0 w-full bg-gradient-to-t from-noir-black to-transparent flex flex-col items-center justify-center py-4 mt-6"
-      >
-        {infiniteLoading && (
-          <span className="text-noir-gold">
-            {t("common.loadingMore", { itemName })}
+      {/* Pagination Controls */}
+      {pagination && pagination.totalPages > 1 && (
+        <div className="flex justify-center items-center space-x-4 mt-8">
+          {pagination.hasPrevPage && (
+            <Button
+              onClick={() => onPrevPage?.()}
+              variant="secondary"
+              size="sm"
+            >
+              Previous
+            </Button>
+          )}
+
+          <span className="text-noir-gold/80">
+            Page {pagination.currentPage} of {pagination.totalPages}
           </span>
-        )}
-        {!infiniteLoading && hasMore && (
-          <Button onClick={onLoadMore}>{t("common.loadMore", { itemName })}</Button>
-        )}
-        {!hasMore && data.length > 0 && (
-          <span className="text-noir-gold">
-            {totalCount > 0
-              ? t("common.allLoaded", { itemName, count: totalCount })
-              : t("common.noMore", { itemName })}
-          </span>
-        )}
-      </div>
+
+          {pagination.hasNextPage && (
+            <Button
+              onClick={() => onNextPage?.()}
+              variant="secondary"
+              size="sm"
+            >
+              Next
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   )
 }

@@ -7,7 +7,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const letter = url.searchParams.get("letter")
   const houseType = url.searchParams.get("houseType") || "all"
   const skip = parseInt(url.searchParams.get("skip") || "0", 10)
-  const take = parseInt(url.searchParams.get("take") || "12", 10)
+  const take = parseInt(url.searchParams.get("take") || "16", 10)
 
   if (!letter || !/^[A-Za-z]$/.test(letter)) {
     return Response.json(

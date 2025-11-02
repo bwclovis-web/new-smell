@@ -137,9 +137,12 @@ const HouseDetailPage = () => {
           <p className="p-4 mb-8">{perfumeHouse.description}</p>
           <span className="tag absolute">{perfumeHouse.type}</span>
           <Button
-            onClick={() => navigate(BEHIND_THE_BOTTLE, {
-                state: selectedLetter ? { selectedLetter } : {},
-              })
+            onClick={() =>
+              navigate(
+                selectedLetter
+                  ? `/behind-the-bottle/${selectedLetter.toLowerCase()}`
+                  : BEHIND_THE_BOTTLE
+              )
             }
             variant="primary"
             background="gold"

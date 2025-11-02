@@ -175,20 +175,14 @@ const PerfumePage = () => {
     if (sourcePage === "vault") {
       // Navigate back to vault
       if (selectedLetter) {
-        navigate(ALL_PERFUMES, {
-          state: { selectedLetter },
-          replace: false,
-        })
+        navigate(`/the-vault/${selectedLetter.toLowerCase()}`)
       } else {
         navigate(ALL_PERFUMES)
       }
     } else {
       // Default to behind-the-bottle (for houses or fallback)
       if (selectedLetter) {
-        navigate("/behind-the-bottle", {
-          state: { selectedLetter },
-          replace: false,
-        })
+        navigate(`/behind-the-bottle/${selectedLetter.toLowerCase()}`)
       } else {
         navigate("/behind-the-bottle")
       }
