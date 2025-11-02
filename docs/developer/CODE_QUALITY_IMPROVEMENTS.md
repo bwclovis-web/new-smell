@@ -1893,7 +1893,7 @@ test.describe("Accessibility", () => {
 
 #### Checklist
 
-- [ ] Add axe-core to tests
+- [x] Add axe-core to tests
 - [ ] Test keyboard navigation
 - [ ] Test screen reader support
 - [ ] Test color contrast

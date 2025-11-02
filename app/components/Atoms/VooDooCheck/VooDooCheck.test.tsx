@@ -1,6 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react"
 import { describe, expect, it, vi } from "vitest"
 
+import { testAxeAccessibility } from "~/../test/utils/accessibility-test-utils"
+
 import VooDooCheck from "./VooDooCheck"
 
 describe("VooDooCheck", () => {
@@ -303,6 +305,20 @@ describe("VooDooCheck", () => {
         />)
 
       expect(screen.getByText(specialLabel)).toBeInTheDocument()
+    })
+  })
+
+  describe("Accessibility", () => {
+    it("should have no accessibility violations", async () => {
+      await testAxeAccessibility(VooDooCheck, defaultProps, {
+        tags: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
+      })
+    })
+
+    it("should have no accessibility violations when checked", async () => {
+      await testAxeAccessibility(VooDooCheck, { ...defaultProps, checked: true }, {
+        tags: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
+      })
     })
   })
 })

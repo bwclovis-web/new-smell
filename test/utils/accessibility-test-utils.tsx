@@ -1,10 +1,29 @@
 import { screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { vi } from "vitest"
+import { toHaveNoViolations, axe } from "jest-axe"
+import { expect, vi } from "vitest"
 
 import { renderWithProviders } from "./test-utils"
 
+// Extend vitest matchers with jest-axe
+expect.extend(toHaveNoViolations)
+
 // Accessibility Testing Utilities
+
+// Test accessibility with axe-core
+export const testAxeAccessibility = async (
+  Component: React.ComponentType<any>,
+  props = {},
+  options: { tags?: string[]; rules?: Record<string, any> } = {}
+) => {
+  const { container } = renderWithProviders(<Component {...props} />)
+  
+  const results = await axe(container, options)
+  
+  expect(results).toHaveNoViolations()
+  
+  return results
+}
 
 // Test keyboard navigation
 export const testKeyboardNavigation = async (
@@ -343,9 +362,16 @@ export const runA11yTestSuite = async (
     testFocus: true,
     testSemantics: true,
     testForms: true,
+    testAxe: true,
   }
 ) => {
   console.log("Running comprehensive accessibility tests...")
+
+  if (options.testAxe) {
+    await testAxeAccessibility(Component, props, {
+      tags: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
+    })
+  }
 
   if (options.testSemantics) {
     testSemanticHTML(Component, props, ["main", "navigation", "button"])
