@@ -254,6 +254,24 @@ export const getHousesByLetterPaginated = async (
   const [houses, totalCount] = await Promise.all([
     prisma.perfumeHouse.findMany({
       where,
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        image: true,
+        website: true,
+        country: true,
+        founded: true,
+        type: true,
+        createdAt: true,
+        updatedAt: true,
+        _count: {
+          select: {
+            perfumes: true,
+          },
+        },
+      },
       orderBy: { name: "asc" },
       skip,
       take,
@@ -264,7 +282,20 @@ export const getHousesByLetterPaginated = async (
   ])
 
   return {
-    houses,
+    houses: houses.map((house) => ({
+      id: house.id,
+      name: house.name,
+      slug: house.slug,
+      description: house.description,
+      image: house.image,
+      website: house.website,
+      country: house.country,
+      founded: house.founded,
+      type: house.type,
+      createdAt: house.createdAt,
+      updatedAt: house.updatedAt,
+      perfumeCount: house._count.perfumes,
+    })),
     count: totalCount,
   }
 }

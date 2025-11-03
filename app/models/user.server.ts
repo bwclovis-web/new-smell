@@ -241,19 +241,44 @@ export const checkPasswordStrength = (password: string) => calculatePasswordStre
 export const getUserPerfumes = async (userId: string) => {
   const userPerfumes = await prisma.userPerfume.findMany({
     where: { userId },
-    include: {
+    select: {
+      id: true,
+      userId: true,
+      perfumeId: true,
+      amount: true,
+      available: true,
+      price: true,
+      placeOfPurchase: true,
+      tradePrice: true,
+      tradePreference: true,
+      tradeOnly: true,
+      type: true,
+      createdAt: true,
       perfume: {
-        include: {
-          perfumeHouse: true,
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          image: true,
+          description: true,
+          perfumeHouse: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
         },
       },
-      comments: {
-        orderBy: {
-          createdAt: "desc",
+      _count: {
+        select: {
+          comments: true,
         },
       },
     },
   })
+  
+  // Only fetch comments if specifically needed, or fetch separately
   return userPerfumes
 }
 

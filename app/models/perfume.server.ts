@@ -21,8 +21,23 @@ const buildPerfumeOrderBy = (sortBy?: string): Prisma.PerfumeOrderByWithRelation
 }
 export const getAllPerfumes = async () => {
   const perfumes = await prisma.perfume.findMany({
-    include: {
-      perfumeHouse: true,
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      image: true,
+      slug: true,
+      perfumeHouseId: true,
+      createdAt: true,
+      updatedAt: true,
+      perfumeHouse: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          type: true,
+        },
+      },
     },
   })
   return perfumes
@@ -35,8 +50,23 @@ export const getAllPerfumesWithOptions = async (options?: {
   const orderBy = buildPerfumeOrderBy(sortBy)
 
   return prisma.perfume.findMany({
-    include: {
-      perfumeHouse: true,
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      image: true,
+      slug: true,
+      perfumeHouseId: true,
+      createdAt: true,
+      updatedAt: true,
+      perfumeHouse: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          type: true,
+        },
+      },
     },
     orderBy,
   })
@@ -110,8 +140,23 @@ export const searchPerfumeByName = async (name: string) => {
         { name: { startsWith: searchTerm, mode: "insensitive" } },
       ],
     },
-    include: {
-      perfumeHouse: true,
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      image: true,
+      slug: true,
+      perfumeHouseId: true,
+      createdAt: true,
+      updatedAt: true,
+      perfumeHouse: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          type: true,
+        },
+      },
     },
     orderBy: { name: "asc" },
     take: 5,
@@ -126,8 +171,23 @@ export const searchPerfumeByName = async (name: string) => {
         { id: { notIn: exactMatches.map(p => p.id) } },
       ],
     },
-    include: {
-      perfumeHouse: true,
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      image: true,
+      slug: true,
+      perfumeHouseId: true,
+      createdAt: true,
+      updatedAt: true,
+      perfumeHouse: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          type: true,
+        },
+      },
     },
     orderBy: { name: "asc" },
     take: 5,
@@ -346,15 +406,38 @@ export const getAvailablePerfumesForDecanting = async () => {
         },
       },
     },
-    include: {
-      perfumeHouse: true,
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      image: true,
+      slug: true,
+      perfumeHouseId: true,
+      createdAt: true,
+      updatedAt: true,
+      perfumeHouse: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          type: true,
+        },
+      },
       userPerfume: {
         where: {
           available: {
             not: "0",
           },
         },
-        include: {
+        select: {
+          id: true,
+          perfumeId: true,
+          available: true,
+          amount: true,
+          price: true,
+          tradePrice: true,
+          tradePreference: true,
+          userId: true,
           user: {
             select: {
               id: true,
@@ -388,8 +471,23 @@ export const getPerfumesByLetterPaginated = async (
           mode: "insensitive",
         },
       },
-      include: {
-        perfumeHouse: true,
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        image: true,
+        slug: true,
+        perfumeHouseId: true,
+        createdAt: true,
+        updatedAt: true,
+        perfumeHouse: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            type: true,
+          },
+        },
       },
       orderBy: { name: "asc" },
       skip,
