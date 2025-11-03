@@ -23,33 +23,33 @@ This document outlines the step-by-step process for implementing TanStack Query 
 ## Phase 1: Setup & Configuration ✅
 
 ### 1.1 Install Dependencies
-- [ ] Move `@tanstack/react-query` from `devDependencies` to `dependencies` in `package.json`
-- [ ] Verify version: Currently `^5.90.2` (keep or update to latest stable)
-- [ ] Run `npm install` to ensure package is installed
+- [x] Move `@tanstack/react-query` from `devDependencies` to `dependencies` in `package.json`
+- [x] Verify version: Currently `^5.90.2` (keep or update to latest stable)
+- [x] Run `npm install` to ensure package is installed
 
 ### 1.2 Create Query Client Configuration
 **File**: `app/lib/queryClient.ts`
-- [ ] Create query client factory function
-- [ ] Configure default options:
+- [x] Create query client factory function
+- [x] Configure default options:
   - `staleTime`: 5 minutes (aligns with current cache duration)
-  - `cacheTime`: 10 minutes
-  - `retry`: 2-3 attempts
-  - `refetchOnWindowFocus`: false (or true based on requirements)
+  - `gcTime`: 10 minutes (formerly cacheTime, updated for v5)
+  - `retry`: 3 attempts
+  - `refetchOnWindowFocus`: false
   - `refetchOnReconnect`: true
-- [ ] Export `queryClient` singleton
+- [x] Export `queryClient` singleton
 
 ### 1.3 Setup QueryProvider
-**File**: `app/providers/QueryProvider.tsx` (currently empty)
-- [ ] Import `QueryClientProvider` from `@tanstack/react-query`
-- [ ] Import query client from `app/lib/queryClient`
-- [ ] Wrap children with `QueryClientProvider`
-- [ ] Add React Query DevTools (development only)
+**File**: `app/providers/QueryProvider.tsx`
+- [x] Import `QueryClientProvider` from `@tanstack/react-query`
+- [x] Import query client from `app/lib/queryClient`
+- [x] Wrap children with `QueryClientProvider`
+- [x] Add React Query DevTools (development only) - conditionally loaded, install `@tanstack/react-query-devtools` to enable
 
 ### 1.4 Integrate Provider in Root
 **File**: `app/root.tsx`
-- [ ] Import `QueryProvider`
-- [ ] Wrap `<Outlet />` with `QueryProvider` (inside existing providers)
-- [ ] Ensure correct provider nesting order:
+- [x] Import `QueryProvider`
+- [x] Wrap `<Outlet />` with `QueryProvider` (inside existing providers)
+- [x] Ensure correct provider nesting order:
   ```
   NonceProvider
     I18nextProvider

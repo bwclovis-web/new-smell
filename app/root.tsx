@@ -19,6 +19,7 @@ import ServiceWorkerRegistration from "./components/Containers/ServiceWorkerRegi
 import { CSRFTokenProvider } from "./components/Molecules/CSRFToken"
 import { NonceProvider, useNonce } from "./hooks/use-nonce"
 import i18n from "./modules/i18n/i18n.client"
+import { QueryProvider } from "./providers/QueryProvider"
 import { AppError } from "./utils/errorHandling"
 
 export const links: Route.LinksFunction = () => [
@@ -89,9 +90,11 @@ export default function App() {
   return (
     <NonceProvider value={undefined}>
       <I18nextProvider i18n={i18n}>
-        <CSRFTokenProvider>
-          <Outlet />
-        </CSRFTokenProvider>
+        <QueryProvider>
+          <CSRFTokenProvider>
+            <Outlet />
+          </CSRFTokenProvider>
+        </QueryProvider>
       </I18nextProvider>
     </NonceProvider>
   )
