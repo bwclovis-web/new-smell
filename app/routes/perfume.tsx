@@ -22,6 +22,8 @@ import {
 import { getUserPerfumeReview } from "~/models/perfumeReview.server"
 import { getUserById } from "~/models/user.server"
 import { isInWishlist } from "~/models/wishlist.server"
+import { usePerfume } from "~/hooks/usePerfume"
+import { useDeletePerfume } from "~/lib/mutations/perfumes"
 import { useSessionStore } from "~/stores/sessionStore"
 import { createSafeUser } from "~/types"
 import { assertExists } from "~/utils/errorHandling.patterns"
@@ -147,14 +149,19 @@ export const meta: MetaFunction = () => {
 }
 
 const PerfumePage = () => {
+  const loaderData = useLoaderData<typeof loader>()
   const {
-    perfume,
+    perfume: initialPerfume,
     user,
     isInUserWishlist,
     userRatings,
     averageRatings,
     userReview,
-  } = useLoaderData<typeof loader>()
+  } = loaderData
+  
+  // Hydrate perfume query with loader data
+  const { data: perfume } = usePerfume(initialPerfume.slug, initialPerfume)
+  
   const navigate = useNavigate()
   const location = useLocation()
   const { t } = useTranslation()
@@ -164,13 +171,25 @@ const PerfumePage = () => {
     ?.selectedLetter
   const sourcePage = (location.state as { sourcePage?: string })?.sourcePage
 
+  // Use TanStack Query mutation for delete perfume
+  const deletePerfume = useDeletePerfume()
+
   const handleDelete = async () => {
-    const url = `/api/deletePerfume?id=${perfume.id}`
-    const res = await fetch(url)
-    if (res.ok) {
-      closeModal()
-      navigate(ALL_PERFUMES)
-    }
+    if (!perfume) return
+    
+    deletePerfume.mutate(
+      { perfumeId: perfume.id },
+      {
+        onSuccess: () => {
+          closeModal()
+          navigate(ALL_PERFUMES)
+        },
+        onError: (error) => {
+          console.error("Failed to delete perfume:", error)
+          alert("Failed to delete perfume. Please try again.")
+        },
+      }
+    )
   }
 
   const handleBack = () => {

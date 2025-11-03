@@ -9,6 +9,7 @@ interface ReviewCardProps {
     review: string
     createdAt: string
     isApproved?: boolean
+    isPending?: boolean // Flag for optimistic/pending reviews
     user: {
       id: string
       username?: string | null
@@ -63,7 +64,10 @@ const ReviewCard = ({
 
   return (
     <div
-      className={styleMerge("bg-white/5 border border-noir-gold rounded-lg p-4 space-y-3")}
+      className={styleMerge(
+        "bg-white/5 border border-noir-gold rounded-lg p-4 space-y-3",
+        review.isPending && "opacity-60 animate-pulse"
+      )}
     >
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -124,10 +128,12 @@ const ReviewCard = ({
       />
 
       {/* Moderation Status */}
-      {showModerationActions && (
+      {(showModerationActions || review.isPending) && (
         <div className="text-xs">
           Status:{" "}
-          {review.isApproved ? (
+          {review.isPending ? (
+            <span className="font-medium text-blue-600">⏳ Submitting...</span>
+          ) : review.isApproved ? (
             <span className="font-medium text-green-600">✓ Approved</span>
           ) : (
             <span className="font-medium text-orange-600">⏳ Pending Review</span>

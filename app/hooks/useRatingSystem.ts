@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
-import { useCSRF } from "./useCSRF"
+import { useCreateOrUpdateRating } from "~/lib/mutations/ratings"
 import { useErrorHandler } from "./useErrorHandler"
 
 export interface RatingData {
@@ -47,10 +47,11 @@ export const useRatingSystem = ({
 }: UseRatingSystemOptions): UseRatingSystemReturn => {
   const { t } = useTranslation()
   const { handleError } = useErrorHandler()
-  const { addToHeaders } = useCSRF()
 
   const [currentRatings, setCurrentRatings] = useState<RatingData | null>(initialRatings)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  // Use TanStack Query mutation for ratings
+  const saveRating = useCreateOrUpdateRating()
 
   const isLoggedIn = Boolean(userId) && userId !== "anonymous"
   const isInteractive = isLoggedIn && !readonly
@@ -67,57 +68,45 @@ export const useRatingSystem = ({
         return
       }
 
-      // Optimistic update
+      // Optimistic update - update local state immediately
       const previousRatings = currentRatings
       setCurrentRatings(prev => ({
         ...prev,
         [category]: rating,
       }))
 
-      // Submit to server (same pattern as wishlist)
-      const formData = new FormData()
-      formData.append("perfumeId", perfumeId)
-      formData.append("category", category)
-      formData.append("rating", rating.toString())
-
-      try {
-        setIsSubmitting(true)
-        const response = await fetch("/api/ratings", {
-          method: "POST",
-          headers: addToHeaders(),
-          body: formData,
-        })
-
-        if (!response.ok) {
-          // Revert on error
-          setCurrentRatings(previousRatings)
-          const errorData = await response
-            .json()
-            .catch(() => ({ error: "Unknown error" }))
-          onError?.(errorData.error || "Failed to save rating")
-          handleError(new Error(errorData.error || "Failed to save rating"), {
-            context: { perfumeId, userId, category, rating },
-          })
-        } else {
-          onSuccess?.({ ...previousRatings, [category]: rating })
+      // Use mutation with optimistic average updates
+      saveRating.mutate(
+        {
+          perfumeId,
+          category: category as any,
+          rating,
+        },
+        {
+          onSuccess: () => {
+            onSuccess?.({ ...previousRatings, [category]: rating } as RatingData)
+          },
+          onError: (error) => {
+            // Revert on error
+            setCurrentRatings(previousRatings)
+            const errorMessage =
+              error instanceof Error
+                ? error.message
+                : "Failed to save rating"
+            onError?.(errorMessage)
+            handleError(error instanceof Error ? error : new Error(errorMessage), {
+              context: { perfumeId, userId, category, rating },
+            })
+          },
         }
-      } catch (error) {
-        // Revert on error
-        setCurrentRatings(previousRatings)
-        onError?.("Failed to save rating")
-        handleError(error as Error, {
-          context: { perfumeId, userId, category, rating },
-        })
-      } finally {
-        setIsSubmitting(false)
-      }
+      )
     },
     [
       isInteractive,
       userId,
       perfumeId,
       currentRatings,
-      addToHeaders,
+      saveRating,
       onError,
       onSuccess,
       handleError,
@@ -143,7 +132,7 @@ export const useRatingSystem = ({
     currentRatings,
     isLoggedIn,
     isInteractive,
-    isSubmitting,
+    isSubmitting: saveRating.isPending,
     handleRatingChange,
     resetRatings,
     categories,

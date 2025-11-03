@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { GrEdit } from "react-icons/gr"
 import { MdDeleteForever } from "react-icons/md"
@@ -17,7 +17,9 @@ import { Button } from "~/components/Atoms/Button"
 import PerfumeHouseAddressBlock from "~/components/Containers/PerfumeHouse/AddressBlock/PerfumeHouseAddressBlock"
 import DangerModal from "~/components/Organisms/DangerModal"
 import Modal from "~/components/Organisms/Modal"
-import { useInfiniteScroll } from "~/hooks/useInfiniteScroll"
+import { useHouse } from "~/hooks/useHouse"
+import { useInfinitePerfumesByHouse } from "~/hooks/useInfinitePerfumes"
+import { useDeleteHouse } from "~/lib/mutations/houses"
 import { getPerfumeHouseBySlug } from "~/models/house.server"
 import { useSessionStore } from "~/stores/sessionStore"
 const ALL_HOUSES = "/behind-the-bottle"
@@ -56,7 +58,15 @@ type OutletContextType = {
 
 // Main component
 const HouseDetailPage = () => {
-  const { perfumeHouse } = useLoaderData<typeof loader>()
+  const loaderData = useLoaderData<typeof loader>()
+  const { perfumeHouse: initialHouse } = loaderData
+  
+  // Hydrate house query with loader data
+  const { data: perfumeHouse } = useHouse(
+    initialHouse.slug,
+    initialHouse
+  )
+  
   const { user } = useOutletContext<OutletContextType>()
   const navigate = useNavigate()
   const location = useLocation()
@@ -65,21 +75,66 @@ const HouseDetailPage = () => {
   // Get selectedLetter from navigation state
   const selectedLetter = (location.state as { selectedLetter?: string })
     ?.selectedLetter
-  const { perfumes, loading, hasMore, observerRef, loadMorePerfumes } =
-    useInfiniteScroll({
-      houseSlug: perfumeHouse.slug,
-      initialPerfumes: (perfumeHouse.perfumes || []) as any,
-      scrollContainerRef,
-    })
+  
+  if (!perfumeHouse) {
+    return <div className="p-4">House not found</div>
+  }
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    error: queryError,
+  } = useInfinitePerfumesByHouse({
+    houseSlug: perfumeHouse.slug,
+    initialData: (perfumeHouse.perfumes || []) as any,
+  })
+
+  // Flatten pages to get all perfumes
+  const perfumes = data?.pages.flatMap((page) => page.perfumes || []) || []
+  const loading = isLoading || isFetchingNextPage
+  const hasMore = hasNextPage ?? false
+  const observerRef = useRef<HTMLDivElement>(null)
+
+  const loadMorePerfumes = async () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      await fetchNextPage()
+    }
+  }
+
+  // Prefetch next page when available for better UX
+  useEffect(() => {
+    if (hasNextPage && !isFetchingNextPage && data) {
+      // Prefetch next page after current data is loaded
+      const timer = setTimeout(() => {
+        fetchNextPage().catch(() => {
+          // Silently fail - prefetch is just an optimization
+        })
+      }, 2000) // Wait 2 seconds before prefetching
+
+      return () => clearTimeout(timer)
+    }
+  }, [hasNextPage, isFetchingNextPage, data, fetchNextPage])
+
+  // Use TanStack Query mutation for delete house
+  const deleteHouse = useDeleteHouse()
 
   // Handle delete house
   const handleDelete = async () => {
-    const url = `/api/deleteHouse?id=${perfumeHouse.id}`
-    const res = await fetch(url)
-    if (res.ok) {
-      closeModal()
-      navigate(ALL_HOUSES)
-    }
+    deleteHouse.mutate(
+      { houseId: perfumeHouse.id },
+      {
+        onSuccess: () => {
+          closeModal()
+          navigate(ALL_HOUSES)
+        },
+        onError: (error) => {
+          console.error("Failed to delete house:", error)
+          alert("Failed to delete house. Please try again.")
+        },
+      }
+    )
   }
 
   return (

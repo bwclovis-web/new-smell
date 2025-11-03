@@ -6,6 +6,7 @@ import {
   ItemsToTrade,
 } from "~/components/Containers/TraderProfile"
 import TitleBanner from "~/components/Organisms/TitleBanner"
+import { useTrader } from "~/hooks/useTrader"
 import { getTraderById } from "~/models/user.server"
 import { getTraderDisplayName } from "~/utils/user"
 
@@ -23,8 +24,18 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 }
 
 const TraderProfilePage = () => {
-  const { trader } = useLoaderData<typeof loader>()
+  const loaderData = useLoaderData<typeof loader>()
+  const { trader: initialTrader } = loaderData
+  
+  // Hydrate trader query with loader data
+  const { data: trader } = useTrader(initialTrader.id, initialTrader)
+  
   const { t } = useTranslation()
+  
+  if (!trader) {
+    return <div className="p-4">Trader not found</div>
+  }
+  
   const traderName = getTraderDisplayName(trader)
 
   return (

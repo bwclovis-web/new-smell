@@ -8,7 +8,7 @@ import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 import AddToCollectionModal from "~/components/Organisms/AddToCollectionModal"
 import DangerModal from "~/components/Organisms/DangerModal"
 import Modal from "~/components/Organisms/Modal"
-import { useCSRF } from "~/hooks/useCSRF"
+import { useToggleWishlist } from "~/lib/mutations/wishlist"
 import { useSessionStore } from "~/stores/sessionStore"
 
 interface Perfume {
@@ -34,39 +34,29 @@ const PerfumeIcons = ({
   const { modalOpen, toggleModal, modalId } = useSessionStore()
   const [isPublic, setIsPublic] = useState(false)
   const [showWishlistForm, setShowWishlistForm] = useState(false)
-  const { addToHeaders } = useCSRF()
-  const revertWishlistState = () => {
-    setInWishlist(!inWishlist)
-  }
-
-  const updateWishlistAPI = async (formData: FormData) => {
-    const response = await fetch("/api/wishlist", {
-      method: "POST",
-      headers: addToHeaders(),
-      body: formData,
-    })
-
-    if (!response.ok) {
-      revertWishlistState()
-    }
-  }
+  
+  // Use TanStack Query mutation for wishlist
+  const toggleWishlist = useToggleWishlist()
 
   const handleWishlistToggle = async () => {
     if (inWishlist) {
       // Remove from wishlist
-      const formData = new FormData()
-      formData.append("perfumeId", perfume.id)
-      formData.append("action", "remove")
-
-      // Optimistically update the UI first
-      setInWishlist(false)
-      setShowWishlistForm(false)
-
-      try {
-        await updateWishlistAPI(formData)
-      } catch {
-        revertWishlistState()
-      }
+      toggleWishlist.mutate(
+        {
+          perfumeId: perfume.id,
+          action: "remove",
+        },
+        {
+          onSuccess: () => {
+            setInWishlist(false)
+            setShowWishlistForm(false)
+          },
+          onError: (error) => {
+            console.error("Failed to remove from wishlist:", error)
+            // The mutation's optimistic update will rollback on error
+          },
+        }
+      )
     } else {
       // Show form to add to wishlist with public/private option
       setShowWishlistForm(true)
@@ -74,20 +64,23 @@ const PerfumeIcons = ({
   }
 
   const handleAddToWishlist = async () => {
-    const formData = new FormData()
-    formData.append("perfumeId", perfume.id)
-    formData.append("action", "add")
-    formData.append("isPublic", isPublic.toString())
-
-    // Optimistically update the UI first
-    setInWishlist(true)
-    setShowWishlistForm(false)
-
-    try {
-      await updateWishlistAPI(formData)
-    } catch {
-      revertWishlistState()
-    }
+    toggleWishlist.mutate(
+      {
+        perfumeId: perfume.id,
+        action: "add",
+        isPublic,
+      },
+      {
+        onSuccess: () => {
+          setInWishlist(true)
+          setShowWishlistForm(false)
+        },
+        onError: (error) => {
+          console.error("Failed to add to wishlist:", error)
+          // The mutation's optimistic update will rollback on error
+        },
+      }
+    )
   }
 
   return (
@@ -107,6 +100,7 @@ const PerfumeIcons = ({
           variant="icon"
           background="gold"
           size={"sm"}
+          disabled={toggleWishlist.isPending}
           aria-label={`${inWishlist ? "remove" : "add"} ${perfume.name} ${
             inWishlist ? "from" : "to"
           } wishlist`}
@@ -140,8 +134,9 @@ const PerfumeIcons = ({
               variant="icon"
               background="gold"
               size={"sm"}
+              disabled={toggleWishlist.isPending}
             >
-              Add to Wishlist
+              {toggleWishlist.isPending ? "Adding..." : "Add to Wishlist"}
             </Button>
             <Button
               onClick={() => setShowWishlistForm(false)}

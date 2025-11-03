@@ -140,6 +140,8 @@ const AllPerfumesPage = () => {
       <AlphabeticalNav
         selectedLetter={letterFromUrl}
         onLetterSelect={handleLetterClick}
+        prefetchType="perfumes"
+        houseType="all"
         className="mb-8"
       />
 

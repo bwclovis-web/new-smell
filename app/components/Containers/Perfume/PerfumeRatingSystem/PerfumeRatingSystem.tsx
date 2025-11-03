@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 
 import NoirRating from "~/components/Organisms/NoirRating"
+import { usePerfumeRatings } from "~/hooks/usePerfumeRatings"
 import { useRatingSystem } from "~/hooks"
 
 interface PerfumeRatingSystemProps {
@@ -28,10 +29,16 @@ const PerfumeRatingSystem = ({
   perfumeId,
   userId,
   userRatings = null,
-  averageRatings = null,
+  averageRatings: initialAverageRatings = null,
   readonly = false,
 }: PerfumeRatingSystemProps) => {
   const { t } = useTranslation()
+  
+  // Use TanStack Query to get ratings (includes averageRatings that update optimistically)
+  const { data: ratingsData } = usePerfumeRatings(perfumeId)
+  // Use query data if available, otherwise fall back to prop
+  const averageRatings = ratingsData?.averageRatings || initialAverageRatings
+  
   const {
     currentRatings,
     isLoggedIn,

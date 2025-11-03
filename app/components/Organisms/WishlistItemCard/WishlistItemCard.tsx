@@ -4,8 +4,7 @@ import { IoMdCloseCircle } from "react-icons/io"
 import { Form, NavLink } from "react-router"
 
 import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
-import { useCSRF } from "~/hooks/useCSRF"
-import { safeAsync } from "~/utils/errorHandling.patterns"
+import { useToggleWishlist } from "~/lib/mutations/wishlist"
 import { styleMerge } from "~/utils/styleUtils"
 
 import {
@@ -28,30 +27,30 @@ const WishlistItemCard = ({
   availableAmount,
 }: WishlistItemCardProps) => {
   const [isPublic, setIsPublic] = useState(item.isPublic)
-  const { addToHeaders } = useCSRF()
   const { t } = useTranslation()
+  
+  // Use TanStack Query mutation for wishlist visibility
+  const toggleWishlist = useToggleWishlist()
 
   const handleVisibilityToggle = async () => {
     const newVisibility = !isPublic
-    // Optimistically update UI
-    setIsPublic(newVisibility)
-
-    const formData = new FormData()
-    formData.append("perfumeId", item.perfume.id)
-    formData.append("action", "updateVisibility")
-    formData.append("isPublic", newVisibility.toString())
-
-    const [error, response] = await safeAsync(() => fetch("/api/wishlist", {
-        method: "POST",
-        headers: addToHeaders(),
-        body: formData,
-      }))
-
-    if (error || !response.ok) {
-      // Revert on error
-      console.error("Error updating wishlist visibility:", error)
-      setIsPublic(!newVisibility)
-    }
+    
+    toggleWishlist.mutate(
+      {
+        perfumeId: item.perfume.id,
+        action: "updateVisibility",
+        isPublic: newVisibility,
+      },
+      {
+        onSuccess: () => {
+          setIsPublic(newVisibility)
+        },
+        onError: (error) => {
+          console.error("Error updating wishlist visibility:", error)
+          // The mutation's optimistic update will rollback on error
+        },
+      }
+    )
   }
 
   return (

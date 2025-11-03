@@ -2,11 +2,19 @@ import { useTranslation } from "react-i18next"
 import { RiLogoutBoxRLine } from "react-icons/ri"
 
 import { Button } from "~/components/Atoms/Button/Button"
+import { clearCacheOnLogout } from "~/lib/utils/cacheManagement"
 
 const LogoutButton = () => {
   const { t } = useTranslation()
+  
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    // Clear cache before logout redirect
+    clearCacheOnLogout()
+    // Form will continue with default submission
+  }
+  
   return (
-    <form method="post" action="/api/log-out">
+    <form method="post" action="/api/log-out" onSubmit={handleSubmit}>
       <Button
         variant="icon"
         type="submit"

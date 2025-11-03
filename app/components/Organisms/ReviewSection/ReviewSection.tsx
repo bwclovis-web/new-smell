@@ -1,9 +1,14 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Button } from "~/components/Atoms/Button"
 import RichTextEditor from "~/components/Atoms/RichTextEditor"
 import ReviewCard from "~/components/Molecules/ReviewCard"
+import {
+  useCreateReview,
+  useDeleteReview,
+} from "~/lib/mutations/reviews"
+import { usePerfumeReviews } from "~/hooks/usePerfumeReviews"
 import { useCSRF } from "~/hooks/useCSRF"
 import { safeAsync } from "~/utils/errorHandling.patterns"
 import { sanitizeString } from "~/utils/validation"
@@ -38,53 +43,24 @@ const ReviewSection = ({
   existingUserReview,
 }: ReviewSectionProps) => {
   const { t } = useTranslation()
-  const { submitForm } = useCSRF()
-  const [reviews, setReviews] = useState<Review[]>([])
-  const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
-  const [hasMore, setHasMore] = useState(true)
   const [showReviewForm, setShowReviewForm] = useState(false)
   const [reviewContent, setReviewContent] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  // Load reviews
-  const loadReviews = async (pageNum: number = 1, append: boolean = false) => {
-    const [error, response] = await safeAsync(() => fetch(`/api/reviews?perfumeId=${perfumeId}&page=${pageNum}&limit=5&isApproved=true`))
-
-    if (error) {
-      console.error("Error loading reviews:", error)
-      setLoading(false)
-      return
-    }
-
-    const [jsonError, data] = await safeAsync(() => response.json())
-
-    if (jsonError) {
-      console.error("Error parsing reviews:", jsonError)
-      setLoading(false)
-      return
-    }
-
-    if (data.reviews) {
-      if (append) {
-        setReviews(prev => [...prev, ...data.reviews])
-      } else {
-        setReviews(data.reviews)
-      }
-      setHasMore(data.pagination.hasNextPage)
-    }
-
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    loadReviews()
-  }, [perfumeId])
+  
+  // Use TanStack Query for reviews
+  const { data: reviewsData, isLoading: loading, refetch } = usePerfumeReviews(perfumeId, { page, limit: 5 })
+  // Extract reviews from data
+  const reviews = reviewsData?.reviews || []
+  const hasMore = reviewsData?.pagination?.hasNextPage ?? false
+  
+  // Mutations
+  const createReview = useCreateReview()
+  const deleteReview = useDeleteReview()
 
   const handleLoadMore = () => {
-    const nextPage = page + 1
-    setPage(nextPage)
-    loadReviews(nextPage, true)
+    // For now, pagination is handled by the query
+    // TODO: Convert to infinite query for better pagination support
+    setPage(prev => prev + 1)
   }
 
   const handleCreateReview = async () => {
@@ -94,40 +70,28 @@ const ReviewSection = ({
       return
     }
 
-    setIsSubmitting(true)
-
-    const formData = new FormData()
-    formData.append("_action", "create")
-    formData.append("perfumeId", perfumeId)
-    formData.append("review", sanitizedReview)
-
-    const [error, response] = await safeAsync(() => submitForm("/api/reviews", formData))
-
-    if (error) {
-      console.error(t("singlePerfume.review.failedToCreateReview"), error)
-      alert(t("singlePerfume.review.failedToCreateReview"))
-      setIsSubmitting(false)
-      return
-    }
-
-    const [jsonError, result] = await safeAsync(() => response.json())
-
-    if (jsonError) {
-      console.error(t("singlePerfume.review.failedToCreateReview"), jsonError)
-      alert(t("singlePerfume.review.failedToCreateReview"))
-      setIsSubmitting(false)
-      return
-    }
-
-    if (result.success) {
-      setReviewContent("")
-      setShowReviewForm(false)
-      loadReviews()
-    } else {
-      alert(result.error || t("singlePerfume.review.failedToCreateReview"))
-    }
-
-    setIsSubmitting(false)
+    // Use mutation with optimistic update
+    createReview.mutate(
+      {
+        perfumeId,
+        review: sanitizedReview,
+      },
+      {
+        onSuccess: () => {
+          setReviewContent("")
+          setShowReviewForm(false)
+          // Refetch reviews to show new review
+          refetch()
+        },
+        onError: (error) => {
+          alert(
+            error instanceof Error
+              ? error.message
+              : t("singlePerfume.review.failedToCreateReview")
+          )
+        },
+      }
+    )
   }
 
   const handleEditReview = async (reviewId: string) => {
@@ -139,39 +103,33 @@ const ReviewSection = ({
       return
     }
 
-    const formData = new FormData()
-    formData.append("_action", "delete")
-    formData.append("reviewId", reviewId)
-
-    const [error, response] = await safeAsync(() => submitForm("/api/reviews", formData))
-
-    if (error) {
-      console.error(t("singlePerfume.review.failedToDeleteReview"), error)
-      alert(t("singlePerfume.review.failedToDeleteReview"))
-      return
-    }
-
-    const [jsonError, result] = await safeAsync(() => response.json())
-
-    if (jsonError) {
-      console.error(t("singlePerfume.review.failedToDeleteReview"), jsonError)
-      alert(t("singlePerfume.review.failedToDeleteReview"))
-      return
-    }
-
-    if (result.success) {
-      // Remove the review from the list
-      setReviews(prev => prev.filter(review => review.id !== reviewId))
-    } else {
-      alert(result.error || t("singlePerfume.review.failedToDeleteReview"))
-    }
+    // Use mutation with optimistic update
+    deleteReview.mutate(
+      {
+        reviewId,
+        perfumeId, // Include for proper query invalidation
+      },
+      {
+        onSuccess: () => {
+          // Refetch reviews to reflect deletion
+          refetch()
+        },
+        onError: (error) => {
+          alert(
+            error instanceof Error
+              ? error.message
+              : t("singlePerfume.review.failedToDeleteReview")
+          )
+        },
+      }
+    )
   }
 
-  const handleModerateReview = async (reviewId: string, isApproved: boolean) => {
-    // Optimistically remove the review from the list for real-time feel
-    const originalReviews = [...reviews]
-    setReviews(prev => prev.filter(review => review.id !== reviewId))
+  const { submitForm } = useCSRF()
 
+  const handleModerateReview = async (reviewId: string, isApproved: boolean) => {
+    // For moderation, we still use the old pattern since there's no mutation yet
+    // TODO: Create useModerateReview mutation with optimistic updates
     const formData = new FormData()
     formData.append("_action", "moderate")
     formData.append("reviewId", reviewId)
@@ -181,7 +139,6 @@ const ReviewSection = ({
 
     if (error) {
       console.error(t("singlePerfume.review.failedToModerateReview"), error)
-      setReviews(originalReviews)
       alert(t("singlePerfume.review.failedToModerateReview"))
       return
     }
@@ -190,18 +147,12 @@ const ReviewSection = ({
 
     if (jsonError || !result.success) {
       console.error(t("singlePerfume.review.failedToModerateReview"), jsonError)
-      setReviews(originalReviews)
       alert(result?.error || t("singlePerfume.review.failedToModerateReview"))
       return
     }
 
-    // If viewing all reviews (not just approved), reload to show updated status
-    // Otherwise the optimistic removal is sufficient
-    if (!window.location.search.includes("isApproved=false")) {
-      // Review was removed optimistically and stays removed
-      // Optionally reload to ensure consistency
-      loadReviews()
-    }
+    // Refetch reviews after moderation
+    refetch()
   }
 
   if (loading) {
@@ -248,14 +199,18 @@ const ReviewSection = ({
           <div className="flex justify-end space-x-2">
             <Button
               onClick={handleCreateReview}
-              disabled={!reviewContent.trim() || isSubmitting}
+              disabled={!reviewContent.trim() || createReview.isPending}
               className="px-4 py-2 bg-noir-gold text-noir-black rounded-md hover:bg-noir-gold/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {isSubmitting
+              {createReview.isPending
                 ? t("singlePerfume.review.submitting")
                 : t("singlePerfume.review.submitReview")}
             </Button>
-            <Button onClick={() => setShowReviewForm(false)} variant="secondary">
+            <Button 
+              onClick={() => setShowReviewForm(false)} 
+              variant="secondary"
+              disabled={createReview.isPending}
+            >
               {t("singlePerfume.review.cancel")}
             </Button>
           </div>
