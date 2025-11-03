@@ -1,19 +1,31 @@
 import type { LoaderFunction, ActionFunction } from "react-router"
 
+import {
+  createPerfumeReview,
+  deletePerfumeReview,
+  getPerfumeReviews,
+  getUserPerfumeReview,
+  moderatePerfumeReview,
+  updatePerfumeReview,
+} from "~/models/perfumeReview.server"
+import {
+  parseFormData,
+  parsePaginationParams,
+  parseQueryParams,
+  withAuthenticatedAction,
+  withPublicLoader,
+} from "~/utils/api-route-helpers.server"
+import {
+  createErrorResponse,
+  createSuccessResponse,
+} from "~/utils/response.server"
+
 /**
  * GET /api/reviews?perfumeId={id}&page=1&limit=10
  * Fetches reviews with optional filters and pagination.
  * Public endpoint - no authentication required.
  */
 export const loader: LoaderFunction = async (args) => {
-  // Dynamic imports to ensure server-only code is not bundled for client
-  const {
-    parseQueryParams,
-    parsePaginationParams,
-    withPublicLoader,
-  } = await import("~/utils/api-route-helpers.server")
-  const { getPerfumeReviews } = await import("~/models/perfumeReview.server")
-
   return withPublicLoader(
     async ({ request }) => {
       const params = parseQueryParams(request)
@@ -56,23 +68,6 @@ export const loader: LoaderFunction = async (args) => {
  * Requires authentication.
  */
 export const action: ActionFunction = async (args) => {
-  // Dynamic imports to ensure server-only code is not bundled for client
-  const {
-    parseFormData,
-    withAuthenticatedAction,
-  } = await import("~/utils/api-route-helpers.server")
-  const {
-    createPerfumeReview,
-    deletePerfumeReview,
-    getUserPerfumeReview,
-    moderatePerfumeReview,
-    updatePerfumeReview,
-  } = await import("~/models/perfumeReview.server")
-  const {
-    createErrorResponse,
-    createSuccessResponse,
-  } = await import("~/utils/response.server")
-
   return withAuthenticatedAction(
     async ({ request, auth }) => {
       const formData = await parseFormData(request)
