@@ -38,12 +38,8 @@ export function useInfiniteHouses(options: UseInfiniteHousesOptions) {
   } = options
 
   return useInfiniteQuery({
-    queryKey: queryKeys.houses.byLetterPaginated(
-      letter || "",
-      houseType,
-      0,
-      pageSize
-    ),
+    // Use infinite-specific query key without pagination params
+    queryKey: queryKeys.houses.byLetterInfinite(letter || "", houseType),
     queryFn: ({ pageParam }) => {
       const skip = pageParam as number
       return getHousesByLetterPaginated(letter!, houseType, skip, pageSize)
@@ -59,7 +55,8 @@ export function useInfiniteHouses(options: UseInfiniteHousesOptions) {
       return undefined // No more pages
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    initialData: initialData
+    // Use placeholderData for non-SSR scenarios or when you want stale-while-revalidate behavior
+    placeholderData: initialData
       ? {
           pages: [
             {

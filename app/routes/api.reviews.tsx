@@ -1,92 +1,86 @@
-import type { ActionFunction, LoaderFunction } from "react-router"
+import type { LoaderFunction, ActionFunction } from "react-router"
+
+import {
+  createPerfumeReview,
+  deletePerfumeReview,
+  getPerfumeReviews,
+  getUserPerfumeReview,
+  moderatePerfumeReview,
+  updatePerfumeReview,
+} from "~/models/perfumeReview.server"
+import {
+  parseFormData,
+  parseQueryParams,
+  parsePaginationParams,
+  withAuthenticatedAction,
+  withPublicLoader,
+  createPaginatedResponse,
+} from "~/utils/api-route-helpers.server"
+import { createErrorResponse, createSuccessResponse } from "~/utils/response.server"
 
 /**
- * GET /api/reviews - Get reviews with optional filters and pagination
+ * GET /api/reviews?perfumeId={id}&page=1&limit=10
+ * Fetches reviews with optional filters and pagination.
+ * Public endpoint - no authentication required.
  */
-export const loader: LoaderFunction = async ({ request }) => {
-  const { getPerfumeReviews } = await import("~/models/perfumeReview.server")
-  const { createErrorResponse } = await import("~/utils/response.server")
+export const loader: LoaderFunction = withPublicLoader(
+  async ({ request }) => {
+    const params = parseQueryParams(request)
+    const pagination = parsePaginationParams(request)
 
-  try {
-    const url = new URL(request.url)
-    const perfumeId = url.searchParams.get("perfumeId")
-    const userId = url.searchParams.get("userId")
-    const page = parseInt(url.searchParams.get("page") || "1", 10)
-    const limit = parseInt(url.searchParams.get("limit") || "10", 10)
-    const isApproved = url.searchParams.get("isApproved")
+    // At least one of perfumeId or userId is required
+    const perfumeId = params.get("perfumeId")
+    const userId = params.get("userId")
 
     if (!perfumeId && !userId) {
-      return createErrorResponse("Either perfumeId or userId is required", 400)
+      throw new Error("Either perfumeId or userId is required")
     }
 
+    // Build filters
     const filters: any = {}
-    if (perfumeId) {
-      filters.perfumeId = perfumeId
-    }
-    if (userId) {
-      filters.userId = userId
-    }
-    // Only apply isApproved filter if explicitly provided
-    if (isApproved !== null && isApproved !== undefined) {
-      filters.isApproved = isApproved === "true"
+    if (perfumeId) filters.perfumeId = perfumeId
+    if (userId) filters.userId = userId
+
+    // Optional isApproved filter
+    const isApproved = params.get("isApproved")
+    if (isApproved !== null) {
+      filters.isApproved = params.getBoolean("isApproved")
     }
 
+    // Fetch reviews
     const result = await getPerfumeReviews(perfumeId || "", filters, {
-      page,
-      limit,
+      page: pagination.page,
+      limit: pagination.limit,
     })
 
     return result
-  } catch (error) {
-    return createErrorResponse("Failed to fetch reviews", 500)
-  }
-}
+  },
+  { context: { api: "reviews", method: "GET" } }
+)
 
 /**
- * POST /api/reviews - Create a new review
+ * POST /api/reviews
+ * Handle review actions: create, update, delete, moderate
+ * Requires authentication.
  */
-export const action: ActionFunction = async ({ request }) => {
-  const {
-    createPerfumeReview,
-    deletePerfumeReview,
-    getUserPerfumeReview,
-    moderatePerfumeReview,
-    updatePerfumeReview,
-  } = await import("~/models/perfumeReview.server")
-  const { authenticateUser } = await import("~/utils/auth.server")
-  const { createErrorResponse, createSuccessResponse } = await import("~/utils/response.server")
-
-  try {
-    // Authenticate user
-    const authResult = await authenticateUser(request)
-    if (!authResult.success) {
-      return createErrorResponse(authResult.error!, authResult.status || 401)
-    }
-
-    const user = authResult.user!
-    const formData = await request.formData()
-    const action = formData.get("_action") as string
+export const action: ActionFunction = withAuthenticatedAction(
+  async ({ request, auth }) => {
+    const formData = await parseFormData(request)
+    const action = formData.required("_action")
 
     switch (action) {
       case "create": {
-        const perfumeId = formData.get("perfumeId") as string
-        const review = formData.get("review") as string
-
-        if (!perfumeId || !review) {
-          return createErrorResponse(
-            "Perfume ID and review content are required",
-            400
-          )
-        }
+        const perfumeId = formData.required("perfumeId")
+        const review = formData.required("review")
 
         // Check if user already has a review for this perfume
-        const existingReview = await getUserPerfumeReview(user.id, perfumeId)
+        const existingReview = await getUserPerfumeReview(auth.userId, perfumeId)
         if (existingReview) {
           return createErrorResponse("You have already reviewed this perfume", 400)
         }
 
         const newReview = await createPerfumeReview({
-          userId: user.id,
+          userId: auth.userId,
           perfumeId,
           review,
         })
@@ -98,21 +92,15 @@ export const action: ActionFunction = async ({ request }) => {
       }
 
       case "update": {
-        const reviewId = formData.get("reviewId") as string
-        const review = formData.get("review") as string
-
-        if (!reviewId || !review) {
-          return createErrorResponse(
-            "Review ID and review content are required",
-            400
-          )
-        }
+        const reviewId = formData.required("reviewId")
+        const review = formData.required("review")
 
         const updatedReview = await updatePerfumeReview(
           reviewId,
           { review },
-          user.id
+          auth.userId
         )
+
         return createSuccessResponse({
           message: "Review updated successfully",
           data: updatedReview,
@@ -120,13 +108,10 @@ export const action: ActionFunction = async ({ request }) => {
       }
 
       case "delete": {
-        const reviewId = formData.get("reviewId") as string
+        const reviewId = formData.required("reviewId")
 
-        if (!reviewId) {
-          return createErrorResponse("Review ID is required", 400)
-        }
+        await deletePerfumeReview(reviewId, auth.userId, auth.user.role)
 
-        await deletePerfumeReview(reviewId, user.id, user.role)
         return createSuccessResponse({
           message: "Review deleted successfully",
         })
@@ -134,18 +119,15 @@ export const action: ActionFunction = async ({ request }) => {
 
       case "moderate": {
         // Only admin and editor roles can moderate
-        if (user.role !== "admin" && user.role !== "editor") {
+        if (auth.user.role !== "admin" && auth.user.role !== "editor") {
           return createErrorResponse("Insufficient permissions", 403)
         }
 
-        const reviewId = formData.get("reviewId") as string
-        const isApproved = formData.get("isApproved") === "true"
-
-        if (!reviewId) {
-          return createErrorResponse("Review ID is required", 400)
-        }
+        const reviewId = formData.required("reviewId")
+        const isApproved = formData.getBoolean("isApproved")
 
         const moderatedReview = await moderatePerfumeReview(reviewId, isApproved)
+
         return createSuccessResponse({
           message: "Review moderated successfully",
           data: moderatedReview,
@@ -153,9 +135,8 @@ export const action: ActionFunction = async ({ request }) => {
       }
 
       default:
-        return createErrorResponse("Invalid action", 400)
+        return createErrorResponse(`Invalid action: ${action}`, 400)
     }
-  } catch (error) {
-    return createErrorResponse("An error occurred while processing the request", 500)
-  }
-}
+  },
+  { context: { api: "reviews", method: "POST" } }
+)

@@ -55,30 +55,14 @@ export const queryKeys = {
       [...queryKeys.perfumes.details(), slug] as const,
     byLetter: (letter: string, houseType: string = "all") =>
       [...queryKeys.perfumes.all, "byLetter", letter, houseType] as const,
-    byLetterPaginated: (
-      letter: string,
-      houseType: string,
-      skip: number,
-      take: number
-    ) =>
-      [
-        ...queryKeys.perfumes.all,
-        "byLetterPaginated",
-        letter,
-        houseType,
-        skip,
-        take,
-      ] as const,
+    // For infinite queries - don't include pagination params in key
+    // All pages share the same cache entry
+    byLetterInfinite: (letter: string, houseType: string) =>
+      [...queryKeys.perfumes.all, "byLetterInfinite", letter, houseType] as const,
     byHouse: (houseSlug: string) =>
       [...queryKeys.perfumes.all, "byHouse", houseSlug] as const,
-    moreByHouse: (houseSlug: string, skip: number, take: number) =>
-      [
-        ...queryKeys.perfumes.all,
-        "moreByHouse",
-        houseSlug,
-        skip,
-        take,
-      ] as const,
+    byHouseInfinite: (houseSlug: string) =>
+      [...queryKeys.perfumes.all, "byHouseInfinite", houseSlug] as const,
   },
 } as const
 

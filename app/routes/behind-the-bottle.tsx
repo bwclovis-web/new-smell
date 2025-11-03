@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   type MetaFunction,
@@ -11,7 +11,7 @@ import AlphabeticalNav from "~/components/Organisms/AlphabeticalNav"
 import DataDisplaySection from "~/components/Organisms/DataDisplaySection"
 import DataFilters from "~/components/Organisms/DataFilters"
 import TitleBanner from "~/components/Organisms/TitleBanner"
-import { useLetterPagination } from "~/hooks/useLetterPagination"
+import { useInfiniteHouses } from "~/hooks/useInfiniteHouses"
 import { useScrollToDataList } from "~/hooks/useScrollToDataList"
 import { useSyncPaginationUrl } from "~/hooks/useSyncPaginationUrl"
 import { getDefaultSortOptions } from "~/utils/sortUtils"
@@ -96,6 +96,130 @@ const useHouseHandlers = (setSelectedHouseType: any, setSelectedSort: any) => {
   return { handleHouseTypeChange, handleSortChange }
 }
 
+const useHousesPagination = (
+  data: any,
+  currentPage: number,
+  pageSize: number
+) => {
+  const allHouses = useMemo(() => {
+    if (!data?.pages) {
+      return []
+    }
+    return data.pages.flatMap((page: any) => page.houses || [])
+  }, [data])
+
+  const totalCount = data?.pages[0]?.count || 0
+  const totalPages = Math.ceil(totalCount / pageSize)
+
+  const houses = useMemo(() => {
+    const startIdx = (currentPage - 1) * pageSize
+    const endIdx = startIdx + pageSize
+    return allHouses.slice(startIdx, endIdx)
+  }, [allHouses, currentPage, pageSize])
+
+  const pagination = useMemo(
+    () => ({
+      currentPage,
+      totalPages,
+      totalCount,
+      hasNextPage: currentPage < totalPages,
+      hasPrevPage: currentPage > 1,
+      pageSize,
+    }),
+    [
+      currentPage,
+      totalPages,
+      totalCount,
+      pageSize,
+    ]
+  )
+
+  return { houses, pagination }
+}
+
+const usePageNavigation = (
+  navigate: any,
+  letterFromUrl: string | null,
+  currentPage: number,
+  pagination: { totalPages: number }
+) => {
+  const handleNextPage = async () => {
+    if (currentPage < pagination.totalPages) {
+      navigate(
+        `/behind-the-bottle/${letterFromUrl?.toLowerCase()}?pg=${currentPage + 1}`,
+        { preventScrollReset: true }
+      )
+    }
+  }
+
+  const handlePrevPage = async () => {
+    if (currentPage > 1) {
+      if (currentPage === 2) {
+        navigate(`/behind-the-bottle/${letterFromUrl?.toLowerCase()}`, {
+          preventScrollReset: true,
+        })
+      } else {
+        navigate(
+          `/behind-the-bottle/${letterFromUrl?.toLowerCase()}?pg=${currentPage - 1}`,
+          { preventScrollReset: true }
+        )
+      }
+    }
+  }
+
+  return { handleNextPage, handlePrevPage }
+}
+
+const useHousesData = (
+  letterFromUrl: string | null,
+  selectedHouseType: string,
+  currentPage: number
+) => {
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    error,
+  } = useInfiniteHouses({
+    letter: letterFromUrl,
+    houseType: selectedHouseType,
+    pageSize: 16,
+  })
+
+  const pageSize = 16
+
+  useEffect(() => {
+    if (letterFromUrl && currentPage > data?.pages?.length) {
+      const pagesToFetch = currentPage - (data?.pages?.length || 0)
+      let fetchCount = 0
+      
+      const fetchPagesSequentially = async () => {
+        while (fetchCount < pagesToFetch && hasNextPage) {
+          await fetchNextPage()
+          fetchCount++
+        }
+      }
+      
+      fetchPagesSequentially().catch(() => {
+        // Silently fail
+      })
+    }
+  }, [
+    currentPage,
+    data?.pages?.length,
+    hasNextPage,
+    letterFromUrl,
+    fetchNextPage,
+  ])
+
+  const { houses, pagination } = useHousesPagination(data, currentPage, pageSize)
+  const loading = isLoading || isFetchingNextPage
+
+  return { houses, pagination, loading, error, data }
+}
+
 const AllHousesPage = () => {
   const { t } = useTranslation()
   const params = useParams()
@@ -114,22 +238,18 @@ const AllHousesPage = () => {
   const filters = useHouseFilters(t)
   const handlers = useHouseHandlers(setSelectedHouseType, setSelectedSort)
 
-  // Pagination hook
-  const {
-    data: houses,
-    loading,
-    error,
-    pagination,
-    nextPage: paginationNextPage,
-    prevPage: paginationPrevPage,
-  } = useLetterPagination({
-    letter: letterFromUrl,
-    endpoint: "/api/houses-by-letter-paginated",
-    itemName: "houses",
-    pageSize: 16,
-    houseType: selectedHouseType,
-    initialPage: pageFromUrl,
-  })
+  const { houses, pagination, loading, error } = useHousesData(
+    letterFromUrl,
+    selectedHouseType,
+    pageFromUrl
+  )
+
+  const { handleNextPage, handlePrevPage } = usePageNavigation(
+    navigate,
+    letterFromUrl,
+    pageFromUrl,
+    pagination
+  )
 
   // Preserve scroll position during loading to prevent jump to top
   useEffect(() => {
@@ -160,15 +280,13 @@ const AllHousesPage = () => {
     }
   }
 
-  // Scroll when letter changes (wait for data to load)
+  // Scroll when letter or pagination changes (wait for data to load)
   useScrollToDataList({
     trigger: letterFromUrl,
     enabled: !!letterFromUrl,
     isLoading: loading,
     hasData: houses.length > 0,
   })
-
-  // Scroll when pagination changes (wait for data to load)
   useScrollToDataList({
     trigger: pagination.currentPage,
     enabled: !!letterFromUrl && !!pagination.currentPage,
@@ -176,16 +294,8 @@ const AllHousesPage = () => {
     hasData: houses.length > 0,
   })
 
-  const handleNextPage = async () => {
-    await paginationNextPage()
-  }
-
-  const handlePrevPage = async () => {
-    await paginationPrevPage()
-  }
-
   if (error) {
-    return <div>Error loading houses: {error}</div>
+    return <div>Error loading houses: {error instanceof Error ? error.message : "Unknown error"}</div>
   }
 
   return (

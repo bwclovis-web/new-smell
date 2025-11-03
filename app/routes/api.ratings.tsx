@@ -1,82 +1,72 @@
-import type { ActionFunction } from "react-router"
+import type { LoaderFunction, ActionFunction } from "react-router"
 
 import {
   createPerfumeRating,
+  getPerfumeRatings,
   getUserPerfumeRating,
   updatePerfumeRating,
 } from "~/models/perfumeRating.server"
-import { authenticateUser } from "~/utils/auth.server"
-import { createErrorResponse, createSuccessResponse } from "~/utils/response.server"
+import {
+  parseFormData,
+  parseQueryParams,
+  validateRating,
+  validateRatingCategory,
+  withAuthenticatedAction,
+  withPublicLoader,
+} from "~/utils/api-route-helpers.server"
 
-async function saveRating(
-  userId: string,
-  perfumeId: string,
-  category: string,
-  rating: number
-) {
-  const existingRating = await getUserPerfumeRating(userId, perfumeId)
+/**
+ * GET /api/ratings?perfumeId={id}
+ * Fetches ratings and averages for a specific perfume.
+ * Public endpoint - no authentication required.
+ */
+export const loader: LoaderFunction = withPublicLoader(
+  async ({ request }) => {
+    const params = parseQueryParams(request)
+    const perfumeId = params.required("perfumeId")
 
-  if (existingRating) {
-    await updatePerfumeRating(existingRating.id, {
-      [category]: rating,
-    })
-  } else {
-    await createPerfumeRating({
-      userId,
-      perfumeId,
-      [category]: rating,
-    })
-  }
-}
+    const ratingsData = await getPerfumeRatings(perfumeId)
+    return ratingsData
+  },
+  { context: { api: "ratings", method: "GET" } }
+)
 
-export const action: ActionFunction = async ({ request }) => {
-  try {
-    // Authenticate user first (same pattern as wishlist)
-    const authResult = await authenticateUser(request)
+/**
+ * POST /api/ratings
+ * Create or update a rating for a perfume.
+ * Requires authentication.
+ */
+export const action: ActionFunction = withAuthenticatedAction(
+  async ({ request, auth }) => {
+    const formData = await parseFormData(request)
 
-    if (!authResult.success) {
-      return createErrorResponse(authResult.error!, authResult.status || 401)
+    // Extract and validate required fields
+    const perfumeId = formData.required("perfumeId")
+    const category = formData.required("category")
+    const rating = formData.getInt("rating")
+
+    // Validate rating value and category
+    validateRating(rating)
+    validateRatingCategory(category)
+
+    // Check if rating already exists
+    const existingRating = await getUserPerfumeRating(auth.userId, perfumeId)
+
+    if (existingRating) {
+      // Update existing rating
+      await updatePerfumeRating(existingRating.id, {
+        [category]: rating,
+      })
+    } else {
+      // Create new rating
+      await createPerfumeRating({
+        userId: auth.userId,
+        perfumeId,
+        [category]: rating,
+      })
     }
 
-    const formData = await request.formData()
-
-    // Extract data from form (no need to validate userId since we get it from auth)
-    const category = formData.get("category") as string
-    const rating = parseInt(formData.get("rating") as string, 10)
-    const perfumeId = formData.get("perfumeId") as string
-
-    // Validate required fields (userId comes from auth)
-    if (!perfumeId || !category || isNaN(rating)) {
-      return createErrorResponse("Missing required fields", 400)
-    }
-
-    // Validate rating value
-    if (rating < 1 || rating > 5) {
-      return createErrorResponse("Rating must be between 1 and 5", 400)
-    }
-
-    // Validate category
-    const validCategories = [
-      "longevity",
-      "sillage",
-      "gender",
-      "priceValue",
-      "overall",
-    ]
-    if (!validCategories.includes(category)) {
-      return createErrorResponse("Invalid rating category", 400)
-    }
-
-    await saveRating(authResult.user.id, perfumeId, category, rating)
-    return createSuccessResponse()
-  } catch (error) {
-    const { ErrorHandler } = await import("~/utils/errorHandling")
-    const appError = ErrorHandler.handle(error, {
-      api: "ratings",
-      perfumeId,
-      category,
-      userId: authResult.user.id,
-    })
-    return createErrorResponse(appError.userMessage, 500)
-  }
-}
+    return { message: "Rating saved successfully" }
+  },
+  { context: { api: "ratings", method: "POST" } }
+)

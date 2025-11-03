@@ -167,25 +167,20 @@ export function useCreateOrUpdateRating() {
     onSuccess: (data, variables) => {
       const { perfumeId } = variables
 
-      // Invalidate ratings queries for this perfume to get accurate averages
+      // Invalidate only ratings queries for this specific perfume
       queryClient.invalidateQueries({
         queryKey: queryKeys.ratings.byPerfume(perfumeId),
+        exact: true,
       })
 
-      // Invalidate all ratings queries
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.ratings.all,
-      })
-
-      // Invalidate perfume detail query (shows average ratings)
+      // Invalidate only the perfume detail query (shows average ratings)
       queryClient.invalidateQueries({
         queryKey: perfumeQueryKeys.perfumes.detail(perfumeId),
+        exact: true,
       })
 
-      // Invalidate perfume lists (might show rating info)
-      queryClient.invalidateQueries({
-        queryKey: perfumeQueryKeys.perfumes.all,
-      })
+      // Don't invalidate all ratings or all perfume lists - too broad
+      // Only this perfume's ratings changed
     },
   })
 }

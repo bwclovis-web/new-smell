@@ -99,14 +99,14 @@ export function getRetryConfig(queryType: QueryType = 'important'): RetryOptions
  * - Implement stale-while-revalidate pattern for better UX
  * 
  * Error Handling:
- * - Global error handler for unhandled query errors
+ * - Query cache listener for error monitoring with metadata access
  * - Per-query-type retry strategies
  * 
  * @see app/lib/utils/backgroundRefetch.ts for refetch strategies
  * @see app/lib/utils/staleWhileRevalidate.ts for SWR pattern
  */
 function createQueryClient(): QueryClient {
-  return new QueryClient({
+  const client = new QueryClient({
     defaultOptions: {
       queries: {
         staleTime: 5 * 60 * 1000, // 5 minutes
@@ -114,13 +114,6 @@ function createQueryClient(): QueryClient {
         retry: retryConfigs.important, // Default to 'important' retry strategy
         refetchOnWindowFocus: false,
         refetchOnReconnect: true,
-        // Global error handler for queries
-        onError: (error) => {
-          // Log query errors for monitoring
-          console.error('Query error:', error)
-          // In production, you might want to send this to an error tracking service
-          // e.g., Sentry, LogRocket, etc.
-        },
       },
       mutations: {
         retry: (failureCount, error) => {
@@ -137,13 +130,68 @@ function createQueryClient(): QueryClient {
           }
           return true
         },
-        // Global error handler for mutations
-        onError: (error) => {
-          console.error('Mutation error:', error)
-        },
       },
     },
   })
+
+  // Set up query cache listener for error monitoring
+  // This gives access to query metadata, unlike the onError callback
+  client.getQueryCache().subscribe((event) => {
+    if (event.type === 'error') {
+      const { query, error } = event
+      
+      // Log errors with query context for debugging
+      console.error('Query error:', {
+        queryKey: query.queryKey,
+        error,
+        queryHash: query.queryHash,
+      })
+
+      // In production, send to error tracking service
+      // if (import.meta.env.PROD) {
+      //   Sentry.captureException(error, {
+      //     extra: {
+      //       queryKey: query.queryKey,
+      //       queryHash: query.queryHash,
+      //     },
+      //   })
+      // }
+    }
+
+    // Optional: Monitor slow queries
+    if (event.type === 'updated' && event.action.type === 'success') {
+      const duration = Date.now() - event.query.state.dataUpdatedAt
+      if (duration > 2000) { // Queries taking > 2 seconds
+        console.warn('Slow query detected:', {
+          queryKey: event.query.queryKey,
+          duration: `${duration}ms`,
+        })
+      }
+    }
+  })
+
+  // Set up mutation cache listener
+  client.getMutationCache().subscribe((event) => {
+    if (event.type === 'error') {
+      const { mutation, error } = event
+      
+      console.error('Mutation error:', {
+        mutationKey: mutation.options.mutationKey,
+        error,
+      })
+
+      // In production, send to error tracking service
+      // if (import.meta.env.PROD) {
+      //   Sentry.captureException(error, {
+      //     extra: {
+      //       mutationKey: mutation.options.mutationKey,
+      //     },
+      //   })
+      // }
+    }
+  })
+
+  return client
 }
 
 // Export singleton instance

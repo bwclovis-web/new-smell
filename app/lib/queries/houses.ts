@@ -60,15 +60,10 @@ export const queryKeys = {
       [...queryKeys.houses.all, "byLetter", letter, houseType] as const,
     paginated: (filters: HouseFilters) =>
       [...queryKeys.houses.all, "paginated", filters] as const,
-    byLetterPaginated: (letter: string, houseType: string, skip: number, take: number) =>
-      [
-        ...queryKeys.houses.all,
-        "byLetterPaginated",
-        letter,
-        houseType,
-        skip,
-        take,
-      ] as const,
+    // For infinite queries - don't include pagination params in key
+    // All pages share the same cache entry
+    byLetterInfinite: (letter: string, houseType: string) =>
+      [...queryKeys.houses.all, "byLetterInfinite", letter, houseType] as const,
   },
 } as const
 
@@ -242,4 +237,29 @@ export async function getHousesByLetterPaginated(
 
   return data
 }
+
+/**
+ * Query options factory for houses queries.
+ * Provides type-safe, reusable query configurations.
+ * 
+ * @example
+ * ```tsx
+ * const { data } = useQuery(housesQueryOptions({ houseType: 'niche' }))
+ * ```
+ */
+export const housesQueryOptions = (filters: HouseFilters = {}) => ({
+  queryKey: queryKeys.houses.list(filters),
+  queryFn: () => getHouseSort(filters),
+  staleTime: 5 * 60 * 1000, // 5 minutes
+}) as const
+
+/**
+ * Query options factory for fetching a house by slug.
+ */
+export const houseBySlugQueryOptions = (slug: string) => ({
+  queryKey: queryKeys.houses.detail(slug),
+  queryFn: () => getHouseBySlug(slug),
+  staleTime: 5 * 60 * 1000,
+  enabled: !!slug,
+}) as const
 

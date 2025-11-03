@@ -1,5 +1,5 @@
 export const ROUTE_PATH = "/the-vault"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   type MetaFunction,
@@ -12,7 +12,7 @@ import AlphabeticalNav from "~/components/Organisms/AlphabeticalNav"
 import DataDisplaySection from "~/components/Organisms/DataDisplaySection"
 import DataFilters from "~/components/Organisms/DataFilters"
 import TitleBanner from "~/components/Organisms/TitleBanner"
-import { useLetterPagination } from "~/hooks/useLetterPagination"
+import { useInfinitePerfumesByLetter } from "~/hooks/useInfinitePerfumes"
 import { useScrollToDataList } from "~/hooks/useScrollToDataList"
 import { useSyncPaginationUrl } from "~/hooks/useSyncPaginationUrl"
 import { getDefaultSortOptions } from "~/utils/sortUtils"
@@ -48,21 +48,98 @@ const AllPerfumesPage = () => {
 
   const sortOptions = getDefaultSortOptions(t)
 
-  // Pagination hook
+  // TanStack Query infinite query
   const {
-    data: perfumes,
-    loading,
+    data,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
     error,
-    pagination,
-    nextPage: paginationNextPage,
-    prevPage: paginationPrevPage,
-  } = useLetterPagination({
+  } = useInfinitePerfumesByLetter({
     letter: letterFromUrl,
-    endpoint: "/api/perfumes-by-letter",
-    itemName: "perfumes",
+    houseType: "all",
     pageSize: 16,
-    initialPage: pageFromUrl,
   })
+
+  // Calculate current page from URL
+  const currentPage = pageFromUrl
+  const pageSize = 16
+
+  // Flatten all pages to get all perfumes
+  const allPerfumes = useMemo(() => {
+    if (!data?.pages) return []
+    return data.pages.flatMap((page) => page.perfumes || [])
+  }, [data])
+
+  // Get total count from first page
+  const totalCount = data?.pages[0]?.count || 0
+  const totalPages = Math.ceil(totalCount / pageSize)
+
+  // Check if we need to fetch more pages to reach current page
+  useEffect(() => {
+    if (letterFromUrl && currentPage > data?.pages?.length) {
+      const pagesToFetch = currentPage - (data?.pages?.length || 0)
+      let fetchCount = 0
+      
+      const fetchPagesSequentially = async () => {
+        while (fetchCount < pagesToFetch && hasNextPage) {
+          await fetchNextPage()
+          fetchCount++
+        }
+      }
+      
+      fetchPagesSequentially().catch(() => {
+        // Silently fail
+      })
+    }
+  }, [currentPage, data?.pages?.length, hasNextPage, letterFromUrl, fetchNextPage])
+
+  // Get perfumes for current page
+  const perfumes = useMemo(() => {
+    const startIdx = (currentPage - 1) * pageSize
+    const endIdx = startIdx + pageSize
+    return allPerfumes.slice(startIdx, endIdx)
+  }, [allPerfumes, currentPage, pageSize])
+
+  const loading = isLoading || isFetchingNextPage
+
+  // Pagination helpers
+  const pagination = useMemo(
+    () => ({
+      currentPage,
+      totalPages,
+      totalCount,
+      hasNextPage: currentPage < totalPages,
+      hasPrevPage: currentPage > 1,
+      pageSize,
+    }),
+    [currentPage, totalPages, totalCount, pageSize]
+  )
+
+  const handleNextPage = async () => {
+    if (currentPage < totalPages) {
+      navigate(
+        `/the-vault/${letterFromUrl?.toLowerCase()}?pg=${currentPage + 1}`,
+        { preventScrollReset: true }
+      )
+    }
+  }
+
+  const handlePrevPage = async () => {
+    if (currentPage > 1) {
+      if (currentPage === 2) {
+        navigate(`/the-vault/${letterFromUrl?.toLowerCase()}`, {
+          preventScrollReset: true,
+        })
+      } else {
+        navigate(
+          `/the-vault/${letterFromUrl?.toLowerCase()}?pg=${currentPage - 1}`,
+          { preventScrollReset: true }
+        )
+      }
+    }
+  }
 
   // Preserve scroll position during loading to prevent jump to top
   useEffect(() => {
@@ -109,16 +186,8 @@ const AllPerfumesPage = () => {
     hasData: perfumes.length > 0,
   })
 
-  const handleNextPage = async () => {
-    await paginationNextPage()
-  }
-
-  const handlePrevPage = async () => {
-    await paginationPrevPage()
-  }
-
   if (error) {
-    return <div>Error loading perfumes: {error}</div>
+    return <div>Error loading perfumes: {error instanceof Error ? error.message : "Unknown error"}</div>
   }
 
   return (

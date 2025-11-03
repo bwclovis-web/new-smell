@@ -150,20 +150,21 @@ export function useToggleWishlist() {
       // Invalidate queries to refetch fresh data
       const { perfumeId } = variables
 
-      // Invalidate all wishlist queries (will catch any userId)
+      // Invalidate only wishlist queries (not all user data)
       queryClient.invalidateQueries({
-        queryKey: queryKeys.user.all,
+        queryKey: queryKeys.user.wishlist("current"),
+        exact: false, // Also invalidates nested keys
       })
 
-      // Invalidate perfume detail query to update wishlist status
+      // Invalidate specific perfume detail query
       queryClient.invalidateQueries({
         queryKey: perfumeQueryKeys.perfumes.detail(perfumeId),
+        exact: true, // Only this specific perfume
       })
 
-      // Invalidate perfume lists that might show wishlist status
-      queryClient.invalidateQueries({
-        queryKey: perfumeQueryKeys.perfumes.all,
-      })
+      // Don't invalidate all perfume lists - too broad and causes unnecessary refetches
+      // If perfume lists need wishlist status, they should include it in their response
+      // or use a separate query to check wishlist status
     },
   })
 }

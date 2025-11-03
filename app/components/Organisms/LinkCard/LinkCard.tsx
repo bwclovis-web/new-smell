@@ -38,19 +38,25 @@ const LinkCard = ({
           )}
         </div>
         <div className="relative rounded-lg ">
-          <img
-            src={data.image}
-            alt={data.name}
-            height={400}
-            width={300}
-            className="w-full object-cover mask-radial-at-center mask-radial-from-10% mask-radial-to-75%                                                        
+          {data.image ? (
+            <img
+              src={data.image}
+              alt={data.name}
+              height={400}
+              width={300}
+              className="w-full object-cover mask-radial-at-center mask-radial-from-10% mask-radial-to-75%                                                        
             transition-all duration-500 ease-in-out scale-120 h-full
             filter grayscale-100 group-hover:grayscale-0 group-hover:scale-100 group-hover:mask-radial-from-30% group-hover:mask-radial-to-100%"
-            style={{
-              viewTransitionName: `perfume-image-${data.id}`,
-              contain: "layout style paint",
-            }}
-          />
+              style={{
+                viewTransitionName: `perfume-image-${data.id}`,
+                contain: "layout style paint",
+              }}
+            />
+          ) : (
+            <div className="w-full h-48 bg-noir-dark/50 flex items-center justify-center border border-noir-gold/20 rounded-lg">
+              <span className="text-noir-gold/40 text-sm">No Image</span>
+            </div>
+          )}
         </div>
       </NavLink>
       {children && (

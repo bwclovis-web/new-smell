@@ -18,9 +18,19 @@ export async function prefetchHousesByLetter(
     return
   }
 
-  await queryClient.prefetchQuery({
+  await queryClient.prefetchInfiniteQuery({
     queryKey: houseQueryKeys.houses.byLetterPaginated(letter, houseType, 0, pageSize),
-    queryFn: () => getHousesByLetterPaginated(letter, houseType, 0, pageSize),
+    queryFn: ({ pageParam }) => {
+      const skip = pageParam as number
+      return getHousesByLetterPaginated(letter, houseType, skip, pageSize)
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.meta?.hasMore) {
+        return (lastPage.meta.skip || 0) + (lastPage.meta.take || pageSize)
+      }
+      return undefined
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
@@ -41,9 +51,19 @@ export async function prefetchPerfumesByLetter(
     return
   }
 
-  await queryClient.prefetchQuery({
+  await queryClient.prefetchInfiniteQuery({
     queryKey: perfumeQueryKeys.perfumes.byLetterPaginated(letter, houseType, 0, pageSize),
-    queryFn: () => getPerfumesByLetter(letter, houseType, 0, pageSize),
+    queryFn: ({ pageParam }) => {
+      const skip = pageParam as number
+      return getPerfumesByLetter(letter, houseType, skip, pageSize)
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.meta?.hasMore) {
+        return (lastPage.meta.skip || 0) + (lastPage.meta.take || pageSize)
+      }
+      return undefined
+    },
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }

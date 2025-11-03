@@ -47,12 +47,8 @@ export function useInfinitePerfumesByLetter(
   } = options
 
   return useInfiniteQuery({
-    queryKey: queryKeys.perfumes.byLetterPaginated(
-      letter || "",
-      houseType,
-      0,
-      pageSize
-    ),
+    // Use infinite-specific query key without pagination params
+    queryKey: queryKeys.perfumes.byLetterInfinite(letter || "", houseType),
     queryFn: ({ pageParam }) => {
       const skip = pageParam as number
       return getPerfumesByLetter(letter!, houseType, skip, pageSize)
@@ -68,7 +64,8 @@ export function useInfinitePerfumesByLetter(
       return undefined // No more pages
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    initialData: initialData
+    // Use placeholderData for non-SSR scenarios or when you want stale-while-revalidate behavior
+    placeholderData: initialData
       ? {
           pages: [
             {
@@ -113,7 +110,8 @@ export function useInfinitePerfumesByHouse(
   const { houseSlug, pageSize = 9, initialData } = options
 
   return useInfiniteQuery({
-    queryKey: queryKeys.perfumes.moreByHouse(houseSlug, 0, pageSize),
+    // Use infinite-specific query key without pagination params
+    queryKey: queryKeys.perfumes.byHouseInfinite(houseSlug),
     queryFn: ({ pageParam }) => {
       const skip = pageParam as number
       return getMorePerfumes(houseSlug, { skip, take: pageSize })
@@ -129,7 +127,8 @@ export function useInfinitePerfumesByHouse(
       return undefined // No more pages
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
-    initialData: initialData
+    // Use placeholderData for non-SSR scenarios or when you want stale-while-revalidate behavior
+    placeholderData: initialData
       ? {
           pages: [
             {

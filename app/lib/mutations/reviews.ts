@@ -170,20 +170,20 @@ export function useCreateReview() {
     onSuccess: (data, variables) => {
       const { perfumeId } = variables
 
-      // Invalidate all review queries for this perfume to get fresh data
+      // Invalidate only review queries for this specific perfume
       queryClient.invalidateQueries({
         queryKey: queryKeys.reviews.byPerfume(perfumeId),
+        exact: false, // Include pagination variants
       })
 
-      // Invalidate all review lists
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.reviews.all,
-      })
-
-      // Invalidate perfume detail query (might show review count)
+      // Invalidate only the perfume detail query (shows review count)
       queryClient.invalidateQueries({
         queryKey: perfumeQueryKeys.perfumes.detail(perfumeId),
+        exact: true,
       })
+
+      // Don't invalidate all reviews - too broad
+      // Other perfumes' reviews don't need to be refetched
     },
   })
 }
@@ -205,20 +205,19 @@ export function useUpdateReview() {
     onSuccess: (data, variables) => {
       const { perfumeId } = variables
 
-      // Invalidate all review queries for this perfume
+      // Invalidate only review queries for this specific perfume
       queryClient.invalidateQueries({
         queryKey: queryKeys.reviews.byPerfume(perfumeId),
+        exact: false, // Include pagination variants
       })
 
-      // Invalidate all review lists
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.reviews.all,
-      })
-
-      // Invalidate perfume detail query (might show review count)
+      // Invalidate only the perfume detail query (shows review count)
       queryClient.invalidateQueries({
         queryKey: perfumeQueryKeys.perfumes.detail(perfumeId),
+        exact: true,
       })
+
+      // Don't invalidate all reviews - too broad
     },
   })
 }
@@ -288,20 +287,19 @@ export function useDeleteReview() {
     onSuccess: (data, variables) => {
       const { perfumeId } = variables
 
-      // Invalidate all review queries
-      queryClient.invalidateQueries({
-        queryKey: queryKeys.reviews.all,
-      })
-
       // If perfumeId is provided, invalidate specific perfume review queries
       if (perfumeId) {
         queryClient.invalidateQueries({
           queryKey: queryKeys.reviews.byPerfume(perfumeId),
+          exact: false, // Include pagination variants
         })
         queryClient.invalidateQueries({
           queryKey: perfumeQueryKeys.perfumes.detail(perfumeId),
+          exact: true,
         })
       }
+
+      // Don't invalidate all reviews - too broad
     },
   })
 }

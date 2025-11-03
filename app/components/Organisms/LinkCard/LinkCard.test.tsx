@@ -358,7 +358,23 @@ describe("LinkCard", () => {
   describe("Edge Cases", () => {
     it("handles missing image gracefully", () => {
       const dataWithoutImage = { ...mockPerfumeData, image: "" }
-      expect(() => renderWithRouter(<LinkCard data={dataWithoutImage} type="perfume" />)).not.toThrow()
+      renderWithRouter(<LinkCard data={dataWithoutImage} type="perfume" />)
+      expect(screen.getByText("No Image")).toBeInTheDocument()
+      expect(screen.queryByRole("img")).not.toBeInTheDocument()
+    })
+
+    it("handles undefined image", () => {
+      const dataWithUndefinedImage = { ...mockPerfumeData, image: undefined }
+      renderWithRouter(<LinkCard data={dataWithUndefinedImage} type="perfume" />)
+      expect(screen.getByText("No Image")).toBeInTheDocument()
+      expect(screen.queryByRole("img")).not.toBeInTheDocument()
+    })
+
+    it("handles null image", () => {
+      const dataWithNullImage = { ...mockPerfumeData, image: null }
+      renderWithRouter(<LinkCard data={dataWithNullImage} type="perfume" />)
+      expect(screen.getByText("No Image")).toBeInTheDocument()
+      expect(screen.queryByRole("img")).not.toBeInTheDocument()
     })
 
     it("handles special characters in name", () => {

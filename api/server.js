@@ -170,7 +170,7 @@ app.use(helmet({
           "https:",
           "wss:",
           ...(NODE_ENV === "development"
-            ? ["ws://localhost:*", "ws://127.0.0.1:*"]
+            ? ["http://localhost:*", "ws://localhost:*", "ws://127.0.0.1:*"]
             : []),
         ],
         objectSrc: ["'none'"],
@@ -179,7 +179,7 @@ app.use(helmet({
         frameAncestors: ["'none'"],
       },
     },
-    hsts: {
+    hsts: NODE_ENV === "development" ? false : {
       maxAge: 31536000, // 1 year
       includeSubDomains: true,
       preload: true,
