@@ -102,7 +102,6 @@ export default function Home() {
               action={handleSelectType}
               selectId="search-type"
               selectData={data}
-              defaultId={searchType}
               ariaLabel={t("components.search.ariaLabel")}
             />
             <SearchBar

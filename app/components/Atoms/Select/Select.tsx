@@ -30,11 +30,25 @@ const Select = ({
   action,
   ariaLabel,
   size,
+  ...rest
 }: SelectProps) => {
   const handleChange = (evt: ChangeEvent<HTMLSelectElement>) => {
     if (action) {
       action(evt)
     }
+  }
+
+  // Only use defaultValue if value is not provided (controlled vs uncontrolled)
+  const selectProps = {
+    ...rest,
+    onChange: (evt: ChangeEvent<HTMLSelectElement>) => handleChange(evt),
+    id: selectId,
+    "aria-label": ariaLabel ?? undefined,
+    name: selectId,
+    className: styleMerge(selectVariants({ className, size })),
+    ...(rest.value === undefined && defaultId !== undefined
+      ? { defaultValue: defaultId }
+      : {}),
   }
 
   return (
@@ -50,18 +64,11 @@ const Select = ({
           {label}
         </label>
       )}
-      <select
-        onChange={evt => handleChange(evt)}
-        id={selectId}
-        aria-label={ariaLabel ?? undefined}
-        name={selectId}
-        className={styleMerge(selectVariants({ className, size }))}
-      >
+      <select {...selectProps}>
         {selectData.map(item => (
           <option
             key={item.id}
             value={item.id}
-            selected={item.id === defaultId}
             className="bg-noir-dark w-full"
           >
             {item.label}
