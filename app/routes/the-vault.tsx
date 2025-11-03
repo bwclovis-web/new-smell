@@ -1,4 +1,3 @@
-export const ROUTE_PATH = "/the-vault"
 import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
@@ -20,9 +19,12 @@ import { getDefaultSortOptions } from "~/utils/sortUtils"
 // No server imports needed for client component
 import banner from "../images/vault.webp"
 
-export const loader = async () =>
+export const ROUTE_PATH = "/the-vault"
+
+export const loader = async () => (
   // Don't load all perfumes upfront - we'll load by letter on demand
-  ({})
+  {}
+)
 
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
@@ -68,8 +70,10 @@ const AllPerfumesPage = () => {
 
   // Flatten all pages to get all perfumes
   const allPerfumes = useMemo(() => {
-    if (!data?.pages) return []
-    return data.pages.flatMap((page) => page.perfumes || [])
+    if (!data?.pages) {
+      return []
+    }
+    return data.pages.flatMap(page => page.perfumes || [])
   }, [data])
 
   // Get total count from first page
@@ -78,7 +82,7 @@ const AllPerfumesPage = () => {
 
   // Check if we need to fetch more pages to reach current page
   useEffect(() => {
-    if (letterFromUrl && currentPage > data?.pages?.length) {
+    if (letterFromUrl && currentPage > (data?.pages?.length ?? 0)) {
       const pagesToFetch = currentPage - (data?.pages?.length || 0)
       let fetchCount = 0
       
@@ -93,7 +97,13 @@ const AllPerfumesPage = () => {
         // Silently fail
       })
     }
-  }, [currentPage, data?.pages?.length, hasNextPage, letterFromUrl, fetchNextPage])
+  }, [
+    currentPage,
+    data?.pages?.length,
+    hasNextPage,
+    letterFromUrl,
+    fetchNextPage,
+  ])
 
   // Get perfumes for current page
   const perfumes = useMemo(() => {
@@ -114,7 +124,12 @@ const AllPerfumesPage = () => {
       hasPrevPage: currentPage > 1,
       pageSize,
     }),
-    [currentPage, totalPages, totalCount, pageSize]
+    [
+      currentPage,
+      totalPages,
+      totalCount,
+      pageSize,
+    ]
   )
 
   const handleNextPage = async () => {
