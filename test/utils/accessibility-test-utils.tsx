@@ -1,6 +1,6 @@
 import { screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { toHaveNoViolations, axe } from "jest-axe"
+import { axe, toHaveNoViolations } from "jest-axe"
 import { expect, vi } from "vitest"
 
 import { renderWithProviders } from "./test-utils"
@@ -369,7 +369,9 @@ export const runA11yTestSuite = async (
 
   if (options.testAxe) {
     await testAxeAccessibility(Component, props, {
-      tags: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
+      tags: [
+"wcag2a", "wcag2aa", "wcag21a", "wcag21aa"
+],
     })
   }
 

@@ -47,9 +47,7 @@ export function usePagination({
     }
   }, [hasPrevPage])
 
-  const getSkip = useCallback(() => {
-    return (currentPage - 1) * pageSize
-  }, [currentPage, pageSize])
+  const getSkip = useCallback(() => (currentPage - 1) * pageSize, [currentPage, pageSize])
 
   return {
     currentPage,

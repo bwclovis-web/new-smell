@@ -84,11 +84,7 @@ async function createPerfumeNote(
 
   const trimmedNoteName = noteName.trim().toLowerCase()
 
-  // Check if note already exists
-  const existingNote = await prisma.perfumeNotes.findUnique({
-    where: { name: trimmedNoteName },
-  })
-
+  // Prepare note data with the appropriate perfume relationship
   const noteData: any = {
     name: trimmedNoteName,
   }
@@ -108,17 +104,51 @@ async function createPerfumeNote(
       return null
   }
 
-  // If note exists, just update the relationship
+  // Use upsert to ensure uniqueness - prevents race conditions when creating notes
+  // First try to find existing note to check relationships
+  const existingNote = await prisma.perfumeNotes.findUnique({
+    where: { name: trimmedNoteName },
+  })
+
   if (existingNote) {
-    return await prisma.perfumeNotes.update({
-      where: { id: existingNote.id },
-      data: noteData,
-    })
+    // Note exists - only update if the relationship field for this type is not set
+    const updateData: any = {}
+    
+    switch (noteType) {
+      case "open":
+        if (!existingNote.perfumeOpenId) {
+          updateData.perfumeOpenId = perfumeId
+        }
+        break
+      case "heart":
+        if (!existingNote.perfumeHeartId) {
+          updateData.perfumeHeartId = perfumeId
+        }
+        break
+      case "base":
+        if (!existingNote.perfumeCloseId) {
+          updateData.perfumeCloseId = perfumeId
+        }
+        break
+    }
+
+    // Only update if there's something to update
+    if (Object.keys(updateData).length > 0) {
+      return await prisma.perfumeNotes.update({
+        where: { id: existingNote.id },
+        data: updateData,
+      })
+    }
+
+    // Return existing note if no update needed
+    return existingNote
   }
 
-  // Create new note
-  return await prisma.perfumeNotes.create({
-    data: noteData,
+  // Note doesn't exist - use upsert for atomic creation (prevents duplicates in race conditions)
+  return await prisma.perfumeNotes.upsert({
+    where: { name: trimmedNoteName },
+    update: {}, // Shouldn't happen since we checked, but safe guard
+    create: noteData,
   })
 }
 

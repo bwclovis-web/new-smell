@@ -13,13 +13,13 @@ import {
 } from "react-router"
 
   import { VooDooLink } from "~/components/Atoms/Button"
+import { Button } from "~/components/Atoms/Button"
 import PerfumeHouseAddressBlock from "~/components/Containers/PerfumeHouse/AddressBlock/PerfumeHouseAddressBlock"
+import DangerModal from "~/components/Organisms/DangerModal"
+import Modal from "~/components/Organisms/Modal"
 import { useInfiniteScroll } from "~/hooks/useInfiniteScroll"
 import { getPerfumeHouseBySlug } from "~/models/house.server"
 import { useSessionStore } from "~/stores/sessionStore"
-import Modal from "~/components/Organisms/Modal"
-import DangerModal from "~/components/Organisms/DangerModal"
-import { Button } from "~/components/Atoms/Button"
 const ALL_HOUSES = "/behind-the-bottle"
 const BEHIND_THE_BOTTLE = "/behind-the-bottle"
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -61,7 +61,7 @@ const HouseDetailPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const { modalOpen, toggleModal, modalId,closeModal } = useSessionStore()
+  const { modalOpen, toggleModal, modalId, closeModal } = useSessionStore()
   // Get selectedLetter from navigation state
   const selectedLetter = (location.state as { selectedLetter?: string })
     ?.selectedLetter
@@ -154,12 +154,9 @@ const HouseDetailPage = () => {
           <p className="p-4 mb-8">{perfumeHouse.description}</p>
           <span className="tag absolute">{perfumeHouse.type}</span>
           <Button
-            onClick={() =>
-              navigate(
-                selectedLetter
+            onClick={() => navigate(selectedLetter
                   ? `/behind-the-bottle/${selectedLetter.toLowerCase()}`
-                  : BEHIND_THE_BOTTLE
-              )
+                  : BEHIND_THE_BOTTLE)
             }
             variant="primary"
             background="gold"

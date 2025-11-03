@@ -60,9 +60,19 @@ export interface Perfume {
   createdAt: Date
   updatedAt: Date
   perfumeHouse?: PerfumeHouse | null
-  perfumeNotesClose: PerfumeNotes[]
-  perfumeNotesHeart: PerfumeNotes[]
-  perfumeNotesOpen: PerfumeNotes[]
+  // New junction table relation (Phase 5 migration)
+  perfumeNoteRelations?: Array<{
+    id: string
+    perfumeId: string
+    noteId: string
+    noteType: "open" | "heart" | "base"
+    createdAt: Date
+    note?: PerfumeNotes
+  }>
+  // Display format (transformed from junction table)
+  perfumeNotesOpen?: PerfumeNotes[]
+  perfumeNotesHeart?: PerfumeNotes[]
+  perfumeNotesClose?: PerfumeNotes[]
   userPerfume: UserPerfume[]
   userPerfumeComments: UserPerfumeComment[]
   userPerfumeRating: UserPerfumeRating[]

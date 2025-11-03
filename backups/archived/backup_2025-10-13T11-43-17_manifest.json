@@ -1,0 +1,76 @@
+{
+  "timestamp": "2025-10-13T11-43-17",
+  "method": "prisma",
+  "totalRecords": 48183,
+  "files": {
+    "sql": "backup_2025-10-13T11-43-17_data.sql",
+    "json": "backup_2025-10-13T11-43-17_data.json"
+  },
+  "tables": [
+    {
+      "name": "User",
+      "count": 2,
+      "hasError": false
+    },
+    {
+      "name": "PerfumeHouse",
+      "count": 7448,
+      "hasError": false
+    },
+    {
+      "name": "Perfume",
+      "count": 36761,
+      "hasError": false
+    },
+    {
+      "name": "UserPerfume",
+      "count": 4,
+      "hasError": false
+    },
+    {
+      "name": "UserPerfumeRating",
+      "count": 4,
+      "hasError": false
+    },
+    {
+      "name": "UserPerfumeReview",
+      "count": 2,
+      "hasError": false
+    },
+    {
+      "name": "UserPerfumeWishlist",
+      "count": 7,
+      "hasError": false
+    },
+    {
+      "name": "UserPerfumeComment",
+      "count": 3,
+      "hasError": false
+    },
+    {
+      "name": "PerfumeNotes",
+      "count": 3949,
+      "hasError": false
+    },
+    {
+      "name": "WishlistNotification",
+      "count": 0,
+      "hasError": false
+    },
+    {
+      "name": "SecurityAuditLog",
+      "count": 3,
+      "hasError": false
+    }
+  ],
+  "sizes": {
+    "sql": {
+      "bytes": 18799785,
+      "human": "17.93 MB"
+    },
+    "json": {
+      "bytes": 23230844,
+      "human": "22.15 MB"
+    }
+  }
+}

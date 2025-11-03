@@ -311,13 +311,17 @@ describe("VooDooCheck", () => {
   describe("Accessibility", () => {
     it("should have no accessibility violations", async () => {
       await testAxeAccessibility(VooDooCheck, defaultProps, {
-        tags: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
+        tags: [
+"wcag2a", "wcag2aa", "wcag21a", "wcag21aa"
+],
       })
     })
 
     it("should have no accessibility violations when checked", async () => {
       await testAxeAccessibility(VooDooCheck, { ...defaultProps, checked: true }, {
-        tags: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"],
+        tags: [
+"wcag2a", "wcag2aa", "wcag21a", "wcag21aa"
+],
       })
     })
   })

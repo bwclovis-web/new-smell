@@ -1,0 +1,84 @@
+{
+  "timestamp": "2025-11-03T12-26-45",
+  "totalRecords": 2,
+  "tables": [
+    {
+      "table": "User",
+      "count": 2,
+      "data": [
+        {
+          "id": "cmgchfpcp0000obckvijsygpq",
+          "email": "me@you.com",
+          "password": "2b52496fcf3bf890827f09f0c200297f:$2b$12$SVrdCqdb3pm2BHDvAaCYg.3vPLlXvX5tCJfvtI5HL87gox4dI5q02",
+          "firstName": null,
+          "lastName": null,
+          "username": null,
+          "createdAt": "2025-10-04T16:23:27.769Z",
+          "updatedAt": "2025-10-04T16:23:27.769Z",
+          "role": "user"
+        },
+        {
+          "id": "cmd292ipa0000ob7gcnmfy9nr",
+          "email": "bwclovis.web@gmail.com",
+          "password": "$2b$10$f1jMCQ1x/CKXqinB1ragAe5aefQKrvBOwGqFZxV4drNIDp0ZPoox6",
+          "firstName": "Brian",
+          "lastName": "Clovis",
+          "username": "AngelFodderTest",
+          "createdAt": "2025-07-13T22:32:26.926Z",
+          "updatedAt": "2025-11-01T14:44:16.797Z",
+          "role": "admin"
+        }
+      ]
+    },
+    {
+      "table": "PerfumeHouse",
+      "count": 0,
+      "data": []
+    },
+    {
+      "table": "Perfume",
+      "count": 0,
+      "data": []
+    },
+    {
+      "table": "UserPerfume",
+      "count": 0,
+      "data": []
+    },
+    {
+      "table": "UserPerfumeRating",
+      "count": 0,
+      "data": []
+    },
+    {
+      "table": "UserPerfumeReview",
+      "count": 0,
+      "data": []
+    },
+    {
+      "table": "UserPerfumeWishlist",
+      "count": 0,
+      "data": []
+    },
+    {
+      "table": "UserPerfumeComment",
+      "count": 0,
+      "data": []
+    },
+    {
+      "table": "PerfumeNotes",
+      "count": 0,
+      "data": []
+    },
+    {
+      "table": "WishlistNotification",
+      "count": 0,
+      "data": []
+    },
+    {
+      "table": "SecurityAuditLog",
+      "count": 0,
+      "data": []
+    }
+  ]
+}

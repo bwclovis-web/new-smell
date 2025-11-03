@@ -60,9 +60,10 @@ model Perfume {
   updatedAt             DateTime               @updatedAt
   slug                  String                 @unique
   perfumeHouse          PerfumeHouse?          @relation(fields: [perfumeHouseId], references: [id])
-  perfumeNotesClose     PerfumeNotes[]         @relation("PerfumeNotesBase")
-  perfumeNotesHeart     PerfumeNotes[]         @relation("PerfumeNotesHeart")
-  perfumeNotesOpen      PerfumeNotes[]         @relation("PerfumeNotesOpen")
+  
+  // Junction table relation
+  perfumeNoteRelations  PerfumeNoteRelation[]
+  
   UserAlert             UserAlert[]
   userPerfume           UserPerfume[]
   userPerfumeComments   UserPerfumeComment[]
@@ -149,12 +150,26 @@ model PerfumeNotes {
   id             String   @id @default(cuid())
   name           String   @unique
   createdAt      DateTime @default(now())
-  perfumeOpenId  String?
-  perfumeHeartId String?
-  perfumeCloseId String?
-  perfumeClose   Perfume? @relation("PerfumeNotesBase", fields: [perfumeCloseId], references: [id])
-  perfumeHeart   Perfume? @relation("PerfumeNotesHeart", fields: [perfumeHeartId], references: [id])
-  perfumeOpen    Perfume? @relation("PerfumeNotesOpen", fields: [perfumeOpenId], references: [id])
+  
+  // Junction table relation
+  perfumeNoteRelations PerfumeNoteRelation[]
+}
+
+// New junction table
+model PerfumeNoteRelation {
+  id         String         @id @default(cuid())
+  perfumeId  String
+  noteId     String
+  noteType   PerfumeNoteType
+  createdAt  DateTime       @default(now())
+  
+  perfume    Perfume        @relation(fields: [perfumeId], references: [id], onDelete: Cascade)
+  note       PerfumeNotes   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  
+  @@unique([perfumeId, noteId, noteType])
+  @@index([perfumeId])
+  @@index([noteId])
+  @@index([noteType])
 }
 
 model WishlistNotification {
@@ -280,4 +295,10 @@ enum SecurityAuditSeverity {
 enum AlertType {
   wishlist_available
   decant_interest
+}
+
+enum PerfumeNoteType {
+  open
+  heart
+  base
 }

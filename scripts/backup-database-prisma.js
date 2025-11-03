@@ -18,6 +18,7 @@ const projectRoot = join(__dirname, "..")
 
 // Load environment variables
 import dotenv from "dotenv"
+process.env.DOTENV_CONFIG_QUIET = "true"
 dotenv.config({ path: join(projectRoot, ".env") })
 
 // Configuration
@@ -140,6 +141,17 @@ async function createBackup() {
       totalRecords += data.count
       console.log(`  ${table.name}: ${data.count} records`)
     }
+
+    // Check if database is empty
+    if (totalRecords === 0) {
+      console.error("\n❌ ERROR: Database is empty (0 records found).")
+      console.error("   Cannot create backup of an empty database.")
+      console.error("   Please ensure your database contains data before running backup.")
+      await prisma.$disconnect()
+      process.exit(1)
+    }
+
+    console.log(`\n✅ Database contains ${totalRecords} total records - proceeding with backup...`)
 
     // Generate SQL backup
     console.log("\n📝 Generating SQL backup...")

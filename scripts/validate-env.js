@@ -6,6 +6,8 @@
  * Usage: node scripts/validate-env.js
  */
 
+// Suppress dotenv informational messages
+process.env.DOTENV_CONFIG_QUIET = "true"
 import "dotenv/config"
 
 import {

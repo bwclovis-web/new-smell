@@ -77,6 +77,8 @@ export function useScrollToDataList({
         timeoutRef.current = null
       }
     }
-  }, [trigger, enabled, isLoading, hasData, delay])
+  }, [
+trigger, enabled, isLoading, hasData, delay
+])
 }
 

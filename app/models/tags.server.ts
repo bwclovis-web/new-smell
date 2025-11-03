@@ -85,9 +85,13 @@ const calculateTagRelevanceScore = (tagName: string, searchTerm: string): number
 }
 
 export const createTag = async (name: string) => {
-  const tag = await prisma.perfumeNotes.create({
-    data: {
-      name,
+  // Use upsert to ensure uniqueness - create if doesn't exist, get existing if it does
+  const trimmedName = name.trim().toLowerCase()
+  const tag = await prisma.perfumeNotes.upsert({
+    where: { name: trimmedName },
+    update: {}, // Don't update if exists
+    create: {
+      name: trimmedName,
     },
   })
   return tag

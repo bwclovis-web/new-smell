@@ -5,6 +5,7 @@
  * Creates comprehensive backups of the PostgreSQL database including schema and data
  */
 
+import { PrismaClient } from "@prisma/client"
 import { execSync } from "child_process"
 import { existsSync, mkdirSync, writeFileSync } from "fs"
 import { join } from "path"
@@ -17,6 +18,7 @@ const projectRoot = join(__dirname, "..")
 
 // Load environment variables
 import dotenv from "dotenv"
+process.env.DOTENV_CONFIG_QUIET = "true"
 dotenv.config({ path: join(projectRoot, ".env") })
 
 // Configuration
@@ -28,6 +30,9 @@ const BACKUP_PREFIX = `backup_${TIMESTAMP}`
 if (!existsSync(BACKUP_DIR)) {
   mkdirSync(BACKUP_DIR, { recursive: true })
 }
+
+// Initialize Prisma client for database checks
+const prisma = new PrismaClient()
 
 // Parse database URL
 function parseDatabaseUrl(url) {
@@ -92,6 +97,49 @@ async function createBackup() {
 
     const dbConfig = parseDatabaseUrl(process.env.DATABASE_URL)
     console.log(`🗄️  Database: ${dbConfig.database}@${dbConfig.host}:${dbConfig.port}`)
+
+    // Check if database is empty before creating backups
+    console.log("\n🔍 Checking if database contains data...")
+    try {
+      await prisma.$connect()
+      
+      // Check record counts from all main tables
+      const tables = [
+        { name: "User", model: prisma.user },
+        { name: "PerfumeHouse", model: prisma.perfumeHouse },
+        { name: "Perfume", model: prisma.perfume },
+        { name: "UserPerfume", model: prisma.userPerfume },
+        { name: "PerfumeNotes", model: prisma.perfumeNotes },
+      ]
+      
+      let totalRecords = 0
+      for (const table of tables) {
+        const count = await table.model.count()
+        totalRecords += count
+        if (count > 0) {
+          console.log(`  ${table.name}: ${count} records`)
+        }
+      }
+      
+      if (totalRecords === 0) {
+        console.error("\n❌ ERROR: Database is empty (0 records found).")
+        console.error("   Cannot create backup of an empty database.")
+        console.error("   Please ensure your database contains data before running backup.")
+        await prisma.$disconnect()
+        process.exit(1)
+      }
+      
+      console.log(`✅ Database contains ${totalRecords} total records - proceeding with backup...`)
+      await prisma.$disconnect()
+    } catch (error) {
+      console.warn(`⚠️  Could not verify database contents: ${error.message}`)
+      console.warn("   Proceeding with backup anyway (may fail if database is empty)...")
+      try {
+        await prisma.$disconnect()
+      } catch (e) {
+        // Ignore disconnect errors
+      }
+    }
 
     // 1. Full backup (schema + data)
     console.log("\n📦 Creating full backup (schema + data)...")
@@ -211,8 +259,8 @@ function formatBytes(bytes) {
 }
 
 // Run backup if called directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  createBackup()
+if (process.argv[1] && process.argv[1].endsWith("backup-database.js")) {
+  createBackup().catch(console.error)
 }
 
 export { createBackup, formatBytes, parseDatabaseUrl }

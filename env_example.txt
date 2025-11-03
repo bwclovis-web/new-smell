@@ -7,6 +7,9 @@ DATABASE_URL=postgresql://username:password@localhost:5432/database_name
 # Local Development Database (fallback) - OPTIONAL
 LOCAL_DATABASE_URL=postgresql://username:password@localhost:5432/database_name
 
+# Staging Database (for migration testing) - OPTIONAL
+# STAGING_DATABASE_URL=postgresql://username:password@localhost:5432/staging_database_name
+
 # Vercel Environment Variables
 # Add these in your Vercel project settings:
 # DATABASE_URL=your_production_database_url
@@ -20,6 +23,10 @@ JWT_SECRET=your_jwt_secret_key_here_minimum_32_characters_long
 
 # Node Environment - REQUIRED
 NODE_ENV=development
+
+# Dotenv Configuration - OPTIONAL
+# Set to "true" to suppress informational messages (encryption tips, etc.)
+# DOTENV_CONFIG_QUIET=true
 
 # Server Configuration - OPTIONAL
 # APP_PORT=2112

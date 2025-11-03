@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client"
 
 import { prisma } from "~/db.server"
+import { transformNotesForDisplay } from "~/utils/perfume-notes-helpers"
 import { createUrlSlug } from "~/utils/slug"
 
 const buildPerfumeOrderBy = (sortBy?: string): Prisma.PerfumeOrderByWithRelationInput => {
@@ -42,16 +43,25 @@ export const getAllPerfumesWithOptions = async (options?: {
 }
 
 export const getPerfumeBySlug = async (slug: string) => {
-  const house = await prisma.perfume.findUnique({
+  const perfume = await prisma.perfume.findUnique({
     where: { slug },
     include: {
       perfumeHouse: true,
-      perfumeNotesOpen: true,
-      perfumeNotesHeart: true,
-      perfumeNotesClose: true,
+      // Use junction table for notes
+      perfumeNoteRelations: {
+        include: {
+          note: true,
+        },
+      },
     },
   })
-  return house
+  
+  if (!perfume) {
+    return null
+  }
+  
+  // Transform to backward-compatible format
+  return transformNotesForDisplay(perfume as any)
 }
 
 export const getPerfumeById = async (id: string) => {
@@ -59,12 +69,21 @@ export const getPerfumeById = async (id: string) => {
     where: { id },
     include: {
       perfumeHouse: true,
-      perfumeNotesOpen: true,
-      perfumeNotesHeart: true,
-      perfumeNotesClose: true,
+      // Use junction table for notes
+      perfumeNoteRelations: {
+        include: {
+          note: true,
+        },
+      },
     },
   })
-  return perfume
+  
+  if (!perfume) {
+    return null
+  }
+  
+  // Transform to backward-compatible format
+  return transformNotesForDisplay(perfume as any)
 }
 
 export const deletePerfume = async (id: string) => {
@@ -179,29 +198,58 @@ export const updatePerfume = async (id: string, data: FormData) => {
       baseNotes,
     })
 
-    const updatedPerfume = await prisma.perfume.update({
-      where: { id },
-      data: {
-        name,
-        slug: createUrlSlug(name),
-        description: sanitizeText(data.get("description") as string),
-        image: data.get("image") as string,
-        perfumeNotesOpen: {
-          set: topNotes.map(id => ({ id })),
-        },
-        perfumeNotesHeart: {
-          set: heartNotes.map(id => ({ id })),
-        },
-        perfumeNotesClose: {
-          set: baseNotes.map(id => ({ id })),
-        },
-        perfumeHouse: {
-          connect: {
-            id: data.get("house") as string,
+    // Use transaction to update perfume and note relations
+    const updatedPerfume = await prisma.$transaction(async tx => {
+      // Update perfume basic info
+      const perfume = await tx.perfume.update({
+        where: { id },
+        data: {
+          name,
+          slug: createUrlSlug(name),
+          description: sanitizeText(data.get("description") as string),
+          image: data.get("image") as string,
+          perfumeHouse: {
+            connect: {
+              id: data.get("house") as string,
+            },
           },
         },
-      },
+      })
+
+      // Delete existing note relations
+      await tx.perfumeNoteRelation.deleteMany({
+        where: { perfumeId: id },
+      })
+
+      // Create new note relations in junction table
+      const relationsToCreate = [
+        ...topNotes.map(noteId => ({
+          perfumeId: id,
+          noteId,
+          noteType: "open" as const,
+        })),
+        ...heartNotes.map(noteId => ({
+          perfumeId: id,
+          noteId,
+          noteType: "heart" as const,
+        })),
+        ...baseNotes.map(noteId => ({
+          perfumeId: id,
+          noteId,
+          noteType: "base" as const,
+        })),
+      ]
+
+      if (relationsToCreate.length > 0) {
+        await tx.perfumeNoteRelation.createMany({
+          data: relationsToCreate,
+          skipDuplicates: true,
+        })
+      }
+
+      return perfume
     })
+
     return { success: true, data: updatedPerfume }
   } catch (err) {
     if (
@@ -234,28 +282,56 @@ export const createPerfume = async (data: FormData) => {
   const description = sanitizeText(data.get("description") as string)
   const image = data.get("image") as string
 
-  const newPerfume = await prisma.perfume.create({
-    data: {
-      name,
-      slug: createUrlSlug(name),
-      description,
-      image,
-      perfumeNotesOpen: {
-        connect: (data.getAll("notesTop") as string[]).map(id => ({ id })),
-      },
-      perfumeNotesHeart: {
-        connect: (data.getAll("notesHeart") as string[]).map(id => ({ id })),
-      },
-      perfumeNotesClose: {
-        connect: (data.getAll("notesBase") as string[]).map(id => ({ id })),
-      },
-      perfumeHouse: {
-        connect: {
-          id: data.get("house") as string,
+  // Use transaction to create perfume and note relations
+  const newPerfume = await prisma.$transaction(async tx => {
+    // Create perfume
+    const perfume = await tx.perfume.create({
+      data: {
+        name,
+        slug: createUrlSlug(name),
+        description,
+        image,
+        perfumeHouse: {
+          connect: {
+            id: data.get("house") as string,
+          },
         },
       },
-    },
+    })
+
+    // Create note relations in junction table
+    const topNotes = data.getAll("notesTop") as string[]
+    const heartNotes = data.getAll("notesHeart") as string[]
+    const baseNotes = data.getAll("notesBase") as string[]
+
+    const relationsToCreate = [
+      ...topNotes.map(noteId => ({
+        perfumeId: perfume.id,
+        noteId,
+        noteType: "open" as const,
+      })),
+      ...heartNotes.map(noteId => ({
+        perfumeId: perfume.id,
+        noteId,
+        noteType: "heart" as const,
+      })),
+      ...baseNotes.map(noteId => ({
+        perfumeId: perfume.id,
+        noteId,
+        noteType: "base" as const,
+      })),
+    ]
+
+    if (relationsToCreate.length > 0) {
+      await tx.perfumeNoteRelation.createMany({
+        data: relationsToCreate,
+        skipDuplicates: true,
+      })
+    }
+
+    return perfume
   })
+
   return newPerfume
 }
 

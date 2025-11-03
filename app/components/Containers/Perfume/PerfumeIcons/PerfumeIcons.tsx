@@ -2,12 +2,13 @@ import { useState } from "react"
 import { BsHeartFill, BsHearts } from "react-icons/bs"
 import { GrEdit } from "react-icons/gr"
 import { MdDeleteForever } from "react-icons/md"
-import DangerModal from "~/components/Organisms/DangerModal"
+
 import { Button, VooDooLink } from "~/components/Atoms/Button"
 import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 import AddToCollectionModal from "~/components/Organisms/AddToCollectionModal"
-import { useCSRF } from "~/hooks/useCSRF"
+import DangerModal from "~/components/Organisms/DangerModal"
 import Modal from "~/components/Organisms/Modal"
+import { useCSRF } from "~/hooks/useCSRF"
 import { useSessionStore } from "~/stores/sessionStore"
 
 interface Perfume {
