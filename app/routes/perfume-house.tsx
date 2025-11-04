@@ -155,8 +155,11 @@ const HouseDetailPage = () => {
         <img
           src={perfumeHouse.image || ""}
           alt={perfumeHouse.name}
-          // height={600}
-          // width={300}
+          loading="eager"
+          decoding="sync"
+          fetchPriority="high"
+          width={300}
+          height={600}
           className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 details-title filter contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-screen mask-linear-gradient-to-b"
           style={{
             viewTransitionName: `perfume-image-${perfumeHouse.id}`,
@@ -237,6 +240,7 @@ const HouseDetailPage = () => {
                 <li key={perfume.id}>
                   <NavLink
                     viewTransition
+                    prefetch="intent"
                     to={`/perfume/${perfume.slug}`}
                     state={selectedLetter ? { selectedLetter } : {}}
                     className="block p-2 h-full noir-border relative w-full transition-colors duration-300 ease-in-out"
@@ -251,6 +255,11 @@ const HouseDetailPage = () => {
                     <img
                       src={perfume.image ?? undefined}
                       alt={perfume.name}
+                      loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
+                      width={192}
+                      height={192}
                       className="w-48 h-48 object-cover rounded-lg mb-2 mx-auto details-title dark:brightness-90"
                       style={{
                         viewTransitionName: `perfume-image-${perfume.id}`,

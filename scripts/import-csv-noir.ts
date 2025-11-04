@@ -384,10 +384,28 @@ async function importPerfumeData(csvFiles: string[]) {
 async function main() {
   console.log("🚀 Starting CSV import from csv_noir...")
 
-  // Only import perfumes_kyse.csv
-  const csvFiles = ["perfumes_kyse.csv"]
+  // Get CSV file name from command line argument
+  const csvFileName = process.argv[2]
 
-  console.log(`Importing CSV file: ${csvFiles[0]}`)
+  if (!csvFileName) {
+    console.error("❌ Please provide a CSV file name as an argument")
+    console.error("Usage: npm run import-csv-noir <filename.csv>")
+    console.error("Example: npm run import-csv-noir perfumes_kyse.csv")
+    
+    // List available CSV files
+    const csvDir = path.join(__dirname, "../csv_noir")
+    if (fs.existsSync(csvDir)) {
+      const files = fs.readdirSync(csvDir)
+      const csvFiles = files.filter(file => file.endsWith(".csv") && file !== "README.md")
+      console.log("\nAvailable CSV files:")
+      csvFiles.forEach(file => console.log(`  - ${file}`))
+    }
+    
+    process.exit(1)
+  }
+
+  const csvFiles = [csvFileName]
+  console.log(`Importing CSV file: ${csvFileName}`)
 
   await importPerfumeData(csvFiles)
 

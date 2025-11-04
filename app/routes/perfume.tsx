@@ -251,7 +251,9 @@ const PerfumeHeader = ({
     <img
       src={perfume.image || ""}
       alt={perfume.name}
-      loading="lazy"
+      loading="eager"
+      decoding="sync"
+      fetchPriority="high"
       width={300}
       height={600}
       className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 details-title filter contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-screen mask-linear-gradient-to-b"

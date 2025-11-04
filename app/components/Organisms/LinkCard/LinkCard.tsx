@@ -22,6 +22,7 @@ const LinkCard = ({
         to={`${url}/${data.slug}`}
         state={selectedLetter ? { selectedLetter, sourcePage } : { sourcePage }}
         viewTransition
+        prefetch="intent"
         className="p-4 flex flex-col overflow-hidden justify-between items-center group  transition-all duration-300 ease-in-out "
       >
         <div className="text-center">
@@ -44,6 +45,9 @@ const LinkCard = ({
               alt={data.name}
               height={400}
               width={300}
+              loading="lazy"
+              decoding="async"
+              fetchPriority="low"
               className="w-full object-cover mask-radial-at-center mask-radial-from-10% mask-radial-to-75%                                                        
             transition-all duration-500 ease-in-out scale-120 h-full
             filter grayscale-100 group-hover:grayscale-0 group-hover:scale-100 group-hover:mask-radial-from-30% group-hover:mask-radial-to-100%"

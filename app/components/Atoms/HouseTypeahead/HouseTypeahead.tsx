@@ -2,6 +2,7 @@ import {
   type ChangeEvent,
   type KeyboardEvent,
   useEffect,
+  useId,
   useRef,
   useState,
 } from "react"
@@ -33,7 +34,7 @@ const HouseTypeahead = ({
     width: 0,
   })
   const [showDropdown, setShowDropdown] = useState(false)
-  const [inputId] = useState(`house-typeahead-${Math.random().toString(36).substr(2, 9)}`)
+  const inputId = useId()
   const wrapperRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
