@@ -3,12 +3,14 @@ import cookie from "cookie"
 import { redirect } from "react-router"
 
 import { getUserById } from "~/models/user.query"
-import { ROUTE_PATH as SIGN_IN } from "~/routes/login/SignInPage"
 import { createSafeUser } from "~/types"
 import {
   refreshAccessToken,
   verifyAccessToken,
 } from "~/utils/security/session-manager.server"
+
+// Define route path as constant to avoid circular dependency
+const SIGN_IN_PATH = "/sign-in"
 
 export const sharedLoader = async (request: Request) => {
   const cookieHeader = request.headers.get("cookie") || ""
@@ -26,7 +28,7 @@ export const sharedLoader = async (request: Request) => {
   }
 
   if (!accessToken && !refreshToken) {
-    throw redirect(SIGN_IN)
+    throw redirect(SIGN_IN_PATH)
   }
 
   // Verify access token
@@ -38,7 +40,7 @@ export const sharedLoader = async (request: Request) => {
       const user = createSafeUser(fullUser)
 
       if (!user) {
-        throw redirect("/sign-in")
+        throw redirect(SIGN_IN_PATH)
       }
 
       return user
@@ -67,7 +69,7 @@ export const sharedLoader = async (request: Request) => {
         const user = createSafeUser(fullUser)
 
         if (!user) {
-          throw redirect("/sign-in")
+          throw redirect(SIGN_IN_PATH)
         }
 
         // Return user with new token in headers
@@ -82,5 +84,5 @@ export const sharedLoader = async (request: Request) => {
     }
   }
 
-  throw redirect("/sign-in")
+  throw redirect(SIGN_IN_PATH)
 }

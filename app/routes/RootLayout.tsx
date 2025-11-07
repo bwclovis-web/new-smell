@@ -43,7 +43,10 @@ const RootLayout = () => {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <div className="flex flex-col gap-8 items-center relative min-h-svh bg-noir-black">
+      <div
+        className="flex flex-col gap-8 items-center relative min-h-svh bg-noir-black"
+        suppressHydrationWarning
+      >
         <GlobalNavigation user={user} />
         <MobileNavigation user={user} />
         <MobileBottomNavigation user={user} />

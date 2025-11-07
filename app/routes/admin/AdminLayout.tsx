@@ -14,8 +14,9 @@ const AdminLayout = () => {
 
   return (
     <div className="relative flex flex-col md:flex-row w-full gap-4 md:gap-10 items-start z-10">
-      {user && <AdminNavigation user={user} />}
+      {user && <div className="hidden md:block"><AdminNavigation user={user} /></div>}
       <div className="flex-1  w-full">
+        
         <Outlet context={{ user }} />
       </div>
       {!user && (

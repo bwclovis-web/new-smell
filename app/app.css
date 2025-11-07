@@ -24,15 +24,12 @@ html {
   scroll-behavior: smooth;
   text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
-  /* Optimize for performance */
-  contain: layout style;
 }
 
 html,
 body {
   @apply bg-white dark:bg-gray-950 min-h-screen dark:text-noir-light font-sans text-base leading-7;
   /* Performance optimizations */
-  contain: layout style;
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -51,9 +48,6 @@ h3 {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Performance optimizations */
-  contain: layout style;
-  will-change: auto;
 }
 
 .hero-title {

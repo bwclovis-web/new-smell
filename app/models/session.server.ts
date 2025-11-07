@@ -3,7 +3,9 @@ import cookie from "cookie"
 import { redirect } from "react-router"
 
 import { ROUTE_PATH as ADMIN_PROFILE } from "~/routes/admin/profilePage"
-import { ROUTE_PATH as SIGN_IN } from "~/routes/login/SignInPage"
+
+// Use hardcoded path to avoid circular dependency with SignInPage
+const SIGN_IN = "/sign-in"
 import {
   createSession,
   getActiveSession,

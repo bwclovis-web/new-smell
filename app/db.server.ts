@@ -22,13 +22,9 @@ if (!databaseUrl) {
   throw new Error("DATABASE_URL environment variable is required")
 }
 
-console.log("Initializing Prisma with database URL:", databaseUrl)
-console.log(
-  "Environment:",
-  process.env.NODE_ENV,
-  "| Localhost detected:",
-  isLocalhost
-)
+// Reduced logging for faster startup - uncomment when debugging database connection
+// console.log("Initializing Prisma with database URL:", databaseUrl)
+// console.log("Environment:", process.env.NODE_ENV, "| Localhost detected:", isLocalhost)
 
 const prisma = singleton(
   "prisma",

@@ -5,6 +5,7 @@ import {
   type KeyboardEvent,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react"
 import { createPortal } from "react-dom"
@@ -37,6 +38,7 @@ const SearchBar = ({
     left: 0,
     width: 0,
   })
+  const inputRef = useRef<HTMLInputElement>(null)
   const { t } = useTranslation()
 
   // Create search function for the debounced hook
@@ -59,16 +61,13 @@ const SearchBar = ({
 
   // Update dropdown position when results change
   useEffect(() => {
-    if (results.length > 0) {
-      const input = document.getElementById("search") as HTMLInputElement
-      if (input) {
-        const rect = input.getBoundingClientRect()
-        setDropdownPosition({
-          top: rect.bottom + window.scrollY,
-          left: rect.left + window.scrollX,
-          width: rect.width,
-        })
-      }
+    if (results.length > 0 && inputRef.current) {
+      const rect = inputRef.current.getBoundingClientRect()
+      setDropdownPosition({
+        top: rect.bottom + window.scrollY,
+        left: rect.left + window.scrollX,
+        width: rect.width,
+      })
     }
   }, [results])
 
@@ -119,6 +118,7 @@ const SearchBar = ({
           Search
         </label>
         <input
+          ref={inputRef}
           type="text"
           id="search"
           autoComplete="off"
@@ -132,7 +132,7 @@ const SearchBar = ({
       {(results.length > 0 || isLoading || error) &&
         createPortal(
           <ul
-            className="bg-noir-dark rounded-b-md fixed border-l-8 border-b-8 border-r-8 border-noir-gold/80 border-double z-[99999] max-h-52 overflow-y-auto shadow-2xl"
+            className="bg-noir-dark rounded-b-md border-l-8 border-b-8 absolute border-r-8 border-noir-gold/80 border-double z-[99999] max-h-52 overflow-y-auto shadow-2xl"
             style={{
               top: dropdownPosition.top,
               left: dropdownPosition.left,

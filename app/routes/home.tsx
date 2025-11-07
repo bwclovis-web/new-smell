@@ -95,7 +95,7 @@ export default function Home() {
             <h1 className="hero-title">{t("home.heading")}</h1>
             <p className="subtitle opacity-0">{t("home.subheading")}</p>
           </div>
-          <div className="flex items-baseline justify-start w-full max-w-4xl mt-6">
+          <div className="flex flex-col-reverse md:flex-row items-baseline justify-start w-full max-w-4xl mt-6 gap-4 md:gap-0">
             <Select
               size="expanded"
               value={searchType}
@@ -107,7 +107,7 @@ export default function Home() {
             <SearchBar
               searchType={searchType}
               variant="home"
-              className="mt-2 md:mt-8"
+              className="mt-2 md:mt-8 w-full"
             />
           </div>
         </section>

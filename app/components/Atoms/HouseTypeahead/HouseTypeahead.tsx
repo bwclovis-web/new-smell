@@ -150,7 +150,7 @@ const HouseTypeahead = ({
         showDropdown &&
         createPortal(
           <ul
-            className="bg-noir-dark rounded-b-md fixed border-l-8 border-b-8 border-r-8 border-noir-gold/80 border-double z-[99999] max-h-52 overflow-y-auto shadow-2xl"
+            className="bg-noir-dark rounded-b-md border-l-8 border-b-8 absolute border-r-8 border-noir-gold/80 border-double z-[99999] max-h-52 overflow-y-auto shadow-2xl"
             style={{
               top: dropdownPosition.top,
               left: dropdownPosition.left,

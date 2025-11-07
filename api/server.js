@@ -49,20 +49,40 @@ import {
 import { parseCookies, verifyJwt } from "./utils.js"
 
 // Run environment validation before starting the server
-console.warn("🚀 Starting Voodoo Perfumes server...")
+// Set STARTUP_VERBOSE=true in .env for detailed startup logging
+if (process.env.STARTUP_VERBOSE === "true") {
+  console.warn("🚀 Starting Voodoo Perfumes server...")
+}
 validateEnvironmentAtStartup()
 const METRICS_PORT = process.env.METRICS_PORT || 3030
 const PORT = process.env.APP_PORT || 2112
 const NODE_ENV = process.env.NODE_ENV ?? "development"
 const MAX_LIMIT_MULTIPLE = NODE_ENV !== "production" ? 10_000 : 1
 
-const viteDevServer =
-  process.env.NODE_ENV === "production"
-    ? undefined
-    : await import("vite").then(vite => vite.createServer({
-          server: { middlewareMode: true },
-          appType: "custom",
-        }))
+// Lazy-load Vite dev server to avoid blocking startup
+// Create it in the background and attach middleware when ready
+let viteDevServer = null
+let viteDevServerPromise = null
+
+if (process.env.NODE_ENV !== "production") {
+  // Start Vite server creation in background (non-blocking)
+  viteDevServerPromise = import("vite").then(vite => vite.createServer({
+    root: process.cwd(),
+    server: {
+      middlewareMode: true,
+    },
+    appType: "custom",
+  })).then(server => {
+    viteDevServer = server
+    return server
+  }).catch(error => {
+    console.error("Failed to create Vite dev server:", error)
+    return null
+  })
+  
+  // Don't await - let it initialize in background
+  // Server will wait for it on first request
+}
 
 const defaultRateLimit = {
   legacyHeaders: false,
@@ -134,9 +154,47 @@ const generalRateLimit = rateLimit({
 const app = express()
 const metricsApp = express()
 
+// Middleware to wait for Vite dev server if it's still initializing
+// Wrapped to properly handle async errors in Express
+const viteMiddleware = (req, res, next) => {
+  if (NODE_ENV === "production") {
+    return next()
+  }
+  
+  // If Vite is ready, use it
+  if (viteDevServer) {
+    return viteDevServer.middlewares(req, res, next)
+  }
+  
+  // If still initializing, wait for it (with timeout)
+  if (viteDevServerPromise) {
+    Promise.race([
+      viteDevServerPromise,
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error("Vite server initialization timeout")), 30000)
+      )
+    ])
+    .then(server => {
+      if (server) {
+        return server.middlewares(req, res, next)
+      }
+      next()
+    })
+    .catch(error => {
+      console.error("Vite middleware error:", error.message)
+      // Fall through to static file serving
+      next()
+    })
+    return // Don't call next() here - let the promise handle it
+  }
+  
+  // Fallback to static files if Vite isn't available
+  next()
+}
+
 // Place Vite dev server middleware first to ensure HMR works properly
-if (viteDevServer) {
-  app.use(viteDevServer.middlewares)
+if (NODE_ENV !== "production") {
+  app.use(viteMiddleware)
   // Serve images in development
   app.use("/images", express.static("public/images", { maxAge: "1h" }))
 } else {
@@ -426,9 +484,33 @@ const findServerBuild = () => {
   return path.join(serverDir, subdirs[0].name, "index.js")
 }
 
-const build = viteDevServer
-  ? await viteDevServer.ssrLoadModule("virtual:react-router/server-build")
-  : await import(findServerBuild())
+// Lazy load build - wait for Vite if in dev mode
+let buildPromise = null
+const getBuild = async () => {
+  if (buildPromise) {
+    return buildPromise
+  }
+  
+  if (NODE_ENV !== "production") {
+    // In dev, wait for Vite server to be ready
+    if (viteDevServerPromise) {
+      buildPromise = viteDevServerPromise.then(async server => {
+        if (server) {
+          return await server.ssrLoadModule("virtual:react-router/server-build")
+        }
+        throw new Error("Vite server not available")
+      })
+    } else {
+      // Fallback to production build if Vite fails
+      buildPromise = import(findServerBuild())
+    }
+  } else {
+    // Production: use static build
+    buildPromise = import(findServerBuild())
+  }
+  
+  return buildPromise
+}
 
 app.get("/test-session", (req, res) => {
   if (!req.session.views) {
@@ -536,36 +618,65 @@ app.get("/admin/compression-stats", (req, res) => {
   })
 })
 
-app.all(
-  "*",
-  createRequestHandler({
-    build,
-    mode: NODE_ENV,
-    getLoadContext: async (req, res) => {
-      const cookies = parseCookies(req)
-      const token = cookies.token
-      let user = null
+// Cache the request handler once build is ready
+let cachedRequestHandler = null
+let requestHandlerPromise = null
 
-      if (token) {
-        const payload = verifyJwt(token)
-        if (payload && payload.userId) {
-          // You can fetch full user here or just pass userId
-          user = { id: payload.userId }
+const getRequestHandler = async () => {
+  if (cachedRequestHandler) {
+    return cachedRequestHandler
+  }
+  
+  if (requestHandlerPromise) {
+    return requestHandlerPromise
+  }
+  
+  requestHandlerPromise = getBuild().then(build => {
+    cachedRequestHandler = createRequestHandler({
+      build,
+      mode: NODE_ENV,
+      getLoadContext: async (req, res) => {
+        const cookies = parseCookies(req)
+        const token = cookies.token
+        let user = null
+
+        if (token) {
+          const payload = verifyJwt(token)
+          if (payload && payload.userId) {
+            // You can fetch full user here or just pass userId
+            user = { id: payload.userId }
+          }
         }
-      }
 
-      return {
-        user,
-        req,
-        res,
-        cspNonce: res.locals.cspNonce,
-        i18n: {
-          language: req.language || req.i18n?.language || "en",
-        },
-      }
-    },
+        return {
+          user,
+          req,
+          res,
+          cspNonce: res.locals.cspNonce,
+          i18n: {
+            language: req.language || req.i18n?.language || "en",
+          },
+        }
+      },
+    })
+    return cachedRequestHandler
   })
-)
+  
+  return requestHandlerPromise
+}
+
+// Create request handler wrapper that waits for build to be ready
+const requestHandler = async (req, res, next) => {
+  try {
+    const handler = await getRequestHandler()
+    return handler(req, res, next)
+  } catch (error) {
+    console.error("Error loading build:", error)
+    return next(error)
+  }
+}
+
+app.all("*", requestHandler)
 
 app.use((err, req, res, next) => {
   if (res.headersSent) {
@@ -581,6 +692,11 @@ app.use((err, req, res, next) => {
 export const handler = serverless(app)
 
 if (NODE_ENV !== "production") {
-  app.listen(PORT, () => console.warn(`🤘 server running: http://localhost:${PORT}`))
-  metricsApp.listen(METRICS_PORT, () => console.warn(`✅ metrics ready: http://localhost:${METRICS_PORT}/metrics`))
+  app.listen(PORT, () => {
+    console.warn(`🤘 server running: http://localhost:${PORT}`)
+    if (process.env.STARTUP_VERBOSE === "true") {
+      console.warn(`✅ metrics ready: http://localhost:${METRICS_PORT}/metrics`)
+    }
+  })
+  metricsApp.listen(METRICS_PORT)
 }

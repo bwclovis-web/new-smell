@@ -20,7 +20,7 @@ interface AdminNavigationProps
 const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
   const { t } = useTranslation()
   return (
-    <aside className="relative md:fixed top-40 md:left-0 z-20 w-full md:w-64  text-noir-light py-4">
+    <aside className="relative md:fixed top-40 md:right-20 z-20 w-full md:w-64  text-noir-light py-4">
       <ul
         className={styleMerge(adminNavigationVariants({ className }))}
         data-cy="AdminNavigation"

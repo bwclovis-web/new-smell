@@ -6,8 +6,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const name = url.searchParams.get("name")
   if (!name) {
-    return []
+    return Response.json([])
   }
   const result = await searchPerfumeByName(name)
-  return result ? result : []
+  return Response.json(result ? result : [])
 }

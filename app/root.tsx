@@ -71,6 +71,7 @@ export function Layout({ children }: { children: ReactNode }) {
 
         {/* Font loading optimized - removed redundant preload */}
 
+        {/* Always include Meta and Links first for CSS stability */}
         <Meta />
         <Links />
         <ImagePreloader images={criticalImages} priority="high" />

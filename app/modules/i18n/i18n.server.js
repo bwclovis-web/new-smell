@@ -15,7 +15,7 @@ if (!i18n.isInitialized) {
       fallbackLng: "en",
       supportedLngs: ["en", "es"],
       load: "languageOnly",
-      debug: process.env.NODE_ENV === "development",
+      debug: false, // Disabled for faster startup - enable only when debugging i18n
       interpolation: {
         escapeValue: false, // React already does escaping
       },

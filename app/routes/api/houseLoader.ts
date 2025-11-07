@@ -6,9 +6,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const name = url.searchParams.get("name")
   if (!name) {
-    return []
+    return Response.json([])
   }
   // Explicitly include houses without perfumes
   const result = await searchPerfumeHouseByName(name, true)
-  return result ? result : []
+  return Response.json(result ? result : [])
 }
