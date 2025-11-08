@@ -68,7 +68,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       {
         headers: {
           "Content-Type": "application/json",
-          "Cache-Control": "public, max-age=600", // 10 minute cache
+          "Cache-Control": "no-store",
           "X-Data-Size": JSON.stringify(perfumes).length.toString(),
         },
       }
