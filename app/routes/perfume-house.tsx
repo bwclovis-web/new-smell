@@ -61,6 +61,13 @@ type OutletContextType = {
 const HouseDetailPage = () => {
   const loaderData = useLoaderData<typeof loader>()
   const { perfumeHouse: initialHouse } = loaderData
+  const initialPerfumeCount =
+    typeof (initialHouse as any).perfumeCount === "number"
+      ? (initialHouse as any).perfumeCount
+      : (initialHouse as any)._count?.perfumes ??
+        initialHouse.perfumes?.length ??
+        0
+  const initialPerfumes = (initialHouse.perfumes || []) as any
   
   // Hydrate house query with loader data
   const { data: perfumeHouse } = useHouse(
@@ -80,6 +87,12 @@ const HouseDetailPage = () => {
   if (!perfumeHouse) {
     return <div className="p-4">House not found</div>
   }
+  const derivedPerfumeCount =
+    typeof (perfumeHouse as any).perfumeCount === "number"
+      ? (perfumeHouse as any).perfumeCount
+      : (perfumeHouse as any)._count?.perfumes
+  const totalPerfumeCount = derivedPerfumeCount ?? initialPerfumeCount
+
   const {
     data,
     isLoading,
@@ -89,7 +102,8 @@ const HouseDetailPage = () => {
     error: queryError,
   } = useInfinitePerfumesByHouse({
     houseSlug: perfumeHouse.slug,
-    initialData: (perfumeHouse.perfumes || []) as any,
+    initialData: initialPerfumes,
+    initialTotalCount: totalPerfumeCount,
   })
 
   // Flatten pages to get all perfumes
@@ -214,7 +228,20 @@ const HouseDetailPage = () => {
         )}
         <div className="noir-border relative bg-white/5 text-noir-gold-500">
           <PerfumeHouseAddressBlock perfumeHouse={perfumeHouse} />
-          <p className="p-4 mb-8">{perfumeHouse.description}</p>
+          {perfumeHouse.description && (
+            <p className="px-4 pt-4">{perfumeHouse.description}</p>
+          )}
+          <div className="flex flex-wrap items-baseline justify-between gap-2 px-4 pb-4 pt-4">
+            <span className="text-xs uppercase tracking-[0.3em] text-noir-gold/70">
+              Total perfumes
+            </span>
+            <span
+              className="text-2xl font-semibold text-noir-gold"
+              data-testid="perfume-count"
+            >
+              {totalPerfumeCount}
+            </span>
+          </div>
           <span className="tag absolute">{perfumeHouse.type}</span>
           <Button
             onClick={() => navigate(selectedLetter
@@ -224,7 +251,7 @@ const HouseDetailPage = () => {
             variant="primary"
             background="gold"
             size="sm"
-            className="gap-2 max-w-max ml-2 mb-2"
+            className="gap-2 max-w-max ml-2 mb-2 mt-2"
             aria-label={
               selectedLetter
                 ? `Back to houses starting with ${selectedLetter}`

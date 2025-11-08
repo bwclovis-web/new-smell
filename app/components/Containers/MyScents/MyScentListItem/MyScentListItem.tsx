@@ -122,21 +122,20 @@ const MyScentsListItem = ({
         </div>
         <div className="flex gap-4">
           <Button
-            className="bg-red-500/20  hover:bg-red-600/50 focus:bg-red-700 disabled:bg-red-400 border-red-700 gap-2 flex items-center justify-center"
             onClick={() => {
               const buttonRef = { current: document.createElement("button") }
               toggleModal(buttonRef as any, "delete-item", "delete-item")
             }}
             disabled={isSubmitting}
-            variant={"icon"}
+            variant="danger"
             size="sm"
+            leftIcon={<MdDeleteForever size={20} fill="white" />}
           >
             <span className="text-white/90 font-bold text-sm">
               {isSubmitting
                 ? t("myScents.listItem.removing")
                 : t("myScents.listItem.removeButton")}
             </span>
-            <MdDeleteForever size={20} fill="white" />
           </Button>
         </div>
       </div>

@@ -36,6 +36,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
     // Return the perfumes - compression is handled by Express middleware
     const perfumes = house.perfumes || []
+    const totalCount =
+      typeof (house as any).perfumeCount === "number"
+        ? (house as any).perfumeCount
+        : (house as any)._count?.perfumes ?? perfumes.length
+    const hasMore = skip + perfumes.length < totalCount
     return Response.json(
       {
         success: true,
@@ -44,8 +49,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
           houseName: house.name,
           skip,
           take,
-          hasMore: perfumes.length === take,
+          hasMore,
           count: perfumes.length,
+          totalCount,
         },
       },
       {

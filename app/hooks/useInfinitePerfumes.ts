@@ -17,6 +17,7 @@ interface UseInfinitePerfumesByHouseOptions {
   houseSlug: string
   pageSize?: number
   initialData?: any[]
+  initialTotalCount?: number
 }
 
 /**
@@ -107,7 +108,16 @@ export function useInfinitePerfumesByLetter(
 export function useInfinitePerfumesByHouse(
   options: UseInfinitePerfumesByHouseOptions
 ) {
-  const { houseSlug, pageSize = 9, initialData } = options
+  const {
+    houseSlug,
+    pageSize = 9,
+    initialData,
+    initialTotalCount,
+  } = options
+  const derivedInitialTotal =
+    typeof initialTotalCount === "number"
+      ? initialTotalCount
+      : initialData?.length ?? 0
 
   return useInfiniteQuery({
     // Use infinite-specific query key without pagination params
@@ -138,8 +148,9 @@ export function useInfinitePerfumesByHouse(
                 houseName: "",
                 skip: 0, // First page starts at 0
                 take: pageSize,
-                hasMore: initialData.length === pageSize,
+                hasMore: derivedInitialTotal > initialData.length,
                 count: initialData.length,
+                totalCount: derivedInitialTotal,
               },
             },
           ],

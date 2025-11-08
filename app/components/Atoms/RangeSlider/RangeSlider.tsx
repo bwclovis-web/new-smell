@@ -118,7 +118,7 @@ const RangeSlider = ({
   }
 
   return (
-    <div className="w-full space-y-2 text-noir-gold">
+    <div className="w-full space-y-2 text-noir-dark">
       {label && (
         <div className="flex justify-between items-center text-md">
           <span>{label}</span>
@@ -141,7 +141,7 @@ const RangeSlider = ({
           aria-valuemax={max}
           aria-valuenow={internalValue}
           aria-disabled={disabled}
-          className={styleMerge(rangeSliderVariants({ className, theme: "light" }))}
+          className={styleMerge(rangeSliderVariants({ className, theme: "dark" }))}
           onClick={handleTrackClick}
           onTouchStart={handleTrackTouch}
           onKeyDown={handleKeyDown}

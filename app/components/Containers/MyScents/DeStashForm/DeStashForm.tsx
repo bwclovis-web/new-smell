@@ -1,3 +1,4 @@
+import { t } from "i18next"
 import { useCallback, useMemo } from "react"
 
 import { Button } from "~/components/Atoms/Button"
@@ -45,17 +46,17 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
 
       const amount = parseFloat(values.deStashAmount)
       if (isNaN(amount) || amount < 0) {
-        errors.deStashAmount = "Amount must be a positive number"
+        errors.deStashAmount = t("myScents.listItem.decantOptionsAmountError")
       }
       if (amount > parseFloat(userPerfume.amount)) {
-        errors.deStashAmount = "Amount cannot exceed available amount"
+        errors.deStashAmount = t("myScents.listItem.decantOptionsAmountError")
       }
 
       // Price is optional, but if provided, it should be a valid number
       if (values.price && values.price !== "") {
         const price = parseFloat(values.price)
         if (isNaN(price) || price < 0) {
-          errors.price = "Price must be a positive number"
+          errors.price = t("myScents.listItem.decantOptionsPriceError")
         }
       }
 
@@ -87,30 +88,29 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
   })
 
   const tradeOptions = [
-    { id: "cash", value: "cash", label: "Cash Only", name: "tradePreference" },
+    { id: "cash", value: "cash", label: t("myScents.listItem.decantOptionsTradePreferencesCash"), name: "tradePreference" },
     {
       id: "trade",
       value: "trade",
-      label: "Trade Only",
+      label: t("myScents.listItem.decantOptionsTradePreferencesTrade"),
       name: "tradePreference",
     },
     {
       id: "both",
       value: "both",
-      label: "Cash or Trade",
+      label: t("myScents.listItem.decantOptionsTradePreferencesBoth"),
       name: "tradePreference",
     },
   ]
 
   return (
     <div className="p-4">
-      <h3 className="text-lg font-semibold mb-2">Decant Options</h3>
-      <p className="text-sm text-gray-600">
-        Decanting allows you to share or transfer a portion of your fragrance to
-        another bottle.
+      <h3 className="!text-noir-dark">{t("myScents.listItem.decantOptionsTitle")}</h3>
+      <p className="text-sm text-noir-black">
+        {t("myScents.listItem.decantOptionsDescriptionOne")}
       </p>
-      <p className="text-sm text-gray-600">
-        Set your amount, price, and trade preferences below.
+      <p className="text-sm text-noir-black">
+        {t("myScents.listItem.decantOptionsDescriptionTwo")}
       </p>
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
         {/* Amount Slider */}
@@ -122,9 +122,9 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
             value={parseFloat(values.deStashAmount) || 0}
             onChange={value => setValue("deStashAmount", value.toFixed(1))}
             formatValue={value => value.toFixed(1)}
-            label="Amount to De-stash"
-            showManualInput={true}
-            inputPlaceholder={`Enter amount (0-${userPerfume.amount}ml)`}
+            label={t("myScents.listItem.decantOptionsAmountLabel")}
+            showManualInput={true}  
+            inputPlaceholder={t("myScents.listItem.decantOptionsAmountPlaceholder", { amount: userPerfume.amount })}
           />
           {errors.deStashAmount && (
             <p className="text-red-500 text-sm mt-1">{errors.deStashAmount}</p>
@@ -136,9 +136,9 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
           <div>
             <label
               htmlFor="price"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-noir-dark mb-1"
             >
-              Price ($ per ml, optional)
+              {t("myScents.listItem.decantOptionsPriceLabel")}
             </label>
             <input
               type="number"
@@ -158,7 +158,7 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
           <div>
             <fieldset>
               <legend className="block text-sm font-medium text-gray-700 mb-2">
-                Trade Preferences
+                {t("myScents.listItem.decantOptionsTradePreferencesLabel")}
               </legend>
               <RadioSelect
                 data={tradeOptions.map(option => ({
@@ -179,8 +179,8 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
           values.tradePreference !== "cash" && (
             <div>
               <VooDooCheck
-                labelChecked="Only accept trades (no cash offers)"
-                labelUnchecked="Accept both cash and trade offers"
+                labelChecked={t("myScents.listItem.decantOptionsTradePreferencesOnlyTrades")}
+                labelUnchecked={t("myScents.listItem.decantOptionsTradePreferencesAcceptBoth")}
                 checked={values.tradeOnly}
                 onChange={() => setValue("tradeOnly", !values.tradeOnly)}
               />
@@ -194,8 +194,8 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
             variant="primary"
           >
             {parseFloat(values.deStashAmount) === 0
-              ? "Remove from Trading Post"
-              : "Confirm De-Stash"}
+              ? t("myScents.listItem.removeFromTradingPost")
+              : t("myScents.listItem.confirmDeStash")}
           </Button>
         </div>
       </form>

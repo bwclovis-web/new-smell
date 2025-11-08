@@ -211,7 +211,25 @@
       "type": "Type",
       "viewDetails": "View / Edit details",
       "viewComments": "View My Comments",
-      "setDestashed": "De-stash Perfume"
+      "setDestashed": "De-stash Perfume",
+      "decantOptionsTitle": "Decant Options",
+      "decantOptionsDescriptionOne": "Decanting allows you to share or transfer a portion of your fragrance to another bottle.",
+      "decantOptionsDescriptionTwo": "Set your amount, price, and trade preferences below.",
+      "decantOptionsAmountLabel": "Amount to De-stash",
+      "decantOptionsAmountPlaceholder": "Enter amount (0-{{amount}}ml)",
+      "decantOptionsPriceLabel": "Price ($ per ml, optional)",
+      "decantOptionsTradePreferencesLabel": "Trade Preferences",
+      "decantOptionsTradePreferencesDescription": "Choose your trade preferences below.",
+      "decantOptionsTradePreferencesCash": "Cash Only",
+      "decantOptionsTradePreferencesTrade": "Trade Only",
+      "decantOptionsTradePreferencesBoth": "Cash or Trade",
+      "decantOptionsTradePreferencesOnlyTrades": "Only accept trades (no cash offers)",
+      "decantOptionsTradePreferencesAcceptBoth": "Accept both cash and trade offers",
+      "removeFromTradingPost": "Remove from Trading Post",
+      "confirmDeStash": "Confirm De-Stash",
+      "decantOptionsPriceError": "Price must be a positive number",
+      "decantOptionsAmountError": "Amount must be a positive number",
+      "decantOptionsAmountErrorExceedsAvailableAmount": "Amount cannot exceed available amount"
     },
     "heading": "My Scents",
     "subheading": "Manage your personal collection of perfumes.",
@@ -454,6 +472,29 @@
       "cash": "Cash Only",
       "trade": "Trade Only",
       "both": "Cash or Trade"
+    }
+  },
+  "userAdmin": {
+    "meta": {
+      "title": "User Admin - Shadow and Sillage",
+      "description": "Manage user accounts and view their data usage"
+    },
+    "heading": "User Management",
+    "subheading": "Manage user accounts and permissions",
+    "users": "Users",
+    "userCount": "Currently we have {{count}} users",
+    "manageUsers": "Manage Our Current Users",
+    "table": {
+      "user": "User",
+      "role": "Role",
+      "dataRecords": "Data Records",
+      "joined": "Joined",
+      "actions": "Actions",
+      "softDelete": "Soft Delete",
+      "delete": "Delete",
+      "currentUser": "Current User",
+      "admin": "Admin",
+      "deleted": "Deleted"
     }
   },
   "wishlist": {

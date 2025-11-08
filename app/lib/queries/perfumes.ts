@@ -37,6 +37,7 @@ export interface MorePerfumesResponse {
     take: number
     hasMore: boolean
     count: number
+    totalCount: number
   }
 }
 

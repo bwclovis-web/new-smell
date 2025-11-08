@@ -1,3 +1,4 @@
+import type { UserRole } from "@prisma/client"
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
@@ -8,7 +9,7 @@ export interface UserWithCounts {
   firstName: string | null
   lastName: string | null
   username: string | null
-  role: string
+  role: UserRole
   createdAt: Date
   _count: {
     UserPerfume: number
@@ -16,7 +17,7 @@ export interface UserWithCounts {
     UserPerfumeReview: number
     UserPerfumeWishlist: number
     userPerfumeComments: number
-    userAlerts: number
+    UserAlert: number
     SecurityAuditLog: number
   }
 }
@@ -42,7 +43,7 @@ export async function getAllUsersWithCounts(): Promise<UserWithCounts[]> {
             UserPerfumeReview: true,
             UserPerfumeWishlist: true,
             userPerfumeComments: true,
-            userAlerts: true,
+            UserAlert: true,
             SecurityAuditLog: true,
           },
         },
@@ -79,7 +80,7 @@ export async function getUserWithCounts(userId: string): Promise<UserWithCounts 
             UserPerfumeReview: true,
             UserPerfumeWishlist: true,
             userPerfumeComments: true,
-            userAlerts: true,
+            UserAlert: true,
             SecurityAuditLog: true,
           },
         },
@@ -130,7 +131,7 @@ export async function deleteUserSafely(
         userWithCounts._count.UserPerfumeReview +
         userWithCounts._count.UserPerfumeWishlist +
         userWithCounts._count.userPerfumeComments +
-        userWithCounts._count.userAlerts +
+        userWithCounts._count.UserAlert +
         userWithCounts._count.SecurityAuditLog
       : 0
 
@@ -259,6 +260,98 @@ export async function softDeleteUser(
     return {
       success: false,
       message: "Failed to soft delete user. Please try again.",
+    }
+  }
+}
+
+/**
+ * Update a user's role
+ */
+export async function updateUserRole(
+  userId: string,
+  newRole: UserRole,
+  adminId: string
+): Promise<{ success: boolean; message: string; role?: UserRole }> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, email: true, role: true },
+    })
+
+    if (!user) {
+      return { success: false, message: "User not found" }
+    }
+
+    if (userId === adminId) {
+      return { success: false, message: "Cannot change your own role" }
+    }
+
+    if (user.email.startsWith("deleted_")) {
+      return {
+        success: false,
+        message: "Cannot change role for a deleted user",
+      }
+    }
+
+    const formattedRole = `${newRole.charAt(0).toUpperCase()}${newRole.slice(1)}`
+
+    if (user.role === newRole) {
+      return {
+        success: true,
+        message: `User ${user.email} already has role ${formattedRole}`,
+        role: newRole,
+      }
+    }
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { role: newRole },
+    })
+
+    await prisma.securityAuditLog.create({
+      data: {
+        id: `audit_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        userId: adminId,
+        action: "ROLE_CHANGE",
+        severity: "info",
+        resource: "User",
+        resourceId: userId,
+        details: {
+          previousRole: user.role,
+          newRole,
+          targetUserEmail: user.email,
+          action: "User role changed by admin",
+        },
+      },
+    })
+
+    return {
+      success: true,
+      message: `User ${user.email} role updated to ${formattedRole}`,
+      role: newRole,
+    }
+  } catch (error) {
+    console.error("Error updating user role:", error)
+
+    await prisma.securityAuditLog.create({
+      data: {
+        id: `audit_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        userId: adminId,
+        action: "ROLE_CHANGE",
+        severity: "error",
+        resource: "User",
+        resourceId: userId,
+        details: {
+          attemptedRole: newRole,
+          error: error instanceof Error ? error.message : "Unknown error",
+          action: "Failed user role update attempt",
+        },
+      },
+    })
+
+    return {
+      success: false,
+      message: "Failed to update user role. Please try again.",
     }
   }
 }

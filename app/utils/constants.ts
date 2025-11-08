@@ -21,6 +21,30 @@ export const FORM_DATA_ACTIONS = {
   DELETE_COMMENT: "delete-comment" as const,
 }
 
+export const ADMIN_ROLE_VALUES = ["user", "editor", "admin"] as const
+export type AdminRoleValue = (typeof ADMIN_ROLE_VALUES)[number]
+
+export const ADMIN_ROLE_OPTIONS: Array<{
+  value: AdminRoleValue
+  label: string
+}> = [
+  { value: "user", label: "User" },
+  { value: "editor", label: "Editor" },
+  { value: "admin", label: "Admin" },
+]
+
+export const ADMIN_ROLE_BADGE_CLASSES: Record<AdminRoleValue, string> = {
+  user: "bg-noir-gold-500/30 text-noir-dark",
+  editor: "bg-blue-100 text-blue-800",
+  admin: "bg-noir-blue/50 text-noir-gold-500",
+}
+
+export const ADMIN_ROLE_LABELS: Record<AdminRoleValue, string> = {
+  user: "User",
+  editor: "Editor",
+  admin: "Admin",
+}
+
 // DEPRECATED: Rating labels are now managed via i18n translations
 // See: public/locales/{en,es}/translation.json -> singlePerfume.rating.labels
 // This constant is kept for reference only and is no longer used in components

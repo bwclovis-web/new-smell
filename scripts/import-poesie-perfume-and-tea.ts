@@ -1,4 +1,9 @@
-// filepath: prisma/seed.ts
+// Import script for perfumes_poesie-perfume-and-tea.csv from csv directory
+// Handles duplicates intelligently:
+// - Same house: update existing with missing info while keeping richest record
+// - Different house: append "-house name"
+// - Uses existing notes from database, creates new ones only when absent
+
 import { PrismaClient, PerfumeNoteType } from "@prisma/client"
 import { parse } from "csv-parse/sync"
 import fs from "fs"
@@ -50,6 +55,22 @@ function calculateDataCompleteness(data: any): number {
   return score
 }
 
+function parseNotes(notesString: string): string[] {
+  if (!notesString || notesString.trim() === "" || notesString === "[]") {
+    return []
+  }
+
+  try {
+    const parsed = JSON.parse(notesString)
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return notesString
+      .split(",")
+      .map(note => note.trim())
+      .filter(note => note.length > 0)
+  }
+}
+
 async function importCsv(
   filePath: string,
   importFunction: (data: any) => Promise<void>
@@ -73,31 +94,13 @@ async function importCsv(
   console.log(`✅ Completed importing ${records.length} records from ${path.basename(filePath)}`)
 }
 
-function parseNotes(notesString: string): string[] {
-  if (!notesString || notesString.trim() === "" || notesString === "[]") {
-    return []
-  }
-
-  try {
-    // Try to parse as JSON array first
-    const parsed = JSON.parse(notesString)
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    // If JSON parsing fails, try to split by comma
-    return notesString
-      .split(",")
-      .map(note => note.trim())
-      .filter(note => note.length > 0)
-  }
-}
-
 async function createOrGetPerfumeHouse(houseName: string) {
   if (!houseName || houseName.trim() === "") {
     return null
   }
 
   const trimmedName = houseName.trim()
-  
+
   const existingHouse = await prisma.perfumeHouse.findUnique({
     where: { name: trimmedName },
   })
@@ -107,7 +110,7 @@ async function createOrGetPerfumeHouse(houseName: string) {
   }
 
   const slug = createUrlSlug(trimmedName)
-  
+
   // Check if slug exists, if so, append a number
   let finalSlug = slug
   let counter = 1
@@ -120,7 +123,7 @@ async function createOrGetPerfumeHouse(houseName: string) {
     data: {
       name: trimmedName,
       slug: finalSlug,
-      type: "indie", // Default to indie, you can adjust this
+      type: "indie",
     },
   })
 }
@@ -215,7 +218,7 @@ async function importPerfumeData(csvFiles: string[]) {
       })
 
       let perfume
-      
+
       if (existingPerfumes.length > 0) {
         // Check if any existing perfumes are from the same house
         const sameHousePerfumes = existingPerfumes.filter(
@@ -224,7 +227,6 @@ async function importPerfumeData(csvFiles: string[]) {
 
         if (sameHousePerfumes.length > 0) {
           // Same house - check for duplicates and keep the one with most data
-          // Calculate scores for all existing perfumes
           const scoredPerfumes = sameHousePerfumes.map(p => {
             const score = calculateDataCompleteness({
               description: p.description,
@@ -247,14 +249,13 @@ async function importPerfumeData(csvFiles: string[]) {
             })
             return { perfume: p, score }
           })
-          
-          // Find the one with the highest score
-          const bestExisting = scoredPerfumes.reduce((best, current) => 
+
+          const bestExisting = scoredPerfumes.reduce((best, current) =>
             current.score > best.score ? current : best
           )
-          
+
           const newScore = calculateDataCompleteness(data)
-          
+
           // If we have duplicates, delete the ones with less data
           if (sameHousePerfumes.length > 1) {
             console.log(`Found ${sameHousePerfumes.length} duplicates in same house for "${perfumeName}"`)
@@ -265,49 +266,43 @@ async function importPerfumeData(csvFiles: string[]) {
               }
             }
           }
-          
-          // Update or keep the best existing one
-          if (newScore > bestExisting.score) {
-            console.log(`Updating existing perfume "${perfumeName}" from same house (new data has more info)`)
-            
-            const updateData: any = {}
-            if (!bestExisting.perfume.description && data.description) {
-              updateData.description = data.description.trim() || null
-            }
-            if (!bestExisting.perfume.image && data.image) {
-              updateData.image = data.image.trim() || null
-            }
-            
-            if (Object.keys(updateData).length > 0) {
-              perfume = await prisma.perfume.update({
-                where: { id: bestExisting.perfume.id },
-                data: updateData,
-              })
-            } else {
-              perfume = bestExisting.perfume
-            }
+
+          // Update with any missing information
+          const updateData: any = {}
+          if (!bestExisting.perfume.description && data.description) {
+            updateData.description = data.description.trim() || null
+          }
+          if (!bestExisting.perfume.image && data.image) {
+            updateData.image = data.image.trim() || null
+          }
+
+          if (Object.keys(updateData).length > 0) {
+            console.log(`Updating existing perfume "${perfumeName}" from same house with missing information`)
+            perfume = await prisma.perfume.update({
+              where: { id: bestExisting.perfume.id },
+              data: updateData,
+            })
           } else {
-            // Existing has more data, keep it but still process notes to add any missing ones
             perfume = bestExisting.perfume
-            console.log(`  Keeping existing perfume (has more data), but will add any missing notes`)
+            console.log(`  Keeping existing perfume "${perfumeName}" (no new data to add), but will add any missing notes`)
           }
         } else {
           // Different house - append house name
           const houseName = data.perfumeHouse ? data.perfumeHouse.trim() : "Unknown"
           const newName = `${perfumeName} - ${houseName}`
-          
+
           // Check if the renamed version already exists
           const renamedExists = await prisma.perfume.findUnique({
             where: { name: newName },
           })
-          
+
           if (renamedExists) {
             console.log(`Renamed perfume "${newName}" already exists, skipping...`)
             return
           }
-          
+
           console.log(`Renaming "${perfumeName}" to "${newName}" (different house)`)
-          
+
           const slug = createUrlSlug(newName)
           let finalSlug = slug
           let counter = 1
@@ -315,7 +310,7 @@ async function importPerfumeData(csvFiles: string[]) {
             finalSlug = `${slug}-${counter}`
             counter++
           }
-          
+
           perfume = await prisma.perfume.create({
             data: {
               name: newName,
@@ -335,7 +330,7 @@ async function importPerfumeData(csvFiles: string[]) {
           finalSlug = `${slug}-${counter}`
           counter++
         }
-        
+
         perfume = await prisma.perfume.create({
           data: {
             name: perfumeName,
@@ -378,34 +373,14 @@ async function importPerfumeData(csvFiles: string[]) {
 }
 
 async function main() {
-  console.log("🚀 Starting database seeding...")
+  console.log("🚀 Starting CSV import for Poesie Perfume and Tea...")
 
-  // List of all your CSV files
-  const csvFiles = [
-    "perfumes_4160tuesdays_updated.csv",
-    "perfumes_akro_updated.csv",
-    "perfumes_blackcliff.csv",
-    "perfumes_cocoapink.csv",
-    "perfumes_lucky9.csv",
-    "perfumes_luvmilk.csv",
-    "perfumes_navitus_updated.csv",
-    "perfumes_pnicolai.csv",
-    "perfumes_poesie-perfume-and-tea.csv",
-    "perfumes_possets.csv",
-    "perfumes_sagegoddess.csv",
-    "perfumes_sarahbaker.csv",
-    "perfumes_scentsofwood_fixed.csv",
-    "perfumes_shopsorce_updated.csv",
-    "perfumes_strangesouth_updated.csv",
-    "perfumes_thoo.csv",
-    "perfumes_tiziana_terenzi.csv",
-    "perfumes_xerjoff.csv",
-    "bpal_enhanced_progress_1450.csv",
-  ]
+  const csvFiles = ["perfumes_poesie-perfume-and-tea.csv"]
+  console.log(`Importing CSV file: ${csvFiles[0]}`)
 
   await importPerfumeData(csvFiles)
 
-  console.log("✅ Database seeding completed!")
+  console.log("✅ CSV import completed!")
 }
 
 main()
@@ -417,3 +392,5 @@ main()
     await prisma.$disconnect()
     process.exit(1)
   })
+
+

@@ -312,10 +312,22 @@ export const getPerfumeHouseBySlug = async (
         take: opts?.take ?? 9,
         orderBy: { createdAt: "desc" }, // Add consistent ordering
       },
+      _count: {
+        select: {
+          perfumes: true,
+        },
+      },
     },
   })
 
-  return house
+  if (!house) {
+    return house
+  }
+
+  return {
+    ...house,
+    perfumeCount: house._count?.perfumes ?? house.perfumes?.length ?? 0,
+  }
 }
 
 export const getPerfumeHouseById = async (
@@ -330,10 +342,22 @@ export const getPerfumeHouseById = async (
         take: opts?.take ?? 9,
         orderBy: { createdAt: "desc" }, // Add consistent ordering
       },
+      _count: {
+        select: {
+          perfumes: true,
+        },
+      },
     },
   })
 
-  return house
+  if (!house) {
+    return house
+  }
+
+  return {
+    ...house,
+    perfumeCount: house._count?.perfumes ?? house.perfumes?.length ?? 0,
+  }
 }
 
 export const getPerfumeHouseByName = async (name: string) => {
