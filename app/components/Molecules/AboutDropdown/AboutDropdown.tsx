@@ -98,6 +98,7 @@ const AboutDropdown = ({
                 <NavLink
                   to={item.path}
                   onClick={handleNavClick}
+                  viewTransition
                   className={({ isActive }) => styleMerge(
                       variant === "mobile"
                         ? "block text-noir-gold hover:text-noir-light font-semibold text-lg py-3 px-4 transition-colors duration-400 hover:bg-noir-black/30"

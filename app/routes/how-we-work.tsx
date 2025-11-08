@@ -10,8 +10,8 @@ export const ROUTE_PATH = "/how-we-work"
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
   return [
-    { title: t("howWeWork.meta.title") },
-    { name: "description", content: t("howWeWork.meta.description") },
+    { title: t("howItWorks.meta.title") },
+    { name: "description", content: t("howItWorks.meta.description") },
   ]
 }
 
@@ -24,43 +24,71 @@ const HowWeWorkPage = () => {
     <section>
       <TitleBanner
         image={banner}
-        heading={t("howWeWork.heading")}
-        subheading={t("howWeWork.subheading")}
+        heading={t("howItWorks.heading")}
+        subheading={t("howItWorks.subheading")}
       />
 
-      <div className="inner-container py-12">
-        <div className="max-w-4xl mx-auto">
-          <div className="prose prose-lg prose-invert max-w-none">
-            <h2 className="text-noir-gold text-2xl font-bold mb-6">
-              {t("howWeWork.section1.title")}
-            </h2>
-            <p className="text-noir-light mb-6 leading-relaxed">
-              {t("howWeWork.section1.content")}
-            </p>
+      <section className="inner-container py-12">
+        <article className="max-w-4xl mx-auto">
+          <div className="prose prose-lg prose-invert max-w-none gap-10 flex flex-col">
+            <section className="flex flex-col gap-6 border-b border-noir-gold pb-10">
+              <h2 className="subtitle mb-6">
+                {t("howItWorks.section1.title")}
+              </h2>
+                <p className="text-noir-light text-lg mb-6 leading-relaxed">
+                  {t("howItWorks.section1.content")}
+                </p>
+                <p className="text-noir-light text-lg mb-6 leading-relaxed">
+                  {t("howItWorks.section1.content2")}
+                </p>
+            </section>
 
-            <h2 className="text-noir-gold text-2xl font-bold mb-6 mt-12">
-              {t("howWeWork.section2.title")}
-            </h2>
-            <p className="text-noir-light mb-6 leading-relaxed">
-              {t("howWeWork.section2.content")}
-            </p>
+            <section className="flex flex-col gap-6 border-b border-noir-gold pb-10">
+              <h2 className="subtitle mb-6">
+                {t("howItWorks.section2.title")}
+              </h2>
+              <p className="text-noir-light text-lg leading-relaxed mb-6">
+                {t("howItWorks.section2.content")}
+              </p>
+              <p className="text-noir-light text-lg leading-relaxed mb-6">
+                {t("howItWorks.section2.content2")}
+              </p>
+            </section>
 
-            <h2 className="text-noir-gold text-2xl font-bold mb-6 mt-12">
-              {t("howWeWork.section3.title")}
-            </h2>
-            <p className="text-noir-light mb-6 leading-relaxed">
-              {t("howWeWork.section3.content")}
-            </p>
+            <section className="flex flex-col gap-6 border-b border-noir-gold pb-10">
+              <h2 className="subtitle mb-6">
+                {t("howItWorks.section3.title")}
+              </h2>
+              <p className="text-noir-light text-lg leading-relaxed mb-6">
+                {t("howItWorks.section3.content")}
+              </p>
+              <p className="text-noir-light text-lg leading-relaxed mb-6">
+                {t("howItWorks.section3.content2")}
+              </p>
+            </section>
 
-            <h2 className="text-noir-gold text-2xl font-bold mb-6 mt-12">
-              {t("howWeWork.section4.title")}
+            <section className="flex flex-col gap-6 border-b border-noir-gold pb-10">
+              <h2 className="subtitle mb-6">
+              {t("howItWorks.section4.title")}
             </h2>
-            <p className="text-noir-light mb-6 leading-relaxed">
-              {t("howWeWork.section4.content")}
+              <p className="text-noir-light text-lg leading-relaxed mb-6">
+              {t("howItWorks.section4.content")}
             </p>
+            <p className="text-noir-light text-lg leading-relaxed mb-6">
+              {t("howItWorks.section4.content2")}
+            </p>
+            </section>
+            <section className="flex flex-col gap-6 pb-10">
+              <h2 className="subtitle mb-6">
+              {t("howItWorks.section5.title")}
+            </h2>
+              <p className="text-noir-light text-lg leading-relaxed mb-6">
+              {t("howItWorks.section5.content")}
+            </p>
+            </section>
           </div>
-        </div>
-      </div>
+        </article>
+      </section>
     </section>
   )
 }

@@ -183,6 +183,38 @@
       "perfume": "Perfumes"
     }
   },
+  "howItWorks":{
+    "meta": {
+      "title": "How It Works - Shadow and Sillage",
+      "description": "Learn how Shadow and Sillage works."
+    },
+    "heading": "The Game of Bottles and Trust",
+    "subheading": "You list, you discover, you trade — all in the quiet glow of discretion.",
+    "section1": {
+      "title": "Step One: Light Your Match — Create an Account",
+      "content": "The story begins when you decide to step out of the fog. Creating an account opens the door to everything Shadow and Sillage has to offer — a place where collectors and dreamers cross paths. With an account, you can rate and review perfumes, share your impressions, list your own decants, and save favorites to return to later. Those who prefer to stay in the shadows may still wander and search the site, but the full experience belongs to those who join the inner circle.",
+      "content2": "Accounts are free for the first 100 members, a nod to the early few who saw the potential in the scent of mystery. And rest assured — your information stays yours. We don’t sell it, trade it, or pass it along. What happens in the shadows stays there."
+    },
+    "section2": {
+      "title": "Step Two: List Your Decants — Share the Scent",
+      "content": "Every bottle tells a story, but some are meant to be shared. When you list your decants, you’re offering more than a few milliliters — you’re inviting another collector into your narrative. Describe your perfume, note its character, and let others discover its charm. Maybe it’s something rare, maybe it’s something familiar. Either way, the act of sharing connects you to a community that knows the language of scent better than words ever could.",
+      "content2": "Each listing is handled with care — we don’t touch the trades or the payments, but we give you the stage to make them happen safely and transparently."
+    },
+    "section3": {
+      "title": "Step Three: Build Your Wishlist — Chase the One That Got Away",
+      "content": "Everyone has that one perfume — the elusive note that lingers in memory long after it’s gone. Your wishlist is where longing takes form. Add your favorites, the ones you’ve loved, lost, or longed for, and keep them close. When someone lists what you’re after, you’ll be the first to catch wind of it.",
+      "content2": "Think of it as your personal scent journal — a map of desire and discovery. Over time, it becomes a portrait of taste, mood, and moments that still haunt you."
+    },
+    "section4": {
+      "title": "Step Four: Make the Trade — The Quiet Exchange",
+      "content": "When two collectors meet under the faint light of curiosity, a trade begins. You reach out, make your offer, and strike your deal. We stay out of the transaction — no middlemen, no cut, no interference. What passes between you and your trading partner stays yours alone.",
+      "content2": "We provide the meeting place, the silence, and the trust. Every deal made here is built on respect for the art of perfume and the people who keep that art alive. The rest — the thrill, the risk, the satisfaction — is entirely up to you."
+    },
+    "section5": {
+      "title": "The Sillage We Leave Behind",
+      "content": "Shadow and Sillage isn’t just a platform — it’s a gathering of collectors, romantics, and scent detectives who believe perfume is memory in liquid form. Every rating, wishlist, and trade adds another thread to the tapestry of this community. We don’t chase trends, and we don’t sell secrets. We build a space where passion and privacy share the same breath. In the end, what lingers isn’t just the fragrance — it’s the connection it creates."
+    }
+  },
   "securityMonitor": {
     "heading": "Security Monitor",
     "subheading": "So you sleep safe at night"

@@ -10,10 +10,10 @@ import {
 } from "react-router"
 
 import { Button } from "~/components/Atoms/Button"
-import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
 import PerfumeIcons from "~/components/Containers/Perfume/PerfumeIcons"
 import PerfumeNotes from "~/components/Containers/Perfume/PerfumeNotes"
 import PerfumeRatingSystem from "~/components/Containers/Perfume/PerfumeRatingSystem"
+import { HeroHeader } from "~/components/Molecules/HeroHeader"
 import ReviewSection from "~/components/Organisms/ReviewSection"
 import { usePerfume } from "~/hooks/usePerfume"
 import { useDeletePerfume } from "~/lib/mutations/perfumes"
@@ -250,39 +250,25 @@ const PerfumeHeader = ({
   onBack: () => void
   selectedLetter?: string | null
 }) => (
-  <header className="flex items-end justify-center mb-10 relative h-[600px]">
-    {perfume.image ? (
-      <OptimizedImage
-        src={perfume.image}
-        alt={perfume.name}
-        priority={true}
-        width={1200}
-        height={600}
-        quality={85}
-        className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 details-title filter contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-screen mask-linear-gradient-to-b"
-        sizes="100vw"
-        viewTransitionName={`perfume-image-${perfume.id}`}
-        placeholder="blur"
-      />
-    ) : (
-      <div className="w-full h-full bg-noir-dark/50 rounded-lg absolute top-0 left-0 right-0 z-0 flex items-center justify-center">
-        <span className="text-noir-gold/40">No Image</span>
-      </div>
-    )}
-    <div className="relative z-10 px-8 text-center filter w-full rounded-lg py-4 text-shadow-lg text-shadow-noir-black/90">
-      <h1 className="capitalize">{perfume.name}</h1>
-      <p className="text-lg tracking-wide mt-2 text-noir-gold-500">
-        {t("singlePerfume.subheading")}
-        <NavLink
-          className="text-blue-200 hover:underline font-semibold underline"
-          viewTransition
-          to={`${HOUSE_PATH}/${perfume?.perfumeHouse?.slug}`}
-        >
-          {perfume?.perfumeHouse?.name}
-        </NavLink>
-      </p>
-    </div>
-  </header>
+  <HeroHeader
+    title={perfume.name}
+    image={perfume.image ?? undefined}
+    imageAlt={perfume.name}
+    transitionKey={perfume.id}
+    viewTransitionName={`perfume-image-${perfume.id}`}
+  >
+    <h1 className="capitalize">{perfume.name}</h1>
+    <p className="text-lg tracking-wide mt-2 text-noir-gold-500">
+      {t("singlePerfume.subheading")}
+      <NavLink
+        className="text-blue-200 hover:underline font-semibold underline"
+        viewTransition
+        to={`${HOUSE_PATH}/${perfume?.perfumeHouse?.slug}`}
+      >
+        {perfume?.perfumeHouse?.name}
+      </NavLink>
+    </p>
+  </HeroHeader>
 )
 
 const PerfumeContent = ({
