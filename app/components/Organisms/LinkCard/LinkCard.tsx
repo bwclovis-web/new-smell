@@ -1,20 +1,34 @@
 import { NavLink } from "react-router"
 
+import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
 import { ROUTE_PATH as PERFUME_PATH } from "~/routes/perfume"
 import { ROUTE_PATH as PERFUME_HOUSE } from "~/routes/perfume-house"
-const LinkCard = ({
+
+interface LinkCardProps {
+  data: {
+    id: string
+    name: string
+    slug: string
+    image?: string
+    type?: string
+    perfumeHouse?: {
+      name: string
+    }
+  }
+  type: "house" | "perfume"
+  children?: React.ReactNode
+  selectedLetter?: string | null
+  sourcePage?: string
+}
+
+// React Compiler automatically optimizes this component - no manual memo needed
+function LinkCard({
   data,
   type,
   children,
   selectedLetter,
   sourcePage,
-}: {
-  data: any
-  type: any
-  children?: any
-  selectedLetter?: string | null
-  sourcePage?: string
-}) => {
+}: LinkCardProps) {
   const url = type === "house" ? PERFUME_HOUSE : PERFUME_PATH
   return (
     <div className="relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out bg-noir-dark/70 backdrop-blur-sm">
@@ -38,23 +52,21 @@ const LinkCard = ({
             </p>
           )}
         </div>
-        <div className="relative rounded-lg ">
+        <div className="relative rounded-lg">
           {data.image ? (
-            <img
+            <OptimizedImage
               src={data.image}
               alt={data.name}
-              height={400}
               width={300}
-              loading="lazy"
-              decoding="async"
-              fetchPriority="low"
+              height={400}
+              priority={false}
+              quality={75}
               className="w-full object-cover mask-radial-at-center mask-radial-from-10% mask-radial-to-75%                                                        
             transition-all duration-500 ease-in-out scale-120 h-full
             filter grayscale-100 group-hover:grayscale-0 group-hover:scale-100 group-hover:mask-radial-from-30% group-hover:mask-radial-to-100%"
-              style={{
-                viewTransitionName: `perfume-image-${data.id}`,
-                contain: "layout style paint",
-              }}
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+              viewTransitionName={`perfume-image-${data.id}`}
+              placeholder="blur"
             />
           ) : (
             <div className="w-full h-48 bg-noir-dark/50 flex items-center justify-center border border-noir-gold/20 rounded-lg">

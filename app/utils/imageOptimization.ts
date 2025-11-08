@@ -12,8 +12,12 @@ export interface ImageOptimizationOptions {
 
 /**
  * Generates optimized image URLs with different formats and sizes
- * This is a placeholder for integration with image optimization services
- * like Cloudinary, ImageKit, or Next.js Image Optimization
+ * Supports integration with image optimization services like Cloudinary, ImageKit, or Next.js Image Optimization
+ * 
+ * To enable CDN optimization, set IMAGE_CDN_URL environment variable:
+ * - Cloudinary: https://res.cloudinary.com/your-cloud/image/fetch
+ * - ImageKit: https://ik.imagekit.io/your-imagekit-id
+ * - Cloudflare Images: https://imagedelivery.net/your-account-id
  */
 export const getOptimizedImageUrl = (
   src: string,
@@ -21,39 +25,99 @@ export const getOptimizedImageUrl = (
 ): string => {
   const { quality = 75, format = "webp", width, height, fit = "cover" } = options
 
-  // For local images, return as-is for now
-  // In production, this would integrate with an image optimization service
-  if (src.startsWith("/") || src.startsWith("./")) {
-    return src
+  // Early return for empty src
+  if (!src) {
+    return ""
   }
 
-  // For external images, you could add optimization parameters here
-  // Example for Cloudinary:
-  // return `https://res.cloudinary.com/your-cloud/image/fetch/q_${quality},f_${format},w_${width},h_${height},c_${fit}/${encodeURIComponent(src)}`
+  // Check for CDN configuration
+  const imageCdnUrl = typeof process !== "undefined" && process.env?.IMAGE_CDN_URL
+    ? process.env.IMAGE_CDN_URL
+    : null
 
-  // Example for ImageKit:
-  // return `https://ik.imagekit.io/your-imagekit-id/tr:q-${quality},f-${format},w-${width},h-${height},c-${fit}/${src}`
+  // If CDN is configured, use it
+  if (imageCdnUrl) {
+    const params = new URLSearchParams()
+    if (quality) params.set("q", quality.toString())
+    if (format) params.set("f", format)
+    if (width) params.set("w", width.toString())
+    if (height) params.set("h", height.toString())
+    if (fit) params.set("fit", fit)
 
+    // Cloudinary format
+    if (imageCdnUrl.includes("cloudinary.com")) {
+      const transformParams = [
+        `q_${quality}`,
+        `f_${format}`,
+        width && `w_${width}`,
+        height && `h_${height}`,
+        `c_${fit}`,
+      ]
+        .filter(Boolean)
+        .join(",")
+      return `${imageCdnUrl}/${transformParams}/${encodeURIComponent(src)}`
+    }
+
+    // ImageKit format
+    if (imageCdnUrl.includes("imagekit.io")) {
+      const transformParams = [
+        `q-${quality}`,
+        `f-${format}`,
+        width && `w-${width}`,
+        height && `h-${height}`,
+        `c-${fit}`,
+      ]
+        .filter(Boolean)
+        .join(",")
+      return `${imageCdnUrl}/tr:${transformParams}/${src}`
+    }
+
+    // Generic CDN with query params
+    return `${imageCdnUrl}${src.startsWith("/") ? "" : "/"}${src}?${params.toString()}`
+  }
+
+  // For local images or external images without CDN, return as-is
+  // In production, consider implementing server-side image optimization
   return src
 }
 
 /**
  * Generates responsive image srcSet for different screen sizes
+ * Supports both CDN-based and local image optimization
  */
 export const generateResponsiveSrcSet = (
   baseSrc: string,
-  sizes: number[] = [
-320, 640, 768, 1024, 1280, 1536, 1920
-]
+  sizes: number[] = [320, 640, 768, 1024, 1280, 1536, 1920]
 ): string => {
   if (!baseSrc) {
     return ""
   }
 
+  // Check for CDN configuration
+  const imageCdnUrl = typeof process !== "undefined" && process.env?.IMAGE_CDN_URL
+    ? process.env.IMAGE_CDN_URL
+    : null
+
+  // If CDN is configured, generate srcSet with CDN URLs
+  if (imageCdnUrl) {
+    return sizes
+      .map((size) => {
+        const optimizedUrl = getOptimizedImageUrl(baseSrc, {
+          width: size,
+          quality: 80,
+          format: "webp",
+        })
+        return `${optimizedUrl} ${size}w`
+      })
+      .join(", ")
+  }
+
+  // For local images, try to generate srcSet based on common naming conventions
+  // This assumes you have multiple image sizes available (e.g., image-320w.jpg, image-640w.jpg)
   const baseUrl = baseSrc.replace(/\.[^/.]+$/, "")
   const extension = baseSrc.split(".").pop() || "jpg"
 
-  return sizes.map(size => `${baseUrl}-${size}w.${extension} ${size}w`).join(", ")
+  return sizes.map((size) => `${baseUrl}-${size}w.${extension} ${size}w`).join(", ")
 }
 
 /**

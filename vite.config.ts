@@ -15,9 +15,9 @@ export default defineConfig({
     // Tailwind CSS plugin - must be early in the plugin chain for proper HMR
     tailwindcss(),
     tsconfigPaths(),
-    // React Compiler - ONLY in production for faster dev builds
-    // In dev, React 19's built-in optimizations are sufficient
-    !isDev && babel({
+    // React Compiler - automatically optimizes components and eliminates need for manual memoization
+    // Enable in both dev and production for consistent behavior and automatic optimizations
+    babel({
       filter: /\.[jt]sx?$/,
       babelConfig: {
         presets: ["@babel/preset-typescript"],
@@ -25,7 +25,7 @@ export default defineConfig({
           [
             "babel-plugin-react-compiler",
             {
-              compilationMode: "infer",
+              compilationMode: "infer", // Automatically optimize without manual annotations
             },
           ],
         ],

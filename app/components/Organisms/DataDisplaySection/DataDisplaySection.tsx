@@ -22,7 +22,8 @@ interface DataDisplaySectionProps {
   onPrevPage?: () => void
 }
 
-const DataDisplaySection = ({
+// React Compiler automatically optimizes this component - no manual memo/useMemo needed
+function DataDisplaySection({
   data,
   isLoading,
   type,
@@ -32,7 +33,7 @@ const DataDisplaySection = ({
   onPageChange,
   onNextPage,
   onPrevPage,
-}: DataDisplaySectionProps) => {
+}: DataDisplaySectionProps) {
   const { t } = useTranslation()
   const itemName = type === "house" ? "houses" : "perfumes"
 

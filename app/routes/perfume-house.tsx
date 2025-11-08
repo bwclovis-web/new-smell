@@ -14,6 +14,7 @@ import {
 
   import { VooDooLink } from "~/components/Atoms/Button"
 import { Button } from "~/components/Atoms/Button"
+import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
 import PerfumeHouseAddressBlock from "~/components/Containers/PerfumeHouse/AddressBlock/PerfumeHouseAddressBlock"
 import DangerModal from "~/components/Organisms/DangerModal"
 import Modal from "~/components/Organisms/Modal"
@@ -152,20 +153,24 @@ const HouseDetailPage = () => {
       {/* Back Button */}
 
       <header className="flex items-end justify-center mb-10 relative h-[600px]">
-        <img
-          src={perfumeHouse.image || ""}
-          alt={perfumeHouse.name}
-          loading="eager"
-          decoding="sync"
-          fetchPriority="high"
-          width={300}
-          height={600}
-          className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 details-title filter contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-screen mask-linear-gradient-to-b"
-          style={{
-            viewTransitionName: `perfume-image-${perfumeHouse.id}`,
-            contain: "layout style paint",
-          }}
-        />
+        {perfumeHouse.image ? (
+          <OptimizedImage
+            src={perfumeHouse.image}
+            alt={perfumeHouse.name}
+            priority={true}
+            width={1200}
+            height={600}
+            quality={85}
+            className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 details-title filter contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-screen mask-linear-gradient-to-b"
+            sizes="100vw"
+            viewTransitionName={`perfume-image-${perfumeHouse.id}`}
+            placeholder="blur"
+          />
+        ) : (
+          <div className="w-full h-full bg-noir-dark/50 rounded-lg absolute top-0 left-0 right-0 z-0 flex items-center justify-center">
+            <span className="text-noir-gold/40">No Image</span>
+          </div>
+        )}
 
         <div className="relative z-10 px-8 text-center filter w-full rounded-lg py-4 text-shadow-lg text-shadow-noir-black/90">
           <h1 className="text-noir-gold">{perfumeHouse.name}</h1>
@@ -252,20 +257,24 @@ const HouseDetailPage = () => {
                     >
                       {perfume.name}
                     </h3>
-                    <img
-                      src={perfume.image ?? undefined}
-                      alt={perfume.name}
-                      loading="lazy"
-                      decoding="async"
-                      fetchPriority="low"
-                      width={192}
-                      height={192}
-                      className="w-48 h-48 object-cover rounded-lg mb-2 mx-auto details-title dark:brightness-90"
-                      style={{
-                        viewTransitionName: `perfume-image-${perfume.id}`,
-                        contain: "layout style paint",
-                      }}
-                    />
+                    {perfume.image ? (
+                      <OptimizedImage
+                        src={perfume.image}
+                        alt={perfume.name}
+                        priority={false}
+                        width={192}
+                        height={192}
+                        quality={75}
+                        className="w-48 h-48 object-cover rounded-lg mb-2 mx-auto dark:brightness-90"
+                        sizes="(max-width: 768px) 50vw, 33vw"
+                        viewTransitionName={`perfume-image-${perfume.id}`}
+                        placeholder="blur"
+                      />
+                    ) : (
+                      <div className="w-48 h-48 bg-noir-dark/50 flex items-center justify-center border border-noir-gold/20 rounded-lg mb-2 mx-auto">
+                        <span className="text-noir-gold/40 text-xs">No Image</span>
+                      </div>
+                    )}
                   </NavLink>
                 </li>
               ))}
