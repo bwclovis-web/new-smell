@@ -180,9 +180,13 @@ async function createPerfumeNoteRelation(
   }
 }
 
-async function importPerfumeData(csvFiles: string[]) {
+async function importPerfumeData(csvFiles: string[], baseDir: string) {
+  const resolvedBaseDir = path.isAbsolute(baseDir)
+    ? baseDir
+    : path.join(__dirname, baseDir)
+
   for (const csvFile of csvFiles) {
-    const filePath = path.join(__dirname, "../csv_noir", csvFile)
+    const filePath = path.join(resolvedBaseDir, csvFile)
 
     if (!fs.existsSync(filePath)) {
       console.log(`⚠️  File not found: ${csvFile}`)
@@ -270,30 +274,33 @@ async function importPerfumeData(csvFiles: string[]) {
             }
           }
           
-          // Update or keep the best existing one
-          if (newScore > bestExisting.score) {
-            console.log(`Updating existing perfume "${perfumeName}" from same house (new data has more info)`)
-            
-            const updateData: any = {}
-            if (!bestExisting.perfume.description && data.description) {
-              updateData.description = data.description.trim() || null
+          // Always prefer enriched noir text when provided
+          const updateData: any = {}
+          if (data.description) {
+            const newDescription = data.description.trim()
+            const currentDescription = bestExisting.perfume.description?.trim()
+            if (!currentDescription || currentDescription !== newDescription) {
+              updateData.description = newDescription || null
             }
-            if (!bestExisting.perfume.image && data.image) {
-              updateData.image = data.image.trim() || null
+          }
+          if (data.image) {
+            const newImage = data.image.trim()
+            const currentImage = bestExisting.perfume.image?.trim()
+            if (!currentImage || currentImage !== newImage) {
+              updateData.image = newImage || null
             }
-            
-            if (Object.keys(updateData).length > 0) {
-              perfume = await prisma.perfume.update({
-                where: { id: bestExisting.perfume.id },
-                data: updateData,
-              })
-            } else {
-              perfume = bestExisting.perfume
-            }
+          }
+
+          if (Object.keys(updateData).length > 0) {
+            console.log(`Updating existing perfume "${perfumeName}" from same house with enriched data`)
+            perfume = await prisma.perfume.update({
+              where: { id: bestExisting.perfume.id },
+              data: updateData,
+            })
           } else {
-            // Existing has more data, keep it but still process notes to add any missing ones
+            // Existing remains the same, but still add any missing notes
             perfume = bestExisting.perfume
-            console.log(`  Keeping existing perfume (has more data), but will add any missing notes`)
+            console.log(`  Existing perfume "${perfumeName}" already up to date; checking notes`)
           }
         } else {
           // Different house - append house name
@@ -385,15 +392,27 @@ async function main() {
   console.log("🚀 Starting CSV import from csv_noir...")
 
   // Get CSV file name from command line argument
-  const csvFileName = process.argv[2]
+  const args = process.argv.slice(2)
+  const dirArgIndex = args.findIndex(arg => arg.startsWith("--dir="))
+  let baseDir = "../csv_noir"
+
+  if (dirArgIndex !== -1) {
+    baseDir = args[dirArgIndex].replace("--dir=", "") || baseDir
+    args.splice(dirArgIndex, 1)
+  }
+
+  const csvFileName = args[0]
 
   if (!csvFileName) {
     console.error("❌ Please provide a CSV file name as an argument")
-    console.error("Usage: npm run import-csv-noir <filename.csv>")
+    console.error("Usage: npm run import-csv-noir [--dir=../csv_noir] <filename.csv>")
     console.error("Example: npm run import-csv-noir perfumes_kyse.csv")
+    console.error("Example: npm run import-csv-noir -- --dir=../csv perfumes_histoires-de-parfums.csv")
     
     // List available CSV files
-    const csvDir = path.join(__dirname, "../csv_noir")
+    const csvDir = path.isAbsolute(baseDir)
+      ? baseDir
+      : path.join(__dirname, baseDir)
     if (fs.existsSync(csvDir)) {
       const files = fs.readdirSync(csvDir)
       const csvFiles = files.filter(file => file.endsWith(".csv") && file !== "README.md")
@@ -405,9 +424,9 @@ async function main() {
   }
 
   const csvFiles = [csvFileName]
-  console.log(`Importing CSV file: ${csvFileName}`)
+  console.log(`Importing CSV file: ${csvFileName} from directory ${baseDir}`)
 
-  await importPerfumeData(csvFiles)
+  await importPerfumeData(csvFiles, baseDir)
 
   console.log("✅ CSV import completed!")
 }

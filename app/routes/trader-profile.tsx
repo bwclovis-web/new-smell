@@ -11,6 +11,7 @@ import { getTraderById } from "~/models/user.server"
 import { getTraderDisplayName } from "~/utils/user"
 
 import banner from "../images/trade.webp"
+import VooDooDetails from "~/components/Atoms/VooDooDetails"
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!params.id) {
@@ -48,6 +49,13 @@ const TraderProfilePage = () => {
       <div className="flex flex-col md:flex-row justify-between inner-container items-start gap-8 p-6">
         <div className="noir-border relative md:w-1/2 w-full p-4">
           <h2>{t("traderProfile.itemsAvailable")}</h2>
+          <VooDooDetails
+            type="primary"
+            name="itemsAvailable"
+            summary={t("traderProfile.itemsAvailableSummary", { traderName })}
+            background="dark"
+            defaultOpen={true}
+          >
           {trader.UserPerfume.length > 0 ? (
             <ul className="mt-6">
               {trader.UserPerfume.map((userPerfume: any) => (
@@ -57,15 +65,25 @@ const TraderProfilePage = () => {
           ) : (
             <p>{t("traderProfile.noItemsAvailable")}</p>
           )}
+          </VooDooDetails>
         </div>
         <div className="noir-border relative md:w-1/2 w-full p-4">
-          <h2>{t("traderProfile.itemsSearchingFor")}</h2>
+        <h2>{t("traderProfile.itemsSearchingFor")}</h2>
+        <VooDooDetails
+          type="primary"
+          name="itemsSearchingFor"
+          summary={t("traderProfile.itemsSummary", { traderName })}
+          background="dark"
+          defaultOpen={true}
+        >
           <ItemsSearchingFor
             wishlistItems={(trader.UserPerfumeWishlist || []).map((item: any) => ({
               ...item,
               user: trader,
             }))}
           />
+        </VooDooDetails>
+         
         </div>
       </div>
     </section>

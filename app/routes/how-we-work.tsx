@@ -3,7 +3,7 @@ import { type MetaFunction } from "react-router"
 
 import TitleBanner from "~/components/Organisms/TitleBanner"
 
-import banner from "../images/behind.webp"
+import banner from "../images/work.webp"
 
 export const ROUTE_PATH = "/how-we-work"
 

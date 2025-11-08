@@ -395,66 +395,117 @@ export const createPerfume = async (data: FormData) => {
   return newPerfume
 }
 
-export const getAvailablePerfumesForDecanting = async () => {
-  const availablePerfumes = await prisma.perfume.findMany({
+const availableForDecantingWhere = {
+  userPerfume: {
+    some: {
+      available: {
+        not: "0",
+      },
+    },
+  },
+} as const
+
+const availableForDecantingSelect = {
+  id: true,
+  name: true,
+  description: true,
+  image: true,
+  slug: true,
+  perfumeHouseId: true,
+  createdAt: true,
+  updatedAt: true,
+  perfumeHouse: {
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      type: true,
+    },
+  },
+  userPerfume: {
     where: {
-      userPerfume: {
-        some: {
-          available: {
-            not: "0",
-          },
-        },
+      available: {
+        not: "0",
       },
     },
     select: {
       id: true,
-      name: true,
-      description: true,
-      image: true,
-      slug: true,
-      perfumeHouseId: true,
-      createdAt: true,
-      updatedAt: true,
-      perfumeHouse: {
+      perfumeId: true,
+      available: true,
+      amount: true,
+      price: true,
+      tradePrice: true,
+      tradePreference: true,
+      userId: true,
+      user: {
         select: {
           id: true,
-          name: true,
-          slug: true,
-          type: true,
-        },
-      },
-      userPerfume: {
-        where: {
-          available: {
-            not: "0",
-          },
-        },
-        select: {
-          id: true,
-          perfumeId: true,
-          available: true,
-          amount: true,
-          price: true,
-          tradePrice: true,
-          tradePreference: true,
-          userId: true,
-          user: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              username: true,
-              email: true,
-            },
-          },
+          firstName: true,
+          lastName: true,
+          username: true,
+          email: true,
         },
       },
     },
+  },
+} as const
+
+export const getAvailablePerfumesForDecanting = async () => {
+  const availablePerfumes = await prisma.perfume.findMany({
+    where: availableForDecantingWhere,
+    select: availableForDecantingSelect,
     orderBy: {
       name: "asc",
     },
   })
   return availablePerfumes
+}
+
+interface GetAvailablePerfumesForDecantingPaginatedOptions {
+  skip?: number
+  take?: number
+}
+
+export const getAvailablePerfumesForDecantingPaginated = async ({
+  skip = 0,
+  take = 16,
+}: GetAvailablePerfumesForDecantingPaginatedOptions = {}) => {
+  const [perfumes, totalCount] = await Promise.all([
+    prisma.perfume.findMany({
+      where: availableForDecantingWhere,
+      select: availableForDecantingSelect,
+      orderBy: {
+        name: "asc",
+      },
+      skip,
+      take,
+    }),
+    prisma.perfume.count({
+      where: availableForDecantingWhere,
+    }),
+  ])
+
+  const pageSize = take
+  const hasAnyData = totalCount > 0 && pageSize > 0
+  const totalPages = hasAnyData ? Math.ceil(totalCount / pageSize) : 0
+  const calculatedPage = pageSize > 0 ? Math.floor(skip / pageSize) + 1 : 1
+  const currentPage = hasAnyData ? Math.min(calculatedPage, totalPages) : 1
+  const hasMore = hasAnyData ? skip + perfumes.length < totalCount : false
+  const hasNextPage = hasAnyData ? currentPage < totalPages : false
+  const hasPrevPage = hasAnyData ? currentPage > 1 : false
+
+  return {
+    perfumes,
+    meta: {
+      totalCount,
+      pageSize,
+      currentPage,
+      totalPages,
+      hasMore,
+      hasNextPage,
+      hasPrevPage,
+    },
+  }
 }
 
 export const getPerfumesByLetterPaginated = async (

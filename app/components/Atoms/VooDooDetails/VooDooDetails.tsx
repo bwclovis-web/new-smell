@@ -1,31 +1,50 @@
 import { type VariantProps } from "class-variance-authority"
-import { type HTMLProps } from "react"
+import { type HTMLProps, type ReactNode } from "react"
 
 import { styleMerge } from "~/utils/styleUtils"
 
-import { voodoodetailsVariants } from "./voodoodetails-variants"
+import {
+  voodooDetailsSummaryVariants,
+  voodoodetailsVariants,
+} from "./voodoodetails-variants"
 
-interface VooDooDetailsProps
-  extends HTMLProps<HTMLDetailsElement>,
-    VariantProps<typeof voodoodetailsVariants> {}
+type VooDooDetailsProps = HTMLProps<HTMLDetailsElement> &
+  VariantProps<typeof voodoodetailsVariants> &
+  VariantProps<typeof voodooDetailsSummaryVariants> & {
+    summary?: string
+    name: string
+    children: ReactNode
+    defaultOpen?: boolean
+  }
 
 const VooDooDetails = ({
   className,
   summary,
   name,
   children,
+  type,
+  background,
+  defaultOpen,
   ...props
-}: VooDooDetailsProps) => (
-  <details
-    name={name}
-    className={styleMerge(voodoodetailsVariants({ className }))}
-    data-cy="VooDooDetails"
-    {...props}
-  >
-    <summary className="cursor-pointer justify-around">
-      <span className="text-lg font-semibold">{summary || "VooDoo Details"}</span>
-    </summary>
-    {children}
-  </details>
-)
+}: VooDooDetailsProps) => {
+  const detailsVariant = voodoodetailsVariants({ type })
+  const summaryVariant = voodooDetailsSummaryVariants({ type, background })
+  const detailsClassName = styleMerge(detailsVariant, className)
+  const summaryClassName = styleMerge(summaryVariant)
+
+  return (
+    <details
+      name={name}
+      className={detailsClassName}
+      data-cy="VooDooDetails"
+      open={defaultOpen}
+      {...props}
+    >
+      <summary className={summaryClassName}>
+        {summary || "VooDoo Details"}
+      </summary>
+      {children}
+    </details>
+  )
+}
 export default VooDooDetails
