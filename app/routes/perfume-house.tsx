@@ -1,37 +1,40 @@
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import { GrEdit } from "react-icons/gr"
-import { MdDeleteForever } from "react-icons/md"
 import {
   type LoaderFunctionArgs,
   type MetaFunction,
-  NavLink,
   useLoaderData,
   useLocation,
   useNavigate,
   useOutletContext,
+  useSearchParams,
 } from "react-router"
 
-  import { VooDooLink } from "~/components/Atoms/Button"
-import { Button } from "~/components/Atoms/Button"
-import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
-import PerfumeHouseAddressBlock from "~/components/Containers/PerfumeHouse/AddressBlock/PerfumeHouseAddressBlock"
+import {
+  PerfumeHouseAdminActions,
+  PerfumeHouseHero,
+  PerfumeHousePerfumeList,
+  PerfumeHouseSummaryCard,
+} from "~/components/Containers/PerfumeHouse"
 import DangerModal from "~/components/Organisms/DangerModal"
 import Modal from "~/components/Organisms/Modal"
 import { useHouse } from "~/hooks/useHouse"
+import { useInfinitePagination } from "~/hooks/useInfinitePagination"
 import { useInfinitePerfumesByHouse } from "~/hooks/useInfinitePerfumes"
+import { useScrollToDataList } from "~/hooks/useScrollToDataList"
 import { useDeleteHouse } from "~/lib/mutations/houses"
 import { getPerfumeHouseBySlug } from "~/models/house.server"
 import { useSessionStore } from "~/stores/sessionStore"
 const ALL_HOUSES = "/behind-the-bottle"
 const BEHIND_THE_BOTTLE = "/behind-the-bottle"
+const PAGE_SIZE = 9
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!params.houseSlug) {
     throw new Error("House slug is required")
   }
   const perfumeHouse = await getPerfumeHouseBySlug(params.houseSlug, {
     skip: 0,
-    take: 9,
+    take: PAGE_SIZE,
   })
   if (!perfumeHouse) {
     throw new Response("House not found", { status: 404 })
@@ -57,41 +60,40 @@ type OutletContextType = {
   }
 }
 
-// Main component
-const HouseDetailPage = () => {
-  const loaderData = useLoaderData<typeof loader>()
-  const { perfumeHouse: initialHouse } = loaderData
-  const initialPerfumeCount =
-    typeof (initialHouse as any).perfumeCount === "number"
-      ? (initialHouse as any).perfumeCount
-      : (initialHouse as any)._count?.perfumes ??
-        initialHouse.perfumes?.length ??
-        0
-  const initialPerfumes = (initialHouse.perfumes || []) as any
-  
-  // Hydrate house query with loader data
-  const { data: perfumeHouse } = useHouse(
-    initialHouse.slug,
-    initialHouse
-  )
-  
-  const { user } = useOutletContext<OutletContextType>()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
-  const { modalOpen, toggleModal, modalId, closeModal } = useSessionStore()
-  // Get selectedLetter from navigation state
-  const selectedLetter = (location.state as { selectedLetter?: string })
-    ?.selectedLetter
-  
-  if (!perfumeHouse) {
-    return <div className="p-4">House not found</div>
+interface UseHousePerfumePaginationOptions {
+  houseSlug: string
+  initialPerfumes: any[]
+  fallbackPerfumeCount: number
+  pageFromUrl: number
+  navigate: ReturnType<typeof useNavigate>
+}
+
+interface UseHousePerfumePaginationResult {
+  perfumes: any[]
+  pagination: {
+    currentPage: number
+    totalPages: number
+    totalCount: number
+    pageSize: number
+    hasNextPage: boolean
+    hasPrevPage: boolean
   }
-  const derivedPerfumeCount =
-    typeof (perfumeHouse as any).perfumeCount === "number"
-      ? (perfumeHouse as any).perfumeCount
-      : (perfumeHouse as any)._count?.perfumes
-  const totalPerfumeCount = derivedPerfumeCount ?? initialPerfumeCount
+  loading: boolean
+  handleNextPage: () => void
+  handlePrevPage: () => void
+  totalPerfumeCount: number
+  listError: Error | null
+}
+
+function useHousePerfumePagination({
+  houseSlug,
+  initialPerfumes,
+  fallbackPerfumeCount,
+  pageFromUrl,
+  navigate,
+}: UseHousePerfumePaginationOptions): UseHousePerfumePaginationResult {
+  const currentPage =
+    Number.isNaN(pageFromUrl) || pageFromUrl < 1 ? 1 : pageFromUrl
 
   const {
     data,
@@ -99,44 +101,193 @@ const HouseDetailPage = () => {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
-    error: queryError,
+    error,
   } = useInfinitePerfumesByHouse({
-    houseSlug: perfumeHouse.slug,
+    houseSlug,
+    pageSize: PAGE_SIZE,
     initialData: initialPerfumes,
-    initialTotalCount: totalPerfumeCount,
+    initialTotalCount: fallbackPerfumeCount,
   })
 
-  // Flatten pages to get all perfumes
-  const perfumes = data?.pages.flatMap((page) => page.perfumes || []) || []
-  const loading = isLoading || isFetchingNextPage
-  const hasMore = hasNextPage ?? false
-  const observerRef = useRef<HTMLDivElement>(null)
+  const {
+    items: perfumes,
+    pagination,
+    loading,
+  } = useInfinitePagination({
+    pages: data?.pages,
+    currentPage,
+    pageSize: PAGE_SIZE,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    extractItems: page => (page as any).perfumes || [],
+    extractTotalCount: page => {
+      const pageData = page as any
+      return (
+        pageData?.meta?.totalCount ??
+        pageData?._count?.perfumes ??
+        pageData?.count
+      )
+    },
+  })
 
-  const loadMorePerfumes = async () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      await fetchNextPage()
+  useEffect(() => {
+    if (pagination.totalPages > 0 && currentPage > pagination.totalPages) {
+      navigate(
+        pagination.totalPages === 1
+          ? `/perfume-house/${houseSlug}`
+          : `/perfume-house/${houseSlug}?pg=${pagination.totalPages}`,
+        { replace: true, preventScrollReset: true }
+      )
+    }
+
+    if (pagination.totalCount === 0 && currentPage !== 1) {
+      navigate(`/perfume-house/${houseSlug}`, {
+        replace: true,
+        preventScrollReset: true,
+      })
+    }
+  }, [
+    currentPage,
+    houseSlug,
+    navigate,
+    pagination.totalCount,
+    pagination.totalPages,
+  ])
+
+  useEffect(() => {
+    if (loading) {
+      const savedPosition = window.scrollY || document.documentElement.scrollTop
+      if (savedPosition > 0) {
+        window.scrollTo(0, savedPosition)
+      }
+    }
+  }, [loading])
+
+  useScrollToDataList({
+    trigger: pagination.currentPage,
+    enabled: pagination.totalCount > 0,
+    isLoading: loading,
+    hasData: perfumes.length > 0,
+  })
+
+  const handleNextPage = () => {
+    if (pagination.hasNextPage) {
+      navigate(
+        `/perfume-house/${houseSlug}?pg=${pagination.currentPage + 1}`,
+        { preventScrollReset: true }
+      )
     }
   }
 
-  // Prefetch next page when available for better UX
-  useEffect(() => {
-    if (hasNextPage && !isFetchingNextPage && data) {
-      // Prefetch next page after current data is loaded
-      const timer = setTimeout(() => {
-        fetchNextPage().catch(() => {
-          // Silently fail - prefetch is just an optimization
+  const handlePrevPage = () => {
+    if (pagination.hasPrevPage) {
+      if (pagination.currentPage === 2) {
+        navigate(`/perfume-house/${houseSlug}`, {
+          preventScrollReset: true,
         })
-      }, 2000) // Wait 2 seconds before prefetching
-
-      return () => clearTimeout(timer)
+      } else {
+        navigate(
+          `/perfume-house/${houseSlug}?pg=${pagination.currentPage - 1}`,
+          { preventScrollReset: true }
+        )
+      }
     }
-  }, [hasNextPage, isFetchingNextPage, data, fetchNextPage])
+  }
 
-  // Use TanStack Query mutation for delete house
+  const totalPerfumeCount =
+    pagination.totalCount || fallbackPerfumeCount || 0
+
+  const listError =
+    error instanceof Error ? error : error ? new Error(String(error)) : null
+
+  return {
+    perfumes,
+    pagination,
+    loading,
+    handleNextPage,
+    handlePrevPage,
+    totalPerfumeCount,
+    listError,
+  }
+}
+
+const getInitialPerfumeData = (house: any) => {
+  const perfumes = (house.perfumes || []) as any[]
+  const count =
+    typeof house?.perfumeCount === "number"
+      ? house.perfumeCount
+      : house?._count?.perfumes ??
+        perfumes.length ??
+        0
+
+  return { perfumes, count }
+}
+
+interface HouseDetailViewModel {
+  perfumeHouse: any
+  userRole?: string
+  selectedLetter: string | null
+  perfumes: any[]
+  pagination: UseHousePerfumePaginationResult["pagination"]
+  loading: boolean
+  totalPerfumeCount: number
+  listError: Error | null
+  modalOpen: boolean
+  modalId: string | null
+  handleDelete: () => void
+  handleDeleteClick: () => void
+  handleBackClick: () => void
+  handleNextPage: () => void
+  handlePrevPage: () => void
+}
+
+function useHouseDetailViewModel(): HouseDetailViewModel | null {
+  const { perfumeHouse: initialHouse } = useLoaderData<typeof loader>()
+  const { data: perfumeHouse } = useHouse(initialHouse.slug, initialHouse)
+  const { user } = useOutletContext<OutletContextType>()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [searchParams] = useSearchParams()
+  const { modalOpen, toggleModal, modalId, closeModal } = useSessionStore()
+
+  const selectedLetter =
+    (location.state as { selectedLetter?: string })?.selectedLetter ?? null
+
+  if (!perfumeHouse) {
+    return null
+  }
+
+  const { perfumes: initialPerfumes, count: initialPerfumeCount } =
+    getInitialPerfumeData(initialHouse)
+
+  const derivedPerfumeCount =
+    typeof (perfumeHouse as any).perfumeCount === "number"
+      ? (perfumeHouse as any).perfumeCount
+      : (perfumeHouse as any)._count?.perfumes
+  const fallbackPerfumeCount = derivedPerfumeCount ?? initialPerfumeCount
+  const pageFromUrl = parseInt(searchParams.get("pg") || "1", 10)
+
+  const {
+    perfumes,
+    pagination,
+    loading,
+    handleNextPage,
+    handlePrevPage,
+    totalPerfumeCount,
+    listError,
+  } = useHousePerfumePagination({
+    houseSlug: perfumeHouse.slug,
+    initialPerfumes,
+    fallbackPerfumeCount,
+    pageFromUrl,
+    navigate,
+  })
+
   const deleteHouse = useDeleteHouse()
 
-  // Handle delete house
-  const handleDelete = async () => {
+  const handleDelete = () => {
     deleteHouse.mutate(
       { houseId: perfumeHouse.id },
       {
@@ -144,13 +295,72 @@ const HouseDetailPage = () => {
           closeModal()
           navigate(ALL_HOUSES)
         },
-        onError: (error) => {
+        onError: error => {
           console.error("Failed to delete house:", error)
           alert("Failed to delete house. Please try again.")
         },
       }
     )
   }
+
+  const handleDeleteClick = () => {
+    const buttonRef = { current: document.createElement("button") }
+    toggleModal(buttonRef as any, "delete-perfume-house-item")
+  }
+
+  const handleBackClick = () => {
+    navigate(
+      selectedLetter
+        ? `/behind-the-bottle/${selectedLetter.toLowerCase()}`
+        : BEHIND_THE_BOTTLE,
+      { preventScrollReset: true }
+    )
+  }
+
+  return {
+    perfumeHouse,
+    userRole: user?.role,
+    selectedLetter,
+    perfumes,
+    pagination,
+    loading,
+    totalPerfumeCount,
+    listError,
+    modalOpen,
+    modalId,
+    handleDelete,
+    handleDeleteClick,
+    handleBackClick,
+    handleNextPage,
+    handlePrevPage,
+  }
+}
+
+// Main component
+const HouseDetailPage = () => {
+  const viewModel = useHouseDetailViewModel()
+
+  if (!viewModel) {
+    return <div className="p-4">House not found</div>
+  }
+
+  const {
+    perfumeHouse,
+    userRole,
+    selectedLetter,
+    perfumes,
+    pagination,
+    loading,
+    totalPerfumeCount,
+    listError,
+    modalOpen,
+    modalId,
+    handleDelete,
+    handleDeleteClick,
+    handleBackClick,
+    handleNextPage,
+    handlePrevPage,
+  } = viewModel
 
   return (
     <>
@@ -164,168 +374,36 @@ const HouseDetailPage = () => {
       </Modal>
     )} 
     <section className="relative z-10 my-4">
-      {/* Back Button */}
-
-      <header className="flex items-end justify-center mb-10 relative h-[600px]">
-        {perfumeHouse.image ? (
-          <OptimizedImage
-            src={perfumeHouse.image}
-            alt={perfumeHouse.name}
-            priority={true}
-            width={1200}
-            height={600}
-            quality={85}
-            className="w-full h-full object-cover mb-2 rounded-lg absolute top-0 left-0 right-0 z-0 details-title filter contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-screen mask-linear-gradient-to-b"
-            sizes="100vw"
-            viewTransitionName={`perfume-image-${perfumeHouse.id}`}
-            placeholder="blur"
-          />
-        ) : (
-          <div className="w-full h-full bg-noir-dark/50 rounded-lg absolute top-0 left-0 right-0 z-0 flex items-center justify-center">
-            <span className="text-noir-gold/40">No Image</span>
-          </div>
-        )}
-
-        <div className="relative z-10 px-8 text-center filter w-full rounded-lg py-4 text-shadow-lg text-shadow-noir-black/90">
-          <h1 className="text-noir-gold">{perfumeHouse.name}</h1>
-        </div>
-      </header>
+      <PerfumeHouseHero
+        name={perfumeHouse.name}
+        image={perfumeHouse.image}
+        transitionKey={perfumeHouse.id}
+      />
 
       <div className="flex flex-col gap-20 mx-auto max-w-6xl">
-        {user?.role === "admin" && (
-          <div>
-            <h3 className="text-lg font-semibold text-center text-noir-gold-500 mb-2">
-              Admin
-            </h3>
-            <div className="flex flex-col items-center justify-between gap-2">
-              <VooDooLink
-                aria-label={`edit ${perfumeHouse.name}`}
-                variant="icon"
-                background={"gold"}
-                size={"sm"}
-                className="flex items-center justify-between gap-2"
-                url={`/admin/perfume-house/${perfumeHouse.slug}/edit`}
-              >
-                <span>Edit Perfume</span>
-                <GrEdit size={22} />
-              </VooDooLink>
-              <Button
-                onClick={() => {
-                  const buttonRef = { current: document.createElement("button") }
-                  toggleModal(buttonRef as any, "delete-perfume-house-item", "delete-perfume-house-item")
-                }}
-                aria-label={`delete ${perfumeHouse.name}`}
-                variant="icon"
-                className="flex items-center justify-between gap-2"
-                background={"gold"}
-                size={"sm"}
-              >
-                <span>Delete Perfume</span>
-                <MdDeleteForever size={22} />
-              </Button>
-            </div>
-          </div>
-        )}
-        <div className="noir-border relative bg-white/5 text-noir-gold-500">
-          <PerfumeHouseAddressBlock perfumeHouse={perfumeHouse} />
-          {perfumeHouse.description && (
-            <p className="px-4 pt-4">{perfumeHouse.description}</p>
-          )}
-          <div className="flex flex-wrap items-baseline justify-between gap-2 px-4 pb-4 pt-4">
-            <span className="text-xs uppercase tracking-[0.3em] text-noir-gold/70">
-              Total perfumes
-            </span>
-            <span
-              className="text-2xl font-semibold text-noir-gold"
-              data-testid="perfume-count"
-            >
-              {totalPerfumeCount}
-            </span>
-          </div>
-          <span className="tag absolute">{perfumeHouse.type}</span>
-          <Button
-            onClick={() => navigate(selectedLetter
-                  ? `/behind-the-bottle/${selectedLetter.toLowerCase()}`
-                  : BEHIND_THE_BOTTLE)
-            }
-            variant="primary"
-            background="gold"
-            size="sm"
-            className="gap-2 max-w-max ml-2 mb-2 mt-2"
-            aria-label={
-              selectedLetter
-                ? `Back to houses starting with ${selectedLetter}`
-                : "Back to houses"
-            }
-          >
-            ← Back to {selectedLetter || "Houses"}
-          </Button>
-        </div>
-        {perfumes.length > 0 && (
-          <div
-            ref={scrollContainerRef}
-            className=" rounded-b-lg max-h-[800px] overflow-y-auto w-full relative overflow-x-hidden style-scroll"
-          >
-            <h2 className="text-center mb-4">Perfumes</h2>
-            <ul className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 p-2 pb-4">
-              {perfumes.map((perfume: any) => (
-                <li key={perfume.id}>
-                  <NavLink
-                    viewTransition
-                    prefetch="intent"
-                    to={`/perfume/${perfume.slug}`}
-                    state={selectedLetter ? { selectedLetter } : {}}
-                    className="block p-2 h-full noir-border relative w-full transition-colors duration-300 ease-in-out"
-                  >
-                    <h3
-                      className="
-                      text-center block text-lg tracking-wide py-2
-                      font-semibold text-noir-gold  leading-6 capitalize"
-                    >
-                      {perfume.name}
-                    </h3>
-                    {perfume.image ? (
-                      <OptimizedImage
-                        src={perfume.image}
-                        alt={perfume.name}
-                        priority={false}
-                        width={192}
-                        height={192}
-                        quality={75}
-                        className="w-48 h-48 object-cover rounded-lg mb-2 mx-auto dark:brightness-90"
-                        sizes="(max-width: 768px) 50vw, 33vw"
-                        viewTransitionName={`perfume-image-${perfume.id}`}
-                        placeholder="blur"
-                      />
-                    ) : (
-                      <div className="w-48 h-48 bg-noir-dark/50 flex items-center justify-center border border-noir-gold/20 rounded-lg mb-2 mx-auto">
-                        <span className="text-noir-gold/40 text-xs">No Image</span>
-                      </div>
-                    )}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-            <div
-              ref={observerRef}
-              aria-live="polite"
-              aria-busy={loading}
-              role="status"
-              className="sticky bottom-0 w-full bg-gradient-to-t from-noir-black to-transparent flex flex-col items-center justify-center py-4"
-            >
-              {loading && <span>Loading more perfumes…</span>}
-              {!loading && hasMore && (
-                <button
-                  onClick={loadMorePerfumes}
-                  className="bg-noir-gray text-noir-light px-4 py-2 rounded-md font-semibold hover:bg-noir-dark transition-all"
-                >
-                  Load More Perfumes
-                </button>
-              )}
-              {!hasMore && <span>No more perfumes to load.</span>}
-            </div>
-          </div>
-        )}
+        <PerfumeHouseAdminActions
+          isAdmin={userRole === "admin"}
+          houseName={perfumeHouse.name}
+          houseSlug={perfumeHouse.slug}
+          onDeleteClick={handleDeleteClick}
+        />
+
+        <PerfumeHouseSummaryCard
+          perfumeHouse={perfumeHouse}
+          totalPerfumeCount={totalPerfumeCount}
+          selectedLetter={selectedLetter}
+          onBackClick={handleBackClick}
+        />
+
+        <PerfumeHousePerfumeList
+          perfumes={perfumes}
+          loading={loading}
+          pagination={pagination}
+          onNextPage={handleNextPage}
+          onPrevPage={handlePrevPage}
+          selectedLetter={selectedLetter}
+          queryError={listError}
+        />
       </div>
     </section>
     </>

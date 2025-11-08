@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   type MetaFunction,
@@ -12,6 +12,7 @@ import DataDisplaySection from "~/components/Organisms/DataDisplaySection"
 import DataFilters from "~/components/Organisms/DataFilters"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import { useInfinitePerfumesByLetter } from "~/hooks/useInfinitePerfumes"
+import { useInfinitePagination } from "~/hooks/useInfinitePagination"
 import { useScrollToDataList } from "~/hooks/useScrollToDataList"
 import { useSyncPaginationUrl } from "~/hooks/useSyncPaginationUrl"
 import { getDefaultSortOptions } from "~/utils/sortUtils"
@@ -68,88 +69,36 @@ const AllPerfumesPage = () => {
   const currentPage = pageFromUrl
   const pageSize = 16
 
-  // Flatten all pages to get all perfumes
-  const allPerfumes = useMemo(() => {
-    if (!data?.pages) {
-      return []
-    }
-    return data.pages.flatMap(page => page.perfumes || [])
-  }, [data])
-
-  // Get total count from first page
-  const totalCount = data?.pages[0]?.count || 0
-  const totalPages = Math.ceil(totalCount / pageSize)
-
-  // Check if we need to fetch more pages to reach current page
-  useEffect(() => {
-    if (letterFromUrl && currentPage > (data?.pages?.length ?? 0)) {
-      const pagesToFetch = currentPage - (data?.pages?.length || 0)
-      let fetchCount = 0
-      
-      const fetchPagesSequentially = async () => {
-        while (fetchCount < pagesToFetch && hasNextPage) {
-          await fetchNextPage()
-          fetchCount++
-        }
-      }
-      
-      fetchPagesSequentially().catch(() => {
-        // Silently fail
-      })
-    }
-  }, [
+  const { items: perfumes, pagination, loading } = useInfinitePagination({
+    pages: data?.pages,
     currentPage,
-    data?.pages?.length,
+    pageSize,
+    isLoading,
+    isFetchingNextPage,
     hasNextPage,
-    letterFromUrl,
     fetchNextPage,
-  ])
-
-  // Get perfumes for current page
-  const perfumes = useMemo(() => {
-    const startIdx = (currentPage - 1) * pageSize
-    const endIdx = startIdx + pageSize
-    return allPerfumes.slice(startIdx, endIdx)
-  }, [allPerfumes, currentPage, pageSize])
-
-  const loading = isLoading || isFetchingNextPage
-
-  // Pagination helpers
-  const pagination = useMemo(
-    () => ({
-      currentPage,
-      totalPages,
-      totalCount,
-      hasNextPage: currentPage < totalPages,
-      hasPrevPage: currentPage > 1,
-      pageSize,
-    }),
-    [
-      currentPage,
-      totalPages,
-      totalCount,
-      pageSize,
-    ]
-  )
+    extractItems: page => (page as any).perfumes || [],
+    extractTotalCount: page => (page as any)?.meta?.totalCount ?? (page as any)?.count,
+  })
 
   const handleNextPage = async () => {
-    if (currentPage < totalPages) {
+    if (pagination.hasNextPage) {
       navigate(
-        `/the-vault/${letterFromUrl?.toLowerCase()}?pg=${currentPage + 1}`,
+        `/the-vault/${letterFromUrl?.toLowerCase()}?pg=${pagination.currentPage + 1}`,
         { preventScrollReset: true }
       )
     }
   }
 
   const handlePrevPage = async () => {
-    if (currentPage > 1) {
-      if (currentPage === 2) {
+    if (pagination.hasPrevPage) {
+      if (pagination.currentPage === 2) {
         navigate(`/the-vault/${letterFromUrl?.toLowerCase()}`, {
           preventScrollReset: true,
         })
       } else {
         navigate(
-          `/the-vault/${letterFromUrl?.toLowerCase()}?pg=${currentPage - 1}`,
+          `/the-vault/${letterFromUrl?.toLowerCase()}?pg=${pagination.currentPage - 1}`,
           { preventScrollReset: true }
         )
       }

@@ -1,1 +1,5 @@
 export { default as AddressBlock } from "./AddressBlock/PerfumeHouseAddressBlock"
+export { default as PerfumeHouseHero } from "./PerfumeHouseHero"
+export { default as PerfumeHouseAdminActions } from "./PerfumeHouseAdminActions"
+export { default as PerfumeHouseSummaryCard } from "./PerfumeHouseSummaryCard"
+export { default as PerfumeHousePerfumeList } from "./PerfumeHousePerfumeList"

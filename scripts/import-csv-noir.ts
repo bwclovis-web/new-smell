@@ -180,33 +180,12 @@ async function createPerfumeNoteRelation(
   }
 }
 
-async function resolveCsvPath(csvFile: string): Promise<string | null> {
-  const searchDirs = [
-    path.join(__dirname, "../csv_noir"),
-    path.join(__dirname, "../csv"),
-  ]
-
-  for (const dir of searchDirs) {
-    const candidate = path.join(dir, csvFile)
-    if (fs.existsSync(candidate)) {
-      if (dir.endsWith("csv_noir")) {
-        console.log(`📂 Using file from csv_noir: ${csvFile}`)
-      } else {
-        console.log(`📂 Using file from csv: ${csvFile}`)
-      }
-      return candidate
-    }
-  }
-
-  return null
-}
-
 async function importPerfumeData(csvFiles: string[]) {
   for (const csvFile of csvFiles) {
-    const filePath = await resolveCsvPath(csvFile)
+    const filePath = path.join(__dirname, "../csv_noir", csvFile)
 
-    if (!filePath) {
-      console.log(`⚠️  File not found in csv_noir or csv directories: ${csvFile}`)
+    if (!fs.existsSync(filePath)) {
+      console.log(`⚠️  File not found: ${csvFile}`)
       continue
     }
 

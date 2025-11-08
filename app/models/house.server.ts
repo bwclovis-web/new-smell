@@ -324,9 +324,15 @@ export const getPerfumeHouseBySlug = async (
     return house
   }
 
+  const perfumeCount = await prisma.perfume.count({
+    where: {
+      perfumeHouseId: house.id,
+    },
+  })
+
   return {
     ...house,
-    perfumeCount: house._count?.perfumes ?? house.perfumes?.length ?? 0,
+    perfumeCount,
   }
 }
 

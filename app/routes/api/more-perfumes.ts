@@ -1,12 +1,12 @@
 import type { LoaderFunctionArgs } from "react-router"
 
-import { getPerfumeHouseBySlug } from "~/models/house.server"
+import { prisma } from "~/db.server"
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const houseSlug = url.searchParams.get("houseSlug")
   const skip = parseInt(url.searchParams.get("skip") || "0", 10)
-  const take = parseInt(url.searchParams.get("take") || "9", 10)
+  const take = parseInt(url.searchParams.get("take") || "8", 10)
 
   if (!houseSlug) {
     return Response.json(
@@ -20,8 +20,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   try {
-    // Fetch house with perfumes using pagination
-    const house = await getPerfumeHouseBySlug(houseSlug, { skip, take })
+    const house = await prisma.perfumeHouse.findUnique({
+      where: { slug: houseSlug },
+      select: {
+        id: true,
+        name: true,
+      },
+    })
 
     if (!house) {
       return Response.json(
@@ -34,12 +39,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
       )
     }
 
-    // Return the perfumes - compression is handled by Express middleware
-    const perfumes = house.perfumes || []
-    const totalCount =
-      typeof (house as any).perfumeCount === "number"
-        ? (house as any).perfumeCount
-        : (house as any)._count?.perfumes ?? perfumes.length
+    const [perfumes, totalCount] = await Promise.all([
+      prisma.perfume.findMany({
+        where: { perfumeHouseId: house.id },
+        orderBy: { createdAt: "desc" },
+        skip,
+        take,
+      }),
+      prisma.perfume.count({
+        where: { perfumeHouseId: house.id },
+      }),
+    ])
+
     const hasMore = skip + perfumes.length < totalCount
     return Response.json(
       {

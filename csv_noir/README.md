@@ -57,13 +57,13 @@ The `import-csv-noir.ts` script imports perfume data from CSV files in the `csv_
 
 ### Usage
 
-Import a single CSV file at a time:
+Import a single CSV file at a time **from this directory**:
 
 ```bash
 npm run import:csv-noir <filename.csv>
 ```
 
-**Examples:**
+**Examples (files must live in `csv_noir/`):**
 
 ```bash
 # Import Kyse perfumes
@@ -78,6 +78,8 @@ npm run import:csv-noir perfumes_fzotic.csv
 # Import Zara perfumes
 npm run import:csv-noir perfumes_zara.csv
 ```
+
+> ⚠️ For CSVs stored in the `csv/` directory (non-noir data), create or run a dedicated importer under `scripts/importers/` instead of using this script.
 
 **If you run without a filename:**
 

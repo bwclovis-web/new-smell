@@ -296,7 +296,10 @@
     "meta": {
       "title": "Perfume House Details - Shadow and Sillage",
       "description": "Explore the details of a specific perfume house."
-    }
+    },
+    "loadingPerfumes": "Loading perfumes...",
+    "noPerfumes": "No perfumes are currently listed for this house.",
+    "errorLoadingPerfumes": "Error loading perfumes."
   },
   "singlePerfume": {
     "meta": {

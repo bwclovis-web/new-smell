@@ -20,7 +20,7 @@ import {
 } from "~/utils/errorHandling.server"
 import { sharedLoader } from "~/utils/sharedLoader"
 
-import banner from "../../images/myprofile.webp"
+import banner from "../../images/userAdmin.webp"
 import {
   type ActionData,
   executeAction,

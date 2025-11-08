@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   type MetaFunction,
@@ -12,6 +12,7 @@ import DataDisplaySection from "~/components/Organisms/DataDisplaySection"
 import DataFilters from "~/components/Organisms/DataFilters"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import { useInfiniteHouses } from "~/hooks/useInfiniteHouses"
+import { useInfinitePagination } from "~/hooks/useInfinitePagination"
 import { useScrollToDataList } from "~/hooks/useScrollToDataList"
 import { useSyncPaginationUrl } from "~/hooks/useSyncPaginationUrl"
 import { getDefaultSortOptions } from "~/utils/sortUtils"
@@ -96,47 +97,6 @@ const useHouseHandlers = (setSelectedHouseType: any, setSelectedSort: any) => {
   return { handleHouseTypeChange, handleSortChange }
 }
 
-const useHousesPagination = (
-  data: any,
-  currentPage: number,
-  pageSize: number
-) => {
-  const allHouses = useMemo(() => {
-    if (!data?.pages) {
-      return []
-    }
-    return data.pages.flatMap((page: any) => page.houses || [])
-  }, [data])
-
-  const totalCount = data?.pages[0]?.count || 0
-  const totalPages = Math.ceil(totalCount / pageSize)
-
-  const houses = useMemo(() => {
-    const startIdx = (currentPage - 1) * pageSize
-    const endIdx = startIdx + pageSize
-    return allHouses.slice(startIdx, endIdx)
-  }, [allHouses, currentPage, pageSize])
-
-  const pagination = useMemo(
-    () => ({
-      currentPage,
-      totalPages,
-      totalCount,
-      hasNextPage: currentPage < totalPages,
-      hasPrevPage: currentPage > 1,
-      pageSize,
-    }),
-    [
-      currentPage,
-      totalPages,
-      totalCount,
-      pageSize,
-    ]
-  )
-
-  return { houses, pagination }
-}
-
 const usePageNavigation = (
   navigate: any,
   letterFromUrl: string | null,
@@ -214,8 +174,17 @@ const useHousesData = (
     fetchNextPage,
   ])
 
-  const { houses, pagination } = useHousesPagination(data, currentPage, pageSize)
-  const loading = isLoading || isFetchingNextPage
+  const { items: houses, pagination, loading } = useInfinitePagination({
+    pages: data?.pages,
+    currentPage,
+    pageSize,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    extractItems: page => (page as any).houses || [],
+    extractTotalCount: page => (page as any)?.meta?.totalCount ?? (page as any)?.count,
+  })
 
   return { houses, pagination, loading, error, data }
 }
