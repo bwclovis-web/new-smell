@@ -5,7 +5,7 @@
 // - Uses existing notes from database
 // - Only creates new notes when needed
 
-import { PrismaClient, PerfumeNoteType } from "@prisma/client"
+import { PerfumeNoteType, PrismaClient } from "@prisma/client"
 import { parse } from "csv-parse/sync"
 import fs from "fs"
 import path from "path"
@@ -45,8 +45,12 @@ const createUrlSlug = (name: string): string => {
 // Calculate data completeness score
 function calculateDataCompleteness(data: any): number {
   let score = 0
-  if (data.description && data.description.trim()) score += 10
-  if (data.image && data.image.trim()) score += 10
+  if (data.description && data.description.trim()) {
+ score += 10 
+}
+  if (data.image && data.image.trim()) {
+ score += 10 
+}
   const openNotes = parseNotes(data.openNotes || "")
   const heartNotes = parseNotes(data.heartNotes || "")
   const baseNotes = parseNotes(data.baseNotes || "")
@@ -226,9 +230,7 @@ async function importPerfumeData(csvFiles: string[], baseDir: string) {
       
       if (existingPerfumes.length > 0) {
         // Check if any existing perfumes are from the same house
-        const sameHousePerfumes = existingPerfumes.filter(
-          p => p.perfumeHouseId === houseId
-        )
+        const sameHousePerfumes = existingPerfumes.filter(p => p.perfumeHouseId === houseId)
 
         if (sameHousePerfumes.length > 0) {
           // Same house - check for duplicates and keep the one with most data
@@ -237,29 +239,21 @@ async function importPerfumeData(csvFiles: string[], baseDir: string) {
             const score = calculateDataCompleteness({
               description: p.description,
               image: p.image,
-              openNotes: JSON.stringify(
-                p.perfumeNoteRelations
+              openNotes: JSON.stringify(p.perfumeNoteRelations
                   .filter(r => r.noteType === "open")
-                  .map(r => r.note.name)
-              ),
-              heartNotes: JSON.stringify(
-                p.perfumeNoteRelations
+                  .map(r => r.note.name)),
+              heartNotes: JSON.stringify(p.perfumeNoteRelations
                   .filter(r => r.noteType === "heart")
-                  .map(r => r.note.name)
-              ),
-              baseNotes: JSON.stringify(
-                p.perfumeNoteRelations
+                  .map(r => r.note.name)),
+              baseNotes: JSON.stringify(p.perfumeNoteRelations
                   .filter(r => r.noteType === "base")
-                  .map(r => r.note.name)
-              ),
+                  .map(r => r.note.name)),
             })
             return { perfume: p, score }
           })
           
           // Find the one with the highest score
-          const bestExisting = scoredPerfumes.reduce((best, current) => 
-            current.score > best.score ? current : best
-          )
+          const bestExisting = scoredPerfumes.reduce((best, current) => current.score > best.score ? current : best)
           
           const newScore = calculateDataCompleteness(data)
           

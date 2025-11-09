@@ -1,6 +1,6 @@
-import { queryClient } from "~/lib/queryClient"
 import { getHousesByLetterPaginated, queryKeys as houseQueryKeys } from "~/lib/queries/houses"
 import { getPerfumesByLetter, queryKeys as perfumeQueryKeys } from "~/lib/queries/perfumes"
+import { queryClient } from "~/lib/queryClient"
 
 /**
  * Prefetch houses by letter on hover for better UX.
@@ -25,7 +25,7 @@ export async function prefetchHousesByLetter(
       return getHousesByLetterPaginated(letter, houseType, skip, pageSize)
     },
     initialPageParam: 0,
-    getNextPageParam: (lastPage) => {
+    getNextPageParam: lastPage => {
       if (lastPage.meta?.hasMore) {
         return (lastPage.meta.skip || 0) + (lastPage.meta.take || pageSize)
       }
@@ -58,7 +58,7 @@ export async function prefetchPerfumesByLetter(
       return getPerfumesByLetter(letter, houseType, skip, pageSize)
     },
     initialPageParam: 0,
-    getNextPageParam: (lastPage) => {
+    getNextPageParam: lastPage => {
       if (lastPage.meta?.hasMore) {
         return (lastPage.meta.skip || 0) + (lastPage.meta.take || pageSize)
       }

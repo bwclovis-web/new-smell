@@ -1,11 +1,11 @@
 import { type VariantProps } from "class-variance-authority"
 import { type ButtonHTMLAttributes, type LinkHTMLAttributes, type Ref } from "react"
+import { ReactNode } from "react"
 import { NavLink } from "react-router"
 
 import { styleMerge } from "~/utils/styleUtils"
 
 import { buttonVariants } from "./button-variants"
-import { ReactNode } from "react"
 
 interface ButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "style">,

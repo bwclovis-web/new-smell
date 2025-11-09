@@ -13,7 +13,8 @@
  */
 
 import puppeteer from "puppeteer"
-import { PerformanceMetrics, PerformanceReport, PerformanceIssue } from "../app/utils/performanceAnalyzer"
+
+import { PerformanceIssue, PerformanceMetrics, PerformanceReport } from "../app/utils/performanceAnalyzer"
 
 interface AnalysisOptions {
   url: string
@@ -74,7 +75,7 @@ async function analyzePerformance(options: AnalysisOptions): Promise<Performance
       if (performance.getEntriesByType) {
         const resources = performance.getEntriesByType("resource") as PerformanceResourceTiming[]
         
-        resources.forEach((resource) => {
+        resources.forEach(resource => {
           const duration = resource.responseEnd - resource.requestStart
           const size = resource.transferSize || 0
 
@@ -113,7 +114,7 @@ async function analyzePerformance(options: AnalysisOptions): Promise<Performance
 
       // Get Core Web Vitals
       const paintEntries = performance.getEntriesByType("paint") as PerformancePaintTiming[]
-      paintEntries.forEach((entry) => {
+      paintEntries.forEach(entry => {
         if (entry.name === "first-contentful-paint") {
           perfData.fcp = entry.startTime
         }
@@ -159,7 +160,7 @@ async function analyzePerformance(options: AnalysisOptions): Promise<Performance
     }
 
     // Image issues
-    const largeImages = metrics.imageLoadTimes?.filter((img) => img.size > 200000) || []
+    const largeImages = metrics.imageLoadTimes?.filter(img => img.size > 200000) || []
     if (largeImages.length > 0) {
       issues.push({
         type: "warning",
@@ -193,7 +194,7 @@ async function analyzePerformance(options: AnalysisOptions): Promise<Performance
 
     // Generate recommendations
     const recommendations: string[] = []
-    if (issues.filter((i) => i.impact === "high").length > 0) {
+    if (issues.filter(i => i.impact === "high").length > 0) {
       recommendations.push("🚨 Address high-impact performance issues first")
     }
     if (largeImages.length > 0) {
@@ -250,7 +251,7 @@ async function main() {
 
     if (report.issues.length > 0) {
       console.log("\n⚠️  Issues:")
-      report.issues.forEach((issue) => {
+      report.issues.forEach(issue => {
         const icon = issue.type === "error" ? "❌" : issue.type === "warning" ? "⚠️" : "ℹ️"
         console.log(`  ${icon} [${issue.category}] ${issue.message}`)
         if (issue.fix) {
@@ -261,13 +262,13 @@ async function main() {
 
     if (report.recommendations.length > 0) {
       console.log("\n💡 Recommendations:")
-      report.recommendations.forEach((rec) => {
+      report.recommendations.forEach(rec => {
         console.log(`  ${rec}`)
       })
     }
 
     // Save to file if output path provided
-    const outputPath = process.argv.find((arg) => arg.startsWith("--output="))?.split("=")[1]
+    const outputPath = process.argv.find(arg => arg.startsWith("--output="))?.split("=")[1]
     if (outputPath) {
       const fs = await import("fs/promises")
       await fs.writeFile(outputPath, JSON.stringify(report, null, 2))
@@ -275,7 +276,7 @@ async function main() {
     }
 
     // Exit with error code if high-impact issues found
-    const hasHighImpactIssues = report.issues.some((issue) => issue.impact === "high")
+    const hasHighImpactIssues = report.issues.some(issue => issue.impact === "high")
     if (hasHighImpactIssues) {
       console.log("\n❌ High-impact performance issues detected!")
       process.exit(1)

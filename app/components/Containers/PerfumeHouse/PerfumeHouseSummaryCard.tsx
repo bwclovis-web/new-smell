@@ -13,8 +13,7 @@ const PerfumeHouseSummaryCard = ({
   totalPerfumeCount,
   selectedLetter,
   onBackClick,
-}: PerfumeHouseSummaryCardProps) => {
-  return (
+}: PerfumeHouseSummaryCardProps) => (
     <div className="noir-border relative bg-white/5 text-noir-gold-500">
       <PerfumeHouseAddressBlock perfumeHouse={perfumeHouse} />
       {perfumeHouse.description && (
@@ -48,7 +47,6 @@ const PerfumeHouseSummaryCard = ({
       </Button>
     </div>
   )
-}
 
 export default PerfumeHouseSummaryCard
 

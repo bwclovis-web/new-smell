@@ -1,19 +1,19 @@
 // Existing hooks
-export { default as useLetterSelection } from "./useLetterSelection"
+export { useHouse } from "./useHouse"
 export { useHouses } from "./useHouses"
 export { useHousesByLetter } from "./useHousesByLetter"
-export { usePerfumesByLetter } from "./usePerfumesByLetter"
 export { useInfiniteHouses } from "./useInfiniteHouses"
 export {
   useInfinitePerfumesByHouse,
   useInfinitePerfumesByLetter,
 } from "./useInfinitePerfumes"
-export { usePerfumeReviews } from "./usePerfumeReviews"
-export { usePerfumeRatings } from "./usePerfumeRatings"
-export { useWishlistStatus } from "./useWishlistStatus"
+export { default as useLetterSelection } from "./useLetterSelection"
 export { usePerfume } from "./usePerfume"
-export { useHouse } from "./useHouse"
+export { usePerfumeRatings } from "./usePerfumeRatings"
+export { usePerfumeReviews } from "./usePerfumeReviews"
+export { usePerfumesByLetter } from "./usePerfumesByLetter"
 export { useTrader } from "./useTrader"
+export { useWishlistStatus } from "./useWishlistStatus"
 
 // New extracted hooks
 export { default as useDebounce } from "./useDebounce"

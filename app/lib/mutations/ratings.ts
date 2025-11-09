@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-import { queryKeys } from "~/lib/queries/reviews"
 import { queryKeys as perfumeQueryKeys } from "~/lib/queries/perfumes"
+import { queryKeys } from "~/lib/queries/reviews"
 
 export type RatingCategory =
   | "longevity"
@@ -27,9 +27,7 @@ export interface RatingResponse {
  * Create or update a rating mutation function.
  * The API endpoint handles both create and update.
  */
-async function saveRating(
-  params: CreateOrUpdateRatingParams
-): Promise<RatingResponse> {
+async function saveRating(params: CreateOrUpdateRatingParams): Promise<RatingResponse> {
   const { perfumeId, category, rating } = params
 
   // Validate rating
@@ -50,9 +48,7 @@ async function saveRating(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.error || errorData.message || "Failed to save rating"
-    )
+    throw new Error(errorData.error || errorData.message || "Failed to save rating")
   }
 
   return await response.json()
@@ -73,7 +69,7 @@ export function useCreateOrUpdateRating() {
 
   return useMutation({
     mutationFn: saveRating,
-    onMutate: async (variables) => {
+    onMutate: async variables => {
       const { perfumeId, category, rating } = variables
 
       // Cancel outgoing refetches
@@ -87,18 +83,16 @@ export function useCreateOrUpdateRating() {
       ])
 
       // Snapshot previous values for rollback
-      const previousRatings = queryClient.getQueryData(
-        queryKeys.ratings.byPerfume(perfumeId)
-      )
-      const previousPerfume = queryClient.getQueryData(
-        perfumeQueryKeys.perfumes.detail(perfumeId)
-      )
+      const previousRatings = queryClient.getQueryData(queryKeys.ratings.byPerfume(perfumeId))
+      const previousPerfume = queryClient.getQueryData(perfumeQueryKeys.perfumes.detail(perfumeId))
 
       // Optimistically update ratings
       queryClient.setQueryData(
         queryKeys.ratings.byPerfume(perfumeId),
         (old: any) => {
-          if (!old) return old
+          if (!old) {
+ return old 
+}
 
           const currentAverage = old.averageRatings?.[category] || 0
           const currentTotal = old.averageRatings?.totalRatings || 0
@@ -126,7 +120,9 @@ export function useCreateOrUpdateRating() {
       queryClient.setQueryData(
         perfumeQueryKeys.perfumes.detail(perfumeId),
         (old: any) => {
-          if (!old || !old.averageRatings) return old
+          if (!old || !old.averageRatings) {
+ return old 
+}
 
           const currentAverage = old.averageRatings[category] || 0
           const currentTotal = old.averageRatings.totalRatings || 0

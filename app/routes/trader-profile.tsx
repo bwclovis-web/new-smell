@@ -1,19 +1,21 @@
 import { useTranslation } from "react-i18next"
 import { type LoaderFunctionArgs, useLoaderData } from "react-router"
 
+import VooDooDetails from "~/components/Atoms/VooDooDetails"
 import {
   ItemsSearchingFor,
   ItemsToTrade,
 } from "~/components/Containers/TraderProfile"
+import TraderFeedbackSection from "~/components/Containers/TraderProfile/TraderFeedbackSection"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import { useTrader } from "~/hooks/useTrader"
 import { getTraderById } from "~/models/user.server"
+import { authenticateUser } from "~/utils/auth.server"
 import { getTraderDisplayName } from "~/utils/user"
 
 import banner from "../images/trade.webp"
-import VooDooDetails from "~/components/Atoms/VooDooDetails"
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   if (!params.id) {
     throw new Error("Note ID is required")
   }
@@ -21,12 +23,22 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!trader) {
     throw new Error("Trader not found")
   }
-  return { trader }
+  const auth = await authenticateUser(request)
+  const viewer = auth.success
+    ? {
+        id: auth.user.id,
+        firstName: auth.user.firstName,
+        lastName: auth.user.lastName,
+        username: auth.user.username,
+        role: auth.user.role,
+      }
+    : null
+  return { trader, viewer }
 }
 
 const TraderProfilePage = () => {
   const loaderData = useLoaderData<typeof loader>()
-  const { trader: initialTrader } = loaderData
+  const { trader: initialTrader, viewer } = loaderData
   
   // Hydrate trader query with loader data
   const { data: trader } = useTrader(initialTrader.id, initialTrader)
@@ -46,8 +58,15 @@ const TraderProfilePage = () => {
         heading={t("traderProfile.heading", { traderName })}
         subheading={t("traderProfile.subheading", { traderName })}
       />
-      <div className="flex flex-col md:flex-row justify-between inner-container items-start gap-8 p-6">
-        <div className="noir-border relative md:w-1/2 w-full p-4">
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 inner-container items-start p-6">
+      <div className="md:col-span-2 xl:col-span-1">
+        <TraderFeedbackSection
+          traderId={trader.id}
+          viewerId={viewer?.id}
+        />
+      </div>
+        <div className="noir-border relative col-span-1 p-4">
           <h2>{t("traderProfile.itemsAvailable")}</h2>
           <VooDooDetails
             type="primary"
@@ -67,7 +86,7 @@ const TraderProfilePage = () => {
           )}
           </VooDooDetails>
         </div>
-        <div className="noir-border relative md:w-1/2 w-full p-4">
+        <div className="noir-border relative col-span-1 w-full p-4">
         <h2>{t("traderProfile.itemsSearchingFor")}</h2>
         <VooDooDetails
           type="primary"
@@ -86,6 +105,7 @@ const TraderProfilePage = () => {
          
         </div>
       </div>
+      
     </section>
   )
 }

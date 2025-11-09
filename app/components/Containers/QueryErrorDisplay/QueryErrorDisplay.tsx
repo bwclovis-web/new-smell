@@ -1,11 +1,12 @@
-import { type FC, type ReactNode } from "react"
 import type { QueryObserverResult } from "@tanstack/react-query"
+import { type FC, type ReactNode } from "react"
 
 import ErrorDisplay from "~/components/Containers/ErrorDisplay"
 import { useQueryError, type UseQueryErrorOptions } from "~/hooks/useQueryError"
 
 export interface QueryErrorDisplayProps<TData, TError>
   extends UseQueryErrorOptions {
+
   /**
    * Query result from useQuery, useMutation, etc.
    */
@@ -13,18 +14,22 @@ export interface QueryErrorDisplayProps<TData, TError>
     QueryObserverResult<TData, TError>,
     "error" | "isError" | "refetch" | "isFetching"
   >
+
   /**
    * Variant of error display
    */
   variant?: "inline" | "card" | "banner"
+
   /**
    * Custom className
    */
   className?: string
+
   /**
    * Children to render when there's no error
    */
   children?: ReactNode
+
   /**
    * Whether to show error only (hide children when error exists)
    */

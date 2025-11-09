@@ -48,23 +48,22 @@ export const queryKeys = {
   reviews: {
     all: ["reviews"] as const,
     lists: () => [...queryKeys.reviews.all, "list"] as const,
-    list: (filters: ReviewFilters, pagination?: ReviewPagination) =>
-      [...queryKeys.reviews.lists(), filters, pagination] as const,
-    byPerfume: (perfumeId: string, pagination?: ReviewPagination) =>
-      [...queryKeys.reviews.all, "perfume", perfumeId, pagination] as const,
-    byUser: (userId: string, pagination?: ReviewPagination) =>
-      [...queryKeys.reviews.all, "user", userId, pagination] as const,
-    userReviews: (pagination?: ReviewPagination) =>
-      [...queryKeys.reviews.all, "userReviews", pagination] as const,
-    pending: (pagination?: ReviewPagination) =>
-      [...queryKeys.reviews.all, "pending", pagination] as const,
+    list: (filters: ReviewFilters, pagination?: ReviewPagination) => [...queryKeys.reviews.lists(), filters, pagination] as const,
+    byPerfume: (perfumeId: string, pagination?: ReviewPagination) => [
+...queryKeys.reviews.all, "perfume", perfumeId, pagination
+] as const,
+    byUser: (userId: string, pagination?: ReviewPagination) => [
+...queryKeys.reviews.all, "user", userId, pagination
+] as const,
+    userReviews: (pagination?: ReviewPagination) => [...queryKeys.reviews.all, "userReviews", pagination] as const,
+    pending: (pagination?: ReviewPagination) => [...queryKeys.reviews.all, "pending", pagination] as const,
   },
   ratings: {
     all: ["ratings"] as const,
-    byPerfume: (perfumeId: string) =>
-      [...queryKeys.ratings.all, "perfume", perfumeId] as const,
-    userRating: (userId: string, perfumeId: string) =>
-      [...queryKeys.ratings.all, "user", userId, perfumeId] as const,
+    byPerfume: (perfumeId: string) => [...queryKeys.ratings.all, "perfume", perfumeId] as const,
+    userRating: (userId: string, perfumeId: string) => [
+...queryKeys.ratings.all, "user", userId, perfumeId
+] as const,
   },
 } as const
 
@@ -105,9 +104,7 @@ export async function getReviews(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.message || `Failed to fetch reviews: ${response.statusText}`
-    )
+    throw new Error(errorData.message || `Failed to fetch reviews: ${response.statusText}`)
   }
 
   const data: ReviewsResponse = await response.json()
@@ -166,9 +163,7 @@ export async function getRatings(perfumeId: string): Promise<RatingsResponse> {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.message || `Failed to fetch ratings: ${response.statusText}`
-    )
+    throw new Error(errorData.message || `Failed to fetch ratings: ${response.statusText}`)
   }
 
   const data: RatingsResponse = await response.json()

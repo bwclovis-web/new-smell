@@ -32,14 +32,12 @@ export interface WishlistResponse {
 export const queryKeys = {
   user: {
     all: ["user"] as const,
-    perfumes: (userId: string, filters?: UserPerfumeFilters) =>
-      [...queryKeys.user.all, "perfumes", userId, filters] as const,
-    wishlist: (userId: string) =>
-      [...queryKeys.user.all, "wishlist", userId] as const,
-    alerts: (userId: string) =>
-      [...queryKeys.user.all, "alerts", userId] as const,
-    trader: (traderId: string) =>
-      [...queryKeys.user.all, "trader", traderId] as const,
+    perfumes: (userId: string, filters?: UserPerfumeFilters) => [
+...queryKeys.user.all, "perfumes", userId, filters
+] as const,
+    wishlist: (userId: string) => [...queryKeys.user.all, "wishlist", userId] as const,
+    alerts: (userId: string) => [...queryKeys.user.all, "alerts", userId] as const,
+    trader: (traderId: string) => [...queryKeys.user.all, "trader", traderId] as const,
   },
 } as const
 
@@ -77,11 +75,9 @@ export async function getUserPerfumes(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.error ||
+    throw new Error(errorData.error ||
         errorData.message ||
-        `Failed to fetch user perfumes: ${response.statusText}`
-    )
+        `Failed to fetch user perfumes: ${response.statusText}`)
   }
 
   const data: UserPerfumesResponse = await response.json()
@@ -127,11 +123,9 @@ export async function getWishlist(userId: string): Promise<WishlistResponse> {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.error ||
+    throw new Error(errorData.error ||
         errorData.message ||
-        `Failed to fetch wishlist: ${response.statusText}`
-    )
+        `Failed to fetch wishlist: ${response.statusText}`)
   }
 
   const data: WishlistResponse = await response.json()
@@ -146,9 +140,7 @@ export async function getWishlist(userId: string): Promise<WishlistResponse> {
  * @param userId - User ID
  * @returns Promise resolving to alerts response with unread count
  */
-export async function getUserAlerts(
-  userId: string
-): Promise<UserAlertsResponse> {
+export async function getUserAlerts(userId: string): Promise<UserAlertsResponse> {
   if (!userId) {
     throw new Error("User ID is required")
   }
@@ -163,11 +155,9 @@ export async function getUserAlerts(
     }
 
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.error ||
+    throw new Error(errorData.error ||
         errorData.message ||
-        `Failed to fetch user alerts: ${response.statusText}`
-    )
+        `Failed to fetch user alerts: ${response.statusText}`)
   }
 
   const data: UserAlertsResponse = await response.json()
@@ -222,11 +212,9 @@ export async function getTraderById(traderId: string): Promise<TraderResponse> {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.error ||
+    throw new Error(errorData.error ||
         errorData.message ||
-        `Failed to fetch trader: ${response.statusText}`
-    )
+        `Failed to fetch trader: ${response.statusText}`)
   }
 
   const data = await response.json()

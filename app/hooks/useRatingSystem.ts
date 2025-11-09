@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { useCreateOrUpdateRating } from "~/lib/mutations/ratings"
+
 import { useErrorHandler } from "./useErrorHandler"
 
 export interface RatingData {
@@ -86,7 +87,7 @@ export const useRatingSystem = ({
           onSuccess: () => {
             onSuccess?.({ ...previousRatings, [category]: rating } as RatingData)
           },
-          onError: (error) => {
+          onError: error => {
             // Revert on error
             setCurrentRatings(previousRatings)
             const errorMessage =

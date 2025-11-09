@@ -17,6 +17,7 @@ import type { QueryOptions } from '@tanstack/react-query'
  * Stale-while-revalidate configuration options
  */
 export interface StaleWhileRevalidateOptions {
+
   /**
    * Stale time in milliseconds
    * Data is considered fresh for this duration
@@ -73,9 +74,7 @@ export interface StaleWhileRevalidateOptions {
  * })
  * ```
  */
-export function staleWhileRevalidate(
-  options: StaleWhileRevalidateOptions = {}
-): Partial<QueryOptions<any, any>> {
+export function staleWhileRevalidate(options: StaleWhileRevalidateOptions = {}): Partial<QueryOptions<any, any>> {
   const {
     staleTime = 5 * 60 * 1000, // 5 minutes
     gcTime = 10 * 60 * 1000, // 10 minutes
@@ -106,6 +105,7 @@ export function staleWhileRevalidate(
  * Stale-while-revalidate presets for common use cases
  */
 export const staleWhileRevalidatePresets = {
+
   /**
    * Fast updates - data updates frequently but we want instant UI
    * Use for: Real-time feeds, notifications, live data
@@ -125,7 +125,7 @@ export const staleWhileRevalidatePresets = {
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     refetchOnMount: true,
-    refetchOnWindowFocus: (query) => {
+    refetchOnWindowFocus: query => {
       const staleThreshold = 5 * 60 * 1000
       return Date.now() - query.state.dataUpdatedAt > staleThreshold
     },
@@ -139,7 +139,7 @@ export const staleWhileRevalidatePresets = {
     staleTime: 15 * 60 * 1000, // 15 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
     refetchOnMount: false,
-    refetchOnWindowFocus: (query) => {
+    refetchOnWindowFocus: query => {
       const staleThreshold = 15 * 60 * 1000
       return Date.now() - query.state.dataUpdatedAt > staleThreshold
     },
@@ -176,9 +176,7 @@ export const staleWhileRevalidatePresets = {
  * }
  * ```
  */
-export function useStaleWhileRevalidate(
-  preset: keyof typeof staleWhileRevalidatePresets = 'standard'
-): Partial<QueryOptions<any, any>> {
+export function useStaleWhileRevalidate(preset: keyof typeof staleWhileRevalidatePresets = 'standard'): Partial<QueryOptions<any, any>> {
   return staleWhileRevalidatePresets[preset]
 }
 
@@ -199,9 +197,7 @@ export function useStaleWhileRevalidate(
  * })
  * ```
  */
-export function createStaleWhileRevalidate(
-  options: StaleWhileRevalidateOptions
-): Partial<QueryOptions<any, any>> {
+export function createStaleWhileRevalidate(options: StaleWhileRevalidateOptions): Partial<QueryOptions<any, any>> {
   return staleWhileRevalidate(options)
 }
 

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 
-import { housesQueryOptions, type HouseFilters } from "~/lib/queries/houses"
+import { type HouseFilters, housesQueryOptions } from "~/lib/queries/houses"
 
 /**
  * Hook to fetch houses with filtering and sorting.

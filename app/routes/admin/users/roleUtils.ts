@@ -3,14 +3,10 @@ import {
   type AdminRoleValue,
 } from "~/utils/constants"
 
-export const isRoleValue = (value: unknown): value is AdminRoleValue => {
-  return (
+export const isRoleValue = (value: unknown): value is AdminRoleValue => (
     typeof value === "string" &&
     ADMIN_ROLE_VALUES.includes(value as AdminRoleValue)
   )
-}
 
-export const resolveRoleValue = (role: unknown): AdminRoleValue => {
-  return isRoleValue(role) ? role : "user"
-}
+export const resolveRoleValue = (role: unknown): AdminRoleValue => isRoleValue(role) ? role : "user"
 

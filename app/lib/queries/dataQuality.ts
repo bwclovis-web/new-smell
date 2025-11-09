@@ -36,8 +36,7 @@ export interface DataQualityStats {
 export const queryKeys = {
   dataQuality: {
     all: ["dataQuality"] as const,
-    stats: (timeframe: DataQualityTimeframe, force?: boolean) =>
-      [
+    stats: (timeframe: DataQualityTimeframe, force?: boolean) => [
         ...queryKeys.dataQuality.all,
         "stats",
         timeframe,
@@ -76,9 +75,7 @@ export async function getDataQualityStats(
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => "")
-    throw new Error(
-      `Failed to fetch data quality stats: ${response.statusText}${errorText ? ` - ${errorText}` : ""}`
-    )
+    throw new Error(`Failed to fetch data quality stats: ${response.statusText}${errorText ? ` - ${errorText}` : ""}`)
   }
 
   const data: DataQualityStats = await response.json()
@@ -98,11 +95,9 @@ export async function getDataQualityHouses(): Promise<any[]> {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.message ||
+    throw new Error(errorData.message ||
         errorData.error ||
-        `Failed to fetch data quality houses: ${response.statusText}`
-    )
+        `Failed to fetch data quality houses: ${response.statusText}`)
   }
 
   const data = await response.json()

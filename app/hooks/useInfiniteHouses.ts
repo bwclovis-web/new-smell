@@ -46,7 +46,7 @@ export function useInfiniteHouses(options: UseInfiniteHousesOptions) {
     },
     enabled: !!letter && /^[A-Za-z]$/.test(letter),
     initialPageParam: 0,
-    getNextPageParam: (lastPage) => {
+    getNextPageParam: lastPage => {
       // Check if there's more data based on metadata
       if (lastPage.meta?.hasMore) {
         // Return the next skip value (current skip + take)

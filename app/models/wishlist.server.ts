@@ -101,7 +101,7 @@ export const getUserWishlist = async (userId: string) => {
   })
 
   // Fetch available perfumes with user info for all wishlist items
-  const perfumeIds = wishlist.map((item) => item.perfumeId)
+  const perfumeIds = wishlist.map(item => item.perfumeId)
   const availablePerfumes = await prisma.userPerfume.findMany({
     where: {
       perfumeId: { in: perfumeIds },
@@ -126,7 +126,7 @@ export const getUserWishlist = async (userId: string) => {
 
   // Group available perfumes by perfumeId
   const availableMap = new Map<string, typeof availablePerfumes>()
-  availablePerfumes.forEach((up) => {
+  availablePerfumes.forEach(up => {
     if (!availableMap.has(up.perfumeId)) {
       availableMap.set(up.perfumeId, [])
     }
@@ -134,7 +134,7 @@ export const getUserWishlist = async (userId: string) => {
   })
 
   // Combine wishlist items with available user perfumes
-  return wishlist.map((item) => ({
+  return wishlist.map(item => ({
     ...item,
     perfume: {
       ...item.perfume,

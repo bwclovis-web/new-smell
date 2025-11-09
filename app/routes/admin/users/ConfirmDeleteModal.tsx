@@ -13,13 +13,11 @@ type ConfirmDeleteModalProps = {
   onCancel: () => void
 }
 
-const getDeleteMessage = (deleteType: DeleteType) =>
-  deleteType === "delete"
+const getDeleteMessage = (deleteType: DeleteType) => deleteType === "delete"
     ? "This will permanently delete the user and ALL their data. This action cannot be undone."
     : "This will mark the user as deleted but keep their data. The user will not be able to log in."
 
-const getConfirmButtonClasses = (deleteType: DeleteType) =>
-  deleteType === "delete"
+const getConfirmButtonClasses = (deleteType: DeleteType) => deleteType === "delete"
     ? "bg-red-600 hover:bg-red-700"
     : "bg-yellow-600 hover:bg-yellow-700"
 

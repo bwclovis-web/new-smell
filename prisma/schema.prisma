@@ -30,6 +30,8 @@ model User {
   UserPerfumeReview     UserPerfumeReview[]
   UserPerfumeWishlist   UserPerfumeWishlist[]
   wishlistNotifications WishlistNotification[]
+  traderFeedbackReceived TraderFeedback[] @relation("FeedbackForTrader")
+  traderFeedbackLeft     TraderFeedback[] @relation("FeedbackFromReviewer")
 }
 
 model PerfumeHouse {
@@ -181,6 +183,22 @@ model WishlistNotification {
   user       User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, perfumeId])
+}
+
+model TraderFeedback {
+  id          String   @id @default(cuid())
+  traderId    String
+  reviewerId  String
+  rating      Int      /// Expected 1-5 scale; enforce in application logic.
+  comment     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  trader      User     @relation("FeedbackForTrader", fields: [traderId], references: [id])
+  reviewer    User     @relation("FeedbackFromReviewer", fields: [reviewerId], references: [id])
+
+  @@unique([traderId, reviewerId])
+  @@index([traderId])
+  @@index([reviewerId])
 }
 
 model SecurityAuditLog {

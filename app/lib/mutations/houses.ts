@@ -16,9 +16,7 @@ export interface DeleteHouseResponse {
 /**
  * Delete a house mutation function.
  */
-async function deleteHouse(
-  params: DeleteHouseParams
-): Promise<DeleteHouseResponse> {
+async function deleteHouse(params: DeleteHouseParams): Promise<DeleteHouseResponse> {
   const { houseId } = params
 
   const response = await fetch(`/api/deleteHouse?id=${houseId}`, {
@@ -28,9 +26,7 @@ async function deleteHouse(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.error || errorData.message || "Failed to delete house"
-    )
+    throw new Error(errorData.error || errorData.message || "Failed to delete house")
   }
 
   const result = await response.json()
@@ -55,7 +51,7 @@ export function useDeleteHouse() {
 
   return useMutation({
     mutationFn: deleteHouse,
-    onMutate: async (variables) => {
+    onMutate: async variables => {
       const { houseId } = variables
 
       // Cancel outgoing refetches
@@ -69,7 +65,9 @@ export function useDeleteHouse() {
 
       // Optimistically remove house from cache
       queryClient.setQueryData(queryKeys.houses.all, (old: any) => {
-        if (!old) return old
+        if (!old) {
+ return old 
+}
 
         // Handle different query structures
         if (Array.isArray(old)) {

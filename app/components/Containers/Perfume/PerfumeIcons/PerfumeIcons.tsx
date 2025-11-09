@@ -51,7 +51,7 @@ const PerfumeIcons = ({
             setInWishlist(false)
             setShowWishlistForm(false)
           },
-          onError: (error) => {
+          onError: error => {
             console.error("Failed to remove from wishlist:", error)
             // The mutation's optimistic update will rollback on error
           },
@@ -75,7 +75,7 @@ const PerfumeIcons = ({
           setInWishlist(true)
           setShowWishlistForm(false)
         },
-        onError: (error) => {
+        onError: error => {
           console.error("Failed to add to wishlist:", error)
           // The mutation's optimistic update will rollback on error
         },

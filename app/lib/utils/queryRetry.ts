@@ -1,4 +1,5 @@
-import type { QueryOptions, MutationOptions } from '@tanstack/react-query'
+import type { MutationOptions, QueryOptions } from '@tanstack/react-query'
+
 import type { QueryType, RetryOptions } from '../queryClient'
 
 /**
@@ -119,6 +120,7 @@ export function smartRetry(
  * Preset retry configurations for common scenarios
  */
 export const retryPresets = {
+
   /**
    * No retry - for non-critical queries or when errors are expected
    */
@@ -148,7 +150,9 @@ export const retryPresets = {
    * Network-only retry - only retries on network errors
    */
   networkOnly: (failureCount: number, error: unknown) => {
-    if (failureCount >= 3) return false
+    if (failureCount >= 3) {
+ return false 
+}
 
     if (error && typeof error === 'object') {
       if ('status' in error) {

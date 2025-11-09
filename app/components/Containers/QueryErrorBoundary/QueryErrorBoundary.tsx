@@ -1,13 +1,13 @@
-import React, { Component, type ErrorInfo, type ReactNode, type FC } from "react"
 import { useQueryErrorResetBoundary } from "@tanstack/react-query"
+import React, { Component, type ErrorInfo, type FC, type ReactNode } from "react"
 
+import ErrorDisplay from "~/components/Containers/ErrorDisplay"
 import {
   AppError,
   ErrorHandler,
   type ErrorSeverity,
   type ErrorType,
 } from "~/utils/errorHandling"
-import ErrorDisplay from "~/components/Containers/ErrorDisplay"
 
 interface QueryErrorBoundaryProps {
   children: ReactNode
@@ -185,7 +185,7 @@ export const QueryErrorResetBoundary: FC<QueryErrorResetBoundaryProps> = ({
   return (
     <QueryErrorBoundary
       fallback={fallback}
-      onError={(error) => {
+      onError={error => {
         onError?.(error)
         // Reset query errors when boundary catches them
         reset()

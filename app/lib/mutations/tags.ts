@@ -30,9 +30,7 @@ async function createTag(params: CreateTagParams): Promise<CreateTagResponse> {
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.error || errorData.message || "Failed to create tag"
-    )
+    throw new Error(errorData.error || errorData.message || "Failed to create tag")
   }
 
   const result = await response.json()

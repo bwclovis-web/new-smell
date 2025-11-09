@@ -38,9 +38,10 @@ export default [
     ),
     route("api/perfumes-by-letter", "routes/api/perfumes-by-letter.ts"),
     route("api/update-house-info", "routes/api/update-house-info.tsx"),
-    route("api/ratings", "routes/api.ratings.tsx"),
-    route("api/reviews", "routes/api.reviews.tsx"),
-    route("api/user-reviews", "routes/api.user-reviews.tsx"),
+    route("api/ratings", "routes/api/ratings.tsx"),
+    route("api/reviews", "routes/api/reviews.tsx"),
+    route("api/trader-feedback", "routes/api/trader-feedback.tsx"),
+    route("api/user-reviews", "routes/api/user-reviews.tsx"),
     route("my-reviews", "routes/my-reviews.tsx"),
     route("api/user-alerts/:userId", "routes/api/user-alerts.$userId.tsx"),
     route(

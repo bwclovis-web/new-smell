@@ -1,5 +1,5 @@
-import { useCallback, useMemo } from "react"
 import type { QueryObserverResult } from "@tanstack/react-query"
+import { useCallback, useMemo } from "react"
 
 import {
   AppError,
@@ -9,26 +9,32 @@ import {
 } from "~/utils/errorHandling"
 
 export interface UseQueryErrorOptions {
+
   /**
    * Custom title for the error display
    */
   title?: string
+
   /**
    * Whether to show technical error details
    */
   showDetails?: boolean
+
   /**
    * Custom error handling function
    */
   onError?: (error: AppError) => void
+
   /**
    * Whether to throw errors (for error boundaries)
    */
   throwOnError?: boolean
+
   /**
    * Custom error type mapping function
    */
   mapErrorType?: (error: unknown) => ErrorType
+
   /**
    * Custom severity mapping function
    */
@@ -36,22 +42,27 @@ export interface UseQueryErrorOptions {
 }
 
 export interface UseQueryErrorReturn<TData, TError> {
+
   /**
    * Whether the query has an error
    */
   hasError: boolean
+
   /**
    * Normalized AppError if error exists, otherwise null
    */
   error: AppError | null
+
   /**
    * Original error from query result
    */
   originalError: TError | null
+
   /**
    * Function to manually reset the error state
    */
   resetError: () => void
+
   /**
    * Props ready to pass to ErrorDisplay component
    */
@@ -226,7 +237,9 @@ export function useQueryError<TData, TError>(
       onRetry: refetch ? () => refetch() : undefined,
       variant: "card" as const,
     }),
-    [error, title, showDetails, refetch]
+    [
+error, title, showDetails, refetch
+]
   )
 
   return {
@@ -242,12 +255,10 @@ export function useQueryError<TData, TError>(
  * Simplified hook for inline error display
  * Returns error message and retry function for inline use
  */
-export function useQueryErrorInline<TData, TError>(
-  queryResult: Pick<
+export function useQueryErrorInline<TData, TError>(queryResult: Pick<
     QueryObserverResult<TData, TError>,
     "error" | "isError" | "refetch"
-  >
-) {
+  >) {
   const { hasError, error, errorDisplayProps } = useQueryError(queryResult, {
     variant: "inline",
   })

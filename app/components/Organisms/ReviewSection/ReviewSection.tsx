@@ -4,12 +4,12 @@ import { useTranslation } from "react-i18next"
 import { Button } from "~/components/Atoms/Button"
 import RichTextEditor from "~/components/Atoms/RichTextEditor"
 import ReviewCard from "~/components/Molecules/ReviewCard"
+import { useCSRF } from "~/hooks/useCSRF"
+import { usePerfumeReviews } from "~/hooks/usePerfumeReviews"
 import {
   useCreateReview,
   useDeleteReview,
 } from "~/lib/mutations/reviews"
-import { usePerfumeReviews } from "~/hooks/usePerfumeReviews"
-import { useCSRF } from "~/hooks/useCSRF"
 import { safeAsync } from "~/utils/errorHandling.patterns"
 import { sanitizeString } from "~/utils/validation"
 
@@ -83,12 +83,10 @@ const ReviewSection = ({
           // Refetch reviews to show new review
           refetch()
         },
-        onError: (error) => {
-          alert(
-            error instanceof Error
+        onError: error => {
+          alert(error instanceof Error
               ? error.message
-              : t("singlePerfume.review.failedToCreateReview")
-          )
+              : t("singlePerfume.review.failedToCreateReview"))
         },
       }
     )
@@ -114,12 +112,10 @@ const ReviewSection = ({
           // Refetch reviews to reflect deletion
           refetch()
         },
-        onError: (error) => {
-          alert(
-            error instanceof Error
+        onError: error => {
+          alert(error instanceof Error
               ? error.message
-              : t("singlePerfume.review.failedToDeleteReview")
-          )
+              : t("singlePerfume.review.failedToDeleteReview"))
         },
       }
     )

@@ -509,6 +509,32 @@
       "cash": "Cash Only",
       "trade": "Trade Only",
       "both": "Cash or Trade"
+    },
+    "feedback": {
+      "title": "Trader Feedback",
+      "subtitle": "Build trust with ratings and comments from the community.",
+      "reviewCount_one": "{{count}} review",
+      "reviewCount_other": "{{count}} reviews",
+      "badgeLabel": "Trusted Trader",
+      "noRatings": "No ratings yet",
+      "loading": "Loading feedback...",
+      "error": "We couldn't load trader feedback right now.",
+      "noComments": "No feedback comments yet.",
+      "anonymousReviewer": "Anonymous reviewer",
+      "selfReviewNotice": "You cannot leave feedback on your own profile.",
+      "ratingLabel": "Your rating",
+      "ratingHint": "Score trades from 1 (needs improvement) to 5 (excellent).",
+      "selectRating": "Select rating",
+      "commentLabel": "Your comment",
+      "commentPlaceholder": "Share details about your experience trading with this member.",
+      "commentHint": "Comments are optional and help other members decide who to trust.",
+      "submitButton": "Submit feedback",
+      "updateButton": "Update feedback",
+      "deleteButton": "Remove feedback",
+      "loginPrompt": "Sign in to leave feedback and help build community trust.",
+      "validation": {
+        "ratingRequired": "Rating is required before submitting."
+      }
     }
   },
   "userAdmin": {

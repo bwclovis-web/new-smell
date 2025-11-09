@@ -1,4 +1,4 @@
-import type { LoaderFunction, ActionFunction } from "react-router"
+import type { ActionFunction, LoaderFunction } from "react-router"
 
 import {
   createPerfumeReview,
@@ -25,8 +25,7 @@ import {
  * Fetches reviews with optional filters and pagination.
  * Public endpoint - no authentication required.
  */
-export const loader: LoaderFunction = async (args) => {
-  return withPublicLoader(
+export const loader: LoaderFunction = async args => withPublicLoader(
     async ({ request }) => {
       const params = parseQueryParams(request)
       const pagination = parsePaginationParams(request)
@@ -41,8 +40,12 @@ export const loader: LoaderFunction = async (args) => {
 
       // Build filters
       const filters: any = {}
-      if (perfumeId) filters.perfumeId = perfumeId
-      if (userId) filters.userId = userId
+      if (perfumeId) {
+ filters.perfumeId = perfumeId 
+}
+      if (userId) {
+ filters.userId = userId 
+}
 
       // Optional isApproved filter
       const isApproved = params.get("isApproved")
@@ -60,15 +63,13 @@ export const loader: LoaderFunction = async (args) => {
     },
     { context: { api: "reviews", method: "GET" } }
   )(args)
-}
 
 /**
  * POST /api/reviews
  * Handle review actions: create, update, delete, moderate
  * Requires authentication.
  */
-export const action: ActionFunction = async (args) => {
-  return withAuthenticatedAction(
+export const action: ActionFunction = async args => withAuthenticatedAction(
     async ({ request, auth }) => {
       const formData = await parseFormData(request)
       const action = formData.required("_action")
@@ -145,4 +146,3 @@ export const action: ActionFunction = async (args) => {
     },
     { context: { api: "reviews", method: "POST" } }
   )(args)
-}

@@ -51,19 +51,18 @@ export const queryKeys = {
   houses: {
     all: ["houses"] as const,
     lists: () => [...queryKeys.houses.all, "list"] as const,
-    list: (filters: HouseFilters) =>
-      [...queryKeys.houses.lists(), filters] as const,
+    list: (filters: HouseFilters) => [...queryKeys.houses.lists(), filters] as const,
     details: () => [...queryKeys.houses.all, "detail"] as const,
-    detail: (slug: string) =>
-      [...queryKeys.houses.details(), slug] as const,
-    byLetter: (letter: string, houseType: string = "all") =>
-      [...queryKeys.houses.all, "byLetter", letter, houseType] as const,
-    paginated: (filters: HouseFilters) =>
-      [...queryKeys.houses.all, "paginated", filters] as const,
+    detail: (slug: string) => [...queryKeys.houses.details(), slug] as const,
+    byLetter: (letter: string, houseType: string = "all") => [
+...queryKeys.houses.all, "byLetter", letter, houseType
+] as const,
+    paginated: (filters: HouseFilters) => [...queryKeys.houses.all, "paginated", filters] as const,
     // For infinite queries - don't include pagination params in key
     // All pages share the same cache entry
-    byLetterInfinite: (letter: string, houseType: string) =>
-      [...queryKeys.houses.all, "byLetterInfinite", letter, houseType] as const,
+    byLetterInfinite: (letter: string, houseType: string) => [
+...queryKeys.houses.all, "byLetterInfinite", letter, houseType
+] as const,
   },
 } as const
 
@@ -109,9 +108,7 @@ export async function getHousesByLetter(
  * @param filters - Filter and pagination options
  * @returns Promise resolving to paginated houses response
  */
-export async function getHousesPaginated(
-  filters: HouseFilters = {}
-): Promise<HousesPaginatedResponse> {
+export async function getHousesPaginated(filters: HouseFilters = {}): Promise<HousesPaginatedResponse> {
   const {
     houseType = "all",
     sortBy = "created-desc",
@@ -157,9 +154,7 @@ export async function getHousesPaginated(
  * @param filters - Filter and sorting options
  * @returns Promise resolving to houses array
  */
-export async function getHouseSort(
-  filters: HouseFilters = {}
-): Promise<any[]> {
+export async function getHouseSort(filters: HouseFilters = {}): Promise<any[]> {
   const result = await getHousesPaginated(filters)
   return result.houses || []
 }
@@ -224,9 +219,7 @@ export async function getHousesByLetterPaginated(
   const response = await fetch(`/api/houses-by-letter-paginated?${params}`)
 
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch houses by letter (paginated): ${response.statusText}`
-    )
+    throw new Error(`Failed to fetch houses by letter (paginated): ${response.statusText}`)
   }
 
   const data: HousesByLetterPaginatedResponse = await response.json()

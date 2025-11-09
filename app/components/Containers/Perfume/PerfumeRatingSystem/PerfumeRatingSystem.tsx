@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next"
 
 import NoirRating from "~/components/Organisms/NoirRating"
-import { usePerfumeRatings } from "~/hooks/usePerfumeRatings"
 import { useRatingSystem } from "~/hooks"
+import { usePerfumeRatings } from "~/hooks/usePerfumeRatings"
 
 interface PerfumeRatingSystemProps {
   perfumeId: string

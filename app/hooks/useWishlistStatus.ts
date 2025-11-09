@@ -30,14 +30,12 @@ export function useWishlistStatus(perfumeId: string, userId: string) {
       const wishlistItems = wishlistData.wishlist || []
 
       // Check if perfume exists in wishlist
-      return wishlistItems.some(
-        (item: any) => item.perfumeId === perfumeId || item.perfume?.id === perfumeId
-      )
+      return wishlistItems.some((item: any) => item.perfumeId === perfumeId || item.perfume?.id === perfumeId)
     },
     enabled: !!perfumeId && !!userId,
     staleTime: 1 * 60 * 1000, // 1 minute (wishlist status can change)
     // Use cached wishlist data if available
-    select: (data) => data ?? false,
+    select: data => data ?? false,
   })
 }
 

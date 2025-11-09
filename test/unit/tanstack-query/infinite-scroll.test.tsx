@@ -6,9 +6,10 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { renderHook, waitFor } from "@testing-library/react"
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest"
-import { useInfinitePerfumesByHouse } from "~/hooks/useInfinitePerfumes"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+
 import { useInfiniteHouses } from "~/hooks/useInfiniteHouses"
+import { useInfinitePerfumesByHouse } from "~/hooks/useInfinitePerfumes"
 
 // Mock fetch
 global.fetch = vi.fn()
@@ -47,8 +48,7 @@ describe("TanStack Query Infinite Scroll", () => {
       })
 
       const { result } = renderHook(
-        () =>
-          useInfinitePerfumesByHouse({
+        () => useInfinitePerfumesByHouse({
             houseSlug: "test-house",
             pageSize: 2,
             initialData: [],
@@ -86,8 +86,7 @@ describe("TanStack Query Infinite Scroll", () => {
         })
 
       const { result } = renderHook(
-        () =>
-          useInfinitePerfumesByHouse({
+        () => useInfinitePerfumesByHouse({
             houseSlug: "test-house",
             pageSize: 1,
             initialData: [],
@@ -131,8 +130,7 @@ describe("TanStack Query Infinite Scroll", () => {
         })
 
       const { result } = renderHook(
-        () =>
-          useInfinitePerfumesByHouse({
+        () => useInfinitePerfumesByHouse({
             houseSlug: "test-house",
             pageSize: 1,
             initialData: [],
@@ -169,8 +167,7 @@ describe("TanStack Query Infinite Scroll", () => {
       })
 
       const { result } = renderHook(
-        () =>
-          useInfinitePerfumesByHouse({
+        () => useInfinitePerfumesByHouse({
             houseSlug: "test-house",
             pageSize: 1,
             initialData: [],
@@ -199,8 +196,7 @@ describe("TanStack Query Infinite Scroll", () => {
       })
 
       const { result } = renderHook(
-        () =>
-          useInfiniteHouses({
+        () => useInfiniteHouses({
             letter: "A",
             houseType: "all",
             pageSize: 2,

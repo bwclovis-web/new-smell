@@ -66,7 +66,7 @@ export const retryConfigs: Record<QueryType, RetryOptions | number | boolean> = 
   'real-time': false,
   
   // Background queries: Single retry with delay
-  background: (failureCount) => {
+  background: failureCount => {
     if (failureCount >= 1) {
       return false
     }
@@ -136,7 +136,7 @@ function createQueryClient(): QueryClient {
 
   // Set up query cache listener for error monitoring
   // This gives access to query metadata, unlike the onError callback
-  client.getQueryCache().subscribe((event) => {
+  client.getQueryCache().subscribe(event => {
     if (event.type === 'error') {
       const { query, error } = event
       
@@ -171,7 +171,7 @@ function createQueryClient(): QueryClient {
   })
 
   // Set up mutation cache listener
-  client.getMutationCache().subscribe((event) => {
+  client.getMutationCache().subscribe(event => {
     if (event.type === 'error') {
       const { mutation, error } = event
       

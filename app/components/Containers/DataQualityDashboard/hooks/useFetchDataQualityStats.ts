@@ -1,9 +1,9 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import {
+  type DataQualityTimeframe,
   getDataQualityStats,
   queryKeys,
-  type DataQualityTimeframe,
 } from "~/lib/queries/dataQuality"
 
 import { type DataQualityStats } from "../utils/chartDataUtils"
@@ -15,9 +15,7 @@ import { type DataQualityStats } from "../utils/chartDataUtils"
  * @param timeframe - Timeframe for the statistics: "week", "month", or "all"
  * @returns Query result with stats, loading, error, and forceRefresh function
  */
-export const useFetchDataQualityStats = (
-  timeframe: DataQualityTimeframe
-) => {
+export const useFetchDataQualityStats = (timeframe: DataQualityTimeframe) => {
   const queryClient = useQueryClient()
   const query = useQuery({
     queryKey: queryKeys.dataQuality.stats(timeframe, false),

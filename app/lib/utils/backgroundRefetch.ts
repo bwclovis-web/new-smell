@@ -11,6 +11,7 @@
  * All intervals are in milliseconds
  */
 export const refetchIntervals = {
+
   /**
    * Real-time data that should be updated frequently
    * Examples: Live notifications, chat messages, real-time stats
@@ -56,9 +57,7 @@ export type RefetchIntervalType = keyof typeof refetchIntervals
 /**
  * Get refetch interval by type
  */
-export function getRefetchInterval(
-  type: RefetchIntervalType
-): number | false {
+export function getRefetchInterval(type: RefetchIntervalType): number | false {
   return refetchIntervals[type]
 }
 
@@ -70,7 +69,7 @@ export function createSmartRefetchInterval(
   baseInterval: number,
   pauseWhenHidden: boolean = true
 ): (query: { state: { dataUpdateCount: number } }) => number | false {
-  return (query) => {
+  return query => {
     // Pause refetching when tab is hidden (if enabled)
     if (pauseWhenHidden && document.hidden) {
       return false
@@ -85,6 +84,7 @@ export function createSmartRefetchInterval(
  * Refetch on window focus strategies
  */
 export const refetchOnWindowFocusStrategies = {
+
   /**
    * Always refetch when window gains focus
    * Use for: Critical data that must be fresh when user returns
@@ -112,6 +112,7 @@ export const refetchOnWindowFocusStrategies = {
  * Background refetch configuration for different data types
  */
 export interface BackgroundRefetchConfig {
+
   /**
    * Refetch interval in milliseconds or false to disable
    * Can be a function that returns interval based on query state
@@ -143,6 +144,7 @@ export const backgroundRefetchStrategies: Record<
   string,
   BackgroundRefetchConfig
 > = {
+
   /**
    * Real-time data strategy
    * - Frequent refetching (5 seconds)
@@ -225,9 +227,7 @@ export const backgroundRefetchStrategies: Record<
 /**
  * Get background refetch configuration by strategy name
  */
-export function getBackgroundRefetchConfig(
-  strategy: keyof typeof backgroundRefetchStrategies
-): BackgroundRefetchConfig {
+export function getBackgroundRefetchConfig(strategy: keyof typeof backgroundRefetchStrategies): BackgroundRefetchConfig {
   return backgroundRefetchStrategies[strategy]
 }
 

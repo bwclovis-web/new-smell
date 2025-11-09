@@ -49,21 +49,19 @@ export const queryKeys = {
   perfumes: {
     all: ["perfumes"] as const,
     lists: () => [...queryKeys.perfumes.all, "list"] as const,
-    list: (filters: PerfumeFilters) =>
-      [...queryKeys.perfumes.lists(), filters] as const,
+    list: (filters: PerfumeFilters) => [...queryKeys.perfumes.lists(), filters] as const,
     details: () => [...queryKeys.perfumes.all, "detail"] as const,
-    detail: (slug: string) =>
-      [...queryKeys.perfumes.details(), slug] as const,
-    byLetter: (letter: string, houseType: string = "all") =>
-      [...queryKeys.perfumes.all, "byLetter", letter, houseType] as const,
+    detail: (slug: string) => [...queryKeys.perfumes.details(), slug] as const,
+    byLetter: (letter: string, houseType: string = "all") => [
+...queryKeys.perfumes.all, "byLetter", letter, houseType
+] as const,
     // For infinite queries - don't include pagination params in key
     // All pages share the same cache entry
-    byLetterInfinite: (letter: string, houseType: string) =>
-      [...queryKeys.perfumes.all, "byLetterInfinite", letter, houseType] as const,
-    byHouse: (houseSlug: string) =>
-      [...queryKeys.perfumes.all, "byHouse", houseSlug] as const,
-    byHouseInfinite: (houseSlug: string) =>
-      [...queryKeys.perfumes.all, "byHouseInfinite", houseSlug] as const,
+    byLetterInfinite: (letter: string, houseType: string) => [
+...queryKeys.perfumes.all, "byLetterInfinite", letter, houseType
+] as const,
+    byHouse: (houseSlug: string) => [...queryKeys.perfumes.all, "byHouse", houseSlug] as const,
+    byHouseInfinite: (houseSlug: string) => [...queryKeys.perfumes.all, "byHouseInfinite", houseSlug] as const,
   },
 } as const
 
@@ -96,9 +94,7 @@ export async function getPerfumesByLetter(
   const response = await fetch(`/api/perfumes-by-letter?${params}`)
 
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch perfumes by letter: ${response.statusText}`
-    )
+    throw new Error(`Failed to fetch perfumes by letter: ${response.statusText}`)
   }
 
   const data: PerfumesByLetterResponse = await response.json()
@@ -185,9 +181,7 @@ export async function getMorePerfumes(
  * @param filters - Filter and sorting options
  * @returns Promise resolving to perfumes array
  */
-export async function getPerfumeSort(
-  filters: PerfumeFilters = {}
-): Promise<any[]> {
+export async function getPerfumeSort(filters: PerfumeFilters = {}): Promise<any[]> {
   const { sortBy = "created-desc" } = filters
 
   const params = new URLSearchParams()

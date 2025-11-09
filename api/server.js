@@ -170,9 +170,7 @@ const viteMiddleware = (req, res, next) => {
   if (viteDevServerPromise) {
     Promise.race([
       viteDevServerPromise,
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error("Vite server initialization timeout")), 30000)
-      )
+      new Promise((_, reject) => setTimeout(() => reject(new Error("Vite server initialization timeout")), 30000))
     ])
     .then(server => {
       if (server) {

@@ -1,4 +1,4 @@
-import type { LoaderFunction, ActionFunction } from "react-router"
+import type { ActionFunction, LoaderFunction } from "react-router"
 
 import {
   createPerfumeRating,

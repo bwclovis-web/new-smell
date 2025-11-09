@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-import { queryKeys } from "~/lib/queries/user"
 import { queryKeys as perfumeQueryKeys } from "~/lib/queries/perfumes"
+import { queryKeys } from "~/lib/queries/user"
 
 export interface WishlistActionParams {
   perfumeId: string
@@ -19,9 +19,7 @@ export interface WishlistResponse {
 /**
  * Mutation function to perform wishlist actions (add, remove, updateVisibility).
  */
-async function wishlistAction(
-  params: WishlistActionParams
-): Promise<WishlistResponse> {
+async function wishlistAction(params: WishlistActionParams): Promise<WishlistResponse> {
   const { perfumeId, action, isPublic } = params
 
   const formData = new FormData()
@@ -39,9 +37,7 @@ async function wishlistAction(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.error || errorData.message || `Failed to ${action} from wishlist`
-    )
+    throw new Error(errorData.error || errorData.message || `Failed to ${action} from wishlist`)
   }
 
   return await response.json()
@@ -66,7 +62,7 @@ export function useToggleWishlist() {
 
   return useMutation({
     mutationFn: wishlistAction,
-    onMutate: async (variables) => {
+    onMutate: async variables => {
       // Cancel outgoing refetches to avoid overwriting optimistic update
       const { perfumeId } = variables
 
@@ -79,19 +75,17 @@ export function useToggleWishlist() {
       ])
 
       // Snapshot previous values for rollback
-      const previousWishlist = queryClient.getQueryData(
-        queryKeys.user.wishlist("current")
-      )
-      const previousPerfume = queryClient.getQueryData(
-        perfumeQueryKeys.perfumes.detail(perfumeId)
-      )
+      const previousWishlist = queryClient.getQueryData(queryKeys.user.wishlist("current"))
+      const previousPerfume = queryClient.getQueryData(perfumeQueryKeys.perfumes.detail(perfumeId))
 
       // Optimistically update wishlist
       if (variables.action === "add" || variables.action === "remove") {
         queryClient.setQueryData(
           queryKeys.user.wishlist("current"),
           (old: any) => {
-            if (!old) return old
+            if (!old) {
+ return old 
+}
 
             const wishlistItems = old.wishlist || []
             const isAdding = variables.action === "add"
@@ -99,10 +93,7 @@ export function useToggleWishlist() {
             if (isAdding) {
               // Add to wishlist (optimistic)
               if (
-                !wishlistItems.some(
-                  (item: any) =>
-                    item.perfumeId === perfumeId || item.perfume?.id === perfumeId
-                )
+                !wishlistItems.some((item: any) => item.perfumeId === perfumeId || item.perfume?.id === perfumeId)
               ) {
                 return {
                   ...old,
@@ -116,11 +107,8 @@ export function useToggleWishlist() {
               // Remove from wishlist (optimistic)
               return {
                 ...old,
-                wishlist: wishlistItems.filter(
-                  (item: any) =>
-                    item.perfumeId !== perfumeId &&
-                    item.perfume?.id !== perfumeId
-                ),
+                wishlist: wishlistItems.filter((item: any) => item.perfumeId !== perfumeId &&
+                    item.perfume?.id !== perfumeId),
               }
             }
 

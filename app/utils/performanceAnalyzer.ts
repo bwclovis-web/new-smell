@@ -118,7 +118,7 @@ class PerformanceAnalyzer {
     }
 
     try {
-      const observer = new PerformanceObserver((list) => {
+      const observer = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           const resourceEntry = entry as PerformanceResourceTiming
           const duration = resourceEntry.responseEnd - resourceEntry.requestStart
@@ -175,7 +175,7 @@ class PerformanceAnalyzer {
     }
 
     try {
-      const observer = new PerformanceObserver((list) => {
+      const observer = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           const paintEntry = entry as PerformancePaintTiming
           if (paintEntry.name === "first-contentful-paint") {
@@ -201,7 +201,7 @@ class PerformanceAnalyzer {
 
     try {
       let clsValue = 0
-      const observer = new PerformanceObserver((list) => {
+      const observer = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           const layoutShift = entry as PerformanceEntry & { value: number; hadRecentInput: boolean }
           if (!layoutShift.hadRecentInput) {
@@ -227,7 +227,7 @@ class PerformanceAnalyzer {
     }
 
     try {
-      const observer = new PerformanceObserver((list) => {
+      const observer = new PerformanceObserver(list => {
         const entries = list.getEntries()
         const lastEntry = entries[entries.length - 1] as PerformanceEntry & { renderTime: number; loadTime: number }
         this.metrics.lcp = lastEntry.renderTime || lastEntry.loadTime
@@ -249,7 +249,7 @@ class PerformanceAnalyzer {
     }
 
     try {
-      const observer = new PerformanceObserver((list) => {
+      const observer = new PerformanceObserver(list => {
         for (const entry of list.getEntries()) {
           const fidEntry = entry as PerformanceEventTiming
           if (!this.metrics.fid) {
@@ -353,7 +353,7 @@ class PerformanceAnalyzer {
     }
 
     // Image performance checks
-    const largeImages = this.metrics.imageLoadTimes.filter((img) => img.size > 200000)
+    const largeImages = this.metrics.imageLoadTimes.filter(img => img.size > 200000)
     if (largeImages.length > 0) {
       issues.push({
         type: "warning",
@@ -364,7 +364,7 @@ class PerformanceAnalyzer {
       })
     }
 
-    const slowImages = this.metrics.imageLoadTimes.filter((img) => img.loadTime > 1000)
+    const slowImages = this.metrics.imageLoadTimes.filter(img => img.loadTime > 1000)
     if (slowImages.length > 0) {
       issues.push({
         type: "warning",
@@ -397,7 +397,7 @@ class PerformanceAnalyzer {
     }
 
     // Script performance checks
-    const largeScripts = this.metrics.scriptLoadTimes.filter((script) => script.size > 500000)
+    const largeScripts = this.metrics.scriptLoadTimes.filter(script => script.size > 500000)
     if (largeScripts.length > 0) {
       issues.push({
         type: "warning",
@@ -416,18 +416,18 @@ class PerformanceAnalyzer {
    */
   private generateRecommendations(issues: PerformanceIssue[]): string[] {
     const recommendations: string[] = []
-    const highImpactIssues = issues.filter((issue) => issue.impact === "high")
+    const highImpactIssues = issues.filter(issue => issue.impact === "high")
 
     if (highImpactIssues.length > 0) {
       recommendations.push("🚨 Address high-impact performance issues first")
     }
 
-    const imageIssues = issues.filter((issue) => issue.category === "images")
+    const imageIssues = issues.filter(issue => issue.category === "images")
     if (imageIssues.length > 0) {
       recommendations.push("🖼️ Optimize images: Use OptimizedImage component, enable lazy loading, compress images")
     }
 
-    const networkIssues = issues.filter((issue) => issue.category === "network")
+    const networkIssues = issues.filter(issue => issue.category === "network")
     if (networkIssues.length > 0) {
       recommendations.push("🌐 Optimize network: Enable compression, use CDN, implement HTTP/2")
     }
@@ -443,7 +443,7 @@ class PerformanceAnalyzer {
    * Clean up observers
    */
   cleanup() {
-    this.observers.forEach((observer) => observer.disconnect())
+    this.observers.forEach(observer => observer.disconnect())
     this.observers = []
   }
 

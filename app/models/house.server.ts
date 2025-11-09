@@ -282,7 +282,7 @@ export const getHousesByLetterPaginated = async (
   ])
 
   return {
-    houses: houses.map((house) => ({
+    houses: houses.map(house => ({
       id: house.id,
       name: house.name,
       slug: house.slug,

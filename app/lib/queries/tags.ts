@@ -44,9 +44,7 @@ export async function getTag(name: string): Promise<Tag[]> {
   const response = await fetch(`/api/getTag?${params}`)
 
   if (!response.ok) {
-    throw new Error(
-      `Failed to fetch tags: ${response.statusText}`
-    )
+    throw new Error(`Failed to fetch tags: ${response.statusText}`)
   }
 
   const data: Tag[] = await response.json()

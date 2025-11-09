@@ -6,7 +6,8 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { renderHook, waitFor } from "@testing-library/react"
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+
 import { useHouses } from "~/hooks/useHouses"
 import { usePerfume } from "~/hooks/usePerfume"
 import { queryKeys } from "~/lib/queries/houses"

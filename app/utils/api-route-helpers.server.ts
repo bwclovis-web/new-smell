@@ -3,10 +3,11 @@
  * Reduces boilerplate and ensures consistency across API routes
  */
 
-import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router"
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router"
+
 import { authenticateUser } from "./auth.server"
-import { createErrorResponse, createSuccessResponse } from "./response.server"
 import { ErrorHandler } from "./errorHandling"
+import { createErrorResponse, createSuccessResponse } from "./response.server"
 
 // ==================== Types ====================
 
@@ -50,14 +51,18 @@ export function parseQueryParams(request: Request) {
     
     getInt(key: string, defaultValue: number = 0): number {
       const value = url.searchParams.get(key)
-      if (!value) return defaultValue
+      if (!value) {
+ return defaultValue 
+}
       const parsed = parseInt(value, 10)
       return isNaN(parsed) ? defaultValue : parsed
     },
     
     getBoolean(key: string, defaultValue: boolean = false): boolean {
       const value = url.searchParams.get(key)
-      if (value === null) return defaultValue
+      if (value === null) {
+ return defaultValue 
+}
       return value === "true" || value === "1"
     },
     
@@ -110,14 +115,18 @@ export async function parseFormData(request: Request) {
     
     getInt(key: string, defaultValue: number = 0): number {
       const value = formData.get(key)
-      if (typeof value !== "string") return defaultValue
+      if (typeof value !== "string") {
+ return defaultValue 
+}
       const parsed = parseInt(value, 10)
       return isNaN(parsed) ? defaultValue : parsed
     },
     
     getBoolean(key: string, defaultValue: boolean = false): boolean {
       const value = formData.get(key)
-      if (typeof value !== "string") return defaultValue
+      if (typeof value !== "string") {
+ return defaultValue 
+}
       return value === "true" || value === "1"
     },
     

@@ -45,7 +45,7 @@ const WishlistItemCard = ({
         onSuccess: () => {
           setIsPublic(newVisibility)
         },
-        onError: (error) => {
+        onError: error => {
           console.error("Error updating wishlist visibility:", error)
           // The mutation's optimistic update will rollback on error
         },

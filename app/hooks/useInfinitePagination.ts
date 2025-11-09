@@ -94,7 +94,9 @@ export function useInfinitePagination<TPage, TItem>({
     return () => {
       cancelled = true
     }
-  }, [fetchNextPage, hasNextPage, pages?.length, safeCurrentPage])
+  }, [
+fetchNextPage, hasNextPage, pages?.length, safeCurrentPage
+])
 
   const items = useMemo(() => {
     const startIndex = (safeCurrentPage - 1) * pageSize
@@ -114,7 +116,9 @@ export function useInfinitePagination<TPage, TItem>({
         (!!hasNextPage && totalPages === 0),
       hasPrevPage: totalPages > 0 && safeCurrentPage > 1,
     }
-  }, [hasNextPage, pageSize, safeCurrentPage, totalCount, totalPages])
+  }, [
+hasNextPage, pageSize, safeCurrentPage, totalCount, totalPages
+])
 
   return {
     items,

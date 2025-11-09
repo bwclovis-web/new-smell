@@ -37,9 +37,7 @@ interface UseInfinitePerfumesByHouseOptions {
  * const perfumes = data?.pages.flatMap(page => page.perfumes) || []
  * ```
  */
-export function useInfinitePerfumesByLetter(
-  options: UseInfinitePerfumesByLetterOptions
-) {
+export function useInfinitePerfumesByLetter(options: UseInfinitePerfumesByLetterOptions) {
   const {
     letter,
     houseType = "all",
@@ -56,7 +54,7 @@ export function useInfinitePerfumesByLetter(
     },
     enabled: !!letter && /^[A-Za-z]$/.test(letter),
     initialPageParam: 0,
-    getNextPageParam: (lastPage) => {
+    getNextPageParam: lastPage => {
       // Check if there's more data based on metadata
       if (lastPage.meta?.hasMore) {
         // Return the next skip value (current skip + take)
@@ -105,9 +103,7 @@ export function useInfinitePerfumesByLetter(
  * const perfumes = data?.pages.flatMap(page => page.perfumes) || []
  * ```
  */
-export function useInfinitePerfumesByHouse(
-  options: UseInfinitePerfumesByHouseOptions
-) {
+export function useInfinitePerfumesByHouse(options: UseInfinitePerfumesByHouseOptions) {
   const {
     houseSlug,
     pageSize = 9,
@@ -128,7 +124,7 @@ export function useInfinitePerfumesByHouse(
     },
     enabled: !!houseSlug,
     initialPageParam: 0,
-    getNextPageParam: (lastPage) => {
+    getNextPageParam: lastPage => {
       // Check if there's more data based on metadata
       if (lastPage.meta?.hasMore) {
         // Return the next skip value (current skip + take)

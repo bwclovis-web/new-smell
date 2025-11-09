@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-import { queryKeys } from "~/lib/queries/perfumes"
 import { queryKeys as houseQueryKeys } from "~/lib/queries/houses"
+import { queryKeys } from "~/lib/queries/perfumes"
 
 export interface DeletePerfumeParams {
   perfumeId: string
@@ -16,9 +16,7 @@ export interface DeletePerfumeResponse {
 /**
  * Delete a perfume mutation function.
  */
-async function deletePerfume(
-  params: DeletePerfumeParams
-): Promise<DeletePerfumeResponse> {
+async function deletePerfume(params: DeletePerfumeParams): Promise<DeletePerfumeResponse> {
   const { perfumeId } = params
 
   const response = await fetch(`/api/deletePerfume?id=${perfumeId}`, {
@@ -28,9 +26,7 @@ async function deletePerfume(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.error || errorData.message || "Failed to delete perfume"
-    )
+    throw new Error(errorData.error || errorData.message || "Failed to delete perfume")
   }
 
   const result = await response.json()
@@ -55,7 +51,7 @@ export function useDeletePerfume() {
 
   return useMutation({
     mutationFn: deletePerfume,
-    onMutate: async (variables) => {
+    onMutate: async variables => {
       const { perfumeId } = variables
 
       // Cancel outgoing refetches
@@ -69,7 +65,9 @@ export function useDeletePerfume() {
 
       // Optimistically remove perfume from cache
       queryClient.setQueryData(queryKeys.perfumes.all, (old: any) => {
-        if (!old) return old
+        if (!old) {
+ return old 
+}
 
         // Handle different query structures
         if (Array.isArray(old)) {
@@ -78,9 +76,7 @@ export function useDeletePerfume() {
         if (old.perfumes && Array.isArray(old.perfumes)) {
           return {
             ...old,
-            perfumes: old.perfumes.filter(
-              (perfume: any) => perfume.id !== perfumeId
-            ),
+            perfumes: old.perfumes.filter((perfume: any) => perfume.id !== perfumeId),
           }
         }
 

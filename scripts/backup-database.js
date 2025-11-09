@@ -71,9 +71,7 @@ function resolvePgDumpExecutable() {
       cachedPgDumpPath = resolvedCustomPath
       return cachedPgDumpPath
     }
-    console.warn(
-      `⚠️  PG_DUMP_PATH is set but the executable was not found at: ${resolvedCustomPath}`
-    )
+    console.warn(`⚠️  PG_DUMP_PATH is set but the executable was not found at: ${resolvedCustomPath}`)
   }
 
   try {
@@ -125,9 +123,7 @@ function resolvePgDumpExecutable() {
     }
   }
 
-  throw new Error(
-    "pg_dump executable not found. Install PostgreSQL client tools or set PG_DUMP_PATH to the pg_dump binary."
-  )
+  throw new Error("pg_dump executable not found. Install PostgreSQL client tools or set PG_DUMP_PATH to the pg_dump binary.")
 }
 
 // Execute pg_dump command
@@ -165,11 +161,9 @@ function executePgDump(dbConfig, options, outputFile) {
     if (stderrOutput) {
       console.error(stderrOutput)
     }
-    throw new Error(
-      `pg_dump exited with code ${result.status}${
+    throw new Error(`pg_dump exited with code ${result.status}${
         stderrOutput ? `: ${stderrOutput.split("\n").pop()}` : ""
-      }`
-    )
+      }`)
   }
 
   if (result.stderr?.length) {

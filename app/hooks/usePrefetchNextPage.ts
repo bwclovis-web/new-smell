@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react"
 import { useQueryClient } from "@tanstack/react-query"
+import { useEffect, useRef } from "react"
 
 /**
  * Hook to prefetch the next page of an infinite query when user scrolls near the end.
@@ -43,7 +43,9 @@ export function usePrefetchNextPage(
     }, 1000) // Wait 1 second after mount/data load before prefetching
 
     return () => clearTimeout(timer)
-  }, [queryKey, hasNextPage, enabled, fetchNextPage, queryClient])
+  }, [
+queryKey, hasNextPage, enabled, fetchNextPage, queryClient
+])
 
   // Reset prefetched flag when query key changes
   useEffect(() => {

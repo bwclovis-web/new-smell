@@ -5,13 +5,13 @@
  * based on resource types and hierarchical query keys.
  */
 
-import { queryClient } from "../queryClient"
+import { queryKeys as dataQualityQueryKeys } from "../queries/dataQuality"
 import { queryKeys as houseQueryKeys } from "../queries/houses"
 import { queryKeys as perfumeQueryKeys } from "../queries/perfumes"
 import { queryKeys as reviewQueryKeys } from "../queries/reviews"
-import { queryKeys as userQueryKeys } from "../queries/user"
-import { queryKeys as dataQualityQueryKeys } from "../queries/dataQuality"
 import { queryKeys as tagQueryKeys } from "../queries/tags"
+import { queryKeys as userQueryKeys } from "../queries/user"
+import { queryClient } from "../queryClient"
 
 /**
  * Resource types that can be selectively cleared from cache
@@ -130,7 +130,7 @@ export function clearUserCache() {
   
   // Also clear user-specific reviews and ratings
   queryClient.removeQueries({
-    predicate: (query) => {
+    predicate: query => {
       const key = query.queryKey
       // Check if query key contains "user" or "userReviews" or "userRating"
       return (

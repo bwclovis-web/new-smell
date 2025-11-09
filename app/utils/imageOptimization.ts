@@ -38,11 +38,21 @@ export const getOptimizedImageUrl = (
   // If CDN is configured, use it
   if (imageCdnUrl) {
     const params = new URLSearchParams()
-    if (quality) params.set("q", quality.toString())
-    if (format) params.set("f", format)
-    if (width) params.set("w", width.toString())
-    if (height) params.set("h", height.toString())
-    if (fit) params.set("fit", fit)
+    if (quality) {
+ params.set("q", quality.toString()) 
+}
+    if (format) {
+ params.set("f", format) 
+}
+    if (width) {
+ params.set("w", width.toString()) 
+}
+    if (height) {
+ params.set("h", height.toString()) 
+}
+    if (fit) {
+ params.set("fit", fit) 
+}
 
     // Cloudinary format
     if (imageCdnUrl.includes("cloudinary.com")) {
@@ -87,7 +97,9 @@ export const getOptimizedImageUrl = (
  */
 export const generateResponsiveSrcSet = (
   baseSrc: string,
-  sizes: number[] = [320, 640, 768, 1024, 1280, 1536, 1920]
+  sizes: number[] = [
+320, 640, 768, 1024, 1280, 1536, 1920
+]
 ): string => {
   if (!baseSrc) {
     return ""
@@ -101,7 +113,7 @@ export const generateResponsiveSrcSet = (
   // If CDN is configured, generate srcSet with CDN URLs
   if (imageCdnUrl) {
     return sizes
-      .map((size) => {
+      .map(size => {
         const optimizedUrl = getOptimizedImageUrl(baseSrc, {
           width: size,
           quality: 80,
@@ -117,7 +129,7 @@ export const generateResponsiveSrcSet = (
   const baseUrl = baseSrc.replace(/\.[^/.]+$/, "")
   const extension = baseSrc.split(".").pop() || "jpg"
 
-  return sizes.map((size) => `${baseUrl}-${size}w.${extension} ${size}w`).join(", ")
+  return sizes.map(size => `${baseUrl}-${size}w.${extension} ${size}w`).join(", ")
 }
 
 /**

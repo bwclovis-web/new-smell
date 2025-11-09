@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 
-import { queryKeys } from "~/lib/queries/reviews"
 import { queryKeys as perfumeQueryKeys } from "~/lib/queries/perfumes"
+import { queryKeys } from "~/lib/queries/reviews"
 
 export interface CreateReviewParams {
   perfumeId: string
@@ -43,9 +43,7 @@ async function createReview(params: CreateReviewParams): Promise<ReviewResponse>
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.error || errorData.message || "Failed to create review"
-    )
+    throw new Error(errorData.error || errorData.message || "Failed to create review")
   }
 
   return await response.json()
@@ -68,9 +66,7 @@ async function updateReview(params: UpdateReviewParams): Promise<ReviewResponse>
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.error || errorData.message || "Failed to update review"
-    )
+    throw new Error(errorData.error || errorData.message || "Failed to update review")
   }
 
   return await response.json()
@@ -92,9 +88,7 @@ async function deleteReview(params: DeleteReviewParams): Promise<ReviewResponse>
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      errorData.error || errorData.message || "Failed to delete review"
-    )
+    throw new Error(errorData.error || errorData.message || "Failed to delete review")
   }
 
   return await response.json()
@@ -114,7 +108,7 @@ export function useCreateReview() {
 
   return useMutation({
     mutationFn: createReview,
-    onMutate: async (variables) => {
+    onMutate: async variables => {
       const { perfumeId } = variables
 
       // Cancel outgoing refetches to avoid overwriting optimistic update
@@ -123,15 +117,15 @@ export function useCreateReview() {
       })
 
       // Snapshot previous values for rollback
-      const previousReviews = queryClient.getQueryData(
-        queryKeys.reviews.byPerfume(perfumeId)
-      )
+      const previousReviews = queryClient.getQueryData(queryKeys.reviews.byPerfume(perfumeId))
 
       // Optimistically add a pending review to the list
       queryClient.setQueryData(
         queryKeys.reviews.byPerfume(perfumeId),
         (old: any) => {
-          if (!old) return old
+          if (!old) {
+ return old 
+}
 
           const tempReview = {
             id: `pending-${Date.now()}`,
@@ -236,10 +230,12 @@ export function useDeleteReview() {
 
   return useMutation({
     mutationFn: deleteReview,
-    onMutate: async (variables) => {
+    onMutate: async variables => {
       const { reviewId, perfumeId } = variables
 
-      if (!perfumeId) return
+      if (!perfumeId) {
+ return 
+}
 
       // Cancel outgoing refetches
       await queryClient.cancelQueries({
@@ -247,21 +243,19 @@ export function useDeleteReview() {
       })
 
       // Snapshot previous values for rollback
-      const previousReviews = queryClient.getQueryData(
-        queryKeys.reviews.byPerfume(perfumeId)
-      )
+      const previousReviews = queryClient.getQueryData(queryKeys.reviews.byPerfume(perfumeId))
 
       // Optimistically remove review from list
       queryClient.setQueryData(
         queryKeys.reviews.byPerfume(perfumeId),
         (old: any) => {
-          if (!old) return old
+          if (!old) {
+ return old 
+}
 
           return {
             ...old,
-            reviews: (old.reviews || []).filter(
-              (review: any) => review.id !== reviewId
-            ),
+            reviews: (old.reviews || []).filter((review: any) => review.id !== reviewId),
             pagination: {
               ...old.pagination,
               totalCount: Math.max(

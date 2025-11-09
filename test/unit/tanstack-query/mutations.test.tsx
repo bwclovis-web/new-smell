@@ -6,13 +6,14 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { renderHook, waitFor } from "@testing-library/react"
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest"
-import { useToggleWishlist } from "~/lib/mutations/wishlist"
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
+
 import { useDeleteHouse } from "~/lib/mutations/houses"
 import { useDeletePerfume } from "~/lib/mutations/perfumes"
-import { queryKeys as userQueryKeys } from "~/lib/queries/user"
-import { queryKeys as perfumeQueryKeys } from "~/lib/queries/perfumes"
+import { useToggleWishlist } from "~/lib/mutations/wishlist"
 import { queryKeys as houseQueryKeys } from "~/lib/queries/houses"
+import { queryKeys as perfumeQueryKeys } from "~/lib/queries/perfumes"
+import { queryKeys as userQueryKeys } from "~/lib/queries/user"
 
 // Mock fetch
 global.fetch = vi.fn()
@@ -183,15 +184,10 @@ describe("TanStack Query Mutations - Optimistic Updates", () => {
       queryClient.setQueryData(userQueryKeys.user.wishlist("current"), initialWishlist)
 
       // Mock delayed API response
-      ;(global.fetch as any).mockImplementationOnce(
-        () =>
-          new Promise(resolve =>
-            setTimeout(
+      ;(global.fetch as any).mockImplementationOnce(() => new Promise(resolve => setTimeout(
               () => resolve({ ok: true, json: async () => ({ success: true }) }),
               100
-            )
-          )
-      )
+            )))
 
       const { result } = renderHook(() => useToggleWishlist(), { wrapper })
 
@@ -218,15 +214,10 @@ describe("TanStack Query Mutations - Optimistic Updates", () => {
       }
       queryClient.setQueryData(userQueryKeys.user.wishlist("current"), initialWishlist)
 
-      ;(global.fetch as any).mockImplementationOnce(
-        () =>
-          new Promise(resolve =>
-            setTimeout(
+      ;(global.fetch as any).mockImplementationOnce(() => new Promise(resolve => setTimeout(
               () => resolve({ ok: true, json: async () => ({ success: true }) }),
               100
-            )
-          )
-      )
+            )))
 
       const { result } = renderHook(() => useToggleWishlist(), { wrapper })
 
@@ -276,15 +267,10 @@ describe("TanStack Query Mutations - Optimistic Updates", () => {
       ]
       queryClient.setQueryData(houseQueryKeys.houses.all, initialHouses)
 
-      ;(global.fetch as any).mockImplementationOnce(
-        () =>
-          new Promise(resolve =>
-            setTimeout(
+      ;(global.fetch as any).mockImplementationOnce(() => new Promise(resolve => setTimeout(
               () => resolve({ ok: true, json: async () => [{ id: "1" }] }),
               100
-            )
-          )
-      )
+            )))
 
       const { result } = renderHook(() => useDeleteHouse(), { wrapper })
 
