@@ -23,13 +23,13 @@ interface ModalProps
   children: ReactNode
 }
 
-const Modal: FC<ModalProps> = ({
+const Modal = ({
   children,
   background,
   innerType,
   animateStart,
   ref,
-}) => {
+}:ModalProps) => {
   const [mounted, setMounted] = useState(false)
   const [animate, setAnimate] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -94,13 +94,13 @@ const Modal: FC<ModalProps> = ({
       >
         <button
           type="button"
-          className="absolute top-5 right-5 max-w-max cursor-pointer"
+          className="absolute top-5 right-5 max-w-max cursor-pointer z-20"
           onClick={() => handleClick()}
         >
           <IoMdCloseCircle
             size={34}
             color="currentColor"
-            className="fill-cyan-800"
+            className="fill-noir-blue"
           />
         </button>
         {children}

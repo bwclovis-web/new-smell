@@ -27,7 +27,7 @@ const NavigationLinks  = ({
     <nav className="flex-1 px-4 pb-4">
       <ul className="space-y-2">
         <li>
-          <AboutDropdown variant="mobile" />
+          <AboutDropdown variant="mobile" onNavClick={onNavClick} />
         </li>
         {mainNavigation.map(item => (
           <li key={item.id}>

@@ -291,6 +291,7 @@
     }
   },
   "navigation": {
+    "menu": "Menu",
     "logo": " Shadow and Sillage",
     "login": "Log In",
     "loggingIn": "Logging in...",
@@ -303,7 +304,9 @@
     "about": "About",
     "aboutUs": "About Us",
     "howWeWork": "How We Work",
-    "contactUs": "Contact Us"
+    "contactUs": "Contact Us",
+    "home": "Home",
+    "search": "Search"
   },
   "profile": {
     "heading": "The Profile",

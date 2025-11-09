@@ -9,6 +9,12 @@ import {
 import TraderFeedbackSection from "~/components/Containers/TraderProfile/TraderFeedbackSection"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import { useTrader } from "~/hooks/useTrader"
+import type { TraderFeedbackResponse } from "~/lib/queries/traderFeedback"
+import {
+  getTraderFeedbackByReviewer,
+  getTraderFeedbackList,
+  getTraderFeedbackSummary,
+} from "~/models/traderFeedback.server"
 import { getTraderById } from "~/models/user.server"
 import { authenticateUser } from "~/utils/auth.server"
 import { getTraderDisplayName } from "~/utils/user"
@@ -33,12 +39,37 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
         role: auth.user.role,
       }
     : null
-  return { trader, viewer }
+  const viewerId = viewer?.id ?? null
+
+  const [summary, comments, viewerFeedbackRecord] = await Promise.all([
+    getTraderFeedbackSummary(trader.id),
+    getTraderFeedbackList(trader.id),
+    viewerId && viewerId !== trader.id
+      ? getTraderFeedbackByReviewer(trader.id, viewerId)
+      : Promise.resolve(null),
+  ])
+
+  const feedback: TraderFeedbackResponse = {
+    summary,
+    comments,
+    viewerFeedback: viewerFeedbackRecord
+      ? {
+          traderId: viewerFeedbackRecord.traderId,
+          reviewerId: viewerFeedbackRecord.reviewerId,
+          rating: viewerFeedbackRecord.rating,
+          comment: viewerFeedbackRecord.comment,
+          createdAt: viewerFeedbackRecord.createdAt.toISOString(),
+          updatedAt: viewerFeedbackRecord.updatedAt.toISOString(),
+        }
+      : null,
+  }
+
+  return { trader, viewer, feedback }
 }
 
 const TraderProfilePage = () => {
   const loaderData = useLoaderData<typeof loader>()
-  const { trader: initialTrader, viewer } = loaderData
+  const { trader: initialTrader, viewer, feedback } = loaderData
   
   // Hydrate trader query with loader data
   const { data: trader } = useTrader(initialTrader.id, initialTrader)
@@ -64,6 +95,7 @@ const TraderProfilePage = () => {
         <TraderFeedbackSection
           traderId={trader.id}
           viewerId={viewer?.id}
+          initialData={feedback}
         />
       </div>
         <div className="noir-border relative col-span-1 p-4">

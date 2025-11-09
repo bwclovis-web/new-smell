@@ -4,22 +4,29 @@ import { FaStar } from "react-icons/fa"
 
 import Select from "~/components/Atoms/Select"
 import { useTraderFeedback, useTraderFeedbackMutations } from "~/hooks/useTraderFeedback"
+import type { TraderFeedbackResponse } from "~/lib/queries/traderFeedback"
 import { TRADER_FEEDBACK_RATING_OPTIONS } from "~/utils/constants"
 import { formatUserName } from "~/utils/formatters"
 
 type TraderFeedbackSectionProps = {
   traderId: string
   viewerId?: string | null
+  initialData?: TraderFeedbackResponse
 }
 
 // eslint-disable-next-line complexity
 const TraderFeedbackSection = ({
   traderId,
   viewerId,
+  initialData,
 }: TraderFeedbackSectionProps) => {
   const { t } = useTranslation()
 
-  const { data, isLoading, isError, error } = useTraderFeedback(traderId, viewerId)
+  const { data, isLoading, isError, error } = useTraderFeedback(
+    traderId,
+    viewerId,
+    initialData
+  )
   const {
     submitFeedback,
     deleteFeedback,

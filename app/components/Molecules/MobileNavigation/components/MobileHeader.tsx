@@ -1,9 +1,7 @@
-import { type FC, type RefObject } from "react"
+import { type RefObject } from "react"
 import { AiFillHome } from "react-icons/ai"
 import { FaBars } from "react-icons/fa6"
 import { NavLink } from "react-router"
-
-import { styleMerge } from "~/utils/styleUtils"
 
 interface MobileHeaderProps {
   logoText: string
@@ -14,18 +12,18 @@ interface MobileHeaderProps {
   onNavClick: () => void
 }
 
-const MobileHeader: FC<MobileHeaderProps> = ({
+const MobileHeader = ({
   logoText,
   menuButtonRef,
   modalOpen,
   modalId,
   onMenuToggle,
   onNavClick,
-}) => (
-  <div className="flex justify-between items-center w-full py-4 px-4 mobile-safe-top bg-noir-dark/60 backdrop-blur-md">
+}: MobileHeaderProps) => (
+  <div className="flex justify-between items-center w-full py-4 px-4 bg-noir-dark/60 backdrop-blur-md">
     <NavLink
       to="/"
-      className="text-noir-gold hover:text-noir-light font-semibold text-lg px-2 py-1 border border-transparent transition-colors duration-400 mobile-touch-target flex items-center"
+      className="text-noir-gold hover:text-noir-light font-semibold text-lg px-2 py-1 border border-transparent transition-colors duration-400 flex items-center"
       onClick={onNavClick}
     >
       <AiFillHome className="mr-2" size={20} />
@@ -36,11 +34,11 @@ const MobileHeader: FC<MobileHeaderProps> = ({
     <button
       ref={menuButtonRef}
       onClick={onMenuToggle}
-      className="text-noir-gold hover:text-noir-light p-3 transition-colors duration-200 mobile-touch-target rounded-lg hover:bg-noir-black/30"
+      className="text-noir-gold hover:text-noir-gold-100 cursor-pointer p-3 transition-colors duration-200  mobile-touch-target rounded-lg hover:bg-noir-black/30"
       aria-label="Open menu"
       aria-expanded={modalOpen && modalId === "mobile-navigation-menu"}
-    >
-      <FaBars size={24} />
+    > 
+      <FaBars size={34} />
     </button>
   </div>
 )

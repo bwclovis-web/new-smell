@@ -1,4 +1,4 @@
-import { type FC, type HTMLProps, useEffect, useRef, useState } from "react"
+import { type HTMLProps, type RefObject, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import Modal from "~/components/Organisms/Modal"
@@ -36,12 +36,12 @@ const MobileNavigation = ({
 
   // Close menu when route changes
   const handleNavClick = () => {
-    toggleModal(menuButtonRef, MOBILE_MENU_ID)
+    toggleModal(menuButtonRef as RefObject<HTMLButtonElement>, MOBILE_MENU_ID)
     onMenuClose?.()
   }
 
   const handleMenuToggle = () => {
-    toggleModal(menuButtonRef, MOBILE_MENU_ID)
+    toggleModal(menuButtonRef as RefObject<HTMLButtonElement>, MOBILE_MENU_ID)
   }
 
   const logoText =
@@ -51,7 +51,7 @@ const MobileNavigation = ({
     <div className={styleMerge("mobile-nav md:hidden fixed w-full z-30", className)}>
       <MobileHeader
         logoText={logoText}
-        menuButtonRef={menuButtonRef}
+        menuButtonRef={menuButtonRef as RefObject<HTMLButtonElement>}
         modalOpen={modalOpen}
         modalId={MOBILE_MENU_ID}
         onMenuToggle={handleMenuToggle}
@@ -61,10 +61,10 @@ const MobileNavigation = ({
       {/* Mobile Menu Modal */}
       {modalOpen && modalId === MOBILE_MENU_ID && (
         <Modal animateStart="left" background="default" innerType="dark">
-          <div className="flex flex-col h-full max-h-[90vh] mobile-safe-top mobile-safe-bottom pointer-events-auto overflow-y-auto">
+          <div className="flex flex-col w-full h-full max-h-[90vh] pointer-events-auto overflow-y-auto">
             {/* Header */}
-            <div className="flex justify-between items-center p-4 border-b border-noir-light/20 mb-4 sticky top-0 bg-noir-black/95 backdrop-blur-sm">
-              <h2 className="text-noir-gold font-semibold text-xl">Menu</h2>
+            <div className="flex justify-between items-center p-4 border-b border-noir-gold-500/20 mb-4 sticky top-0 bg-noir-black/95 backdrop-blur-sm">
+              <h2 className="text-noir-gold font-semibold text-xl">{t("navigation.menu")}</h2>
             </div>
 
             {/* Navigation Links */}

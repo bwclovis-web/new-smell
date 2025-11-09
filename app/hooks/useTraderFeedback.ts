@@ -10,6 +10,7 @@ import {
 import {
   getTraderFeedback,
   queryKeys,
+  type TraderFeedbackResponse,
 } from "~/lib/queries/traderFeedback"
 
 type SubmitParams = SubmitTraderFeedbackParams & {
@@ -18,7 +19,8 @@ type SubmitParams = SubmitTraderFeedbackParams & {
 
 export const useTraderFeedback = (
   traderId: string,
-  viewerId?: string | null
+  viewerId?: string | null,
+  initialData?: TraderFeedbackResponse
 ) => useQuery({
   queryKey: queryKeys.traderFeedback.detail(traderId, viewerId),
   queryFn: () => getTraderFeedback({
@@ -28,6 +30,8 @@ export const useTraderFeedback = (
   }),
   enabled: !!traderId,
   staleTime: 60 * 1000,
+  initialData,
+  initialDataUpdatedAt: initialData ? Date.now() : undefined,
 })
 
 export const useTraderFeedbackMutations = () => {

@@ -8,6 +8,7 @@
     "editor.defaultFormatter": "Prisma.prisma"
   },
   "cSpell.words": [
-    "gsap"
+    "gsap",
+    "Sillage"
   ]
 }

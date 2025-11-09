@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { renderWithProviders } from "../../../../test/utils/test-utils"
 import TraderFeedbackSection from "./TraderFeedbackSection"
+import type { TraderFeedbackResponse } from "~/lib/queries/traderFeedback"
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
@@ -50,64 +51,71 @@ vi.mock("react-i18next", () => ({
   }),
 }))
 
+const submitMutationMock = {
+  mutate: vi.fn(),
+  isPending: false,
+  isError: false,
+  error: null,
+}
+
+const deleteMutationMock = {
+  mutate: vi.fn(),
+  isPending: false,
+  isError: false,
+  error: null,
+}
+
 const mockUseTraderFeedback = vi.fn()
 
 vi.mock("~/hooks/useTraderFeedback", () => ({
   useTraderFeedback: (...args: any[]) => mockUseTraderFeedback(...args),
-}))
-
-const submitMock = {
-  mutate: vi.fn(),
-  isPending: false,
-  isError: false,
-  error: null,
-}
-
-const deleteMock = {
-  mutate: vi.fn(),
-  isPending: false,
-  isError: false,
-  error: null,
-}
-
-vi.mock("~/lib/mutations/traderFeedback", () => ({
-  useSubmitTraderFeedback: () => submitMock,
-  useDeleteTraderFeedback: () => deleteMock,
+  useTraderFeedbackMutations: () => ({
+    submitFeedback: submitMutationMock.mutate,
+    deleteFeedback: deleteMutationMock.mutate,
+    submitMutation: submitMutationMock,
+    deleteMutation: deleteMutationMock,
+    isMutating: false,
+  }),
 }))
 
 describe("TraderFeedbackSection", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockUseTraderFeedback.mockReset()
+    submitMutationMock.mutate.mockReset()
+    deleteMutationMock.mutate.mockReset()
   })
 
   it("shows feedback summary and comments when data is available", () => {
-    mockUseTraderFeedback.mockReturnValue({
-      data: {
-        summary: {
-          traderId: "trader-1",
-          averageRating: 4.5,
-          totalReviews: 12,
-          badgeEligible: true,
-        },
-        comments: [
-          {
-            id: "feedback-1",
-            traderId: "trader-1",
-            reviewerId: "user-2",
-            rating: 5,
-            comment: "Great trade experience!",
-            createdAt: new Date("2024-01-05").toISOString(),
-            updatedAt: new Date("2024-01-05").toISOString(),
-            reviewer: {
-              id: "user-2",
-              firstName: "Alex",
-              lastName: "Smith",
-              username: "alex-smith",
-            },
-          },
-        ],
-        viewerFeedback: null,
+    const feedbackData: TraderFeedbackResponse = {
+      summary: {
+        traderId: "trader-1",
+        averageRating: 4.5,
+        totalReviews: 12,
+        badgeEligible: true,
       },
+      comments: [
+        {
+          id: "feedback-1",
+          traderId: "trader-1",
+          reviewerId: "user-2",
+          rating: 5,
+          comment: "Great trade experience!",
+          createdAt: new Date("2024-01-05").toISOString(),
+          updatedAt: new Date("2024-01-05").toISOString(),
+          reviewer: {
+            id: "user-2",
+            firstName: "Alex",
+            lastName: "Smith",
+            username: "alex-smith",
+          },
+        },
+      ],
+      viewerFeedback: null,
+    }
+
+    mockUseTraderFeedback.mockReturnValue({
+      data: feedbackData,
       isLoading: false,
       isError: false,
       error: null,
@@ -124,17 +132,19 @@ describe("TraderFeedbackSection", () => {
   })
 
   it("prompts user to sign in when viewer is missing", () => {
-    mockUseTraderFeedback.mockReturnValue({
-      data: {
-        summary: {
-          traderId: "trader-2",
-          averageRating: null,
-          totalReviews: 0,
-          badgeEligible: false,
-        },
-        comments: [],
-        viewerFeedback: null,
+    const feedbackData: TraderFeedbackResponse = {
+      summary: {
+        traderId: "trader-2",
+        averageRating: null,
+        totalReviews: 0,
+        badgeEligible: false,
       },
+      comments: [],
+      viewerFeedback: null,
+    }
+
+    mockUseTraderFeedback.mockReturnValue({
+      data: feedbackData,
       isLoading: false,
       isError: false,
       error: null,
@@ -144,6 +154,44 @@ describe("TraderFeedbackSection", () => {
 
     expect(screen.getByText("Sign in to leave feedback and help build community trust.")).toBeInTheDocument()
     expect(screen.queryByText("Submit feedback")).not.toBeInTheDocument()
+  })
+
+  it("passes initial loader data to the feedback hook", () => {
+    const initialFeedback: TraderFeedbackResponse = {
+      summary: {
+        traderId: "trader-3",
+        averageRating: 3.5,
+        totalReviews: 4,
+        badgeEligible: false,
+      },
+      comments: [],
+      viewerFeedback: {
+        traderId: "trader-3",
+        reviewerId: "viewer-1",
+        rating: 4,
+        comment: "Solid trade.",
+        createdAt: new Date("2024-02-01").toISOString(),
+        updatedAt: new Date("2024-02-01").toISOString(),
+      },
+    }
+
+    mockUseTraderFeedback.mockReturnValue({
+      data: initialFeedback,
+      isLoading: false,
+      isError: false,
+      error: null,
+    })
+
+    renderWithProviders(
+      <TraderFeedbackSection
+        traderId="trader-3"
+        viewerId="viewer-1"
+        initialData={initialFeedback}
+      />
+    )
+
+    expect(mockUseTraderFeedback).toHaveBeenCalledWith("trader-3", "viewer-1", initialFeedback)
+    expect(screen.getByDisplayValue("Solid trade.")).toBeInTheDocument()
   })
 })
 
