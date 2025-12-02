@@ -18,7 +18,7 @@ export interface FilterConfig {
 export interface SortableItem {
   id: string
   name: string
-  createdAt: Date
+  createdAt: Date | string
   type?: string
 }
 
@@ -63,19 +63,35 @@ export const sortItems = <T extends SortableItem>(
 ): T[] => {
   const sortedItems = [...items]
 
+  const getTimeValue = (value: Date | string) => {
+    if (value instanceof Date) {
+      return value.getTime()
+    }
+
+    const parsed = new Date(value)
+    const timestamp = parsed.getTime()
+    return Number.isNaN(timestamp) ? 0 : timestamp
+  }
+
   switch (sortBy) {
     case "name-asc":
       return sortedItems.sort((a, b) => a.name.localeCompare(b.name))
     case "name-desc":
       return sortedItems.sort((a, b) => b.name.localeCompare(a.name))
     case "created-asc":
-      return sortedItems.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+      return sortedItems.sort(
+        (a, b) => getTimeValue(a.createdAt) - getTimeValue(b.createdAt)
+      )
     case "created-desc":
-      return sortedItems.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      return sortedItems.sort(
+        (a, b) => getTimeValue(b.createdAt) - getTimeValue(a.createdAt)
+      )
     case "type-asc":
       return sortedItems.sort((a, b) => (a.type || "").localeCompare(b.type || ""))
     default:
-      return sortedItems.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      return sortedItems.sort(
+        (a, b) => getTimeValue(b.createdAt) - getTimeValue(a.createdAt)
+      )
   }
 }
 

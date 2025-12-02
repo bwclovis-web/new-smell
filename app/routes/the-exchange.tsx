@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next"
 import {
   type LoaderFunctionArgs,
   type MetaFunction,
+  NavLink,
   useLoaderData,
   useNavigate,
   useSearchParams,
@@ -137,12 +138,14 @@ const TradingPostPage = () => {
 
                     {perfume.userPerfume.map(userPerfume => (
                       <div key={userPerfume.id} className="mb-1">
-                        <a
-                          href={`/trader/${userPerfume.userId}`}
+                        <NavLink
+                          to={`/trader/${userPerfume.userId}`}
                           className="text-sm font-semibold text-blue-300 hover:text-noir-blue underline"
+                          viewTransition
+                          prefetch="intent"
                         >
                           {getUserDisplayName(userPerfume.user)}:
-                        </a>
+                        </NavLink>
                         <span className="text-sm ml-2 text-noir-gold-100">
                           {getPerfumeTypeLabel(userPerfume.type) || "Unknown Type"}{" "}
                           {userPerfume.available} ml

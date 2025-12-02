@@ -22,7 +22,10 @@ import {
   getPerfumeRatings,
   getUserPerfumeRating,
 } from "~/models/perfumeRating.server"
-import { getUserPerfumeReview } from "~/models/perfumeReview.server"
+import {
+  getPerfumeReviews,
+  getUserPerfumeReview,
+} from "~/models/perfumeReview.server"
 import { getUserById } from "~/models/user.server"
 import { isInWishlist } from "~/models/wishlist.server"
 import { useSessionStore } from "~/stores/sessionStore"
@@ -34,6 +37,7 @@ import { verifyAccessToken } from "~/utils/security/session-manager.server"
 import { ROUTE_PATH as HOUSE_PATH } from "./perfume-house"
 import { ROUTE_PATH as ALL_PERFUMES } from "./the-vault"
 export const ROUTE_PATH = "/perfume"
+const REVIEWS_PAGE_SIZE = 5
 
 const getUserFromRequest = async (request: Request) => {
   const cookieHeader = request.headers.get("cookie") || ""
@@ -71,10 +75,11 @@ export const loader = withLoaderErrorHandling(
     const user = await getUserFromRequest(request)
     const isInUserWishlist = await checkWishlistStatus(request, perfume.id)
 
-    const [userRatings, ratingsData, userReview] = await Promise.all([
+    const [userRatings, ratingsData, userReview, reviewsData] = await Promise.all([
       getUserRatingsForPerfume(request, perfume.id),
       getPerfumeRatings(perfume.id),
       user ? getUserPerfumeReview(user.id, perfume.id) : null,
+      getPerfumeReviews(perfume.id, { isApproved: true }, { page: 1, limit: REVIEWS_PAGE_SIZE }),
     ])
 
     return {
@@ -84,6 +89,8 @@ export const loader = withLoaderErrorHandling(
       userRatings,
       averageRatings: ratingsData.averageRatings,
       userReview,
+      reviewsData,
+      reviewsPageSize: REVIEWS_PAGE_SIZE,
     }
   },
   {
@@ -158,6 +165,8 @@ const PerfumePage = () => {
     userRatings,
     averageRatings,
     userReview,
+    reviewsData,
+    reviewsPageSize,
   } = loaderData
   
   // Hydrate perfume query with loader data
@@ -232,6 +241,8 @@ const PerfumePage = () => {
         userRatings={userRatings}
         averageRatings={averageRatings}
         userReview={userReview}
+        initialReviewsData={reviewsData}
+        reviewsPageSize={reviewsPageSize}
         handleDelete={handleDelete}
         onBack={handleBack}
         selectedLetter={selectedLetter}
@@ -278,6 +289,8 @@ const PerfumeContent = ({
   userRatings,
   averageRatings,
   userReview,
+  initialReviewsData,
+  reviewsPageSize,
   handleDelete,
   onBack,
   selectedLetter,
@@ -289,6 +302,8 @@ const PerfumeContent = ({
   userRatings: any
   averageRatings: any
   userReview: any
+  initialReviewsData: any
+  reviewsPageSize: number
   handleDelete: () => void
   onBack: () => void
   selectedLetter?: string | null
@@ -349,6 +364,8 @@ const PerfumeContent = ({
           currentUserRole={user?.role}
           canCreateReview={user && (user.role === "admin" || user.role === "editor")}
           existingUserReview={userReview}
+          initialReviewsData={initialReviewsData}
+          pageSize={reviewsPageSize}
         />
       </div>
     </div>

@@ -7,6 +7,7 @@ import {
   voodooDetailsSummaryVariants,
   voodoodetailsVariants,
 } from "./voodoodetails-variants"
+import { GiSpiralBottle } from "react-icons/gi"
 
 type VooDooDetailsProps = HTMLProps<HTMLDetailsElement> &
   VariantProps<typeof voodoodetailsVariants> &
@@ -33,18 +34,22 @@ const VooDooDetails = ({
   const summaryClassName = styleMerge(summaryVariant)
 
   return (
-    <details
-      name={name}
-      className={detailsClassName}
-      data-cy="VooDooDetails"
-      open={defaultOpen}
-      {...props}
-    >
-      <summary className={summaryClassName}>
-        {summary || "VooDoo Details"}
-      </summary>
-      {children}
-    </details>
+    <div className="relative group flex items-center">
+      <details
+        name={name}
+        className={detailsClassName}
+        data-cy="VooDooDetails"
+        open={defaultOpen}
+        {...props}
+      >
+        
+        <summary className={summaryClassName}>
+        <GiSpiralBottle className="w-10 h-10 self-start group-open:rotate-180 transition-transform duration-300" />
+          {summary || "VooDoo Details"}
+        </summary>
+        {children}
+      </details>
+    </div>
   )
 }
 export default VooDooDetails

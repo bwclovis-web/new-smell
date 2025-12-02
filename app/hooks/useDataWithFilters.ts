@@ -28,7 +28,7 @@ interface UseDataWithFiltersReturn<T> {
 }
 
 export function useDataWithFilters<
-  T extends { id: string; name: string; createdAt: Date; type?: string }
+  T extends { id: string; name: string; createdAt: Date | string; type?: string }
 >({
   initialData,
   defaultSort = "created-desc",

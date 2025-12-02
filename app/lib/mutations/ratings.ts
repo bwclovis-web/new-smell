@@ -35,15 +35,41 @@ async function saveRating(params: CreateOrUpdateRatingParams): Promise<RatingRes
     throw new Error("Rating must be between 1 and 5")
   }
 
+  const getCsrfToken = () => {
+    if (typeof document === "undefined") {
+      return null
+    }
+
+    const csrfCookie = document.cookie
+      .split(";")
+      .map(cookie => cookie.trim())
+      .find(cookie => cookie.startsWith("_csrf="))
+
+    if (!csrfCookie) {
+      return null
+    }
+
+    return decodeURIComponent(csrfCookie.split("=")[1])
+  }
+
+  const csrfToken = getCsrfToken()
   const formData = new FormData()
   formData.append("perfumeId", perfumeId)
   formData.append("category", category)
   formData.append("rating", rating.toString())
+  if (csrfToken) {
+    formData.append("_csrf", csrfToken)
+  }
 
   const response = await fetch("/api/ratings", {
     method: "POST",
     body: formData,
     credentials: "include",
+    headers: csrfToken
+      ? {
+          "x-csrf-token": csrfToken,
+        }
+      : undefined,
   })
 
   if (!response.ok) {

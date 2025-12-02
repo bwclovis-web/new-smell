@@ -1,8 +1,8 @@
+import { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import NoirRating from "~/components/Organisms/NoirRating"
 import { useRatingSystem } from "~/hooks"
-import { usePerfumeRatings } from "~/hooks/usePerfumeRatings"
 
 interface PerfumeRatingSystemProps {
   perfumeId: string
@@ -33,12 +33,33 @@ const PerfumeRatingSystem = ({
   readonly = false,
 }: PerfumeRatingSystemProps) => {
   const { t } = useTranslation()
-  
-  // Use TanStack Query to get ratings (includes averageRatings that update optimistically)
-  const { data: ratingsData } = usePerfumeRatings(perfumeId)
-  // Use query data if available, otherwise fall back to prop
-  const averageRatings = ratingsData?.averageRatings || initialAverageRatings
-  
+  const [averageRatings, setAverageRatings] = useState(initialAverageRatings)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  useEffect(() => {
+    setAverageRatings(initialAverageRatings)
+  }, [initialAverageRatings])
+
+  const refreshAverageRatings = useCallback(async () => {
+    try {
+      setIsRefreshing(true)
+      const params = new URLSearchParams({ perfumeId })
+      const response = await fetch(`/api/ratings?${params}`)
+
+      if (!response.ok) {
+        const errorPayload = await response.json().catch(() => ({}))
+        throw new Error(errorPayload.message || "Failed to refresh ratings")
+      }
+
+      const data = await response.json()
+      setAverageRatings(data?.averageRatings ?? null)
+    } catch (error) {
+      console.error("Failed to refresh ratings", error)
+    } finally {
+      setIsRefreshing(false)
+    }
+  }, [perfumeId])
+
   const {
     currentRatings,
     isLoggedIn,
@@ -50,6 +71,9 @@ const PerfumeRatingSystem = ({
     userId,
     initialRatings: userRatings,
     readonly,
+    onSuccess: () => {
+      void refreshAverageRatings()
+    },
   })
 
   return (
@@ -86,13 +110,16 @@ const PerfumeRatingSystem = ({
                     {t("singlePerfume.rating.communityAverage")}:{" "}
                     {averageRatings[key]?.toFixed(1)}/5
                     {averageRatings.totalRatings > 0 && (
-                      <span className="ml-1">
-                        ({averageRatings.totalRatings}{" "}
-                        {averageRatings.totalRatings === 1
-                          ? t("singlePerfume.rating.vote")
-                          : t("singlePerfume.rating.votes")}
-                        )
-                      </span>
+                      <>
+                        <span className="ml-1">
+                          ({averageRatings.totalRatings}{" "}
+                          {averageRatings.totalRatings === 1
+                            ? t("singlePerfume.rating.vote")
+                            : t("singlePerfume.rating.votes")}
+                          )
+                        </span>
+                        {isRefreshing && <span className="ml-1">…</span>}
+                      </>
                     )}
                   </>
                 ) : (

@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 export type VooDooDetailsVariants = VariantProps<typeof voodoodetailsVariants>
 export const voodoodetailsVariants = cva(
   [
-    "group relative w-full overflow-hidden rounded-lg transition-all duration-300",
+    "group relative ring ring-noir-gold/30 w-full overflow-hidden rounded-lg transition-all duration-300",
     "focus-within:ring-2 focus-within:ring-noir-gold/20 focus-within:ring-offset-2 focus-within:ring-offset-noir-black",
   ],
   {
@@ -36,7 +36,7 @@ export const voodooDetailsSummaryVariants = cva(
       },
       background: {
         dark:
-          "bg-noir-black/80 group-open:bg-noir-black/60",
+          "bg-noir-gold border-noir-gold-500 border-2 group-open:border-none group-open:shadow-none shadow shadow-xl shadow-black hover:bg-noir-gold-100 text-noir-dark group-open:hover:text-noir-dark group-open:bg-noir-black/60 group-open:text-noir-gold-100",
         light:
           "bg-noir-light/10 text-noir-dark border-b border-noir-gold/30 group-open:bg-noir-light/20",
       },

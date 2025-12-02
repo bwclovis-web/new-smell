@@ -9,8 +9,6 @@ export {
 } from "./useInfinitePerfumes"
 export { default as useLetterSelection } from "./useLetterSelection"
 export { usePerfume } from "./usePerfume"
-export { usePerfumeRatings } from "./usePerfumeRatings"
-export { usePerfumeReviews } from "./usePerfumeReviews"
 export { usePerfumesByLetter } from "./usePerfumesByLetter"
 export { useTrader } from "./useTrader"
 export { useWishlistStatus } from "./useWishlistStatus"

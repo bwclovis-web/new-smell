@@ -21,6 +21,10 @@ import Modal from "~/components/Organisms/Modal"
 import { useHouse } from "~/hooks/useHouse"
 import { useInfinitePagination } from "~/hooks/useInfinitePagination"
 import { useInfinitePerfumesByHouse } from "~/hooks/useInfinitePerfumes"
+import {
+  usePaginatedNavigation,
+  usePreserveScrollPosition,
+} from "~/hooks/usePaginatedNavigation"
 import { useScrollToDataList } from "~/hooks/useScrollToDataList"
 import { useDeleteHouse } from "~/lib/mutations/houses"
 import { getPerfumeHouseBySlug } from "~/models/house.server"
@@ -136,14 +140,14 @@ function useHousePerfumePagination({
     if (pagination.totalPages > 0 && currentPage > pagination.totalPages) {
       navigate(
         pagination.totalPages === 1
-          ? `/perfume-house/${houseSlug}`
-          : `/perfume-house/${houseSlug}?pg=${pagination.totalPages}`,
+          ? `${ROUTE_PATH}/${houseSlug}`
+          : `${ROUTE_PATH}/${houseSlug}?pg=${pagination.totalPages}`,
         { replace: true, preventScrollReset: true }
       )
     }
 
     if (pagination.totalCount === 0 && currentPage !== 1) {
-      navigate(`/perfume-house/${houseSlug}`, {
+      navigate(`${ROUTE_PATH}/${houseSlug}`, {
         replace: true,
         preventScrollReset: true,
       })
@@ -156,45 +160,28 @@ function useHousePerfumePagination({
     pagination.totalPages,
   ])
 
-  useEffect(() => {
-    if (loading) {
-      const savedPosition = window.scrollY || document.documentElement.scrollTop
-      if (savedPosition > 0) {
-        window.scrollTo(0, savedPosition)
-      }
-    }
-  }, [loading])
+  usePreserveScrollPosition(loading)
 
   useScrollToDataList({
     trigger: pagination.currentPage,
     enabled: pagination.totalCount > 0,
     isLoading: loading,
     hasData: perfumes.length > 0,
+    additionalOffset: 32,
+    skipInitialScroll: true,
   })
 
-  const handleNextPage = () => {
-    if (pagination.hasNextPage) {
-      navigate(
-        `/perfume-house/${houseSlug}?pg=${pagination.currentPage + 1}`,
-        { preventScrollReset: true }
-      )
-    }
-  }
-
-  const handlePrevPage = () => {
-    if (pagination.hasPrevPage) {
-      if (pagination.currentPage === 2) {
-        navigate(`/perfume-house/${houseSlug}`, {
-          preventScrollReset: true,
-        })
-      } else {
-        navigate(
-          `/perfume-house/${houseSlug}?pg=${pagination.currentPage - 1}`,
-          { preventScrollReset: true }
-        )
-      }
-    }
-  }
+  const { handleNextPage, handlePrevPage } = usePaginatedNavigation({
+    currentPage: pagination.currentPage,
+    hasNextPage: pagination.hasNextPage,
+    hasPrevPage: pagination.hasPrevPage,
+    navigate,
+    buildPath: page => (
+      page <= 1
+        ? `${ROUTE_PATH}/${houseSlug}`
+        : `${ROUTE_PATH}/${houseSlug}?pg=${page}`
+    ),
+  })
 
   const totalPerfumeCount =
     pagination.totalCount || fallbackPerfumeCount || 0
@@ -251,6 +238,7 @@ function useHouseDetailViewModel(): HouseDetailViewModel | null {
   const location = useLocation()
   const [searchParams] = useSearchParams()
   const { modalOpen, toggleModal, modalId, closeModal } = useSessionStore()
+  
 
   const selectedLetter =
     (location.state as { selectedLetter?: string })?.selectedLetter ?? null
@@ -339,9 +327,10 @@ function useHouseDetailViewModel(): HouseDetailViewModel | null {
 // Main component
 const HouseDetailPage = () => {
   const viewModel = useHouseDetailViewModel()
+  const { t } = useTranslation()
 
   if (!viewModel) {
-    return <div className="p-4">House not found</div>
+    return <div className="p-4">{t("singleHouse.notFound")}</div>
   }
 
   const {
@@ -367,10 +356,9 @@ const HouseDetailPage = () => {
     {modalOpen && modalId === "delete-perfume-house-item" && (
       <Modal innerType="dark" animateStart="top">
         <DangerModal
-        heading="Are you sure you want to delete this perfume house?"
-        description="Once deleted, you will lose all perfumes and history associated with this house."
+        heading={t("singleHouse.deleteModal.heading")}
+        description={t("singleHouse.deleteModal.description")}
         action={handleDelete} />
-
       </Modal>
     )} 
     <section className="relative z-10 my-4">

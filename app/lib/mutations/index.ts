@@ -9,17 +9,6 @@ export {
   type WishlistResponse,
 } from "./wishlist"
 
-// Review mutations
-export {
-  type CreateReviewParams,
-  type DeleteReviewParams,
-  type ReviewResponse,
-  type UpdateReviewParams,
-  useCreateReview,
-  useDeleteReview,
-  useUpdateReview,
-} from "./reviews"
-
 // Rating mutations
 export {
   type CreateOrUpdateRatingParams,

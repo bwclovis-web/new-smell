@@ -36,7 +36,10 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
     ready && isClientReady ? t("navigation.logo") : " Shadow and Sillage"
 
   return (
-    <header className="fixed z-30  w-full h-auto bg-noir-dark/60 backdrop-blur-md">
+    <header
+      className="fixed z-30  w-full h-auto bg-noir-dark/60 backdrop-blur-md"
+      data-sticky-header="global-navigation"
+    >
       <div className="flex justify-end items-center px-30 bg-noir-black/60 backdrop-blur-md w-full gap-4">
       <LanguageSwitcher />
       <div>

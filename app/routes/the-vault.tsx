@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   type MetaFunction,
@@ -13,14 +13,20 @@ import DataFilters from "~/components/Organisms/DataFilters"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import { useInfinitePagination } from "~/hooks/useInfinitePagination"
 import { useInfinitePerfumesByLetter } from "~/hooks/useInfinitePerfumes"
+import {
+  usePaginatedNavigation,
+  usePreserveScrollPosition,
+} from "~/hooks/usePaginatedNavigation"
 import { useScrollToDataList } from "~/hooks/useScrollToDataList"
 import { useSyncPaginationUrl } from "~/hooks/useSyncPaginationUrl"
-import { getDefaultSortOptions } from "~/utils/sortUtils"
+import { getDefaultSortOptions, sortItems, type SortOption } from "~/utils/sortUtils"
 
 // No server imports needed for client component
 import banner from "../images/vault.webp"
 
 export const ROUTE_PATH = "/the-vault"
+
+const PAGE_SIZE = 16
 
 export const loader = async () => (
   // Don't load all perfumes upfront - we'll load by letter on demand
@@ -41,7 +47,7 @@ const AllPerfumesPage = () => {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   
-  const [selectedSort, setSelectedSort] = useState("created-desc")
+  const [selectedSort, setSelectedSort] = useState<SortOption>("created-desc")
 
   // Get letter from URL params
   const letterFromUrl = params.letter || null
@@ -62,75 +68,69 @@ const AllPerfumesPage = () => {
   } = useInfinitePerfumesByLetter({
     letter: letterFromUrl,
     houseType: "all",
-    pageSize: 16,
+    pageSize: PAGE_SIZE,
   })
-
-  // Calculate current page from URL
-  const currentPage = pageFromUrl
-  const pageSize = 16
 
   const { items: perfumes, pagination, loading } = useInfinitePagination({
     pages: data?.pages,
-    currentPage,
-    pageSize,
+    currentPage: pageFromUrl,
+    pageSize: PAGE_SIZE,
     isLoading,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
     extractItems: page => (page as any).perfumes || [],
-    extractTotalCount: page => (page as any)?.meta?.totalCount ?? (page as any)?.count,
+    extractTotalCount: page => (
+      (page as any)?.meta?.totalCount ?? (page as any)?.count
+    ),
   })
 
-  const handleNextPage = async () => {
-    if (pagination.hasNextPage) {
-      navigate(
-        `/the-vault/${letterFromUrl?.toLowerCase()}?pg=${pagination.currentPage + 1}`,
-        { preventScrollReset: true }
-      )
-    }
-  }
+  const normalizedPerfumes = useMemo(
+    () =>
+      perfumes.map(perfume => ({
+        ...perfume,
+        createdAt: perfume.createdAt ?? perfume.updatedAt ?? new Date(0),
+      })),
+    [perfumes]
+  )
 
-  const handlePrevPage = async () => {
-    if (pagination.hasPrevPage) {
-      if (pagination.currentPage === 2) {
-        navigate(`/the-vault/${letterFromUrl?.toLowerCase()}`, {
-          preventScrollReset: true,
-        })
-      } else {
-        navigate(
-          `/the-vault/${letterFromUrl?.toLowerCase()}?pg=${pagination.currentPage - 1}`,
-          { preventScrollReset: true }
-        )
-      }
-    }
-  }
+  const sortedPerfumes = useMemo(
+    () => sortItems(normalizedPerfumes as any, selectedSort),
+    [normalizedPerfumes, selectedSort]
+  )
+
+  const { handleNextPage, handlePrevPage } = usePaginatedNavigation({
+    currentPage: pagination.currentPage,
+    hasNextPage: pagination.hasNextPage,
+    hasPrevPage: pagination.hasPrevPage,
+    navigate,
+    buildPath: page => {
+      const letterSegment = letterFromUrl
+        ? `/${letterFromUrl.toLowerCase()}`
+        : ""
+      const pageSuffix = page > 1 ? `?pg=${page}` : ""
+      return `${ROUTE_PATH}${letterSegment}${pageSuffix}`
+    },
+  })
 
   // Preserve scroll position during loading to prevent jump to top
-  useEffect(() => {
-    if (loading) {
-      const savedPosition = window.scrollY || document.documentElement.scrollTop
-      // Prevent automatic scroll to top during loading
-      if (savedPosition > 0) {
-        window.scrollTo(0, savedPosition)
-      }
-    }
-  }, [loading])
+  usePreserveScrollPosition(loading)
 
   // Sync URL when page changes from pagination (but not on letter change)
   useSyncPaginationUrl({
     currentPage: pagination.currentPage,
     pageFromUrl,
     letter: letterFromUrl,
-    basePath: "/the-vault",
+    basePath: ROUTE_PATH,
   })
 
   const handleLetterClick = (letter: string | null) => {
     if (letter) {
-      navigate(`/the-vault/${letter.toLowerCase()}`, {
+      navigate(`${ROUTE_PATH}/${letter.toLowerCase()}`, {
         preventScrollReset: true,
       })
     } else {
-      navigate("/the-vault", { preventScrollReset: true })
+      navigate(ROUTE_PATH, { preventScrollReset: true })
     }
   }
 
@@ -140,6 +140,7 @@ const AllPerfumesPage = () => {
     enabled: !!letterFromUrl,
     isLoading: loading,
     hasData: perfumes.length > 0,
+    additionalOffset: 32,
   })
 
   // Scroll when pagination changes (wait for data to load)
@@ -148,6 +149,8 @@ const AllPerfumesPage = () => {
     enabled: !!letterFromUrl && !!pagination.currentPage,
     isLoading: loading,
     hasData: perfumes.length > 0,
+    additionalOffset: 32,
+    skipInitialScroll: true,
   })
 
   if (error) {
@@ -165,8 +168,8 @@ const AllPerfumesPage = () => {
       <DataFilters
         searchType="perfume"
         sortOptions={sortOptions}
-        selectedSort={selectedSort as any}
-        onSortChange={evt => setSelectedSort(evt.target.value)}
+        selectedSort={selectedSort}
+        onSortChange={evt => setSelectedSort(evt.target.value as SortOption)}
         className="mb-8"
       />
 
@@ -180,7 +183,7 @@ const AllPerfumesPage = () => {
 
       {/* Perfumes Display */}
       <DataDisplaySection
-        data={perfumes}
+        data={sortedPerfumes}
         isLoading={loading}
         type="perfume"
         selectedLetter={letterFromUrl}
