@@ -16,6 +16,7 @@ import i18nextMiddleware from "i18next-http-middleware"
 import morgan from "morgan"
 import path from "path"
 import serverless from "serverless-http"
+import { pathToFileURL } from "url"
 
 import i18n from "../app/modules/i18n/i18n.server.js"
 import {
@@ -66,17 +67,31 @@ let viteDevServerPromise = null
 
 if (process.env.NODE_ENV !== "production") {
   // Start Vite server creation in background (non-blocking)
+  console.warn("🚀 Initializing Vite dev server...")
   viteDevServerPromise = import("vite").then(vite => vite.createServer({
     root: process.cwd(),
     server: {
       middlewareMode: true,
     },
     appType: "custom",
-  })).then(server => {
+  })  ).then(server => {
     viteDevServer = server
+    console.warn("✅ Vite dev server created")
+    // Don't test the module here - let it load on first request
+    // Testing during init can cause timeouts
     return server
   }).catch(error => {
-    console.error("Failed to create Vite dev server:", error)
+    console.error("❌ Failed to create Vite dev server:", error.message)
+    console.error("   This may cause requests to hang. Check your Vite config.")
+    return null
+  })
+  
+  // Add timeout wrapper - longer timeout for dev mode
+  viteDevServerPromise = Promise.race([
+    viteDevServerPromise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error("Vite init timeout after 120s")), 120000)),
+  ]).catch(error => {
+    console.error("❌ Vite initialization timeout:", error.message)
     return null
   })
   
@@ -170,16 +185,19 @@ const viteMiddleware = (req, res, next) => {
   if (viteDevServerPromise) {
     Promise.race([
       viteDevServerPromise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error("Vite server initialization timeout")), 30000))
+      new Promise((_, reject) => setTimeout(() => reject(new Error("Vite server initialization timeout")), 60000))
     ])
     .then(server => {
       if (server) {
+        viteDevServer = server
         return server.middlewares(req, res, next)
       }
+      console.warn("⚠️  Vite server initialized but returned null, falling back to static files")
       next()
     })
     .catch(error => {
-      console.error("Vite middleware error:", error.message)
+      console.error("❌ Vite middleware error:", error.message)
+      console.error("   Falling back to static file serving")
       // Fall through to static file serving
       next()
     })
@@ -479,7 +497,9 @@ const findServerBuild = () => {
   if (subdirs.length !== 1) {
     throw new Error("Could not uniquely identify server build directory")
   }
-  return path.join(serverDir, subdirs[0].name, "index.js")
+  const buildPath = path.join(serverDir, subdirs[0].name, "index.js")
+  // Convert to file:// URL for Windows compatibility with ESM imports
+  return pathToFileURL(buildPath).href
 }
 
 // Lazy load build - wait for Vite if in dev mode
@@ -492,14 +512,47 @@ const getBuild = async () => {
   if (NODE_ENV !== "production") {
     // In dev, wait for Vite server to be ready
     if (viteDevServerPromise) {
-      buildPromise = viteDevServerPromise.then(async server => {
-        if (server) {
-          return await server.ssrLoadModule("virtual:react-router/server-build")
-        }
-        throw new Error("Vite server not available")
+      console.warn("⏳ Waiting for Vite server to load build...")
+      buildPromise = Promise.race([
+        viteDevServerPromise.then(async server => {
+          if (!server) {
+            throw new Error("Vite server not available")
+          }
+          console.warn("📦 Loading React Router build from Vite...")
+          try {
+            // Wait a moment for Vite plugins to be fully ready
+            await new Promise(resolve => setTimeout(resolve, 2000))
+            // The server should already be ready from initialization
+            // Longer timeout for dev - Vite can take time to compile on first load
+            const build = await Promise.race([
+              server.ssrLoadModule("virtual:react-router/server-build"),
+              new Promise((_, reject) => setTimeout(() => reject(new Error("ssrLoadModule timeout after 180s")), 180000)),
+            ])
+            console.warn("✅ React Router build loaded from Vite")
+            return build
+          } catch (loadError) {
+            console.error("❌ Failed to load build from Vite:", loadError.message)
+            console.warn("⚠️  Falling back to production build...")
+            // Fallback to production build
+            try {
+              return await import(findServerBuild())
+            } catch (fallbackError) {
+              console.error("❌ Production build import also failed:", fallbackError.message)
+              throw new Error(`Vite failed: ${loadError.message}. Production fallback failed: ${fallbackError.message}`)
+            }
+          }
+        }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("Vite server initialization timeout after 120s")), 120000)),
+      ]).catch(error => {
+        console.error("❌ Failed to load build from Vite:", error.message)
+        console.warn("⚠️  In dev mode, Vite build is required. Retrying...")
+        // In dev mode, don't fall back to production - Vite is required
+        // Re-throw to allow retry or show proper error
+        throw new Error(`Vite build failed in dev mode: ${error.message}. Please ensure Vite is properly configured.`)
       })
     } else {
       // Fallback to production build if Vite fails
+      console.warn("⚠️  Vite not available, falling back to production build")
       buildPromise = import(findServerBuild())
     }
   } else {
@@ -666,10 +719,25 @@ const getRequestHandler = async () => {
 // Create request handler wrapper that waits for build to be ready
 const requestHandler = async (req, res, next) => {
   try {
-    const handler = await getRequestHandler()
+    // Longer timeout for dev mode since Vite can take a while to initialize
+    const timeout = NODE_ENV === "production" ? 60000 : 180000 // 60s prod, 180s dev
+    const handler = await Promise.race([
+      getRequestHandler(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error(`Request handler timeout after ${timeout / 1000}s`)), timeout))
+    ])
     return handler(req, res, next)
   } catch (error) {
-    console.error("Error loading build:", error)
+    console.error("❌ Error loading request handler:", error.message)
+    console.error("   Stack:", error.stack)
+    if (!res.headersSent) {
+      res.status(503).json({
+        error: "Service Unavailable",
+        message: NODE_ENV === "development"
+          ? "Vite dev server is still initializing. This can take 1-2 minutes on first startup. Please wait and refresh."
+          : "Server is still initializing. Please try again in a moment.",
+        details: NODE_ENV === "development" ? error.message : undefined
+      })
+    }
     return next(error)
   }
 }
@@ -690,11 +758,31 @@ app.use((err, req, res, next) => {
 export const handler = serverless(app)
 
 if (NODE_ENV !== "production") {
+  console.warn(`🚀 Starting server on port ${PORT}...`)
   app.listen(PORT, () => {
-    console.warn(`🤘 server running: http://localhost:${PORT}`)
+    console.warn(`🤘 Server running: http://localhost:${PORT}`)
     if (process.env.STARTUP_VERBOSE === "true") {
-      console.warn(`✅ metrics ready: http://localhost:${METRICS_PORT}/metrics`)
+      console.warn(`✅ Metrics ready: http://localhost:${METRICS_PORT}/metrics`)
     }
+  }).on("error", err => {
+    if (err.code === "EADDRINUSE") {
+      console.error(`❌ Port ${PORT} is already in use. Please stop the existing server or use a different port.`)
+      console.error(`   To find and kill the process: netstat -ano | findstr :${PORT}`)
+    } else {
+      console.error("❌ Server startup error:", err)
+    }
+    process.exit(1)
   })
-  metricsApp.listen(METRICS_PORT)
+  
+  metricsApp.listen(METRICS_PORT).on("error", err => {
+    if (err.code === "EADDRINUSE") {
+      console.error(`❌ Metrics port ${METRICS_PORT} is already in use.`)
+    } else {
+      console.error("❌ Metrics server startup error:", err)
+    }
+    // Don't exit on metrics port error, just warn
+  })
+  
+  // Log startup completion
+  console.warn("✅ Express server setup complete, waiting for requests...")
 }

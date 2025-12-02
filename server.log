@@ -1,0 +1,45 @@
+🚀 Initializing Vite dev server...
+🚀 Starting server on port 2112...
+✅ Express server setup complete, waiting for requests...
+🤘 Server running: http://localhost:2112
+✅ Vite dev server initialized
+GET /test-session 500 931 - 26.230 ms
+⏳ Waiting for Vite server to load build...
+📦 Loading React Router build from Vite...
+GET / - - - - ms
+[2m6:59:30 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mapi/server.js[22m
+[2m6:59:37 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mapi/server.js[22m
+❌ Failed to load build: Build loading timeout after 60s
+❌ Error loading request handler: Build loading timeout after 60s
+   Stack: Error: Build loading timeout after 60s
+    at Timeout._onTimeout (file:///C:/Repos/new-smell/api/server.js:516:35)
+    at listOnTimeout (node:internal/timers:588:17)
+    at processTimers (node:internal/timers:523:7)
+Error: Build loading timeout after 60s
+    at Timeout._onTimeout (file:///C:/Repos/new-smell/api/server.js:516:35)
+    at listOnTimeout (node:internal/timers:588:17)
+    at processTimers (node:internal/timers:523:7)
+[2m7:00:01 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mapi/server.js[22m
+[2m7:00:20 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mapi/server.js[22m
+[2m7:00:26 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mapi/server.js[22m
+[2m7:00:45 AM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mapi/server.js[22m
+❌ Error loading request handler: Build loading timeout after 60s
+   Stack: Error: Build loading timeout after 60s
+    at Timeout._onTimeout (file:///C:/Repos/new-smell/api/server.js:516:35)
+    at listOnTimeout (node:internal/timers:588:17)
+    at processTimers (node:internal/timers:523:7)
+GET / 503 147 - 6.939 ms
+Error: Build loading timeout after 60s
+    at Timeout._onTimeout (file:///C:/Repos/new-smell/api/server.js:516:35)
+    at listOnTimeout (node:internal/timers:588:17)
+    at processTimers (node:internal/timers:523:7)
+❌ Error loading request handler: Build loading timeout after 60s
+   Stack: Error: Build loading timeout after 60s
+    at Timeout._onTimeout (file:///C:/Repos/new-smell/api/server.js:516:35)
+    at listOnTimeout (node:internal/timers:588:17)
+    at processTimers (node:internal/timers:523:7)
+GET / 503 147 - 7.370 ms
+Error: Build loading timeout after 60s
+    at Timeout._onTimeout (file:///C:/Repos/new-smell/api/server.js:516:35)
+    at listOnTimeout (node:internal/timers:588:17)
+    at processTimers (node:internal/timers:523:7)
