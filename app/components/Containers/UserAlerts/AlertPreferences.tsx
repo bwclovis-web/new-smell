@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { BsBell, BsEnvelope, BsGear, BsX } from "react-icons/bs"
 
 import { Button } from "~/components/Atoms/Button/Button"
+import VooDooCheck from "~/components/Atoms/VooDooCheck"
 import VooDooDetails from "~/components/Atoms/VooDooDetails/VooDooDetails"
 import type { UserAlertPreferences } from "~/types/database"
 
@@ -10,37 +11,6 @@ interface AlertPreferencesProps {
   preferences: UserAlertPreferences
   onPreferencesChange: (preferences: Partial<UserAlertPreferences>) => void
 }
-
-interface CheckboxFieldProps {
-  id: string
-  checked: boolean
-  onChange: (checked: boolean) => void
-  label: string
-  description: string
-}
-
-const CheckboxField = ({
-  id,
-  checked,
-  onChange,
-  label,
-  description,
-}: CheckboxFieldProps) => (
-  <label className="flex items-center gap-3" htmlFor={id}>
-    <input
-      id={id}
-      type="checkbox"
-      checked={checked}
-      onChange={e => onChange(e.target.checked)}
-      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-      aria-label={label}
-    />
-    <div>
-      <div className="font-medium text-gray-900">{label}</div>
-      <div className="text-sm text-gray-600">{description}</div>
-    </div>
-  </label>
-)
 
 interface StatusBadgeProps {
   enabled?: boolean
@@ -79,7 +49,14 @@ export const AlertPreferences = ({
   }, [preferences])
 
   const handleSave = () => {
-    onPreferencesChange(tempPreferences)
+    // Only send the fields that can be updated (exclude id, userId, user)
+    onPreferencesChange({
+      wishlistAlertsEnabled: tempPreferences.wishlistAlertsEnabled,
+      decantAlertsEnabled: tempPreferences.decantAlertsEnabled,
+      emailWishlistAlerts: tempPreferences.emailWishlistAlerts,
+      emailDecantAlerts: tempPreferences.emailDecantAlerts,
+      maxAlerts: tempPreferences.maxAlerts,
+    })
     setIsEditing(false)
   }
 
@@ -95,6 +72,13 @@ export const AlertPreferences = ({
     setTempPreferences(prev => ({
       ...prev,
       [key]: value,
+    }))
+  }
+
+  const togglePreference = (key: keyof UserAlertPreferences) => {
+    setTempPreferences(prev => ({
+      ...prev,
+      [key]: !prev[key],
     }))
   }
 
@@ -114,78 +98,66 @@ export const AlertPreferences = ({
               )}
             </div>
             <div className="space-y-3">
-              <h4 className="font-medium text-gray-900 flex items-center gap-2">
+              <h4 className="font-medium text-noir-gold flex items-center gap-2">
                 <BsBell className="h-4 w-4" />
                 {t("alerts.alertTypes", "Alert Types")}
               </h4>
 
               <div className="space-y-2 ml-6">
-                <CheckboxField
+                <VooDooCheck
                   id="wishlist-alerts"
                   checked={tempPreferences.wishlistAlertsEnabled}
-                  onChange={checked => updatePreference("wishlistAlertsEnabled", checked)}
-                  label={t("alerts.wishlistAlerts", "Wishlist Alerts")}
-                  description={t(
-                    "alerts.wishlistAlertsDescription",
-                    "Get notified when items from your wishlist become available for trade"
-                  )}
+                  onChange={() => togglePreference("wishlistAlertsEnabled")}
+                  labelChecked={t("alerts.wishlistAlerts", "Wishlist Alerts")}
+                  labelUnchecked={t("alerts.wishlistAlerts", "Wishlist Alerts")}
                 />
 
-                <CheckboxField
+                <VooDooCheck
                   id="decant-alerts"
                   checked={tempPreferences.decantAlertsEnabled}
-                  onChange={checked => updatePreference("decantAlertsEnabled", checked)}
-                  label={t("alerts.decantAlerts", "Decant Interest Alerts")}
-                  description={t(
-                    "alerts.decantAlertsDescription",
-                    "Get notified when someone shows interest in your decants"
-                  )}
+                  onChange={() => togglePreference("decantAlertsEnabled")}
+                  labelChecked={t("alerts.decantAlerts", "Decant Interest Alerts")}
+                  labelUnchecked={t("alerts.decantAlerts", "Decant Interest Alerts")}
                 />
               </div>
             </div>
 
             <div className="space-y-3">
-              <h4 className="font-medium text-gray-900 flex items-center gap-2">
+              <h4 className="font-medium text-noir-gold flex items-center gap-2">
                 <BsEnvelope className="h-4 w-4" />
                 {t("alerts.emailNotifications", "Email Notifications")}
               </h4>
 
               <div className="space-y-2 ml-6">
-                <CheckboxField
+                <VooDooCheck
                   id="email-wishlist-alerts"
                   checked={tempPreferences.emailWishlistAlerts}
-                  onChange={checked => updatePreference("emailWishlistAlerts", checked)}
-                  label={t("alerts.emailWishlistAlerts", "Email Wishlist Alerts")}
-                  description={t(
-                    "alerts.emailWishlistAlertsDescription",
-                    "Receive email notifications for wishlist alerts"
-                  )}
+                  onChange={() => togglePreference("emailWishlistAlerts")}
+                  labelChecked={t("alerts.emailWishlistAlerts", "Email Wishlist Alerts")}
+                  labelUnchecked={t("alerts.emailWishlistAlerts", "Email Wishlist Alerts")}
                 />
 
-                <CheckboxField
+                <VooDooCheck
                   id="email-decant-alerts"
                   checked={tempPreferences.emailDecantAlerts}
-                  onChange={checked => updatePreference("emailDecantAlerts", checked)}
-                  label={t("alerts.emailDecantAlerts", "Email Decant Alerts")}
-                  description={t(
-                    "alerts.emailDecantAlertsDescription",
-                    "Receive email notifications for decant interest alerts"
-                  )}
+                  onChange={() => togglePreference("emailDecantAlerts")}
+                  labelChecked={t("alerts.emailDecantAlerts", "Email Decant Alerts")}
+                  labelUnchecked={t("alerts.emailDecantAlerts", "Email Decant Alerts")}
                 />
               </div>
             </div>
 
             <div className="space-y-3">
-              <h4 className="font-medium text-gray-900">
+              <h4 className="font-medium text-noir-gold-100">
                 {t("alerts.alertLimits", "Alert Limits")}
               </h4>
 
               <div className="ml-6">
                 <label className="block" htmlFor="max-alerts">
-                  <div className="font-medium text-gray-900 mb-1">
+                  <div className="font-medium text-noir-gold-100 mb-1">
                     {t("alerts.maxAlerts", "Maximum Alerts to Keep")}
                   </div>
-                  <div className="text-sm text-gray-600 mb-2">
+                  <div className="text-sm text-noir-gold-100 mb-2">
                     {t(
                       "alerts.maxAlertsDescription",
                       "Older alerts will be automatically dismissed when this limit is reached"
@@ -195,7 +167,7 @@ export const AlertPreferences = ({
                     id="max-alerts"
                     value={tempPreferences.maxAlerts}
                     onChange={e => updatePreference("maxAlerts", parseInt(e.target.value, 10))}
-                    className="rounded border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+                    className="rounded border-noir-gold-100 text-noir-gold-100 focus:ring-noir-gold-100 focus:border-noir-gold-100"
                   >
                     <option value={5}>5 alerts</option>
                     <option value={10}>10 alerts</option>
@@ -223,7 +195,7 @@ export const AlertPreferences = ({
         ) : (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-noir-gold-100">
                 {t(
                   "alerts.preferencesDescription",
                   "Configure how and when you receive alerts."
@@ -241,54 +213,54 @@ export const AlertPreferences = ({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-3">
-                <h4 className="font-medium text-gray-900 flex items-center gap-2">
+                <h4 className="font-medium text-noir-gold flex items-center gap-2">
                   <BsBell className="h-4 w-4" />
                   {t("alerts.alertTypes", "Alert Types")}
                 </h4>
 
                 <div className="space-y-2 ml-6">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">
+                    <span className="text-sm text-noir-gold-100">
                       {t("alerts.wishlistAlerts", "Wishlist Alerts")}
                     </span>
-                    <StatusBadge enabled={preferences.wishlistAlertsEnabled} />
+                    <StatusBadge enabled={tempPreferences.wishlistAlertsEnabled} />
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">
+                    <span className="text-sm text-noir-gold-100">
                       {t("alerts.decantAlerts", "Decant Interest Alerts")}
                     </span>
-                    <StatusBadge enabled={preferences.decantAlertsEnabled} />
+                    <StatusBadge enabled={tempPreferences.decantAlertsEnabled} />
                   </div>
                 </div>
               </div>
 
               <div className="space-y-3">
-                <h4 className="font-medium text-gray-900 flex items-center gap-2">
+                <h4 className="font-medium text-noir-gold flex items-center gap-2">
                   <BsEnvelope className="h-4 w-4" />
                   {t("alerts.emailNotifications", "Email Notifications")}
                 </h4>
 
                 <div className="space-y-2 ml-6">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">
+                    <span className="text-sm text-noir-gold-100">
                       {t("alerts.emailWishlistAlerts", "Email Wishlist Alerts")}
                     </span>
-                    <StatusBadge enabled={preferences.emailWishlistAlerts} />
+                    <StatusBadge enabled={tempPreferences.emailWishlistAlerts} />
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">
+                    <span className="text-sm text-noir-gold-100">
                       {t("alerts.emailDecantAlerts", "Email Decant Alerts")}
                     </span>
-                    <StatusBadge enabled={preferences.emailDecantAlerts} />
+                    <StatusBadge enabled={tempPreferences.emailDecantAlerts} />
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">
+                    <span className="text-sm text-noir-gold-100">
                       {t("alerts.maxAlerts", "Max Alerts")}
                     </span>
-                    <StatusBadge value={preferences.maxAlerts} />
+                    <StatusBadge value={tempPreferences.maxAlerts} />
                   </div>
                 </div>
               </div>
