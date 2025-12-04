@@ -175,8 +175,8 @@ export const UserAlerts = ({
             {/* Alert List */}
             {alerts.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                <p>{t("alerts.noAlerts", "No alerts at the moment.")}</p>
-                <p className="text-sm mt-2">
+                <p className="text-noir-gold text-lg">{t("alerts.noAlerts", "No alerts at the moment.")}</p>
+                <p className="text-sm mt-2 text-noir-gold-100">
                   {t(
                     "alerts.noAlertsDescription",
                     "You'll receive alerts when items from your wishlist become available or when someone shows interest in your decants."
