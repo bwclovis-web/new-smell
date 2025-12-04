@@ -9,10 +9,10 @@ import { useFormState } from "~/hooks"
 import type { UserPerfumeI } from "~/types"
 
 interface DeStashFormProps {
-   
   handleDecantConfirm: (deStashData: DeStashData) => void
-  handleDecantCancel?: () => void
   userPerfume: UserPerfumeI
+  isEditing?: boolean
+  isCreating?: boolean
 }
 
 interface DeStashData {
@@ -20,26 +20,55 @@ interface DeStashData {
   price?: string
   tradePreference: "cash" | "trade" | "both"
   tradeOnly: boolean
+  createNew?: boolean
 }
 
-const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => {
+const TRADE_OPTIONS = [
+  {
+    id: "cash",
+    value: "cash",
+    label: "myScents.listItem.decantOptionsTradePreferencesCash",
+    name: "tradePreference",
+  },
+  {
+    id: "trade",
+    value: "trade",
+    label: "myScents.listItem.decantOptionsTradePreferencesTrade",
+    name: "tradePreference",
+  },
+  {
+    id: "both",
+    value: "both",
+    label: "myScents.listItem.decantOptionsTradePreferencesBoth",
+    name: "tradePreference",
+  },
+] as const
+
+const DeStashForm = ({
+  handleDecantConfirm,
+  userPerfume,
+  isEditing = false,
+  isCreating = false,
+}: DeStashFormProps) => {
   const initialValues = useMemo(
     () => ({
-      deStashAmount: userPerfume.available || "0",
+      deStashAmount: isCreating ? "0" : userPerfume.available || "0",
       price: userPerfume.tradePrice || "",
       tradePreference:
         (userPerfume.tradePreference as "cash" | "trade" | "both") || "cash",
       tradeOnly: userPerfume.tradeOnly || false,
+      createNew: isCreating,
     }),
     [
+      userPerfume.id,
       userPerfume.available,
       userPerfume.tradePrice,
       userPerfume.tradePreference,
       userPerfume.tradeOnly,
+      isCreating,
     ]
   )
 
-  // Memoize validation function
   const validate = useCallback(
     (values: typeof initialValues) => {
       const errors: Partial<Record<keyof typeof values, string>> = {}
@@ -48,11 +77,7 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
       if (isNaN(amount) || amount < 0) {
         errors.deStashAmount = t("myScents.listItem.decantOptionsAmountError")
       }
-      if (amount > parseFloat(userPerfume.amount)) {
-        errors.deStashAmount = t("myScents.listItem.decantOptionsAmountError")
-      }
 
-      // Price is optional, but if provided, it should be a valid number
       if (values.price && values.price !== "") {
         const price = parseFloat(values.price)
         if (isNaN(price) || price < 0) {
@@ -62,10 +87,9 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
 
       return errors
     },
-    [userPerfume.amount]
+    []
   )
 
-  // Memoize submit handler
   const onSubmit = useCallback(
     (values: typeof initialValues) => {
       const deStashData: DeStashData = {
@@ -73,9 +97,9 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
         price: values.price || undefined,
         tradePreference: values.tradePreference,
         tradeOnly: values.tradeOnly,
+        createNew: values.createNew,
       }
       handleDecantConfirm(deStashData)
-      // Form will be reset by parent component after successful destash processing
     },
     [handleDecantConfirm]
   )
@@ -87,52 +111,103 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
     resetOnSubmit: false,
   })
 
-  const tradeOptions = [
-    { id: "cash", value: "cash", label: t("myScents.listItem.decantOptionsTradePreferencesCash"), name: "tradePreference" },
-    {
-      id: "trade",
-      value: "trade",
-      label: t("myScents.listItem.decantOptionsTradePreferencesTrade"),
-      name: "tradePreference",
-    },
-    {
-      id: "both",
-      value: "both",
-      label: t("myScents.listItem.decantOptionsTradePreferencesBoth"),
-      name: "tradePreference",
-    },
-  ]
+  const isNewDecant = isCreating || values.createNew
+  const maxAmount = isNewDecant ? 100 : parseFloat(userPerfume.amount)
+  const deStashAmount = parseFloat(values.deStashAmount) || 0
+  const showPriceAndTrade = deStashAmount > 0
+  const showTradeOnly = showPriceAndTrade && values.tradePreference !== "cash"
+  const isFormMode = !isEditing && !isCreating
+
+  const getButtonText = useCallback(() => {
+    if (isEditing) {
+      return t("myScents.destashManager.saveChanges")
+    }
+    if (isCreating) {
+      return t("myScents.destashManager.createDestash")
+    }
+    if (deStashAmount === 0) {
+      return t("myScents.listItem.removeFromTradingPost")
+    }
+    return t("myScents.listItem.confirmDeStash")
+  }, [isEditing, isCreating, deStashAmount])
+
+  const tradeOptions = useMemo(
+    () => TRADE_OPTIONS.map(option => ({
+      ...option,
+      label: t(option.label),
+      defaultChecked: option.value === values.tradePreference,
+    })),
+    [values.tradePreference]
+  )
+
+  const renderHeader = () => {
+    if (!isFormMode) {
+      return null
+    }
+    return (
+      <>
+        <h3 className="!text-noir-dark">
+          {t("myScents.listItem.decantOptionsTitle")}
+        </h3>
+        <p className="text-sm text-noir-black">
+          {t("myScents.listItem.decantOptionsDescriptionOne")}
+        </p>
+        <p className="text-sm text-noir-black">
+          {t("myScents.listItem.decantOptionsDescriptionTwo")}
+        </p>
+      </>
+    )
+  }
+
+  const renderCreateNewOption = () => {
+    if (!isFormMode) {
+      return null
+    }
+    return (
+      <div className="mb-4">
+        <VooDooCheck
+          labelChecked={t("myScents.listItem.createNewDecant")}
+          labelUnchecked={t("myScents.listItem.updateExistingDecant")}
+          checked={values.createNew}
+          onChange={() => setValue("createNew", !values.createNew)}
+        />
+        {values.createNew && (
+          <p className="text-sm text-noir-gold-500 mt-2">
+            {t("myScents.listItem.createNewDecantDescription")}
+          </p>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div className="p-4">
-      <h3 className="!text-noir-dark">{t("myScents.listItem.decantOptionsTitle")}</h3>
-      <p className="text-sm text-noir-black">
-        {t("myScents.listItem.decantOptionsDescriptionOne")}
-      </p>
-      <p className="text-sm text-noir-black">
-        {t("myScents.listItem.decantOptionsDescriptionTwo")}
-      </p>
+      {renderHeader()}
       <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-        {/* Amount Slider */}
+        {renderCreateNewOption()}
+
         <div>
           <RangeSlider
             min={0}
-            max={parseFloat(userPerfume.amount)}
+            max={maxAmount}
             step={0.1}
-            value={parseFloat(values.deStashAmount) || 0}
+            value={deStashAmount}
             onChange={value => setValue("deStashAmount", value.toFixed(1))}
             formatValue={value => value.toFixed(1)}
             label={t("myScents.listItem.decantOptionsAmountLabel")}
-            showManualInput={true}  
-            inputPlaceholder={t("myScents.listItem.decantOptionsAmountPlaceholder", { amount: userPerfume.amount })}
+            showManualInput={true}
+            inputPlaceholder={t("myScents.listItem.decantOptionsAmountPlaceholder", {
+              amount: isNewDecant ? "100" : userPerfume.amount,
+            })}
           />
           {errors.deStashAmount && (
-            <p className="text-red-500 text-sm mt-1">{errors.deStashAmount}</p>
+            <p className="text-red-500 text-sm mt-1">
+              {errors.deStashAmount}
+            </p>
           )}
         </div>
 
-        {/* Price Input */}
-        {parseFloat(values.deStashAmount) > 0 && (
+        {showPriceAndTrade && (
           <div>
             <label
               htmlFor="price"
@@ -154,52 +229,48 @@ const DeStashForm = ({ handleDecantConfirm, userPerfume }: DeStashFormProps) => 
           </div>
         )}
 
-        {parseFloat(values.deStashAmount) > 0 && (
+        {showPriceAndTrade && (
           <div>
             <fieldset>
               <legend className="block text-sm font-medium text-gray-700 mb-2">
                 {t("myScents.listItem.decantOptionsTradePreferencesLabel")}
               </legend>
               <RadioSelect
-                data={tradeOptions.map(option => ({
-                  ...option,
-                  defaultChecked: option.value === values.tradePreference,
-                }))}
-                handleRadioChange={event => setValue(
+                data={tradeOptions}
+                handleRadioChange={event => {
+                  setValue(
                     "tradePreference",
                     event.target.value as "cash" | "trade" | "both"
                   )
-                }
+                }}
               />
             </fieldset>
           </div>
         )}
 
-        {parseFloat(values.deStashAmount) > 0 &&
-          values.tradePreference !== "cash" && (
-            <div>
-              <VooDooCheck
-                labelChecked={t("myScents.listItem.decantOptionsTradePreferencesOnlyTrades")}
-                labelUnchecked={t("myScents.listItem.decantOptionsTradePreferencesAcceptBoth")}
-                checked={values.tradeOnly}
-                onChange={() => setValue("tradeOnly", !values.tradeOnly)}
-              />
-            </div>
-          )}
+        {showTradeOnly && (
+          <div>
+            <VooDooCheck
+              labelChecked={t("myScents.listItem.decantOptionsTradePreferencesOnlyTrades")}
+              labelUnchecked={t("myScents.listItem.decantOptionsTradePreferencesAcceptBoth")}
+              checked={values.tradeOnly}
+              onChange={() => setValue("tradeOnly", !values.tradeOnly)}
+            />
+          </div>
+        )}
 
         <div className="flex gap-2">
           <Button
             type="submit"
-            disabled={!isValid || parseFloat(values.deStashAmount) < 0}
+            disabled={!isValid || deStashAmount < 0}
             variant="primary"
           >
-            {parseFloat(values.deStashAmount) === 0
-              ? t("myScents.listItem.removeFromTradingPost")
-              : t("myScents.listItem.confirmDeStash")}
+            {getButtonText()}
           </Button>
         </div>
       </form>
     </div>
   )
 }
+
 export default DeStashForm

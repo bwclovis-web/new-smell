@@ -10,16 +10,9 @@ import Modal from "~/components/Organisms/Modal"
 import { useSessionStore } from "~/stores/sessionStore"
 import type { UserPerfumeI } from "~/types"
 
-import DeStashForm from "../DeStashForm/DeStashForm"
+import DestashManager from "../DestashManager/DestashManager"
 import GeneralDetails from "./bones/GeneralDetails"
 import PerfumeComments from "./bones/PerfumeComments"
-
-interface DeStashData {
-  amount: string
-  price?: string
-  tradePreference: "cash" | "trade" | "both"
-  tradeOnly: boolean
-}
 
 interface MySentListItemI {
   userPerfume: UserPerfumeI
@@ -38,44 +31,11 @@ const MyScentsListItem = ({
   const { modalOpen, toggleModal, modalId, closeModal } = useSessionStore()
   const isSubmitting = navigation.state === "submitting"
 
-  const updateUserPerfumeState = (amount: string) => {
-    setUserPerfumes(prev =>  prev.map(perfume => perfume.id === userPerfume.id ? 
-        { ...perfume, available: amount } : perfume))
-  }
-
-  const createDecantFormData = (data: DeStashData, perfumeId: string) => {
-    const formData = new FormData()
-    formData.append("perfumeId", perfumeId)
-    formData.append("availableAmount", data.amount)
-    formData.append("action", "decant")
-
-    if (data.price) {
-      formData.append("tradePrice", data.price)
-    }
-    formData.append("tradePreference", data.tradePreference)
-    formData.append("tradeOnly", data.tradeOnly.toString())
-
-    return formData
-  }
-
-  const handleDecantConfirm = (data: DeStashData) => {
-    const foundUserPerfume = userPerfumes.find(item => item.id === userPerfume.id)
-    if (!foundUserPerfume) {
-       
-      console.error("User perfume not found for de-stashing")
-      return
-    }
-
-    updateUserPerfumeState(data.amount)
-    const formData = createDecantFormData(data, foundUserPerfume.perfume.id)
-    fetcher.submit(formData, { method: "post", action: "/admin/my-scents" })
-  }
-
-  const handleRemovePerfume = (perfumeId: string) => {
-    setUserPerfumes(prev => prev.filter(perfume => perfume.perfume.id !== perfumeId))
+  const handleRemovePerfume = (userPerfumeId: string) => {
+    setUserPerfumes(prev => prev.filter(perfume => perfume.id !== userPerfumeId))
 
     const formData = new FormData()
-    formData.append("perfumeId", perfumeId)
+    formData.append("userPerfumeId", userPerfumeId)
     formData.append("action", "remove")
     fetcher.submit(formData, { method: "post", action: "/admin/my-scents" })
     closeModal()
@@ -88,7 +48,7 @@ const MyScentsListItem = ({
         <DangerModal 
         heading="Are you sure you want to remove this perfume?"
         description="Once removed, you will lose all history, notes and entries in the exchange."
-        action={() => handleRemovePerfume(userPerfume.perfume.id)} />
+        action={() => handleRemovePerfume(userPerfume.id)} />
       </Modal>
     )}
     <li
@@ -124,7 +84,7 @@ const MyScentsListItem = ({
           <Button
             onClick={() => {
               const buttonRef = { current: document.createElement("button") }
-              toggleModal(buttonRef as any, "delete-item", "delete-item")
+              toggleModal(buttonRef as any, "delete-item")
             }}
             disabled={isSubmitting}
             variant="danger"
@@ -154,13 +114,14 @@ const MyScentsListItem = ({
           <PerfumeComments userPerfume={userPerfume} />
         </VooDooDetails>
         <VooDooDetails
-          summary={t("myScents.listItem.setDestashed")}
+          summary={t("myScents.listItem.manageDestashes")}
           className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded noir-border-dk relative open:bg-noir-gold-100"
           name="inner-details"
         >
-          <DeStashForm
-            handleDecantConfirm={handleDecantConfirm}
-            userPerfume={userPerfume}
+          <DestashManager
+            perfumeId={userPerfume.perfume.id}
+            userPerfumes={userPerfumes}
+            setUserPerfumes={setUserPerfumes}
           />
         </VooDooDetails>
       </VooDooDetails>

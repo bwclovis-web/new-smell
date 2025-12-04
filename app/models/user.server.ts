@@ -348,19 +348,8 @@ export const addUserPerfume = async ({
   placeOfPurchase,
 }: AddUserPerfumeParams) => {
   try {
-    // Check if the perfume exists in collection
-    const existingPerfume = await findUserPerfume(userId, perfumeId)
-
-    if (existingPerfume) {
-      return handleExistingPerfume({
-        existingPerfume,
-        amount,
-        price,
-        placeOfPurchase,
-      })
-    }
-
-    // Add the perfume to the user's collection
+    // Always create a new UserPerfume record to allow multiple decants of the same perfume
+    // This enables customers to create several decants of the same perfume
     const userPerfume = await prisma.userPerfume.create({
       data: {
         userId,
@@ -382,13 +371,85 @@ export const addUserPerfume = async ({
   }
 }
 
-export const removeUserPerfume = async (userId: string, perfumeId: string) => {
+interface CreateDestashParams {
+  userId: string
+  perfumeId: string
+  available: string
+  tradePrice?: string
+  tradePreference?: string
+  tradeOnly?: boolean
+}
+
+export const createDestashEntry = async ({
+  userId,
+  perfumeId,
+  available,
+  tradePrice,
+  tradePreference,
+  tradeOnly,
+}: CreateDestashParams) => {
   try {
-    // Check if the perfume exists in the user's collection
-    const existingPerfume = await prisma.userPerfume.findFirst({
-      where: {
+    const userPerfume = await prisma.userPerfume.create({
+      data: {
         userId,
         perfumeId,
+        amount: "0",
+        available,
+        tradePrice: tradePrice || null,
+        tradePreference: tradePreference || "cash",
+        tradeOnly: tradeOnly || false,
+      },
+      select: {
+        id: true,
+        userId: true,
+        perfumeId: true,
+        amount: true,
+        available: true,
+        price: true,
+        placeOfPurchase: true,
+        tradePrice: true,
+        tradePreference: true,
+        tradeOnly: true,
+        type: true,
+        createdAt: true,
+        perfume: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            image: true,
+            description: true,
+            perfumeHouse: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+              },
+            },
+          },
+        },
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
+    })
+
+    return { success: true, userPerfume }
+  } catch (error) {
+    console.error("Error creating destash entry:", error)
+    return { success: false, error: "Failed to create destash entry" }
+  }
+}
+
+export const removeUserPerfume = async (userId: string, userPerfumeId: string) => {
+  try {
+    // Check if the user perfume exists and belongs to the user
+    const existingPerfume = await prisma.userPerfume.findFirst({
+      where: {
+        id: userPerfumeId,
+        userId,
       },
     })
 
@@ -424,22 +485,23 @@ export const removeUserPerfume = async (userId: string, perfumeId: string) => {
   }
 }
 
-// Helper to prepare update data for available amount
 const prepareUpdateData = (
   availableAmount: string,
-  tradePrice?: string,
-  tradePreference?: string,
-  tradeOnly?: boolean
+  tradePrice?: string | null,
+  tradePreference?: string | null,
+  tradeOnly?: boolean | null
 ) => {
   const updateData: any = { available: availableAmount }
 
-  if (tradePrice !== undefined) {
-    updateData.tradePrice = tradePrice || null
+  if (tradePrice !== undefined && tradePrice !== null) {
+    updateData.tradePrice = tradePrice
   }
-  if (tradePreference !== undefined) {
+
+  if (tradePreference && typeof tradePreference === 'string' && tradePreference.trim()) {
     updateData.tradePreference = tradePreference
   }
-  if (tradeOnly !== undefined) {
+
+  if (typeof tradeOnly === 'boolean') {
     updateData.tradeOnly = tradeOnly
   }
 
@@ -447,15 +509,50 @@ const prepareUpdateData = (
 }
 
 // Helper to update perfume in database
+// Use the same select structure as getUserPerfumes for consistency
 const updatePerfumeInDatabase = async (perfumeId: string, updateData: any) => await prisma.userPerfume.update({
     where: { id: perfumeId },
     data: updateData,
-    include: { perfume: true },
+    select: {
+      id: true,
+      userId: true,
+      perfumeId: true,
+      amount: true,
+      available: true,
+      price: true,
+      placeOfPurchase: true,
+      tradePrice: true,
+      tradePreference: true,
+      tradeOnly: true,
+      type: true,
+      createdAt: true,
+      perfume: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          image: true,
+          description: true,
+          perfumeHouse: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
   })
 
 export const updateAvailableAmount = async (params: {
   userId: string
-  perfumeId: string
+  userPerfumeId: string
   availableAmount: string
   tradePrice?: string
   tradePreference?: string
@@ -464,15 +561,20 @@ export const updateAvailableAmount = async (params: {
   try {
     const {
       userId,
-      perfumeId,
+      userPerfumeId,
       availableAmount,
       tradePrice,
       tradePreference,
       tradeOnly,
     } = params
 
-    // Check if the user owns this perfume
-    const existingPerfume = await findUserPerfume(userId, perfumeId)
+    // Check if the user owns this user perfume entry
+    const existingPerfume = await prisma.userPerfume.findFirst({
+      where: {
+        id: userPerfumeId,
+        userId,
+      },
+    })
 
     if (!existingPerfume) {
       return { success: false, error: "Perfume not found in your collection" }

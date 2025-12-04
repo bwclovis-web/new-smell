@@ -119,11 +119,13 @@ const handleAddAction = async (user: any, perfumeId: string, amount?: string) =>
   return result
 }
 
-const handleRemoveAction = async (user: any, perfumeId: string) => removeUserPerfume(user.id, perfumeId)
+const handleRemoveAction = async (user: any, userPerfumeId: string) =>
+  removeUserPerfume(user.id, userPerfumeId)
 
 const handleDecantAction = async (params: {
   user: any
-  perfumeId: string
+  userPerfumeId: string
+  perfumeId?: string
   amount?: string
   tradePrice?: string
   tradePreference?: string
@@ -131,6 +133,7 @@ const handleDecantAction = async (params: {
 }) => {
   const {
     user,
+    userPerfumeId,
     perfumeId,
     amount = "0",
     tradePrice,
@@ -139,7 +142,7 @@ const handleDecantAction = async (params: {
   } = params
   const result = await updateAvailableAmount({
     userId: user.id,
-    perfumeId,
+    userPerfumeId,
     availableAmount: amount,
     tradePrice,
     tradePreference,
@@ -147,7 +150,7 @@ const handleDecantAction = async (params: {
   })
 
   // Process wishlist availability alerts when a perfume becomes available
-  if (amount && parseFloat(amount) > 0) {
+  if (amount && parseFloat(amount) > 0 && perfumeId) {
     try {
       await processWishlistAvailabilityAlerts(perfumeId)
     } catch (error) {
@@ -230,10 +233,11 @@ const processUserPerfumeAction = async (params: PerfumeActionParams) => {
     case "add":
       return handleAddAction(user, perfumeId, amount)
     case "remove":
-      return handleRemoveAction(user, perfumeId)
+      return handleRemoveAction(user, userPerfumeId || perfumeId)
     case "decant":
       return handleDecantAction({
         user,
+        userPerfumeId: userPerfumeId || perfumeId,
         perfumeId,
         amount,
         tradePrice,
