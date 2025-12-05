@@ -31,6 +31,28 @@ export const UserAlerts = ({
   const [isLoading, setIsLoading] = useState(false)
   const { addToHeaders } = useCSRF()
 
+  // Load preferences on mount if not provided
+  useEffect(() => {
+    if (!preferences && userId) {
+      const loadPreferences = async () => {
+        try {
+          const response = await fetch(`/api/user-alerts/${userId}/preferences`, {
+            headers: addToHeaders(),
+          })
+          if (response.ok) {
+            const loadedPreferences = await response.json()
+            setPreferences(loadedPreferences)
+          }
+        } catch (error) {
+          console.error("Failed to load preferences:", error)
+        }
+      }
+      loadPreferences()
+    }
+    // Only run when userId or initialPreferences change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, initialPreferences])
+
   // Real-time updates using polling (you could replace this with WebSocket/SSE later)
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -49,7 +71,7 @@ export const UserAlerts = ({
     }, 30000) // Poll every 30 seconds
 
     return () => clearInterval(interval)
-  }, [userId])
+  }, [userId, addToHeaders])
 
   const handleMarkAsRead = async (alertId: string) => {
     try {
@@ -107,10 +129,10 @@ export const UserAlerts = ({
     }
   }
 
-  const handlePreferencesChange = async (newPreferences: Partial<UserAlertPreferences>) => {
+  const handlePreferencesChange = async (newPreferences: Partial<UserAlertPreferences>): Promise<boolean> => {
     try {
       const response = await fetch(`/api/user-alerts/${userId}/preferences`, {
-        method: "PUT",
+        method: "POST",
         headers: addToHeaders({
           "Content-Type": "application/json",
         }),
@@ -120,9 +142,13 @@ export const UserAlerts = ({
       if (response.ok) {
         const updatedPreferences = await response.json()
         setPreferences(updatedPreferences)
+        return true
       }
+      console.error("Failed to update preferences:", response.status, response.statusText)
+      return false
     } catch (error) {
       console.error("Failed to update preferences:", error)
+      return false
     }
   }
 

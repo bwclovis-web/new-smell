@@ -15,9 +15,9 @@ export default defineConfig({
     // Tailwind CSS plugin - must be early in the plugin chain for proper HMR
     tailwindcss(),
     tsconfigPaths(),
-    // React Compiler - automatically optimizes components and eliminates need for manual memoization
-    // Enable in both dev and production for consistent behavior and automatic optimizations
-    babel({
+    // React Compiler - only enable in production builds for faster dev startup
+    // The compiler is slow and adds ~30-60s to cold start time
+    !isDev && babel({
       filter: /\.[jt]sx?$/,
       babelConfig: {
         presets: ["@babel/preset-typescript"],
@@ -162,10 +162,16 @@ export default defineConfig({
       "@prisma/client",
     ],
   },
+  resolve: {
+    // Force ESM resolution for React 19 to avoid CommonJS interop issues
+    conditions: ["import", "module", "browser", "default"],
+  },
   optimizeDeps: {
     esbuildOptions: {
       target: "es2022",
     },
+    // Force re-bundling only when dependencies change (speeds up subsequent starts)
+    force: false,
     // Pre-bundle frequently used dependencies for faster cold starts
     include: [
       // React ecosystem

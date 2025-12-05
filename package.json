@@ -146,7 +146,6 @@
     "@types/papaparse": "^5.3.16",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.0.1",
-    "@types/sharp": "^0.31.1",
     "@vitest/ui": "^3.2.2",
     "babel-plugin-react-compiler": "^19.1.0-rc.3",
     "cross-env": "^7.0.3",

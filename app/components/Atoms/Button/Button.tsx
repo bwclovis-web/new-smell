@@ -1,6 +1,5 @@
 import { type VariantProps } from "class-variance-authority"
-import { type ButtonHTMLAttributes, type LinkHTMLAttributes, type Ref } from "react"
-import { ReactNode } from "react"
+import { type ButtonHTMLAttributes, type LinkHTMLAttributes, type ReactNode, type Ref } from "react"
 import { NavLink } from "react-router"
 
 import { styleMerge } from "~/utils/styleUtils"

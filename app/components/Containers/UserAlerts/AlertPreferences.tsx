@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { BsBell, BsEnvelope, BsGear, BsX } from "react-icons/bs"
 
@@ -9,7 +9,9 @@ import type { UserAlertPreferences } from "~/types/database"
 
 interface AlertPreferencesProps {
   preferences: UserAlertPreferences
-  onPreferencesChange: (preferences: Partial<UserAlertPreferences>) => void
+  onPreferencesChange: (
+    preferences: Partial<UserAlertPreferences>
+  ) => Promise<boolean>
 }
 
 interface StatusBadgeProps {
@@ -42,43 +44,58 @@ export const AlertPreferences = ({
 }: AlertPreferencesProps) => {
   const { t } = useTranslation()
   const [isEditing, setIsEditing] = useState(false)
-  const [tempPreferences, setTempPreferences] = useState(preferences)
+  const [isSaving, setIsSaving] = useState(false)
+  
+  // Local edit state - only used during editing
+  const [editState, setEditState] = useState({
+    wishlistAlertsEnabled: preferences.wishlistAlertsEnabled,
+    decantAlertsEnabled: preferences.decantAlertsEnabled,
+    emailWishlistAlerts: preferences.emailWishlistAlerts,
+    emailDecantAlerts: preferences.emailDecantAlerts,
+    maxAlerts: preferences.maxAlerts,
+  })
 
-  useEffect(() => {
-    setTempPreferences(preferences)
-  }, [preferences])
-
-  const handleSave = () => {
-    // Only send the fields that can be updated (exclude id, userId, user)
-    onPreferencesChange({
-      wishlistAlertsEnabled: tempPreferences.wishlistAlertsEnabled,
-      decantAlertsEnabled: tempPreferences.decantAlertsEnabled,
-      emailWishlistAlerts: tempPreferences.emailWishlistAlerts,
-      emailDecantAlerts: tempPreferences.emailDecantAlerts,
-      maxAlerts: tempPreferences.maxAlerts,
+  const handleEdit = () => {
+    // Initialize edit state from current preferences
+    setEditState({
+      wishlistAlertsEnabled: preferences.wishlistAlertsEnabled,
+      decantAlertsEnabled: preferences.decantAlertsEnabled,
+      emailWishlistAlerts: preferences.emailWishlistAlerts,
+      emailDecantAlerts: preferences.emailDecantAlerts,
+      maxAlerts: preferences.maxAlerts,
     })
-    setIsEditing(false)
+    setIsEditing(true)
   }
 
   const handleCancel = () => {
-    setTempPreferences(preferences)
     setIsEditing(false)
   }
 
-  const updatePreference = (
-    key: keyof UserAlertPreferences,
-    value: boolean | number
-  ) => {
-    setTempPreferences(prev => ({
+  const handleSave = async () => {
+    setIsSaving(true)
+    try {
+      const success = await onPreferencesChange(editState)
+      if (success) {
+        setIsEditing(false)
+      }
+    } catch (error) {
+      console.error("Failed to save preferences:", error)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const togglePreference = (key: keyof typeof editState) => {
+    setEditState(prev => ({
       ...prev,
-      [key]: value,
+      [key]: !prev[key],
     }))
   }
 
-  const togglePreference = (key: keyof UserAlertPreferences) => {
-    setTempPreferences(prev => ({
+  const updateMaxAlerts = (value: number) => {
+    setEditState(prev => ({
       ...prev,
-      [key]: !prev[key],
+      maxAlerts: value,
     }))
   }
 
@@ -106,7 +123,7 @@ export const AlertPreferences = ({
               <div className="space-y-2 ml-6">
                 <VooDooCheck
                   id="wishlist-alerts"
-                  checked={tempPreferences.wishlistAlertsEnabled}
+                  checked={editState.wishlistAlertsEnabled}
                   onChange={() => togglePreference("wishlistAlertsEnabled")}
                   labelChecked={t("alerts.wishlistAlerts", "Wishlist Alerts")}
                   labelUnchecked={t("alerts.wishlistAlerts", "Wishlist Alerts")}
@@ -114,7 +131,7 @@ export const AlertPreferences = ({
 
                 <VooDooCheck
                   id="decant-alerts"
-                  checked={tempPreferences.decantAlertsEnabled}
+                  checked={editState.decantAlertsEnabled}
                   onChange={() => togglePreference("decantAlertsEnabled")}
                   labelChecked={t("alerts.decantAlerts", "Decant Interest Alerts")}
                   labelUnchecked={t("alerts.decantAlerts", "Decant Interest Alerts")}
@@ -131,7 +148,7 @@ export const AlertPreferences = ({
               <div className="space-y-2 ml-6">
                 <VooDooCheck
                   id="email-wishlist-alerts"
-                  checked={tempPreferences.emailWishlistAlerts}
+                  checked={editState.emailWishlistAlerts}
                   onChange={() => togglePreference("emailWishlistAlerts")}
                   labelChecked={t("alerts.emailWishlistAlerts", "Email Wishlist Alerts")}
                   labelUnchecked={t("alerts.emailWishlistAlerts", "Email Wishlist Alerts")}
@@ -139,7 +156,7 @@ export const AlertPreferences = ({
 
                 <VooDooCheck
                   id="email-decant-alerts"
-                  checked={tempPreferences.emailDecantAlerts}
+                  checked={editState.emailDecantAlerts}
                   onChange={() => togglePreference("emailDecantAlerts")}
                   labelChecked={t("alerts.emailDecantAlerts", "Email Decant Alerts")}
                   labelUnchecked={t("alerts.emailDecantAlerts", "Email Decant Alerts")}
@@ -165,9 +182,10 @@ export const AlertPreferences = ({
                   </div>
                   <select
                     id="max-alerts"
-                    value={tempPreferences.maxAlerts}
-                    onChange={e => updatePreference("maxAlerts", parseInt(e.target.value, 10))}
-                    className="rounded border-noir-gold-100 text-noir-gold-100 focus:ring-noir-gold-100 focus:border-noir-gold-100"
+                    value={editState.maxAlerts}
+                    onChange={e => updateMaxAlerts(parseInt(e.target.value, 10))}
+                    disabled={isSaving}
+                    className="rounded border-noir-gold-100 text-noir-gold-100 focus:ring-noir-gold-100 focus:border-noir-gold-100 disabled:opacity-50"
                   >
                     <option value={5}>5 alerts</option>
                     <option value={10}>10 alerts</option>
@@ -179,13 +197,19 @@ export const AlertPreferences = ({
             </div>
 
             <div className="flex gap-2 pt-4 border-t border-gray-200">
-              <Button variant="primary" size="sm" onClick={handleSave}>
-                Save Preferences
+              <Button 
+                variant="primary" 
+                size="sm" 
+                onClick={handleSave}
+                disabled={isSaving}
+              >
+                {isSaving ? "Saving..." : "Save Preferences"}
               </Button>
               <Button
                 variant="secondary"
                 size="sm"
                 onClick={handleCancel}
+                disabled={isSaving}
                 leftIcon={<BsX className="h-4 w-4" />}
               >
                 Cancel
@@ -204,7 +228,7 @@ export const AlertPreferences = ({
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={() => setIsEditing(true)}
+                onClick={handleEdit}
                 leftIcon={<BsGear className="h-4 w-4" />}
               >
                 Edit
@@ -223,14 +247,14 @@ export const AlertPreferences = ({
                     <span className="text-sm text-noir-gold-100">
                       {t("alerts.wishlistAlerts", "Wishlist Alerts")}
                     </span>
-                    <StatusBadge enabled={tempPreferences.wishlistAlertsEnabled} />
+                    <StatusBadge enabled={preferences.wishlistAlertsEnabled} />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-noir-gold-100">
                       {t("alerts.decantAlerts", "Decant Interest Alerts")}
                     </span>
-                    <StatusBadge enabled={tempPreferences.decantAlertsEnabled} />
+                    <StatusBadge enabled={preferences.decantAlertsEnabled} />
                   </div>
                 </div>
               </div>
@@ -246,21 +270,21 @@ export const AlertPreferences = ({
                     <span className="text-sm text-noir-gold-100">
                       {t("alerts.emailWishlistAlerts", "Email Wishlist Alerts")}
                     </span>
-                    <StatusBadge enabled={tempPreferences.emailWishlistAlerts} />
+                    <StatusBadge enabled={preferences.emailWishlistAlerts} />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-noir-gold-100">
                       {t("alerts.emailDecantAlerts", "Email Decant Alerts")}
                     </span>
-                    <StatusBadge enabled={tempPreferences.emailDecantAlerts} />
+                    <StatusBadge enabled={preferences.emailDecantAlerts} />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-noir-gold-100">
                       {t("alerts.maxAlerts", "Max Alerts")}
                     </span>
-                    <StatusBadge value={tempPreferences.maxAlerts} />
+                    <StatusBadge value={preferences.maxAlerts} />
                   </div>
                 </div>
               </div>

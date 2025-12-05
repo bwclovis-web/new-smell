@@ -51,7 +51,8 @@ export const loader = withLoaderErrorHandling(
 
 export const action = withActionErrorHandling(
   async ({ request, params }: ActionFunctionArgs) => {
-    if (request.method !== "PUT") {
+    // Accept both PUT and POST for compatibility
+    if (request.method !== "PUT" && request.method !== "POST") {
       throw new Response("Method not allowed", { status: 405 })
     }
 
@@ -110,8 +111,18 @@ export const action = withActionErrorHandling(
       return Response.json(updatedPreferences)
     } catch (error) {
       // UserAlertPreferences table doesn't exist in production yet
-      console.warn("UserAlertPreferences table not available:", error)
-      return Response.json({ ...validPreferences, userId }, { status: 200 })
+      console.error("UserAlertPreferences update failed:", error)
+      // Return a full preferences object with defaults for missing fields
+      const fallbackPreferences = {
+        id: "fallback",
+        userId,
+        wishlistAlertsEnabled: validPreferences.wishlistAlertsEnabled ?? true,
+        decantAlertsEnabled: validPreferences.decantAlertsEnabled ?? true,
+        emailWishlistAlerts: validPreferences.emailWishlistAlerts ?? false,
+        emailDecantAlerts: validPreferences.emailDecantAlerts ?? false,
+        maxAlerts: validPreferences.maxAlerts ?? 10,
+      }
+      return Response.json(fallbackPreferences, { status: 200 })
     }
   },
   {
