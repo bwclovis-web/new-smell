@@ -285,6 +285,9 @@ describe("PerformanceMonitor (Container)", () => {
 
       const clsObserver = performanceObserverInstances[2]
 
+      // Clear any previous console.log calls
+      vi.mocked(console.log).mockClear()
+
       clsObserver.callback({
         getEntries: () => [{ value: 0.05, hadRecentInput: true }],
       })
