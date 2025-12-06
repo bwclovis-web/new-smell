@@ -7,6 +7,10 @@ import ReviewCard from "./ReviewCard"
 // Mock date-fns
 vi.mock("date-fns", () => ({
   formatDistanceToNow: vi.fn((date: Date) => {
+    // Check if date is invalid
+    if (isNaN(date.getTime())) {
+      throw new Error("Invalid date")
+    }
     const now = new Date("2024-01-15T12:00:00Z")
     const diff = now.getTime() - date.getTime()
     const days = Math.floor(diff / (1000 * 60 * 60 * 24))
