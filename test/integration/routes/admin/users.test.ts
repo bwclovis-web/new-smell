@@ -60,8 +60,10 @@ describe("Admin Users Route Integration Tests", () => {
         },
       ]
 
-      vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(mockAdminUser as any)
-      vi.mocked(adminServer.getAllUsersWithCounts).mockResolvedValue(mockUsers as any)
+      const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
+      const mockGetAllUsers = vi.mocked(adminServer.getAllUsersWithCounts)
+      mockSharedLoader.mockResolvedValue(mockAdminUser as any)
+      mockGetAllUsers.mockResolvedValue(mockUsers as any)
 
       const request = new Request("https://example.com/admin/users")
 
@@ -72,9 +74,19 @@ describe("Admin Users Route Integration Tests", () => {
       }
 
       const result = await usersLoader(args)
+      
+      // If we get a redirect Response, the mock isn't working
+      if (result instanceof Response && result.status === 302) {
+        const msg = `Expected loader to return data but got redirect. ` +
+          `Mock may not be working correctly. Status: ${result.status}`
+        throw new Error(msg)
+      }
+      
+      // Handle case where result might be a Response (non-redirect)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result.users).toEqual(mockUsers)
-      expect(result.currentUser).toEqual(mockAdminUser)
+      expect(data.users).toEqual(mockUsers)
+      expect(data.currentUser).toEqual(mockAdminUser)
     })
 
     // TODO: Fix mock isolation - error handling returns object instead of Response
@@ -95,7 +107,7 @@ describe("Admin Users Route Integration Tests", () => {
 
     // TODO: Fix mock isolation - error handling returns object instead of Response
     it.skip("should deny access to unauthenticated users", async () => {
-      vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(null)
+      vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(null as any)
 
       const request = new Request("https://example.com/admin/users")
 
@@ -150,8 +162,18 @@ describe("Admin Users Route Integration Tests", () => {
       }
 
       const result = await usersAction(args)
+      
+      // If we get a redirect Response, the mock isn't working
+      if (result instanceof Response && result.status === 302) {
+        const msg = `Expected action to return data but got redirect. ` +
+          `Mock may not be working correctly. Status: ${result.status}`
+        throw new Error(msg)
+      }
+      
+      // Handle case where result might be a Response (non-redirect)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result.success).toBe(true)
+      expect(data.success).toBe(true)
       expect(adminServer.deleteUserSafely).toHaveBeenCalledWith("user-1", "admin-1")
     })
 
@@ -178,8 +200,18 @@ describe("Admin Users Route Integration Tests", () => {
       }
 
       const result = await usersAction(args)
+      
+      // If we get a redirect Response, the mock isn't working
+      if (result instanceof Response && result.status === 302) {
+        const msg = `Expected action to return data but got redirect. ` +
+          `Mock may not be working correctly. Status: ${result.status}`
+        throw new Error(msg)
+      }
+      
+      // Handle case where result might be a Response (non-redirect)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result.success).toBe(true)
+      expect(data.success).toBe(true)
       expect(adminServer.softDeleteUser).toHaveBeenCalledWith("user-1", "admin-1")
     })
 
@@ -202,9 +234,19 @@ describe("Admin Users Route Integration Tests", () => {
       }
 
       const result = await usersAction(args)
+      
+      // If we get a redirect Response, the mock isn't working
+      if (result instanceof Response && result.status === 302) {
+        const msg = `Expected action to return data but got redirect. ` +
+          `Mock may not be working correctly. Status: ${result.status}`
+        throw new Error(msg)
+      }
+      
+      // Handle case where result might be a Response (non-redirect)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result.success).toBe(false)
-      expect(result.message).toBe("Unauthorized")
+      expect(data.success).toBe(false)
+      expect(data.message).toBe("Unauthorized")
     })
 
     it("should reject action with missing userId", async () => {
@@ -225,9 +267,19 @@ describe("Admin Users Route Integration Tests", () => {
       }
 
       const result = await usersAction(args)
+      
+      // If we get a redirect Response, the mock isn't working
+      if (result instanceof Response && result.status === 302) {
+        const msg = `Expected action to return data but got redirect. ` +
+          `Mock may not be working correctly. Status: ${result.status}`
+        throw new Error(msg)
+      }
+      
+      // Handle case where result might be a Response (non-redirect)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result.success).toBe(false)
-      expect(result.message).toBe("User ID is required")
+      expect(data.success).toBe(false)
+      expect(data.message).toBe("User ID is required")
     })
 
     it("should reject invalid action type", async () => {
@@ -249,9 +301,19 @@ describe("Admin Users Route Integration Tests", () => {
       }
 
       const result = await usersAction(args)
+      
+      // If we get a redirect Response, the mock isn't working
+      if (result instanceof Response && result.status === 302) {
+        const msg = `Expected action to return data but got redirect. ` +
+          `Mock may not be working correctly. Status: ${result.status}`
+        throw new Error(msg)
+      }
+      
+      // Handle case where result might be a Response (non-redirect)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result.success).toBe(false)
-      expect(result.message).toBe("Invalid action")
+      expect(data.success).toBe(false)
+      expect(data.message).toBe("Invalid action")
     })
 
     it("should handle database errors during deletion", async () => {
@@ -274,9 +336,19 @@ describe("Admin Users Route Integration Tests", () => {
       }
 
       const result = await usersAction(args)
+      
+      // If we get a redirect Response, the mock isn't working
+      if (result instanceof Response && result.status === 302) {
+        const msg = `Expected action to return data but got redirect. ` +
+          `Mock may not be working correctly. Status: ${result.status}`
+        throw new Error(msg)
+      }
+      
+      // Handle case where result might be a Response (non-redirect)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result.success).toBe(false)
-      expect(result.error || result.message).toBeDefined()
+      expect(data.success).toBe(false)
+      expect(data.error || data.message).toBeDefined()
     })
   })
 })
