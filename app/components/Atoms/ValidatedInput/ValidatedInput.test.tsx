@@ -4,12 +4,14 @@ import { describe, expect, it, vi } from "vitest"
 import { z } from "zod"
 
 import ValidatedInput from "./ValidatedInput"
+import { useFieldValidation } from "~/hooks/useValidation"
 
 // Mock useFieldValidation hook
-const mockUseFieldValidation = vi.fn()
 vi.mock("~/hooks/useValidation", () => ({
-  useFieldValidation: mockUseFieldValidation,
+  useFieldValidation: vi.fn(),
 }))
+
+const mockUseFieldValidation = vi.mocked(useFieldValidation)
 
 // Mock FormField component
 vi.mock("../FormField/FormField", () => ({

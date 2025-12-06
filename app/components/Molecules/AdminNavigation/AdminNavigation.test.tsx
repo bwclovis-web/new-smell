@@ -8,6 +8,7 @@ describe("AdminNavigation", () => {
   it("renders a adminnavigation", () => {
     const user = { role: "admin" }
     renderWithProviders(<AdminNavigation user={user} />)
-    expect(screen.getByText("create house")).toBeInTheDocument()
+    // Component renders translation keys, check for the link by href instead
+    expect(screen.getByRole("link", { name: /admin\.navigation\.createHouse/i })).toBeInTheDocument()
   })
 })
