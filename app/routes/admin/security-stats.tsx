@@ -1,9 +1,13 @@
 import { ServerErrorHandler } from "~/utils/errorHandling.server"
+import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
 import { getSecurityStats } from "~/utils/security/security-monitor.server"
+import { requireAdmin } from "~/utils/requireAdmin.server"
 
 export const ROUTE_PATH = "/admin/security-stats" as const
 
-export const loader = async () => {
+export const loader = withLoaderErrorHandling(
+  async ({ request }: { request: Request }) => {
+    await requireAdmin(request)
   try {
     // Check if getSecurityStats function exists
     if (typeof getSecurityStats !== "function") {
@@ -29,4 +33,10 @@ export const loader = async () => {
 
     return ServerErrorHandler.createErrorResponse(appError)
   }
-}
+  },
+  {
+    context: { page: "security-stats" },
+    redirectOnAuth: "/sign-in?redirect=/admin/security-stats",
+    redirectOnAuthz: "/unauthorized",
+  }
+)

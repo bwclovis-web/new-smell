@@ -99,11 +99,6 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
     formData.append("perfumeId", perfumeId)
     formData.append("userPerfumeId", userPerfumeId)
 
-    console.log("Deleting comment with data:")
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`)
-    }
-
     // Use safeAsync for error handling
     const [error, response] = await safeAsync(() => submitForm("/api/user-perfumes", formData))
 
@@ -122,8 +117,6 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
       alert(`${t("comments.deleteFailed", "Failed to delete comment")}: ${
           result?.error || "Unknown error"
         }`)
-    } else {
-      console.log("Comment deleted successfully")
     }
   }
 

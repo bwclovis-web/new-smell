@@ -12,6 +12,8 @@ import TitleBanner from "~/components/Organisms/TitleBanner/TitleBanner"
 import { createPerfumeHouse } from "~/models/house.server"
 import { FORM_TYPES } from "~/utils/constants"
 import { CreatePerfumeHouseSchema } from "~/utils/formValidationSchemas"
+import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { requireAdmin } from "~/utils/requireAdmin.server"
 
 import banner from "../../images/createHouse.webp"
 export const ROUTE_PATH = "/admin/create-perfume-house" as const
@@ -22,15 +24,34 @@ export const meta: MetaFunction = () => [
     content: "Create a new perfume house in our database.",
   },
 ]
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData()
-  const test = parseWithZod(formData, { schema: CreatePerfumeHouseSchema })
-  if (test.status !== "success") {
-    return test.reply()
+export const action = withActionErrorHandling(
+  async ({ request }: ActionFunctionArgs) => {
+    await requireAdmin(request)
+    
+    const formData = await request.formData()
+    const test = parseWithZod(formData, { schema: CreatePerfumeHouseSchema })
+    if (test.status !== "success") {
+      return test.reply()
+    }
+    const res = await createPerfumeHouse(formData)
+    return res
+  },
+  {
+    context: { page: "create-perfume-house", action: "create-perfume-house" },
   }
-  const res = await createPerfumeHouse(formData)
-  return res
-}
+)
+
+export const loader = withLoaderErrorHandling(
+  async ({ request }: { request: Request }) => {
+    await requireAdmin(request)
+    return {}
+  },
+  {
+    context: { page: "create-perfume-house" },
+    redirectOnAuth: "/sign-in?redirect=/admin/create-perfume-house",
+    redirectOnAuthz: "/unauthorized",
+  }
+)
 
 const CreatePerfumeHousePage = () => {
   const lastResult = useActionData<SubmissionResult<string[]> | null>()

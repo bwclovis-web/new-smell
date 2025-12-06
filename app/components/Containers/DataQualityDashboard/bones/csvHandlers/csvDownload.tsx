@@ -87,16 +87,8 @@ export const handleDownloadCSV = async () => {
     const res = await fetch("/api/data-quality-houses")
     const response = await res.json()
 
-    // Debug logging
-    console.log("API Response:", response)
-    console.log("Response type:", typeof response)
-    console.log("Is array:", Array.isArray(response))
-
     // The API returns houses directly, not wrapped in a 'houses' property
     const houses = Array.isArray(response) ? response : response.houses || []
-
-    console.log("Houses count:", houses.length)
-    console.log("First house:", houses[0])
 
     if (houses.length === 0) {
       alert("No houses found to export. Please check if there are houses in the database.")
@@ -137,8 +129,6 @@ export const handleDownloadCSV = async () => {
     aTag.click()
     document.body.removeChild(aTag)
     URL.revokeObjectURL(url)
-
-    console.log(`CSV downloaded successfully: ${filename} with ${houses.length} houses`)
   } catch (error) {
     console.error("Error downloading CSV:", error)
     const errorMessage = error instanceof Error ? error.message : String(error)

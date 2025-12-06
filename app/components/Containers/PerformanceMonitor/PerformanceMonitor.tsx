@@ -19,7 +19,6 @@ const PerformanceMonitor = () => {
         const entries = list.getEntries()
         const lastEntry = entries[entries.length - 1]
         if (lastEntry) {
-          console.log("LCP:", lastEntry.startTime)
           // Send to analytics service
           if (window.gtag) {
             window.gtag("event", "LCP", {
@@ -35,7 +34,6 @@ const PerformanceMonitor = () => {
       fidObserver = new PerformanceObserver(list => {
         const entries = list.getEntries()
         entries.forEach(entry => {
-          console.log("FID:", entry.processingStart - entry.startTime)
           if (window.gtag) {
             window.gtag("event", "FID", {
               value: Math.round(entry.processingStart - entry.startTime),
@@ -53,7 +51,6 @@ const PerformanceMonitor = () => {
         entries.forEach((entry: any) => {
           if (!entry.hadRecentInput) {
             clsValue += entry.value
-            console.log("CLS:", clsValue)
             if (window.gtag) {
               window.gtag("event", "CLS", {
                 value: Math.round(clsValue * 1000) / 1000,
@@ -70,7 +67,6 @@ const PerformanceMonitor = () => {
         const entries = list.getEntries()
         const firstEntry = entries[0]
         if (firstEntry) {
-          console.log("FCP:", firstEntry.startTime)
           if (window.gtag) {
             window.gtag("event", "FCP", {
               value: Math.round(firstEntry.startTime),
@@ -85,7 +81,6 @@ const PerformanceMonitor = () => {
       ttiObserver = new PerformanceObserver(list => {
         const entries = list.getEntries()
         entries.forEach(entry => {
-          console.log("TTI:", entry.startTime)
           if (window.gtag) {
             window.gtag("event", "TTI", {
               value: Math.round(entry.startTime),
@@ -111,8 +106,6 @@ const PerformanceMonitor = () => {
                 navigation.domContentLoadedEventEnd - navigation.navigationStart,
               loadComplete: navigation.loadEventEnd - navigation.navigationStart,
             }
-
-            console.log("Performance Metrics:", metrics)
 
             // Send to analytics
             if (window.gtag) {

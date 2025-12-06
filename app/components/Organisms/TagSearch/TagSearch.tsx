@@ -57,30 +57,16 @@ const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => 
     (inputValue.length >= 1 && results.length === 0)
 
   const handleItemClick = (item: any) => {
-    // eslint-disable-next-line no-console
-    console.log("TagSearch - handleItemClick called with:", item)
     if (!selectedTags.find(t => t.id === item.id)) {
       const newTags = [...selectedTags, item]
-      // eslint-disable-next-line no-console
-      console.log("TagSearch - updating tags:", {
-        old: selectedTags,
-        new: newTags,
-      })
       setSelectedTags(newTags)
       onChange?.(newTags)
-    } else {
-      // eslint-disable-next-line no-console
-      console.log("TagSearch - tag already exists in selection")
     }
     clearResults()
   }
 
   const handleRemoveTag = (tagId: string) => {
-    // eslint-disable-next-line no-console
-    console.log("Removing tag:", tagId, "from:", selectedTags)
     const newTags = selectedTags.filter(tag => tag.id !== tagId)
-    // eslint-disable-next-line no-console
-    console.log("New tags after removal:", newTags)
     setSelectedTags(newTags)
     onChange?.(newTags)
   }

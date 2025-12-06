@@ -27,7 +27,7 @@ const DestashItem = ({ destash, onEdit, onDelete }: DestashItemProps) => {
   }
 
   return (
-    <div className="noir-border p-4 bg-noir-dark/20 flex justify-between items-start gap-4">
+    <div className="noir-border p-4 bg-noir-dark/90 flex justify-between items-start gap-4">
       <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4">
         <div>
           <p className="text-sm text-noir-gold-500 font-medium">

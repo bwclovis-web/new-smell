@@ -69,11 +69,6 @@ const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
     )
     formData.append("comment", validationResult.data.comment)
 
-    console.log("Submitting comment with validated data:")
-    for (const [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`)
-    }
-
     // Use safeAsync for error handling
     const [error, response] = await safeAsync(() => submitForm("/api/user-perfumes", formData))
 
@@ -93,10 +88,7 @@ const CommentsModal = ({ perfume, onCommentAdded }: CommentsModalProps) => {
       return
     }
 
-    console.log("Server response:", result)
-
     if (result.success) {
-      console.log("Comment added successfully!")
       setTimeout(() => {
         closeModal()
       }, 1000)

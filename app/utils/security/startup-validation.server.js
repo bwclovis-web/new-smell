@@ -9,33 +9,16 @@ export function validateEnvironmentAtStartup() {
   // Reduced logging for faster startup
   const isVerbose = process.env.STARTUP_VERBOSE === "true"
   
-  if (isVerbose) {
- console.log("🔍 Validating environment configuration...") 
-}
 
   try {
     // Validate core security variables (required)
     const coreEnv = validateCoreSecurityEnv()
-    if (isVerbose) {
- console.log("✅ Core security environment variables validated") 
-}
 
     // Validate extended environment variables (optional)
     const extendedEnv = validateExtendedEnv()
-    if (isVerbose) {
-      if (extendedEnv) {
-        console.log("✅ Extended environment variables validated")
-      } else {
-        console.log("⚠️  Some optional environment variables may need attention")
-      }
-    }
 
     // Additional security checks
     validateSecurityRequirements(coreEnv)
-
-    if (isVerbose) {
- console.log("✅ Environment validation completed successfully") 
-}
     return { coreEnv, extendedEnv }
   } catch (error) {
     console.error("❌ Environment validation failed:")

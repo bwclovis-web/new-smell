@@ -21,7 +21,6 @@ const CreateTagButton = ({ action, setOpenDropdown }) => {
       }
 
       const res = await response.json()
-      console.log("Created tag:", res)
 
       if (!res || !res.id) {
         console.error("Invalid tag response:", res)

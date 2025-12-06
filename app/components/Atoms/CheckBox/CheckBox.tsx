@@ -30,29 +30,35 @@ const CheckBox = ({
   labelSize,
   value,
   inputType,
+  id,
+  name,
   ...props
-}: CheckBoxProps) => (
-  <div
-    className={styleMerge(checkboxVariants({ className, labelPosition }))}
-    data-cy="CheckBox"
-    {...props}
-  >
-    <label
-      className={styleMerge(checkboxLabelVariants({ labelSize }))}
-      aria-label="group"
-      htmlFor={label}
+}: CheckBoxProps) => {
+  const inputId = id || label
+  return (
+    <div
+      className={styleMerge(checkboxVariants({ className, labelPosition }))}
+      data-cy="CheckBox"
+      {...props}
     >
-      {htmlLabel ? <div dangerouslySetInnerHTML={{ __html: htmlLabel }} /> : label}
-    </label>
-    <input
-      className={styleMerge(checkboxInputVariants({ inputType }))}
-      type="checkbox"
-      id={label}
-      aria-describedby=""
-      checked={checked !== undefined ? checked : defaultChecked}
-      onChange={onChange}
-      value={value}
-    />
-  </div>
-)
+      <label
+        className={styleMerge(checkboxLabelVariants({ labelSize }))}
+        aria-label="group"
+        htmlFor={inputId}
+      >
+        {htmlLabel ? <div dangerouslySetInnerHTML={{ __html: htmlLabel }} /> : label}
+      </label>
+      <input
+        className={styleMerge(checkboxInputVariants({ inputType }))}
+        type="checkbox"
+        id={inputId}
+        name={name}
+        aria-describedby=""
+        checked={checked !== undefined ? checked : defaultChecked}
+        onChange={onChange}
+        value={value}
+      />
+    </div>
+  )
+}
 export default CheckBox

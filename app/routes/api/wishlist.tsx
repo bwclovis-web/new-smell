@@ -20,20 +20,24 @@ const processWishlistAction = async (
   isPublic?: boolean
 ) => {
   if (actionType === "add") {
-    const result = await addToWishlist(userId, perfumeId, isPublic || false)
+    const wishlistIsPublic = isPublic || false
+    const result = await addToWishlist(userId, perfumeId, wishlistIsPublic)
 
-    // Process decant interest alerts when someone adds to wishlist
-    try {
-      await processDecantInterestAlerts(perfumeId, userId)
-    } catch (error) {
-      const { ErrorHandler } = await import("~/utils/errorHandling")
-      ErrorHandler.handle(error, {
-        api: "wishlist",
-        action: "processDecantAlerts",
-        perfumeId,
-        userId,
-      })
-      // Don't fail the wishlist operation if alert processing fails
+    // Process decant interest alerts when someone adds to a PUBLIC wishlist
+    // Only alert decanters if the wishlist is public
+    if (wishlistIsPublic) {
+      try {
+        await processDecantInterestAlerts(perfumeId, userId, true)
+      } catch (error) {
+        const { ErrorHandler } = await import("~/utils/errorHandling")
+        ErrorHandler.handle(error, {
+          api: "wishlist",
+          action: "processDecantAlerts",
+          perfumeId,
+          userId,
+        })
+        // Don't fail the wishlist operation if alert processing fails
+      }
     }
 
     return result
@@ -48,7 +52,26 @@ const processWishlistAction = async (
         action: "updateVisibility",
       })
     }
-    return await updateWishlistVisibility(userId, perfumeId, isPublic)
+    const result = await updateWishlistVisibility(userId, perfumeId, isPublic)
+
+    // Process decant interest alerts when wishlist visibility changes to PUBLIC
+    // This notifies decanters that someone is now publicly interested in their perfume
+    if (isPublic) {
+      try {
+        await processDecantInterestAlerts(perfumeId, userId, true)
+      } catch (error) {
+        const { ErrorHandler } = await import("~/utils/errorHandling")
+        ErrorHandler.handle(error, {
+          api: "wishlist",
+          action: "processDecantAlerts-visibilityChange",
+          perfumeId,
+          userId,
+        })
+        // Don't fail the visibility update if alert processing fails
+      }
+    }
+
+    return result
   }
   throw validationError("Invalid action type", {
     actionType,

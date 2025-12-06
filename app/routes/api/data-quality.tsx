@@ -160,8 +160,13 @@ const getFilteredFiles = (
 const getLatestReportFiles = async (timeframe: string = "all") => {
   const reportsDir = path.resolve(projectRoot, "docs", "reports")
 
-  // Read all files in the reports directory
-  const allFiles = await fs.readdir(reportsDir)
+  // Read all files in the reports directory (will throw if directory doesn't exist)
+  let allFiles: string[]
+  try {
+    allFiles = await fs.readdir(reportsDir)
+  } catch (error) {
+    throw new Error(`Failed to read reports directory: ${error instanceof Error ? error.message : String(error)}`)
+  }
 
   // Get files filtered by timeframe
   const filteredFiles = getFilteredFiles(allFiles, timeframe)
@@ -192,6 +197,11 @@ const getLatestReportFiles = async (timeframe: string = "all") => {
           fileB.date.getTime() - fileA.date.getTime())
 
     filesToUse = allTimestampedFiles
+  }
+
+  // Check if we have any files to use
+  if (filesToUse.length === 0) {
+    throw new Error("No report files found. Please generate data quality reports first.")
   }
 
   // Get the latest timestamp

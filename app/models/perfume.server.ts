@@ -4,7 +4,8 @@ import { prisma } from "~/db.server"
 import { transformNotesForDisplay } from "~/utils/perfume-notes-helpers"
 import { createUrlSlug } from "~/utils/slug"
 
-const buildPerfumeOrderBy = (sortBy?: string): Prisma.PerfumeOrderByWithRelationInput => {
+const buildPerfumeOrderBy = 
+  (sortBy?: string): Prisma.PerfumeOrderByWithRelationInput => {
   if (sortBy) {
     switch (sortBy) {
       case "name-asc":
@@ -247,16 +248,10 @@ export const updatePerfume = async (id: string, data: FormData) => {
   try {
     const name = sanitizeText(data.get("name") as string)
 
-    // Debug logging
+    // Extract notes from FormData
     const topNotes = data.getAll("notesTop") as string[]
     const heartNotes = data.getAll("notesHeart") as string[]
     const baseNotes = data.getAll("notesBase") as string[]
-
-    console.log("UpdatePerfume - Received note data:", {
-      topNotes,
-      heartNotes,
-      baseNotes,
-    })
 
     // Use transaction to update perfume and note relations
     const updatedPerfume = await prisma.$transaction(async tx => {

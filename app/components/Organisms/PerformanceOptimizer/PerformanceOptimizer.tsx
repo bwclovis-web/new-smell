@@ -119,7 +119,6 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
       enabled: true,
       action: () => {
         // This would typically involve server-side processing
-        console.log("Image optimization would be applied server-side")
       },
       condition: () => {
         const images = document.querySelectorAll('img[src$=".jpg"], img[src$=".png"]')
@@ -136,7 +135,6 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
       enabled: true,
       action: () => {
         // This would typically be done at build time
-        console.log("CSS minification would be applied at build time")
       },
       condition: () => process.env.NODE_ENV === "development",
       impact: "low",
@@ -150,7 +148,6 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
       enabled: true,
       action: () => {
         // This would be configured server-side
-        console.log("Gzip compression would be enabled server-side")
       },
       condition: () => true, // Always applicable
       impact: "high",
@@ -165,7 +162,6 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
       enabled: true,
       action: () => {
         // This would involve analyzing and simplifying DOM
-        console.log("DOM complexity analysis would be performed")
       },
       condition: () => {
         const elements = document.querySelectorAll("*")
@@ -182,7 +178,6 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
       enabled: true,
       action: () => {
         // This would involve cleaning up event listeners
-        console.log("Memory cleanup would be performed")
       },
       condition: () => true, // Always applicable
       impact: "low",

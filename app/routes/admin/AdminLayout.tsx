@@ -1,13 +1,21 @@
 import { Outlet, useLoaderData } from "react-router"
 
 import AdminNavigation from "~/components/Molecules/AdminNavigation/AdminNavigation"
-import { sharedLoader } from "~/utils/sharedLoader"
+import { createError } from "~/utils/errorHandling"
+import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { requireAdmin } from "~/utils/requireAdmin.server"
 
-export const loader = async ({ request }: { request: Request }) => {
-  const user = await sharedLoader(request)
-
-  return { user }
-}
+export const loader = withLoaderErrorHandling(
+  async ({ request }: { request: Request }) => {
+    const user = await requireAdmin(request)
+    return { user }
+  },
+  {
+    context: { page: "admin-layout" },
+    redirectOnAuth: "/sign-in?redirect=/admin",
+    redirectOnAuthz: "/unauthorized",
+  }
+)
 
 const AdminLayout = () => {
   const { user } = useLoaderData<typeof loader>()

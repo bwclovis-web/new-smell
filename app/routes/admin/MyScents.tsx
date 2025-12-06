@@ -15,11 +15,13 @@ import TitleBanner from "~/components/Organisms/TitleBanner"
 import {
   addUserPerfume,
   createDestashEntry,
+  getUserPerfumeById,
   getUserPerfumes,
   removeUserPerfume,
   updateAvailableAmount,
 } from "~/models/user.server"
 import type { UserPerfumeI } from "~/types"
+import { processWishlistAvailabilityAlerts } from "~/utils/alert-processors"
 import { sharedLoader } from "~/utils/sharedLoader"
 
 import banner from "../../images/perfume.webp"
@@ -142,6 +144,19 @@ const handleDecantAction = async (
     tradeOnly,
   })
 
+  // Process wishlist availability alerts when a perfume becomes available for trade
+  if (result.success && availableAmount && parseFloat(availableAmount) > 0) {
+    // Get the perfumeId from the userPerfume
+    const userPerfume = await getUserPerfumeById(userPerfumeId)
+    if (userPerfume?.perfumeId) {
+      try {
+        await processWishlistAvailabilityAlerts(userPerfume.perfumeId, userId)
+      } catch {
+        // Don't fail the decant operation if alert processing fails
+      }
+    }
+  }
+
   // Return as JSON response for consistency
   return new Response(
     JSON.stringify(result),
@@ -246,6 +261,15 @@ const handleCreateDecantAction = async (
       result.error || "Failed to create destash entry",
       { status: 400 }
     )
+  }
+
+  // Process wishlist availability alerts when a new decant becomes available
+  if (decantAmount && parseFloat(decantAmount) > 0) {
+    try {
+      await processWishlistAvailabilityAlerts(perfumeId, userId)
+    } catch {
+      // Don't fail the decant operation if alert processing fails
+    }
   }
 
   return new Response(

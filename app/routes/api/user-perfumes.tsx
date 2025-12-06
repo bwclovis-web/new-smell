@@ -102,9 +102,10 @@ const handleAddAction = async (user: any, perfumeId: string, amount?: string) =>
   })
 
   // Process wishlist availability alerts when a perfume becomes available
+  // Pass the user ID to exclude self-notifications
   if (amount && parseFloat(amount) > 0) {
     try {
-      await processWishlistAvailabilityAlerts(perfumeId)
+      await processWishlistAvailabilityAlerts(perfumeId, user.id)
     } catch (error) {
       const { ErrorHandler } = await import("~/utils/errorHandling")
       ErrorHandler.handle(error, {
@@ -150,9 +151,10 @@ const handleDecantAction = async (params: {
   })
 
   // Process wishlist availability alerts when a perfume becomes available
+  // Pass the user ID to exclude self-notifications
   if (amount && parseFloat(amount) > 0 && perfumeId) {
     try {
-      await processWishlistAvailabilityAlerts(perfumeId)
+      await processWishlistAvailabilityAlerts(perfumeId, user.id)
     } catch (error) {
       const { ErrorHandler } = await import("~/utils/errorHandling")
       ErrorHandler.handle(error, {
@@ -318,12 +320,7 @@ const handleActionError = async (error: any) => {
 
 // Helper function to process form data
 const processFormData = async (request: Request) => {
-  console.log("=== FORM DATA PROCESSING DEBUG ===")
   const formData = await request.formData()
-  console.log("FormData keys:", Array.from(formData.keys()))
-  for (const [key, value] of formData.entries()) {
-    console.log(`Form field ${key}:`, value)
-  }
 
   const result = {
     perfumeId: formData.get("perfumeId") as string,
@@ -338,8 +335,6 @@ const processFormData = async (request: Request) => {
     tradeOnly: formData.get("tradeOnly") === "true",
   }
 
-  console.log("Processed form data result:", result)
-  console.log("=== END FORM DATA PROCESSING DEBUG ===")
   return result
 }
 

@@ -121,7 +121,6 @@ const PerformanceAdmin: React.FC = () => {
   const saveSettings = () => {
     // In a real app, this would save to a backend
     localStorage.setItem("performance-settings", JSON.stringify(settings))
-    console.log("Settings saved:", settings)
   }
 
   const resetSettings = () => {

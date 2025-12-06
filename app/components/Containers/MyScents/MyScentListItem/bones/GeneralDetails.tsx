@@ -7,7 +7,7 @@ const GeneralDetails = ({ userPerfume }: { userPerfume: any }) => {
   const { t } = useTranslation()
 
   return (
-    <div className="flex gap-10 mt-6 justify-between items-center">
+    <div className="flex gap-10 mt-6 justify-between items-center px-2">
       {userPerfume.placeOfPurchase && (
         <p className="font-medium flex flex-col justify-start items-start">
           <span className="text-xl">{t("myScents.listItem.pointOfPurchase")}</span>

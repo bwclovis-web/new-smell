@@ -14,9 +14,6 @@ describe("PerformanceMonitor (Container)", () => {
     performanceObserverInstances = []
     mockGtag = vi.fn()
 
-    // Mock console methods
-    vi.spyOn(console, "log").mockImplementation(() => {})
-
     // Mock PerformanceObserver
     mockPerformanceObserver = vi.fn((callback: any) => {
       const instance = {
@@ -120,7 +117,7 @@ describe("PerformanceMonitor (Container)", () => {
       vi.unstubAllEnvs()
     })
 
-    it("should log LCP value to console", () => {
+    it("should send LCP value to analytics", () => {
       vi.stubEnv("DEV", false)
 
       render(<PerformanceMonitor />)
@@ -133,7 +130,10 @@ describe("PerformanceMonitor (Container)", () => {
         getEntries: () => mockEntries,
       })
 
-      expect(console.log).toHaveBeenCalledWith("LCP:", 2300)
+      expect(mockGtag).toHaveBeenCalledWith("event", "LCP", {
+        value: 2300,
+        event_category: "Web Vitals",
+      })
 
       vi.unstubAllEnvs()
     })
@@ -165,12 +165,15 @@ describe("PerformanceMonitor (Container)", () => {
 
       const lcpObserver = performanceObserverInstances[0]
 
+      mockGtag.mockClear()
+
       lcpObserver.callback({
         getEntries: () => [],
       })
 
-      expect(console.log).not.toHaveBeenCalledWith(
-        expect.stringContaining("LCP:"),
+      expect(mockGtag).not.toHaveBeenCalledWith(
+        "event",
+        "LCP",
         expect.anything()
       )
 
@@ -192,7 +195,7 @@ describe("PerformanceMonitor (Container)", () => {
       vi.unstubAllEnvs()
     })
 
-    it("should log FID value to console", () => {
+    it("should send FID value to analytics", () => {
       vi.stubEnv("DEV", false)
 
       render(<PerformanceMonitor />)
@@ -209,7 +212,10 @@ describe("PerformanceMonitor (Container)", () => {
         getEntries: () => mockEntries,
       })
 
-      expect(console.log).toHaveBeenCalledWith("FID:", 50)
+      expect(mockGtag).toHaveBeenCalledWith("event", "FID", {
+        value: 50,
+        event_category: "Web Vitals",
+      })
 
       vi.unstubAllEnvs()
     })
@@ -266,14 +272,20 @@ describe("PerformanceMonitor (Container)", () => {
         getEntries: () => [{ value: 0.05, hadRecentInput: false }],
       })
 
-      expect(console.log).toHaveBeenCalledWith("CLS:", 0.05)
+      expect(mockGtag).toHaveBeenCalledWith("event", "CLS", {
+        value: 0.05,
+        event_category: "Web Vitals",
+      })
 
       // Second layout shift
       clsObserver.callback({
         getEntries: () => [{ value: 0.03, hadRecentInput: false }],
       })
 
-      expect(console.log).toHaveBeenCalledWith("CLS:", 0.08)
+      expect(mockGtag).toHaveBeenCalledWith("event", "CLS", {
+        value: 0.08,
+        event_category: "Web Vitals",
+      })
 
       vi.unstubAllEnvs()
     })
@@ -285,15 +297,16 @@ describe("PerformanceMonitor (Container)", () => {
 
       const clsObserver = performanceObserverInstances[2]
 
-      // Clear any previous console.log calls
-      vi.mocked(console.log).mockClear()
+      // Clear any previous gtag calls
+      mockGtag.mockClear()
 
       clsObserver.callback({
         getEntries: () => [{ value: 0.05, hadRecentInput: true }],
       })
 
-      expect(console.log).not.toHaveBeenCalledWith(
-        expect.stringContaining("CLS:"),
+      expect(mockGtag).not.toHaveBeenCalledWith(
+        "event",
+        "CLS",
         expect.anything()
       )
 
@@ -334,7 +347,7 @@ describe("PerformanceMonitor (Container)", () => {
       vi.unstubAllEnvs()
     })
 
-    it("should log FCP value to console", () => {
+    it("should send FCP value to analytics", () => {
       vi.stubEnv("DEV", false)
 
       render(<PerformanceMonitor />)
@@ -346,7 +359,10 @@ describe("PerformanceMonitor (Container)", () => {
         getEntries: () => mockEntries,
       })
 
-      expect(console.log).toHaveBeenCalledWith("FCP:", 1200)
+      expect(mockGtag).toHaveBeenCalledWith("event", "FCP", {
+        value: 1200,
+        event_category: "Web Vitals",
+      })
 
       vi.unstubAllEnvs()
     })
@@ -386,7 +402,7 @@ describe("PerformanceMonitor (Container)", () => {
       vi.unstubAllEnvs()
     })
 
-    it("should log TTI value to console", () => {
+    it("should send TTI value to analytics", () => {
       vi.stubEnv("DEV", false)
 
       render(<PerformanceMonitor />)
@@ -398,7 +414,10 @@ describe("PerformanceMonitor (Container)", () => {
         getEntries: () => mockEntries,
       })
 
-      expect(console.log).toHaveBeenCalledWith("TTI:", 3500)
+      expect(mockGtag).toHaveBeenCalledWith("event", "TTI", {
+        value: 3500,
+        event_category: "Web Vitals",
+      })
 
       vi.unstubAllEnvs()
     })
@@ -499,19 +518,34 @@ describe("PerformanceMonitor (Container)", () => {
         loadListener()
       }
 
-      // Wait for setTimeout to execute
+      // Wait for setTimeout to execute and check that metrics are sent to analytics
       await waitFor(
         () => {
-          expect(console.log).toHaveBeenCalledWith(
-            "Performance Metrics:",
-            expect.objectContaining({
-              dns: expect.any(Number),
-              tcp: expect.any(Number),
-              ttfb: expect.any(Number),
-              domContentLoaded: expect.any(Number),
-              loadComplete: expect.any(Number),
-            })
-          )
+          expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
+            metric_name: "dns",
+            value: expect.any(Number),
+            event_category: "Performance",
+          })
+          expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
+            metric_name: "tcp",
+            value: expect.any(Number),
+            event_category: "Performance",
+          })
+          expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
+            metric_name: "ttfb",
+            value: expect.any(Number),
+            event_category: "Performance",
+          })
+          expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
+            metric_name: "domContentLoaded",
+            value: expect.any(Number),
+            event_category: "Performance",
+          })
+          expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
+            metric_name: "loadComplete",
+            value: expect.any(Number),
+            event_category: "Performance",
+          })
         },
         { timeout: 100 }
       )
@@ -679,8 +713,14 @@ describe("PerformanceMonitor (Container)", () => {
         getEntries: () => mockEntries,
       })
 
-      expect(console.log).toHaveBeenCalledWith("FID:", 50)
-      expect(console.log).toHaveBeenCalledWith("FID:", 30)
+      expect(mockGtag).toHaveBeenCalledWith("event", "FID", {
+        value: 50,
+        event_category: "Web Vitals",
+      })
+      expect(mockGtag).toHaveBeenCalledWith("event", "FID", {
+        value: 30,
+        event_category: "Web Vitals",
+      })
 
       vi.unstubAllEnvs()
     })
