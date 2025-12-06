@@ -4,7 +4,8 @@
     "loadingMore": "Cargando más...",
     "noMore": "No hay más {{itemName}} para cargar.",
     "allLoaded": "Todas las {{itemName}} cargadas.",
-    "loadMore": "Cargar Más {{itemName}}"
+    "loadMore": "Cargar Más {{itemName}}",
+    "search": "Buscar..."
   },
   "admin": {
     "navigation": {

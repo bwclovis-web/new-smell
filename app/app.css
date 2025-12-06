@@ -307,9 +307,9 @@ img {
 }
 
 .animate-fade-in-item {
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  opacity: 0;
+  transform: scale(0.95);
+  animation: fadeInItem 0.3s ease-out forwards;
   contain: layout style;
 }
 
