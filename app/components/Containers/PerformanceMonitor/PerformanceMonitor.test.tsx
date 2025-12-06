@@ -1,4 +1,4 @@
-import { act, render } from "@testing-library/react"
+import { act, render, waitFor } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import PerformanceMonitor from "./PerformanceMonitor"
@@ -422,122 +422,151 @@ describe("PerformanceMonitor (Container)", () => {
   })
 
   describe("Navigation Performance Metrics", () => {
-    it("should collect navigation metrics on page load", () => {
-      vi.useFakeTimers()
-      vi.stubEnv("DEV", false)
-
-      // Ensure window.performance is set up before rendering
-      // so the component's "performance" in window check passes
-      ;(global.window as any).performance = global.performance
-
-      // Render component and wait for useEffect to run
-      act(() => {
-        render(<PerformanceMonitor />)
-      })
-
-      // Small delay to ensure useEffect has run and event listener is attached
-      act(() => {
-        vi.advanceTimersByTime(0)
-      })
-
-      // Trigger load event after component has mounted
-      act(() => {
-        window.dispatchEvent(new Event("load"))
-      })
-
-      // Advance timers to trigger setTimeout
-      act(() => {
-        vi.runAllTimers()
-      })
-
-      expect(mockGetEntriesByType).toHaveBeenCalledWith("navigation")
-
-      vi.useRealTimers()
-      vi.unstubAllEnvs()
-    })
-
-    it("should log performance metrics", () => {
-      vi.useFakeTimers()
+    it("should collect navigation metrics on page load", async () => {
       vi.stubEnv("DEV", false)
 
       // Ensure window.performance is set up before rendering
       ;(global.window as any).performance = global.performance
 
-      // Render component and wait for useEffect to run
-      act(() => {
-        render(<PerformanceMonitor />)
+      // Spy on addEventListener to verify it's called
+      const addEventListenerSpy = vi.spyOn(window, "addEventListener")
+
+      // Render component
+      render(<PerformanceMonitor />)
+
+      // Wait for addEventListener to be called (useEffect has run)
+      await waitFor(() => {
+        expect(addEventListenerSpy).toHaveBeenCalledWith(
+          "load",
+          expect.any(Function)
+        )
       })
 
-      // Small delay to ensure useEffect has run and event listener is attached
-      act(() => {
-        vi.advanceTimersByTime(0)
-      })
+      // Get the event listener callback that was registered
+      const loadListenerCall = addEventListenerSpy.mock.calls.find(
+        call => call[0] === "load"
+      )
+      const loadListener = loadListenerCall?.[1] as () => void
 
-      // Trigger load event after component has mounted
-      act(() => {
-        window.dispatchEvent(new Event("load"))
-      })
+      // Manually trigger the event listener callback
+      if (loadListener) {
+        loadListener()
+      }
 
-      // Advance timers to trigger setTimeout
-      act(() => {
-        vi.runAllTimers()
-      })
-
-      expect(console.log).toHaveBeenCalledWith(
-        "Performance Metrics:",
-        expect.objectContaining({
-          dns: expect.any(Number),
-          tcp: expect.any(Number),
-          ttfb: expect.any(Number),
-          domContentLoaded: expect.any(Number),
-          loadComplete: expect.any(Number),
-        })
+      // Wait for setTimeout to execute (use real timers for this)
+      await waitFor(
+        () => {
+          expect(mockGetEntriesByType).toHaveBeenCalledWith("navigation")
+        },
+        { timeout: 100 }
       )
 
-      vi.useRealTimers()
+      addEventListenerSpy.mockRestore()
       vi.unstubAllEnvs()
     })
 
-    it("should send navigation metrics to analytics", () => {
-      vi.useFakeTimers()
+    it("should log performance metrics", async () => {
       vi.stubEnv("DEV", false)
 
       // Ensure window.performance is set up before rendering
       ;(global.window as any).performance = global.performance
 
-      // Render component and wait for useEffect to run
-      act(() => {
-        render(<PerformanceMonitor />)
+      // Spy on addEventListener
+      const addEventListenerSpy = vi.spyOn(window, "addEventListener")
+
+      // Render component
+      render(<PerformanceMonitor />)
+
+      // Wait for addEventListener to be called
+      await waitFor(() => {
+        expect(addEventListenerSpy).toHaveBeenCalledWith(
+          "load",
+          expect.any(Function)
+        )
       })
 
-      // Small delay to ensure useEffect has run and event listener is attached
-      act(() => {
-        vi.advanceTimersByTime(0)
+      // Get the event listener callback
+      const loadListenerCall = addEventListenerSpy.mock.calls.find(
+        call => call[0] === "load"
+      )
+      const loadListener = loadListenerCall?.[1] as () => void
+
+      // Manually trigger the callback
+      if (loadListener) {
+        loadListener()
+      }
+
+      // Wait for setTimeout to execute
+      await waitFor(
+        () => {
+          expect(console.log).toHaveBeenCalledWith(
+            "Performance Metrics:",
+            expect.objectContaining({
+              dns: expect.any(Number),
+              tcp: expect.any(Number),
+              ttfb: expect.any(Number),
+              domContentLoaded: expect.any(Number),
+              loadComplete: expect.any(Number),
+            })
+          )
+        },
+        { timeout: 100 }
+      )
+
+      addEventListenerSpy.mockRestore()
+      vi.unstubAllEnvs()
+    })
+
+    it("should send navigation metrics to analytics", async () => {
+      vi.stubEnv("DEV", false)
+
+      // Ensure window.performance is set up before rendering
+      ;(global.window as any).performance = global.performance
+
+      // Spy on addEventListener
+      const addEventListenerSpy = vi.spyOn(window, "addEventListener")
+
+      // Render component
+      render(<PerformanceMonitor />)
+
+      // Wait for addEventListener to be called
+      await waitFor(() => {
+        expect(addEventListenerSpy).toHaveBeenCalledWith(
+          "load",
+          expect.any(Function)
+        )
       })
 
-      // Trigger load event after component has mounted
-      act(() => {
-        window.dispatchEvent(new Event("load"))
-      })
+      // Get the event listener callback
+      const loadListenerCall = addEventListenerSpy.mock.calls.find(
+        call => call[0] === "load"
+      )
+      const loadListener = loadListenerCall?.[1] as () => void
 
-      // Advance timers to trigger setTimeout
-      act(() => {
-        vi.runAllTimers()
-      })
+      // Manually trigger the callback
+      if (loadListener) {
+        loadListener()
+      }
 
-      expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
-        metric_name: "dns",
-        value: expect.any(Number),
-        event_category: "Performance",
-      })
+      // Wait for setTimeout to execute
+      await waitFor(
+        () => {
+          expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
+            metric_name: "dns",
+            value: expect.any(Number),
+            event_category: "Performance",
+          })
 
-      expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
-        metric_name: "tcp",
-        value: expect.any(Number),
-        event_category: "Performance",
-      })
+          expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
+            metric_name: "tcp",
+            value: expect.any(Number),
+            event_category: "Performance",
+          })
+        },
+        { timeout: 100 }
+      )
 
-      vi.useRealTimers()
+      addEventListenerSpy.mockRestore()
       vi.unstubAllEnvs()
     })
   })
