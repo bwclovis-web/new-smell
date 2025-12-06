@@ -29,7 +29,7 @@ describe("ChangePasswordForm", () => {
       renderWithProviders(<ChangePasswordForm />)
 
       expect(screen.getByLabelText(/current password/i)).toBeInTheDocument()
-      expect(screen.getByLabelText(/new password/i)).toBeInTheDocument()
+      expect(screen.getByLabelText("New Password")).toBeInTheDocument()
       expect(screen.getByLabelText(/confirm new password/i)).toBeInTheDocument()
     })
 
@@ -79,7 +79,7 @@ describe("ChangePasswordForm", () => {
       const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
-      const newPasswordInput = screen.getByLabelText(/new password/i) as HTMLInputElement
+      const newPasswordInput = screen.getByLabelText("New Password") as HTMLInputElement
       await user.type(newPasswordInput, "NewPassword123!")
 
       expect(newPasswordInput.value).toBe("NewPassword123!")
@@ -99,7 +99,7 @@ describe("ChangePasswordForm", () => {
       renderWithProviders(<ChangePasswordForm />)
 
       const currentPasswordInput = screen.getByLabelText(/current password/i)
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i)
 
       expect(currentPasswordInput).toHaveAttribute("required")
@@ -129,7 +129,7 @@ describe("ChangePasswordForm", () => {
       const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
-      const newPasswordInput = screen.getByLabelText(/new password/i) as HTMLInputElement
+      const newPasswordInput = screen.getByLabelText("New Password") as HTMLInputElement
       expect(newPasswordInput.type).toBe("password")
 
       const toggleButtons = screen.getAllByRole("button", { name: "" })
@@ -163,7 +163,7 @@ describe("ChangePasswordForm", () => {
       const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       await user.type(newPasswordInput, "NewPassword123!")
 
       expect(screen.getByTestId("password-strength-indicator")).toBeInTheDocument()
@@ -178,7 +178,7 @@ describe("ChangePasswordForm", () => {
       const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
 
       await user.type(newPasswordInput, "weak")
       expect(screen.getByText(/weak/i)).toBeInTheDocument()
@@ -194,7 +194,7 @@ describe("ChangePasswordForm", () => {
       const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i)
 
       await user.type(newPasswordInput, "Password123!")
@@ -208,7 +208,7 @@ describe("ChangePasswordForm", () => {
       const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i)
 
       await user.type(newPasswordInput, "Password123!")
@@ -222,7 +222,7 @@ describe("ChangePasswordForm", () => {
       const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i) as HTMLInputElement
 
       await user.type(newPasswordInput, "Password123!")
@@ -235,7 +235,7 @@ describe("ChangePasswordForm", () => {
       const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i) as HTMLInputElement
 
       await user.type(newPasswordInput, "Password123!")
@@ -259,7 +259,7 @@ describe("ChangePasswordForm", () => {
       const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i)
 
       await user.type(newPasswordInput, "Password123!")
@@ -276,7 +276,7 @@ describe("ChangePasswordForm", () => {
       renderWithProviders(<ChangePasswordForm />)
 
       const currentPasswordInput = screen.getByLabelText(/current password/i)
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i)
 
       await user.type(currentPasswordInput, "OldPassword123!")
@@ -294,7 +294,7 @@ describe("ChangePasswordForm", () => {
       renderWithProviders(<ChangePasswordForm />)
 
       const currentPasswordInput = screen.getByLabelText(/current password/i)
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i)
 
       await user.type(currentPasswordInput, "OldPassword123!")
@@ -312,7 +312,7 @@ describe("ChangePasswordForm", () => {
       renderWithProviders(<ChangePasswordForm isSubmitting={true} />)
 
       const currentPasswordInput = screen.getByLabelText(/current password/i)
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i)
 
       await user.type(currentPasswordInput, "OldPassword123!")
@@ -332,7 +332,7 @@ describe("ChangePasswordForm", () => {
       renderWithProviders(<ChangePasswordForm />)
 
       const currentPasswordInput = screen.getByLabelText(/current password/i) as HTMLInputElement
-      const newPasswordInput = screen.getByLabelText(/new password/i) as HTMLInputElement
+      const newPasswordInput = screen.getByLabelText("New Password") as HTMLInputElement
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i) as HTMLInputElement
 
       await user.type(currentPasswordInput, "OldPassword123!")
@@ -355,7 +355,7 @@ describe("ChangePasswordForm", () => {
       const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       await user.type(newPasswordInput, "NewPassword123!")
 
       expect(screen.getByTestId("password-strength-indicator")).toBeInTheDocument()
@@ -370,7 +370,7 @@ describe("ChangePasswordForm", () => {
       const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i)
 
       await user.type(newPasswordInput, "Password123!")
@@ -475,7 +475,7 @@ describe("ChangePasswordForm", () => {
       renderWithProviders(<ChangePasswordForm />)
 
       const currentPasswordInput = screen.getByLabelText(/current password/i)
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i)
 
       await user.type(currentPasswordInput, "OldPassword123!")
@@ -548,14 +548,14 @@ describe("ChangePasswordForm", () => {
       await user.type(newPasswordInput, "Password123!")
       await user.type(confirmPasswordInput, "Password123!")
 
-      // Green checkmark indicates success
-      expect(screen.getByText(/✅/)).toBeInTheDocument()
+      // Green checkmark and success message indicates passwords match
+      expect(screen.getByText(/passwords match/i)).toBeInTheDocument()
 
       await user.clear(confirmPasswordInput)
       await user.type(confirmPasswordInput, "Different!")
 
-      // Red X indicates error
-      expect(screen.getByText(/❌/)).toBeInTheDocument()
+      // Error message indicates passwords do not match
+      expect(screen.getByText(/passwords do not match/i)).toBeInTheDocument()
     })
   })
 
