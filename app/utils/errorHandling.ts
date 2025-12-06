@@ -253,6 +253,9 @@ export const createError = {
 
 // Import correlation ID utilities (only available on server)
 // We use a function to safely get the correlation ID without breaking client-side code
+// Cache the function reference to ensure we use the same AsyncLocalStorage instance
+let cachedGetCorrelationId: (() => string | undefined) | null = null
+
 function getCorrelationId(): string | undefined {
   // Check if we're on the client side
   if (typeof window !== "undefined") {
@@ -261,11 +264,12 @@ function getCorrelationId(): string | undefined {
 
   // Server-side: try to get correlation ID from AsyncLocalStorage
   try {
-    // Use require for conditional server-only import
-    const {
-      getCorrelationId: getCorrelationIdFunc,
-    } = require("./correlationId.server")
-    return getCorrelationIdFunc()
+    // Cache the function reference to ensure consistent AsyncLocalStorage access
+    if (!cachedGetCorrelationId) {
+      const correlationIdModule = require("./correlationId.server")
+      cachedGetCorrelationId = correlationIdModule.getCorrelationId
+    }
+    return cachedGetCorrelationId()
   } catch {
     // If import fails (e.g., during build), return undefined
     return undefined
