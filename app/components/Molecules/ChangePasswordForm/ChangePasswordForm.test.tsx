@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react"
+import { fireEvent, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
@@ -494,7 +494,7 @@ describe("ChangePasswordForm", () => {
       renderWithProviders(<ChangePasswordForm />)
 
       const currentPasswordInput = screen.getByLabelText(/current password/i)
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i)
 
       expect(currentPasswordInput).toHaveAttribute("name", "currentPassword")
@@ -518,7 +518,7 @@ describe("ChangePasswordForm", () => {
       renderWithProviders(<ChangePasswordForm />)
 
       const currentPasswordInput = screen.getByLabelText(/current password/i)
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i)
 
       expect(currentPasswordInput).toHaveAttribute("id", "currentPassword")
@@ -542,7 +542,7 @@ describe("ChangePasswordForm", () => {
       const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
-      const newPasswordInput = screen.getByLabelText(/new password/i)
+      const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i)
 
       await user.type(newPasswordInput, "Password123!")
@@ -589,20 +589,21 @@ describe("ChangePasswordForm", () => {
       renderWithProviders(<ChangePasswordForm />)
 
       const longPassword = "A".repeat(100) + "1!"
-      const newPasswordInput = screen.getByLabelText(/new password/i) as HTMLInputElement
+      const newPasswordInput = screen.getByLabelText("New Password") as HTMLInputElement
 
       await user.type(newPasswordInput, longPassword)
       expect(newPasswordInput.value).toBe(longPassword)
     })
 
     it("handles special characters in passwords", async () => {
-      const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
       const specialPassword = "P@$$w0rd!#%&*()_+-=[]{}|;:,.<>?"
       const newPasswordInput = screen.getByLabelText("New Password") as HTMLInputElement
 
-      await user.type(newPasswordInput, specialPassword)
+      // Use fireEvent.change instead of user.type because user.type interprets
+      // special characters like []{}|;:,.<>? as keyboard shortcuts
+      fireEvent.change(newPasswordInput, { target: { value: specialPassword } })
       expect(newPasswordInput.value).toBe(specialPassword)
     })
 
