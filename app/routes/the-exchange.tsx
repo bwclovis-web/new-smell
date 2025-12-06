@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   type LoaderFunctionArgs,
@@ -8,6 +9,7 @@ import {
   useSearchParams,
 } from "react-router"
 
+import SearchInput from "~/components/Atoms/SearchInput/SearchInput"
 import { Button } from "~/components/Atoms/Button"
 import LinkCard from "~/components/Organisms/LinkCard"
 import TitleBanner from "~/components/Organisms/TitleBanner"
@@ -78,6 +80,18 @@ const TradingPostPage = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { availablePerfumes, pagination } = useLoaderData<typeof loader>()
+  const [searchQuery, setSearchQuery] = useState("")
+
+  // Filter perfumes based on search query
+  const filteredPerfumes = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return availablePerfumes
+    }
+    const query = searchQuery.toLowerCase()
+    return availablePerfumes.filter(perfume =>
+      perfume.name.toLowerCase().includes(query)
+    )
+  }, [availablePerfumes, searchQuery])
 
   const handlePageChange = (page: number) => {
     if (page <= 1) {
@@ -127,9 +141,27 @@ const TradingPostPage = () => {
         </div>
       ) : (
         <>
-          <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 inner-container py-6 auto-rows-fr">
-            {availablePerfumes?.map(perfume => (
-              <li key={perfume.id} className="relative">
+          <div className="inner-container py-6">
+            <div className="max-w-md mx-auto mb-6">
+              <SearchInput
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder={t("tradingPost.search.placeholder")}
+              />
+            </div>
+            {filteredPerfumes.length === 0 ? (
+              <div className="text-center py-8 bg-noir-gray/80 rounded-md border-2 border-noir-light animate-fade-in">
+                <h2 className="text-noir-light font-black text-xl text-shadow-md text-shadow-noir-dark">
+                  {t("tradingPost.search.noResults")}
+                </h2>
+                <p className="text-noir-gold-100 mt-2">
+                  {t("tradingPost.search.tryDifferent")}
+                </p>
+              </div>
+            ) : (
+              <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 auto-rows-fr animate-fade-in">
+                {filteredPerfumes.map((perfume, index) => (
+              <li key={perfume.id} className="relative animate-fade-in-item" style={{ animationDelay: `${index * 0.05}s` }}>
                 <LinkCard data={perfume} type="perfume">
                   <div className="mt-2 rounded-md">
                     <p className="text-base font-medium text-noir-gold mb-1">
@@ -155,10 +187,12 @@ const TradingPostPage = () => {
                   </div>
                 </LinkCard>
               </li>
-            ))}
-          </ul>
+                ))}
+              </ul>
+            )}
+          </div>
 
-          {pagination.totalPages > 1 && (
+          {!searchQuery && pagination.totalPages > 1 && (
             <div className="flex justify-center items-center gap-4 py-6">
               {pagination.hasPrevPage && (
                 <Button onClick={handlePrevPage} variant="secondary" size="sm">

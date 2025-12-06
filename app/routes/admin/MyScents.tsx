@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import type {
   ActionFunctionArgs,
@@ -7,6 +7,7 @@ import type {
 } from "react-router"
 import { useLoaderData } from "react-router"
 
+import SearchInput from "~/components/Atoms/SearchInput/SearchInput"
 import MyScentsListItem from "~/components/Containers/MyScents/MyScentListItem"
 import { VirtualScrollList } from "~/components/Molecules/VirtualScrollList"
 import AddToCollectionModal from "~/components/Organisms/AddToCollectionModal"
@@ -259,6 +260,7 @@ const handleCreateDecantAction = async (
 const MyScentsPage = () => {
   const { userPerfumes: initialUserPerfumes } = useLoaderData() as LoaderData
   const [userPerfumes, setUserPerfumes] = useState(initialUserPerfumes)
+  const [searchQuery, setSearchQuery] = useState("")
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -282,6 +284,17 @@ const MyScentsPage = () => {
 
   const uniquePerfumes = Object.values(groupedPerfumes)
 
+  // Filter perfumes based on search query
+  const filteredPerfumes = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return uniquePerfumes
+    }
+    const query = searchQuery.toLowerCase()
+    return uniquePerfumes.filter(userPerfume =>
+      userPerfume.perfume.name.toLowerCase().includes(query)
+    )
+  }, [uniquePerfumes, searchQuery])
+
   // Render function for virtual scrolling
   const renderUserPerfume = (userPerfume: UserPerfumeI) => (
     <MyScentsListItem
@@ -304,6 +317,15 @@ const MyScentsPage = () => {
       </TitleBanner>
       <div className="noir-border relative max-w-max mx-auto text-center flex flex-col items-center justify-center gap-4 p-4 my-6">
         <h2 className="mb-2">{t("myScents.collection.heading")}</h2>
+        {uniquePerfumes.length > 0 && (
+          <div className="w-full max-w-md mb-4">
+            <SearchInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder={t("myScents.search.placeholder")}
+            />
+          </div>
+        )}
         {uniquePerfumes.length === 0 ? (
           <div>
             <p className="text-noir-gold-100 text-xl">
@@ -313,31 +335,42 @@ const MyScentsPage = () => {
               {t("myScents.collection.empty.subheading")}
             </p>
           </div>
-        ) : uniquePerfumes.length > 10 ? (
+        ) : filteredPerfumes.length === 0 ? (
+          <div className="animate-fade-in">
+            <p className="text-noir-gold-100 text-xl">
+              {t("myScents.search.noResults")}
+            </p>
+            <p className="text-noir-gold-500 italic">
+              {t("myScents.search.tryDifferent")}
+            </p>
+          </div>
+        ) : filteredPerfumes.length > 10 ? (
           // Use virtual scrolling for large collections
-          <VirtualScrollList
-            items={uniquePerfumes}
-            itemHeight={200}
-            containerHeight={600}
-            overscan={3}
-            className="w-full style-scroll"
-            renderItem={renderUserPerfume}
-            itemClassName="w-full"
-            emptyState={
-              <div>
-                <p className="text-noir-gold-100 text-xl">
-                  {t("myScents.collection.empty.heading")}
-                </p>
-                <p className="text-noir-gold-500 italic">
-                  {t("myScents.collection.empty.subheading")}
-                </p>
-              </div>
-            }
-          />
+          <div className="animate-fade-in">
+            <VirtualScrollList
+              items={filteredPerfumes}
+              itemHeight={200}
+              containerHeight={600}
+              overscan={3}
+              className="w-full style-scroll"
+              renderItem={renderUserPerfume}
+              itemClassName="w-full"
+              emptyState={
+                <div>
+                  <p className="text-noir-gold-100 text-xl">
+                    {t("myScents.collection.empty.heading")}
+                  </p>
+                  <p className="text-noir-gold-500 italic">
+                    {t("myScents.collection.empty.subheading")}
+                  </p>
+                </div>
+              }
+            />
+          </div>
         ) : (
           // Use regular rendering for small collections
-          <ul className="w-full">
-            {uniquePerfumes.map(userPerfume => renderUserPerfume(userPerfume))}
+          <ul className="w-full animate-fade-in">
+            {filteredPerfumes.map(userPerfume => renderUserPerfume(userPerfume))}
           </ul>
         )}
       </div>

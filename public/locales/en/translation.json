@@ -311,6 +311,11 @@
       "addCommentPlaceholder": "Add a comment...",
       "addCommentButton": "Add Comment",
       "noComments": "No comments yet. Be the first to share your thoughts!"
+    },
+    "search": {
+      "placeholder": "Search your perfumes...",
+      "noResults": "No perfumes found",
+      "tryDifferent": "Try a different search term"
     }
   },
   "navigation": {
@@ -515,7 +520,12 @@
     "subheading": "Every bottle has a past. Every trade leaves a trace.",
     "count": "perfumes available",
     "empty": "No perfumes are currently available for trade.",
-    "availableFrom": "Available from"
+    "availableFrom": "Available from",
+    "search": {
+      "placeholder": "Search available perfumes...",
+      "noResults": "No perfumes found",
+      "tryDifferent": "Try a different search term"
+    }
   },
   "traderProfile": {
     "meta": {
