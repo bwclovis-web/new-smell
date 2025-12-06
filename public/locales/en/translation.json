@@ -542,6 +542,7 @@
     "noItemsAvailable": "No items available for trading.",
     "noItemsSearchingFor": "No items searching for.",
     "amount": "Amount Available",
+    "price": "Price",
     "tradePrice": "Trade Price",
     "preference": "Preference",
     "tradeOnly": "Trade Only Item",

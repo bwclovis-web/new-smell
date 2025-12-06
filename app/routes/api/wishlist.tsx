@@ -79,6 +79,11 @@ const processAuthenticatedRequest = async (
 }
 
 const processRequest = async (request: Request) => {
+  // Only allow POST requests for actions
+  if (request.method !== "POST") {
+    return createErrorResponse("Method not allowed", 405)
+  }
+
   const formData = await request.formData()
 
   const validation = validateFormData(WishlistActionSchema, formData)

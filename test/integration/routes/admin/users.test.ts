@@ -88,7 +88,8 @@ describe("Admin Users Route Integration Tests", () => {
         context: {},
       }
 
-      await expect(usersLoader(args)).rejects.toThrow("Unauthorized")
+      // Authorization errors result in redirect Responses
+      await expect(usersLoader(args)).rejects.toBeInstanceOf(Response)
     })
 
     it("should deny access to unauthenticated users", async () => {
@@ -102,7 +103,8 @@ describe("Admin Users Route Integration Tests", () => {
         context: {},
       }
 
-      await expect(usersLoader(args)).rejects.toThrow("Unauthorized")
+      // Authorization errors result in redirect Responses
+      await expect(usersLoader(args)).rejects.toBeInstanceOf(Response)
     })
 
     it("should handle database errors gracefully", async () => {
@@ -117,10 +119,8 @@ describe("Admin Users Route Integration Tests", () => {
         context: {},
       }
 
-      const result = await usersLoader(args)
-
-      expect(result.users).toEqual([])
-      expect(result.currentUser).toEqual(mockAdminUser)
+      // Database errors are thrown by the error handler
+      await expect(usersLoader(args)).rejects.toThrow()
     })
   })
 

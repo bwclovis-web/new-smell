@@ -7,7 +7,7 @@
 
 /* eslint-disable max-nested-callbacks */
 
-import { beforeEach, describe, expect, it } from "vitest"
+import { afterEach, beforeEach, describe, expect, it } from "vitest"
 
 import {
   generateCorrelationId,

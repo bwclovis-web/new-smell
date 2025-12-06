@@ -262,7 +262,6 @@ function getCorrelationId(): string | undefined {
   // Server-side: try to get correlation ID from AsyncLocalStorage
   try {
     // Use require for conditional server-only import
-
     const {
       getCorrelationId: getCorrelationIdFunc,
     } = require("./correlationId.server")

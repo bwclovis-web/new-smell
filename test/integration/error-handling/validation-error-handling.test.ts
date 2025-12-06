@@ -575,8 +575,10 @@ describe("Validation Error Handling Integration Tests", () => {
         context: {},
       }
 
-      // Should handle invalid content type
-      await expect(wishlistAction(args)).rejects.toThrow()
+      // Should handle invalid content type - returns error response, not throws
+      const response = await wishlistAction(args)
+      expect(response).toHaveProperty("success", false)
+      expect(response).toHaveProperty("error")
     })
 
     it("should reject request with missing Content-Type", async () => {
@@ -633,9 +635,15 @@ describe("Validation Error Handling Integration Tests", () => {
         context: {},
       }
 
-      await wishlistAction(args)
+      const response = await wishlistAction(args)
 
+      // PUT requests should be rejected
       expect(wishlistServer.addToWishlist).not.toHaveBeenCalled()
+      if (response instanceof Response) {
+        expect(response.status).toBe(405)
+      } else {
+        expect(response).toHaveProperty("success", false)
+      }
     })
   })
 

@@ -436,6 +436,7 @@
     "noItemsAvailable": "No hay artículos disponibles para intercambio.",
     "noItemsSearchingFor": "No hay artículos que esté buscando.",
     "amount": "Cantidad Disponible",
+    "price": "Precio",
     "tradePrice": "Precio de Intercambio",
     "preference": "Preferencia",
     "tradeOnly": "Artículo Solo para Intercambio",
