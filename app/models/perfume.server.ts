@@ -464,15 +464,32 @@ export const getAvailablePerfumesForDecanting = async () => {
 interface GetAvailablePerfumesForDecantingPaginatedOptions {
   skip?: number
   take?: number
+  search?: string
 }
 
 export const getAvailablePerfumesForDecantingPaginated = async ({
   skip = 0,
   take = 16,
+  search,
 }: GetAvailablePerfumesForDecantingPaginatedOptions = {}) => {
+  // Build where clause with optional search filter
+  const whereClause = search
+    ? {
+        AND: [
+          availableForDecantingWhere,
+          {
+            OR: [
+              { name: { contains: search, mode: "insensitive" as const } },
+              { perfumeHouse: { name: { contains: search, mode: "insensitive" as const } } },
+            ],
+          },
+        ],
+      }
+    : availableForDecantingWhere
+
   const [perfumes, totalCount] = await Promise.all([
     prisma.perfume.findMany({
-      where: availableForDecantingWhere,
+      where: whereClause,
       select: availableForDecantingSelect,
       orderBy: {
         name: "asc",
@@ -481,7 +498,7 @@ export const getAvailablePerfumesForDecantingPaginated = async ({
       take,
     }),
     prisma.perfume.count({
-      where: availableForDecantingWhere,
+      where: whereClause,
     }),
   ])
 

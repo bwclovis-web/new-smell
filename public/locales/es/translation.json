@@ -4,7 +4,8 @@
     "loadingMore": "Cargando más...",
     "noMore": "No hay más {{itemName}} para cargar.",
     "allLoaded": "Todas las {{itemName}} cargadas.",
-    "loadMore": "Cargar Más {{itemName}}"
+    "loadMore": "Cargar Más {{itemName}}",
+    "search": "Buscar..."
   },
   "admin": {
     "navigation": {
@@ -222,6 +223,11 @@
       "addCommentPlaceholder": "Agrega un comentario...",
       "addCommentButton": "Agregar Comentario",
       "noComments": "Aún no hay comentarios. ¡Sé el primero en compartir tus pensamientos!"
+    },
+    "search": {
+      "placeholder": "Busca tus perfumes...",
+      "noResults": "No se encontraron perfumes",
+      "tryDifferent": "Prueba con un término de búsqueda diferente"
     }
   },
   "navigation": {
@@ -411,7 +417,12 @@
     "subheading": "Cada botella tiene un pasado. Cada intercambio deja una huella.",
     "count": "perfumes disponibles",
     "empty": "Actualmente no hay perfumes disponibles para intercambio.",
-    "availableFrom": "Disponible de"
+    "availableFrom": "Disponible de",
+    "search": {
+      "placeholder": "Busca perfumes disponibles...",
+      "noResults": "No se encontraron perfumes",
+      "tryDifferent": "Prueba con un término de búsqueda diferente"
+    }
   },
   "traderProfile": {
     "meta": {
