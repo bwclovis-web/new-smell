@@ -7,6 +7,7 @@ describe("PerformanceMonitor (Container)", () => {
   let mockPerformanceObserver: any
   let performanceObserverInstances: any[] = []
   let mockGtag: any
+  let mockGetEntriesByType: any
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -32,29 +33,35 @@ describe("PerformanceMonitor (Container)", () => {
     // Mock window.gtag
     ;(global.window as any).gtag = mockGtag
 
-    // Mock performance API
+    // Mock performance API - create spy for getEntriesByType
+    mockGetEntriesByType = vi.fn((type: string) => {
+      if (type === "navigation") {
+        return [
+          {
+            domainLookupStart: 0,
+            domainLookupEnd: 10,
+            connectStart: 10,
+            connectEnd: 50,
+            requestStart: 50,
+            responseStart: 200,
+            navigationStart: 0,
+            domContentLoadedEventEnd: 1500,
+            loadEventEnd: 2500,
+          },
+        ]
+      }
+      return []
+    })
+
+    // Set up performance mock on both global and window
     global.performance = {
       ...global.performance,
       now: vi.fn(() => Date.now()),
-      getEntriesByType: vi.fn((type: string) => {
-        if (type === "navigation") {
-          return [
-            {
-              domainLookupStart: 0,
-              domainLookupEnd: 10,
-              connectStart: 10,
-              connectEnd: 50,
-              requestStart: 50,
-              responseStart: 200,
-              navigationStart: 0,
-              domContentLoadedEventEnd: 1500,
-              loadEventEnd: 2500,
-            },
-          ]
-        }
-        return []
-      }),
+      getEntriesByType: mockGetEntriesByType,
     } as any
+
+    // Ensure window.performance is also set
+    ;(global.window as any).performance = global.performance
   })
 
   afterEach(() => {
@@ -419,6 +426,9 @@ describe("PerformanceMonitor (Container)", () => {
       vi.useFakeTimers()
       vi.stubEnv("DEV", false)
 
+      // Ensure window.performance is set up after fake timers
+      ;(global.window as any).performance = global.performance
+
       render(<PerformanceMonitor />)
 
       // Trigger load event
@@ -427,7 +437,7 @@ describe("PerformanceMonitor (Container)", () => {
       // Advance timers to trigger setTimeout
       vi.runAllTimers()
 
-      expect(performance.getEntriesByType).toHaveBeenCalledWith("navigation")
+      expect(mockGetEntriesByType).toHaveBeenCalledWith("navigation")
 
       vi.useRealTimers()
       vi.unstubAllEnvs()
@@ -436,6 +446,9 @@ describe("PerformanceMonitor (Container)", () => {
     it("should log performance metrics", () => {
       vi.useFakeTimers()
       vi.stubEnv("DEV", false)
+
+      // Ensure window.performance is set up after fake timers
+      ;(global.window as any).performance = global.performance
 
       render(<PerformanceMonitor />)
 
@@ -460,6 +473,9 @@ describe("PerformanceMonitor (Container)", () => {
     it("should send navigation metrics to analytics", () => {
       vi.useFakeTimers()
       vi.stubEnv("DEV", false)
+
+      // Ensure window.performance is set up after fake timers
+      ;(global.window as any).performance = global.performance
 
       render(<PerformanceMonitor />)
 
