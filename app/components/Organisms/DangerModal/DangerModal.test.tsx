@@ -180,9 +180,10 @@ describe("DangerModal", () => {
     })
 
     it("handles empty description", () => {
-      render(<DangerModal {...defaultProps} description="" />)
-      const description = screen.getByText("")
+      const { container } = render(<DangerModal {...defaultProps} description="" />)
+      const description = container.querySelector("p.text-noir-gold-100.text-xl")
       expect(description).toBeInTheDocument()
+      expect(description).toHaveTextContent("")
     })
   })
 
