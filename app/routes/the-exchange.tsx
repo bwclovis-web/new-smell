@@ -121,11 +121,18 @@ const TradingPostPage = () => {
   }, [])
 
   const handlePageChange = (page: number) => {
+    // Clear any pending debounce timer to prevent race conditions
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+      debounceRef.current = null
+    }
+
     const nextSearch = new URLSearchParams()
 
-    // Preserve search query when paginating
-    if (searchQuery) {
-      nextSearch.set("q", searchQuery)
+    // Use localSearchValue instead of searchQuery to capture current input state
+    // This ensures pagination uses the search term the user is currently typing
+    if (localSearchValue.trim()) {
+      nextSearch.set("q", localSearchValue.trim())
     }
 
     if (page > 1) {
