@@ -416,6 +416,7 @@ describe("PerformanceMonitor (Container)", () => {
 
   describe("Navigation Performance Metrics", () => {
     it("should collect navigation metrics on page load", () => {
+      vi.useFakeTimers()
       vi.stubEnv("DEV", false)
 
       render(<PerformanceMonitor />)
@@ -428,10 +429,12 @@ describe("PerformanceMonitor (Container)", () => {
 
       expect(performance.getEntriesByType).toHaveBeenCalledWith("navigation")
 
+      vi.useRealTimers()
       vi.unstubAllEnvs()
     })
 
     it("should log performance metrics", () => {
+      vi.useFakeTimers()
       vi.stubEnv("DEV", false)
 
       render(<PerformanceMonitor />)
@@ -450,10 +453,12 @@ describe("PerformanceMonitor (Container)", () => {
         })
       )
 
+      vi.useRealTimers()
       vi.unstubAllEnvs()
     })
 
     it("should send navigation metrics to analytics", () => {
+      vi.useFakeTimers()
       vi.stubEnv("DEV", false)
 
       render(<PerformanceMonitor />)
@@ -473,6 +478,7 @@ describe("PerformanceMonitor (Container)", () => {
         event_category: "Performance",
       })
 
+      vi.useRealTimers()
       vi.unstubAllEnvs()
     })
   })
