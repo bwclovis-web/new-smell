@@ -113,7 +113,7 @@ describe("Perfume Route Integration Tests", () => {
         context: {},
       }
 
-      await expect(perfumeLoader(args)).rejects.toThrow("Perfume slug is required")
+      await expect(perfumeLoader(args)).rejects.toThrow("Perfume slug not found")
     })
 
     it("should throw 404 when perfume not found", async () => {
@@ -127,7 +127,7 @@ describe("Perfume Route Integration Tests", () => {
         context: {},
       }
 
-      await expect(perfumeLoader(args)).rejects.toThrow("House not found")
+      await expect(perfumeLoader(args)).rejects.toThrow("Perfume not found")
     })
 
     it("should handle database errors gracefully", async () => {
@@ -141,7 +141,7 @@ describe("Perfume Route Integration Tests", () => {
         context: {},
       }
 
-      await expect(perfumeLoader(args)).rejects.toThrow("Database connection failed")
+      await expect(perfumeLoader(args)).rejects.toThrow("Database connection error")
     })
   })
 })

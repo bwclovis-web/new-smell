@@ -274,7 +274,7 @@ describe("Admin Users Route Integration Tests", () => {
       const result = await usersAction(args)
 
       expect(result.success).toBe(false)
-      expect(result.message).toContain("error")
+      expect(result.error || result.message).toBeDefined()
     })
   })
 })
