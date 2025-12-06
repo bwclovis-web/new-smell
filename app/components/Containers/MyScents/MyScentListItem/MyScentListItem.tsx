@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction } from "react"
+import { type Dispatch, type SetStateAction, useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { MdDeleteForever } from "react-icons/md"
 import { useFetcher, useNavigation } from "react-router"
@@ -30,6 +30,7 @@ const MyScentsListItem = ({
   const navigation = useNavigation()
   const { modalOpen, toggleModal, modalId, closeModal } = useSessionStore()
   const isSubmitting = navigation.state === "submitting"
+  const removeButtonRef = useRef<HTMLButtonElement>(null)
 
   const handleRemovePerfume = (userPerfumeId: string) => {
     setUserPerfumes(prev => prev.filter(perfume => perfume.id !== userPerfumeId))
@@ -82,9 +83,9 @@ const MyScentsListItem = ({
         </div>
         <div className="flex gap-4">
           <Button
+            ref={removeButtonRef}
             onClick={() => {
-              const buttonRef = { current: document.createElement("button") }
-              toggleModal(buttonRef as any, "delete-item")
+              toggleModal(removeButtonRef, "delete-item")
             }}
             disabled={isSubmitting}
             variant="danger"

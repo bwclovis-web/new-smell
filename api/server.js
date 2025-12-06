@@ -548,9 +548,70 @@ app.get("/test-images", (req, res) => {
   })
 })
 
+// Admin authentication middleware
+const requireAdminAuth = async (req, res, next) => {
+  try {
+    const cookies = parseCookies(req)
+    
+    // Try access token first
+    let accessToken = cookies.accessToken
+    
+    // Fallback to legacy token for backward compatibility
+    if (!accessToken && cookies.token) {
+      accessToken = cookies.token
+    }
+    
+    if (!accessToken) {
+      return res.status(401).json({
+        success: false,
+        error: "Authentication required",
+        message: "No authentication token provided",
+      })
+    }
+    
+    const payload = verifyJwt(accessToken)
+    if (!payload || !payload.userId) {
+      return res.status(401).json({
+        success: false,
+        error: "Invalid token",
+        message: "Authentication token is invalid or expired",
+      })
+    }
+    
+    // Dynamically import getUserById from TypeScript module
+    const { getUserById } = await import("../app/models/user.query.js")
+    const user = await getUserById(payload.userId)
+    
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: "User not found",
+        message: "User associated with token not found",
+      })
+    }
+    
+    if (user.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        error: "Forbidden",
+        message: "Admin access required",
+      })
+    }
+    
+    // Attach user to request for use in route handlers
+    req.user = user
+    next()
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: "Authentication error",
+      message: error.message || "An error occurred during authentication",
+    })
+  }
+}
+
 // Security monitoring endpoints (admin only)
-app.get("/admin/rate-limit-stats", (req, res) => {
-  // In production, add proper authentication here
+app.get("/admin/rate-limit-stats", requireAdminAuth, (req, res) => {
   const stats = getRateLimitStats()
   res.json({
     message: "Rate limiting statistics",
@@ -560,7 +621,7 @@ app.get("/admin/rate-limit-stats", (req, res) => {
 })
 
 // Security events monitoring
-app.get("/admin/security-stats", (req, res) => {
+app.get("/admin/security-stats", requireAdminAuth, (req, res) => {
   const stats = getSecurityStats()
   res.json({
     message: "Security monitoring statistics",
@@ -570,7 +631,7 @@ app.get("/admin/security-stats", (req, res) => {
 })
 
 // Audit logs endpoint
-app.get("/admin/audit-logs", (req, res) => {
+app.get("/admin/audit-logs", requireAdminAuth, (req, res) => {
   const { category, level, userId, ipAddress, limit = 100 } = req.query
   const logs = getAuditLogs({
     category,
@@ -589,7 +650,7 @@ app.get("/admin/audit-logs", (req, res) => {
 })
 
 // Audit statistics
-app.get("/admin/audit-stats", (req, res) => {
+app.get("/admin/audit-stats", requireAdminAuth, (req, res) => {
   const stats = getAuditStats()
   res.json({
     message: "Audit statistics",
@@ -599,7 +660,7 @@ app.get("/admin/audit-stats", (req, res) => {
 })
 
 // Security events for specific IP
-app.get("/admin/security-events/:ip", (req, res) => {
+app.get("/admin/security-events/:ip", requireAdminAuth, (req, res) => {
   const { ip } = req.params
   const events = getEventsForIP(ip)
 
@@ -612,7 +673,7 @@ app.get("/admin/security-events/:ip", (req, res) => {
 })
 
 // Compression monitoring endpoint
-app.get("/admin/compression-stats", (req, res) => {
+app.get("/admin/compression-stats", requireAdminAuth, (req, res) => {
   // Get compression statistics
   const compressionStats = {
     enabled: true,

@@ -6,7 +6,7 @@ import { Button } from "~/components/Atoms/Button"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import banner from "~/images/security.webp"
 import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
-import { sharedLoader } from "~/utils/sharedLoader"
+import { requireAdmin } from "~/utils/requireAdmin.server"
 
 interface SecurityStats {
   totalEvents: number
@@ -59,7 +59,7 @@ export const ROUTE_PATH = "/admin/security-monitor" as const
 
 export const loader = withLoaderErrorHandling(
   async ({ request }: { request: Request }) => {
-    const user = await sharedLoader(request)
+    const user = await requireAdmin(request)
 
     // Get the base URL from the request
     const url = new URL(request.url)

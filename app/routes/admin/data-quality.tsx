@@ -4,13 +4,22 @@ import { useLoaderData } from "react-router"
 import DataQualityDashboard from "~/components/Containers/DataQualityDashboard"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import banner from "~/images/quality.webp"
-import { sharedLoader } from "~/utils/sharedLoader"
+import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { requireAdmin } from "~/utils/requireAdmin.server"
+
 export const ROUTE_PATH = "/admin/data-quality" as const
 
-export const loader = async ({ request }: { request: Request }) => {
-  const user = await sharedLoader(request)
-  return { user }
-}
+export const loader = withLoaderErrorHandling(
+  async ({ request }: { request: Request }) => {
+    const user = await requireAdmin(request)
+    return { user }
+  },
+  {
+    context: { page: "data-quality" },
+    redirectOnAuth: "/sign-in?redirect=/admin/data-quality",
+    redirectOnAuthz: "/unauthorized",
+  }
+)
 
 export default function DataQualityPage() {
   const { user } = useLoaderData<typeof loader>()

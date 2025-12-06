@@ -11,6 +11,9 @@ import { useNavigate } from "react-router"
 import PerfumeHouseForm from "~/components/Containers/Forms/PerfumeHouseForm"
 import { getPerfumeHouseBySlug, updatePerfumeHouse } from "~/models/house.server"
 import { FORM_TYPES } from "~/utils/constants"
+import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { requireAdmin } from "~/utils/requireAdmin.server"
+
 export interface CustomSubmit extends SubmissionResult<string[]> {
   success: boolean
   data: {
@@ -18,26 +21,42 @@ export interface CustomSubmit extends SubmissionResult<string[]> {
     slug: string
   }
 }
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData()
-  const formIdEntry = formData.get("houseId")?.toString()
-  if (typeof formIdEntry !== "string") {
-    throw new Error("Form ID is required and must be a string")
-  }
-  const res = updatePerfumeHouse(formIdEntry, formData)
+export const action = withActionErrorHandling(
+  async ({ request }: ActionFunctionArgs) => {
+    await requireAdmin(request)
+    
+    const formData = await request.formData()
+    const formIdEntry = formData.get("houseId")?.toString()
+    if (typeof formIdEntry !== "string") {
+      throw new Error("Form ID is required and must be a string")
+    }
+    const res = updatePerfumeHouse(formIdEntry, formData)
 
-  return res
-}
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-  if (!params.houseSlug) {
-    throw new Error("House ID is required")
+    return res
+  },
+  {
+    context: { page: "edit-perfume-house", action: "update-perfume-house" },
   }
-  const perfumeHouse = await getPerfumeHouseBySlug(params.houseSlug)
-  if (!perfumeHouse) {
-    throw new Response("House not found", { status: 404 })
+)
+export const loader = withLoaderErrorHandling(
+  async ({ params, request }: LoaderFunctionArgs) => {
+    await requireAdmin(request)
+    
+    if (!params.houseSlug) {
+      throw new Error("House ID is required")
+    }
+    const perfumeHouse = await getPerfumeHouseBySlug(params.houseSlug)
+    if (!perfumeHouse) {
+      throw new Response("House not found", { status: 404 })
+    }
+    return { perfumeHouse }
+  },
+  {
+    context: { page: "edit-perfume-house" },
+    redirectOnAuth: "/sign-in",
+    redirectOnAuthz: "/unauthorized",
   }
-  return { perfumeHouse }
-}
+)
 const EditHousePage = () => {
   const { perfumeHouse } = useLoaderData<typeof loader>()
   const lastResult = useActionData<CustomSubmit>()

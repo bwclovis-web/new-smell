@@ -1,9 +1,13 @@
 import { ServerErrorHandler } from "~/utils/errorHandling.server"
+import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
 import { getAuditStats } from "~/utils/security/audit-logger.server"
+import { requireAdmin } from "~/utils/requireAdmin.server"
 
 export const ROUTE_PATH = "/admin/audit-stats" as const
 
-export const loader = async () => {
+export const loader = withLoaderErrorHandling(
+  async ({ request }: { request: Request }) => {
+    await requireAdmin(request)
   try {
     const stats = getAuditStats()
 
@@ -19,4 +23,10 @@ export const loader = async () => {
 
     return ServerErrorHandler.createErrorResponse(appError)
   }
-}
+  },
+  {
+    context: { page: "audit-stats" },
+    redirectOnAuth: "/sign-in?redirect=/admin/audit-stats",
+    redirectOnAuthz: "/unauthorized",
+  }
+)
