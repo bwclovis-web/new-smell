@@ -103,7 +103,6 @@ export async function markAlertAsRead(alertId: string, userId: string) {
  * Dismiss an alert (remove it from view)
  */
 export async function dismissAlert(alertId: string, userId: string) {
-  console.log(`Dismissing alert ${alertId} for user ${userId}`)
   const result = await prisma.userAlert.updateMany({
     where: {
       id: alertId,
@@ -114,7 +113,6 @@ export async function dismissAlert(alertId: string, userId: string) {
       dismissedAt: new Date(),
     },
   })
-  console.log(`Dismissed ${result.count} alert(s)`)
   return result
 }
 
@@ -300,15 +298,12 @@ export async function checkWishlistAvailabilityAlerts(perfumeId: string) {
     })
 
     if (existingAlert) {
-      console.log(`Skipping wishlist alert for user ${wishlistItem.userId} and perfume ${perfumeId} - active alert exists from ${existingAlert.createdAt}`)
       continue
     }
 
     // Create alert for this user
     const title = `${wishlistItem.perfume.name} is now available!`
     const message = `${wishlistItem.perfume.name} by ${wishlistItem.perfume.perfumeHouse?.name} is now available on the trading post from ${availableTraders.length} trader(s).`
-
-    console.log(`Creating wishlist availability alert for user ${wishlistItem.userId} and perfume ${perfumeId}`)
     alertsToCreate.push({
       userId: wishlistItem.userId,
       perfumeId,
@@ -438,25 +433,11 @@ export async function checkDecantInterestAlerts(
         },
       },
     })
-    console.log(`Found ${allExistingAlerts.length} existing decant interest alerts for user ${
-        decanter.userId
-      } and perfume ${perfumeId} in last 24h (${
-        allExistingAlerts.filter(a => !a.isDismissed).length
-      } active)`)
-
     if (existingAlert) {
-      console.log(`Skipping decant interest alert for user ${decanter.userId}, perfume ${perfumeId}, interested user ${interestedUserId} - active alert exists from ${existingAlert.createdAt}`)
       continue
     }
 
     // Create alert for this decanter
-    console.log(`User data for ${interestedUserId}:`, {
-      username: interestedUser.username,
-      firstName: interestedUser.firstName,
-      lastName: interestedUser.lastName,
-      email: interestedUser.email,
-    })
-
     const interestedUserName =
       interestedUser.username ||
       (interestedUser.firstName && interestedUser.lastName
@@ -465,12 +446,8 @@ export async function checkDecantInterestAlerts(
       interestedUser.email ||
       "Unknown User"
 
-    console.log(`Final interestedUserName: ${interestedUserName}`)
-
     const title = `Someone wants your ${decanter.perfume.name}!`
     const message = `${interestedUserName} added ${decanter.perfume.name} by ${decanter.perfume.perfumeHouse?.name} to their wishlist. They might be interested in trading with you!`
-
-    console.log(`Creating decant interest alert for user ${decanter.userId}, perfume ${perfumeId}, interested user ${interestedUserId}`)
     alertsToCreate.push({
       userId: decanter.userId,
       perfumeId,

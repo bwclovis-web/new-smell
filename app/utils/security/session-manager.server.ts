@@ -124,14 +124,12 @@ export async function refreshAccessToken(refreshToken: string) {
 export async function invalidateSession(sessionId: string) {
   // In a cookie-based system, invalidation happens by clearing cookies
   // No database operation needed
-  console.log(`Session ${sessionId} marked for invalidation`)
 }
 
 // Invalidate all user sessions (simplified - no database operation needed)
 export async function invalidateAllUserSessions(userId: string) {
   // In a cookie-based system, invalidation happens by clearing cookies
   // No database operation needed
-  console.log(`All sessions for user ${userId} marked for invalidation`)
 }
 
 // Get active session (simplified - no database lookup)
@@ -145,7 +143,6 @@ export async function getActiveSession(sessionId: string) {
 export async function cleanupExpiredSessions() {
   // In a cookie-based system, expired sessions are automatically invalid
   // No database cleanup needed
-  console.log("No database sessions to clean up")
   return 0
 }
 

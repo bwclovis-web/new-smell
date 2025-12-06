@@ -60,10 +60,6 @@ const PerfumeForm = ({ formType, lastResult, data }: PerfumeFormProps) => {
     }
   }, [data])
 
-  // Debug logging for note state changes
-  useEffect(() => {
-    console.log("Note states updated:", { topNotes, heartNotes, baseNotes })
-  }, [topNotes, heartNotes, baseNotes])
 
   // Dynamically update hidden inputs when note states change
   useEffect(() => {
@@ -113,10 +109,6 @@ const PerfumeForm = ({ formType, lastResult, data }: PerfumeFormProps) => {
       input.value = note.id
       formElement.appendChild(input)
     })
-
-    console.log("Updated hidden inputs in DOM:", {
-      topNotesCount: topNotes.length,
-      heartNotesCount: heartNotes.length,
       baseNotesCount: baseNotes.length,
     })
   }, [

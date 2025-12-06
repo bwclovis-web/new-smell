@@ -318,12 +318,7 @@ const handleActionError = async (error: any) => {
 
 // Helper function to process form data
 const processFormData = async (request: Request) => {
-  console.log("=== FORM DATA PROCESSING DEBUG ===")
   const formData = await request.formData()
-  console.log("FormData keys:", Array.from(formData.keys()))
-  for (const [key, value] of formData.entries()) {
-    console.log(`Form field ${key}:`, value)
-  }
 
   const result = {
     perfumeId: formData.get("perfumeId") as string,
@@ -338,8 +333,6 @@ const processFormData = async (request: Request) => {
     tradeOnly: formData.get("tradeOnly") === "true",
   }
 
-  console.log("Processed form data result:", result)
-  console.log("=== END FORM DATA PROCESSING DEBUG ===")
   return result
 }
 

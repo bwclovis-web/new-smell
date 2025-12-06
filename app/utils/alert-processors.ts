@@ -12,8 +12,6 @@ export async function processWishlistAvailabilityAlerts(perfumeId: string) {
     const alerts = await checkWishlistAvailabilityAlerts(perfumeId)
 
     if (alerts.length > 0) {
-      console.log(`Generated ${alerts.length} wishlist availability alerts for perfume ${perfumeId}`)
-
       // NOTE: Email notifications are not yet implemented
       // When implementing, enable this code and integrate with your email service:
       // for (const alert of alerts) {
@@ -42,8 +40,6 @@ export async function processDecantInterestAlerts(
     const alerts = await checkDecantInterestAlerts(perfumeId, interestedUserId)
 
     if (alerts.length > 0) {
-      console.log(`Generated ${alerts.length} decant interest alerts for perfume ${perfumeId} from user ${interestedUserId}`)
-
       // NOTE: Email notifications are not yet implemented
       // When implementing, enable this code and integrate with your email service:
       // for (const alert of alerts) {
@@ -108,8 +104,6 @@ export async function processBulkAlerts(perfumeIds: string[]) {
       .filter((result): result is PromiseRejectedResult => result.status === "rejected")
       .map(result => result.reason)
 
-    console.log(`Bulk alert processing completed: ${successful.length} alerts generated, ${failed.length} failed`)
-
     return {
       successful,
       failed,
@@ -150,9 +144,7 @@ export async function sendWishlistAlertEmail(
   availableTraders: Array<{ userId: string; displayName: string }>
 ) {
   // NOTE: Email sending not yet implemented
-  // This is a placeholder that logs the intended action
-  console.log(`[Email Placeholder] Would send wishlist alert email to ${userEmail} for ${perfumeName}`)
-  console.log(`Available traders:`, availableTraders)
+  // This is a placeholder for future email implementation
 }
 
 export async function sendDecantInterestAlertEmail(
@@ -161,7 +153,5 @@ export async function sendDecantInterestAlertEmail(
   interestedUserName: string
 ) {
   // NOTE: Email sending not yet implemented
-  // This is a placeholder that logs the intended action
-  console.log(`[Email Placeholder] Would send decant interest alert email to ${userEmail} for ${perfumeName}`)
-  console.log(`Interested user: ${interestedUserName}`)
+  // This is a placeholder for future email implementation
 }

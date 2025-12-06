@@ -35,10 +35,6 @@ export const createUser = async (data: FormData) => {
     )
   }
 
-  // Calculate password strength for logging
-  const strengthInfo = calculatePasswordStrength(password)
-  console.log(`New user password strength: ${strengthInfo.strength} (score: ${strengthInfo.score})`)
-
   const user = await prisma.user.create({
     data: {
       email: data.get("email") as string,
@@ -204,10 +200,6 @@ export const changePassword = async (
         error: "New password must be different from current password",
       }
     }
-
-    // Calculate password strength
-    const strengthInfo = calculatePasswordStrength(newPassword)
-    console.log(`Password change - new password strength: ${strengthInfo.strength} (score: ${strengthInfo.score})`)
 
     // Hash and update password
     const hashedNewPassword = await hashPassword(newPassword)

@@ -14,15 +14,12 @@ import { FORM_TYPES } from "~/utils/constants"
 import type { CustomSubmit } from "./EditPerfumeHousePage"
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  console.log("EditPerfumePage action called")
   const formData = await request.formData()
   const formIdEntry = formData.get("perfumeId")?.toString()
   if (typeof formIdEntry !== "string") {
     throw new Error("Form ID is required and must be a string")
   }
-  console.log("Calling updatePerfume with ID:", formIdEntry)
   const res = await updatePerfume(formIdEntry, formData)
-  console.log("UpdatePerfume result:", res)
   return res
 }
 
@@ -31,22 +28,10 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     throw new Error("Perfume ID is required")
   }
 
-  // Add cache-busting parameter
-  const url = new URL(request.url)
-  const cacheBuster = url.searchParams.get("cb") || Date.now().toString()
-
-  console.log("EditPerfumePage loader called with cache buster:", cacheBuster)
-
   const perfume = await getPerfumeBySlug(params.perfumeSlug)
   if (!perfume) {
     throw new Response("Perfume not found", { status: 404 })
   }
-
-  console.log("Loaded perfume notes:", {
-    topNotes: perfume.perfumeNotesOpen?.length || 0,
-    heartNotes: perfume.perfumeNotesHeart?.length || 0,
-    baseNotes: perfume.perfumeNotesClose?.length || 0,
-  })
 
   return { perfume }
 }

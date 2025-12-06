@@ -20,7 +20,7 @@ export const PriceFilter = () => {
     max: 1000,
     step: 10,
     value: 250,
-    onChange: value => console.log("Price changed to:", value),
+    onChange: () => {},
     disabled: false,
   })
 
@@ -84,7 +84,7 @@ export const VolumeControl = () => {
     max: 100,
     step: 1,
     value: 50,
-    onChange: value => console.log("Volume changed to:", value),
+    onChange: () => {},
     disabled: false,
   })
 

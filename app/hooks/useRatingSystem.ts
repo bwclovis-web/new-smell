@@ -65,7 +65,6 @@ export const useRatingSystem = ({
   const handleRatingChange = useCallback(
     async (category: keyof RatingData, rating: number) => {
       if (!isInteractive || !userId || userId === "anonymous") {
-        console.log("Cannot submit rating:", { isInteractive, userId })
         return
       }
 

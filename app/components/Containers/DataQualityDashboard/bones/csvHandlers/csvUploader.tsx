@@ -23,13 +23,10 @@ export const createHandleUploadCSV =
         return
       }
 
-      console.log("Uploading CSV file:", file.name, "Size:", file.size)
       const text = await file.text()
-      console.log("CSV content preview:", text.substring(0, 200) + "...")
 
       // Use provided CSRF token or try to get from cookies as fallback
       const token = csrfToken || getCSRFTokenFromCookies()
-      console.log("CSRF token found:", token ? "Yes" : "No")
 
       if (!token) {
         alert("CSRF token not found. Please refresh the page and try again.")
@@ -42,16 +39,13 @@ export const createHandleUploadCSV =
         "x-csrf-token": token,
       }
 
-      console.log("Sending request to /api/update-house-info with CSRF token")
       const res = await fetch("/api/update-house-info", {
         method: "POST",
         headers,
         body: text,
       })
 
-      console.log("Response status:", res.status)
       const result = await res.json()
-      console.log("Response data:", result)
 
       if (!res.ok) {
         throw new Error(`HTTP ${res.status}: ${result.error || "Unknown error"}`)

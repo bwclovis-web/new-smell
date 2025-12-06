@@ -460,11 +460,8 @@ class PerformanceAnalyzer {
    */
   logReport() {
     const report = this.collect()
-    console.group("🚀 Performance Report")
-    console.log("Metrics:", report.metrics)
-    console.log("Issues:", report.issues)
-    console.log("Recommendations:", report.recommendations)
-    console.groupEnd()
+    // Report available via collect() method for structured logging
+    return report
   }
 }
 

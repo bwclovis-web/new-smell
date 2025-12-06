@@ -93,9 +93,6 @@ export const action = async ({ request }: { request: Request }) => {
     if (!houseId) {
       try {
         const createResult = await createPerfumeHouse(formData)
-        // Add logging for creation result
-        // eslint-disable-next-line no-console
-        console.log("CREATE", formData.get("name"), createResult)
         if (createResult.success) {
           results.push({ name: formData.get("name"), status: "created" })
         } else {
@@ -128,8 +125,6 @@ export const action = async ({ request }: { request: Request }) => {
     }
     try {
       await updatePerfumeHouse(houseId, formData)
-      // eslint-disable-next-line no-console
-      console.log("UPDATE", formData.get("name"), houseId)
       results.push({ name: formData.get("name"), status: "updated" })
     } catch (err) {
       const { ErrorHandler } = await import("~/utils/errorHandling")

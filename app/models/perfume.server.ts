@@ -247,17 +247,6 @@ export const updatePerfume = async (id: string, data: FormData) => {
   try {
     const name = sanitizeText(data.get("name") as string)
 
-    // Debug logging
-    const topNotes = data.getAll("notesTop") as string[]
-    const heartNotes = data.getAll("notesHeart") as string[]
-    const baseNotes = data.getAll("notesBase") as string[]
-
-    console.log("UpdatePerfume - Received note data:", {
-      topNotes,
-      heartNotes,
-      baseNotes,
-    })
-
     // Use transaction to update perfume and note relations
     const updatedPerfume = await prisma.$transaction(async tx => {
       // Update perfume basic info
