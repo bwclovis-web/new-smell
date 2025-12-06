@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react"
+import { act, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import PerformanceMonitor from "./PerformanceMonitor"
@@ -426,16 +426,29 @@ describe("PerformanceMonitor (Container)", () => {
       vi.useFakeTimers()
       vi.stubEnv("DEV", false)
 
-      // Ensure window.performance is set up after fake timers
+      // Ensure window.performance is set up before rendering
+      // so the component's "performance" in window check passes
       ;(global.window as any).performance = global.performance
 
-      render(<PerformanceMonitor />)
+      // Render component and wait for useEffect to run
+      act(() => {
+        render(<PerformanceMonitor />)
+      })
 
-      // Trigger load event
-      window.dispatchEvent(new Event("load"))
+      // Small delay to ensure useEffect has run and event listener is attached
+      act(() => {
+        vi.advanceTimersByTime(0)
+      })
+
+      // Trigger load event after component has mounted
+      act(() => {
+        window.dispatchEvent(new Event("load"))
+      })
 
       // Advance timers to trigger setTimeout
-      vi.runAllTimers()
+      act(() => {
+        vi.runAllTimers()
+      })
 
       expect(mockGetEntriesByType).toHaveBeenCalledWith("navigation")
 
@@ -447,13 +460,28 @@ describe("PerformanceMonitor (Container)", () => {
       vi.useFakeTimers()
       vi.stubEnv("DEV", false)
 
-      // Ensure window.performance is set up after fake timers
+      // Ensure window.performance is set up before rendering
       ;(global.window as any).performance = global.performance
 
-      render(<PerformanceMonitor />)
+      // Render component and wait for useEffect to run
+      act(() => {
+        render(<PerformanceMonitor />)
+      })
 
-      window.dispatchEvent(new Event("load"))
-      vi.runAllTimers()
+      // Small delay to ensure useEffect has run and event listener is attached
+      act(() => {
+        vi.advanceTimersByTime(0)
+      })
+
+      // Trigger load event after component has mounted
+      act(() => {
+        window.dispatchEvent(new Event("load"))
+      })
+
+      // Advance timers to trigger setTimeout
+      act(() => {
+        vi.runAllTimers()
+      })
 
       expect(console.log).toHaveBeenCalledWith(
         "Performance Metrics:",
@@ -474,13 +502,28 @@ describe("PerformanceMonitor (Container)", () => {
       vi.useFakeTimers()
       vi.stubEnv("DEV", false)
 
-      // Ensure window.performance is set up after fake timers
+      // Ensure window.performance is set up before rendering
       ;(global.window as any).performance = global.performance
 
-      render(<PerformanceMonitor />)
+      // Render component and wait for useEffect to run
+      act(() => {
+        render(<PerformanceMonitor />)
+      })
 
-      window.dispatchEvent(new Event("load"))
-      vi.runAllTimers()
+      // Small delay to ensure useEffect has run and event listener is attached
+      act(() => {
+        vi.advanceTimersByTime(0)
+      })
+
+      // Trigger load event after component has mounted
+      act(() => {
+        window.dispatchEvent(new Event("load"))
+      })
+
+      // Advance timers to trigger setTimeout
+      act(() => {
+        vi.runAllTimers()
+      })
 
       expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
         metric_name: "dns",
