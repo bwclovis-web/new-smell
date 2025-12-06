@@ -66,11 +66,18 @@ describe("Wishlist API Integration Tests", () => {
 
       const response = await action(args)
 
+      // Verify the action was called successfully
+      expect(auth.authenticateUser).toHaveBeenCalled()
       expect(wishlistServer.addToWishlist).toHaveBeenCalledWith(
         mockUserId,
         mockPerfumeId,
         false
       )
+      
+      // Verify response is successful
+      if (response instanceof Response) {
+        expect(response.status).toBe(200)
+      }
     })
 
     it("should return error when user is not authenticated", async () => {
@@ -133,12 +140,17 @@ describe("Wishlist API Integration Tests", () => {
         context: {},
       }
 
-      await action(args)
+      const response = await action(args)
 
+      expect(auth.authenticateUser).toHaveBeenCalled()
       expect(wishlistServer.removeFromWishlist).toHaveBeenCalledWith(
         mockUserId,
         mockPerfumeId
       )
+      
+      if (response instanceof Response) {
+        expect(response.status).toBe(200)
+      }
     })
   })
 
@@ -175,13 +187,18 @@ describe("Wishlist API Integration Tests", () => {
         context: {},
       }
 
-      await action(args)
+      const response = await action(args)
 
+      expect(auth.authenticateUser).toHaveBeenCalled()
       expect(wishlistServer.updateWishlistVisibility).toHaveBeenCalledWith(
         mockUserId,
         mockPerfumeId,
         true
       )
+      
+      if (response instanceof Response) {
+        expect(response.status).toBe(200)
+      }
     })
   })
 
