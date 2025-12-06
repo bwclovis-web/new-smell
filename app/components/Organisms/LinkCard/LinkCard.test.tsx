@@ -126,15 +126,22 @@ describe("LinkCard", () => {
     it("applies grayscale filter class", async () => {
       renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
       const image = await waitFor(() => screen.getByRole("img"))
-      expect(image).toHaveClass("grayscale-100")
+      // OptimizedImage applies className to container, not img element
+      const container = image.closest("div.relative")
+      expect(container).toBeInTheDocument()
+      expect(container).toHaveClass("grayscale-100")
     })
 
     it("applies hover transition classes", async () => {
       renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
       const image = await waitFor(() => screen.getByRole("img"))
-      expect(image).toHaveClass("group-hover:grayscale-0")
-      expect(image).toHaveClass("transition-all")
-      expect(image).toHaveClass("duration-500")
+      // OptimizedImage applies className to container, not img element
+      // Image element has loading classes; hover classes are on container
+      const container = image.closest("div.relative")
+      expect(container).toBeInTheDocument()
+      expect(container).toHaveClass("group-hover:grayscale-0")
+      expect(container).toHaveClass("transition-all")
+      expect(container).toHaveClass("duration-500")
     })
 
     it("applies view transition name", async () => {

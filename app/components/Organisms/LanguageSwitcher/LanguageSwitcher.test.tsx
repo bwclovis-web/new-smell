@@ -76,13 +76,15 @@ describe("LanguageSwitcher", () => {
 
     it("reflects current i18n language", () => {
       mockI18n.language = "en"
-      const { rerender } = render(<LanguageSwitcher />)
+      const { unmount } = render(<LanguageSwitcher />)
 
       let select = screen.getByRole("combobox") as HTMLSelectElement
       expect(select.value).toBe("en")
 
+      unmount()
+
       mockI18n.language = "es"
-      rerender(<LanguageSwitcher />)
+      render(<LanguageSwitcher />)
 
       select = screen.getByRole("combobox") as HTMLSelectElement
       expect(select.value).toBe("es")

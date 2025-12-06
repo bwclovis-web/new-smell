@@ -14,6 +14,15 @@ vi.mock("~/components/Organisms/PasswordStrengthIndicator", () => ({
   ),
 }))
 
+// Mock react-router Form to avoid data router requirement
+vi.mock("react-router", async () => {
+  const actual = await vi.importActual("react-router")
+  return {
+    ...actual,
+    Form: ({ children, ...props }: any) => <form {...props}>{children}</form>,
+  }
+})
+
 describe("ChangePasswordForm", () => {
   describe("Rendering", () => {
     it("renders the form with all fields", () => {
