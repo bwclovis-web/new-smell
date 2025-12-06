@@ -6,10 +6,12 @@ import {
 /**
  * Process alerts when a perfume becomes available for trade
  * This should be called when a user adds a perfume to their available items
+ * @param perfumeId - The perfume that became available
+ * @param decantingUserId - Optional: The user who made the perfume available (to exclude from notifications)
  */
-export async function processWishlistAvailabilityAlerts(perfumeId: string) {
+export async function processWishlistAvailabilityAlerts(perfumeId: string, decantingUserId?: string) {
   try {
-    const alerts = await checkWishlistAvailabilityAlerts(perfumeId)
+    const alerts = await checkWishlistAvailabilityAlerts(perfumeId, decantingUserId)
 
     if (alerts.length > 0) {
       // NOTE: Email notifications are not yet implemented
@@ -22,22 +24,23 @@ export async function processWishlistAvailabilityAlerts(perfumeId: string) {
     }
 
     return alerts
-  } catch (error) {
-    console.error("Error processing wishlist availability alerts:", error)
+  } catch {
     return []
   }
 }
 
 /**
- * Process alerts when someone adds a perfume to their wishlist
+ * Process alerts when someone adds a perfume to their PUBLIC wishlist
  * This should be called when a user adds a perfume to their wishlist
+ * Only sends alerts if the wishlist item is public
  */
 export async function processDecantInterestAlerts(
   perfumeId: string,
-  interestedUserId: string
+  interestedUserId: string,
+  isPublicWishlist: boolean = false
 ) {
   try {
-    const alerts = await checkDecantInterestAlerts(perfumeId, interestedUserId)
+    const alerts = await checkDecantInterestAlerts(perfumeId, interestedUserId, isPublicWishlist)
 
     if (alerts.length > 0) {
       // NOTE: Email notifications are not yet implemented
@@ -50,8 +53,7 @@ export async function processDecantInterestAlerts(
     }
 
     return alerts
-  } catch (error) {
-    console.error("Error processing decant interest alerts:", error)
+  } catch {
     return []
   }
 }
@@ -62,13 +64,14 @@ export async function processDecantInterestAlerts(
  */
 export async function processAllAlertsForPerfume(
   perfumeId: string,
-  triggerUserId?: string
+  triggerUserId?: string,
+  isPublicWishlist: boolean = false
 ) {
   try {
     const [wishlistAlerts, decantAlerts] = await Promise.all([
-      processWishlistAvailabilityAlerts(perfumeId),
+      processWishlistAvailabilityAlerts(perfumeId, triggerUserId),
       triggerUserId
-        ? processDecantInterestAlerts(perfumeId, triggerUserId)
+        ? processDecantInterestAlerts(perfumeId, triggerUserId, isPublicWishlist)
         : Promise.resolve([]),
     ])
 
@@ -77,8 +80,7 @@ export async function processAllAlertsForPerfume(
       decantAlerts,
       totalAlerts: wishlistAlerts.length + decantAlerts.length,
     }
-  } catch (error) {
-    console.error("Error processing all alerts for perfume:", error)
+  } catch {
     return {
       wishlistAlerts: [],
       decantAlerts: [],
@@ -109,11 +111,10 @@ export async function processBulkAlerts(perfumeIds: string[]) {
       failed,
       totalProcessed: perfumeIds.length,
     }
-  } catch (error) {
-    console.error("Error in bulk alert processing:", error)
+  } catch (err) {
     return {
       successful: [],
-      failed: [error],
+      failed: [err],
       totalProcessed: 0,
     }
   }

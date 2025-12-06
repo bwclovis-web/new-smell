@@ -279,6 +279,18 @@ const findUserPerfume = async (userId: string, perfumeId: string) => prisma.user
     where: { userId, perfumeId },
   })
 
+// Get a user perfume by its ID
+export const getUserPerfumeById = async (userPerfumeId: string) =>
+  prisma.userPerfume.findUnique({
+    where: { id: userPerfumeId },
+    select: {
+      id: true,
+      perfumeId: true,
+      userId: true,
+      available: true,
+    },
+  })
+
 interface HandleExistingPerfumeParams {
   existingPerfume: any
   amount?: string

@@ -102,9 +102,10 @@ const handleAddAction = async (user: any, perfumeId: string, amount?: string) =>
   })
 
   // Process wishlist availability alerts when a perfume becomes available
+  // Pass the user ID to exclude self-notifications
   if (amount && parseFloat(amount) > 0) {
     try {
-      await processWishlistAvailabilityAlerts(perfumeId)
+      await processWishlistAvailabilityAlerts(perfumeId, user.id)
     } catch (error) {
       const { ErrorHandler } = await import("~/utils/errorHandling")
       ErrorHandler.handle(error, {
@@ -150,9 +151,10 @@ const handleDecantAction = async (params: {
   })
 
   // Process wishlist availability alerts when a perfume becomes available
+  // Pass the user ID to exclude self-notifications
   if (amount && parseFloat(amount) > 0 && perfumeId) {
     try {
-      await processWishlistAvailabilityAlerts(perfumeId)
+      await processWishlistAvailabilityAlerts(perfumeId, user.id)
     } catch (error) {
       const { ErrorHandler } = await import("~/utils/errorHandling")
       ErrorHandler.handle(error, {

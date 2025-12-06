@@ -232,11 +232,20 @@ export async function getUnreadAlertCount(userId: string): Promise<number> {
 
 /**
  * Check if user should receive wishlist availability alerts
+ * Only alerts users with PUBLIC wishlists
+ * @param perfumeId - The perfume that became available
+ * @param decantingUserId - Optional: The user who made the perfume available (to exclude from notifications)
  */
-export async function checkWishlistAvailabilityAlerts(perfumeId: string) {
-  // Find all users who have this perfume in their wishlist
+export async function checkWishlistAvailabilityAlerts(perfumeId: string, decantingUserId?: string) {
+  // Find all users who have this perfume in their PUBLIC wishlist
+  // Exclude the decanting user (they don't need notification about their own action)
   const wishlistUsers = await prisma.userPerfumeWishlist.findMany({
-    where: { perfumeId },
+    where: {
+      perfumeId,
+      isPublic: true,
+      // Exclude the user who just decanted
+      ...(decantingUserId && { userId: { not: decantingUserId } }),
+    },
     include: {
       user: {
         include: {
@@ -280,7 +289,9 @@ export async function checkWishlistAvailabilityAlerts(perfumeId: string) {
 
   for (const wishlistItem of wishlistUsers) {
     const preferences = wishlistItem.user.alertPreferences
-    if (!preferences?.wishlistAlertsEnabled) {
+    // If user has no preferences yet, default to enabled (true)
+    // Only skip if preferences exist AND wishlistAlertsEnabled is explicitly false
+    if (preferences && preferences.wishlistAlertsEnabled === false) {
       continue
     }
 
@@ -347,11 +358,18 @@ export async function checkWishlistAvailabilityAlerts(perfumeId: string) {
 
 /**
  * Check if user should receive decant interest alerts
+ * Only sends alerts when the wishlist item is PUBLIC
  */
 export async function checkDecantInterestAlerts(
   perfumeId: string,
-  interestedUserId: string
+  interestedUserId: string,
+  isPublicWishlist: boolean = false
 ) {
+  // Only process alerts for public wishlist additions
+  if (!isPublicWishlist) {
+    return []
+  }
+
   // Find all users who have this perfume available for trade (decanters)
   const decanters = await prisma.userPerfume.findMany({
     where: {
@@ -401,7 +419,9 @@ export async function checkDecantInterestAlerts(
 
   for (const decanter of decanters) {
     const preferences = decanter.user.alertPreferences
-    if (!preferences?.decantAlertsEnabled) {
+    // If user has no preferences yet, default to enabled (true)
+    // Only skip if preferences exist AND decantAlertsEnabled is explicitly false
+    if (preferences && preferences.decantAlertsEnabled === false) {
       continue
     }
 
