@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react"
+import { act, render, waitFor } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import PerformanceMonitor from "./PerformanceMonitor"
@@ -7,6 +7,7 @@ describe("PerformanceMonitor (Container)", () => {
   let mockPerformanceObserver: any
   let performanceObserverInstances: any[] = []
   let mockGtag: any
+  let mockGetEntriesByType: any
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -32,29 +33,35 @@ describe("PerformanceMonitor (Container)", () => {
     // Mock window.gtag
     ;(global.window as any).gtag = mockGtag
 
-    // Mock performance API
+    // Mock performance API - create spy for getEntriesByType
+    mockGetEntriesByType = vi.fn((type: string) => {
+      if (type === "navigation") {
+        return [
+          {
+            domainLookupStart: 0,
+            domainLookupEnd: 10,
+            connectStart: 10,
+            connectEnd: 50,
+            requestStart: 50,
+            responseStart: 200,
+            navigationStart: 0,
+            domContentLoadedEventEnd: 1500,
+            loadEventEnd: 2500,
+          },
+        ]
+      }
+      return []
+    })
+
+    // Set up performance mock on both global and window
     global.performance = {
       ...global.performance,
       now: vi.fn(() => Date.now()),
-      getEntriesByType: vi.fn((type: string) => {
-        if (type === "navigation") {
-          return [
-            {
-              domainLookupStart: 0,
-              domainLookupEnd: 10,
-              connectStart: 10,
-              connectEnd: 50,
-              requestStart: 50,
-              responseStart: 200,
-              navigationStart: 0,
-              domContentLoadedEventEnd: 1500,
-              loadEventEnd: 2500,
-            },
-          ]
-        }
-        return []
-      }),
+      getEntriesByType: mockGetEntriesByType,
     } as any
+
+    // Ensure window.performance is also set
+    ;(global.window as any).performance = global.performance
   })
 
   afterEach(() => {
@@ -278,6 +285,9 @@ describe("PerformanceMonitor (Container)", () => {
 
       const clsObserver = performanceObserverInstances[2]
 
+      // Clear any previous console.log calls
+      vi.mocked(console.log).mockClear()
+
       clsObserver.callback({
         getEntries: () => [{ value: 0.05, hadRecentInput: true }],
       })
@@ -415,64 +425,151 @@ describe("PerformanceMonitor (Container)", () => {
   })
 
   describe("Navigation Performance Metrics", () => {
-    it("should collect navigation metrics on page load", () => {
+    it("should collect navigation metrics on page load", async () => {
       vi.stubEnv("DEV", false)
 
+      // Ensure window.performance is set up before rendering
+      ;(global.window as any).performance = global.performance
+
+      // Spy on addEventListener to verify it's called
+      const addEventListenerSpy = vi.spyOn(window, "addEventListener")
+
+      // Render component
       render(<PerformanceMonitor />)
 
-      // Trigger load event
-      window.dispatchEvent(new Event("load"))
+      // Wait for addEventListener to be called (useEffect has run)
+      await waitFor(() => {
+        expect(addEventListenerSpy).toHaveBeenCalledWith(
+          "load",
+          expect.any(Function)
+        )
+      })
 
-      // Advance timers to trigger setTimeout
-      vi.runAllTimers()
+      // Get the event listener callback that was registered
+      const loadListenerCall = addEventListenerSpy.mock.calls.find(
+        call => call[0] === "load"
+      )
+      const loadListener = loadListenerCall?.[1] as () => void
 
-      expect(performance.getEntriesByType).toHaveBeenCalledWith("navigation")
+      // Manually trigger the event listener callback
+      if (loadListener) {
+        loadListener()
+      }
 
-      vi.unstubAllEnvs()
-    })
-
-    it("should log performance metrics", () => {
-      vi.stubEnv("DEV", false)
-
-      render(<PerformanceMonitor />)
-
-      window.dispatchEvent(new Event("load"))
-      vi.runAllTimers()
-
-      expect(console.log).toHaveBeenCalledWith(
-        "Performance Metrics:",
-        expect.objectContaining({
-          dns: expect.any(Number),
-          tcp: expect.any(Number),
-          ttfb: expect.any(Number),
-          domContentLoaded: expect.any(Number),
-          loadComplete: expect.any(Number),
-        })
+      // Wait for setTimeout to execute (use real timers for this)
+      await waitFor(
+        () => {
+          expect(mockGetEntriesByType).toHaveBeenCalledWith("navigation")
+        },
+        { timeout: 100 }
       )
 
+      addEventListenerSpy.mockRestore()
       vi.unstubAllEnvs()
     })
 
-    it("should send navigation metrics to analytics", () => {
+    it("should log performance metrics", async () => {
       vi.stubEnv("DEV", false)
 
+      // Ensure window.performance is set up before rendering
+      ;(global.window as any).performance = global.performance
+
+      // Spy on addEventListener
+      const addEventListenerSpy = vi.spyOn(window, "addEventListener")
+
+      // Render component
       render(<PerformanceMonitor />)
 
-      window.dispatchEvent(new Event("load"))
-      vi.runAllTimers()
-
-      expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
-        metric_name: "dns",
-        value: expect.any(Number),
-        event_category: "Performance",
+      // Wait for addEventListener to be called
+      await waitFor(() => {
+        expect(addEventListenerSpy).toHaveBeenCalledWith(
+          "load",
+          expect.any(Function)
+        )
       })
 
-      expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
-        metric_name: "tcp",
-        value: expect.any(Number),
-        event_category: "Performance",
+      // Get the event listener callback
+      const loadListenerCall = addEventListenerSpy.mock.calls.find(
+        call => call[0] === "load"
+      )
+      const loadListener = loadListenerCall?.[1] as () => void
+
+      // Manually trigger the callback
+      if (loadListener) {
+        loadListener()
+      }
+
+      // Wait for setTimeout to execute
+      await waitFor(
+        () => {
+          expect(console.log).toHaveBeenCalledWith(
+            "Performance Metrics:",
+            expect.objectContaining({
+              dns: expect.any(Number),
+              tcp: expect.any(Number),
+              ttfb: expect.any(Number),
+              domContentLoaded: expect.any(Number),
+              loadComplete: expect.any(Number),
+            })
+          )
+        },
+        { timeout: 100 }
+      )
+
+      addEventListenerSpy.mockRestore()
+      vi.unstubAllEnvs()
+    })
+
+    it("should send navigation metrics to analytics", async () => {
+      vi.stubEnv("DEV", false)
+
+      // Ensure window.performance is set up before rendering
+      ;(global.window as any).performance = global.performance
+
+      // Spy on addEventListener
+      const addEventListenerSpy = vi.spyOn(window, "addEventListener")
+
+      // Render component
+      render(<PerformanceMonitor />)
+
+      // Wait for addEventListener to be called
+      await waitFor(() => {
+        expect(addEventListenerSpy).toHaveBeenCalledWith(
+          "load",
+          expect.any(Function)
+        )
       })
 
+      // Get the event listener callback
+      const loadListenerCall = addEventListenerSpy.mock.calls.find(
+        call => call[0] === "load"
+      )
+      const loadListener = loadListenerCall?.[1] as () => void
+
+      // Manually trigger the callback
+      if (loadListener) {
+        loadListener()
+      }
+
+      // Wait for setTimeout to execute
+      await waitFor(
+        () => {
+          expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
+            metric_name: "dns",
+            value: expect.any(Number),
+            event_category: "Performance",
+          })
+
+          expect(mockGtag).toHaveBeenCalledWith("event", "performance", {
+            metric_name: "tcp",
+            value: expect.any(Number),
+            event_category: "Performance",
+          })
+        },
+        { timeout: 100 }
+      )
+
+      addEventListenerSpy.mockRestore()
       vi.unstubAllEnvs()
     })
   })

@@ -43,15 +43,16 @@ describe("SignUp Route Integration Tests", () => {
 
       vi.mocked(userServer.getUserByName).mockResolvedValue(null)
       vi.mocked(userServer.createUser).mockResolvedValue(mockUser as any)
-      vi.mocked(sessionServer.login).mockResolvedValue({
-        success: true,
-      } as any)
+      // login() throws a redirect Response, so we mock it to throw
+      vi.mocked(sessionServer.login).mockImplementation(() => {
+        throw new Response(null, { status: 302, headers: { Location: "/admin/profile" } })
+      })
 
       const formData = new FormData()
       formData.append("email", "newuser@example.com")
       formData.append("password", "SecurePassword123!")
-      formData.append("passwordMatch", "SecurePassword123!")
-      formData.append("acceptTerms", "true")
+      formData.append("confirmPassword", "SecurePassword123!")
+      formData.append("acceptTerms", "on")
 
       const request = new Request("https://example.com/sign-up", {
         method: "POST",
@@ -64,7 +65,17 @@ describe("SignUp Route Integration Tests", () => {
         context: {},
       }
 
-      await signUpAction(args)
+      // login() throws a redirect, so we need to catch it
+      try {
+        await signUpAction(args)
+      } catch (error) {
+        // Expected: login() throws a redirect Response
+        if (error instanceof Response && [302, 303].includes(error.status)) {
+          // This is expected - login was successful
+        } else {
+          throw error
+        }
+      }
 
       expect(userServer.getUserByName).toHaveBeenCalledWith("newuser@example.com")
       expect(userServer.createUser).toHaveBeenCalled()
@@ -83,8 +94,8 @@ describe("SignUp Route Integration Tests", () => {
       const formData = new FormData()
       formData.append("email", "existing@example.com")
       formData.append("password", "SecurePassword123!")
-      formData.append("passwordMatch", "SecurePassword123!")
-      formData.append("acceptTerms", "true")
+      formData.append("confirmPassword", "SecurePassword123!")
+      formData.append("acceptTerms", "on")
 
       const request = new Request("https://example.com/sign-up", {
         method: "POST",

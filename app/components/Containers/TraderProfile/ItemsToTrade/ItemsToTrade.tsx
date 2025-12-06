@@ -45,8 +45,17 @@ const PriceInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
 // Helper component for trade information
 const TradeInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
   const { t } = useTranslation()
+  const tradePreference = userPerfume.tradePreference || "cash"
+  const showPrice = (tradePreference === "cash" || tradePreference === "both") && userPerfume.price
+  
   return (
     <div className="text-sm text-noir-gold-300 space-y-1">
+      {showPrice && (
+        <p className="font-medium text-noir-gold-100">
+          {t("traderProfile.price")}:
+          <span className="text-noir-gold-500"> ${userPerfume.price}/ml</span>
+        </p>
+      )}
       {userPerfume.tradePrice && (
         <p className="font-medium text-noir-gold-100">
           {t("traderProfile.tradePrice")}:
@@ -57,7 +66,7 @@ const TradeInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
         {t("traderProfile.preference")}:
         <span className="text-noir-gold-500">
           {" "}
-          {getTradeLabel(userPerfume.tradePreference || "cash")}
+          {getTradeLabel(tradePreference)}
         </span>
       </p>
       {userPerfume.tradeOnly && (

@@ -6,9 +6,16 @@ const PerformanceMonitor = () => {
       return
     }
 
+    let lcpObserver: PerformanceObserver | undefined
+    let fidObserver: PerformanceObserver | undefined
+    let clsObserver: PerformanceObserver | undefined
+    let fcpObserver: PerformanceObserver | undefined
+    let ttiObserver: PerformanceObserver | undefined
+    let loadHandler: (() => void) | undefined
+
     // Track Core Web Vitals
     if ("PerformanceObserver" in window) {
-      const lcpObserver = new PerformanceObserver(list => {
+      lcpObserver = new PerformanceObserver(list => {
         const entries = list.getEntries()
         const lastEntry = entries[entries.length - 1]
         if (lastEntry) {
@@ -25,7 +32,7 @@ const PerformanceMonitor = () => {
       lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] })
 
       // First Input Delay (FID)
-      const fidObserver = new PerformanceObserver(list => {
+      fidObserver = new PerformanceObserver(list => {
         const entries = list.getEntries()
         entries.forEach(entry => {
           console.log("FID:", entry.processingStart - entry.startTime)
@@ -41,7 +48,7 @@ const PerformanceMonitor = () => {
 
       // Cumulative Layout Shift (CLS)
       let clsValue = 0
-      const clsObserver = new PerformanceObserver(list => {
+      clsObserver = new PerformanceObserver(list => {
         const entries = list.getEntries()
         entries.forEach((entry: any) => {
           if (!entry.hadRecentInput) {
@@ -59,7 +66,7 @@ const PerformanceMonitor = () => {
       clsObserver.observe({ entryTypes: ["layout-shift"] })
 
       // First Contentful Paint (FCP)
-      const fcpObserver = new PerformanceObserver(list => {
+      fcpObserver = new PerformanceObserver(list => {
         const entries = list.getEntries()
         const firstEntry = entries[0]
         if (firstEntry) {
@@ -75,7 +82,7 @@ const PerformanceMonitor = () => {
       fcpObserver.observe({ entryTypes: ["first-contentful-paint"] })
 
       // Time to Interactive (TTI) - using longtask instead of interaction
-      const ttiObserver = new PerformanceObserver(list => {
+      ttiObserver = new PerformanceObserver(list => {
         const entries = list.getEntries()
         entries.forEach(entry => {
           console.log("TTI:", entry.startTime)
@@ -88,20 +95,11 @@ const PerformanceMonitor = () => {
         })
       })
       ttiObserver.observe({ entryTypes: ["longtask"] })
-
-      // Cleanup
-      return () => {
-        lcpObserver.disconnect()
-        fidObserver.disconnect()
-        clsObserver.disconnect()
-        fcpObserver.disconnect()
-        ttiObserver.disconnect()
-      }
     }
 
     // Track page load performance
     if ("performance" in window) {
-      window.addEventListener("load", () => {
+      loadHandler = () => {
         setTimeout(() => {
           const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming
           if (navigation) {
@@ -128,7 +126,20 @@ const PerformanceMonitor = () => {
             }
           }
         }, 0)
-      })
+      }
+      window.addEventListener("load", loadHandler)
+    }
+
+    // Cleanup
+    return () => {
+      lcpObserver?.disconnect()
+      fidObserver?.disconnect()
+      clsObserver?.disconnect()
+      fcpObserver?.disconnect()
+      ttiObserver?.disconnect()
+      if (loadHandler) {
+        window.removeEventListener("load", loadHandler)
+      }
     }
   }, [])
 

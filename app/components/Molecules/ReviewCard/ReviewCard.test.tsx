@@ -6,17 +6,24 @@ import ReviewCard from "./ReviewCard"
 
 // Mock date-fns
 vi.mock("date-fns", () => ({
-  formatDistanceToNow: vi.fn((date: Date) => {
+  formatDistanceToNow: vi.fn((date: Date, options?: { addSuffix?: boolean }) => {
+    // Check if date is invalid
+    if (isNaN(date.getTime())) {
+      throw new Error("Invalid date")
+    }
     const now = new Date("2024-01-15T12:00:00Z")
     const diff = now.getTime() - date.getTime()
     const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    let result = ""
     if (days === 0) {
-      return "today"
+      result = "today"
+    } else if (days === 1) {
+      result = "1 day ago"
+    } else {
+      result = `${days} days ago`
     }
-    if (days === 1) {
-      return "1 day ago"
-    }
-    return `${days} days ago`
+    // Apply addSuffix option if provided (though our mock already includes "ago")
+    return result
   }),
 }))
 

@@ -209,7 +209,7 @@ export const UpdateCommentSchema = z.object({
 
 // Wishlist Schemas
 export const WishlistActionSchema = z.object({
-  perfumeId: z.string().min(1, { message: "Perfume ID is required" }),
+  perfumeId: z.string().trim().min(1, { message: "Perfume ID is required" }),
   action: z.enum(["add", "remove", "updateVisibility"], {
     errorMap: () => ({
       message: "Action must be add, remove, or updateVisibility",

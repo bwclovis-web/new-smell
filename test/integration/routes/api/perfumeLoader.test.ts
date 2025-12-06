@@ -56,8 +56,22 @@ describe("Perfume Loader API Integration Tests", () => {
       }
 
       const result = await loader(args)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result).toEqual(mockPerfumes)
+      // When JSON is serialized/deserialized, Date objects become strings
+      expect(data).toHaveLength(2)
+      expect(data[0]).toMatchObject({
+        id: mockPerfumes[0].id,
+        name: mockPerfumes[0].name,
+        slug: mockPerfumes[0].slug,
+        description: mockPerfumes[0].description,
+      })
+      expect(data[1]).toMatchObject({
+        id: mockPerfumes[1].id,
+        name: mockPerfumes[1].name,
+        slug: mockPerfumes[1].slug,
+        description: mockPerfumes[1].description,
+      })
       expect(perfumeServer.searchPerfumeByName).toHaveBeenCalledWith("rose")
     })
 
@@ -70,8 +84,9 @@ describe("Perfume Loader API Integration Tests", () => {
       }
 
       const result = await loader(args)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result).toEqual([])
+      expect(data).toEqual([])
       expect(perfumeServer.searchPerfumeByName).not.toHaveBeenCalled()
     })
 
@@ -86,8 +101,9 @@ describe("Perfume Loader API Integration Tests", () => {
       }
 
       const result = await loader(args)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result).toEqual([])
+      expect(data).toEqual([])
     })
 
     it("should handle empty search results", async () => {
@@ -101,8 +117,9 @@ describe("Perfume Loader API Integration Tests", () => {
       }
 
       const result = await loader(args)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result).toEqual([])
+      expect(data).toEqual([])
     })
 
     it("should handle special characters in search query", async () => {
@@ -127,8 +144,18 @@ describe("Perfume Loader API Integration Tests", () => {
       }
 
       const result = await loader(args)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result).toEqual(mockPerfumes)
+      // When JSON is serialized/deserialized, Date objects become strings
+      expect(data).toHaveLength(1)
+      expect(data[0]).toMatchObject({
+        id: mockPerfumes[0].id,
+        name: mockPerfumes[0].name,
+        slug: mockPerfumes[0].slug,
+        description: mockPerfumes[0].description,
+      })
+      expect(data[0].createdAt).toBeDefined()
+      expect(data[0].updatedAt).toBeDefined()
       expect(perfumeServer.searchPerfumeByName).toHaveBeenCalledWith("L'eau")
     })
 
@@ -155,8 +182,9 @@ describe("Perfume Loader API Integration Tests", () => {
       }
 
       const result = await loader(args)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result).toEqual([])
+      expect(data).toEqual([])
     })
   })
 
@@ -209,8 +237,18 @@ describe("Perfume Loader API Integration Tests", () => {
       }
 
       const result = await loader(args)
+      const data = result instanceof Response ? await result.json() : result
 
-      expect(result).toEqual(mockPerfumes)
+      // When JSON is serialized/deserialized, Date objects become strings
+      expect(data).toHaveLength(1)
+      expect(data[0]).toMatchObject({
+        id: mockPerfumes[0].id,
+        name: mockPerfumes[0].name,
+        slug: mockPerfumes[0].slug,
+        description: mockPerfumes[0].description,
+      })
+      expect(data[0].createdAt).toBeDefined()
+      expect(data[0].updatedAt).toBeDefined()
       expect(perfumeServer.searchPerfumeByName).toHaveBeenCalledWith("TEST")
     })
   })

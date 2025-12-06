@@ -4,12 +4,14 @@ import { describe, expect, it, vi } from "vitest"
 import { z } from "zod"
 
 import ValidatedInput from "./ValidatedInput"
+import { useFieldValidation } from "~/hooks/useValidation"
 
 // Mock useFieldValidation hook
-const mockUseFieldValidation = vi.fn()
 vi.mock("~/hooks/useValidation", () => ({
-  useFieldValidation: mockUseFieldValidation,
+  useFieldValidation: vi.fn(),
 }))
+
+const mockUseFieldValidation = vi.mocked(useFieldValidation)
 
 // Mock FormField component
 vi.mock("../FormField/FormField", () => ({
@@ -86,14 +88,17 @@ describe("ValidatedInput", () => {
     })
 
     it("should render with different input types", () => {
-      const { rerender } = render(<ValidatedInput {...defaultProps} type="email" />)
+      const { rerender, container } = render(<ValidatedInput {...defaultProps} type="email" />)
       expect(screen.getByRole("textbox")).toHaveAttribute("type", "email")
 
       rerender(<ValidatedInput {...defaultProps} type="password" />)
-      expect(screen.getByRole("textbox")).toHaveAttribute("type", "password")
+      // Password inputs don't have "textbox" role, query by name attribute instead
+      const passwordInput = container.querySelector('input[name="testField"][type="password"]')
+      expect(passwordInput).toBeInTheDocument()
+      expect(passwordInput).toHaveAttribute("type", "password")
 
       rerender(<ValidatedInput {...defaultProps} type="number" />)
-      expect(screen.getByRole("textbox")).toHaveAttribute("type", "number")
+      expect(screen.getByRole("spinbutton")).toHaveAttribute("type", "number")
     })
   })
 
@@ -336,10 +341,11 @@ describe("ValidatedInput", () => {
     })
 
     it("should pass custom className to FormField", () => {
-      render(<ValidatedInput {...defaultProps} className="custom-class" />)
+      const { container } = render(<ValidatedInput {...defaultProps} className="custom-class" />)
 
-      const container = screen.getByRole("textbox").closest("div")
-      expect(container).toHaveClass("custom-class")
+      // FormField applies className to the outer div
+      const outerDiv = container.querySelector("div.custom-class")
+      expect(outerDiv).toBeInTheDocument()
     })
 
     it("should pass custom labelClassName to FormField", () => {

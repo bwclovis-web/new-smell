@@ -1,11 +1,14 @@
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, render, screen, waitFor } from "@testing-library/react"
+import type { ReactElement } from "react"
 import { MemoryRouter } from "react-router"
 import { afterEach, describe, expect, it } from "vitest"
 
 import LinkCard from "./LinkCard"
 
 // Helper to render with router
-const renderWithRouter = (component: React.ReactElement) => render(<MemoryRouter>{component}</MemoryRouter>)
+function renderWithRouter(component: ReactElement) {
+  return render(<MemoryRouter>{component}</MemoryRouter>)
+}
 
 describe("LinkCard", () => {
   afterEach(() => {
@@ -45,9 +48,9 @@ describe("LinkCard", () => {
       expect(screen.getByText("Test House")).toBeInTheDocument()
     })
 
-    it("renders image with correct src", () => {
+    it("renders image with correct src", async () => {
       renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
-      const image = screen.getByRole("img", { name: "Test Perfume" })
+      const image = await waitFor(() => screen.getByRole("img", { name: "Test Perfume" }))
       expect(image).toHaveAttribute("src", "/images/test-perfume.jpg")
     })
 
@@ -107,42 +110,49 @@ describe("LinkCard", () => {
   })
 
   describe("Image Display", () => {
-    it("renders image with correct alt text", () => {
+    it("renders image with correct alt text", async () => {
       renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
-      const image = screen.getByRole("img")
+      const image = await waitFor(() => screen.getByRole("img"))
       expect(image).toHaveAttribute("alt", "Test Perfume")
     })
 
-    it("applies correct image dimensions", () => {
+    it("applies correct image dimensions", async () => {
       renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
-      const image = screen.getByRole("img")
+      const image = await waitFor(() => screen.getByRole("img"))
       expect(image).toHaveAttribute("height", "400")
       expect(image).toHaveAttribute("width", "300")
     })
 
-    it("applies grayscale filter class", () => {
+    it("applies grayscale filter class", async () => {
       renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
-      const image = screen.getByRole("img")
-      expect(image).toHaveClass("grayscale-100")
+      const image = await waitFor(() => screen.getByRole("img"))
+      // OptimizedImage applies className to container, not img element
+      const container = image.closest("div.relative")
+      expect(container).toBeInTheDocument()
+      expect(container).toHaveClass("grayscale-100")
     })
 
-    it("applies hover transition classes", () => {
+    it("applies hover transition classes", async () => {
       renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
-      const image = screen.getByRole("img")
-      expect(image).toHaveClass("group-hover:grayscale-0")
-      expect(image).toHaveClass("transition-all")
-      expect(image).toHaveClass("duration-500")
+      const image = await waitFor(() => screen.getByRole("img"))
+      // OptimizedImage applies className to container, not img element
+      // Image element has loading classes; hover classes are on container
+      const container = image.closest("div.relative")
+      expect(container).toBeInTheDocument()
+      expect(container).toHaveClass("group-hover:grayscale-0")
+      expect(container).toHaveClass("transition-all")
+      expect(container).toHaveClass("duration-500")
     })
 
-    it("applies view transition name", () => {
+    it("applies view transition name", async () => {
       renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
-      const image = screen.getByRole("img") as HTMLImageElement
+      const image = await waitFor(() => screen.getByRole("img")) as HTMLImageElement
       expect(image.style.viewTransitionName).toBe("perfume-image-perfume-1")
     })
 
-    it("applies contain style for performance", () => {
+    it("applies contain style for performance", async () => {
       renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
-      const image = screen.getByRole("img") as HTMLImageElement
+      const image = await waitFor(() => screen.getByRole("img")) as HTMLImageElement
       expect(image.style.contain).toBe("layout style paint")
     })
   })
@@ -201,7 +211,7 @@ describe("LinkCard", () => {
     })
 
     it("positions children at bottom with overlay", () => {
-      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume">
+      renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume">
           <div data-testid="child-content">Content</div>
         </LinkCard>)
 
@@ -213,7 +223,7 @@ describe("LinkCard", () => {
     })
 
     it("applies dark overlay background to children container", () => {
-      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume">
+      renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume">
           <button>Test</button>
         </LinkCard>)
 
@@ -222,7 +232,7 @@ describe("LinkCard", () => {
     })
 
     it("applies border to children container", () => {
-      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume">
+      renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume">
           <button>Test</button>
         </LinkCard>)
 
@@ -306,7 +316,7 @@ describe("LinkCard", () => {
     })
 
     it("renders house name as paragraph", () => {
-      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
+      renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
       const houseName = screen.getByText("Test House")
       expect(houseName.tagName).toBe("P")
     })
@@ -314,7 +324,7 @@ describe("LinkCard", () => {
 
   describe("Text Wrapping", () => {
     it("applies text-wrap to perfume name", () => {
-      const { container } = renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
+      renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
       const heading = screen.getByRole("heading")
       expect(heading).toHaveClass("text-wrap")
       expect(heading).toHaveClass("break-words")
@@ -337,9 +347,9 @@ describe("LinkCard", () => {
       expect(heading.tagName).toBe("H2")
     })
 
-    it("provides descriptive alt text for image", () => {
+    it("provides descriptive alt text for image", async () => {
       renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
-      const image = screen.getByRole("img")
+      const image = await waitFor(() => screen.getByRole("img"))
       expect(image).toHaveAttribute("alt", "Test Perfume")
     })
 
@@ -371,7 +381,10 @@ describe("LinkCard", () => {
     })
 
     it("handles null image", () => {
-      const dataWithNullImage = { ...mockPerfumeData, image: null }
+      const dataWithNullImage = {
+        ...mockPerfumeData,
+        image: null as unknown as string | undefined,
+      }
       renderWithRouter(<LinkCard data={dataWithNullImage} type="perfume" />)
       expect(screen.getByText("No Image")).toBeInTheDocument()
       expect(screen.queryByRole("img")).not.toBeInTheDocument()
@@ -418,13 +431,13 @@ describe("LinkCard", () => {
       expect(link).toBeInTheDocument()
     })
 
-    it("sets unique viewTransitionName based on item id", () => {
+    it("sets unique viewTransitionName based on item id", async () => {
       renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />)
-      const image = screen.getByRole("img") as HTMLImageElement
+      const image = await waitFor(() => screen.getByRole("img")) as HTMLImageElement
       expect(image.style.viewTransitionName).toBe("perfume-image-perfume-1")
     })
 
-    it("creates different viewTransitionName for different items", () => {
+    it("creates different viewTransitionName for different items", async () => {
       const data1 = { ...mockPerfumeData, id: "perfume-1" }
       const data2 = {
         ...mockPerfumeData,
@@ -434,13 +447,13 @@ describe("LinkCard", () => {
 
       const { unmount } = renderWithRouter(<LinkCard data={data1} type="perfume" />)
 
-      const image1 = screen.getByRole("img") as HTMLImageElement
+      const image1 = await waitFor(() => screen.getByRole("img")) as HTMLImageElement
       expect(image1.style.viewTransitionName).toBe("perfume-image-perfume-1")
       unmount()
 
       renderWithRouter(<LinkCard data={data2} type="perfume" />)
 
-      const image2 = screen.getByRole("img") as HTMLImageElement
+      const image2 = await waitFor(() => screen.getByRole("img")) as HTMLImageElement
       expect(image2.style.viewTransitionName).toBe("perfume-image-perfume-2")
     })
   })
@@ -456,9 +469,9 @@ describe("LinkCard", () => {
     })
 
     it("integrates with router navigation", () => {
-      renderWithRouter(<LinkCard data={mockPerfumeData} type="perfume" />, {
-        initialEntries: ["/"],
-      })
+      render(<MemoryRouter initialEntries={["/"]}>
+          <LinkCard data={mockPerfumeData} type="perfume" />
+        </MemoryRouter>)
 
       const link = screen.getByRole("link")
       expect(link).toHaveAttribute("href", "/perfume/test-perfume")

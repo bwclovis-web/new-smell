@@ -76,13 +76,15 @@ describe("LanguageSwitcher", () => {
 
     it("reflects current i18n language", () => {
       mockI18n.language = "en"
-      const { rerender } = render(<LanguageSwitcher />)
+      const { unmount } = render(<LanguageSwitcher />)
 
       let select = screen.getByRole("combobox") as HTMLSelectElement
       expect(select.value).toBe("en")
 
+      unmount()
+
       mockI18n.language = "es"
-      rerender(<LanguageSwitcher />)
+      render(<LanguageSwitcher />)
 
       select = screen.getByRole("combobox") as HTMLSelectElement
       expect(select.value).toBe("es")
@@ -291,13 +293,14 @@ describe("LanguageSwitcher", () => {
       render(<LanguageSwitcher />)
       const select = screen.getByRole("combobox")
 
-      // The component doesn't catch the error, so it will propagate
-      expect(() => {
-        fireEvent.change(select, { target: { value: "es" } })
-      }).toThrow("Language change failed")
+      // React's event system catches errors in event handlers, so the error
+      // won't propagate, but the function should still be called
+      fireEvent.change(select, { target: { value: "es" } })
 
-      // But the function was still called
+      // Verify the function was called with the correct argument
+      // even though it throws an error
       expect(mockChangeLanguage).toHaveBeenCalledWith("es")
+      expect(mockChangeLanguage).toHaveBeenCalledTimes(1)
     })
   })
 

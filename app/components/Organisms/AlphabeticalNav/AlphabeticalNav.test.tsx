@@ -368,8 +368,9 @@ describe("AlphabeticalNav", () => {
 
       const aButton = screen.getByRole("button", { name: "A" })
 
-      // React will catch the error, but we verify the callback was called
-      expect(() => aButton.click()).toThrow()
+      // React's event system catches errors in event handlers, so the error
+      // won't propagate, but the callback should still be called
+      aButton.click()
       expect(throwingCallback).toHaveBeenCalledWith("A")
     })
 

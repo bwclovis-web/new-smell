@@ -109,8 +109,10 @@ describe("VirtualScroll", () => {
         {(item, index) => <MockItem item={item} index={index} />}
       </VirtualScroll>)
 
-    // The inner div should have the total height (100 items * 50px = 5000px)
-    const innerDiv = container.querySelector("div > div") as HTMLElement
+    // The inner div (second div) should have the total height (100 items * 50px = 5000px)
+    const divs = container.querySelectorAll("div")
+    // First div is the container (200px), second div is the inner scrollable area (5000px)
+    const innerDiv = divs[1] as HTMLElement
     expect(innerDiv.style.height).toBe("5000px") // 100 items * 50px
   })
 })

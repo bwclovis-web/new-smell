@@ -192,7 +192,7 @@ describe("MobileBottomNavigation", () => {
     it("links to sign in page when user is not logged in", () => {
       renderWithProviders(<MobileBottomNavigation />)
       const signInLink = screen.getByRole("link", { name: /sign in/i })
-      expect(signInLink).toHaveAttribute("href", "/login")
+      expect(signInLink).toHaveAttribute("href", "/sign-in")
     })
 
     it('shows "Profile" when user is logged in', () => {

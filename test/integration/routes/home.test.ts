@@ -20,6 +20,7 @@ vi.mock("~/models/feature.server")
 describe("Home Route Integration Tests", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.resetAllMocks()
   })
 
   describe("Loader", () => {
@@ -45,7 +46,7 @@ describe("Home Route Integration Tests", () => {
         },
       ]
 
-      vi.mocked(featureServer.getAllFeatures).mockResolvedValue(mockFeatures)
+      vi.mocked(featureServer.getAllFeatures).mockClear().mockResolvedValue(mockFeatures)
 
       const result = await homeLoader()
 
@@ -54,7 +55,7 @@ describe("Home Route Integration Tests", () => {
     })
 
     it("should handle empty features list", async () => {
-      vi.mocked(featureServer.getAllFeatures).mockResolvedValue([])
+      vi.mocked(featureServer.getAllFeatures).mockClear().mockResolvedValue([])
 
       const result = await homeLoader()
 
@@ -62,7 +63,7 @@ describe("Home Route Integration Tests", () => {
     })
 
     it("should handle errors gracefully", async () => {
-      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(new Error("Database error"))
+      vi.mocked(featureServer.getAllFeatures).mockClear().mockRejectedValue(new Error("Database error"))
 
       await expect(homeLoader()).rejects.toThrow("Database error")
     })
@@ -80,7 +81,7 @@ describe("Home Route Integration Tests", () => {
         },
       ]
 
-      vi.mocked(featureServer.getAllFeatures).mockResolvedValue(mockFeatures)
+      vi.mocked(featureServer.getAllFeatures).mockClear().mockResolvedValue(mockFeatures)
 
       await homeLoader()
       await homeLoader()
@@ -91,13 +92,13 @@ describe("Home Route Integration Tests", () => {
 
   describe("Error Handling", () => {
     it("should propagate network errors", async () => {
-      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(new Error("Network error"))
+      vi.mocked(featureServer.getAllFeatures).mockClear().mockRejectedValue(new Error("Network error"))
 
       await expect(homeLoader()).rejects.toThrow("Network error")
     })
 
     it("should propagate database connection errors", async () => {
-      vi.mocked(featureServer.getAllFeatures).mockRejectedValue(new Error("Database connection failed"))
+      vi.mocked(featureServer.getAllFeatures).mockClear().mockRejectedValue(new Error("Database connection failed"))
 
       await expect(homeLoader()).rejects.toThrow("Database connection failed")
     })
