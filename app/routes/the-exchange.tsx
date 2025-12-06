@@ -84,6 +84,19 @@ const TradingPostPage = () => {
   const [localSearchValue, setLocalSearchValue] = useState(searchQuery)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  const getTradePreferenceLabel = (preference: string | null | undefined) => {
+    switch (preference) {
+      case "cash":
+        return t("traderProfile.preferences.cash")
+      case "trade":
+        return t("traderProfile.preferences.trade")
+      case "both":
+        return t("traderProfile.preferences.both")
+      default:
+        return t("traderProfile.preferences.cash")
+    }
+  }
+
   // Sync local state when URL search param changes (e.g., back/forward navigation)
   // Also clear any pending debounce timer to prevent stale closures from executing
   useEffect(() => {
@@ -229,6 +242,11 @@ const TradingPostPage = () => {
                           {getPerfumeTypeLabel(userPerfume.type) || "Unknown Type"}{" "}
                           {userPerfume.available} ml
                         </span>
+                        {userPerfume.tradePreference && (
+                          <span className="text-sm ml-2 text-noir-gold-500 font-medium">
+                            • {getTradePreferenceLabel(userPerfume.tradePreference)}
+                          </span>
+                        )}
                       </div>
                     ))}
                   </div>

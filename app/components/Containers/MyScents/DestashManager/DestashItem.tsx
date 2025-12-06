@@ -2,6 +2,11 @@ import { useTranslation } from "react-i18next"
 import { MdDelete, MdEdit } from "react-icons/md"
 
 import { Button } from "~/components/Atoms/Button"
+import CommentsModal from "~/components/Containers/MyScents/CommentsModal"
+import DangerModal from "~/components/Organisms/DangerModal"
+import Modal from "~/components/Organisms/Modal"
+import { usePerfumeComments } from "~/hooks/usePerfumeComments"
+import { useSessionStore } from "~/stores/sessionStore"
 import type { UserPerfumeI } from "~/types"
 
 interface DestashItemProps {
@@ -12,6 +17,8 @@ interface DestashItemProps {
 
 const DestashItem = ({ destash, onEdit, onDelete }: DestashItemProps) => {
   const { t } = useTranslation()
+  const { modalOpen, toggleModal, modalId } = useSessionStore()
+  const { uniqueModalId, addComment } = usePerfumeComments({ userPerfume: destash })
 
   const getTradePreferenceLabel = (preference: "cash" | "trade" | "both") => {
     switch (preference) {
@@ -26,8 +33,24 @@ const DestashItem = ({ destash, onEdit, onDelete }: DestashItemProps) => {
     }
   }
 
+
   return (
-    <div className="noir-border p-4 bg-noir-dark/90 flex justify-between items-start gap-4">
+    <>
+      {modalOpen && modalId === "delete-destash-item" && (
+        <Modal innerType="dark" animateStart="top">
+          <DangerModal
+            heading="Are you sure you want to delete this destash?"
+            description="Once deleted, it will be removed from the exchange and your trader profile."
+            action={onDelete}
+          />
+        </Modal>
+      )}
+      {modalOpen && modalId === uniqueModalId && (
+        <Modal innerType="dark" animateStart="top">
+          <CommentsModal perfume={destash} addComment={addComment} />
+        </Modal>
+      )}
+      <div className="noir-border p-4 bg-noir-dark/90 flex justify-between items-start gap-4">
       <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4">
         <div>
           <p className="text-sm text-noir-gold-500 font-medium">
@@ -68,6 +91,16 @@ const DestashItem = ({ destash, onEdit, onDelete }: DestashItemProps) => {
       </div>
       <div className="flex gap-2">
         <Button
+          onClick={() => {
+            const buttonRef = { current: document.createElement("button") }
+            toggleModal(buttonRef as any, uniqueModalId, { action: "create" })
+          }}
+          variant="primary"
+          size="sm"
+        >
+          {t("myScents.comments.addCommentButton", "Add Comment")}
+        </Button>
+        <Button
           onClick={onEdit}
           variant="secondary"
           size="sm"
@@ -76,7 +109,10 @@ const DestashItem = ({ destash, onEdit, onDelete }: DestashItemProps) => {
           {t("myScents.destashManager.edit")}
         </Button>
         <Button
-          onClick={onDelete}
+          onClick={() => {
+            const buttonRef = { current: document.createElement("button") }
+            toggleModal(buttonRef as any, "delete-destash-item")
+          }}
           variant="danger"
           size="sm"
           leftIcon={<MdDelete size={16} />}
@@ -85,6 +121,7 @@ const DestashItem = ({ destash, onEdit, onDelete }: DestashItemProps) => {
         </Button>
       </div>
     </div>
+    </>
   )
 }
 

@@ -11,8 +11,10 @@ import { useSessionStore } from "~/stores/sessionStore"
 import type { UserPerfumeI } from "~/types"
 
 import DestashManager from "../DestashManager/DestashManager"
+import CommentsModal from "../CommentsModal"
 import GeneralDetails from "./bones/GeneralDetails"
 import PerfumeComments from "./bones/PerfumeComments"
+import { usePerfumeComments } from "~/hooks/usePerfumeComments"
 
 interface MySentListItemI {
   userPerfume: UserPerfumeI
@@ -31,6 +33,15 @@ const MyScentsListItem = ({
   const { modalOpen, toggleModal, modalId, closeModal } = useSessionStore()
   const isSubmitting = navigation.state === "submitting"
   const removeButtonRef = useRef<HTMLButtonElement>(null)
+  const { uniqueModalId, addComment } = usePerfumeComments({ userPerfume })
+
+  // Calculate total destashed for this perfume across all entries
+  const totalDestashed = userPerfumes
+    .filter(up => up.perfumeId === userPerfume.perfumeId)
+    .reduce((sum, entry) => {
+      const avail = parseFloat(entry.available?.replace(/[^0-9.]/g, "") || "0")
+      return sum + (isNaN(avail) ? 0 : avail)
+    }, 0)
 
   const handleRemovePerfume = (userPerfumeId: string) => {
     setUserPerfumes(prev => prev.filter(perfume => perfume.id !== userPerfumeId))
@@ -52,6 +63,11 @@ const MyScentsListItem = ({
         action={() => handleRemovePerfume(userPerfume.id)} />
       </Modal>
     )}
+      {modalOpen && modalId === uniqueModalId && (
+        <Modal innerType="dark" animateStart="top">
+          <CommentsModal perfume={userPerfume} addComment={addComment} />
+        </Modal>
+      )}
     <li
       key={userPerfume.id}
       className="border p-4 flex flex-col w-full bg-noir-dark/60 text-noir-gold mb-4 last-of-type:mb-0"
@@ -77,7 +93,7 @@ const MyScentsListItem = ({
               {t("myScents.listItem.destashed")}
             </span>
             <span className="text-xl text-noir-gold-100">
-              {userPerfume.available || "0"} ml
+              {totalDestashed.toFixed(1)} ml
             </span>
           </p>
         </div>
