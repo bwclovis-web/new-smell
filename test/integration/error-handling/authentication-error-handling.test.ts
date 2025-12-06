@@ -14,6 +14,9 @@ vi.mock("~/utils/alert-processors", () => ({
 describe("Authentication Error Handling Integration Tests", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.resetAllMocks()
+    vi.mocked(wishlistServer.addToWishlist).mockReset()
+    vi.mocked(auth.authenticateUser).mockReset()
   })
 
   describe("Missing Authentication", () => {
@@ -435,6 +438,8 @@ describe("Authentication Error Handling Integration Tests", () => {
     })
 
     it("should reject request with invalid CSRF token", async () => {
+      vi.mocked(wishlistServer.addToWishlist).mockReset()
+      
       vi.mocked(auth.authenticateUser).mockResolvedValue({
         success: false,
         error: "Invalid CSRF token",
@@ -465,6 +470,8 @@ describe("Authentication Error Handling Integration Tests", () => {
 
   describe("Rate Limiting", () => {
     it("should reject request when rate limit exceeded", async () => {
+      vi.mocked(wishlistServer.addToWishlist).mockReset()
+      
       vi.mocked(auth.authenticateUser).mockResolvedValue({
         success: false,
         error: "Rate limit exceeded",
@@ -492,6 +499,8 @@ describe("Authentication Error Handling Integration Tests", () => {
     })
 
     it("should include retry-after header in rate limit response", async () => {
+      vi.mocked(wishlistServer.addToWishlist).mockReset()
+      
       vi.mocked(auth.authenticateUser).mockResolvedValue({
         success: false,
         error: "Rate limit exceeded",
@@ -522,6 +531,9 @@ describe("Authentication Error Handling Integration Tests", () => {
 
   describe("Concurrent Authentication", () => {
     it("should handle concurrent authentication requests", async () => {
+      vi.mocked(auth.authenticateUser).mockReset()
+      vi.mocked(wishlistServer.addToWishlist).mockReset()
+      
       const mockUser = { id: "user-123", email: "test@example.com" }
 
       vi.mocked(auth.authenticateUser).mockResolvedValue({
