@@ -13,6 +13,7 @@ interface DeStashFormProps {
   userPerfume: UserPerfumeI
   isEditing?: boolean
   isCreating?: boolean
+  maxAvailable?: number // Maximum amount that can be destashed (remaining from owned)
 }
 
 interface DeStashData {
@@ -49,6 +50,7 @@ const DeStashForm = ({
   userPerfume,
   isEditing = false,
   isCreating = false,
+  maxAvailable,
 }: DeStashFormProps) => {
   const initialValues = useMemo(
     () => ({
@@ -78,6 +80,14 @@ const DeStashForm = ({
         errors.deStashAmount = t("myScents.listItem.decantOptionsAmountError")
       }
 
+      // Check that destash amount doesn't exceed max available
+      if (!isNaN(amount) && maxAvailable !== undefined && amount > maxAvailable) {
+        errors.deStashAmount = t(
+          "myScents.listItem.decantOptionsExceedsOwned",
+          { owned: maxAvailable.toFixed(1) }
+        )
+      }
+
       if (values.price && values.price !== "") {
         const price = parseFloat(values.price)
         if (isNaN(price) || price < 0) {
@@ -87,7 +97,7 @@ const DeStashForm = ({
 
       return errors
     },
-    []
+    [maxAvailable]
   )
 
   const onSubmit = useCallback(
@@ -112,7 +122,10 @@ const DeStashForm = ({
   })
 
   const isNewDecant = isCreating || values.createNew
-  const maxAmount = isNewDecant ? 100 : parseFloat(userPerfume.amount)
+  // Use maxAvailable if provided, otherwise fall back to owned amount or 100
+  const maxAmount = maxAvailable !== undefined
+    ? Math.max(0, maxAvailable)
+    : 100
   const deStashAmount = parseFloat(values.deStashAmount) || 0
   const showPriceAndTrade = deStashAmount > 0
   const showTradeOnly = showPriceAndTrade && values.tradePreference !== "cash"

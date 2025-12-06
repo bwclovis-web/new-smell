@@ -393,6 +393,36 @@ export const createDestashEntry = async ({
   tradeOnly,
 }: CreateDestashParams) => {
   try {
+    // Get all user's entries for this perfume to calculate totals
+    const existingEntries = await prisma.userPerfume.findMany({
+      where: { userId, perfumeId },
+      select: { amount: true, available: true },
+    })
+
+    // Calculate total owned (sum of all amount values > 0)
+    const totalOwned = existingEntries.reduce((sum, entry) => {
+      const amt = parseFloat(entry.amount?.replace(/[^0-9.]/g, "") || "0")
+      return sum + (isNaN(amt) ? 0 : amt)
+    }, 0)
+
+    // Calculate total already destashed (sum of all available values)
+    const totalDestashed = existingEntries.reduce((sum, entry) => {
+      const avail = parseFloat(entry.available?.replace(/[^0-9.]/g, "") || "0")
+      return sum + (isNaN(avail) ? 0 : avail)
+    }, 0)
+
+    // Parse the new destash amount
+    const newDestashAmount = parseFloat(available?.replace(/[^0-9.]/g, "") || "0")
+
+    // Validate: total destashed + new destash cannot exceed total owned
+    if (totalOwned > 0 && (totalDestashed + newDestashAmount) > totalOwned) {
+      const remainingAvailable = Math.max(0, totalOwned - totalDestashed)
+      return {
+        success: false,
+        error: `Cannot destash ${available}. You only have ${remainingAvailable.toFixed(1)} ml remaining (${totalOwned} ml owned - ${totalDestashed.toFixed(1)} ml already destashed).`,
+      }
+    }
+
     const userPerfume = await prisma.userPerfume.create({
       data: {
         userId,
@@ -554,6 +584,17 @@ const updatePerfumeInDatabase = async (perfumeId: string, updateData: any) => aw
     },
   })
 
+// Helper to parse amount strings (e.g., "50", "50ml", "full") to numeric value
+// Returns null for "full" or unparseable values (treated as unlimited)
+const parseAmountToNumber = (amount: string | null): number | null => {
+  if (!amount || amount.toLowerCase() === "full") {
+    return null // "full" means unlimited
+  }
+  // Remove common units and parse the number
+  const numericValue = parseFloat(amount.replace(/[^0-9.]/g, ""))
+  return isNaN(numericValue) ? null : numericValue
+}
+
 export const updateAvailableAmount = async (params: {
   userId: string
   userPerfumeId: string
@@ -582,6 +623,38 @@ export const updateAvailableAmount = async (params: {
 
     if (!existingPerfume) {
       return { success: false, error: "Perfume not found in your collection" }
+    }
+
+    // Get all user's entries for this perfume to calculate totals
+    const allEntries = await prisma.userPerfume.findMany({
+      where: { userId, perfumeId: existingPerfume.perfumeId },
+      select: { id: true, amount: true, available: true },
+    })
+
+    // Calculate total owned (sum of all amount values > 0)
+    const totalOwned = allEntries.reduce((sum, entry) => {
+      const amt = parseFloat(entry.amount?.replace(/[^0-9.]/g, "") || "0")
+      return sum + (isNaN(amt) ? 0 : amt)
+    }, 0)
+
+    // Calculate total already destashed EXCLUDING current entry (we're updating it)
+    const totalDestashedOthers = allEntries
+      .filter(entry => entry.id !== userPerfumeId)
+      .reduce((sum, entry) => {
+        const avail = parseFloat(entry.available?.replace(/[^0-9.]/g, "") || "0")
+        return sum + (isNaN(avail) ? 0 : avail)
+      }, 0)
+
+    // Parse the new destash amount
+    const newDestashAmount = parseAmountToNumber(availableAmount) || 0
+
+    // Validate: total destashed (others + new) cannot exceed total owned
+    if (totalOwned > 0 && (totalDestashedOthers + newDestashAmount) > totalOwned) {
+      const remainingAvailable = Math.max(0, totalOwned - totalDestashedOthers)
+      return {
+        success: false,
+        error: `Cannot destash ${availableAmount}. You only have ${remainingAvailable.toFixed(1)} ml remaining.`,
+      }
     }
 
     // Prepare update data

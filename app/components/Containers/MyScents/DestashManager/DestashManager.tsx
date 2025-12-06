@@ -67,6 +67,17 @@ const DestashManager = ({
     up => up.perfumeId === perfumeId && parseFloat(up.available || "0") > 0
   )
 
+  // Calculate total owned and total destashed for this perfume
+  const entriesForPerfume = userPerfumes.filter(up => up.perfumeId === perfumeId)
+  const totalOwned = entriesForPerfume.reduce((sum, entry) => {
+    const amt = parseFloat(entry.amount?.replace(/[^0-9.]/g, "") || "0")
+    return sum + (isNaN(amt) ? 0 : amt)
+  }, 0)
+  const totalDestashed = entriesForPerfume.reduce((sum, entry) => {
+    const avail = parseFloat(entry.available?.replace(/[^0-9.]/g, "") || "0")
+    return sum + (isNaN(avail) ? 0 : avail)
+  }, 0)
+
   const handleCreateNew = () => {
     setIsCreating(true)
     setEditingId(null)
@@ -214,6 +225,9 @@ const DestashManager = ({
               userPerfume={editingDestash}
               handleDecantConfirm={handleDecantConfirm}
               isEditing={true}
+              maxAvailable={totalOwned > 0
+                ? totalOwned - totalDestashed + parseFloat(editingDestash.available || "0")
+                : undefined}
             />
           )}
           {isCreating && (
@@ -225,6 +239,7 @@ const DestashManager = ({
               }
               handleDecantConfirm={handleDecantConfirm}
               isCreating={true}
+              maxAvailable={totalOwned > 0 ? totalOwned - totalDestashed : undefined}
             />
           )}
         </div>

@@ -263,6 +263,7 @@
       "decantOptionsPriceError": "Price must be a positive number",
       "decantOptionsAmountError": "Amount must be a positive number",
       "decantOptionsAmountErrorExceedsAvailableAmount": "Amount cannot exceed available amount",
+      "decantOptionsExceedsOwned": "Cannot destash more than you own ({{owned}} ml)",
       "createNewDecant": "Create as new decant entry",
       "updateExistingDecant": "Update existing decant",
       "createNewDecantDescription": "This will create a separate new decant entry instead of updating the current one.",
