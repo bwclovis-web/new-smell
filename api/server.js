@@ -449,28 +449,23 @@ app.use((req, res, next) => {
   next()
 })
 
-// Parse request bodies and apply CSRF protection for API routes only
+// Apply CSRF protection for API routes (but don't parse bodies - let React Router handle that)
 app.use("/api", (req, res, next) => {
-  // Parse request bodies for API routes
-  express.json({ limit: "10mb" })(req, res, () => {
-    express.urlencoded({ extended: true, limit: "10mb" })(req, res, () => {
-      // Skip CSRF for routes that don't need it
-      const excludedRoutes = [
-        "/log-out", // Logout doesn't need CSRF
-        "/wishlist",
-        "/rate-limit-stats", // Monitoring endpoints
-        "/security-stats",
-        "/audit-logs",
-        "/audit-stats",
-      ]
+  // Skip CSRF for routes that don't need it
+  const excludedRoutes = [
+    "/log-out", // Logout doesn't need CSRF
+    "/wishlist",
+    "/rate-limit-stats", // Monitoring endpoints
+    "/security-stats",
+    "/audit-logs",
+    "/audit-stats",
+  ]
 
-      if (excludedRoutes.includes(req.path)) {
-        return next()
-      }
+  if (excludedRoutes.includes(req.path)) {
+    return next()
+  }
 
-      return csrfMiddleware(req, res, next)
-    })
-  })
+  return csrfMiddleware(req, res, next)
 })
 
 // CSRF protection middleware - only for specific routes that need it

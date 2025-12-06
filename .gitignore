@@ -61,6 +61,10 @@ nul
 /vitest.config.*.timestamp-*html/
 /html/
 
+## Vite
+*.timestamp-*.mjs
+vite.config.*.timestamp-*.mjs
+
 # CrewAI Python Environment
 /crews/
 crews/venv/

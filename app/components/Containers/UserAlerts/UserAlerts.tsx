@@ -131,23 +131,35 @@ export const UserAlerts = ({
 
   const handlePreferencesChange = async (newPreferences: Partial<UserAlertPreferences>): Promise<boolean> => {
     try {
+      // Create an AbortController for timeout
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+
       const response = await fetch(`/api/user-alerts/${userId}/preferences`, {
-        method: "POST",
+        method: "PUT",
         headers: addToHeaders({
           "Content-Type": "application/json",
         }),
         body: JSON.stringify(newPreferences),
+        signal: controller.signal,
       })
+
+      clearTimeout(timeoutId)
 
       if (response.ok) {
         const updatedPreferences = await response.json()
         setPreferences(updatedPreferences)
         return true
       }
+      
       console.error("Failed to update preferences:", response.status, response.statusText)
       return false
     } catch (error) {
-      console.error("Failed to update preferences:", error)
+      if (error instanceof Error && error.name === "AbortError") {
+        console.error("Request timeout: Failed to update preferences within 10 seconds")
+      } else {
+        console.error("Failed to update preferences:", error)
+      }
       return false
     }
   }
