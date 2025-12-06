@@ -85,8 +85,16 @@ const TradingPostPage = () => {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Sync local state when URL search param changes (e.g., back/forward navigation)
+  // Also clear any pending debounce timer to prevent stale closures from executing
   useEffect(() => {
     setLocalSearchValue(searchQuery)
+    
+    // Clear any pending debounce timer when searchQuery changes from navigation
+    // This prevents stale closures from executing after back/forward navigation
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+      debounceRef.current = null
+    }
   }, [searchQuery])
 
   // Debounced search - navigates to URL with search param
