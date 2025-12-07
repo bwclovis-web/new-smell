@@ -23,6 +23,13 @@ vi.mock("~/db.server", () => ({
       create: vi.fn(),
       update: vi.fn(),
     },
+    userPerfume: {
+      findMany: vi.fn(),
+      findFirst: vi.fn(),
+      findUnique: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+    },
     userPerfumeRating: {
       findFirst: vi.fn(),
       findUnique: vi.fn(),
@@ -57,6 +64,7 @@ describe("Database Error Handling Integration Tests", () => {
       connectionError.name = "P1001"
 
       vi.mocked(prisma.userPerfumeWishlist.findMany).mockRejectedValue(connectionError)
+      vi.mocked(prisma.userPerfume.findMany).mockResolvedValue([])
 
       await expect(wishlistServer.getUserWishlist("user-123")).rejects.toThrow("Connection timeout")
     })
@@ -74,6 +82,7 @@ describe("Database Error Handling Integration Tests", () => {
       const poolError = new Error("Connection pool timeout")
       poolError.name = "P1008"
 
+      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)
       vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(poolError)
 
       const result = await wishlistServer
@@ -118,6 +127,7 @@ describe("Database Error Handling Integration Tests", () => {
       const uniqueError = new Error("Unique constraint failed")
       uniqueError.name = "P2002"
 
+      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)
       vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(uniqueError)
 
       await expect(wishlistServer.addToWishlist("user-123", "perfume-456", false)).rejects.toThrow("Unique constraint failed")
@@ -127,6 +137,7 @@ describe("Database Error Handling Integration Tests", () => {
       const fkError = new Error("Foreign key constraint failed")
       fkError.name = "P2003"
 
+      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)
       vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(fkError)
 
       await expect(wishlistServer.addToWishlist("invalid-user", "invalid-perfume", false)).rejects.toThrow("Foreign key constraint failed")
@@ -152,6 +163,7 @@ describe("Database Error Handling Integration Tests", () => {
     it("should handle transaction rollback on error", async () => {
       const transactionError = new Error("Transaction aborted")
 
+      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)
       vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(transactionError)
 
       await expect(wishlistServer.addToWishlist("user-123", "perfume-456", false)).rejects.toThrow("Transaction aborted")
@@ -161,6 +173,7 @@ describe("Database Error Handling Integration Tests", () => {
       const timeoutError = new Error("Transaction timeout")
       timeoutError.name = "P2024"
 
+      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)
       vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(timeoutError)
 
       await expect(wishlistServer.addToWishlist("user-123", "perfume-456", false)).rejects.toThrow("Transaction timeout")
@@ -324,6 +337,7 @@ describe("Database Error Handling Integration Tests", () => {
 
     it("should maintain data consistency after error", async () => {
       // Simulate error on create
+      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)
       vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValueOnce(new Error("Create failed"))
 
       await expect(wishlistServer.addToWishlist("user-123", "perfume-456", false)).rejects.toThrow("Create failed")

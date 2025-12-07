@@ -25,8 +25,10 @@ import { loader as createPerfumeLoader } from "~/routes/admin/CreatePerfumePage"
 import { loader as dataQualityLoader } from "~/routes/admin/data-quality"
 import { loader as securityMonitorLoader } from "~/routes/admin/security-monitor"
 import * as requireAdmin from "~/utils/requireAdmin.server"
+import * as sharedLoader from "~/utils/sharedLoader"
 
 vi.mock("~/utils/requireAdmin.server")
+vi.mock("~/utils/sharedLoader")
 
 describe("Admin Routes Authentication", () => {
   const mockAdminUser = {
@@ -49,11 +51,14 @@ describe("Admin Routes Authentication", () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    // Reset mocks to default behavior
+    vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(mockAdminUser as any)
+    vi.mocked(requireAdmin.requireAdmin).mockResolvedValue(mockAdminUser as any)
   })
 
   describe("AdminLayout", () => {
     it("should allow admin users", async () => {
-      vi.mocked(requireAdmin.requireAdmin).mockResolvedValue(mockAdminUser as any)
+      vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(mockAdminUser as any)
 
       const request = new Request("https://example.com/admin")
       const args: LoaderFunctionArgs = {
@@ -67,7 +72,11 @@ describe("Admin Routes Authentication", () => {
     })
 
     it("should reject non-admin users", async () => {
-      vi.mocked(requireAdmin.requireAdmin).mockRejectedValue(new Error("Admin access required"))
+      // sharedLoader throws redirect when no user, which gets caught by withLoaderErrorHandling
+      const redirectResponse = new Response(null, { status: 302 })
+      vi.mocked(sharedLoader.sharedLoader).mockImplementation(() => {
+        throw redirectResponse
+      })
 
       const request = new Request("https://example.com/admin")
       const args: LoaderFunctionArgs = {
@@ -82,7 +91,7 @@ describe("Admin Routes Authentication", () => {
 
   describe("AdminIndex", () => {
     it("should allow admin users", async () => {
-      vi.mocked(requireAdmin.requireAdmin).mockResolvedValue(mockAdminUser as any)
+      vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(mockAdminUser as any)
 
       const request = new Request("https://example.com/admin")
       const args: LoaderFunctionArgs = {
@@ -96,7 +105,11 @@ describe("Admin Routes Authentication", () => {
     })
 
     it("should reject non-admin users", async () => {
-      vi.mocked(requireAdmin.requireAdmin).mockRejectedValue(new Error("Admin access required"))
+      // sharedLoader throws redirect when no user, which gets caught by withLoaderErrorHandling
+      const redirectResponse = new Response(null, { status: 302 })
+      vi.mocked(sharedLoader.sharedLoader).mockImplementation(() => {
+        throw redirectResponse
+      })
 
       const request = new Request("https://example.com/admin")
       const args: LoaderFunctionArgs = {

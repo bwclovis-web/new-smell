@@ -96,12 +96,7 @@ describe("Perfume Route Integration Tests", () => {
       }
 
       // Mock all required functions - ensure mocks are set up before calling loader
-      vi.mocked(perfumeServer.getPerfumeBySlug).mockImplementation(async (slug: string) => {
-          if (slug === "test-perfume") {
-            return mockPerfume as any
-          }
-          return null
-        })
+      vi.mocked(perfumeServer.getPerfumeBySlug).mockResolvedValue(mockPerfume as any)
       
       vi.mocked(sessionManager.verifyAccessToken).mockReturnValue(null)
       vi.mocked(userServer.getUserById).mockResolvedValue(null)
