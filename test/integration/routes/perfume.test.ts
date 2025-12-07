@@ -26,12 +26,31 @@ import * as wishlistServer from "~/models/wishlist.server"
 import { loader as perfumeLoader } from "~/routes/perfume"
 import * as sessionManager from "~/utils/security/session-manager.server"
 
-vi.mock("~/models/perfume.server")
-vi.mock("~/models/perfumeRating.server")
-vi.mock("~/models/perfumeReview.server")
-vi.mock("~/models/user.server")
-vi.mock("~/models/wishlist.server")
-vi.mock("~/utils/security/session-manager.server")
+vi.mock("~/models/perfume.server", () => ({
+  getPerfumeBySlug: vi.fn(),
+}))
+
+vi.mock("~/models/perfumeRating.server", () => ({
+  getPerfumeRatings: vi.fn(),
+  getUserPerfumeRating: vi.fn(),
+}))
+
+vi.mock("~/models/perfumeReview.server", () => ({
+  getPerfumeReviews: vi.fn(),
+  getUserPerfumeReview: vi.fn(),
+}))
+
+vi.mock("~/models/user.server", () => ({
+  getUserById: vi.fn(),
+}))
+
+vi.mock("~/models/wishlist.server", () => ({
+  isInWishlist: vi.fn(),
+}))
+
+vi.mock("~/utils/security/session-manager.server", () => ({
+  verifyAccessToken: vi.fn(),
+}))
 vi.mock("cookie", () => ({
   default: {
     parse: vi.fn(str => {
