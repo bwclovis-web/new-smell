@@ -33,6 +33,8 @@ export const AlertItem = ({
         return <BsHeartFill className="h-4 w-4 text-green-600" />
       case "decant_interest":
         return <BsBell className="h-4 w-4 text-blue-600" />
+      case "pending_submission_approval":
+        return <BsBell className="h-4 w-4 text-yellow-600" />
       default:
         return <BsBell className="h-4 w-4 text-gray-600" />
     }
@@ -44,6 +46,8 @@ export const AlertItem = ({
         return "Wishlist Alert"
       case "decant_interest":
         return "Interest Alert"
+      case "pending_submission_approval":
+        return "Pending Submission"
       default:
         return "Alert"
     }
@@ -76,6 +80,20 @@ export const AlertItem = ({
 
   const getPerfumeLink = () => `/perfume/${alert.Perfume.slug}`
 
+  const getAlertLink = () => {
+    if (alert.alertType === "pending_submission_approval") {
+      return "/admin/pending-submissions"
+    }
+    return getPerfumeLink()
+  }
+
+  const getLinkText = () => {
+    if (alert.alertType === "pending_submission_approval") {
+      return "Review submission"
+    }
+    return "View perfume"
+  }
+
   if (compact) {
     return (
       <div
@@ -105,10 +123,10 @@ export const AlertItem = ({
                   {formatTimeAgo(alert.createdAt)}
                 </span>
                 <Link
-                  to={getPerfumeLink()}
+                  to={getAlertLink()}
                   className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
                 >
-                  View perfume <BsBoxArrowUpRight className="h-3 w-3" />
+                  {getLinkText()} <BsBoxArrowUpRight className="h-3 w-3" />
                 </Link>
               </div>
             </div>
@@ -181,22 +199,24 @@ export const AlertItem = ({
 
               <p className="text-sm text-gray-600 mt-1 mb-3">{alert.message}</p>
 
-              {/* Perfume Info */}
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <span>Perfume:</span>
-                <Link
-                  to={getPerfumeLink()}
-                  className="font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1"
-                >
-                  {alert.Perfume.name}
-                  {alert.Perfume.perfumeHouse && (
-                    <span className="text-gray-500">
-                      by {alert.Perfume.perfumeHouse.name}
-                    </span>
-                  )}
-                  <BsBoxArrowUpRight className="h-3 w-3" />
-                </Link>
-              </div>
+              {/* Perfume Info - only show for non-pending-submission alerts */}
+              {alert.alertType !== "pending_submission_approval" && alert.Perfume && (
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <span>Perfume:</span>
+                  <Link
+                    to={getPerfumeLink()}
+                    className="font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                  >
+                    {alert.Perfume.name}
+                    {alert.Perfume.perfumeHouse && (
+                      <span className="text-gray-500">
+                        by {alert.Perfume.perfumeHouse.name}
+                      </span>
+                    )}
+                    <BsBoxArrowUpRight className="h-3 w-3" />
+                  </Link>
+                </div>
+              )}
 
               {/* Additional metadata for specific alert types */}
               {alert.metadata && (

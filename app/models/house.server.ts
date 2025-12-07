@@ -596,13 +596,18 @@ export const updatePerfumeHouse = async (id: string, data: FormData) => {
     }
   }
 }
-// Helper function to sanitize text input by normalizing Unicode characters
+// Helper function to sanitize text input by normalizing Unicode characters and preventing XSS
 const sanitizeText = (text: string | null): string => {
   if (!text) {
     return ""
   }
 
   return text
+    .trim()
+    .replace(/[<>]/g, "") // Remove angle brackets to prevent HTML/script tags
+    .replace(/javascript:/gi, "") // Remove javascript: protocol
+    .replace(/on\w+=/gi, "") // Remove event handlers (onclick, onerror, etc.)
+    .replace(/[\x00-\x1F\x7F]/g, "") // Remove control characters
     .normalize("NFD") // Normalize Unicode
     .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
     .replace(/[\u2013\u2014]/g, "-") // en dash, em dash → hyphen

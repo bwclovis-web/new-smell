@@ -17,9 +17,10 @@ interface TagSearchProps
   onChange?: Function
   label?: string
   data?: any[]
+  allowCreate?: boolean
 }
 
-const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => {
+const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data, allowCreate = true }) => {
   const initialTags = Array.isArray(data) ? data : []
   const [selectedTags, setSelectedTags] = useState<any[]>(initialTags)
 
@@ -131,17 +132,19 @@ const TagSearch: FC<TagSearchProps> = ({ className, onChange, label, data }) => 
                   <span>No tags found</span>
                 </li>
               )}
-            <li
-              className={
-                "p-2 hover:bg-noir-gray hover:text-noir-light " +
-                "cursor-pointer last-of-type:rounded-b-md"
-              }
-            >
-              <CreateTagButton
-                action={handleItemClick}
-                setOpenDropdown={() => clearResults()}
-              />
-            </li>
+            {allowCreate && (
+              <li
+                className={
+                  "p-2 hover:bg-noir-gray hover:text-noir-light " +
+                  "cursor-pointer last-of-type:rounded-b-md"
+                }
+              >
+                <CreateTagButton
+                  action={handleItemClick}
+                  setOpenDropdown={() => clearResults()}
+                />
+              </li>
+            )}
           </ul>
         )}
       </div>

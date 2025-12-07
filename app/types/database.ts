@@ -7,6 +7,8 @@ import type {
   AlertType,
   HouseType,
   PerfumeType,
+  PendingSubmissionStatus,
+  PendingSubmissionType,
   TradePreference,
   UserRole,
 } from "@prisma/client"
@@ -197,8 +199,41 @@ export interface UserAlertPreferences {
   user: User
 }
 
+export interface PendingSubmission {
+  id: string
+  submissionType: PendingSubmissionType
+  submittedBy?: string | null
+  status: PendingSubmissionStatus
+  submissionData: Record<string, any>
+  adminNotes?: string | null
+  reviewedBy?: string | null
+  reviewedAt?: Date | null
+  createdAt: Date
+  updatedAt: Date
+  submittedByUser?: {
+    id: string
+    email: string
+    username?: string | null
+    firstName?: string | null
+    lastName?: string | null
+  } | null
+  reviewedByUser?: {
+    id: string
+    email: string
+    username?: string | null
+  } | null
+}
+
 // Re-export enums
-export type { AlertType, HouseType, PerfumeType, TradePreference, UserRole }
+export type {
+  AlertType,
+  HouseType,
+  PendingSubmissionStatus,
+  PendingSubmissionType,
+  PerfumeType,
+  TradePreference,
+  UserRole,
+}
 
 // Utility types for common database operations
 export type CreateUserInput = Omit<

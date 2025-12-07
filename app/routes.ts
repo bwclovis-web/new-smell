@@ -13,6 +13,7 @@ export default [
     route("terms-and-conditions", "routes/termsAndConditions.tsx"),
     route("about-us", "routes/about-us.tsx"),
     route("how-we-work", "routes/how-we-work.tsx"),
+    route("contact-us", "routes/contact-us.tsx"),
     // Handle .well-known paths (e.g., Chrome DevTools requests)
     route(".well-known/*", "routes/.well-known.$.tsx"),
     // API ROUTES
@@ -61,6 +62,7 @@ export default [
       "routes/api/user-alerts.$userId.preferences.tsx"
     ),
     route("api/error-analytics", "routes/api/error-analytics.tsx"),
+    route("api/pending-submissions", "routes/api/pending-submissions.tsx"),
 
     layout("routes/admin/AdminLayout.tsx", [
       route("admin/", "routes/admin/adminIndex.tsx"),
@@ -80,6 +82,7 @@ export default [
       route("admin/performance-admin", "routes/admin/performance-admin.tsx"),
       route("admin/error-analytics", "routes/admin.error-analytics.tsx"),
       route("admin/change-password", "routes/admin/change-password.tsx"),
+      route("admin/pending-submissions", "routes/admin/pending-submissions.tsx"),
     ]),
 
     layout("routes/login/LoginLayout.tsx", [

@@ -32,6 +32,8 @@ model User {
   wishlistNotifications WishlistNotification[]
   traderFeedbackReceived TraderFeedback[] @relation("FeedbackForTrader")
   traderFeedbackLeft     TraderFeedback[] @relation("FeedbackFromReviewer")
+  pendingSubmissions    PendingSubmission[] @relation("SubmittedSubmissions")
+  reviewedSubmissions   PendingSubmission[] @relation("ReviewedSubmissions")
 }
 
 model PerfumeHouse {
@@ -247,6 +249,35 @@ model UserAlertPreferences {
   User                  User    @relation(fields: [userId], references: [id])
 }
 
+model PendingSubmission {
+  id            String                @id @default(cuid())
+  submissionType PendingSubmissionType
+  submittedBy   String?
+  status         PendingSubmissionStatus @default(pending)
+  submissionData Json
+  adminNotes     String?
+  reviewedBy     String?
+  reviewedAt     DateTime?
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  submittedByUser User?               @relation("SubmittedSubmissions", fields: [submittedBy], references: [id])
+  reviewedByUser User?                @relation("ReviewedSubmissions", fields: [reviewedBy], references: [id])
+
+  @@index([status, createdAt])
+  @@index([submissionType, status])
+}
+
+enum PendingSubmissionType {
+  perfume
+  perfume_house
+}
+
+enum PendingSubmissionStatus {
+  pending
+  approved
+  rejected
+}
+
 enum UserRole {
   user
   admin
@@ -313,6 +344,7 @@ enum SecurityAuditSeverity {
 enum AlertType {
   wishlist_available
   decant_interest
+  pending_submission_approval
 }
 
 enum PerfumeNoteType {

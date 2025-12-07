@@ -52,6 +52,11 @@ const AboutDropdown = ({
       label: ready && isClientReady ? t("navigation.howWeWork") : "How We Work",
       path: "/how-we-work",
     },
+    {
+      id: "contact-us",
+      label: ready && isClientReady ? t("navigation.contactUs") : "Contact Us",
+      path: "/contact-us",
+    },
   ]
 
   const handleNavClick = () => {
