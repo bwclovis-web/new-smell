@@ -120,8 +120,7 @@ const handleAddAction = async (user: any, perfumeId: string, amount?: string) =>
   return result
 }
 
-const handleRemoveAction = async (user: any, userPerfumeId: string) =>
-  removeUserPerfume(user.id, userPerfumeId)
+const handleRemoveAction = async (user: any, userPerfumeId: string) => removeUserPerfume(user.id, userPerfumeId)
 
 const handleDecantAction = async (params: {
   user: any

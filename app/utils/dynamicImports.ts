@@ -37,7 +37,7 @@ export const dynamicRouteImports = {
 export const dynamicComponentImports = {
   // Data visualization components
   dataQualityDashboard: () =>
-    import("~/components/Containers/DataQualityDashboard/DataQualityDashboard"),
+    import("~/components/Containers/DataQualityDashboard"),
 
   // Complex forms
   perfumeForm: () => import("~/components/Containers/Forms/PerfumeForm"),
@@ -49,7 +49,7 @@ export const dynamicComponentImports = {
 
   // Chart components (if using chart libraries)
   chartComponents: () =>
-    import("~/components/Containers/DataQualityDashboard/DataQualityDashboard"),
+    import("~/components/Containers/DataQualityDashboard"),
 
   // Modal components
   complexModals: () => import("~/components/Organisms/Modal/Modal"),

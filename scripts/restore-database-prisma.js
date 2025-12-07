@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+/* eslint-disable max-statements */
+/* eslint-disable no-console */
 
 /**
  * Database Restore Script using Prisma

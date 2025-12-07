@@ -84,9 +84,7 @@ describe("usePreserveScrollPosition", () => {
       value: 150,
     })
 
-    const { rerender } = renderHook(loading =>
-      usePreserveScrollPosition(loading)
-    )
+    const { rerender } = renderHook(loading => usePreserveScrollPosition(loading))
 
     rerender(true)
 

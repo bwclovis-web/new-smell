@@ -138,7 +138,8 @@ export const createMockUser = (overrides: Partial<MockUser> = {}): MockUser => (
  * @deprecated Use createMockPerfume from test/factories instead
  * Legacy mock perfume generator - kept for backward compatibility
  */
-export const createMockPerfume = (overrides: Partial<MockPerfume> = {}): MockPerfume => ({
+export const createMockPerfume = 
+  (overrides: Partial<MockPerfume> = {}): MockPerfume => ({
   id: "1",
   name: "Test Perfume",
   brand: "Test Brand",
@@ -262,7 +263,8 @@ export const mockScrollTo = () => {
  * Legacy test data factories - kept for backward compatibility
  *
  * For new tests, use:
- * - import { createMockUser, createMockPerfume, createMockHouse } from 'test/factories'
+ * - import 
+ * { createMockUser, createMockPerfume, createMockHouse } from 'test/factories'
  * - import { batchGeneration, generateBulkTestData } from 'test/factories'
  */
 export const createTestData = {
@@ -284,9 +286,11 @@ export const wait = (milliseconds: number) => new Promise(resolve => {
 
 export const createTestUser = () => userEvent.setup()
 
-export const waitForElement = async (selector: string, timeout = 5000) => waitFor(() => screen.getByTestId(selector), { timeout })
+export const waitForElement = 
+  async (selector: string, timeout = 5000) =>  waitFor(() => screen.getByTestId(selector), { timeout })
 
-export const waitForElementToDisappear = async (selector: string, timeout = 5000) => waitFor(
+export const waitForElementToDisappear = 
+  async (selector: string, timeout = 5000) => waitFor(
     () => {
       expect(screen.queryByTestId(selector)).not.toBeInTheDocument()
     },

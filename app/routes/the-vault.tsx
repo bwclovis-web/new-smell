@@ -86,8 +86,7 @@ const AllPerfumesPage = () => {
   })
 
   const normalizedPerfumes = useMemo(
-    () =>
-      perfumes.map(perfume => ({
+    () => perfumes.map(perfume => ({
         ...perfume,
         createdAt: perfume.createdAt ?? perfume.updatedAt ?? new Date(0),
       })),

@@ -47,7 +47,7 @@ describe("Integration Testing Example", () => {
       try {
         localStorage.setItem("test-key", "value")
         expect(localStorage.getItem("test-key")).toBe("value")
-      } catch (error) {
+      } catch {
         // localStorage not available in this environment
       }
     }
@@ -58,7 +58,7 @@ describe("Integration Testing Example", () => {
       try {
         // Storage was cleared by the lifecycle
         expect(localStorage.getItem("test-key")).toBeNull()
-      } catch (error) {
+      } catch () {
         // localStorage not available in this environment
       }
     }
@@ -198,9 +198,9 @@ describe("Multiple Cleanup Example", () => {
     const order: string[] = []
 
     // Register cleanup functions
-    registerCleanup(() => order.push("first"))
-    registerCleanup(() => order.push("second"))
-    registerCleanup(() => order.push("third"))
+    registerCleanup(() => { order.push("first"); return undefined })
+    registerCleanup(() => { order.push("second"); return undefined })
+    registerCleanup(() => { order.push("third"); return undefined })
 
     // During test
     expect(order).toEqual([])

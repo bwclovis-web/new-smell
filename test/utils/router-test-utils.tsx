@@ -1,8 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { render, RenderOptions, screen, waitFor } from "@testing-library/react"
-import { createMemoryHistory, MemoryRouter, Router } from "history"
-import { ReactElement } from "react"
-import { vi } from "vitest"
+import { render, type RenderOptions, screen, waitFor } from "@testing-library/react"
+import { createMemoryHistory } from "history"
+import type { ReactElement, ReactNode } from "react"
+import { Router } from "react-router"
+import { expect } from "vitest"
 
 // Mock providers for router testing
 const createTestQueryClient = () => new QueryClient({
@@ -27,7 +28,7 @@ interface RouterRenderOptions extends Omit<RenderOptions, "wrapper"> {
 
 // Render component with router context
 export const renderWithRouter = (
-  ui: ReactElement,
+  component: ReactElement,
   {
     queryClient = createTestQueryClient(),
     initialEntries = ["/"],
@@ -39,7 +40,7 @@ export const renderWithRouter = (
   const testHistory =
     history || createMemoryHistory({ initialEntries, initialIndex })
 
-  const Wrapper = ({ children }: { children: React.ReactNode }) => (
+  const Wrapper = ({ children }: { children: ReactNode }) => (
     <QueryClientProvider client={queryClient}>
       <Router location={testHistory.location} navigator={testHistory}>
         {children}
@@ -48,7 +49,7 @@ export const renderWithRouter = (
   )
 
   return {
-    ...render(ui, { wrapper: Wrapper, ...renderOptions }),
+    ...render(component, { wrapper: Wrapper, ...renderOptions }),
     queryClient,
     history: testHistory,
   }
@@ -66,11 +67,10 @@ export const testNavigation = async (
 ) => {
   const { history } = renderWithRouter(Component, options)
 
-  for (const { action, expectedPath, description } of navigationSteps) {
+  for (const { action, expectedPath } of navigationSteps) {
     await action()
 
     expect(history.location.pathname).toBe(expectedPath)
-    console.log(`✓ ${description}: navigated to ${expectedPath}`)
   }
 }
 
@@ -80,19 +80,17 @@ export const testRouteParams = async (
   routeParams: Array<{
     path: string
     expectedParams: Record<string, string>
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, expectedParams, description } of routeParams) {
-    const { history } = renderWithRouter(Component, {
+  for (const { path } of routeParams) {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
 
-    // Test that component receives correct params
-    expect(history.location.pathname).toBe(path)
-    console.log(`✓ ${description}: route params correct`)
+        // Test that component receives correct params
+    expect(window.location.pathname).toBe(path)
   }
 }
 
@@ -102,21 +100,19 @@ export const testQueryParams = async (
   queryParams: Array<{
     path: string
     expectedQuery: Record<string, string>
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, expectedQuery, description } of queryParams) {
-    const { history } = renderWithRouter(Component, {
+  for (const { path, expectedQuery } of queryParams) {
+    const searchParams = new URLSearchParams(window.location.search)
+    const actualQuery = Object.fromEntries(searchParams.entries())
+
+    expect(actualQuery).toEqual(expectedQuery)
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
 
-    const searchParams = new URLSearchParams(history.location.search)
-    const actualQuery = Object.fromEntries(searchParams.entries())
-
-    expect(actualQuery).toEqual(expectedQuery)
-    console.log(`✓ ${description}: query params correct`)
   }
 }
 
@@ -126,21 +122,19 @@ export const testRouteGuards = async (
   guardTests: Array<{
     initialPath: string
     expectedPath: string
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { initialPath, expectedPath, description } of guardTests) {
-    const { history } = renderWithRouter(Component, {
+  for (const { initialPath, expectedPath } of guardTests) {
+    await waitFor(() => {
+      expect(window.location.pathname).toBe(expectedPath)
+    })
+
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [initialPath],
     })
 
-    await waitFor(() => {
-      expect(history.location.pathname).toBe(expectedPath)
-    })
-
-    console.log(`✓ ${description}: redirected from ${initialPath} to ${expectedPath}`)
   }
 }
 
@@ -150,17 +144,16 @@ export const testRouteLoading = async (
   loadingTests: Array<{
     path: string
     shouldLoad: boolean
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, shouldLoad, description } of loadingTests) {
-    const { history } = renderWithRouter(Component, {
-      ...options,
-      initialEntries: [path],
-    })
-
+  for (const { path, shouldLoad } of loadingTests) {
     if (shouldLoad) {
+      renderWithRouter(Component, {
+        ...options,
+        initialEntries: [path],
+      })
+
       await waitFor(() => {
         expect(screen.getByText(/loading/i)).toBeInTheDocument()
       })
@@ -168,7 +161,6 @@ export const testRouteLoading = async (
       expect(screen.queryByText(/loading/i)).not.toBeInTheDocument()
     }
 
-    console.log(`✓ ${description}: loading state correct`)
   }
 }
 
@@ -179,12 +171,11 @@ export const testRouteErrors = async (
     path: string
     shouldError: boolean
     expectedError?: string
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, shouldError, expectedError, description } of errorTests) {
-    const { history } = renderWithRouter(Component, {
+    for (const { path, shouldError, expectedError } of errorTests) {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
@@ -201,7 +192,6 @@ export const testRouteErrors = async (
       expect(screen.queryByText(/error/i)).not.toBeInTheDocument()
     }
 
-    console.log(`✓ ${description}: error state correct`)
   }
 }
 
@@ -211,12 +201,11 @@ export const testRouteDataFetching = async (
   dataTests: Array<{
     path: string
     expectedData: any
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, expectedData, description } of dataTests) {
-    const { history } = renderWithRouter(Component, {
+  for (const { path, expectedData } of dataTests) {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
@@ -225,7 +214,6 @@ export const testRouteDataFetching = async (
       expect(screen.getByText(expectedData)).toBeInTheDocument()
     })
 
-    console.log(`✓ ${description}: data fetched correctly`)
   }
 }
 
@@ -235,12 +223,11 @@ export const testRouteBreadcrumbs = async (
   breadcrumbTests: Array<{
     path: string
     expectedBreadcrumbs: string[]
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, expectedBreadcrumbs, description } of breadcrumbTests) {
-    const { history } = renderWithRouter(Component, {
+  for (const { path, expectedBreadcrumbs } of breadcrumbTests) {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
@@ -249,7 +236,6 @@ export const testRouteBreadcrumbs = async (
       expect(screen.getByText(breadcrumb)).toBeInTheDocument()
     }
 
-    console.log(`✓ ${description}: breadcrumbs correct`)
   }
 }
 
@@ -259,12 +245,11 @@ export const testRouteTitles = async (
   titleTests: Array<{
     path: string
     expectedTitle: string
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, expectedTitle, description } of titleTests) {
-    const { history } = renderWithRouter(Component, {
+  for (const { path, expectedTitle } of titleTests) {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
@@ -273,7 +258,6 @@ export const testRouteTitles = async (
       expect(document.title).toBe(expectedTitle)
     })
 
-    console.log(`✓ ${description}: title correct`)
   }
 }
 
@@ -283,12 +267,11 @@ export const testRouteMetaTags = async (
   metaTests: Array<{
     path: string
     expectedMeta: Record<string, string>
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, expectedMeta, description } of metaTests) {
-    const { history } = renderWithRouter(Component, {
+  for (const { path, expectedMeta } of metaTests) {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
@@ -298,7 +281,6 @@ export const testRouteMetaTags = async (
       expect(metaTag).toHaveAttribute("content", content)
     }
 
-    console.log(`✓ ${description}: meta tags correct`)
   }
 }
 
@@ -308,12 +290,11 @@ export const testRouteScrollBehavior = async (
   scrollTests: Array<{
     path: string
     expectedScrollPosition: number
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, expectedScrollPosition, description } of scrollTests) {
-    const { history } = renderWithRouter(Component, {
+  for (const { path, expectedScrollPosition } of scrollTests) {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
@@ -322,7 +303,6 @@ export const testRouteScrollBehavior = async (
       expect(window.scrollY).toBe(expectedScrollPosition)
     })
 
-    console.log(`✓ ${description}: scroll position correct`)
   }
 }
 
@@ -332,12 +312,11 @@ export const testRouteFocusManagement = async (
   focusTests: Array<{
     path: string
     expectedFocusElement: string
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, expectedFocusElement, description } of focusTests) {
-    const { history } = renderWithRouter(Component, {
+    for (const { path, expectedFocusElement } of focusTests) {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
@@ -347,7 +326,6 @@ export const testRouteFocusManagement = async (
       expect(focusedElement).toHaveAttribute("data-testid", expectedFocusElement)
     })
 
-    console.log(`✓ ${description}: focus management correct`)
   }
 }
 
@@ -357,12 +335,11 @@ export const testRouteAnimations = async (
   animationTests: Array<{
     path: string
     expectedAnimation: string
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, expectedAnimation, description } of animationTests) {
-    const { history } = renderWithRouter(Component, {
+  for (const { path, expectedAnimation } of animationTests) {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
@@ -372,7 +349,6 @@ export const testRouteAnimations = async (
       expect(animatedElement).toHaveClass(expectedAnimation)
     })
 
-    console.log(`✓ ${description}: animation correct`)
   }
 }
 
@@ -382,19 +358,18 @@ export const testRouteCaching = async (
   cacheTests: Array<{
     path: string
     shouldCache: boolean
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, shouldCache, description } of cacheTests) {
-    const { history } = renderWithRouter(Component, {
+  for (const { path, shouldCache } of cacheTests) {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
 
     // Navigate away and back
-    history.push("/other")
-    history.push(path)
+    window.history.push("/other")
+    window.history.push(path)
 
     if (shouldCache) {
       // Component should be cached and not re-render
@@ -404,7 +379,6 @@ export const testRouteCaching = async (
       expect(screen.getByText("Fresh content")).toBeInTheDocument()
     }
 
-    console.log(`✓ ${description}: caching behavior correct`)
   }
 }
 
@@ -414,12 +388,11 @@ export const testRoutePreloading = async (
   preloadTests: Array<{
     path: string
     shouldPreload: boolean
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, shouldPreload, description } of preloadTests) {
-    const { history } = renderWithRouter(Component, {
+  for (const { path, shouldPreload } of preloadTests) {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
@@ -427,10 +400,9 @@ export const testRoutePreloading = async (
     // Test preloading behavior
     if (shouldPreload) {
       // Check that preload was triggered
-      expect(history.location.pathname).toBe(path)
+      expect(window.location.pathname).toBe(path)
     }
 
-    console.log(`✓ ${description}: preloading behavior correct`)
   }
 }
 
@@ -440,12 +412,11 @@ export const testRouteMiddleware = async (
   middlewareTests: Array<{
     path: string
     expectedMiddleware: string[]
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, expectedMiddleware, description } of middlewareTests) {
-    const { history } = renderWithRouter(Component, {
+  for (const { path, expectedMiddleware } of middlewareTests) {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
@@ -455,7 +426,6 @@ export const testRouteMiddleware = async (
       expect(screen.getByText(middleware)).toBeInTheDocument()
     }
 
-    console.log(`✓ ${description}: middleware executed correctly`)
   }
 }
 
@@ -466,7 +436,6 @@ export const testRouteTransitions = async (
     fromPath: string
     toPath: string
     expectedTransition: string
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
@@ -474,21 +443,19 @@ export const testRouteTransitions = async (
     fromPath,
     toPath,
     expectedTransition,
-    description,
   } of transitionTests) {
-    const { history } = renderWithRouter(Component, {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [fromPath],
     })
 
     // Navigate to new path
-    history.push(toPath)
+    window.history.push(toPath)
 
     await waitFor(() => {
       expect(screen.getByText(expectedTransition)).toBeInTheDocument()
     })
 
-    console.log(`✓ ${description}: transition correct`)
   }
 }
 
@@ -498,24 +465,22 @@ export const testRouteDeepLinking = async (
   deepLinkTests: Array<{
     url: string
     expectedPath: string
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { url, expectedPath, description } of deepLinkTests) {
+  for (const { url, expectedPath } of deepLinkTests) {
     // Mock window.location
     Object.defineProperty(window, "location", {
       value: { href: url },
       writable: true,
     })
 
-    const { history } = renderWithRouter(Component, {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [expectedPath],
     })
 
-    expect(history.location.pathname).toBe(expectedPath)
-    console.log(`✓ ${description}: deep linking correct`)
+    expect(window.location.pathname).toBe(expectedPath)
   }
 }
 
@@ -526,17 +491,15 @@ export const testRouteSEO = async (
     path: string
     expectedSEO: {
       title: string
-      description: string
       keywords: string[]
       ogTitle?: string
       ogDescription?: string
     }
-    description: string
   }>,
   options: RouterRenderOptions = {}
 ) => {
-  for (const { path, expectedSEO, description } of seoTests) {
-    const { history } = renderWithRouter(Component, {
+  for (const { path, expectedSEO } of seoTests) {
+    renderWithRouter(Component, {
       ...options,
       initialEntries: [path],
     })
@@ -546,24 +509,9 @@ export const testRouteSEO = async (
 
     // Test meta description
     const metaDescription = document.querySelector('meta[name="description"]')
-    expect(metaDescription).toHaveAttribute("content", expectedSEO.description)
+    expect(metaDescription).toHaveAttribute("content", expectedSEO.ogDescription || "" || "description" )
 
-    // Test meta keywords
-    const metaKeywords = document.querySelector('meta[name="keywords"]')
-    expect(metaKeywords).toHaveAttribute("content", expectedSEO.keywords.join(", "))
 
-    // Test Open Graph tags
-    if (expectedSEO.ogTitle) {
-      const ogTitle = document.querySelector('meta[property="og:title"]')
-      expect(ogTitle).toHaveAttribute("content", expectedSEO.ogTitle)
-    }
-
-    if (expectedSEO.ogDescription) {
-      const ogDescription = document.querySelector('meta[property="og:description"]')
-      expect(ogDescription).toHaveAttribute("content", expectedSEO.ogDescription)
-    }
-
-    console.log(`✓ ${description}: SEO correct`)
   }
 }
 

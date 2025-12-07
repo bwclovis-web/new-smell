@@ -125,13 +125,9 @@ export const usePerfumeComments = ({ userPerfume, onCommentAdded }: UsePerfumeCo
    */
   const toggleCommentVisibility = async (commentId: string, currentIsPublic: boolean) => {
     // Optimistically update UI
-    setComments(prevComments =>
-      prevComments.map(comment =>
-        comment.id === commentId
+    setComments(prevComments => prevComments.map(comment => comment.id === commentId
           ? { ...comment, isPublic: !currentIsPublic }
-          : comment
-      )
-    )
+          : comment))
 
     const { perfumeId, userPerfumeId } = getIds()
 
@@ -148,13 +144,9 @@ export const usePerfumeComments = ({ userPerfume, onCommentAdded }: UsePerfumeCo
     if (error) {
       console.error("Error toggling comment visibility:", error)
       // Revert the UI change on error
-      setComments(prevComments =>
-        prevComments.map(comment =>
-          comment.id === commentId
+      setComments(prevComments => prevComments.map(comment => comment.id === commentId
             ? { ...comment, isPublic: currentIsPublic }
-            : comment
-        )
-      )
+            : comment))
       return { success: false, error: "Error toggling comment visibility" }
     }
 
@@ -166,13 +158,9 @@ export const usePerfumeComments = ({ userPerfume, onCommentAdded }: UsePerfumeCo
         jsonError || result.error
       )
       // Revert the UI change on error
-      setComments(prevComments =>
-        prevComments.map(comment =>
-          comment.id === commentId
+      setComments(prevComments => prevComments.map(comment => comment.id === commentId
             ? { ...comment, isPublic: currentIsPublic }
-            : comment
-        )
-      )
+            : comment))
       return { success: false, error: jsonError || result.error }
     }
 
@@ -210,11 +198,9 @@ export const usePerfumeComments = ({ userPerfume, onCommentAdded }: UsePerfumeCo
     if (jsonError || !result.success) {
       console.error("Failed to delete comment:", jsonError || result.error)
       setComments(originalComments)
-      alert(
-        `${t("comments.deleteFailed", "Failed to delete comment")}: ${
+      alert(`${t("comments.deleteFailed", "Failed to delete comment")}: ${
           result?.error || "Unknown error"
-        }`
-      )
+        }`)
       return { success: false, error: jsonError || result.error }
     }
 

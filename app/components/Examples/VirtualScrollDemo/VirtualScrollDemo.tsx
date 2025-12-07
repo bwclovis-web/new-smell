@@ -150,7 +150,7 @@ const VirtualScrollDemo: React.FC = () => {
             items={demoData}
             itemHeight={itemHeight}
             containerHeight={containerHeight}
-            overscan={5}
+            overScan={5}
             className="p-4"
             renderItem={renderItem}
             itemClassName="mb-4"

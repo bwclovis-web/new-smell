@@ -1,9 +1,10 @@
 import { screen } from "@testing-library/react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
+import type { TraderFeedbackResponse } from "~/lib/queries/traderFeedback"
+
 import { renderWithProviders } from "../../../../test/utils/test-utils"
 import TraderFeedbackSection from "./TraderFeedbackSection"
-import type { TraderFeedbackResponse } from "~/lib/queries/traderFeedback"
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
@@ -182,13 +183,11 @@ describe("TraderFeedbackSection", () => {
       error: null,
     })
 
-    renderWithProviders(
-      <TraderFeedbackSection
+    renderWithProviders(<TraderFeedbackSection
         traderId="trader-3"
         viewerId="viewer-1"
         initialData={initialFeedback}
-      />
-    )
+      />)
 
     expect(mockUseTraderFeedback).toHaveBeenCalledWith("trader-3", "viewer-1", initialFeedback)
     expect(screen.getByDisplayValue("Solid trade.")).toBeInTheDocument()

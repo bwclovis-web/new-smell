@@ -44,7 +44,6 @@ const ValidatedInput = forwardRef<HTMLInputElement, ValidatedInputProps>((
       onBlur,
       validationSchema,
       validateOnChange = true,
-      validateOnBlur = true,
       debounceMs = 300,
       required = false,
       disabled = false,

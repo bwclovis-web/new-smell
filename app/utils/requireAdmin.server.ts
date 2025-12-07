@@ -3,9 +3,10 @@
  * Throws appropriate errors if user is not authenticated or not an admin
  */
 
+import type { SafeUser } from "~/types"
+
 import { createError } from "./errorHandling"
 import { sharedLoader } from "./sharedLoader"
-import type { SafeUser } from "~/types"
 
 /**
  * Requires the user to be authenticated and have admin role

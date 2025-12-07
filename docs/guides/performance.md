@@ -561,7 +561,7 @@ export function VirtualizedPerfumeList({ perfumes }: Props) {
       items={perfumes}
       itemHeight={120}
       renderItem={(perfume) => <PerfumeCard key={perfume.id} perfume={perfume} />}
-      overscan={5}
+      overScan={5}
     />
   )
 }

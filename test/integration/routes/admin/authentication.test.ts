@@ -67,9 +67,7 @@ describe("Admin Routes Authentication", () => {
     })
 
     it("should reject non-admin users", async () => {
-      vi.mocked(requireAdmin.requireAdmin).mockRejectedValue(
-        new Error("Admin access required")
-      )
+      vi.mocked(requireAdmin.requireAdmin).mockRejectedValue(new Error("Admin access required"))
 
       const request = new Request("https://example.com/admin")
       const args: LoaderFunctionArgs = {
@@ -98,9 +96,7 @@ describe("Admin Routes Authentication", () => {
     })
 
     it("should reject non-admin users", async () => {
-      vi.mocked(requireAdmin.requireAdmin).mockRejectedValue(
-        new Error("Admin access required")
-      )
+      vi.mocked(requireAdmin.requireAdmin).mockRejectedValue(new Error("Admin access required"))
 
       const request = new Request("https://example.com/admin")
       const args: LoaderFunctionArgs = {
@@ -129,9 +125,7 @@ describe("Admin Routes Authentication", () => {
     })
 
     it("should reject non-admin users", async () => {
-      vi.mocked(requireAdmin.requireAdmin).mockRejectedValue(
-        new Error("Admin access required")
-      )
+      vi.mocked(requireAdmin.requireAdmin).mockRejectedValue(new Error("Admin access required"))
 
       const request = new Request("https://example.com/admin/create-perfume")
       const args: LoaderFunctionArgs = {
@@ -160,9 +154,7 @@ describe("Admin Routes Authentication", () => {
     })
 
     it("should reject non-admin users", async () => {
-      vi.mocked(requireAdmin.requireAdmin).mockRejectedValue(
-        new Error("Admin access required")
-      )
+      vi.mocked(requireAdmin.requireAdmin).mockRejectedValue(new Error("Admin access required"))
 
       const request = new Request("https://example.com/admin/data-quality")
       const args: LoaderFunctionArgs = {
@@ -197,9 +189,7 @@ describe("Admin Routes Authentication", () => {
     })
 
     it("should reject non-admin users", async () => {
-      vi.mocked(requireAdmin.requireAdmin).mockRejectedValue(
-        new Error("Admin access required")
-      )
+      vi.mocked(requireAdmin.requireAdmin).mockRejectedValue(new Error("Admin access required"))
 
       const request = new Request("https://example.com/admin/security-monitor")
       const args: LoaderFunctionArgs = {

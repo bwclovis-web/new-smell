@@ -1,5 +1,6 @@
 // Performance monitoring types
 declare global {
+  // eslint-disable-next-line no-unused-vars
   interface Window {
     gtag?: (
       command: "event",

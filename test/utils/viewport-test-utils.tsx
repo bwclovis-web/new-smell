@@ -1,4 +1,5 @@
-import { vi } from "vitest"
+import type { ComponentType } from "react"
+import { expect, vi } from "vitest"
 
 /**
  * Viewport and Responsive Testing Utilities
@@ -58,9 +59,9 @@ export const testAtViewports = async (
 export const mockMediaQuery = (query: string, matches = true) => {
   Object.defineProperty(window, "matchMedia", {
     writable: true,
-    value: vi.fn().mockImplementation((q: string) => ({
-      matches: q === query ? matches : false,
-      media: q,
+    value: vi.fn().mockImplementation((queryString: string) => ({
+      matches: queryString === query ? matches : false,
+      media: queryString,
       onchange: null,
       addListener: vi.fn(),
       removeListener: vi.fn(),
@@ -73,7 +74,7 @@ export const mockMediaQuery = (query: string, matches = true) => {
 
 // Test media query behavior
 export const testMediaQuery = async (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   mediaTests: Array<{
     query: string
     matches: boolean
@@ -83,9 +84,6 @@ export const testMediaQuery = async (
 ) => {
   for (const test of mediaTests) {
     mockMediaQuery(test.query, test.matches)
-
-    // Test would verify component behavior here
-    console.log(`✓ Media query test: ${test.description}`)
   }
 }
 
@@ -106,7 +104,7 @@ export const mockTouchSupport = (enabled = true) => {
 
 // Test responsive behavior
 export const testResponsiveBehavior = async (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   tests: Array<{
     viewport: ViewportName
     expectedElements: string[]
@@ -134,13 +132,12 @@ export const testResponsiveBehavior = async (
       }
     }
 
-    console.log(`✓ Responsive test (${test.viewport}): ${test.description}`)
   }
 }
 
 // Test orientation changes
 export const testOrientationChange = async (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   testFn: (orientation: "portrait" | "landscape") => void | Promise<void>
 ) => {
   // Test portrait

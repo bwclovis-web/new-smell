@@ -8,8 +8,8 @@ import {
   useNavigate,
 } from "react-router"
 
-import SearchInput from "~/components/Atoms/SearchInput/SearchInput"
 import { Button } from "~/components/Atoms/Button"
+import SearchInput from "~/components/Atoms/SearchInput/SearchInput"
 import LinkCard from "~/components/Organisms/LinkCard"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import { getPerfumeTypeLabel } from "~/data/SelectTypes"
@@ -133,13 +133,11 @@ const TradingPostPage = () => {
   }
 
   // Cleanup debounce timer on unmount
-  useEffect(() => {
-    return () => {
+  useEffect(() => () => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current)
       }
-    }
-  }, [])
+    }, [])
 
   const handlePageChange = (page: number) => {
     // Clear any pending debounce timer to prevent race conditions

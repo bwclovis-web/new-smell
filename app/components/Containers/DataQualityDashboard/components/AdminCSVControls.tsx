@@ -1,4 +1,4 @@
-import { type FC, useRef } from "react"
+import { type ChangeEventHandler, useRef } from "react"
 
 import { useCSRFToken } from "~/components/Molecules/CSRFToken"
 
@@ -9,7 +9,7 @@ interface AdminCSVControlsProps {
   onUploadComplete: () => void
 }
 
-const AdminCSVControls: FC<AdminCSVControlsProps> = ({ onUploadComplete }) => {
+const AdminCSVControls = ({ onUploadComplete }: AdminCSVControlsProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { csrfToken } = useCSRFToken()
 
@@ -17,7 +17,7 @@ const AdminCSVControls: FC<AdminCSVControlsProps> = ({ onUploadComplete }) => {
   const handleUploadCSV = createHandleUploadCSV(csrfToken)
 
   // Wrap the upload handler to refresh dashboard after upload
-  const handleUploadAndRefresh: React.ChangeEventHandler<HTMLInputElement> = async e => {
+  const handleUploadAndRefresh: ChangeEventHandler<HTMLInputElement> = async e => {
     try {
       await handleUploadCSV(e)
       // Force refresh by updating lastFetch to 0 (or Date.now())

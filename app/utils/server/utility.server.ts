@@ -25,10 +25,11 @@ export function getDomainPathname(request: Request) {
 }
 
 export const singleton = <Value>(name: string, valueFactory: () => Value): Value => {
-  const g = global as unknown as { __singletons: Record<string, Value> }
-  g.__singletons = g.__singletons ?? {}
-  g.__singletons[name] ??= valueFactory()
-  return g.__singletons[name] as Value
+  const globalSingleton = 
+  globalThis as unknown as { __singletons: Record<string, Value> }
+  globalSingleton.__singletons = globalSingleton.__singletons ?? {}
+  globalSingleton.__singletons[name] ??= valueFactory()
+  return globalSingleton.__singletons[name] as Value
 }
 
 export const mergeHeaders = (...headers: Array<ResponseInit["headers"] | null | undefined>) => {

@@ -77,7 +77,8 @@ const ChartVisualizations: React.FC<ChartVisualizationsProps> = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries(missingHouseInfoBreakdown).map(([house, fields]) => (
+                    {Object.entries(missingHouseInfoBreakdown)
+                    .map(([house, fields]) => (
                         <tr key={house} className="border-t border-yellow-100">
                           <td className="px-2 py-1 text-yellow-900">{house}</td>
                           <td className="px-2 py-1 text-yellow-700">

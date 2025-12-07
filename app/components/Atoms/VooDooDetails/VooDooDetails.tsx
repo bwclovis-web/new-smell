@@ -1,5 +1,6 @@
 import { type VariantProps } from "class-variance-authority"
 import { type HTMLProps, type ReactNode } from "react"
+import { GiSpiralBottle } from "react-icons/gi"
 
 import { styleMerge } from "~/utils/styleUtils"
 
@@ -7,7 +8,6 @@ import {
   voodooDetailsSummaryVariants,
   voodoodetailsVariants,
 } from "./voodoodetails-variants"
-import { GiSpiralBottle } from "react-icons/gi"
 
 type VooDooDetailsProps = HTMLProps<HTMLDetailsElement> &
   VariantProps<typeof voodoodetailsVariants> &

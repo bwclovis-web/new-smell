@@ -18,7 +18,7 @@ const VirtualScrollList: React.FC<VirtualScrollListProps> = ({
   items,
   itemHeight,
   containerHeight,
-  overscan = 5,
+  overScan = 5,
   className,
   renderItem,
   itemClassName,
@@ -83,7 +83,7 @@ const VirtualScrollList: React.FC<VirtualScrollListProps> = ({
         items={items}
         itemHeight={itemHeight}
         containerHeight={containerHeight}
-        overscan={overscan}
+        overScan={overScan}
         className={className}
         onScroll={onScroll}
         scrollToIndex={scrollToIndex}

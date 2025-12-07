@@ -7,14 +7,14 @@ import { Button } from "~/components/Atoms/Button"
 import VooDooDetails from "~/components/Atoms/VooDooDetails"
 import DangerModal from "~/components/Organisms/DangerModal"
 import Modal from "~/components/Organisms/Modal"
+import { usePerfumeComments } from "~/hooks/usePerfumeComments"
 import { useSessionStore } from "~/stores/sessionStore"
 import type { UserPerfumeI } from "~/types"
 
-import DestashManager from "../DestashManager/DestashManager"
 import CommentsModal from "../CommentsModal"
+import DestashManager from "../DestashManager/DestashManager"
 import GeneralDetails from "./bones/GeneralDetails"
 import PerfumeComments from "./bones/PerfumeComments"
-import { usePerfumeComments } from "~/hooks/usePerfumeComments"
 
 interface MySentListItemI {
   userPerfume: UserPerfumeI

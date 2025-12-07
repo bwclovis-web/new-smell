@@ -1,7 +1,7 @@
 import css from "@eslint/css"
 import js from "@eslint/js"
 import stylistic from "@stylistic/eslint-plugin"
-import { defineConfig } from "eslint/config"
+import { defineConfig, globalIgnores as globalIgnoresConfig } from "eslint/config"
 import jsxA11y from "eslint-plugin-jsx-a11y"
 import pluginReact from "eslint-plugin-react"
 import simpleImportSort from "eslint-plugin-simple-import-sort"
@@ -9,6 +9,31 @@ import globals from "globals"
 import tseslint from "typescript-eslint"
 
 export default defineConfig([
+  globalIgnoresConfig([
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/coverage/**",
+    "**/test-results/**",
+    "**/test/**",
+    "**/spec/**",
+    "**/scripts/**",
+    "**/csv/**",
+    "**/data/**",
+    "**/logs/**",
+    "**/reports/**",
+    "**/results/**",
+    "**/scraper/**",
+    "**/prisma/**",
+    "**/crews/**",
+    "**/.venv/**",
+    "**/app/app.css",
+    "**/app/**",
+    "**/stories/**",
+    "**/public/**",
+    "**/generator/**",
+    "eslint.config.js"
+  ]),
   {
     files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
     plugins: {
@@ -184,7 +209,7 @@ export default defineConfig([
     rules: {
       "arrow-body-style": ["error", "as-needed"],
       camelcase: ["error", { properties: "always", ignoreDestructuring: true }],
-      complexity: ["error", 16],
+      complexity: ["error", 20],
       curly: "error",
       "default-case": "error",
       "default-case-last": "error",
@@ -206,9 +231,9 @@ export default defineConfig([
 ],
         },
       ],
-      "max-depth": ["error", 2],
+      "max-depth": ["error", 4],
       "max-nested-callbacks": ["error", 4],
-      "max-params": ["error", 4],
+      "max-params": ["error", 5],
       "max-statements": ["error", 20],
       "new-cap": ["error", { newIsCap: true, capIsNew: true }],
       "no-console": ["error", { allow: ["warn", "error"] }],

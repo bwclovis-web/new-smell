@@ -60,7 +60,8 @@ describe("commonSchemas", () => {
 
     it("should reject invalid phone numbers", () => {
       // Phone is optional, so we need to test the required pattern
-      const requiredPhone = commonSchemas.phone.unwrap() // Get the inner schema without optional
+      const requiredPhone = 
+        commonSchemas.phone.unwrap()
       expect(() => requiredPhone.parse("abc")).toThrow() // Letters only
       expect(() => requiredPhone.parse("12 34")).toThrow() // With spaces
       expect(() => requiredPhone.parse("0123456789")).toThrow() // Starting with 0

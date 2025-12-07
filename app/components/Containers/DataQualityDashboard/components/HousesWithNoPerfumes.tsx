@@ -1,4 +1,4 @@
-import { type FC, useState } from "react"
+import { useState } from "react"
 
 import { type DataQualityStats } from "../utils/chartDataUtils"
 
@@ -8,14 +8,15 @@ interface HousesWithNoPerfumesProps {
 
 type FilterType = "no-perfumes" | "missing-info" | "all"
 
-const HousesWithNoPerfumes: FC<HousesWithNoPerfumesProps> = ({ stats }) => {
+const HousesWithNoPerfumes = ({ stats }: HousesWithNoPerfumesProps) => {
   const [filter, setFilter] = useState<FilterType>("no-perfumes")
 
   const housesNoPerfumes = stats.housesNoPerfumes || []
   const missingHouseInfoByBrand = stats.missingHouseInfoByBrand || {}
 
   // Get houses with missing info
-  const housesWithMissingInfo = Object.entries(missingHouseInfoByBrand).map(([name, count]) => ({
+  const housesWithMissingInfo = 
+    Object.entries(missingHouseInfoByBrand).map(([name, count]) => ({
       name,
       missingFieldsCount: count,
     }))
@@ -37,10 +38,10 @@ const HousesWithNoPerfumes: FC<HousesWithNoPerfumesProps> = ({ stats }) => {
         }
       case "all":
         // Combine both - houses with no perfumes OR missing info
-        const allIssues = [
-          ...housesNoPerfumes.map(h => ({ ...h, issue: "No Perfumes" })),
-          ...housesWithMissingInfo.map(h => ({
-            ...h,
+        { const allIssues = [
+          ...housesNoPerfumes.map(house => ({ ...house, issue: "No Perfumes" })),
+          ...housesWithMissingInfo.map(house => ({
+            ...house,
             issue: "Missing Info",
           })),
         ]
@@ -49,7 +50,7 @@ const HousesWithNoPerfumes: FC<HousesWithNoPerfumesProps> = ({ stats }) => {
           count: allIssues.length,
           showMissingFields: false,
           showIssueType: true,
-        }
+        } }
       default:
         return { houses: [], count: 0, showMissingFields: false }
     }

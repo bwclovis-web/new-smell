@@ -21,14 +21,14 @@ describe("VirtualScroll", () => {
         items={mockItems}
         itemHeight={50}
         containerHeight={200}
-        overscan={2}
+        overScan={2}
       >
         {(item, index) => <MockItem item={item} index={index} />}
       </VirtualScroll>)
 
-    // Should render only visible items (200px / 50px = 4 items + overscan)
+    // Should render only visible items (200px / 50px = 4 items + overScan)
     const visibleItems = screen.queryAllByTestId(/^item-\d+$/)
-    expect(visibleItems.length).toBeLessThanOrEqual(8) // 4 visible + 4 overscan
+    expect(visibleItems.length).toBeLessThanOrEqual(8) // 4 visible + 4 overScan
   })
 
   it("handles scroll events", () => {
@@ -65,16 +65,16 @@ describe("VirtualScroll", () => {
     // After scrolling to index 10, items around index 10 should be visible
     // With itemHeight=50 and containerHeight=200, we can see 4 items at once
     // scrollToIndex=10 with 'start' alignment means scrollTop = 10 * 50 = 500
-    // Visible range: 500/50 = index 10 to (500+200)/50 = index 13, plus overscan
+    // Visible range: 500/50 = index 10 to (500+200)/50 = index 13, plus overScan
     const visibleItems = container.querySelectorAll('[data-testid^="item-"]')
     expect(visibleItems.length).toBeGreaterThan(0)
 
     // Verify that item 10 or nearby items are rendered
-    const hasNearbyItems = Array.from(visibleItems).some(el => {
-      const match = el.getAttribute("data-testid")?.match(/item-(\d+)/)
+    const hasNearbyItems = Array.from(visibleItems).some(ele => {
+      const match = ele.getAttribute("data-testid")?.match(/item-(\d+)/)
       if (match) {
-        const index = parseInt(match[1])
-        return index >= 5 && index <= 20 // Item 10 +/- 10 with overscan
+        const index = parseInt(match[1], 10)
+        return index >= 5 && index <= 20 // Item 10 +/- 10 with overScan
       }
       return false
     })
@@ -109,9 +109,11 @@ describe("VirtualScroll", () => {
         {(item, index) => <MockItem item={item} index={index} />}
       </VirtualScroll>)
 
-    // The inner div (second div) should have the total height (100 items * 50px = 5000px)
+    // The inner div (second div) 
+    // should have the total height (100 items * 50px = 5000px)
     const divs = container.querySelectorAll("div")
-    // First div is the container (200px), second div is the inner scrollable area (5000px)
+    // First div is the container (200px), 
+    // second div is the inner scrollable area (5000px)
     const innerDiv = divs[1] as HTMLElement
     expect(innerDiv.style.height).toBe("5000px") // 100 items * 50px
   })

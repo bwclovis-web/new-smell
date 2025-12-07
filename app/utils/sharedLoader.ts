@@ -79,7 +79,10 @@ export const sharedLoader = async (request: Request) => {
           },
         })
       }
-    } catch (error) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Token refresh failed:", error.message)
+      }
       // Token refresh failed
     }
   }

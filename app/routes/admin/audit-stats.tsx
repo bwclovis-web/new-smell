@@ -1,7 +1,7 @@
 import { ServerErrorHandler } from "~/utils/errorHandling.server"
 import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
-import { getAuditStats } from "~/utils/security/audit-logger.server"
 import { requireAdmin } from "~/utils/requireAdmin.server"
+import { getAuditStats } from "~/utils/security/audit-logger.server"
 
 export const ROUTE_PATH = "/admin/audit-stats" as const
 

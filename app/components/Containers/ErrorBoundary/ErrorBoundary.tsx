@@ -7,18 +7,8 @@ import {
   ErrorHandler,
 } from "~/utils/errorHandling"
 
-interface ErrorBoundaryState {
-  hasError: boolean
-  error?: AppError
-  errorId?: string
-}
 
-interface ErrorBoundaryProps {
-  children: ReactNode
-  fallback?: (error: AppError, errorId: string) => ReactNode
-  onError?: (error: AppError, errorInfo: ErrorInfo) => void
-  level?: "page" | "component" | "critical"
-}
+
 
 export class ErrorBoundary extends Component<
   ErrorBoundaryProps,
@@ -50,7 +40,6 @@ export class ErrorBoundary extends Component<
       component: "ErrorBoundary",
       errorInfo: {
         componentStack: errorInfo.componentStack,
-        errorBoundary: errorInfo.errorBoundary,
       },
     })
 
