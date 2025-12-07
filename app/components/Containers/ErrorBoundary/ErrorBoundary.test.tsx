@@ -359,9 +359,7 @@ describe("ErrorBoundary", () => {
         </ErrorBoundary>)
 
       expect(screen.getByText("Critical Error")).toBeInTheDocument()
-      expect(screen
-      .getByText('A critical error has occurred. Please refresh the page or contact support'))
-      .toBeInTheDocument()
+      expect(screen.getByText(/A critical error has occurred\. Please refresh the page or contact support/i)).toBeInTheDocument()
       expect(screen.getByText("Refresh Page")).toBeInTheDocument()
       expect(screen.getByText("Report Error")).toBeInTheDocument()
     })
@@ -390,7 +388,7 @@ describe("ErrorBoundary", () => {
           <ThrowError error={appError} />
         </ErrorBoundary>)
 
-      expect(screen.getByText('Database connection failed|Something went wrong')).toBeInTheDocument()
+      expect(screen.getByText('Database connection failed')).toBeInTheDocument()
     })
 
     it("should handle regular Error instances", () => {
