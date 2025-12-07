@@ -162,7 +162,8 @@ const generalRateLimit = rateLimit({
 const app = express()
 const metricsApp = express()
 
-// Trust proxy - required for express-rate-limit when behind a proxy (like Vite dev server)
+// Trust proxy - required for express-rate-limit 
+// when behind a proxy (like Vite dev server)
 // This enables req.ip to correctly identify client IPs via X-Forwarded-For headers
 app.set('trust proxy', 1)
 
@@ -449,7 +450,8 @@ app.use((req, res, next) => {
   next()
 })
 
-// Apply CSRF protection for API routes (but don't parse bodies - let React Router handle that)
+// Apply CSRF protection for API routes 
+// (but don't parse bodies - let React Router handle that)
 app.use("/api", (req, res, next) => {
   // Skip CSRF for routes that don't need it
   const excludedRoutes = [

@@ -9,9 +9,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import { getUserById } from "~/models/user.query"
+import { createError } from "~/utils/errorHandling"
 import { requireAdmin } from "~/utils/requireAdmin.server"
 import * as sharedLoader from "~/utils/sharedLoader"
-import { createError } from "~/utils/errorHandling"
 
 vi.mock("~/utils/sharedLoader")
 vi.mock("~/models/user.query")
@@ -65,9 +65,7 @@ describe("requireAdmin", () => {
   })
 
   it("should throw authentication error for unauthenticated users", async () => {
-    vi.mocked(sharedLoader.sharedLoader).mockRejectedValue(
-      createError.authentication("Authentication required")
-    )
+    vi.mocked(sharedLoader.sharedLoader).mockRejectedValue(createError.authentication("Authentication required"))
 
     const request = new Request("https://example.com/admin")
 

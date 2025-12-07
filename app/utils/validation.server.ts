@@ -132,7 +132,10 @@ export function validateEmailValue(email: string | null) {
       .email({ message: "Please enter a valid email address" })
     emailSchema.parse(email)
     return null
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof z.ZodError) {
+      return createErrorResponse(error.errors[0]?.message || "Invalid email address", 400)
+    }
     return createErrorResponse("Please enter a valid email address", 400)
   }
 }
@@ -180,7 +183,10 @@ export function validateUrlValue(url: string | null) {
     const urlSchema = z.string().url({ message: "Please enter a valid URL" })
     urlSchema.parse(url)
     return null
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof z.ZodError) {
+      return createErrorResponse(error.errors[0]?.message || "Invalid URL", 400)
+    }
     return createErrorResponse("Please enter a valid URL", 400)
   }
 }
@@ -191,12 +197,15 @@ export function validatePhoneValue(phone: string | null) {
   }
 
   try {
-    const phoneSchema = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, {
+    const phoneSchema = z.string().regex(/^[+]?[1-9][\d]{0,15}$/, {
       message: "Please enter a valid phone number",
     })
     phoneSchema.parse(phone)
     return null
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof z.ZodError) {
+      return createErrorResponse(error.errors[0]?.message || "Invalid phone number", 400)
+    }
     return createErrorResponse("Please enter a valid phone number", 400)
   }
 }
@@ -212,7 +221,10 @@ export function validateYearValue(year: string | null) {
     })
     yearSchema.parse(year)
     return null
-  } catch (error) {
+  } catch (error: unknown) {
+    if (error instanceof z.ZodError) {
+      return createErrorResponse(error.errors[0]?.message || "Invalid year", 400)
+    }
     return createErrorResponse("Please enter a valid year (1900-2099)", 400)
   }
 }
@@ -315,7 +327,7 @@ export function validateField<T>(
   try {
     const data = schema.parse(value)
     return { success: true, data }
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return {
         success: false,

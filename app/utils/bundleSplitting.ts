@@ -233,7 +233,7 @@ export const viteBundleConfig = {
         ],
 
         // Data visualization
-        "data-viz": ["./app/components/Containers/DataQualityDashboard/DataQualityDashboard.tsx",],
+        "data-viz": ["./app/components/Containers/DataQualityDashboard/index.ts",],
       },
     },
   },

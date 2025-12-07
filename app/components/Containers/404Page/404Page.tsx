@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next"
 
 import { VooDooLink } from "~/components/Atoms/Button/Button"
-import banner from "~/images/notFound.webp"
+import banner from "~/images/notFound404.webp"
 
 const FourOFourPage = () => {
   const { t } = useTranslation()

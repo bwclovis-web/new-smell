@@ -198,8 +198,7 @@ const AllHousesPage = () => {
   )
 
   const normalizedHouses = useMemo(
-    () =>
-      houses.map(house => ({
+    () => houses.map(house => ({
         ...house,
         createdAt: house.createdAt ?? house.updatedAt ?? new Date(0),
       })),

@@ -1,6 +1,9 @@
 import { screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { vi } from "vitest"
+import { type ComponentType } from "react"
+import { expect, vi } from "vitest"
+
+import { renderWithProviders } from "./test-utils"
 
 /**
  * Modal and Dialog Testing Utilities
@@ -28,19 +31,23 @@ export const testModalClose = async (closeMethod: "button" | "overlay" | "escape
   const user = userEvent.setup()
 
   switch (closeMethod) {
-    case "button":
+    case "button": {
       const closeButton = screen.getByRole("button", { name: /close/i })
       await user.click(closeButton)
       break
-
-    case "overlay":
+    }
+    case "overlay": {
       const overlay = screen.getByTestId("modal-overlay")
       await user.click(overlay)
       break
-
-    case "escape":
+    }
+    case "escape": {
       await user.keyboard("{Escape}")
       break
+    }
+    default: {
+      throw new Error(`Unknown close method: ${closeMethod}`)
+    }
   }
 
   await waitFor(() => {
@@ -91,6 +98,8 @@ export const testModalAnimations = async (expectedAnimation: "fade" | "slide" | 
     case "zoom":
       expect(modal).toHaveClass("zoom")
       break
+    default:
+      throw new Error(`Unknown animation type: ${expectedAnimation}`)
   }
 }
 
@@ -145,11 +154,11 @@ export const testModalStacking = async (modalCount: number) => {
   // Check z-index stacking
   for (let i = 0; i < modals.length; i++) {
     const style = window.getComputedStyle(modals[i])
-    const zIndex = parseInt(style.zIndex)
+    const zIndex = parseInt(style.zIndex, 10)
 
     if (i > 0) {
       const prevStyle = window.getComputedStyle(modals[i - 1])
-      const prevZIndex = parseInt(prevStyle.zIndex)
+      const prevZIndex = parseInt(prevStyle.zIndex, 10)
       expect(zIndex).toBeGreaterThan(prevZIndex)
     }
   }
@@ -212,13 +221,12 @@ export const testModalPortal = () => {
 
 // Test modal size variants
 export const testModalSizes = (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   sizes: Array<{
     size: "small" | "medium" | "large" | "fullscreen"
     expectedWidth: string
   }>
 ) => {
-  const { renderWithProviders } = require("./test-utils")
 
   for (const { size, expectedWidth } of sizes) {
     const { unmount } = renderWithProviders(<Component size={size} isOpen={true} />)

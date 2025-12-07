@@ -20,8 +20,8 @@ export const createUrlSlug = (name: string): string => {
       .replace(/[\u2018\u2019]/g, "'") // smart single quotes
       .replace(/[\u201C\u201D]/g, '"') // smart double quotes
       .replace(/[\u2026]/g, "...") // ellipsis
-      // Remove any remaining non-ASCII characters
-      .replace(/[^\x00-\x7F]/g, "")
+      // Remove any remaining non-ASCII printable characters
+      .replace(/[^\x20-\x7E]/g, "")
       // Replace spaces with hyphens
       .replace(/\s+/g, "-")
       // Replace underscores with hyphens

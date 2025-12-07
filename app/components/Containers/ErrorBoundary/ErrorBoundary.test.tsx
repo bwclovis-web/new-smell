@@ -20,13 +20,13 @@ const ThrowError = ({
 }
 
 // Mock window.location.reload
-const originalLocation = window.location
-delete (window as any).location
-window.location = { ...originalLocation, reload: vi.fn() }
+let reloadMock: ReturnType<typeof vi.fn>
 
 describe("ErrorBoundary", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    reloadMock = vi.fn()
+    vi.spyOn(window.location, "reload").mockImplementation(reloadMock)
     // Suppress console.error for error boundary tests
     vi.spyOn(console, "error").mockImplementation(() => {})
   })
@@ -115,7 +115,8 @@ describe("ErrorBoundary", () => {
           <ThrowError error={appError} />
         </ErrorBoundary>)
 
-      expect(screen.getByText(/Please check your input|Something went wrong/i)).toBeInTheDocument()
+      expect(screen.getByText(/Please check your input|Something went wrong/i))
+        .toBeInTheDocument()
     })
 
     it("should display error ID", () => {
@@ -252,7 +253,7 @@ describe("ErrorBoundary", () => {
     })
 
     it("should pass error and errorId to custom fallback", () => {
-      const fallbackSpy = vi.fn((error: AppError, errorId: string) => (
+      const fallbackSpy = vi.fn(() => (
         <div>Custom fallback</div>
       ))
 
@@ -261,8 +262,8 @@ describe("ErrorBoundary", () => {
         </ErrorBoundary>)
 
       expect(fallbackSpy).toHaveBeenCalled()
-      expect(fallbackSpy.mock.calls[0][0]).toHaveProperty("message")
-      expect(fallbackSpy.mock.calls[0][1]).toMatch(/error_/)
+      expect(fallbackSpy.mock.calls[0]![0]).toHaveProperty("message")
+      expect(fallbackSpy.mock.calls[0]![1]).toMatch(/error_/)
     })
 
     it("should prioritize custom fallback over level-based fallback", () => {
@@ -308,7 +309,7 @@ describe("ErrorBoundary", () => {
         // Simulate an error in onError callback, but catch it
         try {
           throw new Error("onError callback error")
-        } catch (e) {
+        } catch {
           // Silently catch - this simulates error boundary handling
         }
       })
@@ -358,7 +359,7 @@ describe("ErrorBoundary", () => {
         </ErrorBoundary>)
 
       expect(screen.getByText("Critical Error")).toBeInTheDocument()
-      expect(screen.getByText(/A critical error has occurred. Please refresh the page or contact support./)).toBeInTheDocument()
+      expect(screen.getByText(/A critical error has occurred\. Please refresh the page or contact support/i)).toBeInTheDocument()
       expect(screen.getByText("Refresh Page")).toBeInTheDocument()
       expect(screen.getByText("Report Error")).toBeInTheDocument()
     })
@@ -387,7 +388,7 @@ describe("ErrorBoundary", () => {
           <ThrowError error={appError} />
         </ErrorBoundary>)
 
-      expect(screen.getByText(/Database connection failed|Something went wrong/i)).toBeInTheDocument()
+      expect(screen.getByText('Database connection failed')).toBeInTheDocument()
     })
 
     it("should handle regular Error instances", () => {

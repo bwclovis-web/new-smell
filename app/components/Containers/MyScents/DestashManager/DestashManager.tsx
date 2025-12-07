@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction,useEffect, useRef,useState } from "react"
+import { type Dispatch, type SetStateAction, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {  MdAdd } from "react-icons/md"
 import { useFetcher, useRevalidator } from "react-router"
@@ -62,12 +62,12 @@ const DestashManager = ({
       revalidator.revalidate()
     }
     previousStateRef.current = fetcher.state
-  }, [fetcher.state, fetcher.data, revalidator, setUserPerfumes])
+  }, [
+fetcher.state, fetcher.data, revalidator, setUserPerfumes
+])
 
   // Filter destashes for this perfume
-  const destashes = userPerfumes.filter(
-    up => up.perfumeId === perfumeId && parseFloat(up.available || "0") > 0
-  )
+  const destashes = userPerfumes.filter(up => up.perfumeId === perfumeId && parseFloat(up.available || "0") > 0)
 
   // Calculate total owned and total destashed for this perfume
   const entriesForPerfume = userPerfumes.filter(up => up.perfumeId === perfumeId)
@@ -99,13 +99,9 @@ const DestashManager = ({
     const destash = userPerfumes.find(up => up.id === userPerfumeId)
     closeModal()
     if (destash) {
-      setUserPerfumes(prev =>
-        prev.map(perfume =>
-          perfume.id === userPerfumeId
+      setUserPerfumes(prev => prev.map(perfume => perfume.id === userPerfumeId
             ? { ...perfume, available: "0" }
-            : perfume
-        )
-      )
+            : perfume))
 
       const formData = new FormData()
       formData.append("action", "decant")

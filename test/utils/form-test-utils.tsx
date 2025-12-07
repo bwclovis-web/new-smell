@@ -1,6 +1,7 @@
 import { screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { vi } from "vitest"
+import { type ComponentType } from "react"
+import { expect, vi } from "vitest"
 
 import { renderWithProviders } from "./test-utils"
 
@@ -38,8 +39,6 @@ export const testFormValidation = async (
   }>,
   submitButtonText = "Submit"
 ) => {
-  const user = userEvent.setup()
-
   // Fill form fields
   for (const field of formFields) {
     await fillFormField(field.label, field.value)
@@ -99,7 +98,7 @@ export const testFieldTypes = async (fieldTests: Array<{
 
 // Test form with different states
 export const testFormStates = async (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   states: Array<{
     props: any
     description: string

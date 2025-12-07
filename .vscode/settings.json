@@ -8,9 +8,12 @@
     "editor.defaultFormatter": "Prisma.prisma"
   },
   "cSpell.words": [
+    "ALLUPPERCASE",
+    "changeme",
     "destash",
     "gsap",
     "revalidator",
-    "Sillage"
+    "Sillage",
+    "venv"
   ]
 }

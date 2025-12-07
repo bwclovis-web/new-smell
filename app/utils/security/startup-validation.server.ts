@@ -56,7 +56,8 @@ function validateSecurityRequirements(env: any) {
     throw new Error("SESSION_SECRET appears to be a default/weak value. Please use a strong, unique secret.")
   }
 
-  // Validate database URL format - support PostgreSQL, Prisma Accelerate, and Prisma Accelerate with prisma+postgres format
+  // Validate database URL format - support PostgreSQL, 
+  // Prisma Accelerate, and Prisma Accelerate with prisma+postgres format
   const isPostgreSQL = env.DATABASE_URL.startsWith("postgresql://")
   const isPrismaAccelerate = env.DATABASE_URL.startsWith("prisma://")
   const isPrismaAccelerateWithPrefix =
@@ -76,6 +77,7 @@ function validateSecurityRequirements(env: any) {
  * Generate a secure secret for development
  */
 export function generateSecureSecret(length: number = 64): string {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const crypto = require("crypto")
   return crypto.randomBytes(length).toString("hex")
 }

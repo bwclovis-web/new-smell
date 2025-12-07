@@ -29,7 +29,7 @@ export const commonSchemas = {
 
   phone: z
     .string()
-    .regex(/^[\+]?[1-9][\d]{0,15}$/, {
+    .regex(/^[+]?[1-9][\d]{0,15}$/, {
       message: "Please enter a valid phone number",
     })
     .optional(),

@@ -49,7 +49,7 @@ describe("Virtual Scroll Performance Tests", () => {
           items={largeDataset}
           itemHeight={50}
           containerHeight={200}
-          overscan={5}
+          overScan={5}
         >
           {(item, index) => <MockItem item={item} index={index} />}
         </VirtualScroll>)
@@ -60,7 +60,7 @@ describe("Virtual Scroll Performance Tests", () => {
       // Should render quickly (generous threshold for CI environments)
       expect(renderTime).toBeLessThan(200)
 
-      // Should only render visible items (200px / 50px = 4 + overscan=5 + 1 = 10)
+      // Should only render visible items (200px / 50px = 4 + overScan=5 + 1 = 10)
       // Use container-scoped query to avoid counting items from other tests
       const visibleItems = container.querySelectorAll("[data-testid^='item-']")
       expect(visibleItems.length).toBeLessThanOrEqual(10)
@@ -104,7 +104,7 @@ describe("Virtual Scroll Performance Tests", () => {
           items={veryLargeDataset}
           itemHeight={50}
           containerHeight={200}
-          overscan={3}
+          overScan={3}
         >
           {(item, index) => <MockItem item={item} index={index} />}
         </VirtualScroll>)
@@ -116,7 +116,7 @@ describe("Virtual Scroll Performance Tests", () => {
       expect(renderTime).toBeLessThan(200)
 
       // Should only render visible items (not all 10000)
-      // With containerHeight=200, itemHeight=50: 4 visible + overscan=3 + ceiling = ~8 items
+      // With containerHeight=200, itemHeight=50: 4 visible + overScan=3 + ceiling = ~8 items
       // Use container-scoped query to avoid counting items from other tests
       const visibleItems = container.querySelectorAll("[data-testid^='item-']")
       expect(visibleItems.length).toBeLessThanOrEqual(10)
@@ -134,7 +134,7 @@ describe("Virtual Scroll Performance Tests", () => {
           items={largeDataset}
           itemHeight={60}
           containerHeight={300}
-          overscan={3}
+          overScan={3}
           renderItem={(item, index) => <MockItem item={item} index={index} />}
         />)
 
@@ -145,7 +145,7 @@ describe("Virtual Scroll Performance Tests", () => {
       expect(renderTime).toBeLessThan(150)
 
       // Should only render visible items (not all 2000)
-      // With containerHeight=300, itemHeight=60: 5 visible + overscan=3 + ceiling = ~9 items
+      // With containerHeight=300, itemHeight=60: 5 visible + overScan=3 + ceiling = ~9 items
       // Use container-scoped query to avoid counting items from other tests
       const visibleItems = container.querySelectorAll("[data-testid^='item-']")
       expect(visibleItems.length).toBeLessThanOrEqual(10)
@@ -220,17 +220,17 @@ describe("Virtual Scroll Performance Tests", () => {
           items={largeDataset}
           itemHeight={50}
           containerHeight={200}
-          overscan={2}
+          overScan={2}
         >
           {(item, index) => <MockItem item={item} index={index} />}
         </VirtualScroll>)
 
       // Count all test elements (should be limited by virtual scrolling)
       // With containerHeight=200, itemHeight=50: ceil(200/50) = 4 visible
-      // Plus overscan=2 at end, plus 1 for ceiling calculation = 7 max
+      // Plus overScan=2 at end, plus 1 for ceiling calculation = 7 max
       // Use container-scoped query to avoid counting items from other tests
       const allItems = container.querySelectorAll("[data-testid^='item-']")
-      expect(allItems.length).toBeLessThanOrEqual(7) // 4 visible + 2 overscan + 1 ceiling
+      expect(allItems.length).toBeLessThanOrEqual(7) // 4 visible + 2 overScan + 1 ceiling
       expect(allItems.length).toBeLessThan(largeDataset.length)
     })
 
@@ -239,7 +239,7 @@ describe("Virtual Scroll Performance Tests", () => {
           items={generateLargeDataset(100)}
           itemHeight={50}
           containerHeight={200}
-          overscan={2}
+          overScan={2}
           renderItem={(item, index) => <MockItem item={item} index={index} />}
         />)
 
@@ -254,14 +254,14 @@ describe("Virtual Scroll Performance Tests", () => {
             items={newData}
             itemHeight={50}
             containerHeight={200}
-            overscan={2}
+            overScan={2}
             renderItem={(item, index) => <MockItem item={item} index={index} />}
           />)
       }
 
       // Should still only render visible items
       // With containerHeight=200, itemHeight=50: ceil(200/50) = 4 visible
-      // Plus overscan=2 at end, plus 1 for ceiling calculation = 7 max
+      // Plus overScan=2 at end, plus 1 for ceiling calculation = 7 max
       // Use container-scoped query to avoid counting items from other tests
       const visibleItems = container.querySelectorAll("[data-testid^='item-']")
       expect(visibleItems.length).toBeLessThanOrEqual(7)

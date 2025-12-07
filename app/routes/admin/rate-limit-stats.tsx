@@ -1,7 +1,7 @@
 import { ServerErrorHandler } from "~/utils/errorHandling.server"
 import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
-import { getRateLimitStats } from "~/utils/security/rate-limit-monitor.server"
 import { requireAdmin } from "~/utils/requireAdmin.server"
+import { getRateLimitStats } from "~/utils/security/rate-limit-monitor.server"
 
 export const ROUTE_PATH = "/admin/rate-limit-stats" as const
 

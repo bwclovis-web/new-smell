@@ -1,6 +1,7 @@
 import { screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
-import { vi } from "vitest"
+import { type ComponentType } from "react"
+import { expect, vi } from "vitest"
 
 import { renderWithProviders } from "./test-utils"
 
@@ -57,7 +58,7 @@ export const mockAuthContext = (authState = mockAuthStates.authenticated) => ({
 
 // Test login flow
 export const testLoginFlow = async (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   credentials = { email: "test@example.com", password: "password123" },
   expectedRedirect = "/dashboard"
 ) => {
@@ -84,7 +85,7 @@ export const testLoginFlow = async (
 
 // Test logout flow
 export const testLogoutFlow = async (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   expectedRedirect = "/login"
 ) => {
   const mockLogout = vi.fn().mockResolvedValue(undefined)
@@ -106,7 +107,7 @@ export const testLogoutFlow = async (
 
 // Test registration flow
 export const testRegistrationFlow = async (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   userData = {
     name: "Test User",
     email: "test@example.com",
@@ -141,7 +142,7 @@ export const testRegistrationFlow = async (
 
 // Test authentication guards
 export const testAuthGuards = async (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   guardTests: Array<{
     authState: any
     expectedBehavior: "allow" | "redirect" | "show_error"
@@ -164,15 +165,15 @@ export const testAuthGuards = async (
       case "show_error":
         expect(screen.getByText(/unauthorized/i)).toBeInTheDocument()
         break
+      default:
+        throw new Error(`Unhandled expectedBehavior: ${test.expectedBehavior}`)
     }
-
-    console.log(`✓ Auth guard test: ${test.description}`)
   }
 }
 
 // Test role-based access
 export const testRoleBasedAccess = async (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   roleTests: Array<{
     role: string
     permissions: string[]
@@ -199,13 +200,12 @@ export const testRoleBasedAccess = async (
       expect(screen.queryByText(element)).not.toBeInTheDocument()
     }
 
-    console.log(`✓ Role test: ${test.description}`)
   }
 }
 
 // Test permission-based features
 export const testPermissionBasedFeatures = async (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   permissionTests: Array<{
     permissions: string[]
     expectedActions: string[]
@@ -234,13 +234,12 @@ export const testPermissionBasedFeatures = async (
       }
     }
 
-    console.log(`✓ Permission test: ${test.description}`)
   }
 }
 
 // Test session management
 export const testSessionManagement = async (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   sessionTests: Array<{
     sessionState: "valid" | "expired" | "invalid"
     expectedBehavior: "maintain" | "redirect" | "refresh"
@@ -256,6 +255,8 @@ export const testSessionManagement = async (
           return Promise.reject(new Error("Session expired"))
         case "invalid":
           return Promise.reject(new Error("Invalid session"))
+        default:
+          throw new Error(`Unhandled session state: ${test.sessionState}`)
       }
     })
 
@@ -278,15 +279,16 @@ export const testSessionManagement = async (
           expect(mockSessionCheck).toHaveBeenCalledTimes(2)
         })
         break
+      default:
+        throw new Error(`Unhandled expected behavior: ${test.expectedBehavior}`)
     }
 
-    console.log(`✓ Session test: ${test.description}`)
   }
 }
 
 // Test password requirements
 export const testPasswordRequirements = async (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   passwordTests: Array<{
     password: string
     expectedValid: boolean
@@ -314,13 +316,12 @@ export const testPasswordRequirements = async (
       }
     }
 
-    console.log(`✓ Password test: ${test.description}`)
   }
 }
 
 // Test two-factor authentication
 export const test2FA = async (
-  Component: React.ComponentType<any>,
+  Component: ComponentType<any>,
   code = "123456"
 ) => {
   const mockVerify2FA = vi.fn().mockResolvedValue({ verified: true })
@@ -355,7 +356,7 @@ export const mockJWT = {
 }
 
 // Test token refresh
-export const testTokenRefresh = async (Component: React.ComponentType<any>) => {
+export const testTokenRefresh = async (Component: ComponentType<any>) => {
   const mockRefreshToken = vi.fn().mockResolvedValue({
     token: "new-mock-token",
     refreshToken: "new-refresh-token",

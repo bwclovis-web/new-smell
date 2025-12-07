@@ -1,3 +1,5 @@
+ 
+/* eslint-disable no-console */
 // Migration script to transfer data from local PostgreSQL to Prisma Accelerate
 // This script will migrate all data and generate slugs for houses and perfumes
 

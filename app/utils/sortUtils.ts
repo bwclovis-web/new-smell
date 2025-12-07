@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 export type SortOption =
   | "name-asc"
   | "name-desc"
@@ -75,23 +76,17 @@ export const sortItems = <T extends SortableItem>(
 
   switch (sortBy) {
     case "name-asc":
-      return sortedItems.sort((a, b) => a.name.localeCompare(b.name))
+      return sortedItems.sort((item1, item2) => item1.name.localeCompare(item2.name))
     case "name-desc":
-      return sortedItems.sort((a, b) => b.name.localeCompare(a.name))
+      return sortedItems.sort((item1, item2) => item2.name.localeCompare(item1.name))
     case "created-asc":
-      return sortedItems.sort(
-        (a, b) => getTimeValue(a.createdAt) - getTimeValue(b.createdAt)
-      )
+      return sortedItems.sort((item1, item2) => getTimeValue(item1.createdAt) - getTimeValue(item2.createdAt))
     case "created-desc":
-      return sortedItems.sort(
-        (a, b) => getTimeValue(b.createdAt) - getTimeValue(a.createdAt)
-      )
+      return sortedItems.sort((item1, item2) => getTimeValue(item2.createdAt) - getTimeValue(item1.createdAt))
     case "type-asc":
-      return sortedItems.sort((a, b) => (a.type || "").localeCompare(b.type || ""))
+      return sortedItems.sort((item1, item2) => (item1.type || "").localeCompare(item2.type || ""))
     default:
-      return sortedItems.sort(
-        (a, b) => getTimeValue(b.createdAt) - getTimeValue(a.createdAt)
-      )
+      return sortedItems.sort((item1, item2) => getTimeValue(item2.createdAt) - getTimeValue(item1.createdAt))
   }
 }
 

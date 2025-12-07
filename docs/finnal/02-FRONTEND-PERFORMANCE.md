@@ -231,7 +231,7 @@ export function PerfumeListVirtualized({ perfumes }: { perfumes: Perfume[] }) {
       renderItem={(perfume) => (
         <PerfumeCard key={perfume.id} perfume={perfume} />
       )}
-      overscan={5}
+      overScan={5}
       className="h-screen"
     />
   )

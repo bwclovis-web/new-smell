@@ -6,8 +6,6 @@ import {
   queryKeys,
 } from "~/lib/queries/dataQuality"
 
-import { type DataQualityStats } from "../utils/chartDataUtils"
-
 /**
  * Hook to fetch data quality statistics using TanStack Query.
  * Replaces manual fetch logic with useQuery for better caching and state management.

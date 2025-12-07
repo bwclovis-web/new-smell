@@ -164,7 +164,9 @@ export default defineConfig({
   },
   resolve: {
     // Force ESM resolution for React 19 to avoid CommonJS interop issues
-    conditions: ["import", "module", "browser", "default"],
+    conditions: [
+"import", "module", "browser", "default"
+],
   },
   optimizeDeps: {
     esbuildOptions: {

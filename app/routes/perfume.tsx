@@ -75,7 +75,9 @@ export const loader = withLoaderErrorHandling(
     const user = await getUserFromRequest(request)
     const isInUserWishlist = await checkWishlistStatus(request, perfume.id)
 
-    const [userRatings, ratingsData, userReview, reviewsData] = await Promise.all([
+    const [
+userRatings, ratingsData, userReview, reviewsData
+] = await Promise.all([
       getUserRatingsForPerfume(request, perfume.id),
       getPerfumeRatings(perfume.id),
       user ? getUserPerfumeReview(user.id, perfume.id) : null,

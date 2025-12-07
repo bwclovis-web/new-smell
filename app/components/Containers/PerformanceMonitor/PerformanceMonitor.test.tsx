@@ -465,9 +465,7 @@ describe("PerformanceMonitor (Container)", () => {
       })
 
       // Get the event listener callback that was registered
-      const loadListenerCall = addEventListenerSpy.mock.calls.find(
-        call => call[0] === "load"
-      )
+      const loadListenerCall = addEventListenerSpy.mock.calls.find(call => call[0] === "load")
       const loadListener = loadListenerCall?.[1] as () => void
 
       // Manually trigger the event listener callback
@@ -508,9 +506,7 @@ describe("PerformanceMonitor (Container)", () => {
       })
 
       // Get the event listener callback
-      const loadListenerCall = addEventListenerSpy.mock.calls.find(
-        call => call[0] === "load"
-      )
+      const loadListenerCall = addEventListenerSpy.mock.calls.find(call => call[0] === "load")
       const loadListener = loadListenerCall?.[1] as () => void
 
       // Manually trigger the callback
@@ -575,9 +571,7 @@ describe("PerformanceMonitor (Container)", () => {
       })
 
       // Get the event listener callback
-      const loadListenerCall = addEventListenerSpy.mock.calls.find(
-        call => call[0] === "load"
-      )
+      const loadListenerCall = addEventListenerSpy.mock.calls.find(call => call[0] === "load")
       const loadListener = loadListenerCall?.[1] as () => void
 
       // Manually trigger the callback

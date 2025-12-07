@@ -314,9 +314,7 @@ const MyScentsPage = () => {
       return uniquePerfumes
     }
     const query = searchQuery.toLowerCase()
-    return uniquePerfumes.filter(userPerfume =>
-      userPerfume.perfume.name.toLowerCase().includes(query)
-    )
+    return uniquePerfumes.filter(userPerfume => userPerfume.perfume.name.toLowerCase().includes(query))
   }, [uniquePerfumes, searchQuery])
 
   // Render function for virtual scrolling
@@ -375,7 +373,7 @@ const MyScentsPage = () => {
               items={filteredPerfumes}
               itemHeight={200}
               containerHeight={600}
-              overscan={3}
+              overScan={3}
               className="w-full style-scroll"
               renderItem={renderUserPerfume}
               itemClassName="w-full"

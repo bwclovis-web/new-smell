@@ -1,4 +1,4 @@
-import { type FC } from "react"
+import { type Dispatch, type FC, type SetStateAction } from "react"
 
 import { createChartConfig } from "../utils/chartConfig"
 import { type DataQualityStats } from "../utils/chartDataUtils"
@@ -12,7 +12,7 @@ import TrendChart from "./TrendChart"
 interface DashboardContentProps {
   stats: DataQualityStats
   timeframe: "week" | "month" | "all"
-  setTimeframe: React.Dispatch<React.SetStateAction<"week" | "month" | "all">>
+  setTimeframe: Dispatch<SetStateAction<"week" | "month" | "all">>
 }
 
 const DashboardContent: FC<DashboardContentProps> = ({

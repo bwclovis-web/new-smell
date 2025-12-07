@@ -127,16 +127,16 @@ const ReviewSection = ({
         updateReviewsState(payload.reviews || [], payload.pagination)
       } catch (error) {
         console.error("Failed to fetch reviews", error)
-        alert(
-          error instanceof Error
+        alert(error instanceof Error
             ? error.message
-            : t("singlePerfume.review.failedToLoadReviews")
-        )
+            : t("singlePerfume.review.failedToLoadReviews"))
       } finally {
         setIsLoadingMore(false)
       }
     },
-    [fetchLimit, perfumeId, t, updateReviewsState]
+    [
+fetchLimit, perfumeId, t, updateReviewsState
+]
   )
 
   const refreshReviews = useCallback(async () => fetchReviews(1, false), [fetchReviews])
@@ -165,11 +165,9 @@ const ReviewSection = ({
 
       if (!response.ok) {
         const errorPayload = await response.json().catch(() => ({}))
-        throw new Error(
-          errorPayload.error ||
+        throw new Error(errorPayload.error ||
             errorPayload.message ||
-            t("singlePerfume.review.failedToCreateReview")
-        )
+            t("singlePerfume.review.failedToCreateReview"))
       }
 
       const result = await response.json()
@@ -179,11 +177,9 @@ const ReviewSection = ({
       await refreshReviews()
     } catch (error) {
       console.error("Failed to create review", error)
-      alert(
-        error instanceof Error
+      alert(error instanceof Error
           ? error.message
-          : t("singlePerfume.review.failedToCreateReview")
-      )
+          : t("singlePerfume.review.failedToCreateReview"))
     } finally {
       setIsSubmittingReview(false)
     }
@@ -207,11 +203,9 @@ const ReviewSection = ({
 
       if (!response.ok) {
         const errorPayload = await response.json().catch(() => ({}))
-        throw new Error(
-          errorPayload.error ||
+        throw new Error(errorPayload.error ||
             errorPayload.message ||
-            t("singlePerfume.review.failedToDeleteReview")
-        )
+            t("singlePerfume.review.failedToDeleteReview"))
       }
 
       if (isUserReview) {
@@ -221,11 +215,9 @@ const ReviewSection = ({
       await refreshReviews()
     } catch (error) {
       console.error("Failed to delete review", error)
-      alert(
-        error instanceof Error
+      alert(error instanceof Error
           ? error.message
-          : t("singlePerfume.review.failedToDeleteReview")
-      )
+          : t("singlePerfume.review.failedToDeleteReview"))
     }
   }
 

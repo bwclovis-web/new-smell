@@ -1,14 +1,14 @@
-import { type FC } from "react"
+import { type Dispatch, type SetStateAction } from "react"
 
 interface TimeframeSelectorProps {
   timeframe: "week" | "month" | "all"
-  setTimeframe: React.Dispatch<React.SetStateAction<"week" | "month" | "all">>
+  setTimeframe: Dispatch<SetStateAction<"week" | "month" | "all">>
 }
 
-const TimeframeSelector: FC<TimeframeSelectorProps> = ({
+const TimeframeSelector = ({
   timeframe,
   setTimeframe,
-}) => (
+}:TimeframeSelectorProps) => (
   <div className="mb-6">
     <h3 className="text-lg font-medium text-gray-900 mb-3">Time Period</h3>
     <div className="flex space-x-2">

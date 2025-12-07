@@ -19,13 +19,16 @@ interface AdminNavigationProps
 
 const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
   const { t } = useTranslation()
+  const isAdmin = user?.role === "admin" || user?.role === "editor"
+  
   return (
     <aside className="absolute top-40 md:left-20 z-20 w-full md:w-64  text-noir-light py-4">
       <ul
         className={styleMerge(adminNavigationVariants({ className }))}
         data-cy="AdminNavigation"
       >
-        {(user?.role === "admin" || user?.role === "editor") &&
+        {/* Admin-only navigation - only show for admins/editors */}
+        {isAdmin &&
           adminNavigation.map(item => (
             <li
               key={item.id}
@@ -47,7 +50,8 @@ const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
               </NavLink>
             </li>
           ))}
-        {profileNavigation.map(item => (
+        {/* Profile navigation - show for all authenticated users */}
+        {user && profileNavigation.map(item => (
           <li
             key={item.id}
             className="capitalize font-semibold text-shadow-sm text-shadow-noir-dark/70"

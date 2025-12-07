@@ -3,8 +3,9 @@ import { createRef } from "react"
 import { describe, expect, it, vi } from "vitest"
 import { z } from "zod"
 
-import ValidatedInput from "./ValidatedInput"
 import { useFieldValidation } from "~/hooks/useValidation"
+
+import ValidatedInput from "./ValidatedInput"
 
 // Mock useFieldValidation hook
 vi.mock("~/hooks/useValidation", () => ({

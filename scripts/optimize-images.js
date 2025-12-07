@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-require-imports */
+/* eslint-disable no-console */
 
 /**
  * Image optimization script
@@ -37,7 +39,6 @@ async function optimizeImage(inputPath, outputDir) {
 
   try {
     const image = sharp(inputPath)
-    const metadata = await image.metadata()
 
     // Generate WebP versions
     for (const size of SIZES) {

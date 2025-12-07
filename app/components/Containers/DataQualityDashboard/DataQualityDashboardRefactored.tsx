@@ -1,7 +1,7 @@
 // Import to ensure Chart.js is registered
 import "./utils/chartSetup"
 
-import React, { type FC } from "react"
+import { useState } from "react"
 
 import AdminCSVControls from "./components/AdminCSVControls"
 import DashboardContent from "./components/DashboardContent"
@@ -14,8 +14,8 @@ interface DataQualityDashboardProps {
   isAdmin?: boolean
 }
 
-const DataQualityDashboard: FC<DataQualityDashboardProps> = ({ user, isAdmin }) => {
-  const [timeframe, setTimeframe] = React.useState<"week" | "month" | "all">("month")
+const DataQualityDashboard = ({ isAdmin }: DataQualityDashboardProps) => {
+  const [timeframe, setTimeframe] = useState<"week" | "month" | "all">("month")
   const { stats, loading, error, forceRefresh } = useFetchDataQualityStats(timeframe)
 
   const handleUploadComplete = () => {

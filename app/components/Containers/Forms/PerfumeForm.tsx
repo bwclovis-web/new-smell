@@ -109,7 +109,9 @@ const PerfumeForm = ({ formType, lastResult, data }: PerfumeFormProps) => {
       input.value = note.id
       formElement.appendChild(input)
     })
-  }, [topNotes, heartNotes, baseNotes, formType])
+  }, [
+topNotes, heartNotes, baseNotes, formType
+])
 
   const [form, { name, description, image, house }] = useForm({
     id: formType,

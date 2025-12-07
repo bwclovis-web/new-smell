@@ -136,6 +136,7 @@
     "@inquirer/prompts": "^7.5.0",
     "@playwright/test": "^1.55.0",
     "@react-router/dev": "^7.6.2",
+    "@storybook/react": "^10.1.4",
     "@stylistic/eslint-plugin": "^4.2.0",
     "@stylistic/eslint-plugin-ts": "^4.2.0",
     "@tailwindcss/vite": "^4.1.8",
@@ -162,6 +163,7 @@
     "history": "^5.3.0",
     "husky": "^9.1.7",
     "jest-axe": "^10.0.0",
+    "lint-staged": "^16.2.7",
     "prisma": "^6.9.0",
     "prisma-docs-generator": "^0.8.0",
     "prisma-generator-typescript-interfaces": "^2.1.0",
@@ -181,6 +183,11 @@
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix --cache --cache-location ./node_modules/.cache/eslint"
+    ]
   },
   "browserslist": [
     "last 2 Chrome versions",
