@@ -1,127 +1,31 @@
-import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { MdDeleteForever } from "react-icons/md"
 
 import { Button } from "~/components/Atoms/Button"
 import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
-import Modal from "~/components/Organisms/Modal"
-import { useCSRF } from "~/hooks/useCSRF"
+import { usePerfumeComments } from "~/hooks/usePerfumeComments"
 import { useSessionStore } from "~/stores/sessionStore"
 import type { UserPerfumeI } from "~/types"
-import type { Comment } from "~/types/comments"
-import { safeAsync } from "~/utils/errorHandling.patterns"
-import { assertExists } from "~/utils/errorHandling.patterns"
-
-import CommentsModal from "../../CommentsModal/CommentsModal"
 
 interface PerfumeCommentsProps {
   userPerfume: UserPerfumeI
 }
 const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
   const { t } = useTranslation()
-  const { toggleModal, modalId, modalOpen } = useSessionStore()
-  const { submitForm } = useCSRF()
-  const [comments, setComments] = useState<Comment[]>([])
-  const uniqueModalId = `add-scent-${userPerfume.id}`
+  const { toggleModal } = useSessionStore()
+  const { comments, uniqueModalId, toggleCommentVisibility, deleteComment } =
+    usePerfumeComments({ userPerfume })
 
-  useEffect(() => {
-    if (userPerfume.comments) {
-      setComments(userPerfume.comments)
-    }
-  }, [userPerfume.comments])
   const handleTogglePublic = async (commentId: string, currentIsPublic: boolean) => {
-    // Optimistically update UI
-    setComments(prevComments => prevComments.map(comment => comment.id === commentId
-          ? { ...comment, isPublic: !currentIsPublic }
-          : comment))
-
-    // Validate required IDs exist
-    const perfumeId = assertExists(
-      userPerfume.perfumeId || userPerfume.perfume?.id,
-      "Perfume ID",
-      { userPerfumeId: userPerfume.id }
-    )
-    const userPerfumeId = assertExists(userPerfume.id, "User Perfume ID", {
-      perfumeId,
-    })
-
-    const formData = new FormData()
-    formData.append("action", "toggle-comment-visibility")
-    formData.append("commentId", commentId)
-    formData.append("perfumeId", perfumeId)
-    formData.append("userPerfumeId", userPerfumeId)
-    formData.append("isPublic", (!currentIsPublic).toString())
-
-    // Use safeAsync for error handling
-    const [error, response] = await safeAsync(() => submitForm("/api/user-perfumes", formData))
-
-    if (error) {
-      console.error("Error toggling comment visibility:", error)
-      // Revert the UI change on error
-      setComments(prevComments => prevComments.map(comment => comment.id === commentId
-            ? { ...comment, isPublic: currentIsPublic }
-            : comment))
-      return
-    }
-
-    const [jsonError, result] = await safeAsync(() => response.json())
-
-    if (jsonError || !result.success) {
-      console.error(
-        "Failed to toggle comment visibility:",
-        jsonError || result.error
-      )
-      // Revert the UI change on error
-      setComments(prevComments => prevComments.map(comment => comment.id === commentId
-            ? { ...comment, isPublic: currentIsPublic }
-            : comment))
-    }
+    await toggleCommentVisibility(commentId, currentIsPublic)
   }
 
   const handleDeleteComment = async (commentId: string) => {
-    const originalComments = [...comments]
-    // Optimistically remove from UI
-    setComments(prev => prev.filter(comment => comment.id !== commentId))
-
-    // Validate required IDs exist
-    const perfumeId = assertExists(
-      userPerfume.perfumeId || userPerfume.perfume?.id,
-      "Perfume ID",
-      { userPerfumeId: userPerfume.id }
-    )
-    const userPerfumeId = assertExists(userPerfume.id, "User Perfume ID", {
-      perfumeId,
-    })
-
-    const formData = new FormData()
-    formData.append("action", "delete-comment")
-    formData.append("commentId", commentId)
-    formData.append("perfumeId", perfumeId)
-    formData.append("userPerfumeId", userPerfumeId)
-
-    // Use safeAsync for error handling
-    const [error, response] = await safeAsync(() => submitForm("/api/user-perfumes", formData))
-
-    if (error) {
-      console.error("Error deleting comment:", error)
-      setComments(originalComments)
-      alert(t("comments.deleteError", "Error deleting comment"))
-      return
-    }
-
-    const [jsonError, result] = await safeAsync(() => response.json())
-
-    if (jsonError || !result.success) {
-      console.error("Failed to delete comment:", jsonError || result.error)
-      setComments(originalComments)
-      alert(`${t("comments.deleteFailed", "Failed to delete comment")}: ${
-          result?.error || "Unknown error"
-        }`)
-    }
+    await deleteComment(commentId)
   }
 
   return (
-    <div className="mt1 p-4  rounded-md">
+    <div className="mt1 p-4 rounded-md">
       <h3 className="text-lg font-semibold">{t("myScents.comments.heading")}</h3>
       <p className="text-sm  mb-2">
         {t("myScents.comments.subheading", {
@@ -172,23 +76,12 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
         className="mt-2"
         onClick={() => {
           const buttonRef = { current: document.createElement("button") }
-          toggleModal(buttonRef as any, uniqueModalId, "create")
+          toggleModal(buttonRef as any, uniqueModalId, { action: "create" })
         }}
         size={"sm"}
       >
         {t("myScents.comments.addCommentButton")}
       </Button>
-
-      {modalOpen && modalId === uniqueModalId && (
-        <Modal innerType="dark" animateStart="bottom">
-          <CommentsModal
-            perfume={userPerfume}
-            onCommentAdded={newComment => {
-              setComments(prev => [newComment, ...prev])
-            }}
-          />
-        </Modal>
-      )}
     </div>
   )
 }

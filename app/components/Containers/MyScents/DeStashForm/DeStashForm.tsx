@@ -102,11 +102,15 @@ const DeStashForm = ({
 
   const onSubmit = useCallback(
     (values: typeof initialValues) => {
+      // Set tradeOnly automatically based on tradePreference
+      // If preference is "trade", then tradeOnly is true, otherwise false
+      const tradeOnly = values.tradePreference === "trade"
+      
       const deStashData: DeStashData = {
         amount: values.deStashAmount,
         price: values.price || undefined,
         tradePreference: values.tradePreference,
-        tradeOnly: values.tradeOnly,
+        tradeOnly,
         createNew: values.createNew,
       }
       handleDecantConfirm(deStashData)
@@ -128,7 +132,6 @@ const DeStashForm = ({
     : 100
   const deStashAmount = parseFloat(values.deStashAmount) || 0
   const showPriceAndTrade = deStashAmount > 0
-  const showTradeOnly = showPriceAndTrade && values.tradePreference !== "cash"
   const isFormMode = !isEditing && !isCreating
 
   const getButtonText = useCallback(() => {
@@ -251,24 +254,13 @@ const DeStashForm = ({
               <RadioSelect
                 data={tradeOptions}
                 handleRadioChange={event => {
-                  setValue(
-                    "tradePreference",
-                    event.target.value as "cash" | "trade" | "both"
-                  )
+                  const newPreference = event.target.value as "cash" | "trade" | "both"
+                  setValue("tradePreference", newPreference)
+                  // Automatically update tradeOnly based on selection
+                  setValue("tradeOnly", newPreference === "trade")
                 }}
               />
             </fieldset>
-          </div>
-        )}
-
-        {showTradeOnly && (
-          <div>
-            <VooDooCheck
-              labelChecked={t("myScents.listItem.decantOptionsTradePreferencesOnlyTrades")}
-              labelUnchecked={t("myScents.listItem.decantOptionsTradePreferencesAcceptBoth")}
-              checked={values.tradeOnly}
-              onChange={() => setValue("tradeOnly", !values.tradeOnly)}
-            />
           </div>
         )}
 

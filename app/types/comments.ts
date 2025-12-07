@@ -13,6 +13,6 @@ export interface Comment {
 
 export interface CommentsModalProps {
   perfume: UserPerfumeI
-
   onCommentAdded?: (comment: Comment) => void
+  addComment?: (commentText: string, isPublic: boolean) => Promise<{ success: boolean; error?: string }>
 }

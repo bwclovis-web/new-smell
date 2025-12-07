@@ -46,7 +46,9 @@ const PriceInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
 const TradeInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
   const { t } = useTranslation()
   const tradePreference = userPerfume.tradePreference || "cash"
-  const showPrice = (tradePreference === "cash" || tradePreference === "both") && userPerfume.price
+  // Don't show price if tradeOnly is true
+  const showPrice = !userPerfume.tradeOnly && (tradePreference === "cash" || tradePreference === "both") && userPerfume.price
+  const showTradePrice = !userPerfume.tradeOnly && userPerfume.tradePrice
   
   return (
     <div className="text-sm text-noir-gold-300 space-y-1">
@@ -56,7 +58,7 @@ const TradeInfo = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
           <span className="text-noir-gold-500"> ${userPerfume.price}/ml</span>
         </p>
       )}
-      {userPerfume.tradePrice && (
+      {showTradePrice && (
         <p className="font-medium text-noir-gold-100">
           {t("traderProfile.tradePrice")}:
           <span className="text-noir-gold-500"> ${userPerfume.tradePrice}/ml</span>

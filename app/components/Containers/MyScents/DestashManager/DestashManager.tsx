@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from "react"
+import { type Dispatch, type SetStateAction,useEffect, useRef,useState } from "react"
 import { useTranslation } from "react-i18next"
-import { MdEdit, MdDelete, MdAdd } from "react-icons/md"
+import {  MdAdd } from "react-icons/md"
 import { useFetcher, useRevalidator } from "react-router"
 
 import { Button } from "~/components/Atoms/Button"
+import { useSessionStore } from "~/stores/sessionStore"
 import type { UserPerfumeI } from "~/types"
 
 import DestashForm from "../DeStashForm/DeStashForm"
@@ -12,7 +13,7 @@ import DestashItem from "./DestashItem"
 interface DestashManagerProps {
   perfumeId: string
   userPerfumes: UserPerfumeI[]
-  setUserPerfumes: React.Dispatch<React.SetStateAction<UserPerfumeI[]>>
+  setUserPerfumes: Dispatch<SetStateAction<UserPerfumeI[]>>
 }
 
 const DestashManager = ({
@@ -26,6 +27,7 @@ const DestashManager = ({
   const [editingId, setEditingId] = useState<string | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const previousStateRef = useRef<string>(fetcher.state)
+  const { closeModal } = useSessionStore()
 
   // Revalidate data after successful fetcher submission
   useEffect(() => {
@@ -94,17 +96,8 @@ const DestashManager = ({
   }
 
   const handleDelete = (userPerfumeId: string) => {
-    if (
-      !confirm(
-        t("myScents.destashManager.confirmDelete")
-      )
-    ) {
-      return
-    }
-
-    // Instead of deleting the entry, set available amount to 0 to remove the destash
-    // This preserves the perfume in the collection
     const destash = userPerfumes.find(up => up.id === userPerfumeId)
+    closeModal()
     if (destash) {
       setUserPerfumes(prev =>
         prev.map(perfume =>

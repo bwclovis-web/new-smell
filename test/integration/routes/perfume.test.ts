@@ -95,8 +95,16 @@ describe("Perfume Route Integration Tests", () => {
         totalPages: 0,
       }
 
-      // Mock all required functions
-      vi.mocked(perfumeServer.getPerfumeBySlug).mockResolvedValue(mockPerfume as any)
+      // Mock all required functions - ensure mocks are set up before calling loader
+      vi.mocked(perfumeServer.getPerfumeBySlug).mockImplementation(
+        async (slug: string) => {
+          if (slug === "test-perfume") {
+            return mockPerfume as any
+          }
+          return null
+        }
+      )
+      
       vi.mocked(sessionManager.verifyAccessToken).mockReturnValue(null)
       vi.mocked(userServer.getUserById).mockResolvedValue(null)
       vi.mocked(perfumeRatingServer.getPerfumeRatings).mockResolvedValue(mockRatings as any)
@@ -112,9 +120,22 @@ describe("Perfume Route Integration Tests", () => {
       }
 
       const result = await perfumeLoader(args)
-
-      expect(result.perfume).toEqual(mockPerfume)
-      expect(result.user).toBeNull()
+      
+      // Handle case where result might be a Response (from error handler)
+      if (result instanceof Response) {
+        // If it's a redirect or error response, the test should fail
+        expect(result.status).not.toBe(302)
+        expect(result.status).not.toBe(404)
+        const data = await result.json()
+        expect(data.perfume).toEqual(mockPerfume)
+        expect(data.user).toBeNull()
+      } else {
+        expect(result.perfume).toEqual(mockPerfume)
+        expect(result.user).toBeNull()
+      }
+      
+      // Verify the mock was called
+      expect(perfumeServer.getPerfumeBySlug).toHaveBeenCalledWith("test-perfume")
     })
 
     it("should throw error when perfume slug is missing", async () => {
