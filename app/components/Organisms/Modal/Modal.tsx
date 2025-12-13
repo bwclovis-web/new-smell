@@ -33,26 +33,36 @@ const Modal = ({
   const [mounted, setMounted] = useState(false)
   const [animate, setAnimate] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const { closeModal, modalOpen } = useSessionStore()
 
   const handleClick = () => {
     setAnimate(false)
-    setTimeout(() => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current)
+    }
+    closeTimeoutRef.current = setTimeout(() => {
       closeModal()
     }, 60)
   }
 
   useLayoutEffect(() => {
     setMounted(true)
-    return () => setMounted(false)
+    return () => {
+      setMounted(false)
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current)
+      }
+    }
   }, [])
 
   // Add animation effect only
   useEffect(() => {
     if (mounted) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setAnimate(true)
       }, 140)
+      return () => clearTimeout(timeoutId)
     }
   }, [mounted])
 
