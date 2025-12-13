@@ -115,15 +115,15 @@ describe("Perfume Route Integration Tests", () => {
       }
 
       // Mock all required functions - ensure mocks are set up before calling loader
-      vi.mocked(perfumeServer.getPerfumeBySlug).mockResolvedValue(mockPerfume as any)
+      vi.mocked(perfumeServer.getPerfumeBySlug).mockClear().mockResolvedValue(mockPerfume as any)
       
-      vi.mocked(sessionManager.verifyAccessToken).mockReturnValue(null)
-      vi.mocked(userServer.getUserById).mockResolvedValue(null)
-      vi.mocked(perfumeRatingServer.getPerfumeRatings).mockResolvedValue(mockRatings as any)
-      vi.mocked(perfumeRatingServer.getUserPerfumeRating).mockResolvedValue(null)
-      vi.mocked(perfumeReviewServer.getUserPerfumeReview).mockResolvedValue(null)
-      vi.mocked(perfumeReviewServer.getPerfumeReviews).mockResolvedValue(mockReviews as any)
-      vi.mocked(wishlistServer.isInWishlist).mockResolvedValue(false)
+      vi.mocked(sessionManager.verifyAccessToken).mockClear().mockReturnValue(null)
+      vi.mocked(userServer.getUserById).mockClear().mockResolvedValue(null)
+      vi.mocked(perfumeRatingServer.getPerfumeRatings).mockClear().mockResolvedValue(mockRatings as any)
+      vi.mocked(perfumeRatingServer.getUserPerfumeRating).mockClear().mockResolvedValue(null)
+      vi.mocked(perfumeReviewServer.getUserPerfumeReview).mockClear().mockResolvedValue(null)
+      vi.mocked(perfumeReviewServer.getPerfumeReviews).mockClear().mockResolvedValue(mockReviews as any)
+      vi.mocked(wishlistServer.isInWishlist).mockClear().mockResolvedValue(false)
 
       const args: LoaderFunctionArgs = {
         request: mockRequest,

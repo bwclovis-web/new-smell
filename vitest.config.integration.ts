@@ -2,11 +2,22 @@
 /// <reference types="vite/client" />
 
 import react from "@vitejs/plugin-react"
+import type { Plugin } from "vite"
 import tsconfigPaths from "vite-tsconfig-paths"
 import { configDefaults, defineConfig } from "vitest/config"
 
+// Plugin to mock image imports in tests
+const mockImagesPlugin = (): Plugin => ({
+  name: "mock-images",
+  load(id) {
+    if (/\.(webp|png|jpg|jpeg|svg)$/.test(id)) {
+      return `export default "/mock-image.webp"`
+    }
+  },
+})
+
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+  plugins: [react(), tsconfigPaths(), mockImagesPlugin()],
   test: {
     // Integration test specific configuration
     name: "integration",
