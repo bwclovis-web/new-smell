@@ -1,7 +1,7 @@
 import Input from "~/components/Atoms/Input/Input"
 import Select from "~/components/Atoms/Select/Select"
 import { houseTypes } from "~/data/SelectTypes"
-const InfoFieldset = ({ inputRef, data, actions }) => (
+const InfoFieldset = ({ inputRef, data, actions, hideImage = false }) => (
   <fieldset className="flex flex-col gap-2">
     <legend className="text-3xl text-noir-gold-100 font-bold mb-2">Info</legend>
     <Input
@@ -36,14 +36,16 @@ const InfoFieldset = ({ inputRef, data, actions }) => (
         defaultId={data?.type}
       />
     </div>
-    <Input
-      shading={true}
-      inputType="text"
-      inputRef={inputRef}
-      action={actions.image}
-      inputId="image"
-      defaultValue={data?.image}
-    />
+    {!hideImage && (
+      <Input
+        shading={true}
+        inputType="text"
+        inputRef={inputRef}
+        action={actions.image}
+        inputId="image"
+        defaultValue={data?.image}
+      />
+    )}
   </fieldset>
 )
 

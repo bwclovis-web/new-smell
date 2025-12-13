@@ -15,8 +15,33 @@
       "userManagement": "User Management",
       "securityMonitor": "Security Monitor",
       "performanceAdmin": "Performance Admin",
-      "errorAnalytics": "Error Analytics"
+      "errorAnalytics": "Error Analytics",
+      "pendingSubmissions": "Pending Submissions"
     }
+  },
+  "pendingSubmissions": {
+    "meta": {
+      "title": "Pending Submissions - Admin - Shadow and Sillage",
+      "description": "Review and approve pending perfume and perfume house submissions."
+    },
+    "heading": "Pending Submissions",
+    "subheading": "Review and approve user submissions",
+    "filters": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "all": "All"
+    },
+    "empty": "No submissions found",
+    "showDetails": "Show Details",
+    "hideDetails": "Hide Details",
+    "details": "Submission Details",
+    "adminNotes": "Admin Notes",
+    "notesPlaceholder": "Optional notes...",
+    "approve": "Approve",
+    "approving": "Approving...",
+    "reject": "Reject",
+    "rejecting": "Rejecting..."
   },
   "aboutUs": {
     "meta": {
@@ -213,7 +238,66 @@
     },
     "section5": {
       "title": "The Sillage We Leave Behind",
-      "content": "Shadow and Sillage isn’t just a platform — it’s a gathering of collectors, romantics, and scent detectives who believe perfume is memory in liquid form. Every rating, wishlist, and trade adds another thread to the tapestry of this community. We don’t chase trends, and we don’t sell secrets. We build a space where passion and privacy share the same breath. In the end, what lingers isn’t just the fragrance — it’s the connection it creates."
+      "content": "Shadow and Sillage isn't just a platform — it's a gathering of collectors, romantics, and scent detectives who believe perfume is memory in liquid form. Every rating, wishlist, and trade adds another thread to the tapestry of this community. We don't chase trends, and we don't sell secrets. We build a space where passion and privacy share the same breath. In the end, what lingers isn't just the fragrance — it's the connection it creates."
+    }
+  },
+  "contactUs": {
+    "meta": {
+      "title": "Contact Us & FAQ - Shadow and Sillage",
+      "description": "Get in touch with Shadow and Sillage or find answers to frequently asked questions."
+    },
+    "heading": "Contact Us",
+    "subheading": "Questions, suggestions, or just want to say hello? We're here.",
+    "contact": {
+      "title": "Get In Touch",
+      "description": "Have a question about a perfume, want to suggest a missing bottle, or just want to connect? We'd love to hear from you. Reach out through the email below, and we'll get back to you as soon as we can.",
+      "emailLabel": "Email:",
+      "email": "contact@shadowandsillage.com"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "question1": "How do I add a missing perfume or perfume house?",
+      "answer1": "If you notice a perfume or perfume house missing from our database, you can submit it using the buttons below. Your submission will be reviewed by an admin before being added to the database. We're always looking to expand our collection and appreciate your help in making Shadow and Sillage more complete.",
+      "submitPerfumeButton": "Submit Missing Perfume",
+      "submitHouseButton": "Submit Missing Perfume House",
+      "question2": "How does the trading system work?",
+      "answer2": "Shadow and Sillage provides a platform for collectors to connect and trade. We don't handle transactions or payments directly — those are arranged between you and your trading partner. We simply provide the space and tools to make those connections happen safely and transparently.",
+      "question3": "Is my personal information safe?",
+      "answer3": "Absolutely. We take privacy seriously. We don't sell, trade, or share your personal information. Your data stays yours, and what happens in the shadows stays there.",
+      "question4": "How do I create an account?",
+      "answer4": "Creating an account is free and easy. Simply click the 'Sign In' button in the navigation, then choose 'Sign Up' to create your account. Accounts are free for the first 100 members, and we keep it that way to honor our early supporters.",
+      "question5": "Can I review perfumes without an account?",
+      "answer5": "You can browse and search the site without an account, but to rate, review, list decants, or build your wishlist, you'll need to create an account. It's free and gives you access to the full Shadow and Sillage experience.",
+      "question6": "What if I find an error in the database?",
+      "answer6": "We appreciate your attention to detail! If you spot an error — whether it's a misspelling, incorrect information, or a duplicate entry — please let us know via email. We'll review it and make corrections as needed."
+    },
+    "modal": {
+      "perfume": {
+        "title": "Submit Missing Perfume",
+        "description": "Fill out the form below to submit a perfume that's missing from our database. Your submission will be reviewed by an admin before being added.",
+        "namePlaceholder": "Perfume Name",
+        "descriptionPlaceholder": "Description",
+        "imagePlaceholder": "Image URL",
+        "houseLabel": "Perfume House",
+        "topNotes": "Top Notes",
+        "heartNotes": "Heart Notes",
+        "baseNotes": "Base Notes"
+      },
+      "house": {
+        "title": "Submit Missing Perfume House",
+        "description": "Fill out the form below to submit a perfume house that's missing from our database. Your submission will be reviewed by an admin before being added.",
+        "namePlaceholder": "Perfume House Name",
+        "descriptionPlaceholder": "Description",
+        "imagePlaceholder": "Image URL",
+        "websitePlaceholder": "Website URL",
+        "emailPlaceholder": "Email",
+        "phonePlaceholder": "Phone",
+        "addressPlaceholder": "Address",
+        "countryPlaceholder": "Country",
+        "foundedPlaceholder": "Year Founded"
+      },
+      "submitButton": "Submit for Review",
+      "cancelButton": "Cancel"
     }
   },
   "securityMonitor": {

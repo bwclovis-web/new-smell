@@ -8,7 +8,7 @@ import Select from "~/components/Atoms/Select"
 import SearchBar from "~/components/Organisms/SearchBar"
 import { getAllFeatures } from "~/models/feature.server"
 
-import banner from "../images/scent.webp"
+import banner from "../images/landing.webp"
 
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()
@@ -87,7 +87,7 @@ export default function Home() {
         <img
           src={banner}
           alt=""
-          className="absolute object-cover w-full h-full filter grayscale-[100%] contrast-[1.4] brightness-[0.9] sepia-[0.2] mix-blend-multiply"
+          className="absolute object-cover w-full h-full filter grayscale-[100%] sepia-[0.5] mix-blend-multiply"
         />
         <div className="absolute inset-0 bg-noir-black/85 mask-radial-from-10% mask-radial-to-74% md:mask-radial-from-25% md:mask-radial-to-44%"></div>
         <section className="text-noir-gold relative z-10 flex flex-col items-center gap-4 pt-40 md:pt-0">

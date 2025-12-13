@@ -5,6 +5,7 @@ const emailSchema = z
   .string()
   .email({ message: "Please enter a valid email address" })
 const urlSchema = z.string().url({ message: "Please enter a valid URL" }).optional()
+const requiredUrlSchema = z.string().url({ message: "Website is required and must be a valid URL" }).min(1, { message: "Website is required" })
 const phoneSchema = z
   .string()
   .regex(/^[\+]?[1-9][\d]{0,15}$/, {
@@ -54,17 +55,60 @@ const priceSchema = z
   })
   .optional()
 
+// Sanitization function to prevent XSS and code injection
+const sanitizeInput = (value: string): string => {
+  return value
+    .trim()
+    .replace(/[<>]/g, "") // Remove angle brackets to prevent HTML/script tags
+    .replace(/javascript:/gi, "") // Remove javascript: protocol
+    .replace(/on\w+=/gi, "") // Remove event handlers (onclick, onerror, etc.)
+    .replace(/[\x00-\x1F\x7F]/g, "") // Remove control characters
+}
+
 // Perfume House Schemas
 export const CreatePerfumeHouseSchema = z.object({
   name: z
     .string()
-    .min(2, { message: "Name must be at least 2 characters" })
+    .min(1, { message: "Name is required and must be at least 1 character" })
     .max(100, { message: "Name must be less than 100 characters" })
-    .trim(),
+    .transform(sanitizeInput),
+  description: z
+    .string()
+    .min(10, { message: "Description is required and must be at least 10 characters" })
+    .max(1000, { message: "Description must be less than 1000 characters" })
+    .transform(sanitizeInput),
+  image: urlSchema,
+  website: requiredUrlSchema,
+  country: z
+    .string()
+    .min(2, { message: "Country must be at least 2 characters" })
+    .max(50, { message: "Country must be less than 50 characters" })
+    .optional(),
+  founded: yearSchema,
+  type: z.enum([
+"niche", "designer", "indie", "celebrity", "drugstore"
+]).optional(),
+  email: emailSchema.optional(),
+  phone: phoneSchema,
+  address: z
+    .string()
+    .min(5, { message: "Address must be at least 5 characters" })
+    .max(200, { message: "Address must be less than 200 characters" })
+    .optional(),
+})
+
+export const UpdatePerfumeHouseSchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: "Name must be at least 1 character" })
+    .max(100, { message: "Name must be less than 100 characters" })
+    .transform(sanitizeInput)
+    .optional(),
   description: z
     .string()
     .min(10, { message: "Description must be at least 10 characters" })
     .max(1000, { message: "Description must be less than 1000 characters" })
+    .transform(sanitizeInput)
     .optional(),
   image: urlSchema,
   website: urlSchema,
@@ -86,19 +130,18 @@ export const CreatePerfumeHouseSchema = z.object({
     .optional(),
 })
 
-export const UpdatePerfumeHouseSchema = CreatePerfumeHouseSchema.partial()
-
 // Perfume Schemas
 export const CreatePerfumeSchema = z.object({
   name: z
     .string()
-    .min(2, { message: "Name must be at least 2 characters" })
+    .min(1, { message: "Name is required and must be at least 1 character" })
     .max(100, { message: "Name must be less than 100 characters" })
-    .trim(),
+    .transform(sanitizeInput),
   description: z
     .string()
-    .min(10, { message: "Description must be at least 10 characters" })
-    .max(1000, { message: "Description must be less than 1000 characters" }),
+    .min(10, { message: "Description is required and must be at least 10 characters" })
+    .max(1000, { message: "Description must be less than 1000 characters" })
+    .transform(sanitizeInput),
   house: z.string().min(1, { message: "Perfume house is required" }),
   image: urlSchema,
   perfumeId: z.string().optional(),
@@ -111,14 +154,15 @@ export const UpdatePerfumeSchema = z.object({
   perfumeId: z.string().min(1, { message: "Perfume ID is required" }),
   name: z
     .string()
-    .min(2, { message: "Name must be at least 2 characters" })
+    .min(1, { message: "Name must be at least 1 character" })
     .max(100, { message: "Name must be less than 100 characters" })
-    .trim()
+    .transform(sanitizeInput)
     .optional(),
   description: z
     .string()
     .min(10, { message: "Description must be at least 10 characters" })
     .max(1000, { message: "Description must be less than 1000 characters" })
+    .transform(sanitizeInput)
     .optional(),
   image: urlSchema,
   house: z.string().min(1, { message: "Perfume house is required" }).optional(),

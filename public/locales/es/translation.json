@@ -15,8 +15,33 @@
       "userManagement": "Gestión de Usuarios",
       "securityMonitor": "Monitor de Seguridad",
       "performanceAdmin": "Administración de Rendimiento",
-      "errorAnalytics": "Análisis de Errores"
+      "errorAnalytics": "Análisis de Errores",
+      "pendingSubmissions": "Envíos Pendientes"
     }
+  },
+  "pendingSubmissions": {
+    "meta": {
+      "title": "Envíos Pendientes - Admin - Shadow and Sillage",
+      "description": "Revisar y aprobar envíos pendientes de perfumes y casas de perfumes."
+    },
+    "heading": "Envíos Pendientes",
+    "subheading": "Revisar y aprobar envíos de usuarios",
+    "filters": {
+      "pending": "Pendiente",
+      "approved": "Aprobado",
+      "rejected": "Rechazado",
+      "all": "Todos"
+    },
+    "empty": "No se encontraron envíos",
+    "showDetails": "Mostrar Detalles",
+    "hideDetails": "Ocultar Detalles",
+    "details": "Detalles del Envío",
+    "adminNotes": "Notas del Administrador",
+    "notesPlaceholder": "Notas opcionales...",
+    "approve": "Aprobar",
+    "approving": "Aprobando...",
+    "reject": "Rechazar",
+    "rejecting": "Rechazando..."
   },
   "allHouses": {
     "meta": {
@@ -166,6 +191,35 @@
     "searchType": {
       "perfume-house": "Casas de Perfumes",
       "perfume": "Perfumes"
+    }
+  },
+  "contactUs": {
+    "meta": {
+      "title": "Contáctanos y Preguntas Frecuentes - Shadow and Sillage",
+      "description": "Ponte en contacto con Shadow and Sillage o encuentra respuestas a preguntas frecuentes."
+    },
+    "heading": "Contáctanos",
+    "subheading": "¿Preguntas, sugerencias o solo quieres saludar? Estamos aquí.",
+    "contact": {
+      "title": "Ponte en Contacto",
+      "description": "¿Tienes una pregunta sobre un perfume, quieres sugerir una botella faltante o solo quieres conectarte? Nos encantaría saber de ti. Contáctanos por correo electrónico y te responderemos lo antes posible.",
+      "emailLabel": "Correo electrónico:",
+      "email": "contact@shadowandsillage.com"
+    },
+    "faq": {
+      "title": "Preguntas Frecuentes",
+      "question1": "¿Cómo agrego un perfume o casa de perfumes faltante?",
+      "answer1": "Si notas que falta un perfume o una casa de perfumes en nuestra base de datos, puedes contactarnos por correo electrónico. Siempre estamos buscando expandir nuestra colección y apreciamos tu ayuda para hacer que Shadow and Sillage sea más completo.",
+      "question2": "¿Cómo funciona el sistema de intercambio?",
+      "answer2": "Shadow and Sillage proporciona una plataforma para que los coleccionistas se conecten e intercambien. No manejamos transacciones o pagos directamente; esos se organizan entre tú y tu pareja de intercambio. Simplemente proporcionamos el espacio y las herramientas para que esas conexiones ocurran de manera segura y transparente.",
+      "question3": "¿Mi información personal está segura?",
+      "answer3": "Absolutamente. Nos tomamos la privacidad en serio. No vendemos, intercambiamos ni compartimos tu información personal. Tus datos permanecen tuyos, y lo que sucede en las sombras permanece allí.",
+      "question4": "¿Cómo creo una cuenta?",
+      "answer4": "Crear una cuenta es gratis y fácil. Simplemente haz clic en el botón 'Iniciar Sesión' en la navegación, luego elige 'Registrarse' para crear tu cuenta. Las cuentas son gratuitas para los primeros 100 miembros, y lo mantenemos así para honrar a nuestros primeros seguidores.",
+      "question5": "¿Puedo revisar perfumes sin una cuenta?",
+      "answer5": "Puedes navegar y buscar en el sitio sin una cuenta, pero para calificar, revisar, listar decants o construir tu lista de deseos, necesitarás crear una cuenta. Es gratis y te da acceso a la experiencia completa de Shadow and Sillage.",
+      "question6": "¿Qué pasa si encuentro un error en la base de datos?",
+      "answer6": "¡Apreciamos tu atención al detalle! Si encuentras un error, ya sea una falta de ortografía, información incorrecta o una entrada duplicada, por favor avísanos por correo electrónico. Lo revisaremos y haremos las correcciones necesarias."
     }
   },
   "securityMonitor": {

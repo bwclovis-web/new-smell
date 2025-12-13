@@ -187,7 +187,7 @@ async function createPerfumeNoteRelation(
 async function importPerfumeData(csvFiles: string[], baseDir: string) {
   const resolvedBaseDir = path.isAbsolute(baseDir)
     ? baseDir
-    : path.join(__dirname, baseDir)
+    : path.join(__dirname, "..", baseDir.replace(/^\.\//, ""))
 
   for (const csvFile of csvFiles) {
     const filePath = path.join(resolvedBaseDir, csvFile)
