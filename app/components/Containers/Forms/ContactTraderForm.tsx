@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import FormField from "~/components/Atoms/FormField/FormField"
-import Input from "~/components/Atoms/Input/Input"
+import { FormInput } from "~/components/Atoms/Input"
 import { CSRFToken } from "~/components/Molecules/CSRFToken"
 import { ContactTraderSchema } from "~/utils/formValidationSchemas"
 
@@ -43,7 +43,6 @@ const ContactTraderForm = ({
 }: ContactTraderFormProps) => {
   const { t } = useTranslation()
   const actionData = useActionData()
-  const inputRef = useRef<HTMLInputElement | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
   const [serverError, setServerError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
@@ -153,10 +152,9 @@ const ContactTraderForm = ({
       <input type="hidden" name="recipientId" value={recipientId} />
 
       {/* Subject field */}
-      <Input
+      <FormInput
         inputType="text"
         inputId="subject"
-        inputRef={inputRef}
         action={subject}
         label={t("contactTrader.subjectLabel", "Subject (optional)")}
         placeholder={t("contactTrader.subjectPlaceholder", "Enter subject...")}

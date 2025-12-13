@@ -1,7 +1,7 @@
 import React, { useMemo } from "react"
 
-import { VirtualScroll } from "~/components/Atoms/VirtualScroll"
-import type { VirtualScrollProps } from "~/components/Atoms/VirtualScroll/types"
+import { VirtualScroll } from "~/components/Containers/VirtualScroll"
+import type { VirtualScrollProps } from "~/components/Containers/VirtualScroll/types"
 import { styleMerge } from "~/utils/styleUtils"
 
 export interface VirtualScrollListProps

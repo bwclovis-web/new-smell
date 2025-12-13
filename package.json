@@ -28,6 +28,7 @@
     "db:restore:pg:list": "node scripts/restore-database.js --list",
     "import:s&s": "node scripts/import_s_and_s_complete.js",
     "import:csv-noir": "tsx scripts/import-csv-noir.ts",
+    "import:paintboxsoapworks": "tsx scripts/import-paintboxsoapworks.ts",
     "lint": "eslint --fix --ignore-pattern .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "dev": "node scripts/copy-images.js && run-p start:server open:localhost",
     "open:localhost": "start http://localhost:2112",

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
-import { VirtualScroll } from "~/components/Atoms/VirtualScroll"
+import { VirtualScroll } from "~/components/Containers/VirtualScroll"
 import { VirtualScrollList } from "~/components/Molecules/VirtualScrollList"
 
 // Mock performance API

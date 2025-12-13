@@ -62,7 +62,7 @@ function LinkCard({
               priority={false}
               quality={75}
               className="w-full object-cover mask-radial-at-center mask-radial-from-10% mask-radial-to-75%                                                        
-            transition-all duration-500 ease-in-out scale-120 h-full
+            transition-all duration-500 ease-in-out scale-120 h-full aspect-square
             filter grayscale-100 group-hover:grayscale-0 group-hover:scale-100 group-hover:mask-radial-from-30% group-hover:mask-radial-to-100%"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
               viewTransitionName={`perfume-image-${data.id}`}

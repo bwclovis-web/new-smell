@@ -16,7 +16,7 @@ import { getPerfumeTypeLabel } from "~/data/SelectTypes"
 import { getAvailablePerfumesForDecantingPaginated } from "~/models/perfume.server"
 import { getUserDisplayName } from "~/utils/user"
 
-import banner from "../images/trading.webp"
+import banner from "../images/exchange.webp"
 export const ROUTE_PATH = "/the-exchange"
 
 const PAGE_SIZE = 16

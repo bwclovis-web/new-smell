@@ -142,6 +142,7 @@ const HouseTypeahead = ({
             ? "border-green-500/50"
             : "border-noir-gold/30 focus:border-noir-gold"
         )}
+        
       />
       <input type="hidden" name={name} value={selectedId} />
       {selectedId && <p className="text-xs text-green-400 mt-1">✓ House selected</p>}

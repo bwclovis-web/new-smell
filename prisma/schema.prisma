@@ -52,6 +52,8 @@ model PerfumeHouse {
   updatedAt   DateTime  @updatedAt
   slug        String    @unique
   perfumes    Perfume[]
+
+  @@index([type, name], name: "idx_house_type_name")
 }
 
 model Perfume {
@@ -75,6 +77,10 @@ model Perfume {
   userPerfumeReview     UserPerfumeReview[]
   userPerfumeWishlist   UserPerfumeWishlist[]
   wishlistNotifications WishlistNotification[]
+
+  @@index([slug], name: "idx_perfume_slug")
+  @@index([perfumeHouseId, createdAt], name: "idx_perfume_house_created")
+  @@index([name], name: "idx_perfume_name")
 }
 
 model UserPerfume {
@@ -93,6 +99,9 @@ model UserPerfume {
   perfume         Perfume              @relation(fields: [perfumeId], references: [id])
   user            User                 @relation(fields: [userId], references: [id])
   comments        UserPerfumeComment[]
+
+  @@index([userId, available], name: "idx_user_perfume_user_available")
+  @@index([perfumeId, available], name: "idx_user_perfume_perfume_available")
 }
 
 model UserPerfumeRating {
@@ -110,6 +119,7 @@ model UserPerfumeRating {
   user       User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, perfumeId])
+  @@index([perfumeId, overall], name: "idx_rating_perfume_overall")
 }
 
 model UserPerfumeReview {
@@ -124,6 +134,7 @@ model UserPerfumeReview {
   user       User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, perfumeId])
+  @@index([perfumeId, createdAt], name: "idx_review_perfume_created")
 }
 
 model UserPerfumeWishlist {
@@ -134,6 +145,9 @@ model UserPerfumeWishlist {
   isPublic  Boolean  @default(false)
   perfume   Perfume  @relation(fields: [perfumeId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt], name: "idx_wishlist_user_created")
+  @@index([perfumeId], name: "idx_wishlist_perfume")
 }
 
 model UserPerfumeComment {
@@ -174,6 +188,7 @@ model PerfumeNoteRelation {
   @@index([perfumeId])
   @@index([noteId])
   @@index([noteType])
+  @@index([noteId, noteType], name: "idx_note_relation_note_type")
 }
 
 model WishlistNotification {

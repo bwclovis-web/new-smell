@@ -11,23 +11,30 @@ interface PerfumeNotesProps {
   perfumeNotesClose: PerfumeNote[]
 }
 
-const renderSingleNotesList = (notes: PerfumeNote[], t: any) => (
+const sortNotesAlphabetically = (notes: PerfumeNote[]): PerfumeNote[] => {
+  return [...notes].sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }))
+}
+
+const renderSingleNotesList = (notes: PerfumeNote[], t: any) => {
+  const sortedNotes = sortNotesAlphabetically(notes)
+  return (
   <div className="p-4 bg-noir-dark text-noir-gold-100 flex gap-4">
     <div className="flex flex-col items-start gap-2">
       <span className="font-medium  tracking-wide pb-1 text-2xl text-noir-gold">
         {t("singlePerfume.notes.general")}:{" "}
       </span>
       <ul className="flex font-semibold capitalize flex-wrap ">
-        {notes.map((note, idx) => (
+        {sortedNotes.map((note, idx) => (
           <li key={note.id}>
             {note.name}
-            {idx + 1 < notes.length && <span className="pr-1 pl-0">, </span>}
+            {idx + 1 < sortedNotes.length && <span className="pr-1 pl-0">, </span>}
           </li>
         ))}
       </ul>
     </div>
   </div>
-)
+  )
+}
 
 interface CategorizedNotesProps {
   perfumeNotesOpen: PerfumeNote[]
@@ -47,55 +54,61 @@ const renderCategorizedNotes = ({
   hasHeart,
   hasClose,
   t,
-}: CategorizedNotesProps) => (
-  <div className=" p-4 bg-noir-dark text-noir-gold-100 flex flex-col md:flex-row gap-4">
-    {hasOpen && (
-      <div className="flex flex-col items-start gap-1 border-r-4 md:border-r-noir-gold pr-4">
-        <span className="font-medium tracking-wide pb-1 text-2xl text-noir-gold">
-          {t("singlePerfume.notes.opening")}
-        </span>
-        <ul className="flex capitalize flex-wrap mb-2.5">
-          {perfumeNotesOpen.map((note, idx) => (
-            <li key={note.id}>
-              {note.name}
-              {idx + 1 < perfumeNotesOpen.length && <span className="pr-1">,</span>}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
-    {hasHeart && (
-      <div className="flex flex-col items-start border-r-2 md:border-r-noir-gold-100 pr-4 last-of-type:border-r-0">
-        <span className="font-medium tracking-wide pb-1 text-2xl text-noir-gold">
-          {t("singlePerfume.notes.mid")}
-        </span>
-        <ul className="flex font-semibold capitalize flex-wrap mb-2">
-          {perfumeNotesHeart.map((note, idx) => (
-            <li key={note.id}>
-              {note.name}
-              {idx + 1 < perfumeNotesHeart.length && <span className="pr-1">,</span>}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
-    {hasClose && (
-      <div className="flex flex-col items-start border-r-2 md:border-r-noir-gold-100 pr-4 last-of-type:border-r-0">
-        <span className="font-medium tracking-wide pb-1 text-2xl text-noir-gold">
-          {t("singlePerfume.notes.end")}{" "}
-        </span>
-        <ul className="flex  font-semibold capitalize flex-wrap">
-          {perfumeNotesClose.map((note, idx) => (
-            <li key={note.id}>
-              {note.name}
-              {idx + 1 < perfumeNotesClose.length && <span className="pr-1">,</span>}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
-  </div>
-)
+}: CategorizedNotesProps) => {
+  const sortedOpen = sortNotesAlphabetically(perfumeNotesOpen)
+  const sortedHeart = sortNotesAlphabetically(perfumeNotesHeart)
+  const sortedClose = sortNotesAlphabetically(perfumeNotesClose)
+
+  return (
+    <div className=" p-4 bg-noir-dark text-noir-gold-100 grid grid-cols-1 md:grid-cols-3 gap-4">
+      {hasOpen && (
+        <div className="flex flex-col items-start gap-1 border-r-4 md:border-r-noir-gold pr-4">
+          <span className="font-medium tracking-wide pb-1 text-2xl text-noir-gold">
+            {t("singlePerfume.notes.opening")}
+          </span>
+          <ul className="flex capitalize flex-wrap mb-2.5">
+            {sortedOpen.map((note, idx) => (
+              <li key={note.id}>
+                {note.name}
+                {idx + 1 < sortedOpen.length && <span className="pr-1">,</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {hasHeart && (
+        <div className="flex flex-col items-start border-r-2 md:border-r-noir-gold-100 pr-4 last-of-type:border-r-0">
+          <span className="font-medium tracking-wide pb-1 text-2xl text-noir-gold">
+            {t("singlePerfume.notes.mid")}
+          </span>
+          <ul className="flex font-semibold capitalize flex-wrap mb-2">
+            {sortedHeart.map((note, idx) => (
+              <li key={note.id}>
+                {note.name}
+                {idx + 1 < sortedHeart.length && <span className="pr-1">,</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {hasClose && (
+        <div className="flex flex-col items-start border-r-2 md:border-r-noir-gold-100 pr-4 last-of-type:border-r-0">
+          <span className="font-medium tracking-wide pb-1 text-2xl text-noir-gold">
+            {t("singlePerfume.notes.end")}{" "}
+          </span>
+          <ul className="flex  font-semibold capitalize flex-wrap">
+            {sortedClose.map((note, idx) => (
+              <li key={note.id}>
+                {note.name}
+                {idx + 1 < sortedClose.length && <span className="pr-1">,</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+}
 
 const useNotesLogic = (
   perfumeNotesOpen: PerfumeNote[],

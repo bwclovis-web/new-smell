@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react"
 
-import { VirtualScroll } from "~/components/Atoms/VirtualScroll"
+import { VirtualScroll } from "~/components/Containers/VirtualScroll"
 import { VirtualScrollList } from "~/components/Molecules/VirtualScrollList"
 
 // Generate demo data

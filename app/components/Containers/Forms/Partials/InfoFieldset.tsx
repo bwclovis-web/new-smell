@@ -1,34 +1,38 @@
+import FormField from "~/components/Atoms/FormField/FormField"
 import Input from "~/components/Atoms/Input/Input"
 import Select from "~/components/Atoms/Select/Select"
 import { houseTypes } from "~/data/SelectTypes"
-const InfoFieldset = ({ inputRef, data, actions, hideImage = false }) => (
+const InfoFieldset = ({ data, actions, hideImage = false }) => (
   <fieldset className="flex flex-col gap-2">
     <legend className="text-3xl text-noir-gold-100 font-bold mb-2">Info</legend>
-    <Input
-      shading={true}
-      inputType="text"
-      inputRef={inputRef}
-      action={actions.name}
-      inputId="name"
-      defaultValue={data?.name}
-    />
-    <Input
-      shading={true}
-      inputType="text"
-      inputRef={inputRef}
-      action={actions.description}
-      inputId="description"
-      defaultValue={data?.description}
-    />
-    <div className="grid grid-cols-2 gap-2">
+    <FormField label="Name" error={actions.name?.errors?.[0]} required>
       <Input
         shading={true}
         inputType="text"
-        inputRef={inputRef}
-        action={actions.founded}
-        inputId="founded"
-        defaultValue={data?.founded}
+        action={actions.name}
+        inputId="name"
+        defaultValue={data?.name}
       />
+    </FormField>
+    <FormField label="Description" error={actions.description?.errors?.[0]}>
+      <Input
+        shading={true}
+        inputType="text"
+        action={actions.description}
+        inputId="description"
+        defaultValue={data?.description}
+      />
+    </FormField>
+    <div className="grid grid-cols-2 gap-2">
+      <FormField label="Founded" error={actions.founded?.errors?.[0]}>
+        <Input
+          shading={true}
+          inputType="text"
+          action={actions.founded}
+          inputId="founded"
+          defaultValue={data?.founded}
+        />
+      </FormField>
       <Select
         label="House Type"
         selectId="type"
@@ -37,14 +41,15 @@ const InfoFieldset = ({ inputRef, data, actions, hideImage = false }) => (
       />
     </div>
     {!hideImage && (
-      <Input
-        shading={true}
-        inputType="text"
-        inputRef={inputRef}
-        action={actions.image}
-        inputId="image"
-        defaultValue={data?.image}
-      />
+      <FormField label="Image URL" error={actions.image?.errors?.[0]}>
+        <Input
+          shading={true}
+          inputType="text"
+          action={actions.image}
+          inputId="image"
+          defaultValue={data?.image}
+        />
+      </FormField>
     )}
   </fieldset>
 )
