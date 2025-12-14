@@ -33,12 +33,14 @@ const InfoFieldset = ({ data, actions, hideImage = false }) => (
           defaultValue={data?.founded}
         />
       </FormField>
-      <Select
-        label="House Type"
-        selectId="type"
-        selectData={houseTypes}
-        defaultId={data?.type}
-      />
+      <FormField label="House Type" error={actions.type?.errors?.[0]}>
+        <Select
+          ariaLabel="House Type"
+          selectId="type"
+          selectData={houseTypes}
+          defaultId={data?.type}
+        />
+      </FormField>
     </div>
     {!hideImage && (
       <FormField label="Image URL" error={actions.image?.errors?.[0]}>

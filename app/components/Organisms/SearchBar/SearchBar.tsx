@@ -115,7 +115,7 @@ const SearchBar = ({
     <div className="relative w-full">
       <form className="flex gap-2" onSubmit={evt => evt.preventDefault()}>
         <label htmlFor="search" className="sr-only">
-          Search
+          {t("common.search")}
         </label>
         <input
           ref={inputRef}
@@ -124,7 +124,7 @@ const SearchBar = ({
           autoComplete="off"
           onChange={handleChange}
           value={searchValue}
-          placeholder={placeholder || `Search ${t(`home.searchType.${searchType}`)}`}
+          placeholder={placeholder || `${t("common.search")} ${t(`home.searchType.${searchType}`)}`}
           onKeyUp={handleKeyUp}
           className={styleMerge(searchbarVariants({ className, variant }))}
         />
@@ -141,12 +141,12 @@ const SearchBar = ({
           >
             {isLoading && (
               <li className="p-2 text-noir-gold-100 text-center">
-                <span className="animate-pulse">Searching...</span>
+                <span className="animate-pulse">{t("common.loading")}</span>
               </li>
             )}
             {error && (
               <li className="p-2 text-red-400 text-center">
-                <span>Search error: {error}</span>
+                <span>{t("common.searchError", { error })}</span>
               </li>
             )}
             {!isLoading &&
@@ -173,7 +173,7 @@ const SearchBar = ({
               results.length === 0 &&
               searchValue.length >= 2 && (
                 <li className="p-2 text-noir-gold-100 text-center">
-                  <span>No results found</span>
+                  <span>{t("common.noResultsFound")}</span>
                 </li>
               )}
           </ul>,

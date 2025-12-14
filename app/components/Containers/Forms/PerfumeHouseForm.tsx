@@ -46,7 +46,7 @@ const PerfumeHouseForm = ({
   }, [lastResult])
   const [
     form,
-    { name, description, image, website, email, phone, address, founded },
+    { name, description, image, website, email, phone, address, founded, type, country },
   ] = useForm({
     id: formType,
     lastResult: lastResult || null,
@@ -85,10 +85,10 @@ const PerfumeHouseForm = ({
       <InfoFieldset
         inputRef={inputRef}
         data={data}
-        actions={{ name, description, image, founded }}
+        actions={{ name, description, image, founded, type }}
         hideImage={hideImage}
       />
-      <AddressFieldset address={address} inputRef={inputRef} data={data} />
+      <AddressFieldset address={address} country={country} inputRef={inputRef} data={data} />
       <ContactFieldset
         inputRef={inputRef}
         data={data}

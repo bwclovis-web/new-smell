@@ -24,8 +24,8 @@ if (!i18n.isInitialized) {
       },
       react: {
         useSuspense: false, // Match server configuration to prevent hydration issues
-        // Only bind to loaded event to prevent hydration issues
-        bindI18n: "loaded",
+        // Bind to both loaded and languageChanged events so components re-render on language changes
+        bindI18n: "loaded languageChanged",
       },
       detection: {
         order: [

@@ -31,3 +31,4 @@ CREATE INDEX CONCURRENTLY IF NOT EXISTS "idx_house_type_name" ON "PerfumeHouse"(
 -- PerfumeNoteRelation composite index
 CREATE INDEX CONCURRENTLY IF NOT EXISTS "idx_note_relation_note_type" ON "PerfumeNoteRelation"("noteId", "noteType");
 
+

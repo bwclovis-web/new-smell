@@ -5,7 +5,11 @@
     "noMore": "No more {{itemName}} to load.",
     "allLoaded": "All {{itemName}} loaded.",
     "loadMore": "Load More {{itemName}}",
-    "search": "Search..."
+    "search": "Search",
+    "searchError": "Search error: {{error}}",
+    "noResultsFound": "No results found",
+    "edit": "Edit",
+    "cancel": "Cancel"
   },
   "admin": {
     "navigation": {
@@ -59,6 +63,43 @@
       "five": "The door’s always open. Step in from the rain, hang your coat, and stay awhile. In Shadow and Sillage, every scent has a story, and every story deserves to be found."
     }
   },
+  "alerts":{
+    "heading": "My Alerts",
+    "subheading": "Manage your alerts and preferences",
+    "filters": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "all": "All"
+    },
+    "alert": "alert",
+    "alerts": "alerts",
+    "unread": "unread",
+    "dismissing": "Dismissing...",
+    "dismissAll": "Dismiss All",
+    "viewTradingPost": "View Trading Post",
+    "noAlerts": "No alerts at the moment.",
+    "noAlertsDescription": "You'll receive alerts when items from your wishlist become available or when someone shows interest in your decants.",
+    "alertPreferences": "Alert Preferences",
+    "alertPreferencesDescription": "Configure how and when you receive alerts.",
+    "alertTypes": "Alert Types",
+    "wishlistAlerts": "Wishlist Alerts",
+    "decantAlerts": "Decant Interest Alerts",
+    "emailNotifications": "Email Notifications",
+    "emailWishlistAlerts": "Email Wishlist Alerts",
+    "emailDecantAlerts": "Email Decant Alerts",
+    "alertLimits": "Alert Limits",
+    "maxAlerts": "Maximum Alerts to Keep",
+    "maxAlertsDescription": "Older alerts will be automatically dismissed when this limit is reached",
+    "maxAlertsOptions": {
+      "5": "5 alerts",
+      "10": "10 alerts",
+      "20": "20 alerts",
+      "50": "50 alerts"
+    },
+    "savePreferences": "Save Preferences",
+    "savingPreferences": "Saving..."
+  },
   "allHouses": {
     "meta": {
       "title": "Behind the Bottle - Shadow and Sillage",
@@ -99,6 +140,8 @@
     "subheading": "Log in to your account here. If you do not have one,",
     "createAccount": "Click here to create",
     "passwordRequirements": "Password Requirements:",
+    "termsAndConditions": "I accept the: ",
+    "termsAndConditionsLink": "terms and conditions",
     "passwordRequirementsList": {
       "8characters": "At least 8 characters long",
       "uppercase": "Contains uppercase and lowercase letters",
@@ -106,6 +149,14 @@
       "special": "Contains at least one special character",
       "spaces": "No spaces allowed",
       "different": "Different from your current password"
+    },
+    "signIn": {
+      "title": "Sign In - Shadow and Sillage",
+      "description": "Sign in to your account to access your profile and manage your collection."
+    },
+    "signUp": {
+      "title": "Sign Up - Shadow and Sillage",
+      "description": "Create an account to access your profile and manage your collection."
     }
   },
   "components": {
@@ -135,6 +186,24 @@
         "createdDesc": "Newest First"
       }
     }
+  },
+  "contactTrader": {
+    "title": "Contact Trader",
+    "itemTitle": "Inquire About Item",
+    "heading": "Contact Trader",
+    "subheading": "Contact the trader to inquire about the item.",
+    "name": "Name",
+    "namePlaceholder": "Enter your name",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "subject": "Subject",
+    "subjectPlaceholder": "Enter your subject",
+    "message": "Message",
+    "messagePlaceholder": "Enter your message",
+    "submit": "Submit",
+    "submitLoading": "Submitting...",
+    "submitSuccess": "Message sent successfully",
+    "submitError": "An error occurred. Please try again."
   },
   "dataQuality": {
     "heading": "Data Quality Dashboard",
@@ -421,6 +490,33 @@
     "contactUs": "Contact Us",
     "home": "Home",
     "search": "Search"
+  },
+  "password": {
+    "excellentPasswordStrength": "Excellent password strength!",
+    "passwordMeetsAllRequirements": "Password meets all requirements",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "enterCurrentPassword": "Enter your current password",
+    "newPassword": "New Password",
+    "enterNewPassword": "Enter your new password",
+    "confirmNewPassword": "Confirm New Password",
+    "confirmNewPasswordPlaceholder": "Confirm your new password",
+    "passwordsMatch": "Passwords match",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "error": "Error",
+    "success": "Success",
+    "passwordRequirements": "Password Requirements",
+    "updatePasswordToKeepAccountSecure": "Update your password to keep your account secure",
+    "requirements": {
+      "8characters": "At least 8 characters long",
+      "uppercase": "Contains uppercase and lowercase letters",
+      "number": "Contains at least one number",
+      "special": "Contains at least one special character",
+      "spaces": "No spaces allowed",
+        "different": "Different from your current password"
+      },
+      "clear": "Clear",
+      "changingPassword": "Changing Password..."
   },
   "profile": {
     "heading": "The Profile",

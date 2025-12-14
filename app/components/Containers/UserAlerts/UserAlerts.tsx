@@ -167,7 +167,7 @@ export const UserAlerts = ({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold mb-2  text-noir-gold">Alerts</h2>
+        <h2 className="text-2xl font-bold mb-2  text-noir-gold">{t("alerts.heading")}</h2>
         <AlertBell
           unreadCount={unreadCount}
           userId={userId}
@@ -188,8 +188,8 @@ export const UserAlerts = ({
           <div className="space-y-4 p-4">
             <div className="flex flex-wrap gap-2 justify-between items-center">
               <div className="text-sm text-noir-gold-100">
-                {alerts.length} {alerts.length === 1 ? "alert" : "alerts"} •{" "}
-                {unreadCount} unread
+                {alerts.length} {alerts.length === 1 ? t("alerts.alert", "alert") : t("alerts.alerts", "alerts")} •{" "}
+                {unreadCount} {t("alerts.unread", "unread")}
               </div>
               <div className="flex gap-2">
                 {alerts.length > 0 && (
@@ -199,7 +199,7 @@ export const UserAlerts = ({
                     onClick={handleDismissAll}
                     disabled={isLoading}
                   >
-                    {isLoading ? "Dismissing..." : "Dismiss All"}
+                    {isLoading ? t("alerts.dismissing", "Dismissing...") : t("alerts.dismissAll", "Dismiss All")}
                   </Button>
                 )}
                 <Link to="/the-exchange">

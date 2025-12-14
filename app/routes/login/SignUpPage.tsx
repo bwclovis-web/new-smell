@@ -123,7 +123,7 @@ const RegisterPage = () => {
             value="on"
             required
             className="mt-1"
-            htmlLabel="I accept the <a href='/terms-and-conditions' class='text-noir-gold hover:text-noir-light'>terms and conditions</a>"
+            htmlLabel={`${t("auth.termsAndConditions")} <a href='/terms-and-conditions' class='text-noir-gold hover:text-noir-light'>${t("auth.termsAndConditionsLink")}</a>`}
             labelSize="sm"
             labelPosition="right"
           />

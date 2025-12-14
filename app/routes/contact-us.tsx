@@ -52,7 +52,7 @@ const ContactUsPage = () => {
           <div className="prose prose-lg prose-invert max-w-none">
             <div className="flex flex-col md:flex-row gap-12">
               {/* Contact Section */}
-              <section className="flex flex-col gap-6 border-r-4 border-double border-noir-gold">
+              <section className="flex flex-col gap-6 border-r-4 border-double border-noir-gold px-6">
                 <h2 className="text-noir-gold text-3xl font-bold mb-4">
                   {t("contactUs.contact.title")}
                 </h2>

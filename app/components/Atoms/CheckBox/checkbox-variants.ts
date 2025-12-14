@@ -13,7 +13,7 @@ export const checkboxVariants = cva(["flex gap-3 items-center"], {
   },
 })
 
-export const checkboxLabelVariants = cva([""], {
+export const checkboxLabelVariants = cva(["text-noir-gold-100"], {
   compoundVariants: [{}],
   defaultVariants: {
     labelSize: "md",

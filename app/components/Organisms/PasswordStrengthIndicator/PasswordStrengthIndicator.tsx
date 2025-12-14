@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next"
 import { LuBadge, LuBadgeAlert, LuBadgeCheck } from "react-icons/lu"
 
 import { usePasswordStrength } from "~/hooks"
@@ -36,6 +37,7 @@ export default function PasswordStrengthIndicator({
   if (!password || !strengthInfo) {
     return null
   }
+  const { t } = useTranslation()
 
   const getStrengthIcon = (strength: string) => {
     switch (strength) {
@@ -94,7 +96,7 @@ export default function PasswordStrengthIndicator({
       {strengthInfo.strength === "very_strong" && (
         <div className="text-xs text-green-600 flex items-center space-x-1">
           <span>✅</span>
-          <span>Excellent password strength!</span>
+          <span>{t("password.excellentPasswordStrength", "Excellent password strength!")}</span>
         </div>
       )}
 
@@ -102,7 +104,7 @@ export default function PasswordStrengthIndicator({
       {isValid && (
         <div className="text-xs text-green-600 flex items-center space-x-1">
           <span>✅</span>
-          <span>Password meets all requirements</span>
+          <span>{t("password.passwordMeetsAllRequirements", "Password meets all requirements")}</span>
         </div>
       )}
     </div>

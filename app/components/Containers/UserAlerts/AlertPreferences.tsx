@@ -101,7 +101,7 @@ export const AlertPreferences = ({
 
   return (
     <VooDooDetails
-      summary={t("alerts.preferences", "Alert Preferences")}
+      summary={t("alerts.alertPreferences", "Alert Preferences")}
       className="justify-around text-noir-gold"
       name="alert-preferences"
     >
@@ -110,7 +110,7 @@ export const AlertPreferences = ({
           <div className="space-y-4">
             <div className="text-sm text-noir-gold-100 mb-4">
               {t(
-                "alerts.preferencesDescription",
+                "alerts.alertPreferencesDescription",
                 "Configure how and when you receive alerts."
               )}
             </div>
@@ -187,10 +187,10 @@ export const AlertPreferences = ({
                     disabled={isSaving}
                     className="rounded border-noir-gold-100 text-noir-gold-100 focus:ring-noir-gold-100 focus:border-noir-gold-100 disabled:opacity-50"
                   >
-                    <option value={5}>5 alerts</option>
-                    <option value={10}>10 alerts</option>
-                    <option value={20}>20 alerts</option>
-                    <option value={50}>50 alerts</option>
+                    <option value={5}>{t("alerts.maxAlertsOptions.5", "5 alerts")}</option>
+                    <option value={10}>{t("alerts.maxAlertsOptions.10", "10 alerts")}</option>
+                    <option value={20}>{t("alerts.maxAlertsOptions.20", "20 alerts")}</option>
+                    <option value={50}>{t("alerts.maxAlertsOptions.50", "50 alerts")}</option>
                   </select>
                 </label>
               </div>
@@ -203,7 +203,7 @@ export const AlertPreferences = ({
                 onClick={handleSave}
                 disabled={isSaving}
               >
-                {isSaving ? "Saving..." : "Save Preferences"}
+                {isSaving ? t("alerts.savingPreferences", "Saving...") : t("alerts.savePreferences", "Save Preferences")}
               </Button>
               <Button
                 variant="secondary"
@@ -212,7 +212,7 @@ export const AlertPreferences = ({
                 disabled={isSaving}
                 leftIcon={<BsX className="h-4 w-4" />}
               >
-                Cancel
+                {t("common.cancel", "Cancel")}
               </Button>
             </div>
           </div>
@@ -221,7 +221,7 @@ export const AlertPreferences = ({
             <div className="flex items-center justify-between">
               <div className="text-sm text-noir-gold-100">
                 {t(
-                  "alerts.preferencesDescription",
+                  "alerts.alertPreferencesDescription",
                   "Configure how and when you receive alerts."
                 )}
               </div>
@@ -231,7 +231,7 @@ export const AlertPreferences = ({
                 onClick={handleEdit}
                 leftIcon={<BsGear className="h-4 w-4" />}
               >
-                Edit
+                {t("common.edit", "Edit")}
               </Button>
             </div>
 
