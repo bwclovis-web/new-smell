@@ -107,37 +107,22 @@ const ContactTraderForm = ({
   })
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    // ALWAYS prevent default to stop navigation
-    event.preventDefault()
-    event.stopPropagation()
-    
-    if (!onSubmit) {
-      // No custom onSubmit handler - but we still prevent default
-      return
-    }
-    
-    // Custom onSubmit handler provided (for modal with fetcher)
-    setServerError(null)
-    setSuccessMessage(null)
+    if (onSubmit) {
+      event.preventDefault()
+      setServerError(null)
+      setSuccessMessage(null)
+      setIsSubmitting(true)
 
-    const formData = new FormData(event.currentTarget)
-    
-    // Check if CSRF token is present
-    const csrfToken = formData.get("_csrf")
-    if (!csrfToken) {
-      setServerError(t("contactTrader.error", "CSRF token missing. Please refresh the page."))
-      return
-    }
-    
-    setIsSubmitting(true)
-    try {
-      await onSubmit(formData)
-      // Success handling is done via lastResult in useEffect
-    } catch (error) {
-      setServerError(
-        error instanceof Error ? error.message : t("contactTrader.error", "Failed to send message")
-      )
-      setIsSubmitting(false)
+      const formData = new FormData(event.currentTarget)
+      try {
+        await onSubmit(formData)
+        // Success handling is done via lastResult in useEffect
+      } catch (error) {
+        setServerError(
+          error instanceof Error ? error.message : t("contactTrader.error", "Failed to send message")
+        )
+        setIsSubmitting(false)
+      }
     }
   }
 

@@ -13,7 +13,7 @@ interface SessionState {
 
   // Actions
   toggleModal: (
-    id: RefObject<HTMLButtonElement>,
+    id: RefObject<HTMLButtonElement | null>,
     modalId: string,
     data?: ModalData
   ) => void

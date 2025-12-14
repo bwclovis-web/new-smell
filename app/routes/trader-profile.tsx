@@ -6,6 +6,7 @@ import {
   ItemsSearchingFor,
   ItemsToTrade,
 } from "~/components/Containers/TraderProfile"
+import ContactTraderButton from "~/components/Containers/TraderProfile/ContactTraderButton"
 import TraderFeedbackSection from "~/components/Containers/TraderProfile/TraderFeedbackSection"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import { useTrader } from "~/hooks/useTrader"
@@ -97,6 +98,14 @@ const TraderProfilePage = () => {
           viewerId={viewer?.id}
           initialData={feedback}
         />
+        {/* Contact Trader Button */}
+        <div className="mt-4">
+          <ContactTraderButton
+            traderId={trader.id}
+            trader={trader}
+            viewerId={viewer?.id}
+          />
+        </div>
       </div>
         <div className="noir-border relative col-span-1 p-4">
           <h2>{t("traderProfile.itemsAvailable")}</h2>
@@ -110,7 +119,12 @@ const TraderProfilePage = () => {
           {trader.UserPerfume.length > 0 ? (
             <ul className="mt-6">
               {trader.UserPerfume.map((userPerfume: any) => (
-                <ItemsToTrade key={userPerfume.id} userPerfume={userPerfume} />
+                <ItemsToTrade
+                  key={userPerfume.id}
+                  userPerfume={userPerfume}
+                  trader={trader}
+                  viewerId={viewer?.id}
+                />
               ))}
             </ul>
           ) : (

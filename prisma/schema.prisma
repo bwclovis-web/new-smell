@@ -34,6 +34,8 @@ model User {
   traderFeedbackLeft     TraderFeedback[] @relation("FeedbackFromReviewer")
   pendingSubmissions    PendingSubmission[] @relation("SubmittedSubmissions")
   reviewedSubmissions   PendingSubmission[] @relation("ReviewedSubmissions")
+  traderContactMessagesSent TraderContactMessage[] @relation("ContactMessagesSent")
+  traderContactMessagesReceived TraderContactMessage[] @relation("ContactMessagesReceived")
 }
 
 model PerfumeHouse {
@@ -280,6 +282,21 @@ model PendingSubmission {
 
   @@index([status, createdAt])
   @@index([submissionType, status])
+}
+
+model TraderContactMessage {
+  id          String   @id @default(cuid())
+  senderId    String
+  recipientId String
+  subject     String?
+  message     String
+  createdAt   DateTime @default(now())
+  sender      User     @relation("ContactMessagesSent", fields: [senderId], references: [id])
+  recipient   User     @relation("ContactMessagesReceived", fields: [recipientId], references: [id])
+
+  @@index([senderId, createdAt])
+  @@index([recipientId, createdAt])
+  @@index([senderId, recipientId, createdAt])
 }
 
 enum PendingSubmissionType {

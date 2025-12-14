@@ -133,16 +133,15 @@ function getBaseUrl(request: Request): string {
  * Main handler for contact trader API route
  */
 async function handleContactTrader({ request, auth }: ActionFunctionArgs & { auth: { userId: string; user: any } }) {
-  // Only allow POST requests
   if (request.method !== "POST") {
     return createErrorResponse("Method not allowed", 405)
   }
 
-  // Parse form data first (can only read body once)
   const formData = await request.formData()
   
-  // Validate CSRF token from FormData
-  const csrfToken = formData.get("_csrf") as string | null
+  // CSRF token should be validated by Express middleware via header
+  // But we also check FormData as fallback
+  const csrfToken = (formData.get("_csrf") as string | null) || request.headers.get("x-csrf-token")
   
   if (!csrfToken) {
     return createErrorResponse("CSRF token missing from request", 403)

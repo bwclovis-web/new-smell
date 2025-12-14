@@ -3,6 +3,7 @@ import { GiTrade } from "react-icons/gi"
 
 import VooDooDetails from "~/components/Atoms/VooDooDetails"
 import type { UserPerfumeI } from "~/types"
+import ContactItemButton from "~/components/Containers/TraderProfile/ContactItemButton"
 
 import TradersComments from "./TradersComments"
 
@@ -91,6 +92,7 @@ const CommentsSection = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
     <>
       {publicComments.length > 0 ? (
         <VooDooDetails
+          name="comments"
           summary={`${t("traderProfile.comments")} (${publicComments.length})`}
           className="text-noir-gold mt-2"
         >
@@ -108,7 +110,19 @@ const CommentsSection = ({ userPerfume }: { userPerfume: UserPerfumeI }) => {
   )
 }
 
-const ItemsToTrade = ({ userPerfume }: { userPerfume: UserPerfumeI }) => (
+interface ItemsToTradeProps {
+  userPerfume: UserPerfumeI
+  trader?: {
+    id: string
+    firstName?: string | null
+    lastName?: string | null
+    username?: string | null
+    email?: string
+  }
+  viewerId?: string | null
+}
+
+const ItemsToTrade = ({ userPerfume, trader, viewerId }: ItemsToTradeProps) => (
   <li
     key={userPerfume.id}
     className="mb-4 border bg-noir-gold/20 border-noir-gold rounded p-2"
@@ -117,6 +131,14 @@ const ItemsToTrade = ({ userPerfume }: { userPerfume: UserPerfumeI }) => (
     <PriceInfo userPerfume={userPerfume} />
     <TradeInfo userPerfume={userPerfume} />
     <CommentsSection userPerfume={userPerfume} />
+    {trader && (
+      <ContactItemButton
+        traderId={trader.id}
+        trader={trader}
+        userPerfume={userPerfume}
+        viewerId={viewerId}
+      />
+    )}
   </li>
 )
 

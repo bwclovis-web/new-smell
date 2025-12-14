@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useFetcher } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import ContactTraderModal from "~/components/Containers/Forms/ContactTraderModal"
 import Modal from "~/components/Organisms/Modal/Modal"
 import { useSessionStore } from "~/stores/sessionStore"
+import { useCSRF } from "~/hooks/useCSRF"
 import { getTraderDisplayName } from "~/utils/user"
 
 interface ContactTraderButtonProps {
@@ -15,6 +15,7 @@ interface ContactTraderButtonProps {
     firstName?: string | null
     lastName?: string | null
     username?: string | null
+    email?: string
   }
   viewerId?: string | null
 }
@@ -27,51 +28,47 @@ const ContactTraderButton = ({
   const { t } = useTranslation()
   const { modalOpen, toggleModal, modalId, closeModal } = useSessionStore()
   const modalTrigger = useRef<HTMLButtonElement>(null)
-  const fetcher = useFetcher()
+  const { prepareApiRequest } = useCSRF()
 
   // Only show button if viewer is authenticated and not viewing their own profile
-  if (!viewerId || viewerId === traderId) {
+  if (viewerId === traderId) {
+    return null
+  }
+  
+  if (!viewerId) {
     return null
   }
 
-  const traderName = getTraderDisplayName(trader)
-  const [manualResult, setManualResult] = useState<any>(null)
-  
-  // Use fetcher.data if available, otherwise use manually tracked result
-  const lastResult = fetcher.data || manualResult
-  
-  // Monitor fetcher state changes and manually fetch response if needed
-  useEffect(() => {
-    if (fetcher.state === "idle" && fetcher.data) {
-      setManualResult(null) // Clear manual result if fetcher has data
-    }
-  }, [fetcher.state, fetcher.data])
+  const traderName = getTraderDisplayName({
+    firstName: trader.firstName,
+    lastName: trader.lastName,
+    email: trader.email || trader.id,
+  })
+  const [result, setResult] = useState<any>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (formData: FormData) => {
-    // Submit using fetcher - this should NOT navigate
-    // fetcher.submit() is designed for background submissions
-    fetcher.submit(formData, {
-      method: "POST",
-      action: "/api/contact-trader",
-    })
+    setIsSubmitting(true)
     
-    // Wait a bit for fetcher to complete, then manually fetch if needed
-    // This is a workaround for React Router's fetcher.data not always populating
-    setTimeout(async () => {
-      if (!fetcher.data && fetcher.state === "idle") {
-        try {
-          const response = await fetch("/api/contact-trader", {
-            method: "POST",
-            body: formData,
-            credentials: "include", // Include cookies for CSRF
-          })
-          const data = await response.json()
-          setManualResult(data)
-        } catch (error) {
-          // Silently handle fetch errors - form will show error from fetcher if available
-        }
-      }
-    }, 500)
+    const { formData: protectedFormData, headers } = prepareApiRequest(formData)
+    
+    try {
+      const response = await fetch("/api/contact-trader", {
+        method: "POST",
+        headers: headers,
+        body: protectedFormData,
+        credentials: "include",
+      })
+      const data = await response.json()
+      setResult(data)
+    } catch (error) {
+      setResult({
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to send message",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleSuccess = () => {
@@ -99,11 +96,11 @@ const ContactTraderButton = ({
       </Button>
 
       {modalOpen && modalId === "contact-trader" && (
-        <Modal background="default" innerType="form" animateStart="top">
+        <Modal background="default" innerType="default" animateStart="top">
           <ContactTraderModal
             recipientId={traderId}
             recipientName={traderName}
-            lastResult={lastResult}
+            lastResult={result}
             onSubmit={handleSubmit}
             onSuccess={handleSuccess}
           />

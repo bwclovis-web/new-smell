@@ -441,6 +441,23 @@ export const DataQualityReportSchema = z.object({
   }),
 })
 
+// Contact Trader Schema
+export const ContactTraderSchema = z.object({
+  recipientId: z
+    .string()
+    .min(1, { message: "Recipient ID is required" }),
+  subject: z
+    .string()
+    .max(200, { message: "Subject must be less than 200 characters" })
+    .optional()
+    .transform(val => val?.trim() || undefined),
+  message: z
+    .string()
+    .min(10, { message: "Message must be at least 10 characters" })
+    .max(5000, { message: "Message must be less than 5,000 characters" })
+    .transform(sanitizeInput),
+})
+
 // Export all schemas for easy access
 export const validationSchemas = {
   // Perfume House
@@ -477,4 +494,7 @@ export const validationSchemas = {
   // Admin
   adminUserForm: AdminUserFormSchema,
   dataQualityReport: DataQualityReportSchema,
+
+  // Contact Trader
+  contactTrader: ContactTraderSchema,
 } as const

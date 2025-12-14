@@ -63,6 +63,7 @@ export default [
     ),
     route("api/error-analytics", "routes/api/error-analytics.tsx"),
     route("api/pending-submissions", "routes/api/pending-submissions.tsx"),
+    route("api/contact-trader", "routes/api/contact-trader.tsx"),
 
     layout("routes/admin/AdminLayout.tsx", [
       route("admin/", "routes/admin/adminIndex.tsx"),

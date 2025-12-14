@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useFetcher } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import ContactTraderModal from "~/components/Containers/Forms/ContactTraderModal"
 import Modal from "~/components/Organisms/Modal/Modal"
 import { useSessionStore } from "~/stores/sessionStore"
+import { useCSRF } from "~/hooks/useCSRF"
 import { getTraderDisplayName } from "~/utils/user"
 import type { UserPerfumeI } from "~/types"
 
@@ -16,6 +16,7 @@ interface ContactItemButtonProps {
     firstName?: string | null
     lastName?: string | null
     username?: string | null
+    email?: string
   }
   userPerfume: UserPerfumeI
   viewerId?: string | null
@@ -30,18 +31,19 @@ const ContactItemButton = ({
   const { t } = useTranslation()
   const { modalOpen, toggleModal, modalId, closeModal } = useSessionStore()
   const modalTrigger = useRef<HTMLButtonElement>(null)
-  const fetcher = useFetcher()
+  const { prepareApiRequest } = useCSRF()
 
-  // Only show button if viewer is authenticated and not viewing their own profile
-  if (!viewerId || viewerId === traderId) {
+  if (viewerId === traderId || !viewerId) {
     return null
   }
 
-  const traderName = getTraderDisplayName(trader)
-  const [manualResult, setManualResult] = useState<any>(null)
-  
-  // Use fetcher.data if available, otherwise use manually tracked result
-  const lastResult = fetcher.data || manualResult
+  const traderName = getTraderDisplayName({
+    firstName: trader.firstName,
+    lastName: trader.lastName,
+    email: trader.email || trader.id,
+  })
+  const [result, setResult] = useState<any>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Generate item-specific modal ID to allow multiple item modals
   const itemModalId = `contact-item-${userPerfume.id}`
@@ -58,39 +60,33 @@ const ContactItemButton = ({
   }
 
   // Generate a pre-filled subject line
-  const itemSubject = t(
-    "contactTrader.itemSubject",
-    {
-      perfumeName: itemInfo.perfumeName,
-      perfumeHouse: itemInfo.perfumeHouse ? ` by ${itemInfo.perfumeHouse}` : "",
-    },
-    `Inquiry about ${itemInfo.perfumeName}${itemInfo.perfumeHouse ? ` by ${itemInfo.perfumeHouse}` : ""}`
-  )
+  const itemSubject = t("contactTrader.itemSubject", {
+    perfumeName: itemInfo.perfumeName,
+    perfumeHouse: itemInfo.perfumeHouse ? ` by ${itemInfo.perfumeHouse}` : "",
+  }) || `Inquiry about ${itemInfo.perfumeName}${itemInfo.perfumeHouse ? ` by ${itemInfo.perfumeHouse}` : ""}`
 
   const handleSubmit = async (formData: FormData) => {
-    // Submit using fetcher - this should NOT navigate
-    fetcher.submit(formData, {
-      method: "POST",
-      action: "/api/contact-trader",
-    })
+    setIsSubmitting(true)
     
-    // Wait a bit for fetcher to complete, then manually fetch if needed
-    // This is a workaround for React Router's fetcher.data not always populating
-    setTimeout(async () => {
-      if (!fetcher.data && fetcher.state === "idle") {
-        try {
-          const response = await fetch("/api/contact-trader", {
-            method: "POST",
-            body: formData,
-            credentials: "include", // Include cookies for CSRF
-          })
-          const data = await response.json()
-          setManualResult(data)
-        } catch (error) {
-          // Silently handle fetch errors - form will show error from fetcher if available
-        }
-      }
-    }, 500)
+    const { formData: protectedFormData, headers } = prepareApiRequest(formData)
+    
+    try {
+      const response = await fetch("/api/contact-trader", {
+        method: "POST",
+        headers: headers,
+        body: protectedFormData,
+        credentials: "include",
+      })
+      const data = await response.json()
+      setResult(data)
+    } catch (error) {
+      setResult({
+        success: false,
+        error: error instanceof Error ? error.message : "Failed to send message",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleSuccess = () => {
@@ -121,11 +117,11 @@ const ContactItemButton = ({
       </Button>
 
       {modalOpen && modalId === itemModalId && (
-        <Modal background="dark" innerType="form" animateStart="top">
+        <Modal animateStart="top" innerType="dark">
           <ContactTraderModal
             recipientId={traderId}
             recipientName={traderName}
-            lastResult={lastResult}
+            lastResult={result}
             onSubmit={handleSubmit}
             onSuccess={handleSuccess}
             itemInfo={itemInfo}

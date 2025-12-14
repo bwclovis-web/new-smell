@@ -72,12 +72,52 @@ export function useCSRF() {
     })
   }
 
+  /**
+   * Get CSRF token with fallback to cookie
+   */
+  const getTokenWithFallback = (): string | null => {
+    const token = getToken()
+    if (token) return token
+    
+    // Fallback to cookie
+    const cookies = document.cookie.split(";")
+    const csrfCookie = cookies.find(cookie => cookie.trim().startsWith("_csrf="))
+    if (csrfCookie) {
+      return csrfCookie.split("=")[1].trim()
+    }
+    
+    return null
+  }
+
+  /**
+   * Prepare FormData and headers with CSRF token for API requests
+   * Express middleware requires token in header "x-csrf-token"
+   */
+  const prepareApiRequest = (formData: FormData): { formData: FormData; headers: HeadersInit } => {
+    const token = getTokenWithFallback()
+    
+    // Ensure token is in FormData
+    if (token) {
+      formData.set("_csrf", token)
+    } else {
+      addToFormData(formData)
+    }
+    
+    // Express middleware requires header
+    const headerToken = token || (formData.get("_csrf") as string)
+    const headers: HeadersInit = headerToken ? { "x-csrf-token": headerToken } : addToHeaders({})
+    
+    return { formData, headers }
+  }
+
   return {
     csrfToken,
     isLoading,
     getToken,
+    getTokenWithFallback,
     addToFormData,
     addToHeaders,
     submitForm,
+    prepareApiRequest,
   }
 }
