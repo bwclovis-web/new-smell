@@ -160,6 +160,7 @@ export default defineConfig({
       "puppeteer",
       "bcryptjs",
       "@prisma/client",
+      "resend",
     ],
   },
   resolve: {

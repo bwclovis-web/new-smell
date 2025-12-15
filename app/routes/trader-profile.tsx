@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { type LoaderFunctionArgs, useLoaderData } from "react-router"
+import { type LoaderFunctionArgs, type MetaFunction, useLoaderData } from "react-router"
 
 import VooDooDetails from "~/components/Atoms/VooDooDetails"
 import {
@@ -21,6 +21,14 @@ import { authenticateUser } from "~/utils/auth.server"
 import { getTraderDisplayName } from "~/utils/user"
 
 import banner from "../images/trade.webp"
+
+export const meta: MetaFunction = () => {
+  const { t } = useTranslation()
+  return [
+    { title: t("traderProfile.meta.title") },
+    { name: "description", content: t("traderProfile.meta.description") },
+  ]
+}
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   if (!params.id) {
@@ -147,8 +155,7 @@ const TraderProfilePage = () => {
               user: trader,
             }))}
           />
-        </VooDooDetails>
-         
+        </VooDooDetails>         
         </div>
       </div>
       
