@@ -13,6 +13,10 @@ These documents are kept for historical reference and to understand past decisio
 
 ## Archived Documents
 
+### Quick Reference
+
+👉 **[Implementation History](./implementation-history.md)** - **START HERE** - Consolidated summary of all implementation work
+
 ### Component Work
 
 - **component-cleanup-summary.md** - Summary of component refactoring completed in October 2025

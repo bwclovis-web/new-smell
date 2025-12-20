@@ -8,6 +8,7 @@ Welcome to the New Smell project documentation. This directory contains all proj
 docs/
 ├── guides/                  # Active developer guides and best practices
 ├── error-handling/          # Error handling system documentation
+├── developer/               # Developer-specific docs (AI, patterns, summaries)
 ├── roadmap/                 # Future features and AI integration plans
 ├── audits/                  # Performance and code quality audits
 ├── reports/                 # Data quality reports and metrics
@@ -57,6 +58,7 @@ Quick access:
 
 🔍 **[Audits & Analysis](./audits/)** - Code and performance audits
 
+- [Comprehensive Codebase Audit](./finnal/README.md) - Complete assessment (January 2025)
 - [Performance Components Audit](./audits/performance-components.md) - Component analysis
 
 #### Data Reports
@@ -65,10 +67,20 @@ Quick access:
 
 - [Latest Reports](./reports/latest/) - Current data quality analysis
 
+#### Developer Resources
+
+👨‍💻 **[Developer Documentation](./developer/)** - Developer-specific resources
+
+- [AI Integration Roadmap](./developer/AI_INTEGRATION_ROADMAP.md) - AI features plan
+- [Code Quality Improvements](./developer/CODE_QUALITY_IMPROVEMENTS.md) - Comprehensive quality guide
+- [Reusable Patterns](./developer/REUSABLE_PATTERNS.md) - Code patterns and best practices
+- Implementation summaries and research crew analyses
+
 #### Archive
 
 📦 **[Documentation Archive](./archive/)** - Historical documentation
 
+- [Implementation History](./archive/implementation-history.md) ⭐ **START HERE** - Consolidated summary
 - Completed refactoring summaries
 - Implementation milestones
 - Project approval records
@@ -161,9 +173,10 @@ A: See [AI Integration Roadmap](./roadmap/ai-integration.md)
 | -------------- | --------- | ------------- |
 | Guides         | 5         | ✅ Current    |
 | Error Handling | 5         | ✅ Current    |
+| Developer      | 10+       | ✅ Current    |
 | Roadmap        | 2+        | 📋 Planning   |
-| Audits         | 1         | ✅ Current    |
-| Archive        | 8         | 📦 Historical |
+| Audits         | 2         | ✅ Current    |
+| Archive        | 9         | 📦 Historical |
 
 ## 🎓 Learning Path
 

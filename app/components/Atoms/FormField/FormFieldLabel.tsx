@@ -20,7 +20,7 @@ const FormFieldLabel = ({
   return (
     <label
       className={`
-        block text-sm font-medium text-gray-700
+        block text-sm font-medium text-noir-gold-100
         ${required ? 'after:content-["*"] after:ml-1 after:text-red-500' : ""}
         ${disabled ? "text-gray-400" : ""}
         ${className}

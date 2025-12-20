@@ -1,6 +1,7 @@
 import { type FormEvent, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { FaStar } from "react-icons/fa"
+import { Button } from "~/components/Atoms/Button"
 
 import Select from "~/components/Atoms/Select"
 import { useTraderFeedback, useTraderFeedbackMutations } from "~/hooks/useTraderFeedback"
@@ -134,7 +135,7 @@ const TraderFeedbackSection = ({
               <span className="text-2xl font-bold">{averageDisplay}</span>
             </div>
           ) : (
-            <span className="text-sm text-noir-gold-200">{averageDisplay}</span>
+            <span className="text-sm text-noir-gold-100">{averageDisplay}</span>
           )}
           <div className="text-sm text-noir-gold-500">
             {t("traderProfile.feedback.reviewCount", { count: totalReviews })}
@@ -148,13 +149,13 @@ const TraderFeedbackSection = ({
       </header>
 
       {isLoading && (
-        <p className="text-noir-gold-200 text-sm">
+        <p className="text-noir-gold-500 text-sm">
           {t("traderProfile.feedback.loading")}
         </p>
       )}
 
       {isError && (
-        <p className="text-noir-gold-200 text-sm">
+        <p className="text-noir-gold-500 text-sm">
           {error?.message || t("traderProfile.feedback.error")}
         </p>
       )}
@@ -174,10 +175,10 @@ const TraderFeedbackSection = ({
                         {formatUserName(commentEntry.reviewer) ||
                           t("traderProfile.feedback.anonymousReviewer")}
                       </div>
-                      <div className="flex items-center gap-2 text-noir-gold-200 text-sm">
+                      <div className="flex items-center gap-2 text-noir-gold-500 text-sm">
                         {renderStars(commentEntry.rating)}
                         <span>{commentEntry.rating}/5</span>
-                        <span className="text-noir-gold-400 text-xs">
+                        <span className="text-noir-gold-500 text-xs">
                           {new Date(commentEntry.createdAt).toLocaleDateString()}
                         </span>
                       </div>
@@ -191,7 +192,7 @@ const TraderFeedbackSection = ({
                 ))}
               </ul>
             ) : (
-              <p className="text-noir-gold-200 text-sm">
+              <p className="text-noir-gold-500 text-sm">
                 {t("traderProfile.feedback.noComments")}
               </p>
             )}
@@ -200,7 +201,7 @@ const TraderFeedbackSection = ({
           <div className="border-t border-noir-gold/30 pt-4">
             {viewerId ? (
               isViewerTrader ? (
-                <p className="text-noir-gold-200 text-sm">
+                <p className="text-noir-gold-500 text-sm">
                   {t("traderProfile.feedback.selfReviewNotice")}
                 </p>
               ) : (
@@ -239,7 +240,7 @@ const TraderFeedbackSection = ({
                       maxLength={1000}
                       placeholder={t("traderProfile.feedback.commentPlaceholder")}
                     />
-                    <p className="text-xs text-noir-gold-300 mt-1">
+                    <p className="text-xs text-noir-gold-100 mt-1">
                       {t("traderProfile.feedback.commentHint")}
                     </p>
                   </div>
@@ -249,31 +250,30 @@ const TraderFeedbackSection = ({
                   )}
 
                   <div className="flex flex-wrap items-center gap-3">
-                    <button
+                    <Button
                       type="submit"
-                      className="px-4 py-2 rounded bg-noir-gold text-noir-black font-semibold hover:bg-noir-gold/90 transition"
                       disabled={isMutating}
+                      variant="primary"
                     >
                       {hasViewerFeedback
                         ? t("traderProfile.feedback.updateButton")
                         : t("traderProfile.feedback.submitButton")}
-                    </button>
+                    </Button>
 
                     {hasViewerFeedback && (
-                      <button
+                      <Button
                         type="button"
                         onClick={handleDelete}
-                        className="px-4 py-2 rounded border border-noir-gold/60 text-noir-gold-200 hover:bg-noir-gold/10 transition"
                         disabled={isMutating}
                       >
                         {t("traderProfile.feedback.deleteButton")}
-                      </button>
+                      </Button>
                     )}
                   </div>
                 </form>
               )
             ) : (
-              <p className="text-noir-gold-200 text-sm">
+              <p className="text-noir-gold-500 text-sm">
                 {t("traderProfile.feedback.loginPrompt")}
               </p>
             )}

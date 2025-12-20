@@ -1,36 +1,27 @@
 # Developer Documentation
 
-This directory contains comprehensive developer documentation for the New Smell project. Below is an overview of each document and when to reference it.
+This directory contains developer-specific documentation including AI integration plans, code quality guides, and implementation summaries.
 
 ## 📋 Table of Contents
 
-### Getting Started
+### AI & Research
 
-- **[IMPLEMENTATION_CHECKLIST.md](./IMPLEMENTATION_CHECKLIST.md)** - Step-by-step checklist for implementing new features and improvements
 - **[AI_INTEGRATION_ROADMAP.md](./AI_INTEGRATION_ROADMAP.md)** - Roadmap for AI-powered features and enhancements
+- **[CREWAI_USAGE.md](./CREWAI_USAGE.md)** - Guide for using CrewAI in the project
+- **[RESEARCH_CREW_MISSING_DATA_ISSUES.md](./RESEARCH_CREW_MISSING_DATA_ISSUES.md)** - Research crew analysis for missing data
+- **[RESEARCH_CREW_OPTIMIZATION_ANALYSIS.md](./RESEARCH_CREW_OPTIMIZATION_ANALYSIS.md)** - Optimization analysis from research crew
+- **[RESEARCH_CREW_OPTIMIZATION_IMPLEMENTATION.md](./RESEARCH_CREW_OPTIMIZATION_IMPLEMENTATION.md)** - Implementation details for optimizations
 
-### Code Quality & Architecture
+### Code Quality & Patterns
 
 - **[CODE_QUALITY_IMPROVEMENTS.md](./CODE_QUALITY_IMPROVEMENTS.md)** - Comprehensive guide to code quality standards, patterns, and best practices
-- **[DUPLICATE_COMPONENTS_ANALYSIS.md](./DUPLICATE_COMPONENTS_ANALYSIS.md)** - Analysis of duplicate components and consolidation strategies
+- **[REUSABLE_PATTERNS.md](./REUSABLE_PATTERNS.md)** - Reusable code patterns and best practices
 
-### Error Handling (Complete System)
+### Implementation Summaries
 
-- **[ERROR_HANDLING_DEVELOPER_GUIDE.md](./ERROR_HANDLING_DEVELOPER_GUIDE.md)** - **⭐ START HERE** - Complete developer guide with all patterns and APIs
-- **[ERROR_HANDLING_COMMON_SCENARIOS.md](./ERROR_HANDLING_COMMON_SCENARIOS.md)** - Ready-to-use code examples for 14+ common scenarios
-- **[ERROR_HANDLING_TROUBLESHOOTING.md](./ERROR_HANDLING_TROUBLESHOOTING.md)** - Troubleshooting guide for common issues and debugging tips
-- **[ERROR_HANDLING_IMPROVEMENT_PLAN.md](./ERROR_HANDLING_IMPROVEMENT_PLAN.md)** - Technical implementation plan and system architecture
-- **[PERFORMANCE_TESTING_SUMMARY.md](./PERFORMANCE_TESTING_SUMMARY.md)** - Performance metrics and benchmarks (< 100ms overhead)
-
-### Performance & Optimization
-
-- **[PERFORMANCE_OPTIMIZATION_GUIDE.md](./PERFORMANCE_OPTIMIZATION_GUIDE.md)** - Complete guide to optimizing application performance
-- **[PERFORMANCE_COMPONENTS_AUDIT.md](./PERFORMANCE_COMPONENTS_AUDIT.md)** - Audit of component performance and optimization opportunities
-
-### Security & Infrastructure
-
-- **[SECURITY_HARDENING_SUMMARY.md](./SECURITY_HARDENING_SUMMARY.md)** - Security best practices and hardening measures
-- **[INFRASTRUCTURE_IMPROVEMENTS.md](./INFRASTRUCTURE_IMPROVEMENTS.md)** - Infrastructure setup, deployment, and operational improvements
+- **[DATA_FETCHING_CONSOLIDATION_SUMMARY.md](./DATA_FETCHING_CONSOLIDATION_SUMMARY.md)** - Summary of data fetching consolidation work
+- **[MODAL_SYSTEM_GUIDE.md](./MODAL_SYSTEM_GUIDE.md)** - Guide to the modal system
+- **[MODAL_UNIFICATION_SUMMARY.md](./MODAL_UNIFICATION_SUMMARY.md)** - Summary of modal system unification
 
 ## 🎯 Quick Reference
 
@@ -38,14 +29,14 @@ This directory contains comprehensive developer documentation for the New Smell 
 
 | Scenario                      | Document(s) to Reference                                        |
 | ----------------------------- | --------------------------------------------------------------- |
-| Starting a new feature        | IMPLEMENTATION_CHECKLIST, CODE_QUALITY_IMPROVEMENTS             |
-| Implementing error handling   | ERROR_HANDLING_DEVELOPER_GUIDE, ERROR_HANDLING_COMMON_SCENARIOS |
-| Fixing bugs or errors         | ERROR_HANDLING_DEVELOPER_GUIDE, ERROR_HANDLING_TROUBLESHOOTING  |
-| Debugging error issues        | ERROR_HANDLING_TROUBLESHOOTING                                  |
-| Optimizing performance        | PERFORMANCE_OPTIMIZATION_GUIDE, PERFORMANCE_COMPONENTS_AUDIT    |
-| Refactoring components        | DUPLICATE_COMPONENTS_ANALYSIS, CODE_QUALITY_IMPROVEMENTS        |
-| Security review               | SECURITY_HARDENING_SUMMARY                                      |
-| DevOps/Infrastructure changes | INFRASTRUCTURE_IMPROVEMENTS                                     |
+| Starting a new feature        | [Implementation Checklist](../guides/implementation-checklist.md), CODE_QUALITY_IMPROVEMENTS |
+| Implementing error handling   | [Error Handling Developer Guide](../error-handling/developer-guide.md), [Common Scenarios](../error-handling/common-scenarios.md) |
+| Fixing bugs or errors         | [Error Handling Developer Guide](../error-handling/developer-guide.md), [Troubleshooting](../error-handling/troubleshooting.md) |
+| Debugging error issues        | [Error Handling Troubleshooting](../error-handling/troubleshooting.md) |
+| Optimizing performance        | [Performance Guide](../guides/performance.md), [Performance Audit](../audits/performance-components.md) |
+| Refactoring components        | CODE_QUALITY_IMPROVEMENTS, [Archive: Duplicate Components](../archive/duplicate-components-analysis.md) |
+| Security review               | [Security Guide](../guides/security.md) |
+| DevOps/Infrastructure changes | [Infrastructure Guide](../guides/infrastructure.md) |
 | Adding AI features            | AI_INTEGRATION_ROADMAP                                          |
 
 ## 📊 Report Data
@@ -65,24 +56,24 @@ When making significant changes to the codebase:
 
 All developers should familiarize themselves with:
 
-1. CODE_QUALITY_IMPROVEMENTS.md for coding standards
-2. ERROR_HANDLING_DEVELOPER_GUIDE.md for error handling patterns
-3. SECURITY_HARDENING_SUMMARY.md for security requirements
+1. [Code Quality Guide](../guides/code-quality.md) for coding standards
+2. [Error Handling Developer Guide](../error-handling/developer-guide.md) for error handling patterns
+3. [Security Guide](../guides/security.md) for security requirements
 
 ### Error Handling Quick Start
 
 If you're working with errors, start here:
 
-1. **Read:** [ERROR_HANDLING_DEVELOPER_GUIDE.md](./ERROR_HANDLING_DEVELOPER_GUIDE.md) - Overview and API reference
-2. **Copy:** [ERROR_HANDLING_COMMON_SCENARIOS.md](./ERROR_HANDLING_COMMON_SCENARIOS.md) - Find your scenario and copy the code
-3. **Debug:** [ERROR_HANDLING_TROUBLESHOOTING.md](./ERROR_HANDLING_TROUBLESHOOTING.md) - Solutions to common issues
+1. **Read:** [Error Handling Developer Guide](../error-handling/developer-guide.md) - Overview and API reference
+2. **Copy:** [Common Scenarios](../error-handling/common-scenarios.md) - Find your scenario and copy the code
+3. **Debug:** [Troubleshooting](../error-handling/troubleshooting.md) - Solutions to common issues
 
 **Common Tasks:**
 
-- Adding error handling to a route → See [Common Scenarios](./ERROR_HANDLING_COMMON_SCENARIOS.md#server-side-error-handling)
-- Handling API calls with retry → See [useApiWithRetry examples](./ERROR_HANDLING_DEVELOPER_GUIDE.md#useapiwithretry)
-- Debugging missing correlation IDs → See [Troubleshooting](./ERROR_HANDLING_TROUBLESHOOTING.md#issue-5-correlation-ids-missing)
-- Performance concerns → See [Performance Summary](./PERFORMANCE_TESTING_SUMMARY.md)
+- Adding error handling to a route → See [Common Scenarios](../error-handling/common-scenarios.md)
+- Handling API calls with retry → See [Error Handling Developer Guide](../error-handling/developer-guide.md)
+- Debugging missing correlation IDs → See [Troubleshooting](../error-handling/troubleshooting.md)
+- Performance concerns → See [Performance Metrics](../error-handling/performance-metrics.md)
 
 ---
 

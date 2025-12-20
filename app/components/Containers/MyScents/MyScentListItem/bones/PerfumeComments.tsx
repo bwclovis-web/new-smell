@@ -68,7 +68,7 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-noir-dark mb-2">
+        <p className="text-sm text-noir-gold-500 mb-2">
           {t("myScents.comments.noComments")}
         </p>
       )}

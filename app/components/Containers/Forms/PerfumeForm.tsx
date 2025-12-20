@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { Form, useSubmit } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
+import FormField from "~/components/Atoms/FormField/FormField"
 import HouseTypeahead from "~/components/Atoms/HouseTypeahead/HouseTypeahead"
 import Input from "~/components/Atoms/Input/Input"
 import { CSRFToken } from "~/components/Molecules/CSRFToken"
@@ -174,30 +175,37 @@ topNotes, heartNotes, baseNotes, formType, hideNotes
       onSubmit={onSubmit ? handleSubmit : undefined}
       className={className || "p-6 rounded-md noir-border max-w-6xl mx-auto bg-noir-dark/10 flex flex-col gap-3"}
     >
-      <Input
-        inputType="text"
-        inputRef={inputRef}
-        action={name}
-        shading={true}
-        defaultValue={data?.name || ""}
-      />
-      <Input
-        inputType="text"
-        inputRef={inputRef}
-        action={description}
-        inputId="description"
-        shading={true}
-        defaultValue={data?.description || ""}
-      />
-      {!hideImage && (
+      <FormField label="Name" error={name?.errors?.[0]} required>
         <Input
+          inputType="text"
+          action={name}
           shading={true}
+          ref={inputRef}
+          inputId="name"
+          defaultValue={data?.name || ""}
+        />
+      </FormField>
+      <FormField label="Description" error={description?.errors?.[0]}>
+        <Input
           inputType="text"
           inputRef={inputRef}
-          action={image}
-          inputId="image"
-          defaultValue={data?.image || ""}
+          action={description}
+          inputId="description"
+          shading={true}
+          defaultValue={data?.description || ""}
         />
+      </FormField>
+      {!hideImage && (
+        <FormField label="Image URL" error={image?.errors?.[0]}>
+          <Input
+            shading={true}
+            inputType="text"
+            inputRef={inputRef}
+            action={image}
+            inputId="image"
+            defaultValue={data?.image || ""}
+          />
+        </FormField>
       )}
       <div>
         <HouseTypeahead

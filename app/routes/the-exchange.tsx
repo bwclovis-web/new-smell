@@ -217,7 +217,7 @@ const TradingPostPage = () => {
                 </p>
               </div>
             ) : (
-              <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 auto-rows-fr animate-fade-in">
+              <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-fr animate-fade-in">
                 {availablePerfumes.map((perfume, index) => (
               <li key={perfume.id} className="relative animate-fade-in-item" style={{ animationDelay: `${index * 0.05}s` }}>
                 <LinkCard data={perfume} type="perfume">

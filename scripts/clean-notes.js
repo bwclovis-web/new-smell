@@ -19,6 +19,7 @@ import dotenv from "dotenv"
 import { join } from "path"
 import { dirname } from "path"
 import { fileURLToPath } from "url"
+import { normalizeName, normalizeForDuplicateDetection } from './note-utils.js'
 import { writeFileSync, mkdirSync } from "fs"
 import { existsSync } from "fs"
 
@@ -74,12 +75,6 @@ const STOPWORDS = [
 // Valid characters: letters, numbers, spaces, hyphens, apostrophes
 const VALID_CHAR_REGEX = /^[a-zA-Z0-9\s\-']+$/
 
-/**
- * Normalize note name (lowercase, trim)
- */
-function normalizeName(name) {
-  return name.trim().toLowerCase()
-}
 
 /**
  * Escape special regex characters in a string
@@ -110,17 +105,275 @@ function isStopword(name) {
 }
 
 /**
- * Extract note name from descriptive phrase
+ * Clean note name by removing trailing punctuation
+ */
+function removeTrailingPunctuation(name) {
+  return name.replace(/[.,;:!?\]\[\)\}\{]+$/g, '').trim()
+}
+
+/**
+ * Split note by slash separator
+ * Examples: "opoponax/resins" → ["opoponax", "resins"]
+ * Returns array of notes or null if no slash found
+ */
+function splitBySlash(name, existingNotes) {
+  if (!name.includes('/')) {
+    return null
+  }
+  
+  const parts = name.split('/').map(part => part.trim()).filter(part => part.length > 0)
+  if (parts.length < 2) {
+    return null
+  }
+  
+  const notes = []
+  for (const part of parts) {
+    const cleaned = removeTrailingPunctuation(part)
+    if (cleaned.length >= 2 && cleaned.length <= 50) {
+      // Check if it matches an existing note
+      const foundNote = existingNotes.find(n => 
+        normalizeName(n.name) === normalizeName(cleaned)
+      )
+      if (foundNote) {
+        notes.push(foundNote.name)
+      } else if (!isStopword(cleaned)) {
+        notes.push(cleaned)
+      }
+    }
+  }
+  
+  return notes.length > 0 ? notes : null
+}
+
+/**
+ * Detect multiple distinct notes in a phrase
+ * Examples: "the fabulous vanilla bean orchid" → ["vanilla bean", "orchid"]
+ * Returns array of extracted notes or null
+ */
+function detectMultipleDistinctNotes(name, existingNotes) {
+  const normalized = normalizeName(name)
+  let trimmed = normalized.trim()
+  trimmed = removeTrailingPunctuation(trimmed)
+  
+  const words = trimmed.split(/\s+/).filter(w => w.length > 0)
+  if (words.length < 3) {
+    return null
+  }
+  
+  // Look for patterns where the last word(s) might be a separate note
+  // e.g., "the fabulous vanilla bean orchid" - "orchid" is likely separate from "vanilla bean"
+  
+  // Common note endings that might indicate a separate note
+  const commonNoteEndings = ['orchid', 'rose', 'lily', 'jasmine', 'iris', 'violet', 'peony', 'tulip', 'daisy', 'lavender', 'mint', 'basil', 'sage', 'thyme', 'cedar', 'pine', 'oak', 'amber', 'musk', 'sandalwood', 'patchouli', 'vanilla', 'cinnamon', 'clove', 'nutmeg', 'ginger', 'pepper', 'bergamot', 'lemon', 'orange', 'lime', 'grapefruit', 'mandarin', 'tangerine', 'apple', 'pear', 'peach', 'berry', 'cherry', 'plum', 'fig', 'coconut', 'almond', 'hazelnut', 'walnut', 'coffee', 'tea', 'chocolate', 'honey', 'sugar', 'caramel', 'toffee', 'cream', 'milk', 'butter', 'leather', 'tobacco', 'smoke', 'incense', 'frankincense', 'myrrh', 'benzoin', 'labdanum', 'opoponax', 'resin', 'resins', 'balsam', 'wood', 'woods', 'bean', 'beans']
+  
+  // Check if last 1-2 words match a common note ending
+  for (let i = 1; i <= 2; i++) {
+    if (words.length < i + 2) break // Need at least 2 words before the ending
+    
+    const lastWords = words.slice(-i).join(' ')
+    const beforeLast = words.slice(0, -i).join(' ')
+    
+    // Check if last word(s) is a known note ending
+    const isKnownNote = commonNoteEndings.some(ending => 
+      normalizeName(lastWords) === normalizeName(ending) || 
+      normalizeName(lastWords).endsWith(normalizeName(ending))
+    )
+    
+    // Also check if it exists as a note in the database
+    const foundNote = existingNotes.find(n => 
+      normalizeName(n.name) === normalizeName(lastWords)
+    )
+    
+    if (isKnownNote || foundNote) {
+      // Try to extract the first part as a note
+      // Remove leading articles/adjectives like "the fabulous"
+      let firstPart = beforeLast
+      // Remove multiple leading adjectives/articles
+      firstPart = firstPart.replace(/^(the|a|an)\s+(fabulous|delicate|subtle|strong|soft|light|heavy|faint|intense|rich|deep|fresh|warm|cool|sweet|bitter|spicy|floral|woody|citrus)\s+/i, '')
+      firstPart = firstPart.replace(/^(the|a|an|fabulous|delicate|subtle|strong|soft|light|heavy|faint|intense|rich|deep|fresh|warm|cool|sweet|bitter|spicy|floral|woody|citrus)\s+/i, '')
+      
+      // Check if firstPart itself is a known note (e.g., "vanilla bean")
+      const foundFirstNote = existingNotes.find(n => 
+        normalizeName(n.name) === normalizeName(firstPart)
+      )
+      
+      if (foundFirstNote) {
+        const lastNote = foundNote ? foundNote.name : lastWords
+        // Make sure we're not returning the same note twice
+        if (normalizeName(foundFirstNote.name) !== normalizeName(lastNote)) {
+          return [foundFirstNote.name, lastNote]
+        }
+      } else {
+        // Try to extract note from first part
+        const extractedFirst = extractSingleNoteFromPhrase(firstPart, existingNotes)
+        if (extractedFirst) {
+          const lastNote = foundNote ? foundNote.name : lastWords
+          // Make sure we're not returning the same note twice
+          if (normalizeName(extractedFirst) !== normalizeName(lastNote)) {
+            return [extractedFirst, lastNote]
+          }
+        } else {
+          // If extraction failed, try the original beforeLast (might be a multi-word note)
+          const extractedOriginal = extractSingleNoteFromPhrase(beforeLast, existingNotes)
+          if (extractedOriginal) {
+            const lastNote = foundNote ? foundNote.name : lastWords
+            if (normalizeName(extractedOriginal) !== normalizeName(lastNote)) {
+              return [extractedOriginal, lastNote]
+            }
+          } else {
+            // Last resort: check if beforeLast (after removing articles) is a valid note name
+            // e.g., "vanilla bean" might not be in DB but is a valid note
+            const cleanedBeforeLast = beforeLast.replace(/^(the|a|an)\s+(fabulous|delicate|subtle|strong|soft|light|heavy|faint|intense|rich|deep|fresh|warm|cool|sweet|bitter|spicy|floral|woody|citrus)\s+/i, '')
+              .replace(/^(the|a|an|fabulous|delicate|subtle|strong|soft|light|heavy|faint|intense|rich|deep|fresh|warm|cool|sweet|bitter|spicy|floral|woody|citrus)\s+/i, '').trim()
+            if (cleanedBeforeLast.length >= 2 && cleanedBeforeLast.length <= 50 && !isStopword(cleanedBeforeLast)) {
+              const wordCount = cleanedBeforeLast.split(/\s+/).length
+              if (wordCount >= 1 && wordCount <= 5) {
+                const lastNote = foundNote ? foundNote.name : lastWords
+                if (normalizeName(cleanedBeforeLast) !== normalizeName(lastNote)) {
+                  return [cleanedBeforeLast, lastNote]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  return null
+}
+
+/**
+ * Extract multiple notes from a phrase (handles "and", commas, slashes, etc.)
+ * Examples: 
+ *   "dragon's blood and a river of wine" → ["dragon's blood", "river of wine"]
+ *   "patchouli and orange blossom on a resinous bed of labdanum.]" → ["patchouli", "orange blossom", "labdanum"]
+ *   "opoponax/resins" → ["opoponax", "resins"]
+ *   "the fabulous vanilla bean orchid" → ["vanilla bean", "orchid"]
+ * Returns array of extracted notes or null
+ */
+function extractMultipleNotes(name, existingNotes) {
+  const normalized = normalizeName(name)
+  let cleaned = normalized.trim()
+  
+  // First check for slash-separated notes
+  const slashSplit = splitBySlash(cleaned, existingNotes)
+  if (slashSplit && slashSplit.length > 0) {
+    return slashSplit
+  }
+  
+  // Remove trailing punctuation (., ], }, etc.)
+  cleaned = removeTrailingPunctuation(cleaned)
+  
+  const notes = []
+  
+  // Handle complex phrases like "patchouli and orange blossom on a resinous bed of labdanum"
+  // Extract notes before "on a", "in a", "of a", etc.
+  const complexPattern = /^(.+?)\s+(?:on|in|at|over|under|within|inside)\s+(?:a|an|the)\s+(?:resinous|bed|base|foundation|layer|mix|blend)\s+(?:of|with)\s+(.+)$/i
+  const complexMatch = cleaned.match(complexPattern)
+  if (complexMatch) {
+    // Extract notes from the first part (before "on a resinous bed")
+    const firstPart = complexMatch[1].trim()
+    const lastPart = complexMatch[2].trim()
+    
+    // Extract from first part (may contain "and")
+    if (firstPart.includes(' and ')) {
+      const andSplit = firstPart.split(/\s+and\s+/i)
+      for (let part of andSplit) {
+        part = removeTrailingPunctuation(part.trim())
+        const extracted = extractSingleNoteFromPhrase(part, existingNotes)
+        if (extracted) {
+          notes.push(extracted)
+        }
+      }
+    } else {
+      const extracted = extractSingleNoteFromPhrase(firstPart, existingNotes)
+      if (extracted) {
+        notes.push(extracted)
+      }
+    }
+    
+    // Extract from last part (the note after "bed of")
+    const lastExtracted = extractSingleNoteFromPhrase(lastPart, existingNotes)
+    if (lastExtracted) {
+      notes.push(lastExtracted)
+    }
+    
+    if (notes.length > 0) {
+      return notes
+    }
+  }
+  
+  // Split by "and" (but be careful with "dragon's blood" - apostrophes are valid)
+  // Use word boundary for "and" to avoid splitting "land" or "sand"
+  const andSplit = cleaned.split(/\s+and\s+/i)
+  
+  if (andSplit.length > 1) {
+    // Multiple notes separated by "and"
+    for (let part of andSplit) {
+      part = part.trim()
+      // Remove leading articles and prepositions
+      part = part.replace(/^(a|an|the)\s+/i, '')
+      part = part.replace(/^(of|on|in|at|to|for|with|from|by)\s+/i, '')
+      part = removeTrailingPunctuation(part)
+      
+      // Try to extract note from this part
+      const extracted = extractSingleNoteFromPhrase(part, existingNotes)
+      if (extracted) {
+        notes.push(extracted)
+      }
+    }
+    if (notes.length > 0) {
+      return notes
+    }
+  }
+  
+  // Try comma-separated notes
+  const commaSplit = cleaned.split(/,/).map(s => s.trim())
+  if (commaSplit.length > 1) {
+    for (let part of commaSplit) {
+      part = removeTrailingPunctuation(part.trim())
+      const extracted = extractSingleNoteFromPhrase(part, existingNotes)
+      if (extracted) {
+        notes.push(extracted)
+      }
+    }
+    if (notes.length > 1) {
+      return notes
+    }
+  }
+  
+  // Try to detect multiple distinct notes (e.g., "the fabulous vanilla bean orchid")
+  const distinctNotes = detectMultipleDistinctNotes(cleaned, existingNotes)
+  if (distinctNotes && distinctNotes.length > 1) {
+    return distinctNotes
+  }
+  
+  return null
+}
+
+/**
+ * Extract a single note name from descriptive phrase
  * Examples: "the delicate scent of roses" → "roses", "a hint of vanilla" → "vanilla"
  * Returns null if no note can be extracted
  */
-function extractNoteFromPhrase(name, existingNotes) {
-  const normalized = normalizeName(name)
-  const trimmed = normalized.trim()
+function extractSingleNoteFromPhrase(name, existingNotes) {
+  let normalized = normalizeName(name)
+  let trimmed = normalized.trim()
+  
+  // Remove trailing punctuation
+  trimmed = removeTrailingPunctuation(trimmed)
+  
   const words = trimmed.split(/\s+/).filter(w => w.length > 0)
   
   // Patterns that indicate a note name follows
   const extractionPatterns = [
+    // "soaked in [note]" - captures "black tea" from "petites madeleines soaked in black tea"
+    /soaked\s+in\s+(\w+(?:\s+\w+){0,4})/i,
+    // "hints of [note]" or "hint of [note]" - captures "musk" from "along with hints of musk"
+    /(?:along\s+with\s+)?hints?\s+of\s+(\w+(?:\s+\w+){0,4})/i,
+    // "touch of [note]" - captures note from "a touch of [note]"
+    /(?:a\s+)?touch\s+of\s+(?:the\s+)?(\w+(?:\s+\w+){0,4})/i,
     // "smells like: [adjective] [note]" - captures "vanilla" from "smells like: velvety vanilla"
     // Try to capture just the note name (last word(s)) if there's an adjective
     /smells?\s+like:?\s+(?:(?:velvety|delicate|subtle|strong|soft|light|heavy|faint|intense|rich|deep|fresh|warm|cool|sweet|bitter|spicy|floral|woody|citrus)\s+)?(\w+(?:\s+\w+){0,4})/i,
@@ -156,8 +409,8 @@ function extractNoteFromPhrase(name, existingNotes) {
         continue
       }
       
-      // Try to strip common adjectives from the beginning (e.g., "velvety vanilla" → "vanilla")
-      const adjectives = ['velvety', 'delicate', 'subtle', 'strong', 'soft', 'light', 'heavy', 'faint', 'intense', 'rich', 'deep', 'fresh', 'warm', 'cool', 'sweet', 'bitter', 'spicy', 'floral', 'woody', 'citrus', 'creamy', 'smooth', 'sharp', 'mellow']
+      // Try to strip common adjectives from the beginning (e.g., "velvety vanilla" → "vanilla", "fresh sugared ginger" → "sugared ginger")
+      const adjectives = ['velvety', 'delicate', 'subtle', 'strong', 'soft', 'light', 'heavy', 'faint', 'intense', 'rich', 'deep', 'fresh', 'warm', 'cool', 'sweet', 'bitter', 'spicy', 'floral', 'woody', 'citrus', 'creamy', 'smooth', 'sharp', 'mellow', 'ancient', 'white', 'black', 'red', 'green', 'blue', 'yellow']
       let cleanedExtracted = extracted
       const extractedWords = extracted.split(/\s+/)
       if (extractedWords.length > 1 && adjectives.includes(normalizeName(extractedWords[0]))) {
@@ -217,11 +470,10 @@ function extractNoteFromPhrase(name, existingNotes) {
     }
   }
   
-  // Last resort: try to extract the last significant word(s) if phrase is short
   // Look for patterns like "smells like: [note]" at the end
   const smellsLikeMatch = trimmed.match(/smells?\s+like:?\s+(.+)$/i)
   if (smellsLikeMatch && smellsLikeMatch[1]) {
-    const candidate = smellsLikeMatch[1].trim()
+    const candidate = removeTrailingPunctuation(smellsLikeMatch[1].trim())
     if (candidate.length >= 2 && candidate.length <= 50) {
       const wordCount = candidate.split(/\s+/).length
       if (wordCount >= 1 && wordCount <= 5 && !isStopword(candidate)) {
@@ -237,10 +489,67 @@ function extractNoteFromPhrase(name, existingNotes) {
     }
   }
   
+  // Try to extract meaningful phrases like "autumnal forest" from "fallen leaves deep in the autumnal forest"
+  // Look for patterns like "in the [note]", "of [note]", "on a [note]", etc.
+  // Prefer longer, more specific phrases at the end
+  const phrasePatterns = [
+    // "deep in the autumnal forest" → "autumnal forest"
+    /(?:deep|deeply|within|inside)\s+(?:in|the|a|an)?\s*(\w+(?:\s+\w+){0,4})/i,
+    // "in the autumnal forest" → "autumnal forest"
+    /(?:in|on|of|at|to|for|with|from|by)\s+(?:the|a|an)?\s*(\w+(?:\s+\w+){0,4})/i,
+    // "on a resinous bed of labdanum" → "labdanum"
+    /(?:on|in|at|over|under)\s+(?:a|an|the)\s+(?:\w+\s+)*bed\s+of\s+(\w+(?:\s+\w+){0,4})/i,
+  ]
+  
+  for (const pattern of phrasePatterns) {
+    const matches = [...trimmed.matchAll(new RegExp(pattern.source, 'gi'))]
+    // Take the last match (most likely the actual note at the end)
+    if (matches.length > 0) {
+      const lastMatch = matches[matches.length - 1]
+      if (lastMatch && lastMatch[1]) {
+        let candidate = removeTrailingPunctuation(lastMatch[1].trim())
+        
+        // If candidate is just one word, try to get 2-3 words for context
+        // e.g., "autumnal forest" instead of just "forest"
+        if (candidate.split(/\s+/).length === 1 && words.length > 1) {
+          const candidateIndex = trimmed.lastIndexOf(candidate)
+          if (candidateIndex > 0) {
+            // Try to get the word before it too
+            const beforeCandidate = trimmed.substring(0, candidateIndex).trim()
+            const beforeWords = beforeCandidate.split(/\s+/)
+            if (beforeWords.length > 0) {
+              const lastBeforeWord = beforeWords[beforeWords.length - 1]
+              // If it's an adjective or descriptive word, include it
+              if (!isStopword(lastBeforeWord) && lastBeforeWord.length > 2) {
+                candidate = `${lastBeforeWord} ${candidate}`
+              }
+            }
+          }
+        }
+        
+        candidate = removeTrailingPunctuation(candidate.trim())
+        if (candidate.length >= 2 && candidate.length <= 50) {
+          const wordCount = candidate.split(/\s+/).length
+          if (wordCount >= 1 && wordCount <= 5 && !isStopword(candidate)) {
+            // Check if it matches an existing note
+            const foundNote = existingNotes.find(n => 
+              normalizeName(n.name) === normalizeName(candidate)
+            )
+            if (foundNote) {
+              return foundNote.name
+            }
+            return candidate
+          }
+        }
+      }
+    }
+  }
+  
   // Try last 1-5 words as potential note name (for multi-word notes like "frosted pumpkin pecan cookies")
   if (words.length >= 3 && words.length <= 10) {
     for (let i = 1; i <= 5; i++) {
-      const candidate = words.slice(-i).join(' ')
+      let candidate = words.slice(-i).join(' ')
+      candidate = removeTrailingPunctuation(candidate)
       if (candidate.length <= 50 && candidate.length >= 2) {
         // Skip if it's a stopword
         if (isStopword(candidate)) {
@@ -268,13 +577,49 @@ function extractNoteFromPhrase(name, existingNotes) {
 }
 
 /**
+ * Extract note name from descriptive phrase (handles multiple notes)
+ * Examples: 
+ *   "the delicate scent of roses" → "roses"
+ *   "dragon's blood and a river of wine" → ["dragon's blood", "river of wine"]
+ *   "fallen leaves deep in the autumnal forest." → "autumnal forest"
+ *   "patchouli and orange blossom on a resinous bed of labdanum.]" → ["patchouli", "orange blossom", "labdanum"]
+ * Returns string (single note) or array (multiple notes) or null
+ */
+function extractNoteFromPhrase(name, existingNotes) {
+  // First try to extract multiple notes
+  const multipleNotes = extractMultipleNotes(name, existingNotes)
+  if (multipleNotes && multipleNotes.length > 0) {
+    // Return array if multiple, single value if one
+    return multipleNotes.length === 1 ? multipleNotes[0] : multipleNotes
+  }
+  
+  // Fall back to single note extraction
+  return extractSingleNoteFromPhrase(name, existingNotes)
+}
+
+/**
  * Check if note is a descriptive phrase/sentence (not a valid perfume note)
  * Examples: "fall part one", "none of us really changes over time", "a tendril of smoke lighter"
  * Also includes phrases that can have notes extracted: "the delicate scent of roses"
  */
 function isDescriptivePhrase(name) {
   const normalized = normalizeName(name)
-  const trimmed = normalized.trim()
+  let trimmed = normalized.trim()
+  
+  // Remove trailing punctuation for length check
+  trimmed = removeTrailingPunctuation(trimmed)
+  
+  // Check if it's a valid multi-word note that should be kept as-is
+  // Examples: "white birch wood", "ancient white oak", "crisp paper", "sweet red apple"
+  const validMultiWordNotes = [
+    'white birch wood', 'ancient white oak', 'black tea', 'green tea', 'white tea',
+    'white musk', 'black musk', 'red musk', 'white amber', 'black amber',
+    'white woods', 'black pepper', 'white pepper', 'pink pepper',
+    'crisp paper', 'sweet red apple'
+  ]
+  if (validMultiWordNotes.includes(trimmed)) {
+    return false // Don't treat as descriptive phrase
+  }
   
   // Too long to be a perfume note (allow up to 50 chars for multi-word notes like "frosted pumpkin pecan cookies")
   if (trimmed.length > 50) {
@@ -287,6 +632,25 @@ function isDescriptivePhrase(name) {
   const words = trimmed.split(/\s+/).filter(w => w.length > 0)
   if (words.length >= 6) {
     return true
+  }
+  
+  // Phrases that should be removed (no extractable notes)
+  // Patterns like "tad dirty - tone that is very alluring...", "with every inhale", "he spritzes a touch of the 80s"
+  const removePatterns = [
+    /^tad\s+\w+.*alluring/i,
+    /^tone\s+that\s+is/i,
+    /^very\s+alluring/i,
+    /^.*-\s+tone\s+that/i,
+    /^with\s+every\s+inhale/i,
+    /^he\s+spritzes/i,
+    /^.*touch\s+of\s+the\s+\d+s$/i, // "touch of the 80s"
+    /^.*\d+s$/i, // Ends with decade like "80s"
+  ]
+  
+  for (const pattern of removePatterns) {
+    if (pattern.test(trimmed)) {
+      return true
+    }
   }
   
   // Contains common phrase patterns that should be removed (no extraction possible)
@@ -389,11 +753,11 @@ async function identifyDuplicates() {
     }
   })
   
-  // Group by normalized name
+  // Group by normalized name (using space-to-hyphen normalization for duplicate detection)
   const notesByName = new Map()
   
   for (const note of allNotes) {
-    const normalizedName = normalizeName(note.name)
+    const normalizedName = normalizeForDuplicateDetection(note.name)
     
     if (!notesByName.has(normalizedName)) {
       notesByName.set(normalizedName, [])
@@ -411,11 +775,27 @@ async function identifyDuplicates() {
         relationCount: note.perfumeNoteRelations.length
       }))
       
-      // Sort by relation count (desc), then by createdAt (asc)
+      // Sort by:
+      // 1. Prefer hyphenated version (e.g., "lily-of-the-valley" over "lily of the valley")
+      // 2. Then by relation count (desc)
+      // 3. Then by createdAt (asc)
       notesWithCounts.sort((a, b) => {
+        // First, prefer hyphenated version
+        const aHasHyphens = a.name.includes('-')
+        const bHasHyphens = b.name.includes('-')
+        if (aHasHyphens && !bHasHyphens) {
+          return -1 // Prefer a (hyphenated)
+        }
+        if (!aHasHyphens && bHasHyphens) {
+          return 1 // Prefer b (hyphenated)
+        }
+        
+        // If both have same format, sort by relation count
         if (b.relationCount !== a.relationCount) {
           return b.relationCount - a.relationCount
         }
+        
+        // Finally, by creation date (older first)
         return a.createdAt.getTime() - b.createdAt.getTime()
       })
       
@@ -487,9 +867,10 @@ async function mergeDuplicates(duplicates, isDryRun) {
   let mergedCount = 0
   let relationsUpdatedCount = 0
   
-  // Use transaction for safety
-  await prisma.$transaction(async (tx) => {
-    for (const dup of duplicates) {
+  // Use transaction for safety - increase timeout for large operations (2 minutes)
+  await prisma.$transaction(
+    async (tx) => {
+      for (const dup of duplicates) {
       const canonicalNote = dup.notes[0] // Most used (or oldest if tie)
       const notesToMerge = dup.notes.slice(1)
       
@@ -550,6 +931,9 @@ async function mergeDuplicates(duplicates, isDryRun) {
         }
       }
     }
+  }, {
+    maxWait: 120000, // 2 minutes max wait for transaction to start
+    timeout: 120000, // 2 minutes timeout for transaction execution
   })
   
   console.log(`\n✅ Phase 1 complete: Merged ${mergedCount} duplicate notes, updated ${relationsUpdatedCount} relations\n`)
@@ -567,6 +951,11 @@ async function identifyInvalidNotes() {
   
   const invalidNotes = []
   for (const note of allNotes) {
+    // Skip slash-separated notes - they'll be handled in Phase 3
+    if (note.name.includes('/')) {
+      continue
+    }
+    
     if (!isValidNoteName(note.name)) {
       const cleanedName = cleanNoteName(note.name)
       if (cleanedName.length === 0) {
@@ -638,9 +1027,22 @@ async function cleanInvalidNotes(invalidNotes, isDryRun) {
   let deletedCount = 0
   let relationsUpdatedCount = 0
   
-  // Use transaction for safety
-  await prisma.$transaction(async (tx) => {
-    for (const item of invalidNotes) {
+  // Process in batches to avoid transaction timeouts
+  const BATCH_SIZE = 50
+  const batches = []
+  for (let i = 0; i < invalidNotes.length; i += BATCH_SIZE) {
+    batches.push(invalidNotes.slice(i, i + BATCH_SIZE))
+  }
+  
+  console.log(`📦 Processing ${invalidNotes.length} invalid notes in ${batches.length} batch(es) of ${BATCH_SIZE}...\n`)
+  
+  for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+    const batch = batches[batchIndex]
+    console.log(`\n🔄 Processing batch ${batchIndex + 1}/${batches.length} (${batch.length} items)...`)
+    
+    // Use transaction for safety - increase timeout for large operations
+    await prisma.$transaction(async (tx) => {
+      for (const item of batch) {
       try {
         const { note, action, cleanedName } = item
         
@@ -738,6 +1140,78 @@ async function cleanInvalidNotes(invalidNotes, isDryRun) {
 }
 
 /**
+ * Extract note from stopword-prefixed phrase
+ * Examples: "and vanilla" → "vanilla", "of roses" → "roses", "base Bourbon Vetiver" → "Bourbon Vetiver"
+ */
+function extractNoteFromStopwordPrefix(name, existingNotes) {
+  const normalized = normalizeName(name)
+  const trimmed = normalized.trim()
+  const words = trimmed.split(/\s+/).filter(w => w.length > 0)
+  
+  // Remove "base" prefix (e.g., "base Bourbon Vetiver" → "Bourbon Vetiver")
+  if (words.length > 1 && normalizeName(words[0]) === 'base') {
+    const candidate = words.slice(1).join(' ')
+    
+    // Check if candidate matches an existing note
+    const foundNote = existingNotes.find(n => 
+      normalizeName(n.name) === normalizeName(candidate)
+    )
+    if (foundNote) {
+      return foundNote.name
+    }
+    
+    // Check if candidate is a valid note
+    const wordCount = candidate.split(/\s+/).length
+    if (wordCount >= 1 && wordCount <= 5 && candidate.length <= 50 && !isStopword(candidate)) {
+      return candidate
+    }
+  }
+  
+  // If first word is a stopword, try to extract the note from the rest
+  if (words.length > 1 && isStopword(words[0])) {
+    const candidate = words.slice(1).join(' ')
+    
+    // Check if candidate matches an existing note
+    const foundNote = existingNotes.find(n => 
+      normalizeName(n.name) === normalizeName(candidate)
+    )
+    if (foundNote) {
+      return foundNote.name
+    }
+    
+    // Check if candidate is a valid note (1-5 words, reasonable length, not a stopword)
+    const wordCount = candidate.split(/\s+/).length
+    if (wordCount >= 1 && wordCount <= 5 && candidate.length <= 50 && !isStopword(candidate)) {
+      return candidate
+    }
+  }
+  
+  return null
+}
+
+/**
+ * Clean note by removing suffixes like "& more", "and more", etc.
+ * Examples: "vanilla & more" → "vanilla", "rose and more" → "rose"
+ */
+function removeSuffixes(name) {
+  const normalized = normalizeName(name)
+  let trimmed = normalized.trim()
+  
+  // Remove common suffixes
+  const suffixes = [
+    /\s+&\s+more$/i,
+    /\s+and\s+more$/i,
+    /\s+&$/, // Just "&" at the end
+  ]
+  
+  for (const suffix of suffixes) {
+    trimmed = trimmed.replace(suffix, '').trim()
+  }
+  
+  return trimmed.length > 0 && trimmed !== normalized ? trimmed : null
+}
+
+/**
  * Phase 3: Identify stopwords and descriptive phrases
  */
 async function identifyStopwords() {
@@ -753,15 +1227,108 @@ async function identifyStopwords() {
   const extractablePhrases = []
   
   for (const note of allNotes) {
+    // Skip notes that are already valid and shouldn't be modified
+    // Check if the note name (normalized) matches a known valid note pattern
+    const normalized = normalizeName(note.name)
+    let trimmed = removeTrailingPunctuation(normalized.trim())
+    
+    // First, check if we need to remove suffixes like "& more"
+    const cleanedSuffix = removeSuffixes(note.name)
+    if (cleanedSuffix && cleanedSuffix !== normalized) {
+      // This note has a suffix that should be removed - treat it as extractable
+      const extractedFromSuffix = extractNoteFromStopwordPrefix(cleanedSuffix, allNotes) || cleanedSuffix
+      extractablePhrases.push({ note, type: 'suffix-removal', extractedNote: extractedFromSuffix })
+      continue
+    }
+    
+    // Valid multi-word notes that should be kept as-is
+    const validMultiWordNotes = [
+      'white birch wood', 'ancient white oak', 'black tea', 'green tea', 'white tea',
+      'white musk', 'black musk', 'red musk', 'white amber', 'black amber',
+      'white woods', 'black pepper', 'white pepper', 'pink pepper',
+      'crisp paper', 'sweet red apple', 'sugared ginger', 'motor oil', 'dirt', 'coppery blood'
+    ]
+    
+    if (validMultiWordNotes.includes(trimmed)) {
+      continue // Skip this note, it's already valid
+    }
+    
+    // Also check patterns for similar valid notes
+    const validMultiWordPatterns = [
+      /^(white|black|red|green|ancient)\s+\w+\s+wood$/i, // "white birch wood"
+      /^(white|black|ancient)\s+\w+\s+oak$/i, // "ancient white oak"
+      /^(crisp)\s+\w+$/i, // "crisp paper"
+      /^(sweet)\s+(red|green|white|black)\s+\w+$/i, // "sweet red apple"
+      /^(motor)\s+oil$/i, // "motor oil"
+      /^(coppery)\s+blood$/i, // "coppery blood"
+    ]
+    
+    let isValidNote = false
+    for (const pattern of validMultiWordPatterns) {
+      if (pattern.test(trimmed)) {
+        isValidNote = true
+        break
+      }
+    }
+    
+    if (isValidNote) {
+      continue // Skip this note, it's already valid
+    }
+    
+    // First check for slash-separated notes (e.g., "opoponax/resins")
+    const slashSplit = splitBySlash(note.name, allNotes)
+    if (slashSplit && slashSplit.length > 1) {
+      extractablePhrases.push({ note, type: 'slash-separated', extractedNote: slashSplit })
+      continue
+    }
+    
+    // Check if it's a pure stopword (just the stopword itself)
     if (isStopword(note.name)) {
       invalidNotes.push({ note, type: 'stopword', extractedNote: null })
-    } else if (isDescriptivePhrase(note.name)) {
-      // Try to extract a note from the phrase
-      const extractedNote = extractNoteFromPhrase(note.name, allNotes)
-      if (extractedNote) {
-        extractablePhrases.push({ note, type: 'extractable', extractedNote })
-      } else {
-        invalidNotes.push({ note, type: 'descriptive', extractedNote: null })
+    } 
+    // Check if it starts with a stopword (e.g., "and vanilla")
+    else {
+      const extractedFromStopword = extractNoteFromStopwordPrefix(note.name, allNotes)
+      if (extractedFromStopword) {
+        // After removing stopword prefix, check if there are multiple distinct notes
+        // e.g., "the fabulous vanilla bean orchid" → "fabulous vanilla bean orchid" → should be ["vanilla bean", "orchid"]
+        const afterStopwordRemoval = note.name.replace(/^(the|a|an|and|of|with|but|or|in|on|at|to|for|from|by)\s+/i, '').trim()
+        const distinctNotes = detectMultipleDistinctNotes(afterStopwordRemoval, allNotes)
+        if (distinctNotes && distinctNotes.length > 1) {
+          extractablePhrases.push({ note, type: 'multiple-distinct', extractedNote: distinctNotes })
+        } else {
+          extractablePhrases.push({ note, type: 'stopword-prefix', extractedNote: extractedFromStopword })
+        }
+      }
+      // Check if it's a descriptive phrase
+      // NOTE: Descriptive phrases are now handled by AI script for better accuracy
+      // We'll mark them for AI processing instead of trying to extract here
+      else if (isDescriptivePhrase(note.name)) {
+        // Skip simple cases that we can handle with rules (like "& more" suffix, "base" prefix)
+        const cleanedSuffix = removeSuffixes(note.name)
+        if (cleanedSuffix && cleanedSuffix !== normalizeName(note.name)) {
+          // Simple suffix removal - handle it here
+          const extractedFromSuffix = extractNoteFromStopwordPrefix(cleanedSuffix, allNotes) || cleanedSuffix
+          extractablePhrases.push({ note, type: 'suffix-removal', extractedNote: extractedFromSuffix })
+        } else {
+          // For now, still try rule-based extraction as fallback
+          // But mark complex ones for AI processing in the complete workflow
+          const extractedNote = extractNoteFromPhrase(note.name, allNotes)
+          if (extractedNote) {
+            extractablePhrases.push({ note, type: 'extractable', extractedNote })
+          } else {
+            // No extraction possible with rules - mark for AI
+            invalidNotes.push({ note, type: 'descriptive-ai', extractedNote: null })
+          }
+        }
+      }
+      // Check for multiple distinct notes even if not a descriptive phrase
+      // (e.g., "the fabulous vanilla bean orchid" might not be caught by isDescriptivePhrase)
+      else {
+        const distinctNotes = detectMultipleDistinctNotes(note.name, allNotes)
+        if (distinctNotes && distinctNotes.length > 1) {
+          extractablePhrases.push({ note, type: 'multiple-distinct', extractedNote: distinctNotes })
+        }
       }
     }
   }
@@ -795,15 +1362,18 @@ async function removeStopwords(identificationResults, isDryRun) {
     console.log("  Phrases with extractable notes:")
     if (isDryRun) {
       addToReport("### Phrases with Extractable Notes\n\n")
-      addToReport("| Original Phrase | Extracted Note | Relations |\n")
-      addToReport("|-----------------|----------------|-----------|\n")
+      addToReport("| Original Phrase | Extracted Note(s) | Type | Relations |\n")
+      addToReport("|-----------------|-------------------|------|-----------|\n")
     }
     for (const item of extractablePhrases) {
       const relationCount = item.note.perfumeNoteRelations.length
-      const msg = `  🔧 "${item.note.name}" → "${item.extractedNote}" (${relationCount} relations will be reassociated)`
+      const typeLabel = item.type === 'stopword-prefix' ? 'stopword-prefix' : 'descriptive'
+      const extractedNotes = Array.isArray(item.extractedNote) ? item.extractedNote : [item.extractedNote]
+      const extractedDisplay = extractedNotes.map(n => `"${n}"`).join(', ')
+      const msg = `  🔧 "${item.note.name}" → ${extractedDisplay} (${relationCount} relations will be reassociated)`
       console.log(msg)
       if (isDryRun) {
-        addToReport(`| "${item.note.name}" | "${item.extractedNote}" | ${relationCount} |\n`)
+        addToReport(`| "${item.note.name}" | ${extractedDisplay} | ${typeLabel} | ${relationCount} |\n`)
       }
     }
     console.log("")
@@ -858,13 +1428,15 @@ async function removeStopwords(identificationResults, isDryRun) {
   let relationsRemovedCount = 0
   let relationsReassociatedCount = 0
   
-  // Use transaction for safety
+  // Use transaction for safety - increase timeout for large operations
   await prisma.$transaction(async (tx) => {
     // First, handle extractable phrases
     for (const item of extractablePhrases) {
       try {
         const { note, extractedNote } = item
-        console.log(`\n🔧 Processing phrase "${note.name}" → extracting "${extractedNote}"`)
+        const extractedNotes = Array.isArray(extractedNote) ? extractedNote : [extractedNote]
+        
+        console.log(`\n🔧 Processing phrase "${note.name}" → extracting ${extractedNotes.length > 1 ? 'notes' : 'note'}: ${extractedNotes.map(n => `"${n}"`).join(', ')}`)
         
         // Get all relations
         const relations = await tx.perfumeNoteRelation.findMany({
@@ -873,49 +1445,66 @@ async function removeStopwords(identificationResults, isDryRun) {
         
         console.log(`   Found ${relations.length} relations to reassociate`)
         
-        // Find or create the extracted note
-        let targetNote = await tx.perfumeNotes.findUnique({
-          where: { name: extractedNote }
-        })
-        
-        if (!targetNote) {
-          // Create the extracted note
-          targetNote = await tx.perfumeNotes.create({
-            data: { name: extractedNote }
-          })
-          console.log(`   Created note: "${extractedNote}"`)
-        } else {
-          console.log(`   Found existing note: "${extractedNote}"`)
-        }
-        
-        // Reassociate relations
-        for (const relation of relations) {
-          // Check if target note already has this relation
-          const existingRelation = await tx.perfumeNoteRelation.findUnique({
-            where: {
-              perfumeId_noteId_noteType: {
-                perfumeId: relation.perfumeId,
-                noteId: targetNote.id,
-                noteType: relation.noteType
-              }
-            }
+        // Find or create all extracted notes
+        const targetNotes = []
+        for (const extracted of extractedNotes) {
+          let targetNote = await tx.perfumeNotes.findUnique({
+            where: { name: extracted }
           })
           
-          if (existingRelation) {
-            // Relation already exists, delete duplicate
-            await tx.perfumeNoteRelation.delete({
-              where: { id: relation.id }
+          if (!targetNote) {
+            // Create the extracted note
+            targetNote = await tx.perfumeNotes.create({
+              data: { name: extracted }
             })
-            console.log(`   → Removed duplicate relation (already exists for extracted note)`)
+            console.log(`   Created note: "${extracted}"`)
           } else {
-            // Update relation to point to extracted note
-            await tx.perfumeNoteRelation.update({
-              where: { id: relation.id },
-              data: { noteId: targetNote.id }
-            })
-            console.log(`   → Reassociated relation to extracted note`)
+            console.log(`   Found existing note: "${extracted}"`)
           }
-          relationsReassociatedCount++
+          targetNotes.push(targetNote)
+        }
+        
+        // Reassociate relations to all extracted notes
+        // If multiple notes extracted, create relations to all of them (perfume has all these notes)
+        for (const relation of relations) {
+          let relationProcessed = false
+          
+          for (const targetNote of targetNotes) {
+            // Check if target note already has this relation
+            const existingRelation = await tx.perfumeNoteRelation.findUnique({
+              where: {
+                perfumeId_noteId_noteType: {
+                  perfumeId: relation.perfumeId,
+                  noteId: targetNote.id,
+                  noteType: relation.noteType
+                }
+              }
+            })
+            
+            if (!existingRelation) {
+              // Create relation to this extracted note
+              await tx.perfumeNoteRelation.create({
+                data: {
+                  perfumeId: relation.perfumeId,
+                  noteId: targetNote.id,
+                  noteType: relation.noteType
+                }
+              })
+              relationProcessed = true
+              relationsReassociatedCount++
+            }
+          }
+          
+          // Delete the original relation (we've created new ones for extracted notes)
+          await tx.perfumeNoteRelation.delete({
+            where: { id: relation.id }
+          })
+          
+          if (relationProcessed) {
+            console.log(`   → Reassociated relation to ${targetNotes.length} extracted note(s)`)
+          } else {
+            console.log(`   → Removed relation (all extracted notes already have this relation)`)
+          }
         }
         
         // Delete the phrase note
@@ -923,7 +1512,7 @@ async function removeStopwords(identificationResults, isDryRun) {
           where: { id: note.id }
         })
         
-        console.log(`   ✅ Extracted note and reassociated ${relations.length} relations`)
+        console.log(`   ✅ Extracted ${extractedNotes.length} note(s) and reassociated ${relations.length} relations`)
       } catch (error) {
         console.error(`   ❌ Error processing: ${error.message}`)
         throw error // Rollback transaction
@@ -952,7 +1541,14 @@ async function removeStopwords(identificationResults, isDryRun) {
         throw error // Rollback transaction
       }
     }
-  })
+      }
+    }, {
+      maxWait: 60000, // 1 minute max wait for transaction to start
+      timeout: 60000, // 1 minute timeout per batch
+    })
+    
+    console.log(`   ✅ Invalid batch ${batchIndex + 1} complete`)
+  }
   
   console.log(`\n✅ Phase 3 complete:`)
   console.log(`   • Removed ${removedCount} invalid notes`)
@@ -972,8 +1568,12 @@ async function removeStopwords(identificationResults, isDryRun) {
  */
 async function cleanNotes() {
   try {
+    const duplicatesOnly = process.argv.includes('--duplicates-only')
+    
     const header = "=".repeat(60)
-    const title = "🧹 Clean Duplicate and Erroneous Notes"
+    const title = duplicatesOnly 
+      ? "🔍 Duplicate Detection Only"
+      : "🧹 Clean Duplicate and Erroneous Notes"
     console.log(header)
     console.log(title)
     console.log(header)
@@ -982,34 +1582,78 @@ async function cleanNotes() {
     if (isDryRun) {
       const msg = "⚠️  DRY RUN MODE - No changes will be made\n"
       console.log(msg)
-      addToReport("# Clean Duplicate and Erroneous Notes - Dry Run Report\n\n")
-      addToReport(`**Generated:** ${new Date().toISOString()}\n\n`)
-      addToReport("⚠️ **DRY RUN MODE** - No changes will be made\n\n")
-      addToReport("---\n\n")
+      if (!duplicatesOnly) {
+        addToReport("# Clean Duplicate and Erroneous Notes - Dry Run Report\n\n")
+        addToReport(`**Generated:** ${new Date().toISOString()}\n\n`)
+        addToReport("⚠️ **DRY RUN MODE** - No changes will be made\n\n")
+        addToReport("---\n\n")
+      }
     } else {
       console.log("⚠️  IMPORTANT: Ensure you have run `npm run db:backup` before proceeding!\n")
     }
     
     // Pre-flight validation
     const initialCounts = await validateDatabase()
-    if (isDryRun) {
+    if (isDryRun && !duplicatesOnly) {
       addToReport("## Pre-Flight Validation\n\n")
       addToReport(`- **Total Notes:** ${initialCounts.noteCount}\n`)
       addToReport(`- **Total Relations:** ${initialCounts.relationCount}\n\n`)
       addToReport("---\n\n")
     }
     
-    // Phase 1: Merge duplicates
-    const duplicates = await identifyDuplicates()
-    const phase1Results = await mergeDuplicates(duplicates, isDryRun)
+    // Phase 1: Merge duplicates (initial pass)
+    console.log("\n" + "=".repeat(60))
+    console.log("PHASE 1: Duplicate Detection & Merge")
+    console.log("=".repeat(60) + "\n")
+    const duplicates1 = await identifyDuplicates()
+    const phase1Results = await mergeDuplicates(duplicates1, isDryRun)
+    
+    // If duplicates-only mode, exit after Phase 1 to prevent loops
+    if (duplicatesOnly) {
+      if (!isDryRun) {
+        console.log("\n✅ Duplicate detection complete!")
+      }
+      return
+    }
     
     // Phase 2: Clean invalid characters
+    console.log("\n" + "=".repeat(60))
+    console.log("PHASE 2: Clean Invalid Characters")
+    console.log("=".repeat(60) + "\n")
     const invalidNotes = await identifyInvalidNotes()
     const phase2Results = await cleanInvalidNotes(invalidNotes, isDryRun)
     
-    // Phase 3: Remove stopwords and descriptive phrases
+    // Phase 2.5: Merge duplicates again (cleaning may have created new duplicates)
+    if (!isDryRun && phase2Results.cleaned > 0) {
+      console.log("\n" + "=".repeat(60))
+      console.log("PHASE 2.5: Merge Duplicates (After Cleaning)")
+      console.log("=".repeat(60) + "\n")
+      const duplicates2 = await identifyDuplicates()
+      const phase2_5Results = await mergeDuplicates(duplicates2, isDryRun)
+      // Add to phase2 results
+      phase2Results.merged = (phase2Results.merged || 0) + phase2_5Results.merged
+      phase2Results.relationsUpdated = (phase2Results.relationsUpdated || 0) + phase2_5Results.relationsUpdated
+    }
+    
+    // Phase 3: Extract notes from phrases and remove stopwords
+    console.log("\n" + "=".repeat(60))
+    console.log("PHASE 3: Extract Notes from Phrases & Remove Stopwords")
+    console.log("=".repeat(60) + "\n")
     const invalidPhraseNotes = await identifyStopwords()
     const phase3Results = await removeStopwords(invalidPhraseNotes, isDryRun)
+    
+    // Phase 3.5: Merge duplicates again (extraction may have created new duplicates)
+    // This catches cases like "and vanilla" → "vanilla" when "vanilla" already exists
+    if (!isDryRun && (phase3Results.relationsReassociated > 0 || phase3Results.removed > 0)) {
+      console.log("\n" + "=".repeat(60))
+      console.log("PHASE 3.5: Merge Duplicates (After Extraction/Stopword Removal)")
+      console.log("=".repeat(60) + "\n")
+      const duplicates3 = await identifyDuplicates()
+      const phase3_5Results = await mergeDuplicates(duplicates3, isDryRun)
+      // Add to phase3 results
+      phase3Results.merged = (phase3Results.merged || 0) + phase3_5Results.merged
+      phase3Results.relationsUpdated = (phase3Results.relationsUpdated || 0) + phase3_5Results.relationsUpdated
+    }
     
     // Post-cleanup validation
     if (!isDryRun) {
@@ -1019,13 +1663,18 @@ async function cleanNotes() {
       console.log("=".repeat(60))
       console.log("\n📊 CLEANUP SUMMARY")
       console.log("=".repeat(60))
-      console.log(`\nPhase 1 - Duplicates:`)
+      console.log(`\nPhase 1 - Initial Duplicates:`)
       console.log(`  • Merged: ${phase1Results.merged} notes`)
       console.log(`  • Relations updated: ${phase1Results.relationsUpdated}`)
       console.log(`\nPhase 2 - Invalid Characters:`)
       console.log(`  • Cleaned: ${phase2Results.cleaned} notes`)
       console.log(`  • Deleted: ${phase2Results.deleted} notes`)
       console.log(`  • Relations updated: ${phase2Results.relationsUpdated}`)
+      if (phase2Results.merged > 0) {
+        console.log(`\nPhase 2.5 - Duplicates After Cleaning:`)
+        console.log(`  • Additional merged: ${phase2Results.merged} notes`)
+        console.log(`  • Additional relations updated: ${phase2Results.relationsUpdated - (phase2Results.cleaned + phase2Results.deleted)}`)
+      }
       console.log(`\nPhase 3 - Stopwords & Descriptive Phrases:`)
       console.log(`  • Removed: ${phase3Results.removed} invalid notes`)
       if (phase3Results.relationsReassociated > 0) {
@@ -1033,9 +1682,18 @@ async function cleanNotes() {
         console.log(`  • Relations reassociated: ${phase3Results.relationsReassociated}`)
       }
       console.log(`  • Relations removed: ${phase3Results.relationsRemoved}`)
+      if (phase3Results.merged > 0) {
+        console.log(`\nPhase 3.5 - Duplicates After Extraction:`)
+        console.log(`  • Additional merged: ${phase3Results.merged} notes`)
+        console.log(`  • Additional relations updated: ${phase3Results.relationsUpdated || 0}`)
+      }
       console.log(`\nTotal:`)
       console.log(`  • Notes removed: ${validationResults.notesRemoved}`)
-      console.log(`  • Relations affected: ${phase1Results.relationsUpdated + phase2Results.relationsUpdated + phase3Results.relationsRemoved}`)
+      const totalRelationsAffected = phase1Results.relationsUpdated + 
+        (phase2Results.relationsUpdated || 0) + 
+        phase3Results.relationsRemoved +
+        (phase3Results.relationsUpdated || 0)
+      console.log(`  • Relations affected: ${totalRelationsAffected}`)
       console.log(`\n✅ Cleanup completed successfully!`)
       console.log(`\n💡 If you need to rollback, use: npm run db:restore`)
     } else {
@@ -1044,10 +1702,16 @@ async function cleanNotes() {
       
       // Add summary to report
       addToReport("## Summary\n\n")
-      addToReport(`- **Phase 1 - Duplicates:** ${phase1Results.merged} notes will be merged, ${phase1Results.relationsUpdated} relations updated\n`)
+      addToReport(`- **Phase 1 - Initial Duplicates:** ${phase1Results.merged} notes will be merged, ${phase1Results.relationsUpdated} relations updated\n`)
       addToReport(`- **Phase 2 - Invalid Characters:** ${phase2Results.cleaned} notes cleaned, ${phase2Results.deleted} notes deleted, ${phase2Results.relationsUpdated} relations updated\n`)
-      addToReport(`- **Phase 3 - Stopwords & Phrases:** ${phase3Results.removed} notes removed, ${phase3Results.relationsReassociated} relations reassociated, ${phase3Results.relationsRemoved} relations removed\n\n`)
-      addToReport("---\n\n")
+      if (phase2Results.merged > 0) {
+        addToReport(`- **Phase 2.5 - Duplicates After Cleaning:** ${phase2Results.merged} additional notes will be merged\n`)
+      }
+      addToReport(`- **Phase 3 - Stopwords & Phrases:** ${phase3Results.removed} notes removed, ${phase3Results.relationsReassociated} relations reassociated, ${phase3Results.relationsRemoved} relations removed\n`)
+      if (phase3Results.merged > 0) {
+        addToReport(`- **Phase 3.5 - Duplicates After Extraction:** ${phase3Results.merged} additional notes will be merged\n`)
+      }
+      addToReport("\n---\n\n")
       addToReport("✅ **Dry run completed successfully!**\n\n")
       addToReport("To apply these changes, run:\n```bash\nnode scripts/clean-notes.js\n```\n\n")
       addToReport("**⚠️ Remember to backup first:**\n```bash\nnpm run db:backup\n```\n")
