@@ -1541,10 +1541,10 @@ async function removeStopwords(identificationResults, isDryRun) {
         throw error // Rollback transaction
       }
     }
-  }, {
-    maxWait: 60000, // 1 minute max wait for transaction to start
-    timeout: 60000, // 1 minute timeout per batch
-  })
+    }, {
+      maxWait: 60000, // 1 minute max wait for transaction to start
+      timeout: 60000, // 1 minute timeout per batch
+    })
   
   console.log(`\n✅ Phase 3 complete:`)
   console.log(`   • Removed ${removedCount} invalid notes`)

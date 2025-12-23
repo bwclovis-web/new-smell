@@ -76,6 +76,15 @@ Quick access:
 - [Reusable Patterns](./developer/REUSABLE_PATTERNS.md) - Code patterns and best practices
 - Implementation summaries and research crew analyses
 
+#### Data Import
+
+📥 **[CSV Import Guide](./CSV_IMPORT_GUIDE.md)** - Import perfume data from CSV files
+
+- Unified import script for all CSV files
+- Intelligent duplicate handling
+- Automatic note matching and creation
+- Step-by-step usage instructions
+
 #### Archive
 
 📦 **[Documentation Archive](./archive/)** - Historical documentation

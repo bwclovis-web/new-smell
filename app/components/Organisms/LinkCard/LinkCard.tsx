@@ -3,7 +3,8 @@ import { NavLink } from "react-router"
 import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
 import { ROUTE_PATH as PERFUME_PATH } from "~/routes/perfume"
 import { ROUTE_PATH as PERFUME_HOUSE } from "~/routes/perfume-house"
-
+import houseBanner from "../../../images/house-soon.webp"
+import bottleBanner from "../../../images/perfume.webp"
 interface LinkCardProps {
   data: {
     id: string
@@ -30,6 +31,7 @@ function LinkCard({
   sourcePage,
 }: LinkCardProps) {
   const url = type === "house" ? PERFUME_HOUSE : PERFUME_PATH
+  const validImageRegex = /^o\.(?!26258\.jpg)\d+\.jpg$/;
   return (
     <div className="relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out bg-noir-dark/70 backdrop-blur-sm">
       <NavLink
@@ -53,7 +55,7 @@ function LinkCard({
           )}
         </div>
         <div className="relative rounded-lg">
-          {data.image ? (
+          {data.image && !validImageRegex.test(data.image) ? (
             <OptimizedImage
               src={data.image}
               alt={data.name}
@@ -69,9 +71,20 @@ function LinkCard({
               placeholder="blur"
             />
           ) : (
-            <div className="w-full h-48 bg-noir-dark/50 flex items-center justify-center border border-noir-gold/20 rounded-lg">
-              <span className="text-noir-gold/40 text-sm">No Image</span>
-            </div>
+            <OptimizedImage
+              src={type === "house" ? houseBanner : bottleBanner}
+              alt={data.name}
+              width={300}
+              height={400}
+              priority={false}
+              quality={75}
+              className="w-full object-cover mask-radial-at-center mask-radial-from-10% mask-radial-to-75%                                                        
+            transition-all duration-500 ease-in-out scale-120 h-full aspect-square
+            filter grayscale-100 group-hover:grayscale-0 group-hover:scale-100 group-hover:mask-radial-from-30% group-hover:mask-radial-to-100%"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+              viewTransitionName={`perfume-image-${data.id}`}
+              placeholder="blur"
+            />
           )}
         </div>
       </NavLink>

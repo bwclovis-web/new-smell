@@ -3,7 +3,7 @@ import { NavLink } from "react-router"
 
 import { Button } from "~/components/Atoms/Button"
 import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
-
+import houseBanner from "../../../images/house-soon.webp"
 interface PaginationState {
   currentPage: number
   totalPages: number
@@ -58,9 +58,9 @@ const PerfumeHousePerfumeList = ({
                 <h3 className="text-center block text-lg tracking-wide py-2 font-semibold text-noir-gold leading-6 capitalize">
                   {perfume.name}
                 </h3>
-                {perfume.image ? (
+                
                   <OptimizedImage
-                    src={perfume.image}
+                    src={perfume.image ?? houseBanner}
                     alt={perfume.name}
                     priority={false}
                     width={192}
@@ -71,11 +71,7 @@ const PerfumeHousePerfumeList = ({
                     viewTransitionName={`perfume-image-${perfume.id}`}
                     placeholder="blur"
                   />
-                ) : (
-                  <div className="w-48 h-48 bg-noir-dark/50 flex items-center justify-center border border-noir-gold/20 rounded-lg mb-2 mx-auto">
-                    <span className="text-noir-gold/40 text-xs">No Image</span>
-                  </div>
-                )}
+               
               </NavLink>
             </li>
           ))}

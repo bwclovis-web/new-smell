@@ -36,3 +36,6 @@ CREATE INDEX CONCURRENTLY IF NOT EXISTS "idx_note_relation_note_type" ON "Perfum
 
 
 
+
+
+

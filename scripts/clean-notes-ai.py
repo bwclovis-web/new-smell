@@ -19,6 +19,11 @@ from pathlib import Path
 from typing import List, Dict, Optional, Union
 from dotenv import load_dotenv
 
+# Set UTF-8 encoding for stdout on Windows
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
 # Load environment variables
 load_dotenv()
 
@@ -332,7 +337,7 @@ def main():
         sys.exit(1)
     
     print("=" * 60)
-    print("🤖 AI-Powered Note Extraction")
+    print("AI-Powered Note Extraction")
     print("=" * 60)
     
     if args.dry_run:
@@ -358,7 +363,8 @@ def main():
     existing_notes = []  # TODO: Load from database
     
     for i, note_data in enumerate(notes, 1):
-        phrase = note_data.get("name", note_data.get("phrase", ""))
+        # Support multiple formats
+        phrase = note_data.get("name", note_data.get("phrase", note_data.get("original_phrase", "")))
         note_id = note_data.get("id", f"note_{i}")
         
         print(f"\n[{i}/{len(notes)}] Processing: {phrase}")

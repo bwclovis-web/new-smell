@@ -18,7 +18,8 @@ interface HeroHeaderProps {
   imageWidth?: number
   imageHeight?: number
   imageQuality?: number
-  priority?: boolean
+  priority?: boolean,
+  type?: string
 }
 
 const DEFAULT_HEADER_CLASSES =
@@ -42,6 +43,7 @@ const HeroHeader = ({
   titleClassName = DEFAULT_TITLE_CLASS,
   imageClassName = DEFAULT_IMAGE_CLASSES,
   heightClassName = DEFAULT_HEIGHT_CLASS,
+  type,
   sizes = "100vw",
   imageWidth = 1200,
   imageHeight = 600,

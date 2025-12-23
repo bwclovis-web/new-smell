@@ -1,0 +1,38 @@
+[
+  {
+    "extracted_notes": [
+      "sweet"
+    ],
+    "should_delete": false,
+    "original_phrase": "sweet notes",
+    "note_id": "note_1"
+  },
+  {
+    "extracted_notes": null,
+    "should_delete": true,
+    "original_phrase": "top",
+    "note_id": "note_2"
+  },
+  {
+    "extracted_notes": null,
+    "should_delete": true,
+    "original_phrase": "fire",
+    "note_id": "note_3"
+  },
+  {
+    "extracted_notes": [
+      "amber oil"
+    ],
+    "should_delete": false,
+    "original_phrase": "amber oil",
+    "note_id": "note_4"
+  },
+  {
+    "extracted_notes": [
+      "sandalwood"
+    ],
+    "should_delete": false,
+    "original_phrase": "smoky sandalwood",
+    "note_id": "note_5"
+  }
+]

@@ -140,9 +140,14 @@ async function getOrCreateNote(noteName: string) {
 
   const trimmedNoteName = noteName.trim().toLowerCase()
 
-  // Try to find existing note
-  let note = await prisma.perfumeNotes.findUnique({
-    where: { name: trimmedNoteName },
+  // Try to find existing note (case-insensitive)
+  let note = await prisma.perfumeNotes.findFirst({
+    where: {
+      name: {
+        equals: trimmedNoteName,
+        mode: "insensitive",
+      },
+    },
   })
 
   // If note doesn't exist, create it

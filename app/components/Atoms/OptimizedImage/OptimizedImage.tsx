@@ -72,6 +72,7 @@ function OptimizedImage({
   quality = 80,
   format = "webp",
   onLoad,
+  type,
   onError,
   placeholder = "blur",
   blurDataURL,
@@ -123,7 +124,7 @@ function OptimizedImage({
     return (
       <StatusPlaceholder
         className={className}
-        message="No image"
+        message="No image bob"
         style={style}
       />
     )
