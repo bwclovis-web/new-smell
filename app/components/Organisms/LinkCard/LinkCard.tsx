@@ -4,7 +4,8 @@ import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
 import { ROUTE_PATH as PERFUME_PATH } from "~/routes/perfume"
 import { ROUTE_PATH as PERFUME_HOUSE } from "~/routes/perfume-house"
 import houseBanner from "../../../images/house-soon.webp"
-import bottleBanner from "../../../images/perfume.webp"
+import bottleBanner from "../../../images/single-bottle.webp"
+import { validImageRegex } from "~/utils/styleUtils"
 interface LinkCardProps {
   data: {
     id: string
@@ -31,7 +32,7 @@ function LinkCard({
   sourcePage,
 }: LinkCardProps) {
   const url = type === "house" ? PERFUME_HOUSE : PERFUME_PATH
-  const validImageRegex = /^o\.(?!26258\.jpg)\d+\.jpg$/;
+ 
   return (
     <div className="relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out bg-noir-dark/70 backdrop-blur-sm">
       <NavLink

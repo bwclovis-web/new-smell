@@ -5,7 +5,7 @@ import { Form, useSubmit } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import FormField from "~/components/Atoms/FormField/FormField"
-import HouseTypeahead from "~/components/Atoms/HouseTypeahead/HouseTypeahead"
+import HouseTypeahead from "~/components/Molecules/HouseTypeahead/HouseTypeahead"
 import Input from "~/components/Atoms/Input/Input"
 import { CSRFToken } from "~/components/Molecules/CSRFToken"
 import TagSearch from "~/components/Organisms/TagSearch/TagSearch"

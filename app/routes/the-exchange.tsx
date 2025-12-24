@@ -9,7 +9,7 @@ import {
 } from "react-router"
 
 import { Button } from "~/components/Atoms/Button"
-import SearchInput from "~/components/Atoms/SearchInput/SearchInput"
+import SearchInput from "~/components/Molecules/SearchInput/SearchInput"
 import LinkCard from "~/components/Organisms/LinkCard"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import { getPerfumeTypeLabel } from "~/data/SelectTypes"

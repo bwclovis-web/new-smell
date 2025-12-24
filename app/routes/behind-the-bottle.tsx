@@ -21,7 +21,6 @@ import { useScrollToDataList } from "~/hooks/useScrollToDataList"
 import { useSyncPaginationUrl } from "~/hooks/useSyncPaginationUrl"
 import { getDefaultSortOptions, sortItems, type SortOption } from "~/utils/sortUtils"
 
-// No server imports needed for client component
 import banner from "../images/behind-bottle.webp"
 
 export const ROUTE_PATH = "/behind-the-bottle"

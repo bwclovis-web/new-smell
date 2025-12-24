@@ -7,7 +7,7 @@ import type {
 } from "react-router"
 import { useLoaderData } from "react-router"
 
-import SearchInput from "~/components/Atoms/SearchInput/SearchInput"
+import SearchInput from "~/components/Molecules/SearchInput/SearchInput"
 import MyScentsListItem from "~/components/Containers/MyScents/MyScentListItem"
 import { VirtualScrollList } from "~/components/Molecules/VirtualScrollList"
 import AddToCollectionModal from "~/components/Organisms/AddToCollectionModal"

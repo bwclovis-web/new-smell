@@ -3,7 +3,8 @@ import { NavLink } from "react-router"
 
 import { Button } from "~/components/Atoms/Button"
 import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
-import houseBanner from "../../../images/house-soon.webp"
+import bottleBanner from "../../../images/single-bottle.webp"
+import { validImageRegex } from "~/utils/styleUtils"
 interface PaginationState {
   currentPage: number
   totalPages: number
@@ -58,9 +59,8 @@ const PerfumeHousePerfumeList = ({
                 <h3 className="text-center block text-lg tracking-wide py-2 font-semibold text-noir-gold leading-6 capitalize">
                   {perfume.name}
                 </h3>
-                
                   <OptimizedImage
-                    src={perfume.image ?? houseBanner}
+                    src={!validImageRegex.test(perfume.image) ? perfume.image : bottleBanner}
                     alt={perfume.name}
                     priority={false}
                     width={192}
