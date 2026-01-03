@@ -15,6 +15,7 @@ import logo from "../../../images/navlogo.webp"
 import AboutDropdown from "../AboutDropdown/AboutDropdown"
 import LogoutButton from "../LogoutButton/LogoutButton"
 import { globalNavigationVariants } from "./globalNavigation-variants"
+import AdminNavigation from "../AdminNavigation/AdminNavigation"
 
 interface GlobalNavigationProps
   extends HTMLProps<HTMLDivElement>,
@@ -37,7 +38,7 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
 
   return (
     <header
-      className="fixed z-30  w-full h-auto bg-noir-dark/60 backdrop-blur-md"
+      className="fixed z-30 w-full h-auto bg-noir-dark/60 backdrop-blur-md"
       data-sticky-header="global-navigation"
     >
       <div className="flex justify-end items-center px-30 bg-noir-black/60 backdrop-blur-md w-full gap-4">
@@ -64,7 +65,7 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
         
       </div>
       <nav
-        className="hidden md:flex justify-between inner-container"
+        className="hidden lg:flex justify-between inner-container"
         data-cy="GlobalNavigation"
       >
         <NavLink
@@ -116,6 +117,11 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
          
         </ul>
       </nav>
+      {user && 
+        <div className="hidden md:block">
+          <AdminNavigation user={user} />
+        </div>
+      }
     </header>
   )
 }

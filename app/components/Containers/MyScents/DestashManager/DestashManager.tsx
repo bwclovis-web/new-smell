@@ -29,8 +29,6 @@ const DestashManager = ({
   const previousStateRef = useRef<string>(fetcher.state)
   const { closeModal } = useSessionStore()
 
-  console.log('userPerfumes', userPerfumes)
-
   // Revalidate data after successful fetcher submission
   useEffect(() => {
     // Only update when transitioning from "submitting" to "idle"
@@ -63,12 +61,6 @@ const DestashManager = ({
       // Close the form after successful submission
       setIsCreating(false)
       setEditingId(null)
-
-      // Note: We're not calling revalidator.revalidate() here because:
-      // 1. We're already updating local state with the response data
-      // 2. Revalidation can cause navigation/abort issues when submitting from a different route
-      // 3. The local state update is sufficient for immediate UI feedback
-      // If fresh data is needed, the user can refresh the page or navigate away and back
     }
     
     previousStateRef.current = fetcher.state

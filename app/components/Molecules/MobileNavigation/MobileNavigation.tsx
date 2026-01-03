@@ -48,7 +48,7 @@ const MobileNavigation = ({
     ready && isClientReady ? t("navigation.logo") : "Shadow and Sillage"
 
   return (
-    <div className={styleMerge("mobile-nav md:hidden fixed w-full z-30", className)}>
+    <div className={styleMerge("mobile-nav lg:hidden fixed w-full z-30", className)}>
       <MobileHeader
         logoText={logoText}
         menuButtonRef={menuButtonRef as RefObject<HTMLButtonElement>}

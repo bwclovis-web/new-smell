@@ -585,13 +585,13 @@ describe("ChangePasswordForm", () => {
 
   describe("Edge Cases", () => {
     it("handles very long passwords", async () => {
-      const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
       const longPassword = "A".repeat(100) + "1!"
       const newPasswordInput = screen.getByLabelText("New Password") as HTMLInputElement
 
-      await user.type(newPasswordInput, longPassword)
+      // Use fireEvent.change instead of user.type for long strings to avoid timeout
+      fireEvent.change(newPasswordInput, { target: { value: longPassword } })
       expect(newPasswordInput.value).toBe(longPassword)
     })
 

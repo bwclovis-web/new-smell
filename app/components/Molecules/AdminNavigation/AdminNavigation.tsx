@@ -22,7 +22,7 @@ const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
   const isAdmin = user?.role === "admin" || user?.role === "editor"
   
   return (
-    <aside className="absolute top-40 md:left-20 z-20 w-full md:w-64  text-noir-light py-4">
+    <nav className="z-20 w-full text-noir-light pt-4">
       <ul
         className={styleMerge(adminNavigationVariants({ className }))}
         data-cy="AdminNavigation"
@@ -32,14 +32,14 @@ const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
           adminNavigation.map(item => (
             <li
               key={item.id}
-              className="capitalize font-semibold text-shadow-sm text-shadow-noir-dark/70"
+              className="capitalize font-semibold text-shadow-sm text-shadow-noir-dark/70 leading-5 text-center"
             >
               <NavLink
                 viewTransition
                 to={item.path}
                 suppressHydrationWarning
                 className={({ isActive }) => styleMerge(
-                    "text-noir-gold py-2  hover:text-noir-gold-500 transition-colors duration-200 hover:bg-noir-dark/80 block w-full",
+                    "text-noir-gold py-2  hover:text-noir-gold-500 text-center transition-colors duration-200 hover:bg-noir-dark/80 block w-full",
                     isActive
                       ? "text-noir-dark text-shadow-none  bg-noir-gold/80 border-2 border-noir-gold"
                       : ""
@@ -54,7 +54,7 @@ const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
         {user && profileNavigation.map(item => (
           <li
             key={item.id}
-            className="capitalize font-semibold text-shadow-sm text-shadow-noir-dark/70"
+            className="capitalize font-semibold text-shadow-sm text-shadow-noir-dark/70 leading-5 text-center"
           >
             <NavLink
               viewTransition
@@ -72,11 +72,8 @@ const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
             </NavLink>
           </li>
         ))}
-        <li>
-          <LanguageSwitcher />
-        </li>
       </ul>
-    </aside>
+    </nav>
   )
 }
 export default AdminNavigation

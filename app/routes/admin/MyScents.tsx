@@ -314,15 +314,6 @@ const MyScentsPage = () => {
     return uniquePerfumes.filter(userPerfume => userPerfume.perfume.name.toLowerCase().includes(query))
   }, [uniquePerfumes, searchQuery])
 
-  // const renderUserPerfume = (userPerfume: UserPerfumeI) => (
-  //   <MyScentsListItem
-  //     key={userPerfume.id}
-  //     setUserPerfumes={setUserPerfumes}
-  //     userPerfumes={userPerfumes}
-  //     userPerfume={userPerfume}
-  //   />
-  // )
-
   return (
     <section>
       <TitleBanner

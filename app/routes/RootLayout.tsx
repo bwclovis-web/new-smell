@@ -1,6 +1,7 @@
 import cookie from "cookie"
 import { Suspense } from "react"
 import { type LoaderFunctionArgs, Outlet, useLoaderData } from "react-router"
+import AdminNavigation from "~/components/Molecules/AdminNavigation/AdminNavigation"
 
 import GlobalNavigation from "~/components/Molecules/GlobalNavigation/GlobalNavigation"
 import MobileBottomNavigation from "~/components/Molecules/MobileBottomNavigation/MobileBottomNavigation"
