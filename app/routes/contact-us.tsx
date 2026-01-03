@@ -50,9 +50,9 @@ const ContactUsPage = () => {
       <article className="inner-container py-12">
         <div className="max-w-4xl mx-auto md:px-4 md:max-w-full">
           <div className="prose prose-lg prose-invert max-w-none">
-            <div className="flex flex-col md:flex-row gap-12">
+            <div className="flex flex-col lg:flex-row gap-12">
               {/* Contact Section */}
-              <section className="flex flex-col gap-6 border-r-4 border-double border-noir-gold px-6">
+              <section className="flex flex-col gap-6 border-b-4 lg:border-r-4 border-double border-noir-gold lg:px-6 pb-10 lg:pb-0 lg:border-b-0">
                 <h2 className="text-noir-gold text-3xl font-bold mb-4">
                   {t("contactUs.contact.title")}
                 </h2>

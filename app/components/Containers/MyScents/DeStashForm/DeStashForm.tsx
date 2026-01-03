@@ -53,20 +53,22 @@ const DeStashForm = ({
   maxAvailable,
 }: DeStashFormProps) => {
   const initialValues = useMemo(
-    () => ({
-      deStashAmount: isCreating ? "0" : userPerfume.available || "0",
-      price: userPerfume.tradePrice || "",
-      tradePreference:
-        (userPerfume.tradePreference as "cash" | "trade" | "both") || "cash",
-      tradeOnly: userPerfume.tradeOnly || false,
-      createNew: isCreating,
-    }),
+    () => {
+      return {
+        deStashAmount: isCreating ? "0" : (userPerfume?.available || "0"),
+        price: userPerfume?.tradePrice || "",
+        tradePreference:
+          (userPerfume?.tradePreference as "cash" | "trade" | "both") || "cash",
+        tradeOnly: userPerfume?.tradeOnly || false,
+        createNew: isCreating,
+      };
+    },
     [
-      userPerfume.id,
-      userPerfume.available,
-      userPerfume.tradePrice,
-      userPerfume.tradePreference,
-      userPerfume.tradeOnly,
+      userPerfume?.id || "",
+      userPerfume?.available || "0",
+      userPerfume?.tradePrice || "",
+      userPerfume?.tradePreference || "cash",
+      userPerfume?.tradeOnly || false,
       isCreating,
     ]
   )
@@ -213,7 +215,7 @@ const DeStashForm = ({
             label={t("myScents.listItem.decantOptionsAmountLabel")}
             showManualInput={true}
             inputPlaceholder={t("myScents.listItem.decantOptionsAmountPlaceholder", {
-              amount: isNewDecant ? "100" : userPerfume.amount,
+              amount: isNewDecant ? "100" : (userPerfume?.amount || "0"),
             })}
           />
           {errors.deStashAmount && (

@@ -24,7 +24,7 @@ export const voodoodetailsVariants = cva(
 export const voodooDetailsSummaryVariants = cva(
   [
     "flex cursor-pointer items-center gap-3  py-3 uppercase tracking-widest transition-colors duration-200",
-    "text-sm font-semibold outline-none group-open:text-noir-gold-300",
+    "text-sm font-semibold outline-none group-open:text-noir-gold-300 px-1",
   ],
   {
     variants: {

@@ -321,7 +321,7 @@ const PerfumeContent = ({
           isInWishlist={isInUserWishlist}
         />
       )}
-      <div className={`bg-white/5 ${user ? "md:w-3/4" : "md:w-full"} border-4 noir-border relative shadow-lg text-noir-gold-500`}>
+      <div className={`bg-white/5 ${user ? "lg:w-3/4" : "md:w-full"} border-4 noir-border relative shadow-lg text-noir-gold-500`}>
         <PerfumeNotes
           perfumeNotesOpen={perfume.perfumeNotesOpen}
           perfumeNotesHeart={perfume.perfumeNotesHeart}
@@ -350,16 +350,16 @@ const PerfumeContent = ({
       </div>
     </div>
 
-    <div className="w-full flex flex-col md:flex-row gap-4 items-start justify-center">
-      <aside className="noir-border relative w-full md:w-1/3">
+    <div className="w-full flex flex-col lg:flex-row gap-4 items-start justify-center">
+      <div className="noir-border relative w-full lg:w-1/3">
         <PerfumeRatingSystem
           perfumeId={perfume.id}
           userId={user?.id || "anonymous"}
           userRatings={userRatings}
           averageRatings={averageRatings}
         />
-      </aside>
-      <div className="noir-border relative w-full md:w-3/4 p-4">
+      </div>
+      <div className="noir-border relative w-full lg:w-3/4 p-4">
         <ReviewSection
           perfumeId={perfume.id}
           currentUserId={user?.id}

@@ -93,8 +93,7 @@ const PerfumeRatingSystem = ({
       <div className="space-y-6">
         {categories.map(({ key, label }) => (
           <div key={key} className="flex flex-col items-center">
-            <h4 className="text-sm font-medium text-noir-gold mb-2">{label}</h4>
-
+            <h3 className="text-sm font-medium text-noir-gold mb-2">{label}</h3>
             <div className="flex flex-col items-center gap-2">
               <NoirRating
                 category={key}
@@ -103,7 +102,6 @@ const PerfumeRatingSystem = ({
                 readonly={false}
                 showLabel
               />
-
               <div className="text-xs text-noir-gold-100 text-center">
                 {averageRatings && averageRatings[key] ? (
                   <>

@@ -44,6 +44,40 @@ export const getAllPerfumes = async () => {
   return perfumes
 }
 
+export const getSingleUserPerfumeById = async (userPerfumeId: string, userId: string) => {
+  const userPerfume = await prisma.userPerfume.findFirst({
+  where: { perfumeId: userPerfumeId, userId },
+  select: {
+    id: true,
+    perfumeId: true,
+    userId: true,
+    comments: true,
+    price: true,
+    perfume: { 
+      select: { 
+        id: true, 
+        name: true, 
+        description: true, 
+        image: true, 
+        slug: true, 
+        perfumeHouseId: true, 
+        createdAt: true, 
+        updatedAt: true,
+
+        perfumeHouse: { 
+          select: { id: true, 
+            name: true, 
+            slug: true, 
+            type: true 
+          } 
+        } 
+      } 
+    },
+  },
+})
+  return userPerfume
+}
+
 export const getAllPerfumesWithOptions = async (options?: {
   sortBy?: "name-asc" | "name-desc" | "created-desc" | "created-asc" | "type-asc"
 }) => {

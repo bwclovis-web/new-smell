@@ -48,7 +48,7 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
             viewTransition
             to={SIGN_IN}
             className={({ isActive }) => styleMerge(
-                "text-noir-gold hover:text-noir-light dark:text-noir-light/70 dark:hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400 flex",
+                "text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400 flex",
                 isActive &&
                   isClientReady &&
                   "text-noir-light bg-noir-black/30 rounded-full border-noir-light/90"
@@ -69,7 +69,8 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
       >
         <NavLink
           to="/"
-          className="text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 border border-transparent transition-colors duration-400"
+          className="text-noir-gold hover:text-noir-light font-semibold text-lg  
+          px-2 border border-transparent transition-colors duration-400 block text-center leading-5"
         >
           <img src={logo} alt={logoText} className="w-40 h-25" />
         </NavLink>
@@ -83,7 +84,7 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
                 viewTransition
                 to={item.path}
                 className={({ isActive }) => styleMerge(
-                    "text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400",
+                    "text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400 block text-center leading-5",
                     isActive &&
                       isClientReady &&
                       "text-noir-light bg-noir-black/30 rounded-full border-noir-light/90"
@@ -101,7 +102,7 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
                 viewTransition
                 to={ADMIN_PATH}
                 className={({ isActive }) => styleMerge(
-                    "text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400",
+                    "text-noir-gold hover:text-noir-light font-semibold text-lg  px-2 py-1 border border-transparent transition-colors duration-400 block text-center leading-5",
                     isActive &&
                       isClientReady &&
                       "text-noir-light bg-noir-gold rounded-full border-noir-light/90"

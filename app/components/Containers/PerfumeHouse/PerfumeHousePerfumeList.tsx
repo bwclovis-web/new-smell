@@ -3,7 +3,7 @@ import { NavLink } from "react-router"
 
 import { Button } from "~/components/Atoms/Button"
 import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
-import bottleBanner from "../../../images/single-bottle.webp"
+import bottleBanner from "~/images/single-bottle.webp"
 import { validImageRegex } from "~/utils/styleUtils"
 interface PaginationState {
   currentPage: number
@@ -37,7 +37,9 @@ const PerfumeHousePerfumeList = ({
 
   return (
     <div id="data-list" className="rounded-b-lg w-full relative overflow-x-hidden style-scroll">
-      <h2 className="text-center mb-4">Perfumes</h2>
+      <h2 className="text-center mb-4">{t("perfumeHouse.perfumes", {
+        defaultValue: "Perfumes",
+      })}</h2>
 
       {loading && perfumes.length === 0 ? (
         <div className="text-center py-6">
@@ -46,7 +48,7 @@ const PerfumeHousePerfumeList = ({
           })}
         </div>
       ) : perfumes.length > 0 ? (
-        <ul className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 p-2 pb-4">
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 p-2 pb-4 gap-4">
           {perfumes.map((perfume: any) => (
             <li key={perfume.id}>
               <NavLink
@@ -61,7 +63,10 @@ const PerfumeHousePerfumeList = ({
                 </h3>
                   <OptimizedImage
                     src={!validImageRegex.test(perfume.image) ? perfume.image : bottleBanner}
-                    alt={perfume.name}
+                    alt={t("singlePerfume.perfumeBottleAltText", {
+                      defaultValue: "Perfume Bottle {{name}}",
+                      name: perfume.name,
+                    })}
                     priority={false}
                     width={192}
                     height={192}
@@ -71,7 +76,6 @@ const PerfumeHousePerfumeList = ({
                     viewTransitionName={`perfume-image-${perfume.id}`}
                     placeholder="blur"
                   />
-               
               </NavLink>
             </li>
           ))}

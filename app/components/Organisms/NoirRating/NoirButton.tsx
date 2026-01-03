@@ -41,6 +41,7 @@ const NoirButton = ({
     }}
     onMouseEnter={onHover}
     onMouseLeave={onLeave}
+    aria-label={`Rate ${category} ${rating}`}
     className={`
       ${SIZES[size]} 
       transition-opacity duration-300 

@@ -47,8 +47,6 @@ const CommentsModal = ({ perfume, onCommentAdded, addComment }: CommentsModalPro
     // Fallback to legacy behavior if addComment is not provided
     // This maintains backward compatibility
     if (onCommentAdded) {
-      // This would need the createTemporaryComment import, but we'll keep it simple
-      // The hook handles this better
       console.warn("CommentsModal: addComment prop should be provided for better integration")
     }
 

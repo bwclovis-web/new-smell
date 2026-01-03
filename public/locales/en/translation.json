@@ -475,6 +475,9 @@
       "subheading": "Share your thoughts about {{perfumeName}}.",
       "addCommentPlaceholder": "Add a comment...",
       "addCommentButton": "Add Comment",
+      "deleteComment": "Delete Comment",
+      "makePublic": "Make this comment public",
+      "makePrivate": "Make this comment private",
       "noComments": "No comments yet. Be the first to share your thoughts!"
     },
     "search": {
@@ -556,6 +559,15 @@
     "noPerfumes": "No perfumes are currently listed for this house.",
     "errorLoadingPerfumes": "Error loading perfumes.",
     "notFound": "Perfume house not found",
+    "perfumes": "Perfumes",
+    
+    "summaryCard": {
+      "totalPerfumeCount": "Total perfumes",
+      "backToHouses": "Back to {{selectedLetter}}",
+      "ariaLabel": "Back to houses starting with {{selectedLetter}}",
+      "backToHousesLabel": "Back to houses"
+    },
+    "perfumeBottleAltText": "{{name}} Perfume Bottle",
     "deleteModal": {
       "heading": "Are you sure you want to delete this perfume house?",
       "description": "Once deleted, you will lose all perfumes and history associated with this house."

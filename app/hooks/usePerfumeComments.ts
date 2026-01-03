@@ -26,6 +26,8 @@ export const usePerfumeComments = ({ userPerfume, onCommentAdded }: UsePerfumeCo
     }
   }, [userPerfume.comments])
 
+  console.log("perfume id", userPerfume.id)
+
   // Get unique modal ID for this userPerfume
   const uniqueModalId = `add-scent-${userPerfume.id}`
 
@@ -46,13 +48,8 @@ export const usePerfumeComments = ({ userPerfume, onCommentAdded }: UsePerfumeCo
    * Add a new comment
    */
   const addComment = async (commentText: string, isPublic: boolean) => {
-    // Sanitize input
     const sanitizedComment = sanitizeString(commentText)
-
-    // Get IDs
     const { perfumeId, userPerfumeId } = getIds()
-
-    // Validate comment data
     const validationData = {
       perfumeId,
       userPerfumeId,

@@ -23,9 +23,9 @@ const PerfumeHouseAdminActions = ({
 
   return (
     <div>
-      <h3 className="text-lg font-semibold text-center text-noir-gold-500 mb-2">
+      <h2 className="text-lg font-semibold text-center text-noir-gold-500 mb-2">
         Admin
-      </h3>
+      </h2>
       <div className="flex flex-col items-center justify-between gap-2">
         <VooDooLink
           aria-label={`edit ${houseName}`}

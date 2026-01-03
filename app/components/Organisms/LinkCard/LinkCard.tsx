@@ -23,14 +23,13 @@ interface LinkCardProps {
   sourcePage?: string
 }
 
-// React Compiler automatically optimizes this component - no manual memo needed
-function LinkCard({
+const LinkCard = ({
   data,
   type,
   children,
   selectedLetter,
   sourcePage,
-}: LinkCardProps) {
+}: LinkCardProps) => {
   const url = type === "house" ? PERFUME_HOUSE : PERFUME_PATH
  
   return (

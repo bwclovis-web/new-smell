@@ -38,8 +38,6 @@ const Select = ({
     }
   }
 
-  // Use value (controlled) when explicitly provided or when defaultId + action are provided
-  // Use defaultValue (uncontrolled) when defaultId is provided without action (for form fields)
   const selectProps = {
     ...rest,
     onChange: (evt: ChangeEvent<HTMLSelectElement>) => handleChange(evt),
@@ -47,10 +45,6 @@ const Select = ({
     "aria-label": ariaLabel ?? undefined,
     name: selectId,
     className: styleMerge(selectVariants({ className, size })),
-    // If value is explicitly provided in rest, use it (controlled)
-    // If defaultId is provided with action, use value (controlled) for state updates
-    // If defaultId is provided without action, use defaultValue (uncontrolled) for form fields
-    // Otherwise, use defaultValue from rest if provided (uncontrolled)
     ...(rest.value === undefined
       ? defaultId !== undefined
         ? action !== undefined
@@ -69,7 +63,7 @@ const Select = ({
     >
       {!ariaLabel && (
         <label
-          className="font-semibold text-2xl mb-1 capitalize text-noir-gold text-shadow-lg text-shadow-noir-black/60 tracking-wide"
+          className="font-semibold text-lg lg:text-2xl mb-1 capitalize text-noir-gold text-shadow-lg text-shadow-noir-black/60 tracking-wide"
           htmlFor={selectId}
         >
           {label}

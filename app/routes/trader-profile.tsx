@@ -79,10 +79,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 const TraderProfilePage = () => {
   const loaderData = useLoaderData<typeof loader>()
   const { trader: initialTrader, viewer, feedback } = loaderData
-  
-  // Hydrate trader query with loader data
   const { data: trader } = useTrader(initialTrader.id, initialTrader)
-  
   const { t } = useTranslation()
   
   if (!trader) {
@@ -116,7 +113,7 @@ const TraderProfilePage = () => {
         </div>
       </div>
         <div className="noir-border relative col-span-1 p-4">
-          <h2>{t("traderProfile.itemsAvailable")}</h2>
+          <h2 className="text-center mb-2">{t("traderProfile.itemsAvailable")}</h2>
           <VooDooDetails
             type="primary"
             name="itemsAvailable"
@@ -141,7 +138,7 @@ const TraderProfilePage = () => {
           </VooDooDetails>
         </div>
         <div className="noir-border relative col-span-1 w-full p-4">
-        <h2>{t("traderProfile.itemsSearchingFor")}</h2>
+        <h2 className="text-center mb-2">{t("traderProfile.itemsSearchingFor")}</h2>
         <VooDooDetails
           type="primary"
           name="itemsSearchingFor"

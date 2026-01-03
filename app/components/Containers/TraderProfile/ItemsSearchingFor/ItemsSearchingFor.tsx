@@ -33,7 +33,7 @@ const ItemsSearchingFor = ({ wishlistItems }: ItemsSearchingForProps) => {
 
   if (wishlistItems.length === 0) {
     return (
-      <div className="mt-6">
+      <div className="mt-6 px-2">
         <p className="text-noir-gold-100 italic">
           {t("traderProfile.noItemsSearchingFor")}
         </p>

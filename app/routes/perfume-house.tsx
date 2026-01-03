@@ -31,7 +31,7 @@ import { getPerfumeHouseBySlug } from "~/models/house.server"
 import { useSessionStore } from "~/stores/sessionStore"
 const ALL_HOUSES = "/behind-the-bottle"
 const BEHIND_THE_BOTTLE = "/behind-the-bottle"
-const PAGE_SIZE = 9
+const PAGE_SIZE = 8
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!params.houseSlug) {
     throw new Error("House slug is required")
@@ -368,7 +368,7 @@ const HouseDetailPage = () => {
         transitionKey={perfumeHouse.id}
       />
 
-      <div className="flex flex-col gap-20 mx-auto max-w-6xl">
+      <div className="flex flex-col gap-10 lg:gap-20 mx-auto max-w-6xl inner-container">
         <PerfumeHouseAdminActions
           isAdmin={userRole === "admin"}
           houseName={perfumeHouse.name}

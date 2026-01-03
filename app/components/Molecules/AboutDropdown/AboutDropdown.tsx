@@ -67,7 +67,7 @@ const AboutDropdown = ({
   const baseClasses =
     variant === "mobile"
       ? "block text-noir-gold hover:text-noir-light font-semibold text-lg py-4 px-4 border border-transparent transition-colors duration-400 rounded-lg mobile-touch-target hover:bg-noir-black/30"
-      : "text-noir-gold hover:text-noir-light font-semibold text-lg px-2 py-1 border border-transparent transition-colors duration-400"
+      : "text-noir-gold hover:text-noir-light font-semibold text-lg px-2 py-1 border border-transparent transition-colors duration-400 block text-center"
 
   const dropdownClasses =
     variant === "mobile"

@@ -5,11 +5,10 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "react-router"
-import { useLoaderData } from "react-router"
+import { NavLink, useLoaderData } from "react-router"
 
 import SearchInput from "~/components/Molecules/SearchInput/SearchInput"
-import MyScentsListItem from "~/components/Containers/MyScents/MyScentListItem"
-import { VirtualScrollList } from "~/components/Molecules/VirtualScrollList"
+import bottleBanner from "~/images/single-bottle.webp"
 import AddToCollectionModal from "~/components/Organisms/AddToCollectionModal"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import {
@@ -25,6 +24,8 @@ import { processWishlistAvailabilityAlerts } from "~/utils/alert-processors"
 import { sharedLoader } from "~/utils/sharedLoader"
 
 import banner from "../../images/perfume.webp"
+import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
+import { validImageRegex } from "~/utils/styleUtils"
 
 export const ROUTE_PATH = "/admin/my-scents"
 
@@ -120,7 +121,6 @@ const handleDecantAction = async (
   
   const tradePrice = tradePriceRaw ? String(tradePriceRaw) : undefined
   const tradePreference = tradePreferenceRaw ? String(tradePreferenceRaw) : undefined
-  // Only set tradeOnly if it was explicitly included in the form
   const tradeOnly = tradeOnlyRaw !== null ? tradeOnlyRaw === "true" : undefined
 
   if (!userPerfumeId) {
@@ -291,8 +291,6 @@ const MyScentsPage = () => {
     setUserPerfumes(initialUserPerfumes)
   }, [initialUserPerfumes])
 
-  // Group entries by perfumeId - show each perfume only once in the collection
-  // Use the oldest entry (original collection entry) as the primary display item
   const groupedPerfumes = userPerfumes.reduce((acc, up) => {
     if (!acc[up.perfumeId]) {
       acc[up.perfumeId] = up
@@ -308,7 +306,6 @@ const MyScentsPage = () => {
 
   const uniquePerfumes = Object.values(groupedPerfumes)
 
-  // Filter perfumes based on search query
   const filteredPerfumes = useMemo(() => {
     if (!searchQuery.trim()) {
       return uniquePerfumes
@@ -317,15 +314,14 @@ const MyScentsPage = () => {
     return uniquePerfumes.filter(userPerfume => userPerfume.perfume.name.toLowerCase().includes(query))
   }, [uniquePerfumes, searchQuery])
 
-  // Render function for virtual scrolling
-  const renderUserPerfume = (userPerfume: UserPerfumeI) => (
-    <MyScentsListItem
-      key={userPerfume.id}
-      setUserPerfumes={setUserPerfumes}
-      userPerfumes={userPerfumes}
-      userPerfume={userPerfume}
-    />
-  )
+  // const renderUserPerfume = (userPerfume: UserPerfumeI) => (
+  //   <MyScentsListItem
+  //     key={userPerfume.id}
+  //     setUserPerfumes={setUserPerfumes}
+  //     userPerfumes={userPerfumes}
+  //     userPerfume={userPerfume}
+  //   />
+  // )
 
   return (
     <section>
@@ -366,38 +362,40 @@ const MyScentsPage = () => {
               {t("myScents.search.tryDifferent")}
             </p>
           </div>
-        ) : filteredPerfumes.length > 10 ? (
-          // Use virtual scrolling for large collections
-          <div className="animate-fade-in">
-            <VirtualScrollList
-              items={filteredPerfumes}
-              itemHeight={200}
-              containerHeight={600}
-              overScan={3}
-              className="w-full style-scroll"
-              renderItem={renderUserPerfume}
-              itemClassName="w-full"
-              emptyState={
-                <div>
-                  <p className="text-noir-gold-100 text-xl">
-                    {t("myScents.collection.empty.heading")}
-                  </p>
-                  <p className="text-noir-gold-500 italic">
-                    {t("myScents.collection.empty.subheading")}
-                  </p>
-                </div>
-              }
-            />
-          </div>
         ) : (
-          // Use regular rendering for small collections
-          <ul className="w-full animate-fade-in">
-            {filteredPerfumes.map(userPerfume => renderUserPerfume(userPerfume))}
-          </ul>
+          <div className="animate-fade-in">
+            <ul className="w-full animate-fade-in grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[auto-fill_minmax(900px,_1fr)] gap-4">
+              {filteredPerfumes.map((userPerfume) => {
+                const {perfume} = userPerfume
+                return(
+                <li key={userPerfume.id} className="flex flex-col items-center justify-center 
+                border-4 border-double border-noir-gold p-1">
+                  <NavLink 
+                  to={`/admin/my-single-scent/${userPerfume.perfume.id}`}>
+                    <OptimizedImage
+                    src={!validImageRegex.test(perfume.image) ? perfume.image : bottleBanner}
+                    alt={t("singlePerfume.perfumeBottleAltText", {
+                      defaultValue: "Perfume Bottle {{name}}",
+                      name: perfume.name,
+                    })}
+                    priority={false}
+                    width={192}
+                    height={192}
+                    quality={75}
+                    className="w-48 h-48 object-cover rounded-lg mb-2 mx-auto dark:brightness-90"
+                    sizes="(max-width: 768px) 50vw, 33vw"
+                    viewTransitionName={`perfume-image-${perfume.id}`}
+                    placeholder="blur"
+                  />
+                  <span className="text-noir-gold">{userPerfume.perfume.name}</span>
+                  </NavLink>
+                </li>
+              )})}
+            </ul>
+          </div>
         )}
       </div>
     </section>
   )
 }
-
 export default MyScentsPage

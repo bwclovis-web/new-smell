@@ -93,7 +93,7 @@ const HeroHeader = ({
       <div
         className={`${DEFAULT_BODY_CLASSES} ${bodyClassName}`.trim()}
       >
-        {children ?? <h1 className={titleClassName}>{title.toLowerCase()}</h1>}
+        {children ?? <h1 className={titleClassName}>{title}</h1>}
       </div>
     </header>
   )

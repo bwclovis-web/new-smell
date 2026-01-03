@@ -5,14 +5,10 @@ import { useFetcher, useNavigation } from "react-router"
 
 import { Button } from "~/components/Atoms/Button"
 import VooDooDetails from "~/components/Atoms/VooDooDetails"
-import DangerModal from "~/components/Organisms/DangerModal"
-import Modal from "~/components/Organisms/Modal"
-import { usePerfumeComments } from "~/hooks/usePerfumeComments"
 import { useSessionStore } from "~/stores/sessionStore"
 import type { UserPerfumeI } from "~/types"
 
 import CommentsModal from "../CommentsModal"
-import DestashManager from "../DestashManager/DestashManager"
 import GeneralDetails from "./bones/GeneralDetails"
 import PerfumeComments from "./bones/PerfumeComments"
 
@@ -30,10 +26,11 @@ const MyScentsListItem = ({
   const { t } = useTranslation()
   const fetcher = useFetcher()
   const navigation = useNavigation()
-  const { modalOpen, toggleModal, modalId, closeModal } = useSessionStore()
+  const { toggleModal, closeModal } = useSessionStore()
+  
   const isSubmitting = navigation.state === "submitting"
   const removeButtonRef = useRef<HTMLButtonElement>(null)
-  const { uniqueModalId, addComment } = usePerfumeComments({ userPerfume })
+  
 
   // Calculate total destashed for this perfume across all entries
   const totalDestashed = userPerfumes
@@ -55,7 +52,7 @@ const MyScentsListItem = ({
 
   return (
     <>
-    {modalOpen && modalId === "delete-item" && (
+    {/* {modalOpen && modalId === "delete-item" && (
       <Modal innerType="dark" animateStart="top">
         <DangerModal 
         heading="Are you sure you want to remove this perfume?"
@@ -67,20 +64,20 @@ const MyScentsListItem = ({
         <Modal innerType="dark" animateStart="top">
           <CommentsModal perfume={userPerfume} addComment={addComment} />
         </Modal>
-      )}
+      )} */}
     <li
       key={userPerfume.id}
-      className="border p-4 flex flex-col w-full bg-noir-dark/60 text-noir-gold mb-4 last-of-type:mb-0"
+      className="border p-4 w-full flex flex-col w-full bg-noir-dark/60 text-noir-gold mb-4 last-of-type:mb-0"
     >
       <div className="flex justify-between items-center mb-2 gap-6">
-        <div className="flex gap-8">
-          <h3 className="font-medium flex flex-col justify-start items-start max-w-[40ch] min-w-[40ch] text-left">
+        <div className="flex gap-8 items-center w-full">
+          <h3 className="font-medium flex flex-col justify-start items-start text-left">
             <span className="text-xl">{t("myScents.listItem.name")}</span>
             <span className="text-2xl text-noir-gold-100">
               {userPerfume.perfume.name}
             </span>
           </h3>
-          <p className="flex flex-col items-end justify-start">
+          <p className="flex flex-col">
             <span className="text-lg font-medium">
               {t("myScents.listItem.total")}
             </span>
@@ -88,7 +85,7 @@ const MyScentsListItem = ({
               {userPerfume.amount} ml
             </span>
           </p>
-          <p className="flex flex-col items-end justify-start">
+          <p className="flex flex-col">
             <span className="text-lg font-medium">
               {t("myScents.listItem.destashed")}
             </span>
@@ -123,24 +120,6 @@ const MyScentsListItem = ({
         name="perfume-details"
       >
         <GeneralDetails userPerfume={userPerfume} />
-        <VooDooDetails
-          summary={t("myScents.listItem.viewComments")}
-          className="text-start text-noir-dark  py-3 mt-3 bg-noir-gold noir-border-dk px-2 relative open:bg-noir-gold-100"
-          name="inner-details"
-        >
-          <PerfumeComments userPerfume={userPerfume} />
-        </VooDooDetails>
-        <VooDooDetails
-          summary={t("myScents.listItem.manageDestashes")}
-          className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded noir-border-dk relative open:bg-noir-gold-100"
-          name="inner-details"
-        >
-          <DestashManager
-            perfumeId={userPerfume.perfume.id}
-            userPerfumes={userPerfumes}
-            setUserPerfumes={setUserPerfumes}
-          />
-        </VooDooDetails>
       </VooDooDetails>
 
       

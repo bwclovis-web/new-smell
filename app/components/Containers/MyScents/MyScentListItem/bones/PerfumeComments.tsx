@@ -25,46 +25,49 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
   }
 
   return (
-    <div className="mt1 p-4 rounded-md">
+    <div className="mt1 p-4 rounded-b-md bg-noir-dark/80">
       <h3 className="text-lg font-semibold">{t("myScents.comments.heading")}</h3>
-      <p className="text-sm  mb-2">
+      <p className="text-sm mb-2 text-noir-gold-500">
         {t("myScents.comments.subheading", {
           perfumeName: userPerfume.perfume.name,
         })}
       </p>
       {comments.length > 0 ? (
-        <ul className="list-disc pl-5">
+        <ul className="list-decimal">
           {comments.map(comment => (
-            <li
+            <ol
               key={comment.id}
-              className="mb-1 border-b border-noir-dark/20 dark:border-noir-light/90 pb-2 bg-noir-light"
+              className="mb-1 border-b border-noir-gold/20 pb-2"
             >
-              <p className="text-base">{comment.comment}</p>
-              <div className="flex items-center justify-between mt-1 bg-noir-blue/10 p-2 rounded-md">
-                <span className="text-xs text-noir-gray font-bold tracking-wide">
+              <p className="text-lg text-noir-gold-100">{comment.comment}</p>
+              <div className="flex items-center justify-between mt-2 bg-noir-black rounded-sm pl-1">
+                <span className="text-xs text-noir-gold-500 font-bold tracking-wide">
                   Created on : {new Date(comment.createdAt).toLocaleDateString()}
                 </span>
-                <VooDooCheck
-                  checked={comment.isPublic}
-                  labelChecked={t("comments.makePublic", "Make this comment public")}
-                  labelUnchecked={t(
-                    "comments.makePrivate",
-                    "Make this comment private"
-                  )}
-                  onChange={() => handleTogglePublic(comment.id, comment.isPublic)}
-                />
-                <Button
-                  variant="icon"
-                  onClick={() => handleDeleteComment(comment.id)}
-                  background={"red"}
-                >
-                  <span className="text-white/90 font-bold text-sm">
-                    Delete comment
-                  </span>
-                  <MdDeleteForever size={20} fill="white" />
-                </Button>
+                <div className="flex items-center gap-2">
+                  <VooDooCheck
+                    checked={comment.isPublic}
+                    labelChecked={t("myScents.comments.makePublic", "Make this comment public")}
+                    labelUnchecked={t(
+                      "myScents.comments.makePrivate",
+                      "Make this comment private"
+                    )}
+                    onChange={() => handleTogglePublic(comment.id, comment.isPublic)}
+                  />
+                  <Button
+                    variant="icon"
+                    onClick={() => handleDeleteComment(comment.id)}
+                    background={"red"}
+                    className="flex"
+                  >
+                    <span className="text-white/90 font-bold text-sm">
+                      {t("myScents.comments.deleteComment")}
+                    </span>
+                    <MdDeleteForever size={20} fill="white" />
+                  </Button>
+                </div>
               </div>
-            </li>
+            </ol>
           ))}
         </ul>
       ) : (

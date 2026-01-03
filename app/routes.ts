@@ -77,6 +77,7 @@ export default [
       route("admin/profile", "routes/admin/profilePage.tsx"),
       route("admin/wishlist", "routes/admin/WishlistPage.tsx"),
       route("admin/my-scents", "routes/admin/MyScents.tsx"),
+      route("admin/my-single-scent/:scentId", "routes/admin/my-single-scent.tsx"),
       route("admin/data-quality", "routes/admin/data-quality.tsx"),
       route("admin/users", "routes/admin/users.tsx"),
       route("admin/security-monitor", "routes/admin/security-monitor.tsx"),

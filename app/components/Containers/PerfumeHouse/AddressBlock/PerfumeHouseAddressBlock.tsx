@@ -1,5 +1,5 @@
 const PerfumeHouseAddressBlock = ({ perfumeHouse }) => (
-  <address className="flex flex-col  md:flex-row items-center gap-4 p-4 bg-noir-dark text-noir-gold-100 ">
+  <address className="flex flex-col md:flex-row items-start gap-2 p-4 bg-noir-dark text-noir-gold-100 ">
     <div className="md:w-1/2 w-full flex flex-col gap-2">
       {perfumeHouse.address && (
         <p className="text-sm">

@@ -29,6 +29,8 @@ const DestashManager = ({
   const previousStateRef = useRef<string>(fetcher.state)
   const { closeModal } = useSessionStore()
 
+  console.log('userPerfumes', userPerfumes)
+
   // Revalidate data after successful fetcher submission
   useEffect(() => {
     // Only update when transitioning from "submitting" to "idle"
@@ -58,9 +60,17 @@ const DestashManager = ({
         })
       }
 
-      // Always revalidate to ensure data is fresh
-      revalidator.revalidate()
+      // Close the form after successful submission
+      setIsCreating(false)
+      setEditingId(null)
+
+      // Note: We're not calling revalidator.revalidate() here because:
+      // 1. We're already updating local state with the response data
+      // 2. Revalidation can cause navigation/abort issues when submitting from a different route
+      // 3. The local state update is sufficient for immediate UI feedback
+      // If fresh data is needed, the user can refresh the page or navigate away and back
     }
+    
     previousStateRef.current = fetcher.state
   }, [
 fetcher.state, fetcher.data, revalidator, setUserPerfumes
@@ -143,10 +153,12 @@ fetcher.state, fetcher.data, revalidator, setUserPerfumes
     formData.append("tradePreference", data.tradePreference)
     formData.append("tradeOnly", data.tradeOnly.toString())
 
+    // Submit the form
     fetcher.submit(formData, { method: "post", action: "/admin/my-scents" })
-    // Close the form immediately - the revalidator will refresh the data
-    setIsCreating(false)
-    setEditingId(null)
+
+    // Don't close the form immediately - wait for the fetcher to complete
+    // This prevents the AbortError from component unmounting during submission
+    // The useEffect will handle closing the form when the submission completes
   }
 
   const editingDestash = editingId
@@ -219,18 +231,49 @@ fetcher.state, fetcher.data, revalidator, setUserPerfumes
                 : undefined}
             />
           )}
-          {isCreating && (
-            <DestashForm
-              key="create-new"
-              userPerfume={
-                userPerfumes.find(up => up.perfumeId === perfumeId) ||
-                userPerfumes[0]
-              }
-              handleDecantConfirm={handleDecantConfirm}
-              isCreating={true}
-              maxAvailable={totalOwned > 0 ? totalOwned - totalDestashed : undefined}
-            />
-          )}
+          {isCreating && (() => {
+            const foundByPerfumeId = userPerfumes?.find(up => up.perfumeId === perfumeId);
+            const fallbackFirst = userPerfumes?.[0];
+            let finalUserPerfume = foundByPerfumeId || fallbackFirst;
+            
+            // If no userPerfume found, create a minimal fallback object for the form
+            if (!finalUserPerfume) {
+              // Try to get perfume info from any userPerfume in the array
+              const anyUserPerfume = userPerfumes?.find(up => up.perfume?.id === perfumeId) || userPerfumes?.[0];
+              const perfumeName = anyUserPerfume?.perfume?.name || "Unknown Perfume";
+              
+              finalUserPerfume = {
+                id: `temp-${perfumeId}`, // Temporary ID for dependency tracking
+                userId: "",
+                perfumeId: perfumeId,
+                perfume: { 
+                  id: perfumeId, 
+                  name: perfumeName 
+                },
+                amount: "0",
+                available: "0",
+                price: undefined,
+                tradePrice: undefined,
+                tradePreference: "cash",
+                tradeOnly: false,
+              } as UserPerfumeI;
+            }
+            
+            // Ensure finalUserPerfume is always defined before rendering
+            if (!finalUserPerfume) {
+              return null; // Don't render if we can't create a valid userPerfume
+            }
+            
+            return (
+              <DestashForm
+                key="create-new"
+                userPerfume={finalUserPerfume}
+                handleDecantConfirm={handleDecantConfirm}
+                isCreating={true}
+                maxAvailable={totalOwned > 0 ? totalOwned - totalDestashed : undefined}
+              />
+            );
+          })()}
         </div>
       )}
     </div>
