@@ -26,7 +26,9 @@ import * as wishlistServer from "~/models/wishlist.server"
 import { loader as perfumeLoader } from "~/routes/perfume"
 import * as sessionManager from "~/utils/security/session-manager.server"
 
-vi.mock("~/models/perfume.server")
+vi.mock("~/models/perfume.server", () => ({
+  getPerfumeBySlug: vi.fn(),
+}))
 
 vi.mock("~/models/perfumeRating.server", () => ({
   getPerfumeRatings: vi.fn(),

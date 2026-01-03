@@ -76,7 +76,7 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
           <img src={logo} alt={logoText} className="w-40 h-25" />
         </NavLink>
         <ul className="flex gap-4 items-center tracking-wide max-w-max">
-        <li>
+          <li>
             <AboutDropdown variant="desktop" />
           </li>
           {mainNavigation.map(item => (
