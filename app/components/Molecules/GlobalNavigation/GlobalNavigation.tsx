@@ -70,8 +70,7 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
       >
         <NavLink
           to="/"
-          className="text-noir-gold hover:text-noir-light font-semibold text-lg  
-          px-2 border border-transparent transition-colors duration-400 block text-center leading-5"
+          className="px-2 block"
         >
           <img src={logo} alt={logoText} className="w-40 h-25" />
         </NavLink>

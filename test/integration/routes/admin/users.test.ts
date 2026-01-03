@@ -64,8 +64,8 @@ describe("Admin Users Route Integration Tests", () => {
 
       const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
       const mockGetAllUsers = vi.mocked(adminServer.getAllUsersWithCounts)
-      mockSharedLoader.mockClear().mockResolvedValue(mockAdminUser as any)
-      mockGetAllUsers.mockClear().mockResolvedValue(mockUsers as any)
+      mockSharedLoader.mockResolvedValue(mockAdminUser as any)
+      mockGetAllUsers.mockResolvedValue(mockUsers as any)
 
       const request = new Request("https://example.com/admin/users")
 
@@ -144,8 +144,8 @@ describe("Admin Users Route Integration Tests", () => {
     it("should allow admin to delete user", async () => {
       const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
       const mockDeleteUser = vi.mocked(adminServer.deleteUserSafely)
-      mockSharedLoader.mockClear().mockResolvedValue(mockAdminUser as any)
-      mockDeleteUser.mockClear().mockResolvedValue({
+      mockSharedLoader.mockResolvedValue(mockAdminUser as any)
+      mockDeleteUser.mockResolvedValue({
         success: true,
         message: "User deleted successfully",
       })
@@ -184,8 +184,8 @@ describe("Admin Users Route Integration Tests", () => {
     it("should allow admin to soft delete user", async () => {
       const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
       const mockSoftDeleteUser = vi.mocked(adminServer.softDeleteUser)
-      mockSharedLoader.mockClear().mockResolvedValue(mockAdminUser as any)
-      mockSoftDeleteUser.mockClear().mockResolvedValue({
+      mockSharedLoader.mockResolvedValue(mockAdminUser as any)
+      mockSoftDeleteUser.mockResolvedValue({
         success: true,
         message: "User soft deleted successfully",
       })
@@ -257,7 +257,7 @@ describe("Admin Users Route Integration Tests", () => {
 
     it("should reject action with missing userId", async () => {
       const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
-      mockSharedLoader.mockClear().mockResolvedValue(mockAdminUser as any)
+      mockSharedLoader.mockResolvedValue(mockAdminUser as any)
 
       const formData = new FormData()
       formData.append("action", "delete")
@@ -291,7 +291,7 @@ describe("Admin Users Route Integration Tests", () => {
 
     it("should reject invalid action type", async () => {
       const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
-      mockSharedLoader.mockClear().mockResolvedValue(mockAdminUser as any)
+      mockSharedLoader.mockResolvedValue(mockAdminUser as any)
 
       const formData = new FormData()
       formData.append("userId", "user-1")

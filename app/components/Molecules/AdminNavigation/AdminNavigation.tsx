@@ -39,7 +39,7 @@ const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
                 to={item.path}
                 suppressHydrationWarning
                 className={({ isActive }) => styleMerge(
-                    "text-noir-gold py-2  hover:text-noir-gold-500 transition-colors duration-200 hover:bg-noir-dark/80 block w-full",
+                    "text-noir-gold py-2 px-2  hover:text-noir-gold-500 transition-colors duration-200 hover:bg-noir-dark/80 block w-full",
                     isActive
                       ? "text-noir-dark text-shadow-none  bg-noir-gold/80 border-2 border-noir-gold"
                       : ""
