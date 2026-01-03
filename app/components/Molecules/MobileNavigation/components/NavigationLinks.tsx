@@ -1,8 +1,8 @@
+import { type RefObject } from "react"
 import { useTranslation } from "react-i18next"
 import { NavLink } from "react-router"
 
 import { mainNavigation } from "~/data/navigation"
-import { ROUTE_PATH as ADMIN_PATH } from "~/routes/admin/profilePage"
 import { styleMerge } from "~/utils/styleUtils"
 
 import AboutDropdown from "../../AboutDropdown/AboutDropdown"
@@ -14,14 +14,19 @@ interface NavigationLinksProps {
   } | null
   isClientReady: boolean
   onNavClick: () => void
+  onAdminMenuToggle?: () => void
+  adminMenuButtonRef?: RefObject<HTMLButtonElement>
 }
 
 const NavigationLinks  = ({
   user,
   isClientReady,
   onNavClick,
+  onAdminMenuToggle,
+  adminMenuButtonRef,
 }: NavigationLinksProps) => {
   const { t, ready } = useTranslation()
+  const isAdmin = user?.role === "admin" || user?.role === "editor"
 
   return (
     <nav className="flex-1 px-4 pb-4">
@@ -49,22 +54,17 @@ const NavigationLinks  = ({
         ))}
 
         
-        {user && (
+        {isAdmin && onAdminMenuToggle && (
           <li>
-            <NavLink
-              viewTransition
-              to={ADMIN_PATH}
-              onClick={onNavClick}
-              className={({ isActive }) => styleMerge(
-                  "block text-noir-gold hover:text-noir-light font-semibold text-lg py-4 px-4 border border-transparent transition-colors duration-400 rounded-lg mobile-touch-target hover:bg-noir-black/30",
-                  isActive &&
-                    isClientReady &&
-                    "text-noir-light bg-noir-gold rounded-lg border-noir-light/90"
-                )
-              }
+            <button
+              ref={adminMenuButtonRef}
+              onClick={onAdminMenuToggle}
+              className={styleMerge(
+                "block text-noir-gold hover:text-noir-light font-semibold text-lg py-4 px-4 border border-transparent transition-colors duration-400 rounded-lg mobile-touch-target hover:bg-noir-black/30 w-full text-left"
+              )}
             >
               {ready && isClientReady ? t("navigation.admin") : "Admin"}
-            </NavLink>
+            </button>
           </li>
         )}
       </ul>

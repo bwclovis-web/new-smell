@@ -15,9 +15,10 @@ interface AdminNavigationProps
   user?: {
     role?: string
   }
+  onNavClick?: () => void
 }
 
-const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
+const AdminNavigation = ({ className, user, onNavClick }: AdminNavigationProps) => {
   const { t } = useTranslation()
   const isAdmin = user?.role === "admin" || user?.role === "editor"
   
@@ -37,6 +38,7 @@ const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
               <NavLink
                 viewTransition
                 to={item.path}
+                onClick={onNavClick}
                 suppressHydrationWarning
                 className={({ isActive }) => styleMerge(
                     "text-noir-gold py-2 px-2  hover:text-noir-gold-500 transition-colors duration-200 hover:bg-noir-dark/80 block w-full",
@@ -59,6 +61,7 @@ const AdminNavigation = ({ className, user }: AdminNavigationProps) => {
             <NavLink
               viewTransition
               to={item.path}
+              onClick={onNavClick}
               suppressHydrationWarning
               className={({ isActive }) => styleMerge(
                   "text-noir-gold py-2  hover:text-noir-gold-500 transition-colors duration-200 hover:bg-noir-dark/80 block w-full",
