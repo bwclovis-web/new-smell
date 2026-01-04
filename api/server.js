@@ -70,13 +70,68 @@ if (process.env.NODE_ENV !== "production") {
   console.warn("🚀 Initializing Vite dev server...")
   const startTime = Date.now()
   
-  viteDevServerPromise = import("vite").then(vite => vite.createServer({
-    root: process.cwd(),
-    server: {
-      middlewareMode: true,
-    },
-    appType: "custom",
-  })).then(server => {
+  viteDevServerPromise = import("vite").then(async vite => {
+    // Import the config file directly to preserve plugin virtual modules
+    // This ensures React Router's HMR runtime virtual module is properly registered
+    try {
+      const configPath = path.join(process.cwd(), "vite.config.ts")
+      const configUrl = pathToFileURL(configPath).href
+      const configModule = await import(configUrl)
+      const userConfig = configModule.default || {}
+      
+      // Only override server settings for middleware mode
+      // Keep all plugins intact so virtual modules work correctly
+      return vite.createServer({
+        ...userConfig,
+        root: process.cwd(),
+        server: {
+          ...(userConfig.server || {}),
+          middlewareMode: true,
+          // Preserve HMR settings from config
+          hmr: userConfig.server?.hmr || {
+            port: 24680,
+            overlay: false,
+            protocol: "ws",
+            host: "localhost",
+            clientPort: 24680,
+            timeout: 30000,
+          },
+        },
+        appType: "custom",
+      })
+    } catch (configError) {
+      // Fallback: create server with explicit HMR settings matching vite.config.ts
+      console.warn("⚠️  Could not resolve vite config, using explicit HMR settings:", configError.message)
+      return vite.createServer({
+        root: process.cwd(),
+        server: {
+          middlewareMode: true,
+          hmr: {
+            port: 24680,
+            overlay: false,
+            protocol: "ws",
+            host: "localhost",
+            clientPort: 24680,
+            timeout: 30000,
+          },
+          watch: {
+            usePolling: process.platform === "win32",
+            interval: process.platform === "win32" ? 3000 : undefined,
+            ignored: [
+              "**/node_modules/**",
+              "**/.git/**",
+              "**/dist/**",
+              "**/coverage/**",
+              "**/.react-router/**",
+              "**/prisma/migrations/**",
+            ],
+          },
+          cors: true,
+        },
+        appType: "custom",
+      })
+    }
+  }).then(server => {
     viteDevServer = server
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1)
     console.warn(`✅ Vite dev server created in ${elapsed}s`)
@@ -99,6 +154,14 @@ const defaultRateLimit = {
   windowMs: 60 * 1000,
 }
 
+// Helper function to safely get client IP address
+// Handles cases where req.ip might be undefined (e.g., during development)
+const getClientIP = req => req.ip || 
+         req.socket?.remoteAddress || 
+         req.connection?.remoteAddress || 
+         req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+         'unknown'
+
 // Enhanced rate limiting configurations
 const authRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -111,6 +174,7 @@ const authRateLimit = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   skipSuccessfulRequests: true, // Don't count successful requests
+  keyGenerator: req => getClientIP(req),
 })
 
 const apiRateLimit = rateLimit({
@@ -123,6 +187,7 @@ const apiRateLimit = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: req => getClientIP(req),
 })
 
 const ratingRateLimit = rateLimit({
@@ -135,6 +200,7 @@ const ratingRateLimit = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: req => getClientIP(req),
 })
 
 // strongestRateLimit removed - unused
@@ -148,6 +214,7 @@ const strongRateLimit = rateLimit({
     message: "Too many requests, please slow down",
     retryAfter: 60,
   },
+  keyGenerator: req => getClientIP(req),
 })
 
 const generalRateLimit = rateLimit({
@@ -157,6 +224,7 @@ const generalRateLimit = rateLimit({
     message: "Too many requests, please slow down",
     retryAfter: 60,
   },
+  keyGenerator: req => getClientIP(req),
 })
 
 const app = express()

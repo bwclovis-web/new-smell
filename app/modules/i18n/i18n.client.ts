@@ -12,7 +12,7 @@ if (!i18n.isInitialized) {
     .init({
       fallbackLng: "en",
       supportedLngs: ["en", "es"],
-      debug: import.meta.env.DEV && !import.meta.hot, // Disable debug during HMR
+      debug: false, // Disable debug to prevent console spam
       load: "languageOnly",
       defaultNS: "translation",
       ns: ["translation"],
@@ -21,6 +21,7 @@ if (!i18n.isInitialized) {
       },
       backend: {
         loadPath: "/locales/{{lng}}/{{ns}}.json",
+        reloadInterval: false, // Disable auto-reload in dev to prevent conflicts with HMR
       },
       react: {
         useSuspense: false, // Match server configuration to prevent hydration issues
@@ -40,6 +41,8 @@ if (!i18n.isInitialized) {
         // Persist language choice to prevent re-detection
         cookieMinutes: 525600, // 1 year - persist language choice
       },
+      // Ensure i18n is ready before components render
+      initImmediate: false,
     })
 }
 

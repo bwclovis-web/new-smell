@@ -5,7 +5,7 @@ import { type ReactNode, useRef } from "react"
 interface TitleBannerProps {
   image: string
   heading: string
-  subheading: string
+  subheading?: string
   children?: ReactNode
   imagePos?: "object-center" | "object-top" | "object-bottom"
   flipImage?: boolean

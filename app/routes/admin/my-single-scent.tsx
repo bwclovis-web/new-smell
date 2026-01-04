@@ -13,6 +13,7 @@ import { getUserPerfumes } from "~/models/user.server"
 import { useSessionStore } from "~/stores/sessionStore"
 import type { UserPerfumeI } from "~/types"
 import { sharedLoader } from "~/utils/sharedLoader"
+import TitleBanner from "~/components/Organisms/TitleBanner"
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     if (!params.scentId) {
@@ -51,15 +52,10 @@ const MySingleScent = () => {
         () => safeAllUserPerfumes as unknown as UserPerfumeI[],
         [safeAllUserPerfumes]
     )
-    
-    // State for DestashManager to update the list
+
     const [userPerfumesListState, setUserPerfumesListState] = useState<UserPerfumeI[]>(userPerfumesList)
-    
-    // Track the last loader data to detect when it actually changes
     const lastLoaderDataRef = useRef<string>(JSON.stringify(userPerfumesList.map(up => up.id).sort()))
     
-    // Sync state when loader data changes (e.g., after revalidation)
-    // But don't overwrite if state has more items (indicating manual updates from DestashManager)
     useEffect(() => {
         const currentLoaderIds = JSON.stringify(userPerfumesList.map(up => up.id).sort())
         const lastLoaderIds = lastLoaderDataRef.current
@@ -69,9 +65,6 @@ const MySingleScent = () => {
             setUserPerfumesListState(prevState => {
                 const loaderIds = new Set(userPerfumesList.map(up => up.id))
                 const stateIds = new Set(prevState.map(up => up.id))
-                
-                // If state has more items than loader, it means DestashManager added items
-                // In that case, merge the new loader data with the manual updates
                 if (stateIds.size > loaderIds.size) {
                     const manualUpdateIds = [...stateIds].filter(id => !loaderIds.has(id))
                     const manualUpdates = prevState.filter(up => manualUpdateIds.includes(up.id))
@@ -89,6 +82,8 @@ const MySingleScent = () => {
     
     const { uniqueModalId, addComment } = usePerfumeComments({ userPerfume: thisPerfume })
     const perfume = thisPerfume.perfume
+
+    console.log(thisPerfume)
 
     const handleRemovePerfume = (userPerfumeId: string) => {
         const formData = new FormData()
@@ -113,15 +108,18 @@ const MySingleScent = () => {
           <CommentsModal perfume={thisPerfume} addComment={addComment} />
         </Modal>
       )}
-        <div className="mt-190 inner-container">
-            <h1>{perfume.name}</h1>
-            <VooDooDetails
-                summary={t("myScents.listItem.viewComments")}
-                className="text-start text-noir-dark  py-3 mt-3 bg-noir-gold noir-border-dk px-2 relative open:bg-noir-gold-100"
-                name="inner-details"
-            >
-          <PerfumeComments userPerfume={thisPerfume} />
-        </VooDooDetails>
+      <TitleBanner
+        image={perfume.image ?? ""}
+        heading={perfume.name ?? ""}
+      />
+        <div className="inner-container">
+        <VooDooDetails
+            summary={t("myScents.listItem.viewComments")}
+            className="text-start text-noir-dark  py-3 mt-3 bg-noir-gold noir-border-dk px-2 relative open:bg-noir-gold-100"
+            name="inner-details"
+        >
+        <PerfumeComments userPerfume={thisPerfume} />
+    </VooDooDetails>
         <VooDooDetails
             summary={t("myScents.listItem.viewDetails")}
             className="text-start text-noir-dark  py-3 mt-3 bg-noir-gold noir-border-dk px-2 relative open:bg-noir-gold-100"
