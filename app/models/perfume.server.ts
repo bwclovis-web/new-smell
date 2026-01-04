@@ -45,13 +45,32 @@ export const getAllPerfumes = async () => {
 }
 
 export const getSingleUserPerfumeById = async (userPerfumeId: string, userId: string) => {
+  // CRITICAL FIX: When multiple destashes exist, findFirst returns the first one
+  // This can cause comments to be loaded for the wrong destash
+  // We should order by createdAt desc to get the most recent, or better yet, accept userPerfumeId directly
+  // For now, we'll get the first one but the component will need to handle matching correctly
   const userPerfume = await prisma.userPerfume.findFirst({
   where: { perfumeId: userPerfumeId, userId },
+  orderBy: { createdAt: 'desc' }, // Get most recent destash if multiple exist
   select: {
     id: true,
     perfumeId: true,
     userId: true,
-    comments: true,
+    comments: {
+      select: {
+        id: true,
+        userId: true,
+        perfumeId: true,
+        userPerfumeId: true,
+        comment: true,
+        isPublic: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    },
     price: true,
     perfume: { 
       select: { 
@@ -63,7 +82,6 @@ export const getSingleUserPerfumeById = async (userPerfumeId: string, userId: st
         perfumeHouseId: true, 
         createdAt: true, 
         updatedAt: true,
-
         perfumeHouse: { 
           select: { id: true, 
             name: true, 
@@ -73,8 +91,8 @@ export const getSingleUserPerfumeById = async (userPerfumeId: string, userId: st
         } 
       } 
     },
-  },
-})
+    },
+  })
   return userPerfume
 }
 
@@ -470,6 +488,8 @@ const availableForDecantingSelect = {
       price: true,
       tradePrice: true,
       tradePreference: true,
+      tradeOnly: true,
+      type: true,
       userId: true,
       user: {
         select: {
@@ -478,6 +498,24 @@ const availableForDecantingSelect = {
           lastName: true,
           username: true,
           email: true,
+        },
+      },
+      comments: {
+        where: {
+          isPublic: true,
+        },
+        select: {
+          id: true,
+          userId: true,
+          perfumeId: true,
+          userPerfumeId: true,
+          comment: true,
+          isPublic: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+        orderBy: {
+          createdAt: "desc",
         },
       },
     },

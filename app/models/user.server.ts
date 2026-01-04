@@ -89,6 +89,9 @@ export const getTraderById = async (id: string) => {
             },
             select: {
               id: true,
+              userId: true,
+              perfumeId: true,
+              userPerfumeId: true,
               comment: true,
               isPublic: true,
               createdAt: true,
@@ -858,6 +861,35 @@ export const getUserPerfumeComments = async (userId: string, perfumeId: string) 
      
     console.error("Error fetching user perfume comments:", error)
     return { success: false, error: "Failed to fetch comments" }
+  }
+}
+
+// Get comments for a specific userPerfumeId (for when we know the exact destash)
+export const getCommentsByUserPerfumeId = async (userPerfumeId: string) => {
+  try {
+    const comments = await prisma.userPerfumeComment.findMany({
+      where: {
+        userPerfumeId,
+      },
+      select: {
+        id: true,
+        userId: true,
+        perfumeId: true,
+        userPerfumeId: true,
+        comment: true,
+        isPublic: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    })
+
+    return comments
+  } catch (error) {
+    console.error("Error fetching comments by userPerfumeId:", error)
+    return []
   }
 }
 

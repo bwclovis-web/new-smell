@@ -11,7 +11,7 @@ import { sanitizeString } from "~/utils/validation"
 const CommentsModal = ({ perfume, onCommentAdded, addComment }: CommentsModalProps) => {
   const { t } = useTranslation()
   const { toggleModal, modalId } = useSessionStore()
-  const [isPublic, setIsPublic] = useState(false)
+  const [isPublic, setIsPublic] = useState(true) // Default to public
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [comment, setComment] = useState("")
 

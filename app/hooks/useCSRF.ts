@@ -69,6 +69,7 @@ export function useCSRF() {
       method: "POST",
       body: protectedFormData,
       headers: protectedHeaders,
+      credentials: "include", // Include cookies for authentication
     })
   }
 

@@ -6,6 +6,7 @@ import {
   addPerfumeComment,
   addUserPerfume,
   deletePerfumeComment,
+  getCommentsByUserPerfumeId,
   getUserById,
   getUserPerfumes,
   removeUserPerfume,
@@ -214,6 +215,14 @@ const handleDeleteCommentAction = async (user: any, commentId?: string) => {
   return await deletePerfumeComment(user.id, commentId)
 }
 
+const handleGetCommentsAction = async (user: any, userPerfumeId?: string) => {
+  if (!userPerfumeId) {
+    return { success: false, error: "User Perfume ID is required" }
+  }
+  const comments = await getCommentsByUserPerfumeId(userPerfumeId)
+  return { success: true, comments }
+}
+
 // Helper function to process the user perfume action
 const processUserPerfumeAction = async (params: PerfumeActionParams) => {
   const {
@@ -257,6 +266,8 @@ const processUserPerfumeAction = async (params: PerfumeActionParams) => {
       return handleToggleCommentVisibilityAction(user, commentId, isPublic)
     case "delete-comment":
       return handleDeleteCommentAction(user, commentId)
+    case "get-comments":
+      return handleGetCommentsAction(user, userPerfumeId)
     default:
       return { success: false, error: "Invalid action" }
   }

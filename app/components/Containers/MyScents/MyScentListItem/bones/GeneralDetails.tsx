@@ -5,6 +5,7 @@ import { formatPrice } from "~/utils/numberUtils"
 
 const GeneralDetails = ({ userPerfume }: { userPerfume: any }) => {
   const { t } = useTranslation()
+  console.log(userPerfume)
 
   return (
     <div className="flex gap-10 mt-6 justify-between items-center px-2">

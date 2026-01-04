@@ -71,7 +71,7 @@ const TitleBanner = ({
       />
       <div className="relative z-10 w-full max-w-max p-2 top-2 md:top-0 md:px-8 rounded-lg md:py-4 text-noir-gold text-center text-shadow-lg text-shadow-noir-black">
         <h1 className="hero-title">{heading}</h1>
-        <p className="subtitle-sm filter">{subheading}</p>
+        {subheading && <p className="subtitle-sm filter">{subheading}</p>}
         {children && <div className="p-2 mt-4 md:mt-6">{children}</div>}
       </div>
     </header>

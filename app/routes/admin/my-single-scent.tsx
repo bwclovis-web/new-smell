@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useFetcher, useLoaderData, type LoaderFunctionArgs } from "react-router"
+import { useFetcher, useLoaderData, useRevalidator, type LoaderFunctionArgs } from "react-router"
 import VooDooDetails from "~/components/Atoms/VooDooDetails"
 import DestashManager from "~/components/Containers/MyScents/DestashManager/DestashManager"
 import { CommentsModal } from "~/components/Containers/MyScents"
@@ -10,6 +10,7 @@ import Modal from "~/components/Organisms/Modal"
 import { usePerfumeComments } from "~/hooks/usePerfumeComments"
 import { getSingleUserPerfumeById } from "~/models/perfume.server"
 import { getUserPerfumes } from "~/models/user.server"
+import type { Comment } from "~/types/comments"
 import { useSessionStore } from "~/stores/sessionStore"
 import type { UserPerfumeI } from "~/types"
 import { sharedLoader } from "~/utils/sharedLoader"
@@ -33,21 +34,55 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
 const MySingleScent = () => {
     const { userPerfume, allUserPerfumes } = useLoaderData<typeof loader>()
     const fetcher = useFetcher()
+    const revalidator = useRevalidator()
     const { t } = useTranslation()
     const { modalOpen, modalId, closeModal } = useSessionStore()
-    
-    // Normalize allUserPerfumes to array
     const safeAllUserPerfumes = useMemo(() => allUserPerfumes ?? [], [allUserPerfumes])
-    
-    // Find the full user perfume from the list, or fallback to the loader result
     const thisPerfume = useMemo(() => {
-        const found = safeAllUserPerfumes.find(
-            up => up.id === userPerfume.id || up.perfumeId === userPerfume.perfumeId
-        )
-        return (found || userPerfume) as unknown as UserPerfumeI
+        const foundById = safeAllUserPerfumes.find(up => up.id === userPerfume.id)
+        if (foundById) {
+            return { ...foundById, comments: userPerfume.comments || [] } as unknown as UserPerfumeI
+        }
+        const foundByPerfumeId = safeAllUserPerfumes.find(up => up.perfumeId === userPerfume.perfumeId)
+        if (foundByPerfumeId) {
+            return { ...foundByPerfumeId, comments: [] } as unknown as UserPerfumeI
+        }
+        return userPerfume as unknown as UserPerfumeI
     }, [safeAllUserPerfumes, userPerfume])
     
-    // Memoize user perfumes list for DestashManager
+    const [fetchedComments, setFetchedComments] = useState<Comment[]>([])
+    const commentsFetcher = useFetcher()
+    
+    useEffect(() => {
+        if (thisPerfume.id !== userPerfume.id && thisPerfume.id) {
+            const formData = new FormData()
+            formData.append("action", "get-comments")
+            formData.append("userPerfumeId", thisPerfume.id)
+            commentsFetcher.submit(formData, { method: "post", action: "/api/user-perfumes" })
+        } else {
+            setFetchedComments([])
+        }
+    }, [thisPerfume.id, userPerfume.id])
+    
+    useEffect(() => {
+        if (commentsFetcher.data && commentsFetcher.data.success && commentsFetcher.data.comments) {
+            setFetchedComments(commentsFetcher.data.comments)
+        }
+    }, [commentsFetcher.data])
+    
+    const finalPerfume = useMemo(() => {
+        if (thisPerfume.id === userPerfume.id) {
+            return thisPerfume
+        }
+        if (fetchedComments.length > 0) {
+            return { ...thisPerfume, comments: fetchedComments } as UserPerfumeI
+        }
+        const filteredComments = (userPerfume.comments || []).filter(
+            (comment: Comment) => comment.userPerfumeId === thisPerfume.id
+        )
+        return { ...thisPerfume, comments: filteredComments } as UserPerfumeI
+    }, [thisPerfume, userPerfume, fetchedComments])
+    
     const userPerfumesList = useMemo(
         () => safeAllUserPerfumes as unknown as UserPerfumeI[],
         [safeAllUserPerfumes]
@@ -60,7 +95,6 @@ const MySingleScent = () => {
         const currentLoaderIds = JSON.stringify(userPerfumesList.map(up => up.id).sort())
         const lastLoaderIds = lastLoaderDataRef.current
         
-        // Only sync if loader data has actually changed
         if (currentLoaderIds !== lastLoaderIds) {
             setUserPerfumesListState(prevState => {
                 const loaderIds = new Set(userPerfumesList.map(up => up.id))
@@ -68,10 +102,8 @@ const MySingleScent = () => {
                 if (stateIds.size > loaderIds.size) {
                     const manualUpdateIds = [...stateIds].filter(id => !loaderIds.has(id))
                     const manualUpdates = prevState.filter(up => manualUpdateIds.includes(up.id))
-                    // Merge: loader data + manual updates
                     return [...userPerfumesList, ...manualUpdates]
                 } else {
-                    // State doesn't have manual updates, safe to sync from loader
                     return userPerfumesList
                 }
             })
@@ -80,10 +112,23 @@ const MySingleScent = () => {
         }
     }, [userPerfumesList])
     
-    const { uniqueModalId, addComment } = usePerfumeComments({ userPerfume: thisPerfume })
-    const perfume = thisPerfume.perfume
+    const { uniqueModalId, addComment } = usePerfumeComments({ 
+        userPerfume: finalPerfume,
+        onCommentSuccess: () => {
+            if (finalPerfume.id !== userPerfume.id) {
+                const formData = new FormData()
+                formData.append("action", "get-comments")
+                formData.append("userPerfumeId", finalPerfume.id)
+                commentsFetcher.submit(formData, { method: "post", action: "/api/user-perfumes" })
+            } else {
+                setTimeout(() => {
+                    revalidator.revalidate()
+                }, 500)
+            }
+        }
+    })
+    const perfume = finalPerfume.perfume
 
-    console.log(thisPerfume)
 
     const handleRemovePerfume = (userPerfumeId: string) => {
         const formData = new FormData()
@@ -99,34 +144,29 @@ const MySingleScent = () => {
             <DangerModal 
                 heading="Are you sure you want to remove this perfume?"
                 description="Once removed, you will lose all history, notes and entries in the exchange."
-                action={() => handleRemovePerfume(thisPerfume.id)} 
+                action={() => handleRemovePerfume(finalPerfume.id)} 
             />
         </Modal>
         )}
       {modalOpen && modalId === uniqueModalId && (
         <Modal innerType="dark" animateStart="top">
-          <CommentsModal perfume={thisPerfume} addComment={addComment} />
+          <CommentsModal perfume={finalPerfume} addComment={addComment} />
         </Modal>
       )}
       <TitleBanner
         image={perfume.image ?? ""}
         heading={perfume.name ?? ""}
       />
-        <div className="inner-container">
+    <div className="inner-container">
+        <GeneralDetails userPerfume={finalPerfume} />
         <VooDooDetails
             summary={t("myScents.listItem.viewComments")}
             className="text-start text-noir-dark  py-3 mt-3 bg-noir-gold noir-border-dk px-2 relative open:bg-noir-gold-100"
             name="inner-details"
         >
-        <PerfumeComments userPerfume={thisPerfume} />
-    </VooDooDetails>
-        <VooDooDetails
-            summary={t("myScents.listItem.viewDetails")}
-            className="text-start text-noir-dark  py-3 mt-3 bg-noir-gold noir-border-dk px-2 relative open:bg-noir-gold-100"
-            name="inner-details"
-        >
-            <GeneralDetails userPerfume={thisPerfume} />
+            <PerfumeComments userPerfume={finalPerfume} />
         </VooDooDetails>
+        
         <VooDooDetails
             summary={t("myScents.listItem.manageDestashes")}
             className="text-start text-noir-dark font-bold py-3 mt-3 bg-noir-gold px-2 rounded noir-border-dk relative open:bg-noir-gold-100"
