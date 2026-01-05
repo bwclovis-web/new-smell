@@ -45,13 +45,9 @@ export const getAllPerfumes = async () => {
 }
 
 export const getSingleUserPerfumeById = async (userPerfumeId: string, userId: string) => {
-  // CRITICAL FIX: When multiple destashes exist, findFirst returns the first one
-  // This can cause comments to be loaded for the wrong destash
-  // We should order by createdAt desc to get the most recent, or better yet, accept userPerfumeId directly
-  // For now, we'll get the first one but the component will need to handle matching correctly
+  // Query by the actual userPerfume.id to get the specific destash entry
   const userPerfume = await prisma.userPerfume.findFirst({
-  where: { perfumeId: userPerfumeId, userId },
-  orderBy: { createdAt: 'desc' }, // Get most recent destash if multiple exist
+  where: { id: userPerfumeId, userId },
   select: {
     id: true,
     perfumeId: true,

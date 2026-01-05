@@ -1,13 +1,26 @@
+import { useRef } from "react"
 import { useTranslation } from "react-i18next"
+import { MdDeleteForever } from "react-icons/md"
+import { useFetcher, useNavigate } from "react-router"
+import { Button } from "~/components/Atoms/Button"
+import DangerModal from "~/components/Organisms/DangerModal"
+import Modal from "~/components/Organisms/Modal"
 
 import { getPerfumeTypeLabel } from "~/data/SelectTypes"
+import { useSessionStore } from "~/stores/sessionStore"
 import { formatPrice } from "~/utils/numberUtils"
 
 const GeneralDetails = ({ userPerfume }: { userPerfume: any }) => {
   const { t } = useTranslation()
-  console.log(userPerfume)
+  const { modalOpen, toggleModal, modalId, closeModal } = useSessionStore()
+  const navigate = useNavigate()
+  const removeButtonRef = useRef<HTMLButtonElement>(null)
+  const fetcher = useFetcher()
+  const isSubmitting = fetcher.state === "submitting"
+
 
   return (
+    <>
     <div className="flex gap-10 mt-6 justify-between items-center px-2">
       {userPerfume.placeOfPurchase && (
         <p className="font-medium flex flex-col justify-start items-start">
@@ -35,7 +48,24 @@ const GeneralDetails = ({ userPerfume }: { userPerfume: any }) => {
           </span>
         </p>
       </div>
+      <Button
+            ref={removeButtonRef}
+            onClick={() => {
+              toggleModal(removeButtonRef, "delete-item")
+            }}
+            disabled={isSubmitting}
+            variant="danger"
+            size="sm"
+            leftIcon={<MdDeleteForever size={20} fill="white" />}
+          >
+            <span className="text-white/90 font-bold text-sm">
+              {isSubmitting
+                ? t("myScents.listItem.removing")
+                : t("myScents.listItem.removeButton")}
+            </span>
+          </Button>
     </div>
+    </>
   )
 }
 

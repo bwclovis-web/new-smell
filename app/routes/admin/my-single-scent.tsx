@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useFetcher, useLoaderData, useRevalidator, type LoaderFunctionArgs } from "react-router"
+import { useFetcher, useLoaderData, useNavigate, useRevalidator, redirect, type LoaderFunctionArgs } from "react-router"
 import VooDooDetails from "~/components/Atoms/VooDooDetails"
 import DestashManager from "~/components/Containers/MyScents/DestashManager/DestashManager"
 import { CommentsModal } from "~/components/Containers/MyScents"
@@ -15,6 +15,7 @@ import { useSessionStore } from "~/stores/sessionStore"
 import type { UserPerfumeI } from "~/types"
 import { sharedLoader } from "~/utils/sharedLoader"
 import TitleBanner from "~/components/Organisms/TitleBanner"
+import { ROUTE_PATH as MY_SCENTS } from "~/routes/admin/MyScents"
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     if (!params.scentId) {
@@ -25,7 +26,10 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     const allUserPerfumes = await getUserPerfumes(user.id)
     
     if (!userPerfume) {
-        throw new Response("Perfume not found", { status: 404 })
+        // If perfume not found (likely deleted), redirect to my-scents page
+        // This prevents the 404 error when navigating after deletion
+        // Use React Router's redirect helper which properly handles the redirect
+        throw redirect("/admin/my-scents")
     }
     
     return { userPerfume, allUserPerfumes }
@@ -35,6 +39,7 @@ const MySingleScent = () => {
     const { userPerfume, allUserPerfumes } = useLoaderData<typeof loader>()
     const fetcher = useFetcher()
     const revalidator = useRevalidator()
+    const navigate = useNavigate()
     const { t } = useTranslation()
     const { modalOpen, modalId, closeModal } = useSessionStore()
     const safeAllUserPerfumes = useMemo(() => allUserPerfumes ?? [], [allUserPerfumes])
@@ -129,13 +134,20 @@ const MySingleScent = () => {
     })
     const perfume = finalPerfume.perfume
 
-
     const handleRemovePerfume = (userPerfumeId: string) => {
+        console.log('handleRemovePerfume', userPerfumeId)
+        closeModal()
+        
         const formData = new FormData()
         formData.append("userPerfumeId", userPerfumeId)
         formData.append("action", "remove")
+        
+        // Submit the deletion request (will complete in background)
         fetcher.submit(formData, { method: "post", action: "/admin/my-scents" })
-        closeModal()
+        
+        // Navigate immediately to avoid loader being called on deleted perfume
+        // The deletion will complete in the background
+        navigate(MY_SCENTS, { replace: true })
     }
     return (
         <>
@@ -158,7 +170,7 @@ const MySingleScent = () => {
         heading={perfume.name ?? ""}
       />
     <div className="inner-container">
-        <GeneralDetails userPerfume={finalPerfume} />
+        <GeneralDetails userPerfume={finalPerfume} deletePerfume={handleRemovePerfume}/>
         <VooDooDetails
             summary={t("myScents.listItem.viewComments")}
             className="text-start text-noir-dark  py-3 mt-3 bg-noir-gold noir-border-dk px-2 relative open:bg-noir-gold-100"

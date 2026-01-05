@@ -199,7 +199,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
 
     if (normalizedAction === "remove") {
-      return performRemoveAction(user.id, userPerfumeId)
+      if (!userPerfumeId) {
+        return new Response(
+          JSON.stringify({ success: false, error: "userPerfumeId is required" }),
+          { status: 400, headers: { "Content-Type": "application/json" } }
+        )
+      }
+      const result = await performRemoveAction(user.id, userPerfumeId)
+      return new Response(
+        JSON.stringify(result),
+        {
+          status: result.success ? 200 : 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      )
     }
 
     if (normalizedAction === "decant") {
@@ -362,7 +375,7 @@ const MyScentsPage = () => {
                 <li key={userPerfume.id} className="flex flex-col items-center justify-center 
                 border-4 border-double border-noir-gold p-1">
                   <NavLink 
-                  to={`/admin/my-single-scent/${userPerfume.perfume.id}`}>
+                  to={`/admin/my-single-scent/${userPerfume.id}`}>
                     <OptimizedImage
                     src={!validImageRegex.test(perfume.image) ? perfume.image : bottleBanner}
                     alt={t("singlePerfume.perfumeBottleAltText", {
