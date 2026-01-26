@@ -144,8 +144,9 @@ describe("Admin Users Route Integration Tests", () => {
 
   describe("Action - User Management", () => {
     it("should allow admin to delete user", async () => {
+      const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
       const mockDeleteUser = vi.mocked(adminServer.deleteUserSafely)
-      // mockSharedLoader already set to return admin user in beforeEach
+      mockSharedLoader.mockResolvedValue(mockAdminUser as any)
       mockDeleteUser.mockResolvedValue({
         success: true,
         message: "User deleted successfully",
@@ -183,8 +184,9 @@ describe("Admin Users Route Integration Tests", () => {
     })
 
     it("should allow admin to soft delete user", async () => {
+      const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
       const mockSoftDeleteUser = vi.mocked(adminServer.softDeleteUser)
-      // mockSharedLoader already set to return admin user in beforeEach
+      mockSharedLoader.mockResolvedValue(mockAdminUser as any)
       mockSoftDeleteUser.mockResolvedValue({
         success: true,
         message: "User soft deleted successfully",
@@ -257,7 +259,8 @@ describe("Admin Users Route Integration Tests", () => {
     })
 
     it("should reject action with missing userId", async () => {
-      // mockSharedLoader already set to return admin user in beforeEach
+      const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
+      mockSharedLoader.mockResolvedValue(mockAdminUser as any)
 
       const formData = new FormData()
       formData.append("action", "delete")
@@ -290,7 +293,8 @@ describe("Admin Users Route Integration Tests", () => {
     })
 
     it("should reject invalid action type", async () => {
-      // mockSharedLoader already set to return admin user in beforeEach
+      const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
+      mockSharedLoader.mockResolvedValue(mockAdminUser as any)
 
       const formData = new FormData()
       formData.append("userId", "user-1")
@@ -324,8 +328,9 @@ describe("Admin Users Route Integration Tests", () => {
     })
 
     it("should handle database errors during deletion", async () => {
+      const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
       const mockDeleteUser = vi.mocked(adminServer.deleteUserSafely)
-      // mockSharedLoader already set to return admin user in beforeEach
+      mockSharedLoader.mockResolvedValue(mockAdminUser as any)
       mockDeleteUser.mockRejectedValue(new Error("Database error"))
 
       const formData = new FormData()

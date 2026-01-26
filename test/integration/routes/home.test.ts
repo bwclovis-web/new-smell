@@ -12,10 +12,24 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
+import { prisma } from "~/db.server"
 import * as featureServer from "~/models/feature.server"
 import { loader as homeLoader } from "~/routes/home"
 
 vi.mock("~/models/feature.server")
+vi.mock("~/db.server", () => ({
+  prisma: {
+    user: {
+      count: vi.fn(),
+    },
+    perfumeHouse: {
+      count: vi.fn(),
+    },
+    perfume: {
+      count: vi.fn(),
+    },
+  },
+}))
 
 describe("Home Route Integration Tests", () => {
   beforeEach(() => {
@@ -47,19 +61,39 @@ describe("Home Route Integration Tests", () => {
       ]
 
       vi.mocked(featureServer.getAllFeatures).mockClear().mockResolvedValue(mockFeatures)
+      vi.mocked(prisma.user.count).mockResolvedValue(10)
+      vi.mocked(prisma.perfumeHouse.count).mockResolvedValue(5)
+      vi.mocked(prisma.perfume.count).mockResolvedValue(100)
 
       const result = await homeLoader()
 
-      expect(result).toEqual({ features: mockFeatures })
+      expect(result).toEqual({
+        features: mockFeatures,
+        counts: {
+          users: 10,
+          houses: 5,
+          perfumes: 100,
+        },
+      })
       expect(featureServer.getAllFeatures).toHaveBeenCalledTimes(1)
     })
 
     it("should handle empty features list", async () => {
       vi.mocked(featureServer.getAllFeatures).mockClear().mockResolvedValue([])
+      vi.mocked(prisma.user.count).mockResolvedValue(0)
+      vi.mocked(prisma.perfumeHouse.count).mockResolvedValue(0)
+      vi.mocked(prisma.perfume.count).mockResolvedValue(0)
 
       const result = await homeLoader()
 
-      expect(result).toEqual({ features: [] })
+      expect(result).toEqual({
+        features: [],
+        counts: {
+          users: 0,
+          houses: 0,
+          perfumes: 0,
+        },
+      })
     })
 
     it("should handle errors gracefully", async () => {
@@ -82,6 +116,9 @@ describe("Home Route Integration Tests", () => {
       ]
 
       vi.mocked(featureServer.getAllFeatures).mockClear().mockResolvedValue(mockFeatures)
+      vi.mocked(prisma.user.count).mockResolvedValue(10)
+      vi.mocked(prisma.perfumeHouse.count).mockResolvedValue(5)
+      vi.mocked(prisma.perfume.count).mockResolvedValue(100)
 
       await homeLoader()
       await homeLoader()
