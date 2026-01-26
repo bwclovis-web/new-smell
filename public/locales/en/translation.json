@@ -286,6 +286,11 @@
     "searchType": {
       "perfume-house": "Perfume Houses",
       "perfume": "Perfumes"
+    },
+    "stats": {
+      "users": "Users",
+      "houses": "Houses",
+      "perfumes": "Perfumes"
     }
   },
   "howItWorks":{

@@ -134,7 +134,7 @@ h3 {
 }
 
 .inner-container {
-  @apply w-full lg:max-w-[90%] mx-auto px-4 sm:px-6 lg:px-8 min-h-full;
+  @apply w-full max-w-9/10 xl:max-w-[70%] mx-auto px-4 sm:px-6 lg:px-8 min-h-full;
   /* Performance optimization */
   contain: layout style;
 }

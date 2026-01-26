@@ -484,6 +484,32 @@ const validateReportFiles = async (
   }
 }
 
+// Query houses with no perfumes directly from database (always fresh)
+const getHousesNoPerfumesFromDB = async () => {
+  const { prisma } = await import("../../db.server")
+  const houses = await prisma.perfumeHouse.findMany({
+    include: {
+      _count: {
+        select: { perfumes: true },
+      },
+    },
+  })
+
+  const housesWithNoPerfumes = houses
+    .filter(house => house._count.perfumes === 0)
+    .map(house => ({
+      id: house.id,
+      name: house.name,
+      type: house.type,
+      createdAt: house.createdAt.toISOString(),
+    }))
+
+  return {
+    totalHousesNoPerfumes: housesWithNoPerfumes.length,
+    housesNoPerfumes: housesWithNoPerfumes,
+  }
+}
+
 // Function to retrieve and parse all report data
 const collectReportData = async (
   missingPath: string,
@@ -501,8 +527,8 @@ const collectReportData = async (
 
   const { totalDuplicates, duplicatesByBrand } = await parseDuplicatesData(duplicatesPath)
 
-  const { totalHousesNoPerfumes, housesNoPerfumes } =
-    await parseHousesNoPerfumesData(housesNoPerfsPath)
+  // Query houses with no perfumes directly from database for always-fresh data
+  const { totalHousesNoPerfumes, housesNoPerfumes } = await getHousesNoPerfumesFromDB()
 
   // Process historical data for trends
   const historyData = await processHistoryData(allReports)

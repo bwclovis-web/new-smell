@@ -85,6 +85,13 @@ Quick access:
 - Automatic note matching and creation
 - Step-by-step usage instructions
 
+📋 **[Post-Scrape Directions](./POST_SCRAPE_DIRECTIONS.md)** - Clean and validate scraped CSV files
+
+- Validate fragrance notes using CrewAI
+- Clean CSV formatting (line breaks, quotes, whitespace)
+- Prepare scraped data for import
+- Complete workflow from scraper to database
+
 #### Archive
 
 📦 **[Documentation Archive](./archive/)** - Historical documentation

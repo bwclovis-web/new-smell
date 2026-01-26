@@ -18,8 +18,10 @@ export const useFetchDataQualityStats = (timeframe: DataQualityTimeframe) => {
   const query = useQuery({
     queryKey: queryKeys.dataQuality.stats(timeframe, false),
     queryFn: () => getDataQualityStats(timeframe, false),
-    staleTime: 30 * 1000, // 30 seconds (shorter than default, but still cached)
+    staleTime: 0, // Always consider data stale to ensure fresh updates
     gcTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: true, // Refetch when user returns to the tab
+    refetchOnMount: "always", // Always refetch when component mounts to ensure fresh data
   })
 
   // Force refresh function that can trigger regeneration
@@ -43,7 +45,7 @@ export const useFetchDataQualityStats = (timeframe: DataQualityTimeframe) => {
 
   return {
     stats: query.data || null,
-    loading: query.isLoading,
+    loading: query.isLoading || query.isFetching, // Also show loading when refetching
     error: query.error
       ? `Failed to fetch data quality stats: ${
           query.error instanceof Error
@@ -52,5 +54,6 @@ export const useFetchDataQualityStats = (timeframe: DataQualityTimeframe) => {
         }`
       : null,
     forceRefresh,
+    refetch: query.refetch, // Expose refetch function
   }
 }

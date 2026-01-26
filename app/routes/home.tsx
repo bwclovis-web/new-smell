@@ -2,11 +2,12 @@ import { useGSAP } from "@gsap/react"
 import { gsap } from "gsap"
 import { type ChangeEvent, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { type MetaFunction } from "react-router"
+import { type MetaFunction, useLoaderData } from "react-router"
 
 import Select from "~/components/Atoms/Select"
 import SearchBar from "~/components/Organisms/SearchBar"
 import { getAllFeatures } from "~/models/feature.server"
+import { prisma } from "~/db.server"
 
 import banner from "../images/landing.webp"
 
@@ -20,8 +21,18 @@ export const meta: MetaFunction = () => {
 
 export async function loader() {
   const features = await getAllFeatures()
+  const [userCount, houseCount, perfumeCount] = await Promise.all([
+    prisma.user.count(),
+    prisma.perfumeHouse.count(),
+    prisma.perfume.count(),
+  ])
   return {
     features,
+    counts: {
+      users: userCount,
+      houses: houseCount,
+      perfumes: perfumeCount,
+    },
   }
 }
 gsap.registerPlugin(useGSAP)
@@ -29,6 +40,7 @@ export default function Home() {
   const [searchType, setSearchType] = useState<"perfume-house" | "perfume">("perfume")
   const container = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
+  const { counts } = useLoaderData<typeof loader>()
 
   useGSAP(
     () => {
@@ -94,6 +106,32 @@ export default function Home() {
           <div className="text-shadow-lg/90 text-shadow-noir-black text-center">
             <h1 className="hero-title">{t("home.heading")}</h1>
             <p className="subtitle opacity-0">{t("home.subheading")}</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-6 md:gap-8 mt-4 mb-6">
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-noir-gold">
+                {counts.users.toLocaleString()}
+              </div>
+              <div className="text-sm md:text-base text-noir-gold/80">
+                {t("home.stats.users", { count: counts.users })}
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-noir-gold">
+                {counts.houses.toLocaleString()}
+              </div>
+              <div className="text-sm md:text-base text-noir-gold/80">
+                {t("home.stats.houses", { count: counts.houses })}
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl md:text-4xl font-bold text-noir-gold">
+                {counts.perfumes.toLocaleString()}
+              </div>
+              <div className="text-sm md:text-base text-noir-gold/80">
+                {t("home.stats.perfumes", { count: counts.perfumes })}
+              </div>
+            </div>
           </div>
           <div className="flex flex-col-reverse md:flex-row items-baseline justify-start w-full max-w-4xl mt-6 gap-4 md:gap-0">
             <Select

@@ -208,7 +208,7 @@ export const searchPerfumeByName = async (name: string) => {
       },
     },
     orderBy: { name: "asc" },
-    take: 5,
+    take: 20,
   })
 
   // Then, try contains matches (lower priority)
@@ -239,7 +239,7 @@ export const searchPerfumeByName = async (name: string) => {
       },
     },
     orderBy: { name: "asc" },
-    take: 5,
+    take: 20,
   })
 
   // Combine and rank results
@@ -269,11 +269,24 @@ const calculateRelevanceScore = (
 
   // Exact match gets highest score
   if (name === term) {
-    score += 100
+    score += 150
   }
   // Starts with gets high score
   else if (name.startsWith(term)) {
-    score += 80
+    score += 100
+
+    // Bonus for "name - " pattern (search term followed by space and hyphen)
+    // This prioritizes specific versions or flankers of the main perfume
+    if (
+      name.startsWith(term + " -") ||
+      name.startsWith(term + " –") ||
+      name.startsWith(term + " —")
+    ) {
+      score += 45
+    } else if (name.startsWith(term + "-")) {
+      // Smaller bonus for hyphen without space
+      score += 20
+    }
   }
   // Contains gets medium score
   else if (name.includes(term)) {

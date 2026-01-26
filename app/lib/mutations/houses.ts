@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 import { queryKeys } from "~/lib/queries/houses"
 import { queryKeys as perfumeQueryKeys } from "~/lib/queries/perfumes"
+import { queryKeys as dataQualityQueryKeys } from "~/lib/queries/dataQuality"
 
 export interface DeleteHouseParams {
   houseId: string
@@ -91,15 +92,28 @@ export function useDeleteHouse() {
         queryClient.setQueryData(queryKeys.houses.all, context.previousHouses)
       }
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate all house queries
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: queryKeys.houses.all,
       })
 
       // Invalidate perfume queries (perfumes belong to houses)
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: perfumeQueryKeys.perfumes.all,
+      })
+
+      // Invalidate and refetch all data quality queries immediately
+      // This ensures deleted houses are removed from the dashboard right away
+      await queryClient.invalidateQueries({
+        queryKey: dataQualityQueryKeys.dataQuality.all,
+        refetchType: "active", // Refetch active queries (currently mounted/visible)
+      })
+      
+      // Also explicitly refetch if dashboard is active
+      // This ensures immediate update if the dashboard is open
+      queryClient.refetchQueries({
+        queryKey: dataQualityQueryKeys.dataQuality.all,
       })
     },
   })

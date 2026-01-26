@@ -230,9 +230,16 @@ async function createPerfumeNoteRelation(
 }
 
 async function importPerfumeData(csvFile: string, baseDir: string) {
-  const resolvedBaseDir = path.isAbsolute(baseDir)
-    ? baseDir
-    : path.join(__dirname, "..", baseDir.replace(/^\.\//, ""))
+  let resolvedBaseDir: string
+  if (path.isAbsolute(baseDir)) {
+    resolvedBaseDir = baseDir
+  } else if (baseDir.startsWith("../") || baseDir.startsWith("..\\")) {
+    // If baseDir already starts with ../, resolve it relative to __dirname directly
+    resolvedBaseDir = path.resolve(__dirname, baseDir)
+  } else {
+    // Otherwise, resolve relative to project root (one level up from scripts)
+    resolvedBaseDir = path.resolve(__dirname, "..", baseDir.replace(/^\.\//, ""))
+  }
 
   const filePath = path.join(resolvedBaseDir, csvFile)
 
@@ -314,19 +321,15 @@ async function importPerfumeData(csvFile: string, baseDir: string) {
           }
         }
         
-        // Always update to ensure we get the latest data
+        // Always update to ensure we get the latest data (CSV is source of truth)
         const updateData: any = {}
         const { description: parsedDescription, extractedNotes: descriptionNotes } = parseDescription(data.description)
         
-        // Always update description if provided (CSV is source of truth)
-        if (parsedDescription) {
-          updateData.description = parsedDescription
-        }
+        // Always update description from CSV (even if null/empty)
+        updateData.description = parsedDescription
         
-        // Always update image if provided
-        if (data.image) {
-          updateData.image = fixImageUrl(data.image) || null
-        }
+        // Always update image from CSV
+        updateData.image = data.image ? fixImageUrl(data.image) : null
 
         console.log(`  ✏️  Updating existing perfume "${perfumeName}" from same house`)
         perfume = await prisma.perfume.update({
@@ -355,17 +358,15 @@ async function importPerfumeData(csvFile: string, baseDir: string) {
           if (renamedExists.perfumeHouseId === houseId) {
             console.log(`  ✏️  Updating existing renamed perfume "${newName}" from same house`)
             
-            // Always update to ensure we get the latest data
+            // Always update to ensure we get the latest data (CSV is source of truth)
             const updateData: any = {}
             const { description: parsedDescription } = parseDescription(data.description)
             
-            if (parsedDescription) {
-              updateData.description = parsedDescription
-            }
+            // Always update description from CSV (even if null/empty)
+            updateData.description = parsedDescription
             
-            if (data.image) {
-              updateData.image = fixImageUrl(data.image) || null
-            }
+            // Always update image from CSV
+            updateData.image = data.image ? fixImageUrl(data.image) : null
             
             perfume = await prisma.perfume.update({
               where: { id: renamedExists.id },
@@ -433,22 +434,11 @@ async function importPerfumeData(csvFile: string, baseDir: string) {
       }
     }
 
-    // If updating an existing perfume, remove old note relations first
+    // Always remove old note relations first (CSV is source of truth)
     // This ensures we get the latest cleaned notes from the CSV
-    const existingRelations = await prisma.perfumeNoteRelation.findMany({
+    await prisma.perfumeNoteRelation.deleteMany({
       where: { perfumeId: perfume.id },
     })
-    
-    if (existingRelations.length > 0) {
-      // Only delete if we have new notes to replace them with
-      // This prevents deleting notes if CSV has empty note arrays
-      const hasNotes = openNotes.length > 0 || heartNotes.length > 0 || baseNotes.length > 0
-      if (hasNotes) {
-        await prisma.perfumeNoteRelation.deleteMany({
-          where: { perfumeId: perfume.id },
-        })
-      }
-    }
 
     // Create note relations
     for (const noteName of openNotes) {
@@ -508,9 +498,14 @@ async function main() {
     // List available CSV files in common directories
     const commonDirs = ["csv", "csv_noir", "../csv", "../csv_noir"]
     for (const dir of commonDirs) {
-      const csvDir = path.isAbsolute(dir)
-        ? dir
-        : path.join(__dirname, "..", dir.replace(/^\.\//, ""))
+      let csvDir: string
+      if (path.isAbsolute(dir)) {
+        csvDir = dir
+      } else if (dir.startsWith("../") || dir.startsWith("..\\")) {
+        csvDir = path.resolve(__dirname, dir)
+      } else {
+        csvDir = path.resolve(__dirname, "..", dir.replace(/^\.\//, ""))
+      }
       if (fs.existsSync(csvDir)) {
         const files = fs.readdirSync(csvDir)
         const csvFiles = files.filter(file => file.endsWith(".csv"))

@@ -406,7 +406,7 @@ export const searchPerfumeHouseByName = async (
       ],
     },
     orderBy: { name: "asc" },
-    take: 5,
+    take: 20,
     include: {
       _count: {
         select: { perfumes: true },
@@ -425,7 +425,7 @@ export const searchPerfumeHouseByName = async (
       ],
     },
     orderBy: { name: "asc" },
-    take: 5,
+    take: 20,
     include: {
       _count: {
         select: { perfumes: true },
@@ -460,11 +460,24 @@ const calculateHouseRelevanceScore = (
 
   // Exact match gets highest score
   if (name === term) {
-    score += 100
+    score += 150
   }
   // Starts with gets high score
   else if (name.startsWith(term)) {
-    score += 80
+    score += 100
+
+    // Bonus for "name - " pattern (search term followed by space and hyphen)
+    // This prioritizes specific versions or house branches
+    if (
+      name.startsWith(term + " -") ||
+      name.startsWith(term + " –") ||
+      name.startsWith(term + " —")
+    ) {
+      score += 45
+    } else if (name.startsWith(term + "-")) {
+      // Smaller bonus for hyphen without space
+      score += 20
+    }
   }
   // Contains gets medium score
   else if (name.includes(term)) {

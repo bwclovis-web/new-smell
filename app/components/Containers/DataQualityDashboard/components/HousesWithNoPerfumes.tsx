@@ -1,4 +1,8 @@
 import { useState } from "react"
+import { NavLink } from "react-router"
+
+import { ROUTE_PATH as PERFUME_HOUSE } from "~/routes/perfume-house"
+import { createUrlSlug } from "~/utils/slug"
 
 import { type DataQualityStats } from "../utils/chartDataUtils"
 
@@ -152,7 +156,12 @@ const HousesWithNoPerfumes = ({ stats }: HousesWithNoPerfumesProps) => {
                 className="hover:bg-purple-50"
               >
                 <td className="px-4 py-3 text-sm font-medium text-gray-900">
-                  {house.name}
+                  <NavLink
+                    to={`${PERFUME_HOUSE}/${createUrlSlug(house.name)}`}
+                    className="text-purple-700 hover:text-purple-900 hover:underline"
+                  >
+                    {house.name}
+                  </NavLink>
                 </td>
                 {!filteredData.showMissingFields && house.type && (
                   <td className="px-4 py-3 text-sm text-gray-700 capitalize">
