@@ -56,6 +56,11 @@ vi.mock("~/db.server", () => ({
 describe("Database Error Handling Integration Tests", () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Reset all prisma mocks to default behavior
+    vi.mocked(prisma.perfume.findMany).mockResolvedValue([])
+    vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)
+    vi.mocked(prisma.userPerfumeWishlist.create).mockResolvedValue({} as any)
+    vi.mocked(prisma.userPerfumeWishlist.updateMany).mockResolvedValue({ count: 0 })
   })
 
   describe("Connection Errors", () => {
@@ -99,7 +104,7 @@ describe("Database Error Handling Integration Tests", () => {
       const queryError = new Error("Invalid query")
       queryError.name = "P2009"
 
-      vi.mocked(prisma.perfume.findMany).mockRejectedValue(queryError)
+      vi.mocked(prisma.perfume.findMany).mockClear().mockRejectedValue(queryError)
 
       await expect(perfumeServer.getAllPerfumes()).rejects.toThrow("Invalid query")
     })
@@ -108,7 +113,7 @@ describe("Database Error Handling Integration Tests", () => {
       const timeoutError = new Error("Query timeout")
       timeoutError.name = "P2024"
 
-      vi.mocked(prisma.perfume.findMany).mockRejectedValue(timeoutError)
+      vi.mocked(prisma.perfume.findMany).mockClear().mockRejectedValue(timeoutError)
 
       await expect(perfumeServer.getAllPerfumes()).rejects.toThrow("Query timeout")
     })
@@ -127,8 +132,8 @@ describe("Database Error Handling Integration Tests", () => {
       const uniqueError = new Error("Unique constraint failed")
       uniqueError.name = "P2002"
 
-      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)
-      vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(uniqueError)
+      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockClear().mockResolvedValue(null)
+      vi.mocked(prisma.userPerfumeWishlist.create).mockClear().mockRejectedValue(uniqueError)
 
       await expect(wishlistServer.addToWishlist("user-123", "perfume-456", false)).rejects.toThrow("Unique constraint failed")
     })
@@ -137,8 +142,8 @@ describe("Database Error Handling Integration Tests", () => {
       const fkError = new Error("Foreign key constraint failed")
       fkError.name = "P2003"
 
-      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)
-      vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(fkError)
+      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockClear().mockResolvedValue(null)
+      vi.mocked(prisma.userPerfumeWishlist.create).mockClear().mockRejectedValue(fkError)
 
       await expect(wishlistServer.addToWishlist("invalid-user", "invalid-perfume", false)).rejects.toThrow("Foreign key constraint failed")
     })
@@ -163,8 +168,8 @@ describe("Database Error Handling Integration Tests", () => {
     it("should handle transaction rollback on error", async () => {
       const transactionError = new Error("Transaction aborted")
 
-      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)
-      vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(transactionError)
+      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockClear().mockResolvedValue(null)
+      vi.mocked(prisma.userPerfumeWishlist.create).mockClear().mockRejectedValue(transactionError)
 
       await expect(wishlistServer.addToWishlist("user-123", "perfume-456", false)).rejects.toThrow("Transaction aborted")
     })
@@ -173,8 +178,8 @@ describe("Database Error Handling Integration Tests", () => {
       const timeoutError = new Error("Transaction timeout")
       timeoutError.name = "P2024"
 
-      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)
-      vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValue(timeoutError)
+      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockClear().mockResolvedValue(null)
+      vi.mocked(prisma.userPerfumeWishlist.create).mockClear().mockRejectedValue(timeoutError)
 
       await expect(wishlistServer.addToWishlist("user-123", "perfume-456", false)).rejects.toThrow("Transaction timeout")
     })
@@ -229,7 +234,7 @@ describe("Database Error Handling Integration Tests", () => {
       const deadlockError = new Error("Deadlock detected")
       deadlockError.name = "P2034"
 
-      vi.mocked(prisma.userPerfumeWishlist.update).mockRejectedValue(deadlockError)
+      vi.mocked(prisma.userPerfumeWishlist.update).mockClear().mockRejectedValue(deadlockError)
 
       await expect(prisma.userPerfumeWishlist.update({
           where: { id: "wishlist-123" },
@@ -240,7 +245,7 @@ describe("Database Error Handling Integration Tests", () => {
     it("should handle optimistic locking conflict", async () => {
       const conflictError = new Error("Record was modified by another request")
 
-      vi.mocked(prisma.userPerfumeWishlist.updateMany).mockRejectedValue(conflictError)
+      vi.mocked(prisma.userPerfumeWishlist.updateMany).mockClear().mockRejectedValue(conflictError)
 
       await expect(wishlistServer.updateWishlistVisibility("user-123", "perfume-456", true)).rejects.toThrow("Record was modified by another request")
     })
@@ -250,7 +255,7 @@ describe("Database Error Handling Integration Tests", () => {
     it("should handle result set too large", async () => {
       const resultError = new Error("Result set too large")
 
-      vi.mocked(prisma.perfume.findMany).mockRejectedValue(resultError)
+      vi.mocked(prisma.perfume.findMany).mockClear().mockRejectedValue(resultError)
 
       await expect(perfumeServer.getAllPerfumes()).rejects.toThrow("Result set too large")
     })
@@ -258,7 +263,7 @@ describe("Database Error Handling Integration Tests", () => {
     it("should handle memory limit exceeded", async () => {
       const memoryError = new Error("Memory limit exceeded")
 
-      vi.mocked(prisma.perfume.findMany).mockRejectedValue(memoryError)
+      vi.mocked(prisma.perfume.findMany).mockClear().mockRejectedValue(memoryError)
 
       await expect(perfumeServer.getAllPerfumes()).rejects.toThrow("Memory limit exceeded")
     })
@@ -269,7 +274,7 @@ describe("Database Error Handling Integration Tests", () => {
       const schemaError = new Error("Schema mismatch")
       schemaError.name = "P3006"
 
-      vi.mocked(prisma.perfume.findMany).mockRejectedValue(schemaError)
+      vi.mocked(prisma.perfume.findMany).mockClear().mockRejectedValue(schemaError)
 
       await expect(perfumeServer.getAllPerfumes()).rejects.toThrow("Schema mismatch")
     })
@@ -277,7 +282,7 @@ describe("Database Error Handling Integration Tests", () => {
     it("should handle column not found", async () => {
       const columnError = new Error("Column does not exist")
 
-      vi.mocked(prisma.perfume.findMany).mockRejectedValue(columnError)
+      vi.mocked(prisma.perfume.findMany).mockClear().mockRejectedValue(columnError)
 
       await expect(perfumeServer.getAllPerfumes()).rejects.toThrow("Column does not exist")
     })
@@ -288,7 +293,7 @@ describe("Database Error Handling Integration Tests", () => {
       const networkError = new Error("Network error")
       networkError.name = "ECONNRESET"
 
-      vi.mocked(prisma.perfume.findMany).mockRejectedValue(networkError)
+      vi.mocked(prisma.perfume.findMany).mockClear().mockRejectedValue(networkError)
 
       await expect(perfumeServer.getAllPerfumes()).rejects.toThrow("Network error")
     })
@@ -297,7 +302,7 @@ describe("Database Error Handling Integration Tests", () => {
       const sslError = new Error("SSL connection error")
       sslError.name = "UNABLE_TO_VERIFY_LEAF_SIGNATURE"
 
-      vi.mocked(prisma.perfume.findMany).mockRejectedValue(sslError)
+      vi.mocked(prisma.perfume.findMany).mockClear().mockRejectedValue(sslError)
 
       await expect(perfumeServer.getAllPerfumes()).rejects.toThrow("SSL connection error")
     })
@@ -307,7 +312,7 @@ describe("Database Error Handling Integration Tests", () => {
     it("should successfully retry after transient error", async () => {
       let attemptCount = 0
 
-      vi.mocked(prisma.perfume.findMany).mockImplementation(async () => {
+      vi.mocked(prisma.perfume.findMany).mockClear().mockImplementation(async () => {
         attemptCount++
         if (attemptCount === 1) {
           throw new Error("Transient error")
@@ -337,13 +342,13 @@ describe("Database Error Handling Integration Tests", () => {
 
     it("should maintain data consistency after error", async () => {
       // Simulate error on create
-      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)
-      vi.mocked(prisma.userPerfumeWishlist.create).mockRejectedValueOnce(new Error("Create failed"))
+      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockClear().mockResolvedValue(null)
+      vi.mocked(prisma.userPerfumeWishlist.create).mockClear().mockRejectedValueOnce(new Error("Create failed"))
 
       await expect(wishlistServer.addToWishlist("user-123", "perfume-456", false)).rejects.toThrow("Create failed")
 
       // Verify no partial data was created by checking with findFirst
-      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockResolvedValue(null)
+      vi.mocked(prisma.userPerfumeWishlist.findFirst).mockClear().mockResolvedValue(null)
 
       const existing = await prisma.userPerfumeWishlist.findFirst({
         where: {
