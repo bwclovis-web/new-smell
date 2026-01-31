@@ -127,10 +127,14 @@ model UserPerfume {
   tradePreference TradePreference      @default(cash)
   tradeOnly       Boolean              @default(false)
   createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @default(now()) @updatedAt
   type            PerfumeType          @default(eauDeParfum)
   perfume         Perfume              @relation(fields: [perfumeId], references: [id])
   user            User                 @relation(fields: [userId], references: [id])
   comments        UserPerfumeComment[]
+
+  @@index([userId, available], name: "idx_user_perfume_user_available")
+  @@index([perfumeId, available], name: "idx_user_perfume_perfume_available")
 }
 
 model UserPerfumeComment {
@@ -141,7 +145,7 @@ model UserPerfumeComment {
   comment       String
   isPublic      Boolean     @default(false)
   createdAt     DateTime    @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime    @updatedAt
   perfume       Perfume     @relation(fields: [perfumeId], references: [id])
   user          User        @relation(fields: [userId], references: [id])
   userPerfume   UserPerfume @relation(fields: [userPerfumeId], references: [id])
