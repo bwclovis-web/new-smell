@@ -1,8 +1,72 @@
 // Migration script to transfer data from local PostgreSQL to Prisma Accelerate
-// This script will migrate all data and generate slugs for houses and perfumes
+// Supports incremental migrations, batch processing, and dry-run mode
+//
+// Usage:
+//   node scripts/migrate-to-accelerate-fixed.js [options]
+//
+// Options:
+//   --dry-run        Show what would be migrated without actually doing it
+//   --batch-size=N   Process records in batches of N (default: 100)
+//   --full           Force full migration (ignore migration state)
+//   --help           Show this help message
 
 import { PrismaClient } from "@prisma/client"
 import { Client } from "pg"
+import { config } from "dotenv"
+import { resolve } from "path"
+
+// Load environment variables from .env file
+config({ path: resolve(process.cwd(), ".env") })
+
+// Parse command line arguments
+const args = process.argv.slice(2)
+const DRY_RUN = args.includes("--dry-run")
+const FULL_MIGRATION = args.includes("--full")
+const SHOW_HELP = args.includes("--help") || args.includes("-h")
+const BATCH_SIZE = (() => {
+  const batchArg = args.find(arg => arg.startsWith("--batch-size="))
+  if (batchArg) {
+    const size = parseInt(batchArg.split("=")[1], 10)
+    return isNaN(size) ? 100 : size
+  }
+  return 100
+})()
+
+if (SHOW_HELP) {
+  console.log(`
+Migration script to transfer data from local PostgreSQL to Prisma Accelerate
+
+Usage:
+  node scripts/migrate-to-accelerate-fixed.js [options]
+
+Options:
+  --dry-run        Show what would be migrated without actually doing it
+  --batch-size=N   Process records in batches of N (default: 100)
+  --full           Force full migration (ignore migration state)
+  --help           Show this help message
+
+Environment Variables (set in .env file):
+  LOCAL_DATABASE_URL   Local PostgreSQL connection string
+  REMOTE_DATABASE_URL  Prisma Accelerate connection string
+`)
+  process.exit(0)
+}
+
+// Validate environment variables
+const LOCAL_DATABASE_URL = process.env.LOCAL_DATABASE_URL
+const REMOTE_DATABASE_URL = process.env.REMOTE_DATABASE_URL
+
+if (!LOCAL_DATABASE_URL) {
+  console.error("❌ ERROR: LOCAL_DATABASE_URL environment variable is not set")
+  console.error("Please create a .env file with LOCAL_DATABASE_URL=postgresql://...")
+  process.exit(1)
+}
+
+if (!REMOTE_DATABASE_URL) {
+  console.error("❌ ERROR: REMOTE_DATABASE_URL environment variable is not set")
+  console.error("Please create a .env file with REMOTE_DATABASE_URL=prisma+postgres://...")
+  process.exit(1)
+}
 
 // Define the slug utility function inline
 const createUrlSlug = name => {
@@ -12,51 +76,184 @@ const createUrlSlug = name => {
 
   return (
     name
-      // First decode any URL-encoded characters
       .replace(/%20/g, " ")
-      // Replace spaces and other separators with hyphens
       .replace(/[\s_]+/g, "-")
-      // Remove any characters that aren't letters, numbers, or hyphens
       .replace(/[^a-zA-Z0-9\-]/g, "")
-      // Remove multiple consecutive hyphens
       .replace(/-+/g, "-")
-      // Remove leading/trailing hyphens
       .replace(/^-+|-+$/g, "")
-      // Convert to lowercase for consistency
       .toLowerCase()
   )
 }
 
 // Local PostgreSQL connection using pg client
 const localClient = new Client({
-  connectionString: "postgresql://postgres:Toaster69@localhost:5432/new_scent",
+  connectionString: LOCAL_DATABASE_URL,
 })
 
 // Accelerate database connection using Prisma
 const acceleratePrisma = new PrismaClient({
   datasources: {
     db: {
-      url: "prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNjAyM2MyMjMtNzc1YS00MTA1LWExMmYtZWZjNzg1MjJlOWJmIiwidGVuYW50X2lkIjoiYTk4Nzc2ZTVmNzEzNWVlZWNiMzIwYTMwMjc3ZWFiNzk1ZjkxYjlmZDM3ODNlNzJmMzNlZDgwZDM2YzU0YzNjMSIsImludGVybmFsX3NlY3JldCI6IjU0NTQyODg0LTY0ZDItNGEyNS04YTgxLTY1ODgwOTUwYzFmNyJ9.kd6Lq7bADQ59I_7Kj0sKC_Co1-19NFpNx-5cMSKOG6o",
+      url: REMOTE_DATABASE_URL,
     },
   },
 })
 
-// Track migrated records for reference
+// Track migrated records for reference (used for foreign key mapping)
 const migratedHouses = new Map()
 const migratedPerfumes = new Map()
 
-async function migrateUsers() {
-  console.log("🔄 Migrating users...")
+// Migration statistics
+const stats = {
+  created: 0,
+  updated: 0,
+  skipped: 0,
+  errors: 0,
+}
 
-  const result = await localClient.query('SELECT * FROM "User"')
+// ============================================================================
+// MIGRATION STATE MANAGEMENT
+// ============================================================================
+
+const ensureMigrationStateTable = async () => {
+  console.log("🔧 Ensuring MigrationState table exists in remote database...")
+  
+  try {
+    // Try to query the table - if it fails, the table doesn't exist
+    await acceleratePrisma.migrationState.findFirst()
+    console.log("✅ MigrationState table exists")
+  } catch (error) {
+    if (error.code === "P2021" || error.message.includes("does not exist")) {
+      console.log("⚠️  MigrationState table not found on remote database.")
+      console.log("")
+      console.log("To fix this, push the schema to your remote database:")
+      console.log("  1. Open your .env file")
+      console.log("  2. Temporarily change DATABASE_URL to your REMOTE_DATABASE_URL value")
+      console.log("  3. Run: npx prisma db push")
+      console.log("  4. Change DATABASE_URL back to your local database URL")
+      console.log("  5. Run this script again")
+      console.log("")
+      throw new Error("MigrationState table does not exist on remote. See instructions above.")
+    }
+    throw error
+  }
+}
+
+const getLastMigrationTime = async tableName => {
+  try {
+    const state = await acceleratePrisma.migrationState.findUnique({
+      where: { tableName },
+    })
+    return state?.lastMigratedAt || null
+  } catch (error) {
+    console.error(`Error getting migration state for ${tableName}:`, error.message)
+    return null
+  }
+}
+
+const updateMigrationState = async (tableName, timestamp, recordCount) => {
+  if (DRY_RUN) {
+    console.log(`  [DRY-RUN] Would update migration state for ${tableName}`)
+    return
+  }
+
+  try {
+    await acceleratePrisma.migrationState.upsert({
+      where: { tableName },
+      update: { 
+        lastMigratedAt: timestamp,
+        recordCount,
+      },
+      create: { 
+        tableName, 
+        lastMigratedAt: timestamp,
+        recordCount,
+      },
+    })
+  } catch (error) {
+    console.error(`Error updating migration state for ${tableName}:`, error.message)
+  }
+}
+
+// ============================================================================
+// BATCH PROCESSING UTILITIES
+// ============================================================================
+
+const processBatch = async (records, processor, tableName) => {
+  const total = records.length
+  let processed = 0
+  
+  for (let i = 0; i < records.length; i += BATCH_SIZE) {
+    const batch = records.slice(i, i + BATCH_SIZE)
+    
+    for (const record of batch) {
+      try {
+        await processor(record)
+        processed++
+      } catch (error) {
+        stats.errors++
+        console.error(`  ❌ Error processing record:`, error.message)
+      }
+    }
+    
+    const progress = Math.min(i + BATCH_SIZE, total)
+    console.log(`  📊 Progress: ${progress}/${total} records processed`)
+  }
+  
+  return processed
+}
+
+// ============================================================================
+// MIGRATION FUNCTIONS
+// ============================================================================
+
+const migrateUsers = async () => {
+  console.log("\n🔄 Migrating users...")
+
+  const lastMigration = FULL_MIGRATION ? null : await getLastMigrationTime("User")
+  const migrationStart = new Date()
+
+  let query = 'SELECT * FROM "User"'
+  if (lastMigration) {
+    query += ` WHERE "createdAt" > $1 OR "updatedAt" > $1 ORDER BY "createdAt" ASC`
+  } else {
+    query += ` ORDER BY "createdAt" ASC`
+  }
+
+  const result = lastMigration
+    ? await localClient.query(query, [lastMigration])
+    : await localClient.query(query)
+  
   const users = result.rows
-  console.log(`Found ${users.length} users to migrate`)
+  console.log(`  Found ${users.length} users to migrate${lastMigration ? " (incremental)" : " (full)"}`)
 
-  for (const user of users) {
+  if (users.length === 0) {
+    console.log("  ✅ No new users to migrate")
+    return
+  }
+
+  if (DRY_RUN) {
+    console.log(`  [DRY-RUN] Would migrate ${users.length} users`)
+    users.slice(0, 5).forEach(u => console.log(`    - ${u.email}`))
+    if (users.length > 5) console.log(`    ... and ${users.length - 5} more`)
+    return
+  }
+
+  await processBatch(users, async user => {
     try {
-      await acceleratePrisma.user.create({
-        data: {
-          id: user.id,
+      // Use email as the unique key, preserve local ID
+      await acceleratePrisma.user.upsert({
+        where: { email: user.email },
+        update: {
+          password: user.password,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          username: user.username,
+          role: user.role,
+          updatedAt: user.updatedAt,
+        },
+        create: {
+          id: user.id,  // Preserve local ID
           email: user.email,
           password: user.password,
           firstName: user.firstName,
@@ -67,33 +264,77 @@ async function migrateUsers() {
           updatedAt: user.updatedAt,
         },
       })
-      console.log(`✅ Migrated user: ${user.email}`)
+      stats.created++
     } catch (error) {
-      if (error.code === "P2002") {
-        console.log(`⚠️  User already exists: ${user.email}`)
-      } else {
-        console.error(`❌ Error migrating user ${user.email}:`, error.message)
-      }
+      stats.errors++
+      console.error(`  ❌ Error migrating user ${user.email}:`, error.message)
     }
-  }
+  }, "User")
 
-  console.log("✅ Users migration completed")
+  await updateMigrationState("User", migrationStart, users.length)
+  console.log("  ✅ Users migration completed")
 }
 
-async function migratePerfumeHouses() {
-  console.log("🔄 Migrating perfume houses...")
+const migratePerfumeHouses = async () => {
+  console.log("\n🔄 Migrating perfume houses...")
 
-  const result = await localClient.query('SELECT * FROM "PerfumeHouse"')
+  const lastMigration = FULL_MIGRATION ? null : await getLastMigrationTime("PerfumeHouse")
+  const migrationStart = new Date()
+
+  let query = 'SELECT * FROM "PerfumeHouse"'
+  if (lastMigration) {
+    query += ` WHERE "createdAt" > $1 OR "updatedAt" > $1 ORDER BY "createdAt" ASC`
+  } else {
+    query += ` ORDER BY "createdAt" ASC`
+  }
+
+  const result = lastMigration
+    ? await localClient.query(query, [lastMigration])
+    : await localClient.query(query)
+  
   const houses = result.rows
-  console.log(`Found ${houses.length} perfume houses to migrate`)
+  console.log(`  Found ${houses.length} perfume houses to migrate${lastMigration ? " (incremental)" : " (full)"}`)
 
+  if (houses.length === 0) {
+    console.log("  ✅ No new perfume houses to migrate")
+    // Still need to populate migratedHouses map for foreign key references
+    const allHouses = await localClient.query('SELECT id FROM "PerfumeHouse"')
+    allHouses.rows.forEach(h => migratedHouses.set(h.id, h.id))
+    return
+  }
+
+  if (DRY_RUN) {
+    console.log(`  [DRY-RUN] Would migrate ${houses.length} houses`)
+    houses.slice(0, 5).forEach(h => console.log(`    - ${h.name}`))
+    if (houses.length > 5) console.log(`    ... and ${houses.length - 5} more`)
+    // Populate map for subsequent dry-run checks
+    houses.forEach(h => migratedHouses.set(h.id, h.id))
+    return
+  }
+
+  let processed = 0
   for (const house of houses) {
     try {
       const slug = createUrlSlug(house.name)
 
-      const newHouse = await acceleratePrisma.perfumeHouse.create({
-        data: {
-          id: house.id,
+      // Use slug as the unique key, preserve local ID
+      await acceleratePrisma.perfumeHouse.upsert({
+        where: { slug: slug },
+        update: {
+          name: house.name,
+          description: house.description,
+          image: house.image,
+          website: house.website,
+          country: house.country,
+          founded: house.founded,
+          email: house.email,
+          phone: house.phone,
+          address: house.address,
+          type: house.type,
+          updatedAt: house.updatedAt,
+        },
+        create: {
+          id: house.id,  // Preserve local ID
           name: house.name,
           slug: slug,
           description: house.description,
@@ -110,50 +351,88 @@ async function migratePerfumeHouses() {
         },
       })
 
-      migratedHouses.set(house.id, newHouse.id)
-      console.log(`✅ Migrated house: ${house.name} -> ${slug}`)
+      migratedHouses.set(house.id, house.id)
+      stats.created++
     } catch (error) {
-      if (error.code === "P2002") {
-        console.log(`⚠️  House already exists: ${house.name}`)
-        // Try to find the existing house
-        const existingHouse = await acceleratePrisma.perfumeHouse.findUnique({
-          where: { name: house.name },
-        })
-        if (existingHouse) {
-          migratedHouses.set(house.id, existingHouse.id)
-        }
-      } else {
-        console.error(`❌ Error migrating house ${house.name}:`, error.message)
+      stats.errors++
+      // Only log first few errors to avoid flooding console
+      if (stats.errors <= 10) {
+        console.error(`  ❌ Error migrating house ${house.name}:`, error.message?.substring(0, 100) || error)
+      } else if (stats.errors === 11) {
+        console.log(`  ⚠️  Suppressing further error messages...`)
       }
     }
+    
+    processed++
+    if (processed % 500 === 0) {
+      console.log(`  📊 Progress: ${processed}/${houses.length} houses processed (${stats.errors} errors)`)
+    }
   }
+  console.log(`  📊 Final: ${processed}/${houses.length} houses processed (${stats.errors} errors)`)
 
-  console.log("✅ Perfume houses migration completed")
+  // Populate map with all houses for foreign key references
+  const allHouses = await localClient.query('SELECT id FROM "PerfumeHouse"')
+  allHouses.rows.forEach(h => migratedHouses.set(h.id, h.id))
+
+  await updateMigrationState("PerfumeHouse", migrationStart, houses.length)
+  console.log("  ✅ Perfume houses migration completed")
 }
 
-async function migratePerfumes() {
-  console.log("🔄 Migrating perfumes...")
+const migratePerfumes = async () => {
+  console.log("\n🔄 Migrating perfumes...")
 
-  const result = await localClient.query('SELECT * FROM "Perfume"')
+  const lastMigration = FULL_MIGRATION ? null : await getLastMigrationTime("Perfume")
+  const migrationStart = new Date()
+
+  let query = 'SELECT * FROM "Perfume"'
+  if (lastMigration) {
+    query += ` WHERE "createdAt" > $1 OR "updatedAt" > $1 ORDER BY "createdAt" ASC`
+  } else {
+    query += ` ORDER BY "createdAt" ASC`
+  }
+
+  const result = lastMigration
+    ? await localClient.query(query, [lastMigration])
+    : await localClient.query(query)
+  
   const perfumes = result.rows
-  console.log(`Found ${perfumes.length} perfumes to migrate`)
+  console.log(`  Found ${perfumes.length} perfumes to migrate${lastMigration ? " (incremental)" : " (full)"}`)
+
+  if (perfumes.length === 0) {
+    console.log("  ✅ No new perfumes to migrate")
+    // Populate map for foreign key references
+    const allPerfumes = await localClient.query('SELECT id FROM "Perfume"')
+    allPerfumes.rows.forEach(p => migratedPerfumes.set(p.id, p.id))
+    return
+  }
+
+  if (DRY_RUN) {
+    console.log(`  [DRY-RUN] Would migrate ${perfumes.length} perfumes`)
+    perfumes.slice(0, 5).forEach(p => console.log(`    - ${p.name}`))
+    if (perfumes.length > 5) console.log(`    ... and ${perfumes.length - 5} more`)
+    perfumes.forEach(p => migratedPerfumes.set(p.id, p.id))
+    return
+  }
 
   for (const perfume of perfumes) {
     try {
       const slug = createUrlSlug(perfume.name)
+      const perfumeHouseId = perfume.perfumeHouseId && migratedHouses.has(perfume.perfumeHouseId)
+        ? perfume.perfumeHouseId
+        : null
 
-      // Get the migrated house ID
-      let perfumeHouseId = null
-      if (perfume.perfumeHouseId) {
-        perfumeHouseId = migratedHouses.get(perfume.perfumeHouseId)
-        if (!perfumeHouseId) {
-          console.log(`⚠️  House not found for perfume ${perfume.name}, skipping house relation`)
-        }
-      }
-
-      const newPerfume = await acceleratePrisma.perfume.create({
-        data: {
-          id: perfume.id,
+      // Use slug as the unique key, preserve local ID
+      await acceleratePrisma.perfume.upsert({
+        where: { slug: slug },
+        update: {
+          name: perfume.name,
+          description: perfume.description,
+          image: perfume.image,
+          perfumeHouseId: perfumeHouseId,
+          updatedAt: perfume.updatedAt,
+        },
+        create: {
+          id: perfume.id,  // Preserve local ID
           name: perfume.name,
           slug: slug,
           description: perfume.description,
@@ -164,80 +443,191 @@ async function migratePerfumes() {
         },
       })
 
-      migratedPerfumes.set(perfume.id, newPerfume.id)
-      console.log(`✅ Migrated perfume: ${perfume.name} -> ${slug}`)
+      migratedPerfumes.set(perfume.id, perfume.id)
+      stats.created++
     } catch (error) {
-      if (error.code === "P2002") {
-        console.log(`⚠️  Perfume already exists: ${perfume.name}`)
-        // Try to find the existing perfume
-        const existingPerfume = await acceleratePrisma.perfume.findUnique({
-          where: { name: perfume.name },
-        })
-        if (existingPerfume) {
-          migratedPerfumes.set(perfume.id, existingPerfume.id)
-        }
-      } else {
-        console.error(`❌ Error migrating perfume ${perfume.name}:`, error.message)
-      }
+      stats.errors++
+      console.error(`  ❌ Error migrating perfume ${perfume.name}:`, error.message)
     }
   }
 
-  console.log("✅ Perfumes migration completed")
+  // Populate map with all perfumes for foreign key references
+  const allPerfumes = await localClient.query('SELECT id FROM "Perfume"')
+  allPerfumes.rows.forEach(p => migratedPerfumes.set(p.id, p.id))
+
+  await updateMigrationState("Perfume", migrationStart, perfumes.length)
+  console.log("  ✅ Perfumes migration completed")
 }
 
-async function migratePerfumeNotes() {
-  console.log("🔄 Migrating perfume notes...")
+const migratePerfumeNotes = async () => {
+  console.log("\n🔄 Migrating perfume notes...")
 
-  const result = await localClient.query('SELECT * FROM "PerfumeNotes"')
+  const lastMigration = FULL_MIGRATION ? null : await getLastMigrationTime("PerfumeNotes")
+  const migrationStart = new Date()
+
+  let query = 'SELECT * FROM "PerfumeNotes"'
+  if (lastMigration) {
+    query += ` WHERE "createdAt" > $1 OR "updatedAt" > $1 ORDER BY "createdAt" ASC`
+  } else {
+    query += ` ORDER BY "createdAt" ASC`
+  }
+
+  const result = lastMigration
+    ? await localClient.query(query, [lastMigration])
+    : await localClient.query(query)
+  
   const notes = result.rows
-  console.log(`Found ${notes.length} perfume notes to migrate`)
+  console.log(`  Found ${notes.length} perfume notes to migrate${lastMigration ? " (incremental)" : " (full)"}`)
+
+  if (notes.length === 0) {
+    console.log("  ✅ No new perfume notes to migrate")
+    return
+  }
+
+  if (DRY_RUN) {
+    console.log(`  [DRY-RUN] Would migrate ${notes.length} notes`)
+    notes.slice(0, 5).forEach(n => console.log(`    - ${n.name}`))
+    if (notes.length > 5) console.log(`    ... and ${notes.length - 5} more`)
+    return
+  }
 
   for (const note of notes) {
     try {
-      await acceleratePrisma.perfumeNotes.create({
-        data: {
-          id: note.id,
+      // Use name as the unique key, preserve local ID
+      await acceleratePrisma.perfumeNotes.upsert({
+        where: { name: note.name },
+        update: {
+          updatedAt: note.updatedAt,
+        },
+        create: {
+          id: note.id,  // Preserve local ID
           name: note.name,
-          perfumeOpenId: note.perfumeOpenId
-            ? migratedPerfumes.get(note.perfumeOpenId)
-            : null,
-          perfumeHeartId: note.perfumeHeartId
-            ? migratedPerfumes.get(note.perfumeHeartId)
-            : null,
-          perfumeCloseId: note.perfumeCloseId
-            ? migratedPerfumes.get(note.perfumeCloseId)
-            : null,
           createdAt: note.createdAt,
+          updatedAt: note.updatedAt,
         },
       })
-      console.log(`✅ Migrated note: ${note.name}`)
+      stats.created++
     } catch (error) {
-      if (error.code === "P2002") {
-        console.log(`⚠️  Note already exists: ${note.name}`)
-      } else {
-        console.error(`❌ Error migrating note ${note.name}:`, error.message)
-      }
+      stats.errors++
+      console.error(`  ❌ Error migrating note ${note.name}:`, error.message)
     }
   }
 
-  console.log("✅ Perfume notes migration completed")
+  await updateMigrationState("PerfumeNotes", migrationStart, notes.length)
+  console.log("  ✅ Perfume notes migration completed")
 }
 
-async function migrateUserPerfumes() {
-  console.log("🔄 Migrating user perfumes...")
+const migratePerfumeNoteRelations = async () => {
+  console.log("\n🔄 Migrating perfume note relations...")
 
-  const result = await localClient.query('SELECT * FROM "UserPerfume"')
+  const lastMigration = FULL_MIGRATION ? null : await getLastMigrationTime("PerfumeNoteRelation")
+  const migrationStart = new Date()
+
+  let query = 'SELECT * FROM "PerfumeNoteRelation"'
+  if (lastMigration) {
+    query += ` WHERE "createdAt" > $1 OR "updatedAt" > $1 ORDER BY "createdAt" ASC`
+  } else {
+    query += ` ORDER BY "createdAt" ASC`
+  }
+
+  const result = lastMigration
+    ? await localClient.query(query, [lastMigration])
+    : await localClient.query(query)
+  
+  const relations = result.rows
+  console.log(`  Found ${relations.length} note relations to migrate${lastMigration ? " (incremental)" : " (full)"}`)
+
+  if (relations.length === 0) {
+    console.log("  ✅ No new note relations to migrate")
+    return
+  }
+
+  if (DRY_RUN) {
+    console.log(`  [DRY-RUN] Would migrate ${relations.length} note relations`)
+    return
+  }
+
+  for (const relation of relations) {
+    try {
+      await acceleratePrisma.perfumeNoteRelation.upsert({
+        where: { id: relation.id },
+        update: {
+          perfumeId: relation.perfumeId,
+          noteId: relation.noteId,
+          noteType: relation.noteType,
+          updatedAt: relation.updatedAt,
+        },
+        create: {
+          id: relation.id,
+          perfumeId: relation.perfumeId,
+          noteId: relation.noteId,
+          noteType: relation.noteType,
+          createdAt: relation.createdAt,
+          updatedAt: relation.updatedAt,
+        },
+      })
+      stats.created++
+    } catch (error) {
+      stats.errors++
+      console.error(`  ❌ Error migrating note relation ${relation.id}:`, error.message)
+    }
+  }
+
+  await updateMigrationState("PerfumeNoteRelation", migrationStart, relations.length)
+  console.log("  ✅ Perfume note relations migration completed")
+}
+
+const migrateUserPerfumes = async () => {
+  console.log("\n🔄 Migrating user perfumes...")
+
+  const lastMigration = FULL_MIGRATION ? null : await getLastMigrationTime("UserPerfume")
+  const migrationStart = new Date()
+
+  let query = 'SELECT * FROM "UserPerfume"'
+  if (lastMigration) {
+    query += ` WHERE "createdAt" > $1 OR "updatedAt" > $1 ORDER BY "createdAt" ASC`
+  } else {
+    query += ` ORDER BY "createdAt" ASC`
+  }
+
+  const result = lastMigration
+    ? await localClient.query(query, [lastMigration])
+    : await localClient.query(query)
+  
   const userPerfumes = result.rows
-  console.log(`Found ${userPerfumes.length} user perfumes to migrate`)
+  console.log(`  Found ${userPerfumes.length} user perfumes to migrate${lastMigration ? " (incremental)" : " (full)"}`)
+
+  if (userPerfumes.length === 0) {
+    console.log("  ✅ No new user perfumes to migrate")
+    return
+  }
+
+  if (DRY_RUN) {
+    console.log(`  [DRY-RUN] Would migrate ${userPerfumes.length} user perfumes`)
+    return
+  }
 
   for (const userPerfume of userPerfumes) {
     try {
-      await acceleratePrisma.userPerfume.create({
-        data: {
+      await acceleratePrisma.userPerfume.upsert({
+        where: { id: userPerfume.id },
+        update: {
+          userId: userPerfume.userId,
+          perfumeId: userPerfume.perfumeId,
+          amount: userPerfume.amount,
+          available: userPerfume.available,
+          price: userPerfume.price,
+          placeOfPurchase: userPerfume.placeOfPurchase,
+          tradePrice: userPerfume.tradePrice,
+          tradePreference: userPerfume.tradePreference,
+          tradeOnly: userPerfume.tradeOnly,
+          type: userPerfume.type,
+          updatedAt: userPerfume.updatedAt,
+        },
+        create: {
           id: userPerfume.id,
           userId: userPerfume.userId,
-          perfumeId:
-            migratedPerfumes.get(userPerfume.perfumeId) || userPerfume.perfumeId,
+          perfumeId: userPerfume.perfumeId,
           amount: userPerfume.amount,
           available: userPerfume.available,
           price: userPerfume.price,
@@ -247,38 +637,68 @@ async function migrateUserPerfumes() {
           tradeOnly: userPerfume.tradeOnly,
           type: userPerfume.type,
           createdAt: userPerfume.createdAt,
+          updatedAt: userPerfume.updatedAt,
         },
       })
-      console.log(`✅ Migrated user perfume: ${userPerfume.id}`)
+      stats.created++
     } catch (error) {
-      if (error.code === "P2002") {
-        console.log(`⚠️  User perfume already exists: ${userPerfume.id}`)
-      } else {
-        console.error(
-          `❌ Error migrating user perfume ${userPerfume.id}:`,
-          error.message
-        )
-      }
+      stats.errors++
+      console.error(`  ❌ Error migrating user perfume ${userPerfume.id}:`, error.message)
     }
   }
 
-  console.log("✅ User perfumes migration completed")
+  await updateMigrationState("UserPerfume", migrationStart, userPerfumes.length)
+  console.log("  ✅ User perfumes migration completed")
 }
 
-async function migrateUserPerfumeRatings() {
-  console.log("🔄 Migrating user perfume ratings...")
+const migrateUserPerfumeRatings = async () => {
+  console.log("\n🔄 Migrating user perfume ratings...")
 
-  const result = await localClient.query('SELECT * FROM "UserPerfumeRating"')
+  const lastMigration = FULL_MIGRATION ? null : await getLastMigrationTime("UserPerfumeRating")
+  const migrationStart = new Date()
+
+  let query = 'SELECT * FROM "UserPerfumeRating"'
+  if (lastMigration) {
+    query += ` WHERE "createdAt" > $1 OR "updatedAt" > $1 ORDER BY "createdAt" ASC`
+  } else {
+    query += ` ORDER BY "createdAt" ASC`
+  }
+
+  const result = lastMigration
+    ? await localClient.query(query, [lastMigration])
+    : await localClient.query(query)
+  
   const ratings = result.rows
-  console.log(`Found ${ratings.length} user perfume ratings to migrate`)
+  console.log(`  Found ${ratings.length} ratings to migrate${lastMigration ? " (incremental)" : " (full)"}`)
+
+  if (ratings.length === 0) {
+    console.log("  ✅ No new ratings to migrate")
+    return
+  }
+
+  if (DRY_RUN) {
+    console.log(`  [DRY-RUN] Would migrate ${ratings.length} ratings`)
+    return
+  }
 
   for (const rating of ratings) {
     try {
-      await acceleratePrisma.userPerfumeRating.create({
-        data: {
+      await acceleratePrisma.userPerfumeRating.upsert({
+        where: { id: rating.id },
+        update: {
+          userId: rating.userId,
+          perfumeId: rating.perfumeId,
+          gender: rating.gender,
+          longevity: rating.longevity,
+          overall: rating.overall,
+          priceValue: rating.priceValue,
+          sillage: rating.sillage,
+          updatedAt: rating.updatedAt,
+        },
+        create: {
           id: rating.id,
           userId: rating.userId,
-          perfumeId: migratedPerfumes.get(rating.perfumeId) || rating.perfumeId,
+          perfumeId: rating.perfumeId,
           gender: rating.gender,
           longevity: rating.longevity,
           overall: rating.overall,
@@ -288,95 +708,185 @@ async function migrateUserPerfumeRatings() {
           updatedAt: rating.updatedAt,
         },
       })
-      console.log(`✅ Migrated rating: ${rating.id}`)
+      stats.created++
     } catch (error) {
-      if (error.code === "P2002") {
-        console.log(`⚠️  Rating already exists: ${rating.id}`)
-      } else {
-        console.error(`❌ Error migrating rating ${rating.id}:`, error.message)
-      }
+      stats.errors++
+      console.error(`  ❌ Error migrating rating ${rating.id}:`, error.message)
     }
   }
 
-  console.log("✅ User perfume ratings migration completed")
+  await updateMigrationState("UserPerfumeRating", migrationStart, ratings.length)
+  console.log("  ✅ User perfume ratings migration completed")
 }
 
-async function migrateUserPerfumeReviews() {
-  console.log("🔄 Migrating user perfume reviews...")
+const migrateUserPerfumeReviews = async () => {
+  console.log("\n🔄 Migrating user perfume reviews...")
 
-  const result = await localClient.query('SELECT * FROM "UserPerfumeReview"')
+  const lastMigration = FULL_MIGRATION ? null : await getLastMigrationTime("UserPerfumeReview")
+  const migrationStart = new Date()
+
+  let query = 'SELECT * FROM "UserPerfumeReview"'
+  if (lastMigration) {
+    query += ` WHERE "createdAt" > $1 OR "updatedAt" > $1 ORDER BY "createdAt" ASC`
+  } else {
+    query += ` ORDER BY "createdAt" ASC`
+  }
+
+  const result = lastMigration
+    ? await localClient.query(query, [lastMigration])
+    : await localClient.query(query)
+  
   const reviews = result.rows
-  console.log(`Found ${reviews.length} user perfume reviews to migrate`)
+  console.log(`  Found ${reviews.length} reviews to migrate${lastMigration ? " (incremental)" : " (full)"}`)
+
+  if (reviews.length === 0) {
+    console.log("  ✅ No new reviews to migrate")
+    return
+  }
+
+  if (DRY_RUN) {
+    console.log(`  [DRY-RUN] Would migrate ${reviews.length} reviews`)
+    return
+  }
 
   for (const review of reviews) {
     try {
-      await acceleratePrisma.userPerfumeReview.create({
-        data: {
+      await acceleratePrisma.userPerfumeReview.upsert({
+        where: { id: review.id },
+        update: {
+          userId: review.userId,
+          perfumeId: review.perfumeId,
+          review: review.review,
+          isApproved: review.isApproved,
+          updatedAt: review.updatedAt,
+        },
+        create: {
           id: review.id,
           userId: review.userId,
-          perfumeId: migratedPerfumes.get(review.perfumeId) || review.perfumeId,
+          perfumeId: review.perfumeId,
           review: review.review,
+          isApproved: review.isApproved,
           createdAt: review.createdAt,
+          updatedAt: review.updatedAt,
         },
       })
-      console.log(`✅ Migrated review: ${review.id}`)
+      stats.created++
     } catch (error) {
-      if (error.code === "P2002") {
-        console.log(`⚠️  Review already exists: ${review.id}`)
-      } else {
-        console.error(`❌ Error migrating review ${review.id}:`, error.message)
-      }
+      stats.errors++
+      console.error(`  ❌ Error migrating review ${review.id}:`, error.message)
     }
   }
 
-  console.log("✅ User perfume reviews migration completed")
+  await updateMigrationState("UserPerfumeReview", migrationStart, reviews.length)
+  console.log("  ✅ User perfume reviews migration completed")
 }
 
-async function migrateUserPerfumeWishlists() {
-  console.log("🔄 Migrating user perfume wishlists...")
+const migrateUserPerfumeWishlists = async () => {
+  console.log("\n🔄 Migrating user perfume wishlists...")
 
-  const result = await localClient.query('SELECT * FROM "UserPerfumeWishlist"')
+  const lastMigration = FULL_MIGRATION ? null : await getLastMigrationTime("UserPerfumeWishlist")
+  const migrationStart = new Date()
+
+  let query = 'SELECT * FROM "UserPerfumeWishlist"'
+  if (lastMigration) {
+    query += ` WHERE "createdAt" > $1 OR "updatedAt" > $1 ORDER BY "createdAt" ASC`
+  } else {
+    query += ` ORDER BY "createdAt" ASC`
+  }
+
+  const result = lastMigration
+    ? await localClient.query(query, [lastMigration])
+    : await localClient.query(query)
+  
   const wishlists = result.rows
-  console.log(`Found ${wishlists.length} user perfume wishlists to migrate`)
+  console.log(`  Found ${wishlists.length} wishlists to migrate${lastMigration ? " (incremental)" : " (full)"}`)
+
+  if (wishlists.length === 0) {
+    console.log("  ✅ No new wishlists to migrate")
+    return
+  }
+
+  if (DRY_RUN) {
+    console.log(`  [DRY-RUN] Would migrate ${wishlists.length} wishlists`)
+    return
+  }
 
   for (const wishlist of wishlists) {
     try {
-      await acceleratePrisma.userPerfumeWishlist.create({
-        data: {
+      await acceleratePrisma.userPerfumeWishlist.upsert({
+        where: { id: wishlist.id },
+        update: {
+          userId: wishlist.userId,
+          perfumeId: wishlist.perfumeId,
+          isPublic: wishlist.isPublic,
+          updatedAt: wishlist.updatedAt,
+        },
+        create: {
           id: wishlist.id,
           userId: wishlist.userId,
+          perfumeId: wishlist.perfumeId,
           isPublic: wishlist.isPublic,
-          perfumeId: migratedPerfumes.get(wishlist.perfumeId) || wishlist.perfumeId,
           createdAt: wishlist.createdAt,
+          updatedAt: wishlist.updatedAt,
         },
       })
-      console.log(`✅ Migrated wishlist: ${wishlist.id}`)
+      stats.created++
     } catch (error) {
-      if (error.code === "P2002") {
-        console.log(`⚠️  Wishlist already exists: ${wishlist.id}`)
-      } else {
-        console.error(`❌ Error migrating wishlist ${wishlist.id}:`, error.message)
-      }
+      stats.errors++
+      console.error(`  ❌ Error migrating wishlist ${wishlist.id}:`, error.message)
     }
   }
 
-  console.log("✅ User perfume wishlists migration completed")
+  await updateMigrationState("UserPerfumeWishlist", migrationStart, wishlists.length)
+  console.log("  ✅ User perfume wishlists migration completed")
 }
 
-async function migrateUserPerfumeComments() {
-  console.log("🔄 Migrating user perfume comments...")
+const migrateUserPerfumeComments = async () => {
+  console.log("\n🔄 Migrating user perfume comments...")
 
-  const result = await localClient.query('SELECT * FROM "UserPerfumeComment"')
+  const lastMigration = FULL_MIGRATION ? null : await getLastMigrationTime("UserPerfumeComment")
+  const migrationStart = new Date()
+
+  let query = 'SELECT * FROM "UserPerfumeComment"'
+  if (lastMigration) {
+    query += ` WHERE "createdAt" > $1 OR "updatedAt" > $1 ORDER BY "createdAt" ASC`
+  } else {
+    query += ` ORDER BY "createdAt" ASC`
+  }
+
+  const result = lastMigration
+    ? await localClient.query(query, [lastMigration])
+    : await localClient.query(query)
+  
   const comments = result.rows
-  console.log(`Found ${comments.length} user perfume comments to migrate`)
+  console.log(`  Found ${comments.length} comments to migrate${lastMigration ? " (incremental)" : " (full)"}`)
+
+  if (comments.length === 0) {
+    console.log("  ✅ No new comments to migrate")
+    return
+  }
+
+  if (DRY_RUN) {
+    console.log(`  [DRY-RUN] Would migrate ${comments.length} comments`)
+    return
+  }
 
   for (const comment of comments) {
     try {
-      await acceleratePrisma.userPerfumeComment.create({
-        data: {
+      await acceleratePrisma.userPerfumeComment.upsert({
+        where: { id: comment.id },
+        update: {
+          userId: comment.userId,
+          perfumeId: comment.perfumeId,
+          userPerfumeId: comment.userPerfumeId,
+          comment: comment.comment,
+          isPublic: comment.isPublic,
+          updatedAt: comment.updatedAt,
+        },
+        create: {
           id: comment.id,
           userId: comment.userId,
-          perfumeId: migratedPerfumes.get(comment.perfumeId) || comment.perfumeId,
+          perfumeId: comment.perfumeId,
           userPerfumeId: comment.userPerfumeId,
           comment: comment.comment,
           isPublic: comment.isPublic,
@@ -384,67 +894,101 @@ async function migrateUserPerfumeComments() {
           updatedAt: comment.updatedAt,
         },
       })
-      console.log(`✅ Migrated comment: ${comment.id}`)
+      stats.created++
     } catch (error) {
-      if (error.code === "P2002") {
-        console.log(`⚠️  Comment already exists: ${comment.id}`)
-      } else {
-        console.error(`❌ Error migrating comment ${comment.id}:`, error.message)
-      }
+      stats.errors++
+      console.error(`  ❌ Error migrating comment ${comment.id}:`, error.message)
     }
   }
 
-  console.log("✅ User perfume comments migration completed")
+  await updateMigrationState("UserPerfumeComment", migrationStart, comments.length)
+  console.log("  ✅ User perfume comments migration completed")
 }
 
-async function migrateWishlistNotifications() {
-  console.log("🔄 Migrating wishlist notifications...")
+const migrateWishlistNotifications = async () => {
+  console.log("\n🔄 Migrating wishlist notifications...")
 
-  const result = await localClient.query('SELECT * FROM "WishlistNotification"')
+  const lastMigration = FULL_MIGRATION ? null : await getLastMigrationTime("WishlistNotification")
+  const migrationStart = new Date()
+
+  let query = 'SELECT * FROM "WishlistNotification"'
+  if (lastMigration) {
+    query += ` WHERE "notifiedAt" > $1 OR "updatedAt" > $1 ORDER BY "notifiedAt" ASC`
+  } else {
+    query += ` ORDER BY "notifiedAt" ASC`
+  }
+
+  const result = lastMigration
+    ? await localClient.query(query, [lastMigration])
+    : await localClient.query(query)
+  
   const notifications = result.rows
-  console.log(`Found ${notifications.length} wishlist notifications to migrate`)
+  console.log(`  Found ${notifications.length} notifications to migrate${lastMigration ? " (incremental)" : " (full)"}`)
+
+  if (notifications.length === 0) {
+    console.log("  ✅ No new notifications to migrate")
+    return
+  }
+
+  if (DRY_RUN) {
+    console.log(`  [DRY-RUN] Would migrate ${notifications.length} notifications`)
+    return
+  }
 
   for (const notification of notifications) {
     try {
-      await acceleratePrisma.wishlistNotification.create({
-        data: {
+      await acceleratePrisma.wishlistNotification.upsert({
+        where: { id: notification.id },
+        update: {
+          userId: notification.userId,
+          perfumeId: notification.perfumeId,
+          notifiedAt: notification.notifiedAt,
+          updatedAt: notification.updatedAt,
+        },
+        create: {
           id: notification.id,
           userId: notification.userId,
-          perfumeId:
-            migratedPerfumes.get(notification.perfumeId) || notification.perfumeId,
+          perfumeId: notification.perfumeId,
           notifiedAt: notification.notifiedAt,
+          updatedAt: notification.updatedAt,
         },
       })
-      console.log(`✅ Migrated notification: ${notification.id}`)
+      stats.created++
     } catch (error) {
-      if (error.code === "P2002") {
-        console.log(`⚠️  Notification already exists: ${notification.id}`)
-      } else {
-        console.error(
-          `❌ Error migrating notification ${notification.id}:`,
-          error.message
-        )
-      }
+      stats.errors++
+      console.error(`  ❌ Error migrating notification ${notification.id}:`, error.message)
     }
   }
 
-  console.log("✅ Wishlist notifications migration completed")
+  await updateMigrationState("WishlistNotification", migrationStart, notifications.length)
+  console.log("  ✅ Wishlist notifications migration completed")
 }
 
-async function main() {
+// ============================================================================
+// MAIN FUNCTION
+// ============================================================================
+
+const main = async () => {
   console.log("🚀 Starting migration from local PostgreSQL to Prisma Accelerate...")
-  console.log("📊 This will migrate all data and generate slugs for houses and perfumes")
+  console.log(`📊 Mode: ${DRY_RUN ? "DRY-RUN (no changes will be made)" : "LIVE"}`)
+  console.log(`📊 Migration type: ${FULL_MIGRATION ? "FULL (ignoring migration state)" : "INCREMENTAL"}`)
+  console.log(`📊 Batch size: ${BATCH_SIZE}`)
+  console.log("")
 
   try {
     // Connect to local database
     await localClient.connect()
     console.log("✅ Connected to local PostgreSQL database")
 
+    // Ensure migration state table exists
+    await ensureMigrationStateTable()
+
     // Migrate in order to respect foreign key constraints
     await migrateUsers()
     await migratePerfumeHouses()
     await migratePerfumes()
     await migratePerfumeNotes()
+    await migratePerfumeNoteRelations()
     await migrateUserPerfumes()
     await migrateUserPerfumeRatings()
     await migrateUserPerfumeReviews()
@@ -452,8 +996,16 @@ async function main() {
     await migrateUserPerfumeComments()
     await migrateWishlistNotifications()
 
-    console.log("🎉 Migration completed successfully!")
-    console.log(`📈 Migrated ${migratedHouses.size} houses and ${migratedPerfumes.size} perfumes`)
+    console.log("\n" + "=".repeat(60))
+    if (DRY_RUN) {
+      console.log("🔍 DRY-RUN COMPLETE - No changes were made")
+    } else {
+      console.log("🎉 Migration completed successfully!")
+    }
+    console.log(`📈 Statistics:`)
+    console.log(`   - Records processed: ${stats.created}`)
+    console.log(`   - Errors: ${stats.errors}`)
+    console.log("=".repeat(60))
   } catch (error) {
     console.error("❌ Migration failed:", error)
     process.exit(1)

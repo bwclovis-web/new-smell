@@ -97,6 +97,7 @@ model UserPerfume {
   tradePreference TradePreference      @default(cash)
   tradeOnly       Boolean              @default(false)
   createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @default(now()) @updatedAt
   type            PerfumeType          @default(eauDeParfum)
   perfume         Perfume              @relation(fields: [perfumeId], references: [id])
   user            User                 @relation(fields: [userId], references: [id])
@@ -144,6 +145,7 @@ model UserPerfumeWishlist {
   userId    String
   perfumeId String
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
   isPublic  Boolean  @default(false)
   perfume   Perfume  @relation(fields: [perfumeId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
@@ -170,6 +172,12 @@ model PerfumeNotes {
   id             String   @id @default(cuid())
   name           String   @unique
   createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  
+  // Legacy columns (preserved from remote database)
+  perfumeOpenId  String?
+  perfumeHeartId String?
+  perfumeCloseId String?
   
   // Junction table relation
   perfumeNoteRelations PerfumeNoteRelation[]
@@ -182,6 +190,7 @@ model PerfumeNoteRelation {
   noteId     String
   noteType   PerfumeNoteType
   createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @default(now()) @updatedAt
   
   perfume    Perfume        @relation(fields: [perfumeId], references: [id], onDelete: Cascade)
   note       PerfumeNotes   @relation(fields: [noteId], references: [id], onDelete: Cascade)
@@ -198,6 +207,7 @@ model WishlistNotification {
   userId     String
   perfumeId  String
   notifiedAt DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
   perfume    Perfume  @relation(fields: [perfumeId], references: [id])
   user       User     @relation(fields: [userId], references: [id])
 
@@ -290,6 +300,7 @@ model TraderContactMessage {
   recipientId String
   subject     String?
   message     String
+  read        Boolean  @default(false)
   createdAt   DateTime @default(now())
   sender      User     @relation("ContactMessagesSent", fields: [senderId], references: [id])
   recipient   User     @relation("ContactMessagesReceived", fields: [recipientId], references: [id])
@@ -297,6 +308,16 @@ model TraderContactMessage {
   @@index([senderId, createdAt])
   @@index([recipientId, createdAt])
   @@index([senderId, recipientId, createdAt])
+}
+
+// Migration state tracking for incremental syncs
+model MigrationState {
+  id             String   @id @default(cuid())
+  tableName      String   @unique
+  lastMigratedAt DateTime
+  recordCount    Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 enum PendingSubmissionType {

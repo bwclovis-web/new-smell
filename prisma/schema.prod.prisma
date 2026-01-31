@@ -95,7 +95,7 @@ model Perfume {
 }
 
 model PerfumeNotes {
-  id             String   @id
+  id             String   @id @default(cuid())
   name           String   @unique
   createdAt      DateTime @default(now())
   perfumeOpenId  String?
@@ -107,7 +107,7 @@ model PerfumeNotes {
 }
 
 model UserPerfume {
-  id              String               @id
+  id              String               @id @default(cuid())
   userId          String
   perfumeId       String
   amount          String               @default("0")
@@ -125,7 +125,7 @@ model UserPerfume {
 }
 
 model UserPerfumeComment {
-  id            String      @id
+  id            String      @id @default(cuid())
   userId        String
   perfumeId     String
   userPerfumeId String
@@ -139,7 +139,7 @@ model UserPerfumeComment {
 }
 
 model UserPerfumeRating {
-  id         String   @id
+  id         String   @id @default(cuid())
   userId     String
   perfumeId  String
   createdAt  DateTime @default(now())
@@ -156,7 +156,7 @@ model UserPerfumeRating {
 }
 
 model UserPerfumeReview {
-  id        String   @id
+  id        String   @id @default(cuid())
   userId    String
   perfumeId String
   review    String
@@ -166,7 +166,7 @@ model UserPerfumeReview {
 }
 
 model UserPerfumeWishlist {
-  id        String   @id
+  id        String   @id @default(cuid())
   userId    String
   isPublic  Boolean  @default(false)
   perfumeId String
@@ -176,7 +176,7 @@ model UserPerfumeWishlist {
 }
 
 model WishlistNotification {
-  id         String   @id
+  id         String   @id @default(cuid())
   userId     String
   perfumeId  String
   notifiedAt DateTime @default(now())

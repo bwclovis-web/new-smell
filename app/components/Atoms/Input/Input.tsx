@@ -1,6 +1,6 @@
 import { type FieldMetadata, getInputProps } from "@conform-to/react"
 import { type VariantProps } from "class-variance-authority"
-import { forwardRef, type HTMLProps } from "react"
+import { forwardRef, type HTMLProps, type RefObject } from "react"
 
 import { styleMerge } from "~/utils/styleUtils"
 
@@ -13,6 +13,7 @@ interface InputProps
   inputId?: string
   placeholder?: string
   shading?: boolean
+  inputRef?: RefObject<HTMLInputElement | null>
   action?: FieldMetadata<unknown>
   actionData?: {
     errors?: { [key: string]: string }
@@ -32,6 +33,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       placeholder,
       shading,
       autoComplete,
+      inputRef,
       ...props
     },
     ref
@@ -62,9 +64,15 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               : undefined),
         }
 
+    const setRef = (el: HTMLInputElement | null) => {
+      if (typeof ref === "function") ref(el)
+      else if (ref) ref.current = el
+      if (inputRef) inputRef.current = el
+    }
+
     return (
       <input
-        ref={ref}
+        ref={setRef}
         name={action?.name}
         defaultValue={defaultValue ?? ""}
         aria-invalid={actionData?.errors?.[action?.name || ""] ? true : undefined}
