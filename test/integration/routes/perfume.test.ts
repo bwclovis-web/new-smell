@@ -26,45 +26,13 @@ import * as wishlistServer from "~/models/wishlist.server"
 import { loader as perfumeLoader } from "~/routes/perfume"
 import * as sessionManager from "~/utils/security/session-manager.server"
 
-vi.mock("~/models/perfume.server", () => ({
-  getPerfumeBySlug: vi.fn(),
-}))
-
-vi.mock("~/models/perfumeRating.server", () => ({
-  getPerfumeRatings: vi.fn(),
-  getUserPerfumeRating: vi.fn(),
-}))
-
-vi.mock("~/models/perfumeReview.server", () => ({
-  getPerfumeReviews: vi.fn(),
-  getUserPerfumeReview: vi.fn(),
-}))
-
-vi.mock("~/models/user.server", () => ({
-  getUserById: vi.fn(),
-}))
-
-vi.mock("~/models/wishlist.server", () => ({
-  isInWishlist: vi.fn(),
-}))
-
-vi.mock("~/utils/security/session-manager.server", () => ({
-  verifyAccessToken: vi.fn(),
-}))
-vi.mock("cookie", () => ({
-  default: {
-    parse: vi.fn(str => {
-      const obj: Record<string, string> = {}
-      if (str) {
-        str.split(";").forEach((cookie: string) => {
-          const [key, value] = cookie.trim().split("=")
-          obj[key] = value
-        })
-      }
-      return obj
-    }),
-  },
-}))
+vi.mock("~/models/perfume.server")
+vi.mock("~/models/perfumeRating.server")
+vi.mock("~/models/perfumeReview.server")
+vi.mock("~/models/user.server")
+vi.mock("~/models/wishlist.server")
+vi.mock("~/utils/security/session-manager.server")
+vi.mock("cookie")
 
 describe("Perfume Route Integration Tests", () => {
   const mockPerfume = {
@@ -90,6 +58,25 @@ describe("Perfume Route Integration Tests", () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    
+    // Set up default mock implementations
+    vi.mocked(perfumeServer.getPerfumeBySlug).mockResolvedValue(null)
+    vi.mocked(perfumeRatingServer.getPerfumeRatings).mockResolvedValue({
+      averageRatings: {},
+      ratingCount: 0,
+    } as any)
+    vi.mocked(perfumeRatingServer.getUserPerfumeRating).mockResolvedValue(null)
+    vi.mocked(perfumeReviewServer.getUserPerfumeReview).mockResolvedValue(null)
+    vi.mocked(perfumeReviewServer.getPerfumeReviews).mockResolvedValue({
+      reviews: [],
+      totalCount: 0,
+      page: 1,
+      limit: 5,
+      totalPages: 0,
+    } as any)
+    vi.mocked(userServer.getUserById).mockResolvedValue(null)
+    vi.mocked(wishlistServer.isInWishlist).mockResolvedValue(false)
+    vi.mocked(sessionManager.verifyAccessToken).mockReturnValue(null)
   })
 
   describe("Loader", () => {
@@ -115,15 +102,9 @@ describe("Perfume Route Integration Tests", () => {
       }
 
       // Mock all required functions - ensure mocks are set up before calling loader
-      vi.mocked(perfumeServer.getPerfumeBySlug).mockClear().mockResolvedValue(mockPerfume as any)
-      
-      vi.mocked(sessionManager.verifyAccessToken).mockClear().mockReturnValue(null)
-      vi.mocked(userServer.getUserById).mockClear().mockResolvedValue(null)
-      vi.mocked(perfumeRatingServer.getPerfumeRatings).mockClear().mockResolvedValue(mockRatings as any)
-      vi.mocked(perfumeRatingServer.getUserPerfumeRating).mockClear().mockResolvedValue(null)
-      vi.mocked(perfumeReviewServer.getUserPerfumeReview).mockClear().mockResolvedValue(null)
-      vi.mocked(perfumeReviewServer.getPerfumeReviews).mockClear().mockResolvedValue(mockReviews as any)
-      vi.mocked(wishlistServer.isInWishlist).mockClear().mockResolvedValue(false)
+      vi.mocked(perfumeServer.getPerfumeBySlug).mockResolvedValue(mockPerfume as any)
+      vi.mocked(perfumeRatingServer.getPerfumeRatings).mockResolvedValue(mockRatings as any)
+      vi.mocked(perfumeReviewServer.getPerfumeReviews).mockResolvedValue(mockReviews as any)
 
       const args: LoaderFunctionArgs = {
         request: mockRequest,
