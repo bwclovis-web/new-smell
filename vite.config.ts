@@ -10,6 +10,50 @@ import tsconfigPaths from "vite-tsconfig-paths"
 const isDev = process.env.NODE_ENV !== "production"
 const isAnalyze = process.env.ANALYZE === "true"
 
+// Helper functions for code splitting
+function getVendorChunk(id: string): string | undefined {
+  if (id.includes("react/") || id.includes("react-dom/") || id.includes("react-router/")) {
+    return "react-vendor"
+  }
+  if (id.includes("@tanstack/react-query")) {
+ return "react-query-vendor" 
+}
+  if (id.includes("@conform-to") || id.includes("zod")) {
+ return "form-vendor" 
+}
+  if (id.includes("i18next") || id.includes("react-i18next")) {
+ return "i18n-vendor" 
+}
+  if (id.includes("chart.js") || id.includes("react-chartjs-2")) {
+ return "chart-vendor" 
+}
+  if (id.includes("gsap")) {
+ return "animation-vendor" 
+}
+  
+  if (id.includes("react-icons")) {
+    const match = id.match(/react-icons\/(\w+)/)
+    return match ? `icons-${match[1]}` : "icons-vendor"
+  }
+  
+  return "vendor"
+}
+
+function getAppChunk(id: string): string | undefined {
+  if (id.includes("app/routes/")) {
+    const match = id.match(/routes\/([^/]+)/)
+    if (match && match[1] !== "RootLayout.tsx") {
+      return `route-${match[1].replace(/\.(tsx?|jsx?)$/, "")}`
+    }
+  }
+  
+  if (id.includes("DataQualityDashboard")) {
+ return "dashboard" 
+}
+  
+  return undefined
+}
+
 export default defineConfig({
   plugins: [
     // Tailwind CSS plugin - must be early in the plugin chain for proper HMR
@@ -96,51 +140,10 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: id => {
-          // Vendor chunks
           if (id.includes("node_modules")) {
-            // React core
-            if (
-              id.includes("react") ||
-              id.includes("react-dom") ||
-              id.includes("react-router")
-            ) {
-              return "react-vendor"
-            }
-            // React Query
-            if (
-              id.includes("@tanstack/react-query") ||
-              id.includes("@tanstack/react-query-devtools")
-            ) {
-              return "react-query-vendor"
-            }
-            // Form validation
-            if (
-              id.includes("@conform-to") ||
-              id.includes("zod")
-            ) {
-              return "form-vendor"
-            }
-            // i18n
-            if (
-              id.includes("i18next") ||
-              id.includes("react-i18next")
-            ) {
-              return "i18n-vendor"
-            }
-            // Charts
-            if (
-              id.includes("chart.js") ||
-              id.includes("react-chartjs-2")
-            ) {
-              return "chart-vendor"
-            }
-            // Animation
-            if (id.includes("gsap")) {
-              return "animation-vendor"
-            }
-            // Other vendor code
-            return "vendor"
-          }
+ return getVendorChunk(id) 
+}
+          return getAppChunk(id)
         },
         chunkFileNames: "assets/[name]-[hash].js",
       },
@@ -150,6 +153,15 @@ export default defineConfig({
     // Note: esbuild doesn't support drop_console, but production builds
     // will still be minified. For console removal, consider using a plugin
     // or switching to terser (requires installing terser package)
+    
+    // Optimize chunk sizes
+    chunkSizeWarningLimit: 1000, // Warn for chunks > 1MB
+    
+    // Sourcemaps only in dev
+    sourcemap: isDev,
+    
+    // Report compressed size for better insights
+    reportCompressedSize: true,
   },
   ssr: {
     noExternal: [

@@ -1,6 +1,4 @@
-import { useGSAP } from "@gsap/react"
-import { gsap } from "gsap"
-import { type ReactNode, useRef } from "react"
+import { type ReactNode, useEffect, useRef } from "react"
 
 interface TitleBannerProps {
   image: string
@@ -10,7 +8,7 @@ interface TitleBannerProps {
   imagePos?: "object-center" | "object-top" | "object-bottom"
   flipImage?: boolean
 }
-gsap.registerPlugin(useGSAP)
+
 const TitleBanner = ({
   image,
   heading,
@@ -20,8 +18,14 @@ const TitleBanner = ({
   flipImage,
 }: TitleBannerProps) => {
   const container = useRef<HTMLDivElement>(null)
-  useGSAP(
-    () => {
+
+  // Lazy load GSAP animations
+  useEffect(() => {
+    const loadAnimations = async () => {
+      const { gsap } = await import("gsap")
+
+      if (!container.current) return
+
       gsap.fromTo(
         ".hero-image",
         {
@@ -56,9 +60,12 @@ const TitleBanner = ({
           ease: "power3.out",
         }
       )
-    },
-    { scope: container }
-  )
+    }
+
+    requestAnimationFrame(() => {
+      loadAnimations()
+    })
+  }, [])
   return (
     <header className="relative w-full title-banner flex items-end py-6 justify-center overflow-hidden">
       <div className="absolute inset-0 bg-noir-black/30 mask-t-from-5% mask-t-to-100% mask"></div>

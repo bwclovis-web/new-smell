@@ -1,5 +1,3 @@
-import { useGSAP } from "@gsap/react"
-import { gsap } from "gsap"
 import React, { useEffect, useRef, useState } from "react"
 
 import BottleAccents from "./BottleAccents"
@@ -28,16 +26,24 @@ const NoirIcon = ({
     setIsClient(true)
   }, [])
 
-  useGSAP(() => {
+  // Lazy load GSAP and animate
+  useEffect(() => {
     if (!isClient || category !== "overall" || !liquidRef.current) {
       return
     }
-    animateLiquid(liquidRef.current, filled, rating)
-  }, [
-filled, rating, category, isClient
-])
+
+    const loadAnimations = async () => {
+      const { gsap } = await import("gsap")
+      if (liquidRef.current) {
+        animateLiquid(gsap, liquidRef.current, filled, rating)
+      }
+    }
+
+    loadAnimations()
+  }, [filled, rating, category, isClient])
 
   const animateLiquid = (
+    gsap: any,
     element: SVGRectElement,
     isFilled: boolean,
     currentRating: number

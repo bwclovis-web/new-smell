@@ -1,6 +1,4 @@
-import { useGSAP } from "@gsap/react"
-import { gsap } from "gsap"
-import { type ChangeEvent, useRef, useState } from "react"
+import { type ChangeEvent, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { type MetaFunction, useLoaderData } from "react-router"
 
@@ -35,15 +33,24 @@ export async function loader() {
     },
   }
 }
-gsap.registerPlugin(useGSAP)
+
 export default function Home() {
   const [searchType, setSearchType] = useState<"perfume-house" | "perfume">("perfume")
   const container = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
   const { counts } = useLoaderData<typeof loader>()
 
-  useGSAP(
-    () => {
+  // Lazy load GSAP animations after component mounts
+  useEffect(() => {
+    // Dynamic import GSAP only when needed
+    const loadAnimations = async () => {
+      const [{ gsap }, { useGSAP: useGSAPHook }] = await Promise.all([
+        import("gsap"),
+        import("@gsap/react"),
+      ])
+
+      if (!container.current) return
+
       gsap.fromTo(
         ".hero-image",
         { filter: "grayscale(100%) contrast(0.5) brightness(0.4)" },
@@ -71,9 +78,13 @@ export default function Home() {
           ease: "power3.out",
         }
       )
-    },
-    { scope: container }
-  )
+    }
+
+    // Defer animations until after initial render
+    requestAnimationFrame(() => {
+      loadAnimations()
+    })
+  }, [])
 
   const handleSelectType = (evt: ChangeEvent<HTMLSelectElement>) => {
     setSearchType(evt.target.value as "perfume-house" | "perfume")

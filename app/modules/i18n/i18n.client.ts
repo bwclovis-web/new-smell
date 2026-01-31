@@ -1,49 +1,64 @@
 import i18n from "i18next"
-import LanguageDetector from "i18next-browser-languagedetector"
 import Backend from "i18next-http-backend"
 import { initReactI18next } from "react-i18next"
 
 // Prevent re-initialization during HMR
 if (!i18n.isInitialized) {
+  // Initialize with Backend (needed for translations) but lazy load LanguageDetector
   i18n
     .use(Backend)
-    .use(LanguageDetector)
     .use(initReactI18next)
     .init({
       fallbackLng: "en",
       supportedLngs: ["en", "es"],
-      debug: false, // Disable debug to prevent console spam
+      debug: false,
       load: "languageOnly",
       defaultNS: "translation",
       ns: ["translation"],
       interpolation: {
-        escapeValue: false, // React already does escaping
+        escapeValue: false,
       },
       backend: {
         loadPath: "/locales/{{lng}}/{{ns}}.json",
-        reloadInterval: false, // Disable auto-reload in dev to prevent conflicts with HMR
+        reloadInterval: false,
       },
       react: {
-        useSuspense: false, // Match server configuration to prevent hydration issues
-        // Bind to both loaded and languageChanged events so components re-render on language changes
+        useSuspense: false,
         bindI18n: "loaded languageChanged",
       },
-      detection: {
-        order: [
-"cookie", "localStorage", "navigator", "htmlTag"
-],
-        caches: ["localStorage", "cookie"],
-        // Prevent multiple language detections during HMR
-        lookupLocalStorage: "i18nextLng",
-        lookupCookie: "i18next",
-        // Only detect once, not on every render
-        checkWhitelist: true,
-        // Persist language choice to prevent re-detection
-        cookieMinutes: 525600, // 1 year - persist language choice
-      },
-      // Ensure i18n is ready before components render
       initImmediate: false,
+      // Use fallback language initially, detector will update when loaded
+      lng: "en",
     })
+
+  // Lazy load LanguageDetector after initial render for performance
+  // This is safe because we default to 'en' above
+  if (typeof window !== "undefined") {
+    requestIdleCallback(
+      async () => {
+        const { default: LanguageDetector } = await import("i18next-browser-languagedetector")
+
+        i18n.use(LanguageDetector)
+
+        // Configure detection
+        i18n.options.detection = {
+          order: ["cookie", "localStorage", "navigator", "htmlTag"],
+          caches: ["localStorage", "cookie"],
+          lookupLocalStorage: "i18nextLng",
+          lookupCookie: "i18next",
+          checkWhitelist: true,
+          cookieMinutes: 525600,
+        }
+
+        // Detect and change language if needed
+        const detectedLng = i18n.services.languageDetector?.detect()
+        if (detectedLng && detectedLng !== i18n.language) {
+          await i18n.changeLanguage(detectedLng)
+        }
+      },
+      { timeout: 2000 }
+    )
+  }
 }
 
 // Prevent language changes during HMR updates
