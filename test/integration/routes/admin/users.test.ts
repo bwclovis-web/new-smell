@@ -43,6 +43,10 @@ describe("Admin Users Route Integration Tests", () => {
     vi.clearAllMocks()
     // Set default mock behavior - tests can override as needed
     vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(mockAdminUser as any)
+    // Set default empty implementations for admin server functions
+    vi.mocked(adminServer.getAllUsersWithCounts).mockResolvedValue([] as any)
+    vi.mocked(adminServer.deleteUserSafely).mockResolvedValue({ success: true, message: "User deleted" })
+    vi.mocked(adminServer.softDeleteUser).mockResolvedValue({ success: true, message: "User soft deleted" })
   })
 
   describe("Loader - Authorization", () => {
