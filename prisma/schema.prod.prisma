@@ -157,31 +157,41 @@ model UserPerfumeRating {
   overall    Int?
   priceValue Int?
   sillage    Int?
-  updatedAt  DateTime
+  updatedAt  DateTime @updatedAt
   perfume    Perfume  @relation(fields: [perfumeId], references: [id])
   user       User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, perfumeId])
+  @@index([perfumeId, overall], name: "idx_rating_perfume_overall")
 }
 
 model UserPerfumeReview {
-  id        String   @id @default(cuid())
-  userId    String
-  perfumeId String
-  review    String
-  createdAt DateTime @default(now())
-  perfume   Perfume  @relation(fields: [perfumeId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  id         String   @id @default(cuid())
+  userId     String
+  perfumeId  String
+  review     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  isApproved Boolean  @default(true)
+  perfume    Perfume  @relation(fields: [perfumeId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, perfumeId])
+  @@index([perfumeId, createdAt], name: "idx_review_perfume_created")
 }
 
 model UserPerfumeWishlist {
   id        String   @id @default(cuid())
   userId    String
-  isPublic  Boolean  @default(false)
   perfumeId String
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  isPublic  Boolean  @default(false)
   perfume   Perfume  @relation(fields: [perfumeId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt], name: "idx_wishlist_user_created")
+  @@index([perfumeId], name: "idx_wishlist_perfume")
 }
 
 model WishlistNotification {
