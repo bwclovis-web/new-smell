@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./fonts.css";
 
 @theme {
   --font-headline: "Limelight", ui-serif, Georgia, "Times New Roman", Times, serif;

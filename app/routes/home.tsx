@@ -110,7 +110,7 @@ export default function Home() {
           <div className="flex flex-wrap justify-center gap-6 md:gap-8 mt-4 mb-6">
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-noir-gold">
-                {counts.users.toLocaleString()}
+                {counts.users.toLocaleString('en-US')}
               </div>
               <div className="text-sm md:text-base text-noir-gold/80">
                 {t("home.stats.users", { count: counts.users })}
@@ -118,7 +118,7 @@ export default function Home() {
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-noir-gold">
-                {counts.houses.toLocaleString()}
+                {counts.houses.toLocaleString('en-US')}
               </div>
               <div className="text-sm md:text-base text-noir-gold/80">
                 {t("home.stats.houses", { count: counts.houses })}
@@ -126,7 +126,7 @@ export default function Home() {
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-noir-gold">
-                {counts.perfumes.toLocaleString()}
+                {counts.perfumes.toLocaleString('en-US')}
               </div>
               <div className="text-sm md:text-base text-noir-gold/80">
                 {t("home.stats.perfumes", { count: counts.perfumes })}

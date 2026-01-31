@@ -23,15 +23,13 @@ import { QueryProvider } from "./providers/QueryProvider"
 import { AppError } from "./utils/errorHandling"
 
 export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  // Preload critical fonts for faster LCP
   {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
+    rel: "preload",
+    href: "/fonts/limelight-latin.woff2",
+    as: "font",
+    type: "font/woff2",
     crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Limelight&display=swap",
   },
   // PWA manifest
   { rel: "manifest", href: "/manifest.json" },
