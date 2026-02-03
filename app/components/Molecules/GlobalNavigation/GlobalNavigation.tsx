@@ -117,7 +117,7 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
         </ul>
       </nav>
       {user && 
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <AdminNavigation user={user} />
         </div>
       }

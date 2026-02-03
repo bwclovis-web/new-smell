@@ -312,7 +312,7 @@ const PerfumeContent = ({
   sourcePage?: string
 }) => (
   <div className="flex flex-col gap-20 mx-auto inner-container items-center">
-    <div className="w-full flex flex-col md:flex-row gap-4 max-w-6xl">
+    <div className="w-full flex flex-col lg:flex-row gap-4 max-w-6xl">
       {user && (
         <PerfumeIcons
           perfume={perfume}
