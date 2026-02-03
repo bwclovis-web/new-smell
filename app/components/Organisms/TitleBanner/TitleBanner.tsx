@@ -72,6 +72,7 @@ const TitleBanner = ({
       <img
         src={image}
         alt=""
+        suppressHydrationWarning
         className={`hero-image w-full h-full object-cover ${imagePos} ${
           flipImage && "scale-x-[-1]"
         } mb-2 mt-14 md:mt-0 rounded-lg absolute top-0 left-0 right-0 z-0 filter grayscale-[100%] contrast-[1] brightness-[0.9] sepia-[0.2] mix-blend-overlay mask-linear-gradient-to-b`}

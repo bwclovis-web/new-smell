@@ -249,6 +249,7 @@ function BannerImage({
           src={src}
           style={imageStyle}
           width={width}
+          suppressHydrationWarning
         />
       )}
     </>
@@ -307,6 +308,7 @@ function StandardImage({
           src={src}
           style={imageStyle}
           width={width}
+          suppressHydrationWarning
         />
       )}
 

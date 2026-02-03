@@ -17,6 +17,7 @@ const RootLayout = () => {
       <img
         src={banner}
         alt=""
+        suppressHydrationWarning
         className="hero-image absolute object-cover w-full h-full filter grayscale-[100%]  sepia-[0.2]"
       />
       <div className="absolute inset-0  md:mask-radial-from-45% mask-radial-to-64%"></div>

@@ -56,8 +56,6 @@ const HeroHeader = ({
     viewTransitionName ??
     (transitionKey !== undefined ? `hero-image-${transitionKey}` : undefined)
 
-    console.log("IMAGE", image)
-
   return (
     <header
       className={`${DEFAULT_HEADER_CLASSES} ${heightClassName} ${headerClassName}`.trim()}

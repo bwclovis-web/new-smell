@@ -72,7 +72,7 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
           to="/"
           className="px-2 block"
         >
-          <img src={logo} alt={logoText} className="w-40 h-25" />
+          <img src={logo} alt={logoText} className="w-40 h-25" suppressHydrationWarning />
         </NavLink>
         <ul className="flex gap-4 items-center tracking-wide max-w-max">
           <li>
