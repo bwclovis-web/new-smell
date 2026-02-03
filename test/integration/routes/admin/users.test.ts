@@ -76,11 +76,9 @@ describe("Admin Users Route Integration Tests", () => {
         },
       ]
 
-      // Setup mocks for this test
-      const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
-      const mockGetAllUsers = vi.mocked(adminServer.getAllUsersWithCounts)
-      mockSharedLoader.mockResolvedValue(mockAdminUser as any)
-      mockGetAllUsers.mockResolvedValue(mockUsers as any)
+      // Use mockImplementation so the mock is applied when loader runs (robust with restoreMocks)
+      vi.mocked(sharedLoader.sharedLoader).mockImplementation(async () => mockAdminUser as any)
+      vi.mocked(adminServer.getAllUsersWithCounts).mockResolvedValue(mockUsers as any)
 
       const request = new Request("https://example.com/admin/users")
 
@@ -91,15 +89,14 @@ describe("Admin Users Route Integration Tests", () => {
       }
 
       const result = await usersLoader(args)
-      
-      // If we get a redirect Response, the mock isn't working
+
       if (result instanceof Response && result.status === 302) {
-        const msg = `Expected loader to return data but got redirect. ` +
+        const msg =
+          `Expected loader to return data but got redirect. ` +
           `Mock may not be working correctly. Status: ${result.status}`
         throw new Error(msg)
       }
-      
-      // Handle case where result might be a Response (non-redirect)
+
       const data = result instanceof Response ? await result.json() : result
 
       expect(data.users).toEqual(mockUsers)
