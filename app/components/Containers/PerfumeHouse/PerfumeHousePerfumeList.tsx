@@ -48,7 +48,7 @@ const PerfumeHousePerfumeList = ({
           })}
         </div>
       ) : perfumes.length > 0 ? (
-        <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 p-2 pb-4 gap-4">
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 p-2 pb-4 gap-4">
           {perfumes.map((perfume: any) => (
             <li key={perfume.id}>
               <NavLink

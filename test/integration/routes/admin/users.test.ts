@@ -33,6 +33,11 @@ vi.mock("~/utils/sharedLoader", () => ({
 // Import route AFTER mocks are set up to ensure mocks are applied
 import { action as usersAction, loader as usersLoader } from "~/routes/admin/users"
 
+async function getUsersLoader() {
+  const { loader } = await import("~/routes/admin/users")
+  return loader
+}
+
 describe("Admin Users Route Integration Tests", () => {
   const mockAdminUser = {
     id: "admin-1",
@@ -76,7 +81,6 @@ describe("Admin Users Route Integration Tests", () => {
         },
       ]
 
-      // Use mockImplementation so the mock is applied when loader runs (robust with restoreMocks)
       vi.mocked(sharedLoader.sharedLoader).mockImplementation(async () => mockAdminUser as any)
       vi.mocked(adminServer.getAllUsersWithCounts).mockResolvedValue(mockUsers as any)
 
@@ -88,7 +92,10 @@ describe("Admin Users Route Integration Tests", () => {
         context: {},
       }
 
-      const result = await usersLoader(args)
+      // Load route after mocks so it uses mocked sharedLoader (robust with isolate: false)
+      vi.resetModules()
+      const loader = await getUsersLoader()
+      const result = await loader(args)
 
       if (result instanceof Response && result.status === 302) {
         const msg =
