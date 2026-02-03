@@ -116,10 +116,9 @@ describe("Perfume Route Integration Tests", () => {
         totalPages: 0,
       }
 
-      // Use mockImplementation so the mock is applied for the loader call (robust with restoreMocks)
-      vi.mocked(perfumeServer.getPerfumeBySlug).mockImplementation(async (slug) =>
-        slug === "test-perfume" ? (mockPerfume as any) : null
-      )
+      // Reset and set implementation so the mock is applied when loader runs (robust with restoreMocks/clearMocks)
+      vi.mocked(perfumeServer.getPerfumeBySlug).mockReset()
+      vi.mocked(perfumeServer.getPerfumeBySlug).mockImplementation(async () => mockPerfume as any)
       vi.mocked(perfumeRatingServer.getPerfumeRatings).mockResolvedValue(mockRatings as any)
       vi.mocked(perfumeReviewServer.getPerfumeReviews).mockResolvedValue(mockReviews as any)
 
