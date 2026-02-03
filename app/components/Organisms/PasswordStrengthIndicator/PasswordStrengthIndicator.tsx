@@ -85,7 +85,7 @@ export default function PasswordStrengthIndicator({
         <div className="text-xs text-noir-gold-100 space-y-1">
           {strengthInfo.feedback.map((message, index) => (
             <div key={index} className="flex items-center space-x-1">
-              <span className="text-red-400">•</span>
+              <span className="text-red-500">•</span>
               <span>{message}</span>
             </div>
           ))}

@@ -13,14 +13,14 @@ const TermsAndConditions = () => {
         heading={t("termsAndConditions.heading")}
         subheading={t("termsAndConditions.subheading")}
       />
-      <section className="max-w-7xl mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
+      <section className="inner-container mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
         <h2 className="mb-4">1. {t("termsAndConditions.gist.heading")}</h2>
         <div className="flex flex-col gap-4 text-noir-gold-100 text-lg">
           <p>{t("termsAndConditions.gist.contentOne")}</p>
           <p>{t("termsAndConditions.gist.contentTwo")}</p>
         </div>
       </section>
-      <section className="max-w-7xl mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
+      <section className="inner-container mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
         <h2 className="mb-4">
           2. {t("termsAndConditions.tradingAndListing.heading")}
         </h2>
@@ -32,7 +32,7 @@ const TermsAndConditions = () => {
           <p>{t("termsAndConditions.tradingAndListing.contentFive")}</p>
         </div>
       </section>
-      <section className="max-w-7xl mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
+      <section className="inner-container mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
         <h2 className="mb-4">
           3. {t("termsAndConditions.accountsAndConduct.heading")}
         </h2>
@@ -42,7 +42,7 @@ const TermsAndConditions = () => {
           <p>{t("termsAndConditions.accountsAndConduct.contentThree")}</p>
         </div>
       </section>
-      <section className="max-w-7xl mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
+      <section className="inner-container mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
         <h2 className="mb-4">
           4. {t("termsAndConditions.reviewsAndNotes.heading")}
         </h2>
@@ -52,20 +52,20 @@ const TermsAndConditions = () => {
           <p>{t("termsAndConditions.reviewsAndNotes.contentThree")}</p>
         </div>
       </section>
-      <section className="max-w-7xl mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
+      <section className="inner-container mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
         <h2 className="mb-4">5. {t("termsAndConditions.noGuarantee.heading")}</h2>
         <div className="flex flex-col gap-4 text-noir-gold-100 text-lg">
           <p>{t("termsAndConditions.noGuarantee.contentOne")}</p>
         </div>
       </section>
-      <section className="max-w-7xl mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
+      <section className="inner-container mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
         <h2 className="mb-4">6. {t("termsAndConditions.liability.heading")}</h2>
         <div className="flex flex-col gap-4 text-noir-gold-100 text-lg">
           <p>{t("termsAndConditions.liability.contentOne")}</p>
           <p>{t("termsAndConditions.liability.contentTwo")}</p>
         </div>
       </section>
-      <section className="max-w-7xl mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
+      <section className="inner-container mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
         <h2 className="mb-4">7. {t("termsAndConditions.privacy.heading")}</h2>
         <div className="flex flex-col gap-4 text-noir-gold-100 text-lg">
           <p>{t("termsAndConditions.privacy.contentOne")}</p>
@@ -78,13 +78,13 @@ const TermsAndConditions = () => {
           <li>{t("termsAndConditions.privacy.contentList.five")}</li>
         </ul>
       </section>
-      <section className="max-w-7xl mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
+      <section className="inner-container mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold">
         <h2 className="mb-4">8. {t("termsAndConditions.changes.heading")}</h2>
         <div className="flex flex-col gap-4 text-noir-gold-100 text-lg">
           <p>{t("termsAndConditions.changes.contentOne")}</p>
         </div>
       </section>
-      <section className="max-w-7xl mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold mb-20">
+      <section className="inner-container mx-auto mt-8 bg-noir-dark p-8 rounded-lg border border-noir-gold mb-20">
         <h2 className="mb-4">9. {t("termsAndConditions.closing.heading")}</h2>
         <div className="flex flex-col gap-4 text-noir-gold-100 text-lg">
           <p>{t("termsAndConditions.closing.contentOne")}</p>
