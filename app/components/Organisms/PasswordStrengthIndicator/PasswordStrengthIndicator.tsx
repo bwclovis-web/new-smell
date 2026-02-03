@@ -24,6 +24,7 @@ export default function PasswordStrengthIndicator({
   requireSpecialChars = true,
   minScore = 3,
 }: PasswordStrengthIndicatorProps) {
+  const { t } = useTranslation()
   const { strengthInfo, isValid, getStrengthColor, getStrengthText } =
     usePasswordStrength(password, {
       minLength,
@@ -37,7 +38,6 @@ export default function PasswordStrengthIndicator({
   if (!password || !strengthInfo) {
     return null
   }
-  const { t } = useTranslation()
 
   const getStrengthIcon = (strength: string) => {
     switch (strength) {
@@ -82,10 +82,10 @@ export default function PasswordStrengthIndicator({
 
       {/* Feedback Messages */}
       {strengthInfo.feedback.length > 0 && (
-        <div className="text-xs text-gray-600 space-y-1">
+        <div className="text-xs text-noir-gold-100 space-y-1">
           {strengthInfo.feedback.map((message, index) => (
             <div key={index} className="flex items-center space-x-1">
-              <span className="text-red-500">•</span>
+              <span className="text-red-400">•</span>
               <span>{message}</span>
             </div>
           ))}

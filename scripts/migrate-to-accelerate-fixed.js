@@ -414,14 +414,22 @@ const migratePerfumes = async () => {
     return
   }
 
+  // Track used slugs so duplicate names get unique slugs and every perfume gets its own row
+  const usedSlugs = new Set()
+  let duplicateSlugCount = 0
+
   for (const perfume of perfumes) {
     try {
-      const slug = createUrlSlug(perfume.name)
+      const baseSlug = createUrlSlug(perfume.name) || `perfume-${perfume.id}`
+      const slug = usedSlugs.has(baseSlug) ? `${baseSlug}-${perfume.id}` : baseSlug
+      if (usedSlugs.has(baseSlug)) duplicateSlugCount++
+      usedSlugs.add(slug)
+
       const perfumeHouseId = perfume.perfumeHouseId && migratedHouses.has(perfume.perfumeHouseId)
         ? perfume.perfumeHouseId
         : null
 
-      // Use slug as the unique key, preserve local ID
+      // Use slug as the unique key, preserve local ID (each perfume gets its own row)
       await acceleratePrisma.perfume.upsert({
         where: { slug: slug },
         update: {
@@ -449,6 +457,10 @@ const migratePerfumes = async () => {
       stats.errors++
       console.error(`  ❌ Error migrating perfume ${perfume.name}:`, error.message)
     }
+  }
+
+  if (duplicateSlugCount > 0) {
+    console.log(`  ℹ️  ${duplicateSlugCount} perfumes had duplicate names and were given unique slugs (e.g. name-id)`)
   }
 
   // Populate map with all perfumes for foreign key references
@@ -547,7 +559,17 @@ const migratePerfumeNoteRelations = async () => {
     return
   }
 
-  for (const relation of relations) {
+  // Only migrate relations where both perfume and note exist on remote (avoids FK violations
+  // when perfumes were deduplicated by slug or some perfumes failed to migrate)
+  const validRelations = relations.filter(
+    r => migratedPerfumes.has(r.perfumeId)
+  )
+  const skipped = relations.length - validRelations.length
+  if (skipped > 0) {
+    console.log(`  ⚠️  Skipping ${skipped} relations whose perfume is not on remote (would cause FK errors)`)
+  }
+
+  for (const relation of validRelations) {
     try {
       await acceleratePrisma.perfumeNoteRelation.upsert({
         where: { id: relation.id },

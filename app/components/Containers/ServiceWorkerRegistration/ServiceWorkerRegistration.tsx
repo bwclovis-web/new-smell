@@ -2,6 +2,11 @@ import { useEffect } from "react"
 
 const ServiceWorkerRegistration = () => {
   useEffect(() => {
+    // Guard: Only run on client side
+    if (typeof window === "undefined" || typeof navigator === "undefined") {
+      return
+    }
+
     if (import.meta.env.DEV || !("serviceWorker" in navigator)) {
       return
     }

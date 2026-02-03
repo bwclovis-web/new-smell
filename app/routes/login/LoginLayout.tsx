@@ -23,8 +23,9 @@ const RootLayout = () => {
       <div className="relative w-full flex flex-col items-center justify-around gap-4 md:gap-8 mx-auto">
         <div className="mx-auto min-w-1/3 relative noir-border py-5 px-3 bg-noir-dark/10 shadow-md text-noir-gold content text-center">
           <h1 className=" text-shadow-lg text-shadow-black">{t("auth.heading")}</h1>
-          <p className="subtitle">
+          <p className="subtitle mb-4">
             {t("auth.subheading")}
+            </p>
             <VooDooLink
               variant="link"
               size="md"
@@ -33,7 +34,6 @@ const RootLayout = () => {
             >
               {t("auth.createAccount")}
             </VooDooLink>
-          </p>
         </div>
         <div className="w-full lg:w-1/2 form ">
           <Outlet />
