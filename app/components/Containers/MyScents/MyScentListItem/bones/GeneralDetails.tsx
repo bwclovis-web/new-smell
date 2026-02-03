@@ -24,8 +24,8 @@ const GeneralDetails = ({ userPerfume }: { userPerfume: any }) => {
     <div className="flex gap-10 mt-6 justify-between items-center px-2">
       {userPerfume.placeOfPurchase && (
         <p className="font-medium flex flex-col justify-start items-start">
-          <span className="text-xl text-noir-gold">{t("myScents.listItem.pointOfPurchase")}</span>
-          <span className="text-2xl text-noir-gold-100 capitalize">
+          <span className="text-2xl text-noir-gold">{t("myScents.listItem.pointOfPurchase")}</span>
+          <span className="text-xl text-noir-gold-100 capitalize">
             {userPerfume.placeOfPurchase}
           </span>
         </p>
@@ -33,10 +33,10 @@ const GeneralDetails = ({ userPerfume }: { userPerfume: any }) => {
       <div className="flex items-start justify-start gap-8">
         {userPerfume.price && (
           <p className="flex flex-col items-end justify-start">
-            <span className="text-lg font-medium">
+            <span className="text-xl font-medium text-noir-gold">
               {t("myScents.listItem.price")}
             </span>
-            <span className="text-xl text-noir-gold-100">
+            <span className="text-lg text-noir-gold-100">
               {formatPrice(userPerfume.price)}
             </span>
           </p>
