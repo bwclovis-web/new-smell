@@ -5,7 +5,7 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "react-router"
-import { NavLink, useLoaderData } from "react-router"
+import { NavLink, useLoaderData, useLocation } from "react-router"
 
 import SearchInput from "~/components/Molecules/SearchInput/SearchInput"
 import bottleBanner from "~/images/single-bottle.webp"
@@ -299,7 +299,9 @@ const MyScentsPage = () => {
   const [userPerfumes, setUserPerfumes] = useState(initialUserPerfumes)
   const [searchQuery, setSearchQuery] = useState("")
   const { t } = useTranslation()
-
+  const location = useLocation()
+  const selectedLetter = (location.state as { selectedLetter?: string })
+    ?.selectedLetter
   useEffect(() => {
     setUserPerfumes(initialUserPerfumes)
   }, [initialUserPerfumes])
@@ -337,10 +339,10 @@ const MyScentsPage = () => {
       >
         <AddToCollectionModal />
       </TitleBanner>
-      <div className="noir-border relative max-w-max mx-auto text-center flex flex-col items-center justify-center gap-4 p-4 my-6">
+      <div className="noir-border relative inner-container mx-auto text-center flex flex-col items-center justify-center gap-4 p-4 my-6">
         <h2 className="mb-2">{t("myScents.collection.heading")}</h2>
         {uniquePerfumes.length > 0 && (
-          <div className="w-full max-w-md mb-4">
+          <div className="w-full mb-4">
             <SearchInput
               value={searchQuery}
               onChange={setSearchQuery}
@@ -375,7 +377,11 @@ const MyScentsPage = () => {
                 <li key={userPerfume.id} className="flex flex-col items-center justify-center 
                 border-4 border-double border-noir-gold p-1">
                   <NavLink 
-                  to={`/admin/my-single-scent/${userPerfume.id}`}>
+                  viewTransition
+                  prefetch="intent"
+                  to={`/admin/my-single-scent/${userPerfume.id}`}
+                  state={selectedLetter ? { selectedLetter } : {}}
+                  >
                     <OptimizedImage
                     src={!validImageRegex.test(perfume.image) ? perfume.image : bottleBanner}
                     alt={t("singlePerfume.perfumeBottleAltText", {

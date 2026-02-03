@@ -46,6 +46,8 @@
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui",
     "test:all": "npm run test:unit && npm run test:integration && npm run test:performance",
+    "deploy": "npx vercel --prod",
+    "deploy:preview": "npx vercel",
     "test:ci": "vitest run --config vitest.config.ci.ts",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",

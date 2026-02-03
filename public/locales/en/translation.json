@@ -481,8 +481,8 @@
       "addCommentPlaceholder": "Add a comment...",
       "addCommentButton": "Add Comment",
       "deleteComment": "Delete Comment",
-      "makePublic": "Make this comment public",
-      "makePrivate": "Make this comment private",
+      "makePublic": "Make public",
+      "makePrivate": "Make private",
       "noComments": "No comments yet. Be the first to share your thoughts!"
     },
     "search": {
