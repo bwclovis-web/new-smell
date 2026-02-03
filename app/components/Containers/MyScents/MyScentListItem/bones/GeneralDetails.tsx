@@ -24,7 +24,7 @@ const GeneralDetails = ({ userPerfume }: { userPerfume: any }) => {
     <div className="flex gap-10 mt-6 justify-between items-center px-2">
       {userPerfume.placeOfPurchase && (
         <p className="font-medium flex flex-col justify-start items-start">
-          <span className="text-xl">{t("myScents.listItem.pointOfPurchase")}</span>
+          <span className="text-xl text-noir-gold">{t("myScents.listItem.pointOfPurchase")}</span>
           <span className="text-2xl text-noir-gold-100 capitalize">
             {userPerfume.placeOfPurchase}
           </span>

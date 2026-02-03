@@ -175,6 +175,9 @@ export default defineConfig({
       "bcryptjs",
       "@prisma/client",
       "resend",
+      // chart.js optional peer; not installed on Vercel
+      // avoids "Failed to resolve dependency canvas" warning
+      "canvas",
     ],
   },
   resolve: {

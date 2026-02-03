@@ -1,7 +1,5 @@
 import { ROUTE_PATH as ABOUT_US } from "~/routes/about-us"
 import { ROUTE_PATH as CONTACT_US } from "~/routes/contact-us"
-// Inline path to avoid circular dependency (route imports pull in navigation via layout/components)
-const ERROR_ANALYTICS = "/admin/error-analytics"
 import { ROUTE_PATH as CHANGE_PASSWORD } from "~/routes/admin/change-password"
 import { ROUTE_PATH as CREATE_HOUSE } from "~/routes/admin/CreatePerfumeHousePage"
 import { ROUTE_PATH as CREATE_PERFUME } from "~/routes/admin/CreatePerfumePage"
@@ -16,6 +14,8 @@ import { ROUTE_PATH as HOW_WE_WORK } from "~/routes/how-we-work"
 import { ROUTE_PATH as AVAILABLE_PERFUMES } from "~/routes/the-exchange"
 import { ROUTE_PATH as ALL_PERFUMES } from "~/routes/the-vault"
 
+// Inline path to avoid circular dependency (route imports pull in navigation via layout/components)
+const ERROR_ANALYTICS = "/admin/error-analytics"
 const ALL_HOUSES = "/behind-the-bottle"
 
 export const mainNavigation = [

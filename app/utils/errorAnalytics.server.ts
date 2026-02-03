@@ -83,11 +83,12 @@ export interface AnalyticsOptions {
 export class ErrorAnalytics {
   private static instance: ErrorAnalytics
 
-  private errorLogger: ErrorLogger
-
-  private constructor() {
-    this.errorLogger = ErrorLogger.getInstance()
+  /** Lazy getter to avoid circular dependency with ErrorLogger at module init (Vercel server bundle). */
+  private get errorLogger(): ErrorLogger {
+    return ErrorLogger.getInstance()
   }
+
+  private constructor() {}
 
   static getInstance(): ErrorAnalytics {
     if (!ErrorAnalytics.instance) {
