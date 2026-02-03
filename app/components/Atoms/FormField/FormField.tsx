@@ -91,7 +91,7 @@ const FormField = forwardRef<HTMLDivElement, FormFieldProps>((
         </div>
 
         {helpText && (
-          <p id="help-text" className="text-sm text-gray-500">
+          <p id="help-text" className="text-sm text-noir-gold-500">
             {helpText}
           </p>
         )}

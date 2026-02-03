@@ -112,6 +112,20 @@ Check that headings still render with Limelight font:
    - `app/root.tsx` - Replaced Google Fonts with font preload
    - `vite.config.ts` - Added CSS optimization flags
 
+## If Lighthouse Still Shows Google Fonts
+
+The app uses **only** self-hosted Limelight (no Google Fonts). If Lighthouse still reports a request to `fonts.googleapis.com/css2?family=Limelight`:
+
+1. **Redeploy** – Ensure the latest build (with self-hosted fonts) is deployed.
+2. **Hard refresh / clear cache** – Use a clean profile or "Disable cache" in DevTools when running Lighthouse.
+3. **CSP** – Google Fonts domains have been removed from CSP (`api/server.js`, `app/utils/security/helmet-config.server.js`); no stylesheet link to Google Fonts should be present in the app.
+
+## Root CSS (render-blocking)
+
+The root stylesheet (`/assets/root-*.css`) is injected by React Router/Vite and is render-blocking. To move it off the critical path in the future:
+
+- **Critical CSS inlining**: Inline above-the-fold CSS in the document and load the full stylesheet asynchronously (e.g. `media="print"` + `onload="this.media='all'"`), which would require framework or build customization.
+
 ## Rollback Plan
 
 If issues occur, revert `app/root.tsx` to:

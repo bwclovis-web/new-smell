@@ -37,7 +37,7 @@ export const modalBackgroundVariant = cva(
 )
 
 export const modalContentVariant = cva(
-  ["fixed max-h-full z-30 rounded transition-all delay-300 py-2 pb-10 xl:p-8 duration-500 w-full lg:w-4/5 xl:w-2/5 pointer-none flex",],
+  ["fixed max-h-full z-30 rounded transition-all delay-300 py-2 pb-10 xl:p-8 duration-500 w-full lg:w-4/5 xl:w-2/5 pointer-none flex"],
   {
     compoundVariants: [
       {

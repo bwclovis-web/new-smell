@@ -22,8 +22,9 @@ import i18n from "./modules/i18n/i18n.client"
 import { QueryProvider } from "./providers/QueryProvider"
 import { AppError } from "./utils/errorHandling"
 
+// Use self-hosted Limelight only (app/fonts.css). Do NOT add Google Fonts—they block render (~880ms).
 export const links: Route.LinksFunction = () => [
-  // Preload critical fonts for faster LCP
+  // Preload critical font for faster LCP (avoids render-blocking external font request)
   {
     rel: "preload",
     href: "/fonts/limelight-latin.woff2",

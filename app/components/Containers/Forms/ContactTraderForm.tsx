@@ -194,15 +194,15 @@ const ContactTraderForm = ({
 
       {/* Submit button */}
       <div className="flex justify-end gap-3">
-               <Button
-                 type="submit"
-                 disabled={isSubmitting}
-                 className="min-w-[120px]"
-               >
-                 {isSubmitting
-                   ? t("contactTrader.sending", "Sending...")
-                   : t("contactTrader.sendButton", "Send Message")}
-               </Button>
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="min-w-[120px]"
+        >
+          {isSubmitting
+            ? t("contactTrader.sending", "Sending...")
+            : t("contactTrader.sendButton", "Send Message")}
+        </Button>
       </div>
     </form>
   )

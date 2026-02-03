@@ -17,9 +17,8 @@ export function getHelmetConfig(nodeEnv = "development") {
         styleSrc: [
           "'self'",
           "'unsafe-inline'", // Required for Tailwind CSS and inline styles
-          "https://fonts.googleapis.com",
         ],
-        fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
+        fontSrc: ["'self'", "data:"],
         imgSrc: [
           "'self'",
           "data:",
@@ -101,8 +100,8 @@ export function getDevelopmentHelmetConfig() {
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        fontSrc: ["'self'", "data:"],
         imgSrc: [
 "'self'", "data:", "https:", "blob:", "http://localhost:*"
 ],
@@ -142,8 +141,8 @@ export function getProductionHelmetConfig() {
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        fontSrc: ["'self'"],
         imgSrc: ["'self'", "data:", "https:"],
         scriptSrc: ["'self'", "'unsafe-inline'"], // Remove unsafe-eval in production
         connectSrc: ["'self'", "https:"],

@@ -96,7 +96,7 @@ const ContactTraderButton = ({
       </Button>
 
       {modalOpen && modalId === "contact-trader" && (
-        <Modal background="default" innerType="default" animateStart="top">
+        <Modal background="default" innerType="dark" animateStart="top">
           <ContactTraderModal
             recipientId={traderId}
             recipientName={traderName}
