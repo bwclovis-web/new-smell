@@ -1,6 +1,7 @@
 import { ROUTE_PATH as ABOUT_US } from "~/routes/about-us"
 import { ROUTE_PATH as CONTACT_US } from "~/routes/contact-us"
-import { ROUTE_PATH as ERROR_ANALYTICS } from "~/routes/admin.error-analytics"
+// Inline path to avoid circular dependency (route imports pull in navigation via layout/components)
+const ERROR_ANALYTICS = "/admin/error-analytics"
 import { ROUTE_PATH as CHANGE_PASSWORD } from "~/routes/admin/change-password"
 import { ROUTE_PATH as CREATE_HOUSE } from "~/routes/admin/CreatePerfumeHousePage"
 import { ROUTE_PATH as CREATE_PERFUME } from "~/routes/admin/CreatePerfumePage"
