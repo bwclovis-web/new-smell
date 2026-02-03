@@ -14,7 +14,7 @@
 export { MdDeleteForever, MdDelete, MdEdit, MdAdd, MdLibraryAdd } from "react-icons/md"
 
 // Lucide Icons (lu)
-export { LuSearch, LuX, LuBadge, LuBadgeAlert, LuBadgeCheck } from "react-is livecons/lu"
+export { LuSearch, LuX, LuBadge, LuBadgeAlert, LuBadgeCheck } from "react-icons/lu"
 
 // Ionicons (io)
 export { IoMdCloseCircle } from "react-icons/io"

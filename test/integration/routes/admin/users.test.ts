@@ -42,7 +42,7 @@ describe("Admin Users Route Integration Tests", () => {
   beforeEach(() => {
     vi.clearAllMocks()
     // Set default mock behavior - tests can override as needed
-    vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(mockAdminUser as any)
+    vi.mocked(sharedLoader).mockResolvedValue(mockAdminUser as any)
     // Set default empty implementations for admin server functions
     vi.mocked(adminServer.getAllUsersWithCounts).mockResolvedValue([] as any)
     vi.mocked(adminServer.deleteUserSafely).mockResolvedValue({ success: true, message: "User deleted" })
@@ -67,7 +67,7 @@ describe("Admin Users Route Integration Tests", () => {
       ]
 
       // Setup mocks for this test
-      const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
+      const mockSharedLoader = vi.mocked(sharedLoader)
       const mockGetAllUsers = vi.mocked(adminServer.getAllUsersWithCounts)
       mockSharedLoader.mockResolvedValue(mockAdminUser as any)
       mockGetAllUsers.mockResolvedValue(mockUsers as any)
@@ -98,7 +98,7 @@ describe("Admin Users Route Integration Tests", () => {
 
     // TODO: Fix mock isolation - error handling returns object instead of Response
     it.skip("should deny access to non-admin users", async () => {
-      vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(mockRegularUser as any)
+      vi.mocked(sharedLoader).mockResolvedValue(mockRegularUser as any)
 
       const request = new Request("https://example.com/admin/users")
 
@@ -114,7 +114,7 @@ describe("Admin Users Route Integration Tests", () => {
 
     // TODO: Fix mock isolation - error handling returns object instead of Response
     it.skip("should deny access to unauthenticated users", async () => {
-      vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(null as any)
+      vi.mocked(sharedLoader).mockResolvedValue(null as any)
 
       const request = new Request("https://example.com/admin/users")
 
@@ -148,7 +148,7 @@ describe("Admin Users Route Integration Tests", () => {
 
   describe("Action - User Management", () => {
     it("should allow admin to delete user", async () => {
-      const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
+      const mockSharedLoader = vi.mocked(sharedLoader)
       const mockDeleteUser = vi.mocked(adminServer.deleteUserSafely)
       mockSharedLoader.mockResolvedValue(mockAdminUser as any)
       mockDeleteUser.mockResolvedValue({
@@ -188,7 +188,7 @@ describe("Admin Users Route Integration Tests", () => {
     })
 
     it("should allow admin to soft delete user", async () => {
-      const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
+      const mockSharedLoader = vi.mocked(sharedLoader)
       const mockSoftDeleteUser = vi.mocked(adminServer.softDeleteUser)
       mockSharedLoader.mockResolvedValue(mockAdminUser as any)
       mockSoftDeleteUser.mockResolvedValue({
@@ -229,7 +229,7 @@ describe("Admin Users Route Integration Tests", () => {
 
     it("should deny action to non-admin users", async () => {
       // Override default to return non-admin user
-      vi.mocked(sharedLoader.sharedLoader).mockResolvedValue(mockRegularUser as any)
+      vi.mocked(sharedLoader).mockResolvedValue(mockRegularUser as any)
 
       const formData = new FormData()
       formData.append("userId", "user-2")
@@ -263,7 +263,7 @@ describe("Admin Users Route Integration Tests", () => {
     })
 
     it("should reject action with missing userId", async () => {
-      const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
+      const mockSharedLoader = vi.mocked(sharedLoader)
       mockSharedLoader.mockResolvedValue(mockAdminUser as any)
 
       const formData = new FormData()
@@ -297,7 +297,7 @@ describe("Admin Users Route Integration Tests", () => {
     })
 
     it("should reject invalid action type", async () => {
-      const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
+      const mockSharedLoader = vi.mocked(sharedLoader)
       mockSharedLoader.mockResolvedValue(mockAdminUser as any)
 
       const formData = new FormData()
@@ -332,7 +332,7 @@ describe("Admin Users Route Integration Tests", () => {
     })
 
     it("should handle database errors during deletion", async () => {
-      const mockSharedLoader = vi.mocked(sharedLoader.sharedLoader)
+      const mockSharedLoader = vi.mocked(sharedLoader)
       const mockDeleteUser = vi.mocked(adminServer.deleteUserSafely)
       mockSharedLoader.mockResolvedValue(mockAdminUser as any)
       mockDeleteUser.mockRejectedValue(new Error("Database error"))
