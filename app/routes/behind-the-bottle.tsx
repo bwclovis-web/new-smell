@@ -13,6 +13,7 @@ import DataFilters from "~/components/Organisms/DataFilters"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import { useInfiniteHouses } from "~/hooks/useInfiniteHouses"
 import { useInfinitePagination } from "~/hooks/useInfinitePagination"
+import { useResponsivePageSize } from "~/hooks/useMediaQuery"
 import {
   usePaginatedNavigation,
   usePreserveScrollPosition,
@@ -24,8 +25,6 @@ import { getDefaultSortOptions, sortItems, type SortOption } from "~/utils/sortU
 import banner from "../images/behind-bottle.webp"
 
 export const ROUTE_PATH = "/behind-the-bottle"
-
-const PAGE_SIZE = 16
 
 export const loader = async () => ({
   // Don't load all houses upfront - we'll load by letter on demand
@@ -108,7 +107,8 @@ const useHouseHandlers = (
 const useHousesData = (
   letterFromUrl: string | null,
   selectedHouseType: string,
-  currentPage: number
+  currentPage: number,
+  pageSize: number
 ) => {
   const {
     data,
@@ -120,7 +120,7 @@ const useHousesData = (
   } = useInfiniteHouses({
     letter: letterFromUrl,
     houseType: selectedHouseType,
-    pageSize: PAGE_SIZE,
+    pageSize,
   })
 
   const loadedPages = data?.pages?.length ?? 0
@@ -158,7 +158,7 @@ const useHousesData = (
   const { items: houses, pagination, loading } = useInfinitePagination({
     pages: data?.pages,
     currentPage,
-    pageSize: PAGE_SIZE,
+    pageSize,
     isLoading,
     isFetchingNextPage,
     hasNextPage,
@@ -181,6 +181,9 @@ const AllHousesPage = () => {
   const [selectedHouseType, setSelectedHouseType] = useState("all")
   const [selectedSort, setSelectedSort] = useState<SortOption>("created-desc")
 
+  // Get responsive page size based on screen size
+  const pageSize = useResponsivePageSize()
+
   // Get letter from URL params
   const letterFromUrl = params.letter || null
   
@@ -193,7 +196,8 @@ const AllHousesPage = () => {
   const { houses, pagination, loading, error } = useHousesData(
     letterFromUrl,
     selectedHouseType,
-    pageFromUrl
+    pageFromUrl,
+    pageSize
   )
 
   const normalizedHouses = useMemo(

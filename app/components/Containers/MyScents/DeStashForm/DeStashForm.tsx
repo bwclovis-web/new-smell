@@ -242,7 +242,7 @@ const DeStashForm = ({
               onChange={event => setValue("price", event.target.value)}
               step="0.01"
               min="0"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 px-2 py-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
           </div>
         )}

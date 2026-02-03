@@ -13,6 +13,7 @@ import DataFilters from "~/components/Organisms/DataFilters"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import { useInfinitePagination } from "~/hooks/useInfinitePagination"
 import { useInfinitePerfumesByLetter } from "~/hooks/useInfinitePerfumes"
+import { useResponsivePageSize } from "~/hooks/useMediaQuery"
 import {
   usePaginatedNavigation,
   usePreserveScrollPosition,
@@ -25,8 +26,6 @@ import { getDefaultSortOptions, sortItems, type SortOption } from "~/utils/sortU
 import banner from "../images/vault.webp"
 
 export const ROUTE_PATH = "/the-vault"
-
-const PAGE_SIZE = 16
 
 export const loader = async () => (
   // Don't load all perfumes upfront - we'll load by letter on demand
@@ -49,6 +48,9 @@ const AllPerfumesPage = () => {
   
   const [selectedSort, setSelectedSort] = useState<SortOption>("created-desc")
 
+  // Get responsive page size based on screen size
+  const pageSize = useResponsivePageSize()
+
   // Get letter from URL params
   const letterFromUrl = params.letter || null
   
@@ -68,13 +70,13 @@ const AllPerfumesPage = () => {
   } = useInfinitePerfumesByLetter({
     letter: letterFromUrl,
     houseType: "all",
-    pageSize: PAGE_SIZE,
+    pageSize,
   })
 
   const { items: perfumes, pagination, loading } = useInfinitePagination({
     pages: data?.pages,
     currentPage: pageFromUrl,
-    pageSize: PAGE_SIZE,
+    pageSize,
     isLoading,
     isFetchingNextPage,
     hasNextPage,

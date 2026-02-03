@@ -34,7 +34,7 @@ export const buttonVariants = cva(
         true: "flex items-center justify-between gap-2",
       },
       background: {
-        red: "bg-red-600 hover:bg-red-700 focus:bg-red-800 disabled:bg-red-400 text-white",
+        red: "bg-red-600 hover:bg-red-700 focus:bg-red-800 disabled:bg-red-400 text-white w-full md:w-auto",
         gold: "border w-full text-shadow-md text-shadow-noir-dark/60 border-noir-gold bg-noir-gold/10 text-noir-gold-100 hover:border-noir-gold-500 hover:text-noir-gold-500 hover:bg-noir-gold-500/20  focus:bg-noir-gold/20 transition-all duration-300 ease-in-out gap-4",
       },
     },

@@ -21,6 +21,7 @@ import Modal from "~/components/Organisms/Modal"
 import { useHouse } from "~/hooks/useHouse"
 import { useInfinitePagination } from "~/hooks/useInfinitePagination"
 import { useInfinitePerfumesByHouse } from "~/hooks/useInfinitePerfumes"
+import { useResponsivePageSize } from "~/hooks/useMediaQuery"
 import {
   usePaginatedNavigation,
   usePreserveScrollPosition,
@@ -31,14 +32,15 @@ import { getPerfumeHouseBySlug } from "~/models/house.server"
 import { useSessionStore } from "~/stores/sessionStore"
 const ALL_HOUSES = "/behind-the-bottle"
 const BEHIND_THE_BOTTLE = "/behind-the-bottle"
-const PAGE_SIZE = 8
+// Default page size for server-side loader (client-side uses responsive hook)
+const DEFAULT_PAGE_SIZE = 8
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   if (!params.houseSlug) {
     throw new Error("House slug is required")
   }
   const perfumeHouse = await getPerfumeHouseBySlug(params.houseSlug, {
     skip: 0,
-    take: PAGE_SIZE,
+    take: DEFAULT_PAGE_SIZE,
   })
   if (!perfumeHouse) {
     throw new Response("House not found", { status: 404 })
@@ -70,6 +72,7 @@ interface UseHousePerfumePaginationOptions {
   fallbackPerfumeCount: number
   pageFromUrl: number
   navigate: ReturnType<typeof useNavigate>
+  pageSize: number
 }
 
 interface UseHousePerfumePaginationResult {
@@ -95,6 +98,7 @@ function useHousePerfumePagination({
   fallbackPerfumeCount,
   pageFromUrl,
   navigate,
+  pageSize,
 }: UseHousePerfumePaginationOptions): UseHousePerfumePaginationResult {
   const currentPage =
     Number.isNaN(pageFromUrl) || pageFromUrl < 1 ? 1 : pageFromUrl
@@ -108,7 +112,7 @@ function useHousePerfumePagination({
     error,
   } = useInfinitePerfumesByHouse({
     houseSlug,
-    pageSize: PAGE_SIZE,
+    pageSize,
     initialData: initialPerfumes,
     initialTotalCount: fallbackPerfumeCount,
   })
@@ -120,7 +124,7 @@ function useHousePerfumePagination({
   } = useInfinitePagination({
     pages: data?.pages,
     currentPage,
-    pageSize: PAGE_SIZE,
+    pageSize,
     isLoading,
     isFetchingNextPage,
     hasNextPage,
@@ -239,6 +243,8 @@ function useHouseDetailViewModel(): HouseDetailViewModel | null {
   const [searchParams] = useSearchParams()
   const { modalOpen, toggleModal, modalId, closeModal } = useSessionStore()
   
+  // Get responsive page size based on screen size
+  const pageSize = useResponsivePageSize()
 
   const selectedLetter =
     (location.state as { selectedLetter?: string })?.selectedLetter ?? null
@@ -271,6 +277,7 @@ function useHouseDetailViewModel(): HouseDetailViewModel | null {
     fallbackPerfumeCount,
     pageFromUrl,
     navigate,
+    pageSize,
   })
 
   const deleteHouse = useDeleteHouse()

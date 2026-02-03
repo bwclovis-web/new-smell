@@ -47,34 +47,29 @@ const ItemsSearchingFor = ({ wishlistItems }: ItemsSearchingForProps) => {
         {wishlistItems.map(item => (
           <li
             key={item.id}
-            className="border bg-noir-gold/10 border-noir-gold rounded p-3 flex items-center gap-3"
+            className="border bg-noir-gold/10 border-noir-gold rounded p-3 flex items-center gap-3 relative"
           >
-            <div className="flex-shrink-0">
-              <BsHeartFill className="text-red-500" size={20} />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                {item.perfume.image && (
+            <div className="flex items-center gap-0.5">
+              {item.perfume.image && (
                   <img
                     src={item.perfume.image}
                     alt={item.perfume.name}
                     className="w-12 h-12 object-cover rounded"
                   />
                 )}
-                <div>
-                  <h3 className="font-medium text-noir-gold">{item.perfume.name}</h3>
-                  {item.perfume.perfumeHouse && (
-                    <p className="text-sm text-noir-gold-100">
-                      by {item.perfume.perfumeHouse.name}
-                    </p>
-                  )}
-                </div>
-              </div>
             </div>
-            <div className="flex-shrink-0">
-              <span className="text-xs text-noir-gold-500">
+            <div className="flex-1">
+              <h3 className="font-medium text-noir-gold">{item.perfume.name}</h3>
+              {item.perfume.perfumeHouse && (
+                <p className="text-sm text-noir-gold-100">
+                  by {item.perfume.perfumeHouse.name}
+                </p>
+              )}
+            </div>
+            <div className="flex-shrink-0 absolute right-1 bottom-0">
+              <p className="text-xs text-noir-gold-500">
                 Added {new Date(item.createdAt).toLocaleDateString()}
-              </span>
+              </p>
             </div>
           </li>
         ))}

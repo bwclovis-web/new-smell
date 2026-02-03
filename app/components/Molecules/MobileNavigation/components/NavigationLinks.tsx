@@ -1,4 +1,3 @@
-import { type RefObject } from "react"
 import { useTranslation } from "react-i18next"
 import { NavLink } from "react-router"
 
@@ -6,6 +5,7 @@ import { mainNavigation } from "~/data/navigation"
 import { styleMerge } from "~/utils/styleUtils"
 
 import AboutDropdown from "../../AboutDropdown/AboutDropdown"
+import AdminDropdown from "../../AdminDropdown/AdminDropdown"
 
 interface NavigationLinksProps {
   user?: {
@@ -14,19 +14,14 @@ interface NavigationLinksProps {
   } | null
   isClientReady: boolean
   onNavClick: () => void
-  onAdminMenuToggle?: () => void
-  adminMenuButtonRef?: RefObject<HTMLButtonElement>
 }
 
 const NavigationLinks  = ({
   user,
   isClientReady,
   onNavClick,
-  onAdminMenuToggle,
-  adminMenuButtonRef,
 }: NavigationLinksProps) => {
   const { t, ready } = useTranslation()
-  const isAdmin = user?.role === "admin" || user?.role === "editor"
 
   return (
     <nav className="flex-1 px-4 pb-4">
@@ -53,18 +48,10 @@ const NavigationLinks  = ({
           </li>
         ))}
 
-        
-        {isAdmin && onAdminMenuToggle && (
+        {/* Admin dropdown - shown for all authenticated users (links filtered by role inside) */}
+        {user && (
           <li>
-            <button
-              ref={adminMenuButtonRef}
-              onClick={onAdminMenuToggle}
-              className={styleMerge(
-                "block text-noir-gold hover:text-noir-light font-semibold text-lg py-4 px-4 border border-transparent transition-colors duration-400 rounded-lg mobile-touch-target hover:bg-noir-black/30 w-full text-left"
-              )}
-            >
-              {ready && isClientReady ? t("navigation.admin") : "Admin"}
-            </button>
+            <AdminDropdown user={user} onNavClick={onNavClick} />
           </li>
         )}
       </ul>

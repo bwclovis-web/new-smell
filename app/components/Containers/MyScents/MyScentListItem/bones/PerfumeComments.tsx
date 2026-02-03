@@ -58,12 +58,10 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
                     variant="icon"
                     onClick={() => handleDeleteComment(comment.id)}
                     background={"red"}
-                    className="flex"
+                    size="sm"
+                    leftIcon={<MdDeleteForever size={20} fill="white" />}
                   >
-                    <span className="text-white/90 font-bold text-sm">
                       {t("myScents.comments.deleteComment")}
-                    </span>
-                    <MdDeleteForever size={20} fill="white" />
                   </Button>
                 </div>
               </div>

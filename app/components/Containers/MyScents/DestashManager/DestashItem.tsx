@@ -52,7 +52,7 @@ const DestashItem = ({ destash, onEdit, onDelete }: DestashItemProps) => {
         </Modal>
       )}
       <div className="noir-border bg-noir-dark/90">
-        <div className="p-4 flex justify-between items-start gap-4">
+        <div className="p-4 flex flex-col md:flex-row justify-between items-start gap-4">
           <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <p className="text-sm text-noir-gold-500 font-medium">
@@ -91,7 +91,7 @@ const DestashItem = ({ destash, onEdit, onDelete }: DestashItemProps) => {
               </div>
             )}
           </div>
-          <div className="flex gap-2">
+          <div className="w-full md:w-auto flex flex-col md:flex-row gap-2">
             <Button
               onClick={() => {
                 const buttonRef = { current: document.createElement("button") }
@@ -99,6 +99,7 @@ const DestashItem = ({ destash, onEdit, onDelete }: DestashItemProps) => {
               }}
               variant="primary"
               size="sm"
+              className="w-full md:w-auto"
             >
               {t("myScents.comments.addCommentButton", "Add Comment")}
             </Button>
@@ -107,6 +108,7 @@ const DestashItem = ({ destash, onEdit, onDelete }: DestashItemProps) => {
               variant="secondary"
               size="sm"
               leftIcon={<MdEdit size={16} />}
+              className="w-full md:w-auto flex items-center justify-between gap-2"
             >
               {t("myScents.destashManager.edit")}
             </Button>
@@ -115,9 +117,11 @@ const DestashItem = ({ destash, onEdit, onDelete }: DestashItemProps) => {
                 const buttonRef = { current: document.createElement("button") }
                 toggleModal(buttonRef as any, "delete-destash-item")
               }}
-              variant="danger"
+              variant="icon"
               size="sm"
+              background="red"
               leftIcon={<MdDelete size={16} />}
+              className="w-full md:w-auto"
             >
               {t("myScents.destashManager.delete")}
             </Button>

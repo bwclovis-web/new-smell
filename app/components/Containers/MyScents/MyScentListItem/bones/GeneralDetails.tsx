@@ -21,7 +21,7 @@ const GeneralDetails = ({ userPerfume }: { userPerfume: any }) => {
 
   return (
     <>
-    <div className="flex gap-10 mt-6 justify-between items-center px-2">
+    <div className="flex flex-col md:flex-row gap-2 md:gap-10 mt-6 justify-between md:items-center px-2">
       {userPerfume.placeOfPurchase && (
         <p className="font-medium flex flex-col justify-start items-start">
           <span className="text-lg text-noir-gold">{t("myScents.listItem.pointOfPurchase")}</span>
@@ -54,7 +54,8 @@ const GeneralDetails = ({ userPerfume }: { userPerfume: any }) => {
           toggleModal(removeButtonRef, "delete-item")
         }}
         disabled={isSubmitting}
-        variant="danger"
+        variant="icon"
+        background="red"
         size="sm"
         leftIcon={<MdDeleteForever size={20} fill="white" />}
       >

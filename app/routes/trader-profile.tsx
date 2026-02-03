@@ -9,6 +9,7 @@ import {
 import ContactTraderButton from "~/components/Containers/TraderProfile/ContactTraderButton"
 import TraderFeedbackSection from "~/components/Containers/TraderProfile/TraderFeedbackSection"
 import TitleBanner from "~/components/Organisms/TitleBanner"
+import { useMediaQuery } from "~/hooks/useMediaQuery"
 import { useTrader } from "~/hooks/useTrader"
 import type { TraderFeedbackResponse } from "~/lib/queries/traderFeedback"
 import {
@@ -81,6 +82,8 @@ const TraderProfilePage = () => {
   const { trader: initialTrader, viewer, feedback } = loaderData
   const { data: trader } = useTrader(initialTrader.id, initialTrader)
   const { t } = useTranslation()
+  // Details open on tablet/desktop (md+), closed on mobile
+  const detailsOpenByDefault = useMediaQuery("(min-width: 768px)")
   
   if (!trader) {
     return <div className="p-4">Trader not found</div>
@@ -119,7 +122,7 @@ const TraderProfilePage = () => {
             name="itemsAvailable"
             summary={t("traderProfile.itemsAvailableSummary", { traderName })}
             background="dark"
-            defaultOpen={true}
+            defaultOpen={detailsOpenByDefault}
           >
           {trader.UserPerfume.length > 0 ? (
             <ul className="mt-6">
@@ -144,7 +147,7 @@ const TraderProfilePage = () => {
           name="itemsSearchingFor"
           summary={t("traderProfile.itemsSummary", { traderName })}
           background="dark"
-          defaultOpen={true}
+          defaultOpen={detailsOpenByDefault}
         >
           <ItemsSearchingFor
             wishlistItems={(trader.UserPerfumeWishlist || []).map((item: any) => ({

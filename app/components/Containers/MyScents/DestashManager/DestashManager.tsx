@@ -1,7 +1,7 @@
 import { type Dispatch, type SetStateAction, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {  MdAdd } from "react-icons/md"
-import { useFetcher, useRevalidator } from "react-router"
+import { useFetcher } from "react-router"
 
 import { Button } from "~/components/Atoms/Button"
 import { useSessionStore } from "~/stores/sessionStore"
@@ -23,50 +23,71 @@ const DestashManager = ({
 }: DestashManagerProps) => {
   const { t } = useTranslation()
   const fetcher = useFetcher()
-  const revalidator = useRevalidator()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const previousStateRef = useRef<string>(fetcher.state)
+  const submittedRef = useRef(false)
   const { closeModal } = useSessionStore()
 
-  // Revalidate data after successful fetcher submission
+  // Revalidate data after successful fetcher submission and close form
   useEffect(() => {
-    // Only update when transitioning from "submitting" to "idle"
-    if (
-      previousStateRef.current === "submitting" &&
-      fetcher.state === "idle"
-    ) {
-      // Check if the response indicates success
-      const responseData = fetcher.data
-      const isSuccess = responseData && typeof responseData === 'object' && 'success' in responseData
-        ? responseData.success
-        : true // Assume success if format is different
+    const responseData = fetcher.data
+    const isSuccess = responseData && typeof responseData === "object" && "success" in responseData
+      ? (responseData as { success?: boolean }).success
+      : false
 
-      if (isSuccess && responseData?.userPerfume) {
-        // Update or add the entry to local state
-        const updatedUserPerfume = responseData.userPerfume
-        setUserPerfumes(prev => {
-          const index = prev.findIndex(up => up.id === updatedUserPerfume.id)
-          if (index >= 0) {
-            // Update existing entry
-            const updated = [...prev]
-            updated[index] = updatedUserPerfume
-            return updated
-          }
-          // Add new entry (new destash was created)
-          return [...prev, updatedUserPerfume]
-        })
+    const transitionedToIdle =
+      previousStateRef.current === "submitting" && fetcher.state === "idle"
+
+    if (transitionedToIdle && isSuccess) {
+      if (responseData && typeof responseData === "object" && "userPerfume" in responseData) {
+        const updatedUserPerfume = (responseData as { userPerfume: UserPerfumeI }).userPerfume
+        if (updatedUserPerfume) {
+          setUserPerfumes(prev => {
+            const index = prev.findIndex(up => up.id === updatedUserPerfume.id)
+            if (index >= 0) {
+              const updated = [...prev]
+              updated[index] = updatedUserPerfume
+              return updated
+            }
+            return [...prev, updatedUserPerfume]
+          })
+        }
       }
 
-      // Close the form after successful submission
       setIsCreating(false)
       setEditingId(null)
+      submittedRef.current = false
     }
-    
+
+    // Fallback: close form when idle with success data and we had submitted
+    // (handles remount or effect order issues)
+    if (
+      fetcher.state === "idle" &&
+      isSuccess &&
+      submittedRef.current
+    ) {
+      if (responseData && typeof responseData === "object" && "userPerfume" in responseData) {
+        const updatedUserPerfume = (responseData as { userPerfume: UserPerfumeI }).userPerfume
+        if (updatedUserPerfume) {
+          setUserPerfumes(prev => {
+            const index = prev.findIndex(up => up.id === updatedUserPerfume.id)
+            if (index >= 0) {
+              const updated = [...prev]
+              updated[index] = updatedUserPerfume
+              return updated
+            }
+            return [...prev, updatedUserPerfume]
+          })
+        }
+      }
+      setIsCreating(false)
+      setEditingId(null)
+      submittedRef.current = false
+    }
+
     previousStateRef.current = fetcher.state
-  }, [
-fetcher.state, fetcher.data, revalidator, setUserPerfumes
-])
+  }, [fetcher.state, fetcher.data, setUserPerfumes])
 
   // Filter destashes for this perfume
   const destashes = userPerfumes.filter(up => up.perfumeId === perfumeId && parseFloat(up.available || "0") > 0)
@@ -145,12 +166,8 @@ fetcher.state, fetcher.data, revalidator, setUserPerfumes
     formData.append("tradePreference", data.tradePreference)
     formData.append("tradeOnly", data.tradeOnly.toString())
 
-    // Submit the form
+    submittedRef.current = true
     fetcher.submit(formData, { method: "post", action: "/admin/my-scents" })
-
-    // Don't close the form immediately - wait for the fetcher to complete
-    // This prevents the AbortError from component unmounting during submission
-    // The useEffect will handle closing the form when the submission completes
   }
 
   const editingDestash = editingId
@@ -159,7 +176,7 @@ fetcher.state, fetcher.data, revalidator, setUserPerfumes
 
   return (
     <div className="p-4 space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row gap-2 md:gap-0 justify-between items-center">
         <h3 className="!text-noir-dark text-xl font-semibold">
           {t("myScents.destashManager.title")}
         </h3>
@@ -175,7 +192,7 @@ fetcher.state, fetcher.data, revalidator, setUserPerfumes
         )}
       </div>
 
-      <p className="text-sm text-noir-gold-500">
+      <p className="text-sm text-noir-gold-dark">
         {t("myScents.destashManager.description")}
       </p>
 
@@ -203,7 +220,7 @@ fetcher.state, fetcher.data, revalidator, setUserPerfumes
       {(isCreating || editingId) && (
         <div className="noir-border p-4 bg-noir-dark/30">
           <div className="flex justify-between items-center mb-4">
-            <h4 className="text-lg font-semibold text-noir-gold">
+            <h4 className="text-lg font-semibold text-noir-dark">
               {isCreating
                 ? t("myScents.destashManager.createNew")
                 : t("myScents.destashManager.editDestash")}

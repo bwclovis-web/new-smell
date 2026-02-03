@@ -22,7 +22,7 @@ const DataDisplay = ({
         <h2 className="text-2xl font-bold text-noir-gold mb-6 text-center">
           {selectedLetter}
         </h2>
-        <ul className="grid grid-cols-2 gap-6 md:grid-cols-2 2xl:grid-cols-4 auto-rows-fr">
+        <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-4 auto-rows-fr">
           {letterItems.map(item => (
             <li key={item.id}>
               <LinkCard data={item} type={type} />
@@ -49,7 +49,7 @@ const DataDisplay = ({
           <h2 className="text-2xl font-bold text-noir-gold mb-6 text-center">
             {letter}
           </h2>
-          <ul className="grid grid-cols-2 gap-6 md:grid-cols-2 2xl:grid-cols-4 auto-rows-fr">
+          <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-4 auto-rows-fr">
             {groupedItems[letter].map(item => (
               <li key={item.id}>
                 <LinkCard data={item} type={type} />
