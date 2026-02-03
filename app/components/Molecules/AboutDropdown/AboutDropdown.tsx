@@ -43,14 +43,14 @@ const AboutDropdown = ({
 
   const aboutItems = [
     {
-      id: "about-us",
-      label: ready && isClientReady ? t("navigation.aboutUs") : "About Us",
-      path: "/about-us",
-    },
-    {
       id: "how-we-work",
       label: ready && isClientReady ? t("navigation.howWeWork") : "How We Work",
       path: "/how-we-work",
+    },
+    {
+      id: "about-us",
+      label: ready && isClientReady ? t("navigation.aboutUs") : "About Us",
+      path: "/about-us",
     },
     {
       id: "contact-us",
