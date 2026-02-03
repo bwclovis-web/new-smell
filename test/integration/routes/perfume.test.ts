@@ -26,8 +26,11 @@ import * as wishlistServer from "~/models/wishlist.server"
 import { loader as perfumeLoader } from "~/routes/perfume"
 import * as sessionManager from "~/utils/security/session-manager.server"
 
+// Return value for getPerfumeBySlug - set in tests so mock is robust with restoreMocks/clearMocks
+let getPerfumeBySlugReturn: unknown = null
+
 vi.mock("~/models/perfume.server", () => ({
-  getPerfumeBySlug: vi.fn(),
+  getPerfumeBySlug: vi.fn().mockImplementation(async () => getPerfumeBySlugReturn),
 }))
 vi.mock("~/models/perfumeRating.server", () => ({
   getPerfumeRatings: vi.fn(),
@@ -73,9 +76,9 @@ describe("Perfume Route Integration Tests", () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    
-    // Set up default mock implementations
-    vi.mocked(perfumeServer.getPerfumeBySlug).mockResolvedValue(null)
+    getPerfumeBySlugReturn = null
+
+    // Set up default mock implementations (getPerfumeBySlug reads getPerfumeBySlugReturn)
     vi.mocked(perfumeRatingServer.getPerfumeRatings).mockResolvedValue({
       averageRatings: {},
       ratingCount: 0,
@@ -116,9 +119,7 @@ describe("Perfume Route Integration Tests", () => {
         totalPages: 0,
       }
 
-      // Reset and set implementation so the mock is applied when loader runs (robust with restoreMocks/clearMocks)
-      vi.mocked(perfumeServer.getPerfumeBySlug).mockReset()
-      vi.mocked(perfumeServer.getPerfumeBySlug).mockImplementation(async () => mockPerfume as any)
+      getPerfumeBySlugReturn = mockPerfume
       vi.mocked(perfumeRatingServer.getPerfumeRatings).mockResolvedValue(mockRatings as any)
       vi.mocked(perfumeReviewServer.getPerfumeReviews).mockResolvedValue(mockReviews as any)
 
