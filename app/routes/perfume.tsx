@@ -41,7 +41,7 @@ const REVIEWS_PAGE_SIZE = 5
 
 const getUserFromRequest = async (request: Request) => {
   const cookieHeader = request.headers.get("cookie") || ""
-  const cookies = cookie.parse(cookieHeader)
+  const cookies = cookie.parse(cookieHeader) ?? {}
 
   let accessToken = cookies.accessToken
   if (!accessToken && cookies.token) {
@@ -103,7 +103,7 @@ userRatings, ratingsData, userReview, reviewsData
 const getUserIdFromRequest = async (request: Request): Promise<string | null> => {
   try {
     const cookieHeader = request.headers.get("cookie") || ""
-    const cookies = cookie.parse(cookieHeader)
+    const cookies = cookie.parse(cookieHeader) ?? {}
 
     // Try access token first
     let accessToken = cookies.accessToken
