@@ -210,7 +210,9 @@ describe("AlphabeticalNav", () => {
     it("applies grid layout", () => {
       const { container } = render(<AlphabeticalNav selectedLetter={null} onLetterSelect={mockOnLetterSelect} />)
       expect(container.firstChild).toHaveClass("grid")
-      expect(container.firstChild).toHaveClass("grid-cols-9")
+      expect(container.firstChild).toHaveClass("grid-cols-6")
+      expect(container.firstChild).toHaveClass("md:grid-cols-8")
+      expect(container.firstChild).toHaveClass("lg:grid-cols-9")
       expect(container.firstChild).toHaveClass("gap-4")
     })
 
