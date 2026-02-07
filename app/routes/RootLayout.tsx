@@ -1,4 +1,3 @@
-import cookie from "cookie"
 import { Suspense } from "react"
 import { type LoaderFunctionArgs, Outlet, useLoaderData } from "react-router"
 import AdminNavigation from "~/components/Molecules/AdminNavigation/AdminNavigation"
@@ -8,34 +7,11 @@ import MobileBottomNavigation from "~/components/Molecules/MobileBottomNavigatio
 import MobileNavigation from "~/components/Molecules/MobileNavigation/MobileNavigation"
 // Performance monitoring only in development
 // import { DevPerformanceLoader } from '~/components/Performance'
-import { getUserById } from "~/models/user.server"
-import { createSafeUser } from "~/types"
-import { verifyAccessToken } from "~/utils/security/session-manager.server"
+import { getSessionFromRequest } from "~/utils/session-from-request.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  // Get cookies from the request
-  const cookieHeader = request.headers.get("cookie") || ""
-  const cookies = cookie.parse(cookieHeader)
-
-  let user = null
-
-  // Try access token first
-  let accessToken = cookies.accessToken
-
-  // Fallback to legacy token for backward compatibility
-  if (!accessToken && cookies.token) {
-    accessToken = cookies.token
-  }
-
-  if (accessToken) {
-    const payload = verifyAccessToken(accessToken)
-
-    if (payload && payload.userId) {
-      const fullUser = await getUserById(payload.userId)
-      user = createSafeUser(fullUser)
-    }
-  }
-
+  const session = await getSessionFromRequest(request, { includeUser: true })
+  const user = session?.user ?? null
   return { user }
 }
 

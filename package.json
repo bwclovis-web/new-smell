@@ -131,8 +131,6 @@
     "utf-8-validate": "^6.0.5"
   },
   "devDependencies": {
-    "puppeteer": "^24.26.1",
-    "sharp": "^0.34.3",
     "@axe-core/cli": "^4.11.0",
     "@babel/preset-typescript": "^7.27.1",
     "@eslint/css": "^0.7.0",
@@ -173,8 +171,10 @@
     "prisma": "^6.9.0",
     "prisma-docs-generator": "^0.8.0",
     "prisma-generator-typescript-interfaces": "^2.1.0",
+    "puppeteer": "^24.26.1",
     "react-router-devtools": "^1.1.0",
     "rollup-plugin-visualizer": "^6.0.3",
+    "sharp": "^0.34.3",
     "tailwindcss": "^4.1.4",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",

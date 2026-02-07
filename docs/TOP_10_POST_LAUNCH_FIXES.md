@@ -80,12 +80,15 @@ This is a prioritized post-launch list focused on production risk reduction (sec
 - **Impact**: Medium (perf + deploy reliability)
 - **Effort**: Medium
 
-### 8) Consolidate auth helpers (avoid drift)
+### 8) Consolidate auth helpers (avoid drift) ✅
 - **Why**: Multiple helpers parse cookies + verify token with slight differences.
 - **Evidence**
   - `app/utils/auth.server.ts`, `app/utils/sharedLoader.ts`, route-local helpers like in `app/routes/perfume.tsx`
-- **Fix**
-  - One "session-from-request" utility returning `{ userId, user?, tokens? }`
+- **Fix** (done)
+  - One "session-from-request" utility in `app/utils/session-from-request.server.ts` returning `{ userId, user?, tokens?, newAccessToken? }`
+  - Refactored: `auth.server.ts`, `sharedLoader.ts`, `perfume.tsx`, `RootLayout.tsx`, `user-perfumes.tsx`, `api/server.js` (getLoadContext, requireAdminAuth)
+  - API server uses `getSessionFromExpressRequest` in `api/utils.js` for Express req
+- **How to test**: Run `npm run test:unit -- session-from-request` and `npm run test:integration -- --grep auth` (see Testing section below)
 - **Impact**: Medium (reliability)
 - **Effort**: Medium
 
@@ -121,10 +124,15 @@ This is a prioritized post-launch list focused on production risk reduction (sec
 - [ ] **Fix #5** – Replace `alert()`: Add toast/notification system; update `ReviewSection` and perfume delete flow
 - [x] **Fix #6** – HTML sanitization: Audit all review write paths; add optional render-time sanitization for legacy data
 - [x] **Fix #7** – Deps: Move `puppeteer`/`sharp` to optional path or separate package if not needed at runtime
-- [ ] **Fix #8** – Auth helpers: Create single "session-from-request" utility; refactor routes to use it
+- [x] **Fix #8** – Auth helpers: Create single "session-from-request" utility; refactor routes to use it
 - [ ] **Fix #9** – Perfume loader: Consolidate DB queries; reduce redundant parsing in `perfume.tsx`
 - [ ] **Fix #10** – Edit review: Implement edit UI + `update` action; add optimistic updates
 - [ ] **Verify**: Auth regression tests (login, refresh, logout, roles)
+
+### Testing Fix #8 (session-from-request)
+- **Unit test**: `npm run test:unit -- session-from-request` (tests `getTokensFromCookieHeader`, `getSessionFromCookieHeader`, `getSessionFromRequest`)
+- **Integration (auth)**: `npm run test:integration -- --grep auth`
+- **Manual**: Sign in → visit perfume page → verify wishlist/icons show when logged in; visit /my-reviews → should require auth
 - [ ] **Verify**: CSRF tests on all mutating endpoints
 - [ ] **Verify**: XSS tests on review/message fields
 - [ ] **Verify**: TTFB and DB query counts before/after

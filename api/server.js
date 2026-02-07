@@ -47,7 +47,7 @@ import {
   generateCSRFToken,
   setCSRFCookie,
 } from "../app/utils/server/csrf-middleware.server.js"
-import { parseCookies, verifyJwt } from "./utils.js"
+import { getSessionFromExpressRequest, parseCookies } from "./utils.js"
 
 // Run environment validation before starting the server
 // Set STARTUP_VERBOSE=true in .env for detailed startup logging
@@ -577,58 +577,36 @@ app.get("/test-images", (req, res) => {
   })
 })
 
-// Admin authentication middleware
+// Admin authentication middleware (uses getSessionFromExpressRequest from utils)
 const requireAdminAuth = async (req, res, next) => {
   try {
-    const cookies = parseCookies(req)
-    
-    // Try access token first
-    let accessToken = cookies.accessToken
-    
-    // Fallback to legacy token for backward compatibility
-    if (!accessToken && cookies.token) {
-      accessToken = cookies.token
-    }
-    
-    if (!accessToken) {
+    const session = await getSessionFromExpressRequest(req, { includeUser: true })
+
+    if (!session) {
       return res.status(401).json({
         success: false,
         error: "Authentication required",
         message: "No authentication token provided",
       })
     }
-    
-    const payload = verifyJwt(accessToken)
-    if (!payload || !payload.userId) {
-      return res.status(401).json({
-        success: false,
-        error: "Invalid token",
-        message: "Authentication token is invalid or expired",
-      })
-    }
-    
-    // Dynamically import getUserById from TypeScript module
-    const { getUserById } = await import("../app/models/user.query.js")
-    const user = await getUserById(payload.userId)
-    
-    if (!user) {
+
+    if (!session.user) {
       return res.status(401).json({
         success: false,
         error: "User not found",
         message: "User associated with token not found",
       })
     }
-    
-    if (user.role !== "admin") {
+
+    if (session.user.role !== "admin") {
       return res.status(403).json({
         success: false,
         error: "Forbidden",
         message: "Admin access required",
       })
     }
-    
-    // Attach user to request for use in route handlers
-    req.user = user
+
+    req.user = session.user
     next()
   } catch (error) {
     return res.status(500).json({
@@ -746,18 +724,10 @@ const getRequestHandler = async () => {
       build,
       mode: NODE_ENV,
       getLoadContext: async (req, res) => {
-        const cookies = parseCookies(req)
-        // Canonical cookie name; temporary legacy fallback for migration
-        const accessToken = cookies.accessToken || cookies.token
-        let user = null
-
-        if (accessToken) {
-          const payload = verifyJwt(accessToken)
-          if (payload && payload.userId) {
-            // You can fetch full user here or just pass userId
-            user = { id: payload.userId }
-          }
-        }
+        const session = await getSessionFromExpressRequest(req, {
+          includeUser: false,
+        })
+        const user = session ? { id: session.userId } : null
 
         return {
           user,

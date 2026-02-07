@@ -1,4 +1,3 @@
-import cookie from "cookie"
 import { useTranslation } from "react-i18next"
 import {
   type LoaderFunctionArgs,
@@ -26,40 +25,16 @@ import {
   getPerfumeReviews,
   getUserPerfumeReview,
 } from "~/models/perfumeReview.server"
-import { getUserById } from "~/models/user.server"
 import { isInWishlist } from "~/models/wishlist.server"
 import { useSessionStore } from "~/stores/sessionStore"
-import { createSafeUser } from "~/types"
 import { assertExists } from "~/utils/errorHandling.patterns"
 import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
-import { verifyAccessToken } from "~/utils/security/session-manager.server"
+import { getSessionFromRequest } from "~/utils/session-from-request.server"
 
 import { ROUTE_PATH as HOUSE_PATH } from "./perfume-house"
 import { ROUTE_PATH as ALL_PERFUMES } from "./the-vault"
 export const ROUTE_PATH = "/perfume"
 const REVIEWS_PAGE_SIZE = 5
-
-const getUserFromRequest = async (request: Request) => {
-  const cookieHeader = request.headers.get("cookie") || ""
-  const cookies = cookie.parse(cookieHeader) ?? {}
-
-  let accessToken = cookies.accessToken
-  if (!accessToken && cookies.token) {
-    accessToken = cookies.token
-  }
-
-  if (!accessToken) {
-    return null
-  }
-
-  const payload = verifyAccessToken(accessToken)
-  if (!payload?.userId) {
-    return null
-  }
-
-  const fullUser = await getUserById(payload.userId)
-  return fullUser ? createSafeUser(fullUser) : null
-}
 
 export const loader = withLoaderErrorHandling(
   async ({ params, request }: LoaderFunctionArgs) => {
@@ -72,17 +47,24 @@ export const loader = withLoaderErrorHandling(
       perfumeSlug,
     })
 
-    const user = await getUserFromRequest(request)
-    const isInUserWishlist = await checkWishlistStatus(request, perfume.id)
+    const session = await getSessionFromRequest(request, { includeUser: true })
+    const user = session?.user ?? null
 
-    const [
-userRatings, ratingsData, userReview, reviewsData
-] = await Promise.all([
-      getUserRatingsForPerfume(request, perfume.id),
-      getPerfumeRatings(perfume.id),
-      user ? getUserPerfumeReview(user.id, perfume.id) : null,
-      getPerfumeReviews(perfume.id, { isApproved: true }, { page: 1, limit: REVIEWS_PAGE_SIZE }),
-    ])
+    const [isInUserWishlist, userRatings, ratingsData, userReview, reviewsData] =
+      await Promise.all([
+        session?.userId
+          ? isInWishlist(session.userId, perfume.id)
+          : Promise.resolve(false),
+        session?.userId
+          ? getUserPerfumeRating(session.userId, perfume.id).catch(() => null)
+          : Promise.resolve(null),
+        getPerfumeRatings(perfume.id),
+        user ? getUserPerfumeReview(user.id, perfume.id) : null,
+        getPerfumeReviews(perfume.id, { isApproved: true }, {
+          page: 1,
+          limit: REVIEWS_PAGE_SIZE,
+        }),
+      ])
 
     return {
       perfume,
@@ -99,56 +81,6 @@ userRatings, ratingsData, userReview, reviewsData
     context: { route: "perfume", page: "detail" },
   }
 )
-
-const getUserIdFromRequest = async (request: Request): Promise<string | null> => {
-  try {
-    const cookieHeader = request.headers.get("cookie") || ""
-    const cookies = cookie.parse(cookieHeader) ?? {}
-
-    // Try access token first
-    let accessToken = cookies.accessToken
-
-    // Fallback to legacy token for backward compatibility
-    if (!accessToken && cookies.token) {
-      accessToken = cookies.token
-    }
-
-    if (!accessToken) {
-      return null
-    }
-
-    const payload = verifyAccessToken(accessToken)
-    return payload?.userId || null
-  } catch {
-    return null
-  }
-}
-
-const getUserRatingsForPerfume = async (request: Request, perfumeId: string) => {
-  const userId = await getUserIdFromRequest(request)
-  if (!userId) {
-    return null
-  }
-
-  try {
-    return await getUserPerfumeRating(userId, perfumeId)
-  } catch {
-    return null
-  }
-}
-
-const checkWishlistStatus = async (request: Request, perfumeId: string) => {
-  const userId = await getUserIdFromRequest(request)
-  if (!userId) {
-    return false
-  }
-
-  try {
-    return await isInWishlist(userId, perfumeId)
-  } catch {
-    return false
-  }
-}
 
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()

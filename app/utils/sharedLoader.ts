@@ -1,91 +1,38 @@
-/* eslint-disable max-statements */
 import cookie from "cookie"
 import { redirect } from "react-router"
 
-import { getUserById } from "~/models/user.query"
-import { createSafeUser } from "~/types"
-import {
-  refreshAccessToken,
-  verifyAccessToken,
-} from "~/utils/security/session-manager.server"
+import { getSessionFromRequest } from "~/utils/session-from-request.server"
 
-// Define route path as constant to avoid circular dependency
 const SIGN_IN_PATH = "/sign-in"
 
 export const sharedLoader = async (request: Request) => {
-  const cookieHeader = request.headers.get("cookie") || ""
+  const session = await getSessionFromRequest(request, {
+    includeUser: true,
+    attemptRefresh: true,
+  })
 
-  // Parse cookies correctly
-  const cookies = cookie.parse(cookieHeader)
-
-  // Try access token first
-  let accessToken = cookies.accessToken
-  let refreshToken = cookies.refreshToken
-
-  // Fallback to legacy token for backward compatibility
-  if (!accessToken && cookies.token) {
-    accessToken = cookies.token
-  }
-
-  if (!accessToken && !refreshToken) {
+  if (!session) {
     throw redirect(SIGN_IN_PATH)
   }
 
-  // Verify access token
-  if (accessToken) {
-    const payload = verifyAccessToken(accessToken)
-
-    if (payload && payload.userId) {
-      const fullUser = await getUserById(payload.userId)
-      const user = createSafeUser(fullUser)
-
-      if (!user) {
-        throw redirect(SIGN_IN_PATH)
-      }
-
-      return user
-    }
+  if (!session.user) {
+    throw redirect(SIGN_IN_PATH)
   }
 
-  // If access token is invalid or missing, try refresh token
-  if (refreshToken) {
-    try {
-      const refreshResult = await refreshAccessToken(refreshToken)
-      if (refreshResult) {
-        // Set new access token cookie
-        const newAccessTokenCookie = cookie.serialize(
-          "accessToken",
-          refreshResult.accessToken,
-          {
-            httpOnly: true,
-            path: "/",
-            maxAge: 60 * 60, // 60 minutes
-            sameSite: "lax",
-            secure: process.env.NODE_ENV === "production",
-          }
-        )
-
-        const fullUser = await getUserById(refreshResult.userId)
-        const user = createSafeUser(fullUser)
-
-        if (!user) {
-          throw redirect(SIGN_IN_PATH)
-        }
-
-        // Return user with new token in headers
-        throw redirect(request.url, {
-          headers: {
-            "Set-Cookie": newAccessTokenCookie,
-          },
-        })
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error("Token refresh failed:", error.message)
-      }
-      // Token refresh failed
-    }
+  if (session.newAccessToken) {
+    const newAccessTokenCookie = cookie.serialize("accessToken", session.newAccessToken, {
+      httpOnly: true,
+      path: "/",
+      maxAge: 60 * 60, // 60 minutes
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    })
+    throw redirect(request.url, {
+      headers: {
+        "Set-Cookie": newAccessTokenCookie,
+      },
+    })
   }
 
-  throw redirect(SIGN_IN_PATH)
+  return session.user
 }

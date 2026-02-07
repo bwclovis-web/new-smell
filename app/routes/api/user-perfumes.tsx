@@ -1,4 +1,3 @@
-import { parseCookies, verifyJwt } from "@api/utils"
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router"
 
 import { getAllPerfumes } from "~/models/perfume.server"
@@ -7,12 +6,12 @@ import {
   addUserPerfume,
   deletePerfumeComment,
   getCommentsByUserPerfumeId,
-  getUserById,
   getUserPerfumes,
   removeUserPerfume,
   updateAvailableAmount,
   updatePerfumeComment,
 } from "~/models/user.server"
+import { authenticateUser, type AuthResult } from "~/utils/auth.server"
 import { processWishlistAvailabilityAlerts } from "~/utils/alert-processors"
 import {
   withActionErrorHandling,
@@ -20,13 +19,6 @@ import {
 } from "~/utils/errorHandling.server"
 
 // Type definitions
-type AuthResult = {
-  success: boolean
-  error?: string
-  status?: number
-  user?: any
-}
-
 type PerfumeActionParams = {
   user: any
   perfumeId: string
@@ -39,59 +31,6 @@ type PerfumeActionParams = {
   tradePrice?: string
   tradePreference?: string
   tradeOnly?: boolean
-}
-
-// Helper functions for authentication
-const getTokenFromRequest = (request: Request) => {
-  const cookieHeader = request.headers.get("cookie") || ""
-  const cookies = parseCookies({ headers: { cookie: cookieHeader } })
-  return cookies.accessToken || cookies.token
-}
-
-const validateToken = (token: string): { valid: boolean; userId?: string } => {
-  if (!token) {
-    return { valid: false }
-  }
-
-  const payload = verifyJwt(token)
-  if (!payload || !payload.userId) {
-    return { valid: false }
-  }
-
-  return { valid: true, userId: payload.userId }
-}
-
-// Helper function to handle user lookup based on token validation
-const getUserFromValidation = async (validation: {
-  valid: boolean
-  userId?: string
-}): Promise<AuthResult> => {
-  if (!validation.valid || !validation.userId) {
-    return {
-      success: false,
-      error: "Invalid authentication token",
-      status: 401,
-    }
-  }
-
-  const user = await getUserById(validation.userId)
-  if (!user) {
-    return { success: false, error: "User not found", status: 401 }
-  }
-
-  return { success: true, user }
-}
-
-// Helper function to authenticate the user
-const authenticateUser = async (request: Request): Promise<AuthResult> => {
-  const token = getTokenFromRequest(request)
-
-  if (!token) {
-    return { success: false, error: "User not authenticated", status: 401 }
-  }
-
-  const validation = validateToken(token)
-  return getUserFromValidation(validation)
 }
 
 // Helper functions for different action types

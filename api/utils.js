@@ -40,3 +40,48 @@ export function parseCookies(req) {
   const cookieHeader = req.headers.cookie || ""
   return cookie.parse(cookieHeader)
 }
+
+// Canonical cookie names; temporary legacy fallback for migration (Fix #2)
+const ACCESS_TOKEN_COOKIE = "accessToken"
+const LEGACY_TOKEN_COOKIE = "token"
+
+/**
+ * Get session from parsed cookies (Express req).
+ * Mirrors app/utils/session-from-request.server.ts for API server context.
+ * @param {object} req - Express request with req.headers.cookie
+ * @param {{ includeUser?: boolean }} [options]
+ * @returns {Promise<{ userId: string, user?: object } | null>}
+ */
+export async function getSessionFromExpressRequest(req, options = {}) {
+  const { includeUser = false } = options
+  const cookies = parseCookies(req)
+  const accessToken = cookies[ACCESS_TOKEN_COOKIE] || cookies[LEGACY_TOKEN_COOKIE]
+
+  if (!accessToken) {
+    return null
+  }
+
+  const payload = verifyJwt(accessToken)
+  if (!payload || !payload.userId) {
+    return null
+  }
+
+  const result = { userId: payload.userId }
+
+  if (includeUser) {
+    const { getUserById } = await import("../app/models/user.query.js")
+    const fullUser = await getUserById(payload.userId)
+    if (fullUser) {
+      result.user = {
+        id: fullUser.id,
+        email: fullUser.email,
+        firstName: fullUser.firstName,
+        lastName: fullUser.lastName,
+        username: fullUser.username,
+        role: fullUser.role,
+      }
+    }
+  }
+
+  return result
+}
