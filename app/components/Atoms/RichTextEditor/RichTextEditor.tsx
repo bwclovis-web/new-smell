@@ -6,6 +6,7 @@ import {
   type StyleHTMLAttributes,
 } from "react"
 
+import { sanitizeReviewHtml } from "~/utils/sanitize"
 import { styleMerge } from "~/utils/styleUtils"
 
 interface RichTextEditorProps {
@@ -30,9 +31,12 @@ const RichTextEditor = ({
   const [currentLength, setCurrentLength] = useState(0)
 
   useEffect(() => {
-    if (editorRef.current && editorRef.current.innerHTML !== value) {
-      editorRef.current.innerHTML = value
-      setCurrentLength(getTextLength(value))
+    if (editorRef.current) {
+      const safe = sanitizeReviewHtml(value)
+      if (editorRef.current.innerHTML !== safe) {
+        editorRef.current.innerHTML = safe
+      }
+      setCurrentLength(getTextLength(safe))
     }
   }, [value])
 
@@ -44,17 +48,20 @@ const RichTextEditor = ({
 
   const handleInput = (evt: FormEvent<HTMLDivElement>) => {
     if (editorRef.current && onChange) {
-      const content = editorRef.current.innerHTML
+      const raw = editorRef.current.innerHTML
+      const content = sanitizeReviewHtml(raw)
+      // If sanitization removed something (e.g. script), keep editor in sync
+      if (content !== raw && editorRef.current.innerHTML !== content) {
+        editorRef.current.innerHTML = content
+      }
       const textLength = getTextLength(content)
 
       if (textLength <= maxLength) {
         setCurrentLength(textLength)
         onChange(content)
       } else {
-        // Prevent further input if over limit
         evt.preventDefault()
-        // Revert to previous content
-        editorRef.current.innerHTML = value
+        editorRef.current.innerHTML = sanitizeReviewHtml(value)
       }
     }
   }
@@ -80,9 +87,12 @@ const RichTextEditor = ({
   const execCommand = (command: string, value?: string) => {
     document.execCommand(command, false, value)
     editorRef.current?.focus()
-    // Trigger input event manually
     if (editorRef.current && onChange) {
-      const content = editorRef.current.innerHTML
+      const raw = editorRef.current.innerHTML
+      const content = sanitizeReviewHtml(raw)
+      if (content !== raw && editorRef.current.innerHTML !== content) {
+        editorRef.current.innerHTML = content
+      }
       const textLength = getTextLength(content)
       setCurrentLength(textLength)
       onChange(content)

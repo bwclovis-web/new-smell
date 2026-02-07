@@ -20,7 +20,7 @@ This doc is a lightweight "post-launch edit" playbook: what to change, how to va
 - [ ] Confirm admin endpoints are protected and rate limited; audit logs for secret leakage
 
 **Performance**
-- [ ] Move heavy deps (`puppeteer`, `sharp`) out of runtime if only used by scripts/admin
+- [x] Move heavy deps (`puppeteer`, `sharp`) out of runtime if only used by scripts/admin
 - [ ] Consolidate DB round trips in perfume detail, vault, trader pages
 - [ ] Replace `alert()` with toast/notification system in `ReviewSection`, perfume delete flow
 

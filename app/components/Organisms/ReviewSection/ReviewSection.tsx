@@ -6,7 +6,7 @@ import RichTextEditor from "~/components/Atoms/RichTextEditor"
 import ReviewCard from "~/components/Molecules/ReviewCard"
 import { useCSRF } from "~/hooks/useCSRF"
 import { safeAsync } from "~/utils/errorHandling.patterns"
-import { sanitizeString } from "~/utils/validation"
+import { containsDangerousReviewHtml, sanitizeReviewHtml } from "~/utils/sanitize"
 
 interface Review {
   id: string
@@ -148,7 +148,12 @@ fetchLimit, perfumeId, t, updateReviewsState
   }
 
   const handleCreateReview = async () => {
-    const sanitizedReview = sanitizeString(reviewContent)
+    if (containsDangerousReviewHtml(reviewContent)) {
+      alert(t("singlePerfume.review.failedToCreateReview"))
+      return
+    }
+
+    const sanitizedReview = sanitizeReviewHtml(reviewContent)
 
     if (!sanitizedReview.trim()) {
       return

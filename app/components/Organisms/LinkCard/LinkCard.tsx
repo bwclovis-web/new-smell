@@ -33,13 +33,13 @@ const LinkCard = ({
   const url = type === "house" ? PERFUME_HOUSE : PERFUME_PATH
  
   return (
-    <div className="relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out bg-noir-dark/70 backdrop-blur-sm">
+    <div className="relative w-full h-full group noir-border overflow-hidden transition-all duration-300 ease-in-out bg-noir-dark/70 backdrop-blur-sm [touch-action:pan-y]">
       <NavLink
         to={`${url}/${data.slug}`}
         state={selectedLetter ? { selectedLetter, sourcePage } : { sourcePage }}
         viewTransition
         prefetch="intent"
-        className="p-4 flex flex-col overflow-hidden justify-between items-center group  transition-all duration-300 ease-in-out "
+        className="p-4 flex flex-col overflow-hidden justify-between items-center group transition-all duration-300 ease-in-out [touch-action:pan-y]"
       >
         <div className="text-center">
           <h2 className="text-wrap break-words">{data.name}</h2>

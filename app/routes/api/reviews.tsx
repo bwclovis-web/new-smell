@@ -19,6 +19,7 @@ import {
   createErrorResponse,
   createSuccessResponse,
 } from "~/utils/response.server"
+import { containsDangerousReviewHtml } from "~/utils/sanitize"
 
 /**
  * GET /api/reviews?perfumeId={id}&page=1&limit=10
@@ -79,6 +80,13 @@ export const action: ActionFunction = async args => withAuthenticatedAction(
           const perfumeId = formData.required("perfumeId")
           const review = formData.required("review")
 
+          if (containsDangerousReviewHtml(review)) {
+            return createErrorResponse(
+              "Reviews cannot contain scripts or embedded content.",
+              400
+            )
+          }
+
           // Check if user already has a review for this perfume
           const existingReview = await getUserPerfumeReview(auth.userId, perfumeId)
           if (existingReview) {
@@ -100,6 +108,13 @@ export const action: ActionFunction = async args => withAuthenticatedAction(
         case "update": {
           const reviewId = formData.required("reviewId")
           const review = formData.required("review")
+
+          if (containsDangerousReviewHtml(review)) {
+            return createErrorResponse(
+              "Reviews cannot contain scripts or embedded content.",
+              400
+            )
+          }
 
           const updatedReview = await updatePerfumeReview(
             reviewId,
