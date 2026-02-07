@@ -1,6 +1,5 @@
-import DOMPurify from "isomorphic-dompurify"
-
 import { prisma } from "~/db.server"
+import { sanitizeReviewHtml } from "~/utils/sanitize"
 
 export interface CreateReviewData {
   userId: string
@@ -27,26 +26,7 @@ export interface PaginationOptions {
  * Create a new perfume review
  */
 export async function createPerfumeReview(data: CreateReviewData) {
-  // Sanitize HTML content for security
-  const sanitizedReview = DOMPurify.sanitize(data.review, {
-    ALLOWED_TAGS: [
-      "p",
-      "br",
-      "strong",
-      "em",
-      "u",
-      "ul",
-      "ol",
-      "li",
-      "h1",
-      "h2",
-      "h3",
-      "h4",
-      "h5",
-      "h6",
-    ],
-    ALLOWED_ATTR: [],
-  })
+  const sanitizedReview = sanitizeReviewHtml(data.review)
 
   const review = await prisma.userPerfumeReview.create({
     data: {
@@ -86,26 +66,7 @@ export async function updatePerfumeReview(
   data: UpdateReviewData,
   userId: string
 ) {
-  // Sanitize HTML content for security
-  const sanitizedReview = DOMPurify.sanitize(data.review, {
-    ALLOWED_TAGS: [
-      "p",
-      "br",
-      "strong",
-      "em",
-      "u",
-      "ul",
-      "ol",
-      "li",
-      "h1",
-      "h2",
-      "h3",
-      "h4",
-      "h5",
-      "h6",
-    ],
-    ALLOWED_ATTR: [],
-  })
+  const sanitizedReview = sanitizeReviewHtml(data.review)
 
   // Verify the user owns this review
   const existingReview = await prisma.userPerfumeReview.findFirst({

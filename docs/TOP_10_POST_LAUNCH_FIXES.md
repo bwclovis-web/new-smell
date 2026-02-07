@@ -119,7 +119,7 @@ This is a prioritized post-launch list focused on production risk reduction (sec
 - [x] **Fix #3** – CSP: Gate `'unsafe-eval'` to development only in `api/server.js` (or use shared helmet config)
 - [x] **Fix #4** – CSRF: Unify cookie flags and validation; ensure all mutating routes use same mechanism
 - [ ] **Fix #5** – Replace `alert()`: Add toast/notification system; update `ReviewSection` and perfume delete flow
-- [ ] **Fix #6** – HTML sanitization: Audit all review write paths; add optional render-time sanitization for legacy data
+- [x] **Fix #6** – HTML sanitization: Audit all review write paths; add optional render-time sanitization for legacy data
 - [ ] **Fix #7** – Deps: Move `puppeteer`/`sharp` to optional path or separate package if not needed at runtime
 - [ ] **Fix #8** – Auth helpers: Create single "session-from-request" utility; refactor routes to use it
 - [ ] **Fix #9** – Perfume loader: Consolidate DB queries; reduce redundant parsing in `perfume.tsx`

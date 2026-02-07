@@ -8,6 +8,7 @@ import { Link } from "react-router"
 
 import { getUserReviews } from "~/models/perfumeReview.server"
 import { authenticateUser } from "~/utils/auth.server"
+import { sanitizeReviewHtml } from "~/utils/sanitize"
 
 export const ROUTE_PATH = "/my-reviews"
 
@@ -80,7 +81,7 @@ const MyReviewsPage = () => {
 
                   <div
                     className="prose prose-sm max-w-none text-gray-300 mb-4"
-                    dangerouslySetInnerHTML={{ __html: review.review }}
+                    dangerouslySetInnerHTML={{ __html: sanitizeReviewHtml(review.review) }}
                   />
 
                   <div className="flex items-center justify-between">

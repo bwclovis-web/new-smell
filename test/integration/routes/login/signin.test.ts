@@ -23,6 +23,9 @@ import { action as signInAction } from "~/routes/login/SignInPage"
 
 vi.mock("~/models/user.server")
 vi.mock("~/models/session.server")
+vi.mock("~/utils/server/csrf.server", () => ({
+  requireCSRF: vi.fn().mockResolvedValue(undefined),
+}))
 
 describe("SignIn Route Integration Tests", () => {
   beforeEach(() => {

@@ -1,6 +1,7 @@
 import { formatDistanceToNow } from "date-fns"
 
 import { Button } from "~/components/Atoms/Button"
+import { sanitizeReviewHtml } from "~/utils/sanitize"
 import { styleMerge } from "~/utils/styleUtils"
 
 interface ReviewCardProps {
@@ -121,10 +122,10 @@ const ReviewCard = ({
         )}
       </div>
 
-      {/* Review Content */}
+      {/* Review Content – sanitized at render for defense-in-depth (legacy/untrusted data) */}
       <div
         className="prose prose-sm max-w-none text-noir-light"
-        dangerouslySetInnerHTML={{ __html: review.review }}
+        dangerouslySetInnerHTML={{ __html: sanitizeReviewHtml(review.review) }}
       />
 
       {/* Moderation Status */}
