@@ -74,7 +74,7 @@ const MyReviewsPage = () => {
                       </p>
                     </div>
                     <div className="text-sm text-gray-400">
-                      {new Date(review.createdAt).toLocaleDateString()}
+                      {new Date(review.createdAt).toLocaleDateString("en-US")}
                     </div>
                   </div>
 

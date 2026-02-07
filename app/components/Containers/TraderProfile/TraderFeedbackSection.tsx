@@ -179,7 +179,7 @@ const TraderFeedbackSection = ({
                         {renderStars(commentEntry.rating)}
                         <span>{commentEntry.rating}/5</span>
                         <span className="text-noir-gold-500 text-xs">
-                          {new Date(commentEntry.createdAt).toLocaleDateString()}
+                          {new Date(commentEntry.createdAt).toLocaleDateString("en-US")}
                         </span>
                       </div>
                     </div>

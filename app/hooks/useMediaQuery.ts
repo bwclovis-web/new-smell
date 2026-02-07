@@ -6,13 +6,11 @@ import { useEffect, useState } from "react"
  * @param query - Media query string (e.g., "(min-width: 768px)")
  * @returns Boolean indicating if the media query matches
  */
+// Use a constant initial value so server and first client render match (avoids hydration mismatch).
+const getInitialMatches = () => false
+
 export const useMediaQuery = (query: string): boolean => {
-  const [matches, setMatches] = useState(() => {
-    if (typeof window === "undefined") {
-      return false
-    }
-    return window.matchMedia(query).matches
-  })
+  const [matches, setMatches] = useState(getInitialMatches)
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -20,8 +18,7 @@ export const useMediaQuery = (query: string): boolean => {
     }
 
     const mediaQuery = window.matchMedia(query)
-    
-    // Set initial value
+    // Set actual value after mount so hydration matches (initial is always false).
     setMatches(mediaQuery.matches)
 
     // Create event listener

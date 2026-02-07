@@ -116,7 +116,7 @@ const UserRow = ({
         {totalRecords}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-noir-gold-500">
-        {new Date(user.createdAt).toLocaleDateString()}
+        {new Date(user.createdAt).toLocaleDateString("en-US")}
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
         {!isCurrentUser && !isAdmin && !isDeleted && (

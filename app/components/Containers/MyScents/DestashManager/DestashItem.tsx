@@ -140,7 +140,7 @@ const DestashItem = ({ destash, onEdit, onDelete }: DestashItemProps) => {
                   <p className="text-base text-noir-gold-100 mb-2">{comment.comment}</p>
                   <div className="flex items-center justify-between mt-2 bg-noir-black rounded-sm pl-1">
                     <span className="text-xs text-noir-gold-500 font-bold tracking-wide">
-                      Created on: {new Date(comment.createdAt).toLocaleDateString()}
+                      Created on: {new Date(comment.createdAt).toLocaleDateString("en-US")}
                     </span>
                     <div className="flex items-center gap-2">
                       <VooDooCheck

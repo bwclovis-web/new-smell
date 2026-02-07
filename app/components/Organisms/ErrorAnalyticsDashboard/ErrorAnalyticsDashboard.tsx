@@ -55,8 +55,8 @@ export function ErrorAnalyticsDashboard({
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Error Analytics</h1>
           <p className="text-gray-500 mt-1">
-            {new Date(data.startTime).toLocaleDateString()} -{" "}
-            {new Date(data.endTime).toLocaleDateString()}
+            {new Date(data.startTime).toLocaleDateString("en-US")} -{" "}
+            {new Date(data.endTime).toLocaleDateString("en-US")}
           </p>
         </div>
 
@@ -171,7 +171,7 @@ export function ErrorAnalyticsDashboard({
                     {item.percentage.toFixed(1)}%
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(item.lastOccurrence).toLocaleString()}
+                    {new Date(item.lastOccurrence).toLocaleString("en-US")}
                   </td>
                 </tr>
               ))}
@@ -203,7 +203,7 @@ export function ErrorAnalyticsDashboard({
                 </div>
                 <p className="text-sm text-gray-600 mt-1">{error.message}</p>
                 <p className="text-xs text-gray-400 mt-1">
-                  Last: {new Date(error.lastOccurrence).toLocaleString()}
+                  Last: {new Date(error.lastOccurrence).toLocaleString("en-US")}
                 </p>
               </div>
             </div>
@@ -340,7 +340,7 @@ function MetricCard({ title, value, icon, trend, color }: MetricCardProps) {
         <p className="text-sm font-medium opacity-90">{title}</p>
         <span className="text-2xl">{icon}</span>
       </div>
-      <p className="text-3xl font-bold mb-1">{value.toLocaleString()}</p>
+      <p className="text-3xl font-bold mb-1">{value.toLocaleString("en-US")}</p>
       {trend && <p className="text-sm opacity-75">{trend}</p>}
     </div>
   )

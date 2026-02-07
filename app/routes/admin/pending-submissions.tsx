@@ -257,7 +257,7 @@ const PendingSubmissionsPage = () => {
                     </h3>
                     <p className="text-sm text-noir-light mt-1">
                       {submission.submissionType === "perfume" ? "Perfume" : "Perfume House"} •{" "}
-                      Submitted {new Date(submission.createdAt).toLocaleDateString()}
+                      Submitted {new Date(submission.createdAt).toLocaleDateString("en-US")}
                       {submission.submittedByUser && (
                         <> • by {submission.submittedByUser.email}</>
                       )}
@@ -267,7 +267,7 @@ const PendingSubmissionsPage = () => {
                         {submission.status === "approved" ? "Approved" : "Rejected"} by{" "}
                         {submission.reviewedByUser.email} on{" "}
                         {submission.reviewedAt
-                          ? new Date(submission.reviewedAt).toLocaleDateString()
+                          ? new Date(submission.reviewedAt).toLocaleDateString("en-US")
                           : ""}
                       </p>
                     )}

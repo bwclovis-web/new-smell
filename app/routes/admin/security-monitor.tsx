@@ -133,8 +133,15 @@ const SecurityMonitor = () => {
   const loaderData = useLoaderData<typeof loader>()
   const { security, rateLimit, audit, error } = loaderData || {}
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const [lastRefresh, setLastRefresh] = useState(new Date())
+  // Stable initial value so server and first client render match (avoids hydration mismatch)
+  const [lastRefresh, setLastRefresh] = useState<Date | null>(null)
+  const lastRefreshDisplay = lastRefresh ?? new Date(0)
   const { t } = useTranslation()
+
+  // Set initial lastRefresh on client so "Last updated" matches after hydration
+  useEffect(() => {
+    setLastRefresh(new Date())
+  }, [])
 
   // Auto-refresh every 30 seconds
   useEffect(() => {
@@ -189,7 +196,7 @@ const SecurityMonitor = () => {
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center space-x-4">
             <div className="text-sm text-noir-gold">
-              Last updated: {lastRefresh.toLocaleTimeString()}
+              Last updated: {lastRefreshDisplay.toLocaleTimeString("en-US")}
             </div>
             <Button onClick={() => window.location.reload()} disabled={isRefreshing}>
               {isRefreshing ? "Refreshing..." : "Refresh"}
@@ -417,7 +424,7 @@ const SecurityMonitor = () => {
                       <tr key={event.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {event.timestamp
-                            ? new Date(event.timestamp).toLocaleString()
+                            ? new Date(event.timestamp).toLocaleString("en-US")
                             : "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">

@@ -13,7 +13,7 @@ const TradersComments = ({ comments }: TradersCommentsProps) => (
       >
         <div className="flex justify-between items-start mb-1">
           <span className="text-xs text-noir-gold-100">
-            {new Date(comment.createdAt).toLocaleDateString()}
+            {new Date(comment.createdAt).toLocaleDateString("en-US")}
           </span>
           <span className="text-xs text-noir-gold-500 bg-noir-gold/20 px-2 py-1 rounded">
             Public

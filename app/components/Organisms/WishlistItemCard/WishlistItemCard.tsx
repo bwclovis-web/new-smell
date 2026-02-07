@@ -96,7 +96,7 @@ const WishlistItemCard = ({
 
           <div className="flex items-center justify-between mt-4">
             <span className={styleMerge(wishlistAddedVariants({ isAvailable }))}>
-              Added on {new Date(item.createdAt).toLocaleDateString()}
+              Added on {new Date(item.createdAt).toLocaleDateString("en-US")}
             </span>
             <div className="flex items-center gap-2">
               <NavLink

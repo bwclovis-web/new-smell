@@ -410,7 +410,7 @@ enabled, rules, checkRule, createAlert, maxAlerts
                     <div>
                       <div className="font-semibold">{alert.message}</div>
                       <div className="text-sm opacity-75">
-                        {new Date(alert.timestamp).toLocaleString()}
+                        {new Date(alert.timestamp).toLocaleString("en-US")}
                       </div>
                     </div>
                   </div>
@@ -447,7 +447,7 @@ enabled, rules, checkRule, createAlert, maxAlerts
                         {alert.message}
                       </div>
                       <div className="text-xs text-gray-500">
-                        {new Date(alert.timestamp).toLocaleString()}
+                        {new Date(alert.timestamp).toLocaleString("en-US")}
                       </div>
                     </div>
                   </div>

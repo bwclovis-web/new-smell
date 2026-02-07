@@ -68,7 +68,7 @@ const ItemsSearchingFor = ({ wishlistItems }: ItemsSearchingForProps) => {
             </div>
             <div className="flex-shrink-0 absolute right-1 bottom-0">
               <p className="text-xs text-noir-gold-500">
-                Added {new Date(item.createdAt).toLocaleDateString()}
+                Added {new Date(item.createdAt).toLocaleDateString("en-US")}
               </p>
             </div>
           </li>

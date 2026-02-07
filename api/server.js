@@ -614,7 +614,7 @@ app.get("/test-session", (req, res) => {
 app.get("/test-images", (req, res) => {
   res.json({
     message: "Image serving test",
-    images: ["/images/home.webp", "/images/scent.webp", "/images/login.webp"],
+    images: ["/images/home.webp", "/images/scent.webp"],
   })
 })
 

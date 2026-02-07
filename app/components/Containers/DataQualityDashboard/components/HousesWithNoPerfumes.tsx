@@ -189,7 +189,7 @@ const HousesWithNoPerfumes = ({ stats }: HousesWithNoPerfumesProps) => {
                 )}
                 {!filteredData.showMissingFields && house.createdAt && (
                   <td className="px-4 py-3 text-sm text-gray-500">
-                    {new Date(house.createdAt).toLocaleDateString()}
+                    {new Date(house.createdAt).toLocaleDateString("en-US")}
                   </td>
                 )}
               </tr>

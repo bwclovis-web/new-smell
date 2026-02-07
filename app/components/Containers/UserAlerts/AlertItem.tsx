@@ -75,7 +75,7 @@ export const AlertItem = ({
       return `${diffInDays}d ago`
     }
 
-    return dateObj.toLocaleDateString()
+    return dateObj.toLocaleDateString("en-US")
   }
 
   const getPerfumeLink = () => `/perfume/${alert.Perfume.slug}`
@@ -119,7 +119,7 @@ export const AlertItem = ({
                 {alert.message}
               </p>
               <div className="flex items-center gap-2 mt-1">
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-500" suppressHydrationWarning>
                   {formatTimeAgo(alert.createdAt)}
                 </span>
                 <Link
@@ -183,7 +183,7 @@ export const AlertItem = ({
                 <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   {getAlertTypeLabel()}
                 </span>
-                <span className="text-xs text-gray-400 flex items-center gap-1">
+                <span className="text-xs text-gray-400 flex items-center gap-1" suppressHydrationWarning>
                   <BsClock className="h-3 w-3" />
                   {formatTimeAgo(alert.createdAt)}
                 </span>

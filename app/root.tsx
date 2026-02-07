@@ -42,7 +42,15 @@ export function Layout({ children }: { children: ReactNode }) {
   const criticalImages = [
     "/images/home.webp",
     "/images/scent.webp",
-    "/images/login.webp",
+    "/images/perfume.webp",
+    "/images/trading.webp",
+    "/images/vault.webp",
+    "/images/behind.webp",
+    "/images/trading.webp",
+    "/images/scent.webp",
+    "/images/perfume.webp",
+    "/images/trading.webp",
+    "/images/vault.webp",
   ]
 
   return (

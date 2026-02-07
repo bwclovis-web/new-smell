@@ -42,7 +42,7 @@ const PerfumeComments = ({ userPerfume }: PerfumeCommentsProps) => {
               <p className="text-lg text-noir-gold-100">{comment.comment}</p>
               <div className="flex items-center justify-between mt-2 bg-noir-black rounded-sm pl-1">
                 <span className="text-xs text-noir-gold-500 font-bold tracking-wide">
-                  Created on : {new Date(comment.createdAt).toLocaleDateString()}
+                  Created on : {new Date(comment.createdAt).toLocaleDateString("en-US")}
                 </span>
                 <div className="flex items-center gap-2">
                   <VooDooCheck
