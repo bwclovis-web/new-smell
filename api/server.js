@@ -788,11 +788,12 @@ const getRequestHandler = async () => {
       mode: NODE_ENV,
       getLoadContext: async (req, res) => {
         const cookies = parseCookies(req)
-        const token = cookies.token
+        // Canonical cookie name; temporary legacy fallback for migration
+        const accessToken = cookies.accessToken || cookies.token
         let user = null
 
-        if (token) {
-          const payload = verifyJwt(token)
+        if (accessToken) {
+          const payload = verifyJwt(accessToken)
           if (payload && payload.userId) {
             // You can fetch full user here or just pass userId
             user = { id: payload.userId }

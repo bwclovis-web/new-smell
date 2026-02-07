@@ -114,7 +114,7 @@ This is a prioritized post-launch list focused on production risk reduction (sec
 ### Implementation checklist
 
 - [x] **Fix #1** – Refresh-token flow: Update `createSession()` to use `createRefreshToken(userId)` (or implement opaque token storage)
-- [ ] **Fix #2** – Cookie/token names: Standardize on `accessToken`/`refreshToken`; update Express `getLoadContext`; add temporary legacy fallback
+- [x] **Fix #2** – Cookie/token names: Standardize on `accessToken`/`refreshToken`; update Express `getLoadContext`; add temporary legacy fallback
 - [ ] **Fix #3** – CSP: Gate `'unsafe-eval'` to development only in `api/server.js` (or use shared helmet config)
 - [ ] **Fix #4** – CSRF: Unify cookie flags and validation; ensure all mutating routes use same mechanism
 - [ ] **Fix #5** – Replace `alert()`: Add toast/notification system; update `ReviewSection` and perfume delete flow
