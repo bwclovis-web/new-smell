@@ -4,6 +4,7 @@ import { BsFillEyeFill, BsFillEyeSlashFill } from "react-icons/bs"
 import { Form } from "react-router"
 
 import { Button } from "~/components/Atoms/Button"
+import { CSRFToken } from "~/components/Molecules/CSRFToken"
 import PasswordStrengthIndicator from "~/components/Organisms/PasswordStrengthIndicator"
 import { authSchemas } from "~/utils/validation"
 
@@ -65,6 +66,7 @@ export const ChangePasswordForm = ({
 
   return (
     <Form method="post" className={`space-y-6 ${className}`}>
+      <CSRFToken />
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-2">{t("password.changePassword", "Change Password")}</h2>
         <p className="text-gray-600">

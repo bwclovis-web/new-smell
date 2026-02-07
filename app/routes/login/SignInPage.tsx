@@ -21,6 +21,8 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   let formData: FormData
   try {
     formData = await request.formData()
+    const { requireCSRF } = await import("~/utils/server/csrf.server")
+    await requireCSRF(request, formData)
 
     const existingUser = await signInCustomer(formData)
     if (!existingUser) {

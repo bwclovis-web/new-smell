@@ -24,8 +24,10 @@ export interface CustomSubmit extends SubmissionResult<string[]> {
 export const action = withActionErrorHandling(
   async ({ request }: ActionFunctionArgs) => {
     await requireAdmin(request)
-    
+
     const formData = await request.formData()
+    const { requireCSRF } = await import("~/utils/server/csrf.server")
+    await requireCSRF(request, formData)
     const formIdEntry = formData.get("houseId")?.toString()
     if (typeof formIdEntry !== "string") {
       throw new Error("Form ID is required and must be a string")

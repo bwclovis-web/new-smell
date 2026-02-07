@@ -26,8 +26,10 @@ export const meta: MetaFunction = () => [
 export const action = withActionErrorHandling(
   async ({ request }: ActionFunctionArgs) => {
     await requireAdmin(request)
-    
+
     const formData = await request.formData()
+    const { requireCSRF } = await import("~/utils/server/csrf.server")
+    await requireCSRF(request, formData)
     const test = parseWithZod(formData, { schema: CreatePerfumeSchema })
     if (test.status !== "success") {
       return test.reply()

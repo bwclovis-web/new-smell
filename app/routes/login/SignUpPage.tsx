@@ -21,6 +21,8 @@ import CheckBox from "~/components/Atoms/CheckBox"
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const formData = await request.formData()
+  const { requireCSRF } = await import("~/utils/server/csrf.server")
+  await requireCSRF(request, formData)
 
   // Validate the form data
   const submission = parseWithZod(formData, { schema: UserFormSchema })

@@ -57,6 +57,8 @@ export const action = withActionErrorHandling(
     }
 
     const formData = await request.formData()
+    const { requireCSRF } = await import("~/utils/server/csrf.server")
+    await requireCSRF(request, formData)
     const parseResult = parseAction(formData)
 
     if (!parseResult.success) {

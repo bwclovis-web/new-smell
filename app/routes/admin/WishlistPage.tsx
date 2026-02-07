@@ -29,6 +29,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const user = await sharedLoader(request)
   const formData = await request.formData()
+  const { requireCSRF } = await import("~/utils/server/csrf.server")
+  await requireCSRF(request, formData)
   const intent = formData.get("intent")
 
   if (intent === "remove") {

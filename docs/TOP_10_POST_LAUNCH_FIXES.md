@@ -36,16 +36,17 @@ This is a prioritized post-launch list focused on production risk reduction (sec
 - **Impact**: High (security hardening)
 - **Effort**: Low
 
-### 4) Normalize CSRF approach (cookie flags + single validator path)
+### 4) Normalize CSRF approach (cookie flags + single validator path) ✅
 - **Why**: Express CSRF cookie is `httpOnly: false`, but TS helper suggests `httpOnly: true`. Mixed patterns increase bypass/regression risk.
 - **Evidence**
   - `app/utils/server/csrf-middleware.server.js`: `setCSRFCookie(... httpOnly: false)`
   - `app/utils/server/csrf.server.ts`: `createCSRFCookie(... httpOnly: true)`
-- **Fix**
-  - Adopt one consistent model:
-    - Double-submit cookie pattern (cookie readable + header) OR
-    - HttpOnly CSRF secret with server-side validation pattern
-  - Ensure all mutating routes use the same mechanism
+- **Fix** (done)
+  - Unified on double-submit cookie pattern: `httpOnly: false` in both `setCSRFCookie` and `createCSRFCookie`
+  - All mutating routes use the same mechanism:
+    - `/api/*`: Express `csrfMiddleware` validates `x-csrf-token` header (exclusions: log-out, wishlist, admin stats)
+    - Non-API (sign-in, sign-up, admin/*): actions call `requireCSRF(request, formData)` with timing-safe validation
+  - Added `requireCSRF()` helper; ensured all forms include `<CSRFToken />`
 - **Impact**: High (security + maintainability)
 - **Effort**: Medium
 
@@ -115,8 +116,8 @@ This is a prioritized post-launch list focused on production risk reduction (sec
 
 - [x] **Fix #1** – Refresh-token flow: Update `createSession()` to use `createRefreshToken(userId)` (or implement opaque token storage)
 - [x] **Fix #2** – Cookie/token names: Standardize on `accessToken`/`refreshToken`; update Express `getLoadContext`; add temporary legacy fallback
-- [ ] **Fix #3** – CSP: Gate `'unsafe-eval'` to development only in `api/server.js` (or use shared helmet config)
-- [ ] **Fix #4** – CSRF: Unify cookie flags and validation; ensure all mutating routes use same mechanism
+- [x] **Fix #3** – CSP: Gate `'unsafe-eval'` to development only in `api/server.js` (or use shared helmet config)
+- [x] **Fix #4** – CSRF: Unify cookie flags and validation; ensure all mutating routes use same mechanism
 - [ ] **Fix #5** – Replace `alert()`: Add toast/notification system; update `ReviewSection` and perfume delete flow
 - [ ] **Fix #6** – HTML sanitization: Audit all review write paths; add optional render-time sanitization for legacy data
 - [ ] **Fix #7** – Deps: Move `puppeteer`/`sharp` to optional path or separate package if not needed at runtime

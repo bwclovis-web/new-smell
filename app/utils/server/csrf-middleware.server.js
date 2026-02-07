@@ -82,10 +82,11 @@ export function csrfMiddleware(req, res, next) {
   next()
 }
 
-// Generate and set CSRF token cookie
+// Generate and set CSRF token cookie (double-submit pattern)
+// httpOnly: false required so client can read cookie and send in x-csrf-token header
 export function setCSRFCookie(res, token) {
   const csrfCookie = cookie.serialize(CSRF_COOKIE_KEY, token, {
-    httpOnly: false, // Allow JavaScript access for CSRF tokens
+    httpOnly: false,
     path: "/",
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",

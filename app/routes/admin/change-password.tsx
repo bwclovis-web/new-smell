@@ -20,6 +20,8 @@ export const action = async ({ request }: { request: Request }) => {
     }
 
     const formData = await request.formData()
+    const { requireCSRF } = await import("~/utils/server/csrf.server")
+    await requireCSRF(request, formData)
     const currentPassword = formData.get("currentPassword") as string
     const newPassword = formData.get("newPassword") as string
     const confirmNewPassword = formData.get("confirmNewPassword") as string

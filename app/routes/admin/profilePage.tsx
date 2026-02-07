@@ -96,6 +96,8 @@ const validateProfileUpdate = async (formData: FormData) => {
 export const action = withActionErrorHandling(
   async ({ request }: ActionFunctionArgs): Promise<ActionData> => {
     const formData = await request.formData()
+    const { requireCSRF } = await import("~/utils/server/csrf.server")
+    await requireCSRF(request, formData)
 
     const validation = await validateProfileUpdate(formData)
     if (validation.errors) {

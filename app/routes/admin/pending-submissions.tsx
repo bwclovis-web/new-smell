@@ -54,6 +54,8 @@ export const action = withActionErrorHandling(
     await requireAdmin(request)
 
     const formData = await request.formData()
+    const { requireCSRF } = await import("~/utils/server/csrf.server")
+    await requireCSRF(request, formData)
     const actionType = formData.get("action") as string
     const submissionId = formData.get("submissionId") as string
     const adminNotes = formData.get("adminNotes") as string | null

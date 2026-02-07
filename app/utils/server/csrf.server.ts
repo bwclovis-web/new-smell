@@ -25,53 +25,77 @@ export function validateCSRFToken(token: string, sessionToken: string): boolean 
   }
 }
 
-// Get CSRF token from request
-export function getCSRFTokenFromRequest(request: Request): string | null {
-  // Try to get from header first
+// Get CSRF token from request (header first, then formData if provided)
+export async function getCSRFTokenFromRequest(
+  request: Request,
+  formData?: FormData
+): Promise<string | null> {
   const headerToken = request.headers.get(CSRF_HEADER_KEY)
-  if (headerToken) {
-    return headerToken
-  }
+  if (headerToken) return headerToken
+  if (formData) return (formData.get("_csrf") as string) || null
+  const fd = await request.formData()
+  return (fd.get("_csrf") as string) || null
+}
 
-  // Try to get from form data
-  const formData = request.formData ? request.formData() : null
-  if (formData) {
-    return formData
-      .then(data => (data.get("_csrf") as string) || null)
-      .catch(() => null)
-  }
-
-  return null
+// Sync version when formData is already available (avoids consuming body twice)
+export function getCSRFTokenFromRequestSync(
+  request: Request,
+  formData: FormData
+): string | null {
+  return (
+    request.headers.get(CSRF_HEADER_KEY) ||
+    (formData.get("_csrf") as string) ||
+    null
+  )
 }
 
 // Get CSRF token from cookies
 export function getCSRFTokenFromCookies(request: Request): string | null {
   const cookieHeader = request.headers.get("cookie")
-  if (!cookieHeader) {
-    return null
-  }
-
+  if (!cookieHeader) return null
   const cookies = cookie.parse(cookieHeader)
   return cookies[CSRF_COOKIE_KEY] || null
 }
 
-// Validate CSRF for form submissions
-export async function validateCSRF(request: Request): Promise<boolean> {
-  const formData = await request.formData()
-  const token = formData.get("_csrf") as string
+/**
+ * Validate CSRF - use for React Router actions (form posts) that don't go through /api.
+ * Token can be in x-csrf-token header or _csrf form field.
+ * Prefer passing formData when you already have it to avoid double-parsing.
+ */
+export async function validateCSRF(
+  request: Request,
+  formData?: FormData
+): Promise<boolean> {
+  const token = formData
+    ? getCSRFTokenFromRequestSync(request, formData)
+    : await getCSRFTokenFromRequest(request)
   const sessionToken = getCSRFTokenFromCookies(request)
-
-  if (!token || !sessionToken) {
-    return false
-  }
-
+  if (!token || !sessionToken) return false
   return validateCSRFToken(token, sessionToken)
 }
 
-// Create CSRF cookie
+/**
+ * Validate CSRF and throw 403 Response on failure.
+ * Use at start of React Router actions for routes that don't go through /api.
+ */
+export async function requireCSRF(
+  request: Request,
+  formData?: FormData
+): Promise<void> {
+  const valid = await validateCSRF(request, formData)
+  if (!valid) {
+    throw new Response(
+      JSON.stringify({ error: "CSRF token missing or invalid" }),
+      { status: 403, headers: { "Content-Type": "application/json" } }
+    )
+  }
+}
+
+// Create CSRF cookie (double-submit pattern: must be readable by JS)
+// Matches setCSRFCookie in csrf-middleware.server.js for consistency
 export function createCSRFCookie(token: string): string {
   return cookie.serialize(CSRF_COOKIE_KEY, token, {
-    httpOnly: true,
+    httpOnly: false, // Double-submit: client reads cookie, sends in header
     path: "/",
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",

@@ -42,7 +42,7 @@ export function getHelmetConfig(nodeEnv = "development") {
         baseUri: ["'self'"],
         formAction: ["'self'"],
         frameAncestors: ["'none'"],
-        upgradeInsecureRequests: isProduction ? [] : undefined, // Only in production
+        upgradeInsecureRequests: isProduction ? [] : null, // null = disable (dev uses HTTP)
       },
     },
 

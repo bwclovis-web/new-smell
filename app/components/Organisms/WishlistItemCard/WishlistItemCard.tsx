@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { IoMdCloseCircle } from "react-icons/io"
 import { Form, NavLink } from "react-router"
 
+import { CSRFToken } from "~/components/Molecules/CSRFToken"
 import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 import { useToggleWishlist } from "~/lib/mutations/wishlist"
 import { styleMerge } from "~/utils/styleUtils"
@@ -56,6 +57,7 @@ const WishlistItemCard = ({
   return (
     <div className={styleMerge(wishlistVariants({ isAvailable }))}>
       <Form method="post" className="absolute top-2 right-2 z-10">
+        <CSRFToken />
         <input type="hidden" name="intent" value="remove" />
         <input type="hidden" name="perfumeId" value={item.perfume.id} />
         <button

@@ -3,7 +3,6 @@ import { type ActionFunctionArgs, type LoaderFunctionArgs, json } from "react-ro
 
 import { createPendingSubmission } from "~/models/pending-submission.server"
 import { createAdminAlertsForPendingSubmission } from "~/models/pending-submission.server"
-import { validateCSRF } from "~/utils/server/csrf.server"
 import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/errorHandling.server"
 import { CreatePerfumeHouseSchema, CreatePerfumeSchema } from "~/utils/formValidationSchemas"
 
@@ -18,16 +17,9 @@ export const loader = withLoaderErrorHandling(
 
 export const action = withActionErrorHandling(
   async ({ request }: ActionFunctionArgs) => {
-    // Validate CSRF token
-    const isValidCSRF = await validateCSRF(request)
-    if (!isValidCSRF) {
-      return json(
-        { success: false, error: "Invalid or missing CSRF token" },
-        { status: 403 }
-      )
-    }
-
     const formData = await request.formData()
+    const { requireCSRF } = await import("~/utils/server/csrf.server")
+    await requireCSRF(request, formData)
     const submissionType = formData.get("submissionType") as "perfume" | "perfume_house"
     const submittedBy = formData.get("submittedBy") as string | null
 

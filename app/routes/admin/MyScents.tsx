@@ -170,6 +170,8 @@ const handleDecantAction = async (
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     const formData = await request.formData()
+    const { requireCSRF } = await import("~/utils/server/csrf.server")
+    await requireCSRF(request, formData)
     const perfumeId = formData.get("perfumeId") as string
     const userPerfumeId = formData.get("userPerfumeId") as string
     const actionTypeRaw = formData.get("action")

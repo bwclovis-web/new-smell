@@ -11,7 +11,6 @@ import crypto from "crypto"
 import express from "express"
 import { rateLimit } from "express-rate-limit"
 import fs from "fs"
-import helmet from "helmet"
 import i18nextMiddleware from "i18next-http-middleware"
 import morgan from "morgan"
 import path from "path"
@@ -26,6 +25,7 @@ import {
   getAuditStats,
   logAuditEvent,
 } from "../app/utils/security/audit-logger.server.js"
+import { getHelmetConfig } from "../app/utils/security/helmet-config.server.js"
 // Rate limiting monitoring
 import {
   getRateLimitStats,
@@ -289,43 +289,8 @@ if (NODE_ENV !== "production") {
 
 app.disable("x-powered-by")
 
-// Security headers with helmet.js
-app.use(helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        fontSrc: ["'self'"],
-        imgSrc: [
-"'self'", "data:", "https:", "blob:"
-],
-        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"], // Note: unsafe-eval needed for Vite in dev
-        connectSrc: [
-          "'self'",
-          "https:",
-          "wss:",
-          ...(NODE_ENV === "development"
-            ? ["http://localhost:*", "ws://localhost:*", "ws://127.0.0.1:*"]
-            : []),
-        ],
-        objectSrc: ["'none'"],
-        baseUri: ["'self'"],
-        formAction: ["'self'"],
-        frameAncestors: ["'none'"],
-      },
-    },
-    hsts: NODE_ENV === "development" ? false : {
-      maxAge: 31536000, // 1 year
-      includeSubDomains: true,
-      preload: true,
-    },
-    noSniff: true,
-    xssFilter: true,
-    referrerPolicy: { policy: "strict-origin-when-cross-origin" },
-    crossOriginEmbedderPolicy: false, // Disable for compatibility
-    crossOriginOpenerPolicy: { policy: "same-origin" },
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-  }))
+// Security headers with shared helmet config (unsafe-eval gated to dev only)
+app.use(getHelmetConfig(NODE_ENV))
 
 // Enhanced compression configuration
 app.use(compression({
@@ -518,28 +483,22 @@ app.use((req, res, next) => {
   next()
 })
 
-// Apply CSRF protection for API routes 
-// (but don't parse bodies - let React Router handle that)
+// CSRF protection for /api routes (validates x-csrf-token header)
+// Non-/api routes (sign-in, sign-up, admin/*) validate via requireCSRF
 app.use("/api", (req, res, next) => {
-  // Skip CSRF for routes that don't need it
-  const excludedRoutes = [
-    "/log-out", // Logout doesn't need CSRF
+  const excludedPaths = [
+    "/log-out",
     "/wishlist",
-    "/rate-limit-stats", // Monitoring endpoints
+    "/rate-limit-stats",
     "/security-stats",
     "/audit-logs",
     "/audit-stats",
   ]
-
-  if (excludedRoutes.includes(req.path)) {
-    return next()
-  }
-
+  if (excludedPaths.includes(req.path)) {
+ return next() 
+}
   return csrfMiddleware(req, res, next)
 })
-
-// CSRF protection middleware - only for specific routes that need it
-app.use("/auth", csrfMiddleware) // Apply CSRF to auth routes
 
 app.use(i18nextMiddleware.handle(i18n))
 app.use((req, res, next) => {

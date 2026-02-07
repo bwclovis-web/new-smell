@@ -359,35 +359,13 @@ export function validateRateLimit(
   current.count++
 }
 
-// CSRF validation
-export function validateCSRFToken(request: Request, sessionToken: string) {
-  const csrfToken = request.headers.get("x-csrf-token")
-
-  if (!csrfToken) {
-    throw new Response(
-      JSON.stringify({
-        success: false,
-        error: "CSRF token is required",
-      }),
-      {
-        status: 403,
-        headers: { "Content-Type": "application/json" },
-      }
-    )
-  }
-
-  if (csrfToken !== sessionToken) {
-    throw new Response(
-      JSON.stringify({
-        success: false,
-        error: "Invalid CSRF token",
-      }),
-      {
-        status: 403,
-        headers: { "Content-Type": "application/json" },
-      }
-    )
-  }
+// CSRF validation - delegates to canonical csrf.server (timing-safe)
+export async function validateCSRFOrThrow(
+  request: Request,
+  formData?: FormData
+): Promise<void> {
+  const { requireCSRF } = await import("~/utils/server/csrf.server")
+  await requireCSRF(request, formData)
 }
 
 // File upload validation
