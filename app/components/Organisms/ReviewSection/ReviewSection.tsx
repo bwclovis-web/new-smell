@@ -58,6 +58,7 @@ const ReviewSection = ({
   const { t } = useTranslation()
   const [showReviewForm, setShowReviewForm] = useState(false)
   const [reviewContent, setReviewContent] = useState("")
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null)
   const [userReview, setUserReview] = useState(existingUserReview || null)
   const [reviewsState, setReviewsState] = useState(initialReviewsData)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
@@ -147,6 +148,27 @@ fetchLimit, perfumeId, t, updateReviewsState
     }
   }
 
+  // Helper to update a review in state (for optimistic updates)
+  const updateReviewInState = useCallback((reviewId: string, updatedReview: Review) => {
+    setReviewsState(prev => {
+      if (!prev) return prev
+      
+      const updatedReviews = prev.reviews.map(review =>
+        review.id === reviewId ? updatedReview : review
+      )
+      
+      return {
+        ...prev,
+        reviews: updatedReviews,
+      }
+    })
+    
+    // Also update userReview if it's the one being edited
+    if (userReview?.id === reviewId) {
+      setUserReview(updatedReview)
+    }
+  }, [userReview])
+
   const handleCreateReview = async () => {
     if (containsDangerousReviewHtml(reviewContent)) {
       alert(t("singlePerfume.review.failedToCreateReview"))
@@ -190,8 +212,98 @@ fetchLimit, perfumeId, t, updateReviewsState
     }
   }
 
-  const handleEditReview = async (reviewId: string) => {
-    alert(t("singlePerfume.review.editFunctionalityWillBeImplemented"))
+  const handleEditReview = (reviewId: string) => {
+    // Find the review to edit
+    const reviewToEdit = userReview?.id === reviewId 
+      ? userReview 
+      : reviews.find(r => r.id === reviewId)
+    
+    if (!reviewToEdit) {
+      console.error("Review not found for editing")
+      return
+    }
+
+    // Set editing state
+    setEditingReviewId(reviewId)
+    setReviewContent(reviewToEdit.review)
+    setShowReviewForm(true)
+  }
+
+  const handleUpdateReview = async () => {
+    if (!editingReviewId) {
+      return
+    }
+
+    if (containsDangerousReviewHtml(reviewContent)) {
+      alert(t("singlePerfume.review.failedToUpdateReview"))
+      return
+    }
+
+    const sanitizedReview = sanitizeReviewHtml(reviewContent)
+
+    if (!sanitizedReview.trim()) {
+      return
+    }
+
+    // Find the original review for optimistic update
+    const originalReview = userReview?.id === editingReviewId 
+      ? userReview 
+      : reviews.find(r => r.id === editingReviewId)
+
+    if (!originalReview) {
+      console.error("Review not found for update")
+      return
+    }
+
+    // Optimistic update: immediately update UI
+    const optimisticReview: Review = {
+      ...originalReview,
+      review: sanitizedReview,
+    }
+    updateReviewInState(editingReviewId, optimisticReview)
+
+    try {
+      setIsSubmittingReview(true)
+      const formData = new FormData()
+      formData.append("_action", "update")
+      formData.append("reviewId", editingReviewId)
+      formData.append("review", sanitizedReview)
+
+      const response = await submitForm("/api/reviews", formData)
+
+      if (!response.ok) {
+        // Revert optimistic update on error
+        updateReviewInState(editingReviewId, originalReview)
+        const errorPayload = await response.json().catch(() => ({}))
+        throw new Error(errorPayload.error ||
+            errorPayload.message ||
+            t("singlePerfume.review.failedToUpdateReview"))
+      }
+
+      const result = await response.json()
+      // Update with server response (includes updated timestamp, etc.)
+      updateReviewInState(editingReviewId, result?.data || optimisticReview)
+      
+      setReviewContent("")
+      setShowReviewForm(false)
+      setEditingReviewId(null)
+      
+      // Refresh to ensure consistency
+      await refreshReviews()
+    } catch (error) {
+      console.error("Failed to update review", error)
+      alert(error instanceof Error
+          ? error.message
+          : t("singlePerfume.review.failedToUpdateReview"))
+    } finally {
+      setIsSubmittingReview(false)
+    }
+  }
+
+  const handleCancelEdit = () => {
+    setReviewContent("")
+    setShowReviewForm(false)
+    setEditingReviewId(null)
   }
 
   const handleDeleteReview = async (reviewId: string, isUserReview = false) => {
@@ -271,7 +383,9 @@ fetchLimit, perfumeId, t, updateReviewsState
       {showReviewForm && (
         <div className="border border-noir-gold bg-noir-dark rounded-lg p-4 space-y-4">
           <h3 className="text-lg font-medium text-gray-900">
-            {t("singlePerfume.review.writeYourReview")}
+            {editingReviewId 
+              ? t("singlePerfume.review.editYourReview")
+              : t("singlePerfume.review.writeYourReview")}
           </h3>
           <RichTextEditor
             value={reviewContent}
@@ -281,16 +395,18 @@ fetchLimit, perfumeId, t, updateReviewsState
           />
           <div className="flex justify-end space-x-2">
             <Button
-              onClick={handleCreateReview}
+              onClick={editingReviewId ? handleUpdateReview : handleCreateReview}
               disabled={!reviewContent.trim() || isSubmittingReview}
               className="px-4 py-2 bg-noir-gold text-noir-black rounded-md hover:bg-noir-gold/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isSubmittingReview
                 ? t("singlePerfume.review.submitting")
-                : t("singlePerfume.review.submitReview")}
+                : editingReviewId
+                  ? t("singlePerfume.review.updateReview")
+                  : t("singlePerfume.review.submitReview")}
             </Button>
             <Button 
-              onClick={() => setShowReviewForm(false)} 
+              onClick={handleCancelEdit}
               variant="secondary"
               disabled={isSubmittingReview}
             >

@@ -101,12 +101,17 @@ This is a prioritized post-launch list focused on production risk reduction (sec
 - **Impact**: Medium (TTFB/DB load)
 - **Effort**: Medium
 
-### 10) Finish "Edit review" functionality (currently stubbed)
+### 10) Finish "Edit review" functionality (currently stubbed) ✅
 - **Why**: Core community feature is half-complete; impacts satisfaction + retention.
 - **Evidence**
   - `app/components/Organisms/ReviewSection/ReviewSection.tsx`: `handleEditReview` is an alert stub
-- **Fix**
-  - Implement edit UI + `update` action path; ideally optimistic updates with existing patterns
+- **Fix** (done)
+  - Implemented edit UI with form that supports both create and edit modes
+  - Added `handleUpdateReview` function that calls the existing `update` action in `/api/reviews`
+  - Implemented optimistic updates: UI updates immediately, then syncs with server response
+  - Added error handling with rollback on failure
+  - Added translation keys for edit functionality (`editYourReview`, `updateReview`, `failedToUpdateReview`)
+  - Form dynamically shows "Edit Your Review" vs "Write Your Review" based on mode
 - **Impact**: Medium (functionality)
 - **Effort**: Medium
 
@@ -125,8 +130,8 @@ This is a prioritized post-launch list focused on production risk reduction (sec
 - [x] **Fix #6** – HTML sanitization: Audit all review write paths; add optional render-time sanitization for legacy data
 - [x] **Fix #7** – Deps: Move `puppeteer`/`sharp` to optional path or separate package if not needed at runtime
 - [x] **Fix #8** – Auth helpers: Create single "session-from-request" utility; refactor routes to use it
-- [ ] **Fix #9** – Perfume loader: Consolidate DB queries; reduce redundant parsing in `perfume.tsx`
-- [ ] **Fix #10** – Edit review: Implement edit UI + `update` action; add optimistic updates
+- [x] **Fix #9** – Perfume loader: Consolidate DB queries; reduce redundant parsing in `perfume.tsx`
+- [x] **Fix #10** – Edit review: Implement edit UI + `update` action; add optimistic updates
 - [ ] **Verify**: Auth regression tests (login, refresh, logout, roles)
 
 ### Testing Fix #8 (session-from-request)
@@ -136,3 +141,12 @@ This is a prioritized post-launch list focused on production risk reduction (sec
 - [ ] **Verify**: CSRF tests on all mutating endpoints
 - [ ] **Verify**: XSS tests on review/message fields
 - [ ] **Verify**: TTFB and DB query counts before/after
+
+### Testing Fix #9 (perfume loader)
+- **What changed**: Loader now fetches session and perfume in parallel, then a single batched `getPerfumeDetailPayload()` (ratings, reviews, wishlist, user rating, user review) from `app/models/perfumeDetail.server.ts`. No DB schema or migrations required.
+- **Unit/Integration**: `npm run test:integration -- --grep perfume` (route tests still use mocked rating/review/wishlist; no new mocks needed).
+- **Manual testing**:
+  1. **Unauthenticated**: Open any perfume URL (e.g. `/perfume/<slug>`). Page should show perfume, house link, notes, description, rating summary, and reviews. No wishlist/heart or “your review” (or rate) controls.
+  2. **Authenticated**: Sign in, then open the same perfume URL. Verify: wishlist heart reflects in/out of wishlist; your rating (if any) appears in the rating section; your review (if any) appears in the review section; add/remove wishlist and submit rating/review still work.
+  3. **404**: Visit `/perfume/non-existent-slug` and confirm appropriate error (not a blank page).
+- **DB**: No migration or schema update needed for Fix #9. To refresh or seed data: `npx prisma db push` (or `npx prisma migrate deploy` in production); seed with `npx prisma db seed` if you use a seed script.

@@ -653,12 +653,15 @@
       "deleteReviewConfirmation": "Are you sure you want to delete this review?",
       "failedToDeleteReview": "Failed to delete review",
       "failedToModerateReview": "Failed to moderate review",
+      "failedToUpdateReview": "Failed to update review",
       "writeReview": "Write Review",
       "addReviewPlaceholder": "Share your thoughts about this perfume...",
       "cancel": "Cancel",
       "submitting": "Submitting...",
       "submitReview": "Submit Review",
+      "updateReview": "Update Review",
       "writeYourReview": "Write Your Review",
+      "editYourReview": "Edit Your Review",
       "yourReview": "Your Review",
       "loadMoreReviews": "Load More Reviews"
     }

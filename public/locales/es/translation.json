@@ -641,12 +641,15 @@
       "deleteReviewConfirmation": "¿Estás seguro de que deseas eliminar esta reseña?",
       "failedToDeleteReview": "Error al eliminar la reseña",
       "failedToModerateReview": "Error al moderar la reseña",
+      "failedToUpdateReview": "Error al actualizar la reseña",
       "writeReview": "Escribir Reseña",
       "addReviewPlaceholder": "Comparte tus pensamientos sobre este perfume...",
       "cancel": "Cancelar",
       "submitting": "Enviando...",
       "submitReview": "Enviar Reseña",
+      "updateReview": "Actualizar Reseña",
       "writeYourReview": "Escribe Tu Reseña",
+      "editYourReview": "Edita Tu Reseña",
       "yourReview": "Tu Reseña",
       "loadMoreReviews": "Cargar Más Reseñas"
     }

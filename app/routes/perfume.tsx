@@ -16,16 +16,8 @@ import { HeroHeader } from "~/components/Molecules/HeroHeader"
 import ReviewSection from "~/components/Organisms/ReviewSection"
 import { usePerfume } from "~/hooks/usePerfume"
 import { useDeletePerfume } from "~/lib/mutations/perfumes"
+import { getPerfumeDetailPayload } from "~/models/perfumeDetail.server"
 import { getPerfumeBySlug } from "~/models/perfume.server"
-import {
-  getPerfumeRatings,
-  getUserPerfumeRating,
-} from "~/models/perfumeRating.server"
-import {
-  getPerfumeReviews,
-  getUserPerfumeReview,
-} from "~/models/perfumeReview.server"
-import { isInWishlist } from "~/models/wishlist.server"
 import { useSessionStore } from "~/stores/sessionStore"
 import { assertExists } from "~/utils/errorHandling.patterns"
 import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
@@ -43,37 +35,30 @@ export const loader = withLoaderErrorHandling(
       params,
     })
 
-    const perfume = assertExists(await getPerfumeBySlug(perfumeSlug), "Perfume", {
-      perfumeSlug,
-    })
+    // Fetch session and perfume in parallel (one cookie parse, no redundant lookups)
+    const [session, perfumeOrNull] = await Promise.all([
+      getSessionFromRequest(request, { includeUser: true }),
+      getPerfumeBySlug(perfumeSlug),
+    ])
 
-    const session = await getSessionFromRequest(request, { includeUser: true })
+    const perfume = assertExists(perfumeOrNull, "Perfume", { perfumeSlug })
     const user = session?.user ?? null
 
-    const [isInUserWishlist, userRatings, ratingsData, userReview, reviewsData] =
-      await Promise.all([
-        session?.userId
-          ? isInWishlist(session.userId, perfume.id)
-          : Promise.resolve(false),
-        session?.userId
-          ? getUserPerfumeRating(session.userId, perfume.id).catch(() => null)
-          : Promise.resolve(null),
-        getPerfumeRatings(perfume.id),
-        user ? getUserPerfumeReview(user.id, perfume.id) : null,
-        getPerfumeReviews(perfume.id, { isApproved: true }, {
-          page: 1,
-          limit: REVIEWS_PAGE_SIZE,
-        }),
-      ])
+    // Single batched call: ratings, reviews, and user-specific data (wishlist, rating, review)
+    const payload = await getPerfumeDetailPayload(
+      perfume.id,
+      session?.userId ?? null,
+      REVIEWS_PAGE_SIZE
+    )
 
     return {
       perfume,
       user,
-      isInUserWishlist,
-      userRatings,
-      averageRatings: ratingsData.averageRatings,
-      userReview,
-      reviewsData,
+      isInUserWishlist: payload.isInUserWishlist,
+      userRatings: payload.userRatings,
+      averageRatings: payload.averageRatings,
+      userReview: payload.userReview,
+      reviewsData: payload.reviewsData,
       reviewsPageSize: REVIEWS_PAGE_SIZE,
     }
   },
