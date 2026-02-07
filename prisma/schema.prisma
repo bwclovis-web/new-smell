@@ -21,6 +21,10 @@ model User {
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   role                  UserRole               @default(user)
+  subscriptionStatus    SubscriptionStatus     @default(free)
+  subscriptionId        String?
+  subscriptionStartDate DateTime?
+  isEarlyAdopter        Boolean                @default(false)
   SecurityAuditLog      SecurityAuditLog[]
   UserAlert             UserAlert[]
   alertPreferences      UserAlertPreferences?
@@ -335,6 +339,12 @@ enum UserRole {
   user
   admin
   editor
+}
+
+enum SubscriptionStatus {
+  free
+  paid
+  cancelled
 }
 
 enum HouseType {
