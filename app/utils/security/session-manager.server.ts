@@ -1,7 +1,7 @@
 import crypto from "crypto"
 import jwt from "jsonwebtoken"
 
-import { getSessionConfig, SESSION_CONFIG } from "./session-config.server"
+import { getSessionConfig } from "./session-config.server"
 
 // Validate JWT secret
 function validateJwtSecret() {
@@ -17,11 +17,6 @@ function validateJwtSecret() {
 
 const JWT_SECRET = validateJwtSecret()
 const config = getSessionConfig()
-
-// Generate secure refresh token
-export function generateRefreshToken(): string {
-  return crypto.randomBytes(SESSION_CONFIG.REFRESH_TOKEN_LENGTH / 2).toString("hex")
-}
 
 // Create access token
 export function createAccessToken(userId: string): string {
@@ -85,8 +80,8 @@ export async function createSession({
   userAgent?: string
   ipAddress?: string
 }) {
-  // Generate tokens
-  const refreshToken = generateRefreshToken()
+  // Generate tokens (JWT refresh token for stateless verify in refreshAccessToken)
+  const refreshToken = createRefreshToken(userId)
   const accessToken = createAccessToken(userId)
 
   // Calculate expiration date
