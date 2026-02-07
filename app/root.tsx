@@ -32,8 +32,7 @@ export const links: Route.LinksFunction = () => [
     type: "font/woff2",
     crossOrigin: "anonymous",
   },
-  // PWA manifest
-  { rel: "manifest", href: "/manifest.json" },
+  // PWA manifest is added in entry.client.tsx after load to avoid critical request chain
 ]
 
 export function Layout({ children }: { children: ReactNode }) {
