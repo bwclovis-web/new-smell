@@ -51,7 +51,7 @@ function DataDisplaySection({
   }
 
   return (
-    <div className="inner-container my-6 [touch-action:pan-y]" id="data-list">
+    <div className="inner-container my-6" id="data-list">
       <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 2xl:grid-cols-4 auto-rows-fr">
         {isLoading ? (
           <div className="col-span-full text-center py-8">
