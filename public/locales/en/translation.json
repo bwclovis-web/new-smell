@@ -9,7 +9,10 @@
     "searchError": "Search error: {{error}}",
     "noResultsFound": "No results found",
     "edit": "Edit",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "approve": "Approve",
+    "reject": "Reject"
   },
   "admin": {
     "navigation": {
@@ -678,7 +681,11 @@
       "writeYourReview": "Write Your Review",
       "editYourReview": "Edit Your Review",
       "yourReview": "Your Review",
-      "loadMoreReviews": "Load More Reviews"
+      "loadMoreReviews": "Load More Reviews",
+      "dangerModal":{
+        "heading": "Are you sure you want to remove this review?",
+        "description": "Once removed, you will not be able to recover it."
+      }
     }
   },
   "termsAndConditions": {

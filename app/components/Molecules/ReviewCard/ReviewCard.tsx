@@ -3,6 +3,12 @@ import { formatDistanceToNow } from "date-fns"
 import { Button } from "~/components/Atoms/Button"
 import { sanitizeReviewHtml } from "~/utils/sanitize"
 import { styleMerge } from "~/utils/styleUtils"
+import { useSessionStore } from "~/stores/sessionStore"
+import Modal from "~/components/Organisms/Modal"
+import DangerModal from "~/components/Organisms/DangerModal"
+import { useTranslation } from "react-i18next"
+import { useRef } from "react"
+import { MdDeleteForever, MdEdit } from "react-icons/md"
 
 interface ReviewCardProps {
   review: {
@@ -36,11 +42,13 @@ const ReviewCard = ({
   onModerate,
   showModerationActions = false,
 }: ReviewCardProps) => {
+  const { t } = useTranslation()
   const isOwner = currentUserId === review.user.id
   const canModerate = currentUserRole === "admin" || currentUserRole === "editor"
   const canEdit = isOwner || canModerate
   const canDelete = isOwner || canModerate
-
+  const { modalOpen, toggleModal, modalId } = useSessionStore()
+  const removeButtonRef = useRef<HTMLButtonElement>(null)
   const getDisplayName = () => {
     if (review.user.username) {
       return review.user.username
@@ -64,6 +72,16 @@ const ReviewCard = ({
   }
 
   return (
+    <>
+    {modalOpen && onDelete && modalId === "delete-review-item" && (
+        <Modal innerType="dark" animateStart="top">
+          <DangerModal 
+            heading={t("singlePerfume.review.dangerModal.heading")}
+            description={t("singlePerfume.review.dangerModal.description")}
+            action={() => onDelete(review.id)} 
+          />
+        </Modal>
+        )}
     <div
       className={styleMerge(
         "bg-white/5 border border-noir-gold rounded-lg p-4 space-y-3",
@@ -90,17 +108,23 @@ const ReviewCard = ({
         {canEdit && (
           <div className="flex items-center space-x-2">
             {isOwner && onEdit && (
-              <Button onClick={() => onEdit(review.id)} size="sm">
-                Edit
+              <Button 
+              onClick={() => onEdit(review.id)} 
+              variant="icon"
+              background="gold"
+              size="sm" rightIcon={<MdEdit size={16} />}>
+                {t("common.edit")}
               </Button>
             )}
             {canDelete && onDelete && (
-              <button
-                onClick={() => onDelete(review.id)}
-                className="text-xs text-red-600 hover:text-red-800 hover:underline"
-              >
-                Delete
-              </button>
+              <Button
+                onClick={() =>toggleModal(removeButtonRef, "delete-review-item")}
+                variant="icon"
+                background="red"
+                size="sm"
+                rightIcon={<MdDeleteForever size={16} />}>
+                {t("common.delete")}
+              </Button>
             )}
             {showModerationActions && canModerate && onModerate && (
               <div className="flex space-x-1">
@@ -108,13 +132,13 @@ const ReviewCard = ({
                   onClick={() => onModerate(review.id, true)}
                   className="text-xs text-green-600 hover:text-green-800 hover:underline"
                 >
-                  Approve
+                  {t("common.approve")}
                 </button>
                 <button
                   onClick={() => onModerate(review.id, false)}
                   className="text-xs text-orange-600 hover:text-orange-800 hover:underline"
                 >
-                  Reject
+                  {t("common.reject")}
                 </button>
               </div>
             )}
@@ -142,6 +166,7 @@ const ReviewCard = ({
         </div>
       )}
     </div>
+    </>
   )
 }
 

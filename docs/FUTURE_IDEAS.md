@@ -45,7 +45,7 @@ A forward-looking list of enhancements and product ideas to improve customer sat
 ### Mobile and accessibility
 - PWA enhancements (offline favorites, push alerts)
 - WCAG-focused accessibility audit and continuous checks
-- Gesture-optimized browsing and quick actions
+- Gesture-optimized browsing and quick actions.
 
 ---
 
