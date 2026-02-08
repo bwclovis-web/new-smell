@@ -1,8 +1,8 @@
 import type { LoaderFunctionArgs } from "react-router"
 
 import { getUnreadAlertCount, getUserAlerts } from "~/models/user-alerts.server"
-import { authenticateUser } from "~/utils/auth.server"
-import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { authenticateUser } from "~/utils/server/auth.server"
+import { withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 
 export const loader = withLoaderErrorHandling(
   async ({ request, params }: LoaderFunctionArgs) => {

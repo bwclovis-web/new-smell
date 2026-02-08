@@ -5,7 +5,7 @@
 
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router"
 
-import { authenticateUser } from "./auth.server"
+import { authenticateUser } from "~/utils/server/auth.server"
 import { ErrorHandler } from "./errorHandling"
 import { createErrorResponse, createSuccessResponse } from "./response.server"
 

@@ -1,3 +1,4 @@
+import { SubscriptionStatus } from "@prisma/client"
 import { prisma } from "~/db.server"
 import { invalidateAllSessions } from "~/models/session.server"
 import { assertValid, validationError } from "~/utils/errorHandling.patterns"
@@ -7,8 +8,16 @@ import {
   validatePasswordComplexity,
   verifyPassword,
 } from "~/utils/security/password-security.server"
+import { canSignupForFree } from "~/utils/server/user-limit.server"
 
 import { getUserByEmail, getUserByName } from "./user.query"
+
+export interface CreateUserOptions {
+  /** Subscription status for the new user. Defaults to 'free'. */
+  subscriptionStatus?: SubscriptionStatus
+  /** If true, user counts toward the free signup limit. If omitted, derived from count (free) or set false (paid). */
+  isEarlyAdopter?: boolean
+}
 
 // Re-export query functions from user.query to maintain backwards compatibility
 export {
@@ -18,7 +27,10 @@ export {
   getUserByName,
 } from "./user.query"
 
-export const createUser = async (data: FormData) => {
+export const createUser = async (
+  data: FormData,
+  options?: CreateUserOptions
+) => {
   const password = data.get("password")
   assertValid(
     typeof password === "string",
@@ -35,10 +47,22 @@ export const createUser = async (data: FormData) => {
     )
   }
 
+  const subscriptionStatus = options?.subscriptionStatus ?? SubscriptionStatus.free
+  let isEarlyAdopter: boolean
+  if (options?.isEarlyAdopter !== undefined) {
+    isEarlyAdopter = options.isEarlyAdopter
+  } else if (subscriptionStatus === SubscriptionStatus.paid) {
+    isEarlyAdopter = false
+  } else {
+    isEarlyAdopter = await canSignupForFree()
+  }
+
   const user = await prisma.user.create({
     data: {
       email: data.get("email") as string,
       password: await hashPassword(password),
+      subscriptionStatus,
+      isEarlyAdopter,
     },
   })
   return user

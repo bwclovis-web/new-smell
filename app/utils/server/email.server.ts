@@ -1,6 +1,6 @@
 import { Resend } from "resend"
 
-import { getTraderDisplayName } from "./user"
+import { getTraderDisplayName } from "~/utils/user"
 
 /**
  * Email utility for sending trader contact messages via Resend
@@ -77,7 +77,7 @@ export interface SendTraderContactEmailParams {
 
 /**
  * Send an email notification to a trader when they receive a message
- * 
+ *
  * @param params - Email parameters including sender, recipient, message, and base URL
  * @returns Promise resolving to Resend email response
  * @throws Error if email sending fails or configuration is missing
@@ -145,7 +145,7 @@ export const sendTraderContactEmail = async (
   </div>
 
   <div style="text-align: center; margin: 30px 0;">
-    <a href="${traderProfileUrl}" 
+    <a href="${traderProfileUrl}"
        style="display: inline-block; background-color: #2c3e50; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600;">
       View ${senderDisplayName}'s Profile
     </a>
@@ -227,10 +227,3 @@ export const isEmailServiceConfigured = (): boolean => {
     return false
   }
 }
-
-
-
-
-
-
-

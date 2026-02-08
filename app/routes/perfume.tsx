@@ -20,7 +20,7 @@ import { getPerfumeDetailPayload } from "~/models/perfumeDetail.server"
 import { getPerfumeBySlug } from "~/models/perfume.server"
 import { useSessionStore } from "~/stores/sessionStore"
 import { assertExists } from "~/utils/errorHandling.patterns"
-import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 import { getSessionFromRequest } from "~/utils/session-from-request.server"
 
 import { ROUTE_PATH as HOUSE_PATH } from "./perfume-house"

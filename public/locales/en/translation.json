@@ -159,6 +159,21 @@
       "description": "Create an account to access your profile and manage your collection."
     }
   },
+  "subscribe": {
+    "heading": "Subscribe",
+    "subheading": "Join Shadow and Sillage with a paid subscription",
+    "limitTitle": "100-user early adopter limit",
+    "limitCopy": "We offer free signups to our first 100 members as early adopters. That limit has been reached.",
+    "paymentRequired": "To create an account now, a paid subscription is required. Complete checkout below and you’ll be able to sign up right after.",
+    "cta": "Continue to payment"
+  },
+  "subscribeSuccess": {
+    "heading": "Payment successful",
+    "subheading": "Your subscription is active",
+    "messageTitle": "Thank you",
+    "messageBody": "Your payment was successful. Complete sign up below to create your account with the email you used at checkout.",
+    "cta": "Continue to sign up"
+  },
   "components": {
     "dataDisplaySection": {
       "heading": "Select a letter to browse {{itemName}}",

@@ -24,7 +24,7 @@ import { createError } from "~/utils/errorHandling"
 import {
   withActionErrorHandling,
   withLoaderErrorHandling,
-} from "~/utils/errorHandling.server"
+} from "~/utils/server/errorHandling.server"
 import { requireAdmin } from "~/utils/requireAdmin.server"
 import { sharedLoader } from "~/utils/sharedLoader"
 

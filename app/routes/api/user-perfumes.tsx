@@ -11,12 +11,12 @@ import {
   updateAvailableAmount,
   updatePerfumeComment,
 } from "~/models/user.server"
-import { authenticateUser, type AuthResult } from "~/utils/auth.server"
+import { authenticateUser, type AuthResult } from "~/utils/server/auth.server"
 import { processWishlistAvailabilityAlerts } from "~/utils/alert-processors"
 import {
   withActionErrorHandling,
   withLoaderErrorHandling,
-} from "~/utils/errorHandling.server"
+} from "~/utils/server/errorHandling.server"
 
 // Type definitions
 type PerfumeActionParams = {

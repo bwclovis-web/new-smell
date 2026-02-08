@@ -5,7 +5,7 @@ import cookie from "cookie"
 import { createPendingSubmission } from "~/models/pending-submission.server"
 import { createAdminAlertsForPendingSubmission } from "~/models/pending-submission.server"
 import { validateCSRFToken, CSRF_COOKIE_KEY, CSRF_HEADER_KEY } from "~/utils/server/csrf.server"
-import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 import { sharedLoader } from "~/utils/sharedLoader"
 import { CreatePerfumeHouseSchema, CreatePerfumeSchema } from "~/utils/formValidationSchemas"
 

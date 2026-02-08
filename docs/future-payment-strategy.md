@@ -28,7 +28,7 @@ Create migration to add these fields.
 
 ### 2. User Count Utility
 
-**File**: `app/utils/user-limit.server.ts` (new)
+**File**: `app/utils/server/user-limit.server.ts` (new)
 
 Create utility functions:
 - `getCurrentUserCount()`: Returns count of users with `isEarlyAdopter: true` OR `subscriptionStatus: 'paid'`
@@ -48,7 +48,7 @@ Modify the `action` function:
 
 **Dependencies**: Add `stripe` package to `package.json`
 
-**File**: `app/utils/stripe.server.ts` (new)
+**File**: `app/utils/server/stripe.server.ts` (new)
 
 Create Stripe client and utilities:
 - Initialize Stripe with `STRIPE_SECRET_KEY` from env
@@ -197,43 +197,43 @@ Use this checklist in order; later steps depend on earlier ones.
 
 ### Phase 2: Env & Stripe package
 
-- [ ] **2.1** Add Stripe env to validation
-  - [ ] In `app/utils/security/env.server.ts`: add `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET` (required in production)
-  - [ ] In `.env.example` or `env_example.txt`: document the three Stripe variables
-- [ ] **2.2** Install Stripe
-  - [ ] `npm install stripe`
-  - [ ] Add types if needed: `npm install -D @types/stripe` (only if not included)
+- [x] **2.1** Add Stripe env to validation
+  - [x] In `app/utils/security/env.server.ts`: add `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_WEBHOOK_SECRET` (required in production)
+  - [x] In `.env.example` or `env_example.txt`: document the three Stripe variables
+- [x] **2.2** Install Stripe
+  - [x] `npm install stripe`
+  - [x] Add types if needed: `npm install -D @types/stripe` (only if not included) — not needed; Stripe ships with TypeScript types
 
 ### Phase 3: User limit & signup gating
 
-- [ ] **3.1** Create user-limit utility
-  - [ ] Create `app/utils/user-limit.server.ts`
-  - [ ] Export `FREE_USER_LIMIT = 100`
-  - [ ] Implement `getCurrentUserCount()` (count users where `isEarlyAdopter === true` OR `subscriptionStatus === 'paid'`)
-  - [ ] Implement `canSignupForFree(): Promise<boolean>`
-- [ ] **3.2** Update user model for signup
-  - [ ] In `app/models/user.server.ts`: update `createUser()` to accept optional `subscriptionStatus` and set `isEarlyAdopter` based on count (or caller passes it)
-- [ ] **3.3** Gate signup action
-  - [ ] In signup route (e.g. `app/routes/login/SignUpPage.tsx` or where signup action lives): at start of action, call `canSignupForFree()`
-  - [ ] If `false`, redirect to `/subscribe?redirect=/sign-up` (or your signup path)
-  - [ ] If `true`, create user with `isEarlyAdopter: true` and `subscriptionStatus: 'free'`
+- [x] **3.1** Create user-limit utility
+  - [x] Create `app/utils/server/user-limit.server.ts`
+  - [x] Export `FREE_USER_LIMIT = 100`
+  - [x] Implement `getCurrentUserCount()` (count users where `isEarlyAdopter === true` OR `subscriptionStatus === 'paid'`)
+  - [x] Implement `canSignupForFree(): Promise<boolean>`
+- [x] **3.2** Update user model for signup
+  - [x] In `app/models/user.server.ts`: update `createUser()` to accept optional `subscriptionStatus` and set `isEarlyAdopter` based on count (or caller passes it)
+- [x] **3.3** Gate signup action
+  - [x] In signup route (e.g. `app/routes/login/SignUpPage.tsx` or where signup action lives): at start of action, call `canSignupForFree()`
+  - [x] If `false`, redirect to `/subscribe?redirect=/sign-up` (or your signup path)
+  - [x] If `true`, create user with `isEarlyAdopter: true` and `subscriptionStatus: 'free'`
 
 ### Phase 4: Stripe server utilities
 
-- [ ] **4.1** Create Stripe server module
-  - [ ] Create `app/utils/stripe.server.ts`
-  - [ ] Initialize Stripe with `STRIPE_SECRET_KEY`
-  - [ ] Implement `createCheckoutSession()` (e.g. for subscription product/price IDs from env or config)
-  - [ ] Implement `getSubscriptionStatus()` (optional; for looking up by subscription ID or customer ID)
-  - [ ] Add JSDoc or comments for required env vars
+- [x] **4.1** Create Stripe server module
+  - [x] Create `app/utils/server/stripe.server.ts`
+  - [x] Initialize Stripe with `STRIPE_SECRET_KEY`
+  - [x] Implement `createCheckoutSession()` (e.g. for subscription product/price IDs from env or config)
+  - [x] Implement `getSubscriptionStatus()` (optional; for looking up by subscription ID or customer ID)
+  - [x] Add JSDoc or comments for required env vars
 
 ### Phase 5: Subscribe page & checkout UI
 
-- [ ] **5.1** Subscription page route
-  - [ ] Create `app/routes/subscribe.tsx`
-  - [ ] Read `redirect` query param (e.g. `/sign-up`)
-  - [ ] Show copy explaining 100-user limit and that payment is required to sign up
-  - [ ] Add CTA that starts Stripe Checkout (or embed Stripe Elements)
+- [x] **5.1** Subscription page route
+  - [x] Create `app/routes/subscribe.tsx`
+  - [x] Read `redirect` query param (e.g. `/sign-up`)
+  - [x] Show copy explaining 100-user limit and that payment is required to sign up
+  - [x] Add CTA that starts Stripe Checkout (or embed Stripe Elements)
 - [ ] **5.2** Checkout component (if using Elements)
   - [ ] Create `app/components/Containers/Subscription/SubscriptionCheckout.tsx`
   - [ ] Use Stripe Checkout Session redirect or Stripe Elements; on success redirect to `redirect` param or `/subscribe-success`
@@ -241,21 +241,21 @@ Use this checklist in order; later steps depend on earlier ones.
 
 ### Phase 6: Webhook & post-payment flow
 
-- [ ] **6.1** Stripe webhook route
-  - [ ] Create `app/routes/api/stripe-webhook.tsx` (or `.ts` if no UI)
-  - [ ] Verify webhook signature using `STRIPE_WEBHOOK_SECRET`
-  - [ ] Handle `checkout.session.completed`: set user subscription (e.g. by email or metadata) — create or update user with `subscriptionStatus: 'paid'`, `subscriptionId`, `subscriptionStartDate`
-  - [ ] Handle `customer.subscription.updated` and `customer.subscription.deleted` (update or set `subscriptionStatus: 'cancelled'`)
-  - [ ] Return 200 quickly; do heavy work in background if needed
-- [ ] **6.2** Subscribe-success route
-  - [ ] Create `app/routes/subscribe-success.tsx`
-  - [ ] Read session or token from query/Stripe; show success message
-  - [ ] Redirect to signup with pre-filled email if possible, or link to signup; ensure new user is created with `subscriptionStatus: 'paid'`
+- [x] **6.1** Stripe webhook route
+  - [x] Create `app/routes/api/stripe-webhook.ts` (no UI)
+  - [x] Verify webhook signature using `STRIPE_WEBHOOK_SECRET`
+  - [x] Handle `checkout.session.completed`: set user subscription (by email) — update user with `subscriptionStatus: 'paid'`, `subscriptionId`, `subscriptionStartDate`
+  - [x] Handle `customer.subscription.updated` and `customer.subscription.deleted` (update or set `subscriptionStatus: 'cancelled'`)
+  - [x] Return 200 quickly; handler does minimal DB work then returns
+- [x] **6.2** Subscribe-success route
+  - [x] Create `app/routes/subscribe-success.tsx`
+  - [x] Read session or token from query/Stripe; show success message
+  - [x] Redirect to signup with pre-filled email if possible, or link to signup; ensure new user is created with `subscriptionStatus: 'paid'`
 
 ### Phase 7: Queries & polish
 
-- [ ] **7.1** User queries
-  - [ ] In `app/models/user.query.ts` (or equivalent): add/update any queries that filter by `subscriptionStatus` or `isEarlyAdopter` if needed for admin or gating
+- [x] **7.1** User queries
+  - [x] In `app/models/user.query.ts`: added `getUsersBySubscriptionStatus(status)`, `getUsersByEarlyAdopter(isEarlyAdopter)`, `getUserBySubscriptionId(subscriptionId)` for admin and gating
 - [ ] **7.2** Security & robustness
   - [ ] Ensure webhook handler rejects invalid signatures and returns 4xx on failure
   - [ ] Consider rate limiting on `/subscribe` and/or signup

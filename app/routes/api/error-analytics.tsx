@@ -9,7 +9,7 @@ import { type LoaderFunctionArgs } from "react-router"
 
 import { errorAnalytics } from "~/utils/errorAnalytics.server"
 import { createError } from "~/utils/errorHandling"
-import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 import { sharedLoader } from "~/utils/sharedLoader"
 
 export const loader = withLoaderErrorHandling(

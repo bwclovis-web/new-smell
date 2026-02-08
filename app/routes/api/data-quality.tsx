@@ -4,7 +4,7 @@ import * as path from "path"
 import { fileURLToPath } from "url"
 import { promisify } from "util"
 
-import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 
 // Note: Compression is handled by Express middleware
 // The compression utility is for future use with native Response objects

@@ -11,7 +11,7 @@ import { useNavigate } from "react-router"
 import PerfumeHouseForm from "~/components/Containers/Forms/PerfumeHouseForm"
 import { getPerfumeHouseBySlug, updatePerfumeHouse } from "~/models/house.server"
 import { FORM_TYPES } from "~/utils/constants"
-import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 import { requireAdmin } from "~/utils/requireAdmin.server"
 
 export interface CustomSubmit extends SubmissionResult<string[]> {

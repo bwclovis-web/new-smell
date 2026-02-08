@@ -1,5 +1,5 @@
 import { getAvailablePerfumesForDecanting } from "~/models/perfume.server"
-import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 
 export const loader = withLoaderErrorHandling(
   async () => {

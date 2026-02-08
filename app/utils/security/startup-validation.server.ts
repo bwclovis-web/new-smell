@@ -29,6 +29,17 @@ export function validateEnvironmentAtStartup() {
 function validateSecurityRequirements(env: any) {
   // Check for development vs production security settings
   if (env.NODE_ENV === "production") {
+    // In production, Stripe configuration is required
+    const stripeVars = ["STRIPE_SECRET_KEY", "STRIPE_PUBLISHABLE_KEY", "STRIPE_WEBHOOK_SECRET"]
+    const missingStripe = stripeVars.filter(
+      key => !process.env[key] || process.env[key]!.trim() === ""
+    )
+    if (missingStripe.length > 0) {
+      throw new Error(
+        `Stripe configuration required in production. Missing: ${missingStripe.join(", ")}`
+      )
+    }
+
     // In production, ensure we have strong secrets
     if (env.JWT_SECRET.length < 64) {
       console.warn("⚠️  JWT_SECRET should be at least 64 characters in production")

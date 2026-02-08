@@ -19,7 +19,7 @@ import type { SafeUser } from "~/types"
 import {
   withActionErrorHandling,
   withLoaderErrorHandling,
-} from "~/utils/errorHandling.server"
+} from "~/utils/server/errorHandling.server"
 import { UpdateProfileSchema } from "~/utils/formValidationSchemas"
 import { sharedLoader } from "~/utils/sharedLoader"
 import { getUserDisplayName } from "~/utils/user"

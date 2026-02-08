@@ -17,7 +17,7 @@ import { createError } from "~/utils/errorHandling"
 import {
   withActionErrorHandling,
   withLoaderErrorHandling,
-} from "~/utils/errorHandling.server"
+} from "~/utils/server/errorHandling.server"
 import { sharedLoader } from "~/utils/sharedLoader"
 
 import banner from "../../images/userAdmin.webp"

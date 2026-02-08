@@ -102,6 +102,11 @@ const extendedSchema = z.object({
     .optional(),
   CI: z.enum(["true", "false"]).optional(),
 
+  // Stripe configuration (required in production)
+  STRIPE_SECRET_KEY: z.string().optional(),
+  STRIPE_PUBLISHABLE_KEY: z.string().optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
+
   // Cerewai configuration
   MIN_REQUEST_DELAY: z
     .string()

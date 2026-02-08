@@ -4,7 +4,7 @@ import { useLoaderData } from "react-router"
 import DataQualityDashboard from "~/components/Containers/DataQualityDashboard"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import banner from "~/images/quality.webp"
-import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 import { requireAdmin } from "~/utils/requireAdmin.server"
 
 export const ROUTE_PATH = "/admin/data-quality" as const

@@ -5,11 +5,11 @@ import {
   updateUserAlertPreferences,
 } from "~/models/user-alerts.server"
 import type { UserAlertPreferences } from "~/types/database"
-import { authenticateUser } from "~/utils/auth.server"
+import { authenticateUser } from "~/utils/server/auth.server"
 import {
   withActionErrorHandling,
   withLoaderErrorHandling,
-} from "~/utils/errorHandling.server"
+} from "~/utils/server/errorHandling.server"
 
 export const loader = withLoaderErrorHandling(
   async ({ request, params }: LoaderFunctionArgs) => {

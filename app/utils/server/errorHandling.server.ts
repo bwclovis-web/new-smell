@@ -20,7 +20,7 @@ import {
   ErrorHandler,
   ErrorLogger,
   type ErrorType,
-} from "./errorHandling"
+} from "~/utils/errorHandling"
 
 // Server Error Response Types
 export interface ServerErrorResponse {

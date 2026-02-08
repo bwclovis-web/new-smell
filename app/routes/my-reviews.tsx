@@ -7,7 +7,7 @@ import {
 import { Link } from "react-router"
 
 import { getUserReviews } from "~/models/perfumeReview.server"
-import { authenticateUser } from "~/utils/auth.server"
+import { authenticateUser } from "~/utils/server/auth.server"
 import { sanitizeReviewHtml } from "~/utils/sanitize"
 
 export const ROUTE_PATH = "/my-reviews"

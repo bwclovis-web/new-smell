@@ -5,7 +5,7 @@ import { useLoaderData } from "react-router"
 import { Button } from "~/components/Atoms/Button"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import banner from "~/images/security.webp"
-import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 import { requireAdmin } from "~/utils/requireAdmin.server"
 
 interface SecurityStats {

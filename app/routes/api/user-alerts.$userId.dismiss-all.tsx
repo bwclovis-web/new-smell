@@ -1,7 +1,7 @@
 import type { ActionFunctionArgs } from "react-router"
 
 import { dismissAllAlerts } from "~/models/user-alerts.server"
-import { authenticateUser } from "~/utils/auth.server"
+import { authenticateUser } from "~/utils/server/auth.server"
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
   if (request.method !== "POST") {

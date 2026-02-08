@@ -83,10 +83,10 @@ This is a prioritized post-launch list focused on production risk reduction (sec
 ### 8) Consolidate auth helpers (avoid drift) ✅
 - **Why**: Multiple helpers parse cookies + verify token with slight differences.
 - **Evidence**
-  - `app/utils/auth.server.ts`, `app/utils/sharedLoader.ts`, route-local helpers like in `app/routes/perfume.tsx`
+  - `app/utils/server/auth.server.ts`, `app/utils/sharedLoader.ts`, route-local helpers like in `app/routes/perfume.tsx`
 - **Fix** (done)
   - One "session-from-request" utility in `app/utils/session-from-request.server.ts` returning `{ userId, user?, tokens?, newAccessToken? }`
-  - Refactored: `auth.server.ts`, `sharedLoader.ts`, `perfume.tsx`, `RootLayout.tsx`, `user-perfumes.tsx`, `api/server.js` (getLoadContext, requireAdminAuth)
+  - Refactored: `server/auth.server.ts`, `sharedLoader.ts`, `perfume.tsx`, `RootLayout.tsx`, `user-perfumes.tsx`, `api/server.js` (getLoadContext, requireAdminAuth)
   - API server uses `getSessionFromExpressRequest` in `api/utils.js` for Express req
 - **How to test**: Run `npm run test:unit -- session-from-request` and `npm run test:integration -- --grep auth` (see Testing section below)
 - **Impact**: Medium (reliability)

@@ -12,7 +12,7 @@ import PerfumeForm from "~/components/Containers/Forms/PerfumeForm"
 import TitleBanner from "~/components/Organisms/TitleBanner/TitleBanner"
 import { createPerfume } from "~/models/perfume.server"
 import { FORM_TYPES } from "~/utils/constants"
-import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 import { CreatePerfumeSchema } from "~/utils/formValidationSchemas"
 import { requireAdmin } from "~/utils/requireAdmin.server"
 

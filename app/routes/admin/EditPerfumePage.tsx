@@ -10,7 +10,7 @@ import {
 import PerfumeForm from "~/components/Containers/Forms/PerfumeForm"
 import { getPerfumeBySlug, updatePerfume } from "~/models/perfume.server"
 import { FORM_TYPES } from "~/utils/constants"
-import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 import { requireAdmin } from "~/utils/requireAdmin.server"
 
 import type { CustomSubmit } from "./EditPerfumeHousePage"

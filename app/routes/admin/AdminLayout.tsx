@@ -1,7 +1,7 @@
 import { Outlet, useLoaderData } from "react-router"
 
 import AdminNavigation from "~/components/Molecules/AdminNavigation/AdminNavigation"
-import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 import { sharedLoader } from "~/utils/sharedLoader"
 
 export const loader = withLoaderErrorHandling(

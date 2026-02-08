@@ -6,7 +6,7 @@ import {
   ServerErrorHandler,
   withActionErrorHandling,
   withLoaderErrorHandling,
-} from "~/utils/errorHandling.server"
+} from "~/utils/server/errorHandling.server"
 
 describe("Server Error Handling Wrappers", () => {
   describe("withLoaderErrorHandling", () => {

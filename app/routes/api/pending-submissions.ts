@@ -3,7 +3,7 @@ import { type ActionFunctionArgs, type LoaderFunctionArgs, json } from "react-ro
 
 import { createPendingSubmission } from "~/models/pending-submission.server"
 import { createAdminAlertsForPendingSubmission } from "~/models/pending-submission.server"
-import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 import { CreatePerfumeHouseSchema, CreatePerfumeSchema } from "~/utils/formValidationSchemas"
 
 export const loader = withLoaderErrorHandling(

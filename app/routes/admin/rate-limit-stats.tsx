@@ -1,5 +1,4 @@
-import { ServerErrorHandler } from "~/utils/errorHandling.server"
-import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { ServerErrorHandler, withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 import { requireAdmin } from "~/utils/requireAdmin.server"
 import { getRateLimitStats } from "~/utils/security/rate-limit-monitor.server"
 

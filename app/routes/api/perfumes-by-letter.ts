@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs } from "react-router"
 
 import { getPerfumesByLetterPaginated } from "~/models/perfume.server"
 import { assertValid } from "~/utils/errorHandling.patterns"
-import { withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 
 export const loader = withLoaderErrorHandling(
   async ({ request }: LoaderFunctionArgs) => {

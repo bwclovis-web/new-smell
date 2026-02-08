@@ -18,10 +18,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 
 import * as wishlistServer from "~/models/wishlist.server"
 import { action } from "~/routes/api/wishlist"
-import * as auth from "~/utils/auth.server"
+import * as auth from "~/utils/server/auth.server"
 
 vi.mock("~/models/wishlist.server")
-vi.mock("~/utils/auth.server")
+vi.mock("~/utils/server/auth.server")
 vi.mock("~/utils/alert-processors", () => ({
   processDecantInterestAlerts: vi.fn().mockResolvedValue(undefined),
 }))

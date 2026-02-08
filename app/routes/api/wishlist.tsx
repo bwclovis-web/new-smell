@@ -6,9 +6,9 @@ import {
   updateWishlistVisibility,
 } from "~/models/wishlist.server"
 import { processDecantInterestAlerts } from "~/utils/alert-processors"
-import { authenticateUser } from "~/utils/auth.server"
+import { authenticateUser } from "~/utils/server/auth.server"
 import { validationError } from "~/utils/errorHandling.patterns"
-import { withActionErrorHandling } from "~/utils/errorHandling.server"
+import { withActionErrorHandling } from "~/utils/server/errorHandling.server"
 import { WishlistActionSchema } from "~/utils/formValidationSchemas"
 import { createErrorResponse, createJsonResponse } from "~/utils/response.server"
 import { validateFormData } from "~/utils/validation"

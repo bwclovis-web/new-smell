@@ -12,7 +12,7 @@ import { CSRFToken } from "~/components/Molecules/CSRFToken"
 import { login } from "~/models/session.server"
 import { signInCustomer } from "~/models/user.server"
 import { ROUTE_PATH as ADMIN_PATH } from "~/routes/admin/profilePage"
-import { AuthErrorHandler } from "~/utils/errorHandling.server"
+import { AuthErrorHandler } from "~/utils/server/errorHandling.server"
 import { UserLogInSchema } from "~/utils/formValidationSchemas"
 
 export const ROUTE_PATH = "/sign-in"

@@ -1,7 +1,7 @@
 import type { LoaderFunction } from "react-router"
 
 import { getPendingReviews, getUserReviews } from "~/models/perfumeReview.server"
-import { authenticateUser } from "~/utils/auth.server"
+import { authenticateUser } from "~/utils/server/auth.server"
 import { createErrorResponse } from "~/utils/response.server"
 
 const handlePendingReviews = async (user: any, page: number, limit: number) => {

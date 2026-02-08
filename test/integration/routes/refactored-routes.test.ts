@@ -12,7 +12,7 @@ import { ErrorLogger } from "~/utils/errorHandling"
 import {
   withActionErrorHandling,
   withLoaderErrorHandling,
-} from "~/utils/errorHandling.server"
+} from "~/utils/server/errorHandling.server"
 
 // Mock ErrorLogger
 vi.mock("~/utils/errorHandling", () => ({

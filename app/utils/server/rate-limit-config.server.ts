@@ -1,6 +1,6 @@
 /**
  * Rate limit configuration for contact trader messages
- * 
+ *
  * Environment variables:
  * - CONTACT_MESSAGE_RATE_LIMIT_PER_HOUR: Messages per hour per user (default: 10)
  * - CONTACT_MESSAGE_RATE_LIMIT_PER_DAY_PER_PAIR: Messages per day per trader pair (default: 3)
@@ -56,7 +56,7 @@ export function getContactMessageRateLimits(): ContactMessageRateLimits {
  */
 export function getRateLimitMessages(): RateLimitMessages {
   const limits = getContactMessageRateLimits()
-  
+
   const perUserMessage = `You can send up to ${limits.perUser.max} message${limits.perUser.max !== 1 ? "s" : ""} per hour`
   const perPairMessage = `You can send up to ${limits.perPair.max} message${limits.perPair.max !== 1 ? "s" : ""} per day to this trader`
 

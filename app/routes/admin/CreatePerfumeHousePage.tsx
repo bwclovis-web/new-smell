@@ -11,7 +11,7 @@ import PerfumeHouseForm from "~/components/Containers/Forms/PerfumeHouseForm"
 import TitleBanner from "~/components/Organisms/TitleBanner/TitleBanner"
 import { createPerfumeHouse } from "~/models/house.server"
 import { FORM_TYPES } from "~/utils/constants"
-import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/errorHandling.server"
+import { withActionErrorHandling, withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 import { CreatePerfumeHouseSchema } from "~/utils/formValidationSchemas"
 import { requireAdmin } from "~/utils/requireAdmin.server"
 

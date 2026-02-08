@@ -29,7 +29,7 @@ import {
 import {
   withActionErrorHandling,
   withLoaderErrorHandling,
-} from "./errorHandling.server"
+} from "./server/errorHandling.server"
 
 describe("errorHandling.patterns", () => {
   describe("withLoaderErrorHandling", () => {

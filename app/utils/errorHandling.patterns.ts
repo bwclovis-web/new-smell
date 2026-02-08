@@ -5,7 +5,7 @@
  * Use these patterns consistently to ensure reliable error handling, logging, and user feedback.
  *
  * Note: For server-only patterns like withLoaderErrorHandling and withActionErrorHandling,
- * import from ~/utils/errorHandling.server instead.
+ * import from ~/utils/server/errorHandling.server instead.
  *
  * @module errorHandling.patterns
  */

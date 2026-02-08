@@ -159,6 +159,21 @@
       "description": "Crea una cuenta para acceder a tu perfil y administrar tu colección."
     }
   },
+  "subscribe": {
+    "heading": "Suscribirse",
+    "subheading": "Únete a Shadow and Sillage con una suscripción de pago",
+    "limitTitle": "Límite de 100 usuarios early adopter",
+    "limitCopy": "Ofrecemos registro gratuito a nuestros primeros 100 miembros como early adopters. Ese límite ya se ha alcanzado.",
+    "paymentRequired": "Para crear una cuenta ahora, se requiere una suscripción de pago. Completa el pago a continuación y podrás registrarte justo después.",
+    "cta": "Continuar al pago"
+  },
+  "subscribeSuccess": {
+    "heading": "Pago exitoso",
+    "subheading": "Tu suscripción está activa",
+    "messageTitle": "Gracias",
+    "messageBody": "Tu pago se realizó correctamente. Completa el registro a continuación para crear tu cuenta con el correo que usaste en el pago.",
+    "cta": "Continuar al registro"
+  },
   "components": {
     "dataDisplaySection": {
       "heading": "Selecciona una letra para explorar {{itemName}}",

@@ -7,7 +7,7 @@
 import type { LoaderFunctionArgs } from "react-router"
 
 import { createError } from "~/utils/errorHandling"
-import { ServerErrorHandler } from "~/utils/errorHandling.server"
+import { ServerErrorHandler } from "~/utils/server/errorHandling.server"
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url)

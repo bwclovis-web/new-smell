@@ -1,28 +1,49 @@
+import { SubscriptionStatus } from "@prisma/client"
 import { getFormProps, useForm } from "@conform-to/react"
 import { getZodConstraint, parseWithZod } from "@conform-to/zod"
 import type { ChangeEvent } from "react"
 import { useRef, useState } from "react"
-import { Form, useActionData } from "react-router"
+import { Form, useActionData, useLoaderData } from "react-router"
 
 import Input from "~/components/Atoms/Input"
 import { CSRFToken } from "~/components/Molecules/CSRFToken"
 import PasswordStrengthIndicator from "~/components/Organisms/PasswordStrengthIndicator"
 import { login } from "~/models/session.server"
 import { createUser, getUserByName } from "~/models/user.server"
+import { getCheckoutSession } from "~/utils/server/stripe.server"
+import { canSignupForFree } from "~/utils/server/user-limit.server"
 import { UserFormSchema } from "~/utils/formValidationSchemas"
 
 export const ROUTE_PATH = "/sign-up"
 
 import { useTranslation } from "react-i18next"
-import type { ActionFunctionArgs } from "react-router"
+import { type ActionFunctionArgs, type LoaderFunctionArgs, redirect } from "react-router"
 
 import { Button } from "~/components/Atoms/Button"
 import CheckBox from "~/components/Atoms/CheckBox"
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url)
+  return {
+    sessionId: url.searchParams.get("session_id"),
+    email: url.searchParams.get("email"),
+  }
+}
 
 export const action = async ({ request, context }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const { requireCSRF } = await import("~/utils/server/csrf.server")
   await requireCSRF(request, formData)
+
+  // Gate signup first: redirect to subscribe when free signup limit is reached
+  // (Skip this only when coming from Stripe with a valid paid session.)
+  const sessionId = (formData.get("session_id") as string)?.trim() || null
+  if (!sessionId) {
+    const allowed = await canSignupForFree()
+    if (!allowed) {
+      throw redirect("/subscribe?redirect=/sign-up")
+    }
+  }
 
   // Validate the form data
   const submission = parseWithZod(formData, { schema: UserFormSchema })
@@ -40,13 +61,40 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     return { error: "Email already taken" }
   }
 
-  // Create user and log them in
+  if (sessionId) {
+    const session = await getCheckoutSession(sessionId)
+    const formEmail = (formData.get("email") as string)?.toLowerCase()
+    const sessionEmail = (
+      (session?.customer_details?.email as string) ||
+      (session?.customer_email as string)
+    )?.toLowerCase()
+    if (
+      session?.status === "complete" &&
+      sessionEmail &&
+      formEmail &&
+      sessionEmail === formEmail
+    ) {
+      const user = await createUser(formData, {
+        subscriptionStatus: SubscriptionStatus.paid,
+        isEarlyAdopter: false,
+      })
+      return await login({ context: {} as any, userId: user.id })
+    }
+  }
+
+  // No valid paid session: require under limit for free signup
+  const allowed = await canSignupForFree()
+  if (!allowed) {
+    throw redirect("/subscribe?redirect=/sign-up")
+  }
+
   const user = await createUser(formData)
   return await login({ context: {} as any, userId: user.id })
 }
 
 const RegisterPage = () => {
   const actionData = useActionData<typeof action>()
+  const { sessionId, email: prefillEmail } = useLoaderData<typeof loader>()
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { t } = useTranslation()
   const [passwordValue, setPasswordValue] = useState("")
@@ -68,6 +116,9 @@ const RegisterPage = () => {
         className="max-w-md mx-auto p-4 relative w-full flex flex-col gap-4 noir-border"
       >
         <CSRFToken />
+        {sessionId ? (
+          <input type="hidden" name="session_id" value={sessionId} />
+        ) : null}
         <Input
           shading={true}
           inputId="email"
@@ -75,6 +126,7 @@ const RegisterPage = () => {
           inputType="email"
           action={email}
           inputRef={inputRef}
+          defaultValue={prefillEmail ?? ""}
         />
         <div>
           <Input

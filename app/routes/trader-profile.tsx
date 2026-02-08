@@ -18,7 +18,7 @@ import {
   getTraderFeedbackSummary,
 } from "~/models/traderFeedback.server"
 import { getTraderById } from "~/models/user.server"
-import { authenticateUser } from "~/utils/auth.server"
+import { authenticateUser } from "~/utils/server/auth.server"
 import { getTraderDisplayName } from "~/utils/user"
 
 import banner from "../images/trade.webp"
