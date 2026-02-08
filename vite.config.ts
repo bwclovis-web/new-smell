@@ -1,4 +1,6 @@
+import { dirname, resolve } from "node:path"
 import process from "node:process"
+import { fileURLToPath } from "node:url"
 
 import { reactRouter } from "@react-router/dev/vite"
 import tailwindcss from "@tailwindcss/vite"
@@ -7,6 +9,7 @@ import { defineConfig } from "vite"
 import babel from "vite-plugin-babel"
 import tsconfigPaths from "vite-tsconfig-paths"
 
+const __dirname = dirname(fileURLToPath(import.meta.url))
 const isDev = process.env.NODE_ENV !== "production"
 const isAnalyze = process.env.ANALYZE === "true"
 
@@ -181,6 +184,16 @@ export default defineConfig({
     ],
   },
   resolve: {
+    // Fix Prisma browser module resolution: `.prisma/client/index-browser` is a
+    // bare specifier starting with "." which Rollup treats as a relative path
+    // (it's not — it lives in node_modules/.prisma/). In dev Vite resolves it
+    // via Node resolution; in production Rollup cannot, so we alias it.
+    alias: {
+      ".prisma/client/index-browser": resolve(
+        __dirname,
+        "node_modules/.prisma/client/index-browser.js",
+      ),
+    },
     // Force ESM resolution for React 19 to avoid CommonJS interop issues
     conditions: [
 "import", "module", "browser", "default"
