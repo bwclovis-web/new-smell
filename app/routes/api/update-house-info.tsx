@@ -1,5 +1,7 @@
 import Papa from "papaparse"
 
+import { ErrorHandler } from "~/utils/errorHandling"
+
 export const action = async ({ request }: { request: Request }) => {
   if (request.method !== "POST") {
     return new Response(JSON.stringify({ error: "Method not allowed" }), {
@@ -96,7 +98,6 @@ export const action = async ({ request }: { request: Request }) => {
         if (createResult.success) {
           results.push({ name: formData.get("name"), status: "created" })
         } else {
-          const { ErrorHandler } = await import("~/utils/errorHandling")
           ErrorHandler.handle(new Error(createResult.error), {
             api: "update-house-info",
             action: "create-failed",
@@ -109,7 +110,6 @@ export const action = async ({ request }: { request: Request }) => {
           })
         }
       } catch (err) {
-        const { ErrorHandler } = await import("~/utils/errorHandling")
         ErrorHandler.handle(err, {
           api: "update-house-info",
           action: "create-error",
@@ -127,7 +127,6 @@ export const action = async ({ request }: { request: Request }) => {
       await updatePerfumeHouse(houseId, formData)
       results.push({ name: formData.get("name"), status: "updated" })
     } catch (err) {
-      const { ErrorHandler } = await import("~/utils/errorHandling")
       ErrorHandler.handle(err, {
         api: "update-house-info",
         action: "update-error",

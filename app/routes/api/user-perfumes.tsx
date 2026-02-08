@@ -13,6 +13,7 @@ import {
 } from "~/models/user.server"
 import { authenticateUser, type AuthResult } from "~/utils/server/auth.server"
 import { processWishlistAvailabilityAlerts } from "~/utils/alert-processors"
+import { ErrorHandler } from "~/utils/errorHandling"
 import {
   withActionErrorHandling,
   withLoaderErrorHandling,
@@ -47,7 +48,6 @@ const handleAddAction = async (user: any, perfumeId: string, amount?: string) =>
     try {
       await processWishlistAvailabilityAlerts(perfumeId, user.id)
     } catch (error) {
-      const { ErrorHandler } = await import("~/utils/errorHandling")
       ErrorHandler.handle(error, {
         api: "user-perfumes",
         action: "processWishlistAlerts-add",
@@ -95,7 +95,6 @@ const handleDecantAction = async (params: {
     try {
       await processWishlistAvailabilityAlerts(perfumeId, user.id)
     } catch (error) {
-      const { ErrorHandler } = await import("~/utils/errorHandling")
       ErrorHandler.handle(error, {
         api: "user-perfumes",
         action: "processWishlistAlerts-decant",
@@ -256,7 +255,6 @@ const validatePerfumeId = (perfumeId: string | null | undefined) => {
 
 // Helper function to handle errors in action
 const handleActionError = async (error: any) => {
-  const { ErrorHandler } = await import("~/utils/errorHandling")
   const appError = ErrorHandler.handle(error, {
     api: "user-perfumes",
     action: "action",

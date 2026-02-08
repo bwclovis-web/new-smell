@@ -1,6 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router"
 
 import { getHousesByLetterPaginated } from "~/models/house.server"
+import { ErrorHandler } from "~/utils/errorHandling"
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -41,7 +42,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     })
   } catch (error) {
-    const { ErrorHandler } = await import("~/utils/errorHandling")
     const appError = ErrorHandler.handle(error, {
       api: "houses-by-letter-paginated",
       letter,

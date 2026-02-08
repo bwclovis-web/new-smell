@@ -1,5 +1,6 @@
 import type { ActionFunctionArgs } from "react-router"
 
+import { ErrorHandler } from "~/utils/errorHandling"
 import { processWishlistNotifications } from "~/utils/wishlist-notification-processor"
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -22,7 +23,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       { status: 200, headers: { "Content-Type": "application/json" } }
     )
   } catch (error) {
-    const { ErrorHandler } = await import("~/utils/errorHandling")
     const appError = ErrorHandler.handle(error, {
       api: "process-wishlist-notifications",
     })

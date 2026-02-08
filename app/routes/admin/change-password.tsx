@@ -2,6 +2,7 @@ import { useActionData, useNavigation } from "react-router"
 
 import ChangePasswordForm from "~/components/Molecules/ChangePasswordForm/ChangePasswordForm"
 import { changePassword } from "~/models/user.server"
+import { ErrorHandler } from "~/utils/errorHandling"
 import { sharedLoader } from "~/utils/sharedLoader"
 
 export const ROUTE_PATH = "/admin/change-password" as const
@@ -47,7 +48,6 @@ export const action = async ({ request }: { request: Request }) => {
 
     return result
   } catch (error) {
-    const { ErrorHandler } = await import("~/utils/errorHandling")
     const appError = ErrorHandler.handle(error, {
       page: "change-password",
       userId: user?.id,

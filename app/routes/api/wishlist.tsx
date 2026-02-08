@@ -7,6 +7,7 @@ import {
 } from "~/models/wishlist.server"
 import { processDecantInterestAlerts } from "~/utils/alert-processors"
 import { authenticateUser } from "~/utils/server/auth.server"
+import { ErrorHandler } from "~/utils/errorHandling"
 import { validationError } from "~/utils/errorHandling.patterns"
 import { withActionErrorHandling } from "~/utils/server/errorHandling.server"
 import { WishlistActionSchema } from "~/utils/formValidationSchemas"
@@ -29,7 +30,6 @@ const processWishlistAction = async (
       try {
         await processDecantInterestAlerts(perfumeId, userId, true)
       } catch (error) {
-        const { ErrorHandler } = await import("~/utils/errorHandling")
         ErrorHandler.handle(error, {
           api: "wishlist",
           action: "processDecantAlerts",
@@ -60,7 +60,6 @@ const processWishlistAction = async (
       try {
         await processDecantInterestAlerts(perfumeId, userId, true)
       } catch (error) {
-        const { ErrorHandler } = await import("~/utils/errorHandling")
         ErrorHandler.handle(error, {
           api: "wishlist",
           action: "processDecantAlerts-visibilityChange",

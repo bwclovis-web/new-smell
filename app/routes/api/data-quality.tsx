@@ -4,6 +4,7 @@ import * as path from "path"
 import { fileURLToPath } from "url"
 import { promisify } from "util"
 
+import { ErrorHandler } from "~/utils/errorHandling"
 import { withLoaderErrorHandling } from "~/utils/server/errorHandling.server"
 
 // Note: Compression is handled by Express middleware
@@ -344,7 +345,6 @@ const parseHousesNoPerfumesData = async (filePath: string) => {
       housesNoPerfumes: housesData,
     }
   } catch (error) {
-    const { ErrorHandler } = await import("~/utils/errorHandling")
     ErrorHandler.handle(error, {
       api: "data-quality",
       function: "parseHousesNoPerfumesData",
@@ -557,7 +557,6 @@ const generateDataQualityReport = async (
 
     // If there was an error running the script
     if (scriptResult !== true) {
-      const { ErrorHandler } = await import("~/utils/errorHandling")
       ErrorHandler.handle(scriptResult, {
         api: "data-quality",
         step: "script-execution",
@@ -586,7 +585,6 @@ const generateDataQualityReport = async (
       lastUpdated: new Date().toLocaleString(),
     }
   } catch (error) {
-    const { ErrorHandler } = await import("~/utils/errorHandling")
     ErrorHandler.handle(error, {
       api: "data-quality",
       function: "generateDataQualityReport",

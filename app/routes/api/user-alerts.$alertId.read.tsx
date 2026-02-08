@@ -1,6 +1,7 @@
 import type { ActionFunctionArgs } from "react-router"
 
 import { markAlertAsRead } from "~/models/user-alerts.server"
+import { ErrorHandler } from "~/utils/errorHandling"
 import { authenticateUser } from "~/utils/server/auth.server"
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -32,7 +33,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
       console.warn("UserAlert table not available:", error)
       return Response.json({ success: true })
     }
-    const { ErrorHandler } = await import("~/utils/errorHandling")
     const appError = ErrorHandler.handle(error, {
       api: "user-alerts",
       action: "mark-read",
