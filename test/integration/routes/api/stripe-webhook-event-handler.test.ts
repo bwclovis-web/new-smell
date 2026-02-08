@@ -11,9 +11,15 @@ import type Stripe from "stripe"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
 // Use real @prisma/client so SubscriptionStatus enum is available when route uses it.
+// Explicitly re-export SubscriptionStatus so it is present even if a global mock overrides the module.
 vi.mock("@prisma/client", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@prisma/client")>()
-  return { ...actual }
+  const SubscriptionStatus =
+    actual?.SubscriptionStatus ?? ({ free: "free", paid: "paid", cancelled: "cancelled" } as const)
+  return {
+    ...actual,
+    SubscriptionStatus,
+  }
 })
 
 import {
