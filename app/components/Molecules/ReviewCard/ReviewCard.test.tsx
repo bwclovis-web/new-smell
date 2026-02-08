@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import ReviewCard from "./ReviewCard"
+import { useSessionStore } from "~/stores/sessionStore"
 
 // Mock date-fns
 vi.mock("date-fns", () => ({
@@ -42,8 +43,16 @@ describe("ReviewCard", () => {
     },
   }
 
+  beforeEach(() => {
+    const portal = document.createElement("div")
+    portal.setAttribute("id", "modal-portal")
+    document.body.appendChild(portal)
+    useSessionStore.getState().closeModal()
+  })
+
   afterEach(() => {
     cleanup()
+    document.getElementById("modal-portal")?.remove()
   })
 
   describe("Rendering", () => {
@@ -212,13 +221,15 @@ describe("ReviewCard", () => {
     })
 
     it("calls onDelete with review id when delete is clicked", async () => {
-      const user = userEvent.setup()
       const onDelete = vi.fn()
       render(<ReviewCard review={mockReview} currentUserId="user-1" onDelete={onDelete} />)
 
       const deleteButton = screen.getByRole("button", { name: /delete/i })
-      // Use fireEvent for immediate execution instead of userEvent
       deleteButton.click()
+
+      // Modal opens; confirm delete via DangerModal "Remove" button
+      const removeButton = await screen.findByRole("button", { name: /remove/i })
+      removeButton.click()
 
       expect(onDelete).toHaveBeenCalledWith("review-1")
       expect(onDelete).toHaveBeenCalledTimes(1)
