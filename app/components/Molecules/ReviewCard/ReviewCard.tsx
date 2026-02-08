@@ -6,7 +6,10 @@ import { Button } from "~/components/Atoms/Button"
 import Modal from "~/components/Organisms/Modal/Modal"
 import { sanitizeReviewHtml } from "~/utils/sanitize"
 import { styleMerge } from "~/utils/styleUtils"
-
+import { useSessionStore } from "~/stores/sessionStore"
+import DangerModal from "~/components/Organisms/DangerModal"
+import { useRef } from "react"
+import { useTranslation } from "react-i18next"
 interface ReviewCardProps {
   review: {
     id: string
@@ -43,7 +46,9 @@ const ReviewCard = ({
   const canModerate = currentUserRole === "admin" || currentUserRole === "editor"
   const canEdit = isOwner || canModerate
   const canDelete = isOwner || canModerate
-
+  const { modalOpen, modalId, toggleModal } = useSessionStore()
+  const removeButtonRef = useRef<HTMLButtonElement>(null)
+  const { t } = useTranslation()
   const getDisplayName = () => {
     if (review.user.username) {
       return review.user.username
@@ -68,15 +73,15 @@ const ReviewCard = ({
 
   return (
     <>
-    {modalOpen && modalId === "delete-item" && (
+    {modalOpen && modalId && onDelete && modalId === "delete-review-item" && (
       <Modal innerType="dark" animateStart="top">
-          <DangerModal 
-              heading="Are you sure you want to remove this perfume?"
-              description="Once removed, you will lose all history, notes and entries in the exchange."
-              action={() => handleRemovePerfume(finalPerfume.id)} 
-          />
+        <DangerModal 
+          heading={t("singlePerfume.review.dangerModal.heading")}
+          description={t("singlePerfume.review.dangerModal.description")}
+          action={() => onDelete(review.id)} 
+        />
       </Modal>
-      )}
+    )}
     
     <div
       className={styleMerge(
@@ -111,19 +116,19 @@ const ReviewCard = ({
               size={"sm"}
               className="flex items-center justify-between gap-2"
               >
-                <span>Edit</span>
+                <span>{t("common.edit")}</span>
                 <GrEdit size={22} />
               </Button>
             )}
             {canDelete && onDelete && (
               <Button
-                onClick={() => onDelete(review.id)}
+                onClick={() => toggleModal(removeButtonRef, "delete-review-item")}
                 variant="icon" 
                 background={"red"}
                 size={"sm"}
                 className="flex items-center justify-between gap-2"
               >
-                <span>Delete</span>
+                <span>{t("common.delete")}</span>
                 <MdDeleteForever size={22} />
               </Button>
             )}
@@ -133,13 +138,13 @@ const ReviewCard = ({
                   onClick={() => onModerate(review.id, true)}
                   className="text-xs text-green-600 hover:text-green-800 hover:underline"
                 >
-                  Approve
+                {t("common.approve")}
                 </button>
                 <button
                   onClick={() => onModerate(review.id, false)}
                   className="text-xs text-orange-600 hover:text-orange-800 hover:underline"
                 >
-                  Reject
+                  {t("common.reject")}
                 </button>
               </div>
             )}

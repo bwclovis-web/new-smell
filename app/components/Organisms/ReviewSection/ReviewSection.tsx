@@ -307,9 +307,6 @@ fetchLimit, perfumeId, t, updateReviewsState
   }
 
   const handleDeleteReview = async (reviewId: string, isUserReview = false) => {
-    if (!confirm(t("singlePerfume.review.deleteReviewConfirmation"))) {
-      return
-    }
 
     try {
       const formData = new FormData()

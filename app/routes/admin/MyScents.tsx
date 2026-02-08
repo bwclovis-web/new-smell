@@ -36,8 +36,11 @@ export const meta: MetaFunction = () => [
     content: "Manage your personal collection of perfumes.",
   },
 ]
+/** User perfume from loader; createdAt is always present from DB */
+type UserPerfumeWithCreatedAt = UserPerfumeI & { createdAt: Date | string }
+
 interface LoaderData {
-  userPerfumes: UserPerfumeI[]
+  userPerfumes: UserPerfumeWithCreatedAt[]
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -298,7 +301,7 @@ const handleCreateDecantAction = async (
 
 const MyScentsPage = () => {
   const { userPerfumes: initialUserPerfumes } = useLoaderData() as LoaderData
-  const [userPerfumes, setUserPerfumes] = useState(initialUserPerfumes)
+  const [userPerfumes, setUserPerfumes] = useState<UserPerfumeWithCreatedAt[]>(initialUserPerfumes)
   const [searchQuery, setSearchQuery] = useState("")
   const { t } = useTranslation()
   const location = useLocation()
@@ -319,7 +322,7 @@ const MyScentsPage = () => {
       }
     }
     return acc
-  }, {} as Record<string, UserPerfumeI>)
+  }, {} as Record<string, UserPerfumeWithCreatedAt>)
 
   const uniquePerfumes = Object.values(groupedPerfumes)
 
@@ -385,7 +388,7 @@ const MyScentsPage = () => {
                   state={selectedLetter ? { selectedLetter } : {}}
                   >
                     <OptimizedImage
-                    src={!validImageRegex.test(perfume.image) ? perfume.image : bottleBanner}
+                    src={perfume.image && !validImageRegex.test(perfume.image) ? perfume.image : bottleBanner}
                     alt={t("singlePerfume.perfumeBottleAltText", {
                       defaultValue: "Perfume Bottle {{name}}",
                       name: perfume.name,
