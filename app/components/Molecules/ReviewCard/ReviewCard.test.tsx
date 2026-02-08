@@ -497,7 +497,8 @@ describe("ReviewCard", () => {
       render(<ReviewCard review={mockReview} currentUserId="user-1" onDelete={onDelete} />)
 
       const deleteButton = screen.getByRole("button", { name: /delete/i })
-      expect(deleteButton).toHaveClass("hover:text-red-800")
+      // Delete button uses Button with background="red" (bg-red-600, hover:bg-red-700)
+      expect(deleteButton).toHaveClass("hover:bg-red-700")
     })
 
     it("uses prose styling for review content", () => {

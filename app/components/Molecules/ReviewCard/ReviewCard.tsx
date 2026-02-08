@@ -3,6 +3,7 @@ import { GrEdit } from "react-icons/gr"
 import { MdDeleteForever } from "react-icons/md"
 
 import { Button } from "~/components/Atoms/Button"
+import Modal from "~/components/Organisms/Modal/Modal"
 import { sanitizeReviewHtml } from "~/utils/sanitize"
 import { styleMerge } from "~/utils/styleUtils"
 
@@ -66,6 +67,17 @@ const ReviewCard = ({
   }
 
   return (
+    <>
+    {modalOpen && modalId === "delete-item" && (
+      <Modal innerType="dark" animateStart="top">
+          <DangerModal 
+              heading="Are you sure you want to remove this perfume?"
+              description="Once removed, you will lose all history, notes and entries in the exchange."
+              action={() => handleRemovePerfume(finalPerfume.id)} 
+          />
+      </Modal>
+      )}
+    
     <div
       className={styleMerge(
         "bg-white/5 border border-noir-gold rounded-lg p-4 space-y-3",
@@ -155,6 +167,7 @@ const ReviewCard = ({
         </div>
       )}
     </div>
+    </>
   )
 }
 
