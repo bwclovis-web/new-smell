@@ -17,6 +17,10 @@ model User {
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
   role                  UserRole               @default(user)
+update  subscriptionStatus    SubscriptionStatus     @default(free)
+  subscriptionId        String?
+  subscriptionStartDate DateTime?
+  isEarlyAdopter        Boolean                @default(false)
   SecurityAuditLog      SecurityAuditLog[]
   UserAlert             UserAlert[]
   alertPreferences      UserAlertPreferences?
@@ -314,6 +318,12 @@ model MigrationState {
   recordCount    Int      @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+}
+
+enum SubscriptionStatus {
+  free
+  paid
+  cancelled
 }
 
 enum HouseType {
