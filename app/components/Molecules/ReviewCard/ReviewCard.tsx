@@ -1,4 +1,6 @@
 import { formatDistanceToNow } from "date-fns"
+import { GrEdit } from "react-icons/gr"
+import { MdDeleteForever } from "react-icons/md"
 
 import { Button } from "~/components/Atoms/Button"
 import { sanitizeReviewHtml } from "~/utils/sanitize"
@@ -90,9 +92,15 @@ const ReviewCard = ({
         {canEdit && (
           <div className="flex items-center space-x-2">
             {isOwner && onEdit && (
-              <Button onClick={() => onEdit(review.id)} size="sm" variant="icon" background={"gold"}>
-                Edit
-                
+              <Button 
+              onClick={() => onEdit(review.id)} 
+              variant="icon" 
+              background={"gold"}
+              size={"sm"}
+              className="flex items-center justify-between gap-2"
+              >
+                <span>Edit</span>
+                <GrEdit size={22} />
               </Button>
             )}
             {canDelete && onDelete && (
@@ -101,9 +109,10 @@ const ReviewCard = ({
                 variant="icon" 
                 background={"red"}
                 size={"sm"}
-                className="text-xs text-red-600 hover:text-red-800 hover:underline"
+                className="flex items-center justify-between gap-2"
               >
-                Delete
+                <span>Delete</span>
+                <MdDeleteForever size={22} />
               </Button>
             )}
             {showModerationActions && canModerate && onModerate && (
