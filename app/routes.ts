@@ -14,6 +14,8 @@ export default [
     route("about-us", "routes/about-us.tsx"),
     route("how-we-work", "routes/how-we-work.tsx"),
     route("contact-us", "routes/contact-us.tsx"),
+    route("subscribe", "routes/subscribe.tsx"),
+    route("subscribe-success", "routes/subscribe-success.tsx"),
     // Handle .well-known paths (e.g., Chrome DevTools requests)
     route(".well-known/*", "routes/.well-known.$.tsx"),
     // API ROUTES
@@ -64,6 +66,7 @@ export default [
     route("api/error-analytics", "routes/api/error-analytics.tsx"),
     route("api/pending-submissions", "routes/api/pending-submissions.tsx"),
     route("api/contact-trader", "routes/api/contact-trader.tsx"),
+    route("api/stripe-webhook", "routes/api/stripe-webhook.ts"),
 
     layout("routes/admin/AdminLayout.tsx", [
       route("admin/", "routes/admin/adminIndex.tsx"),

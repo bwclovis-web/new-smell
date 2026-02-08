@@ -5,9 +5,12 @@ import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "react
 import { Button } from "~/components/Atoms/Button/Button"
 import { CSRFToken } from "~/components/Molecules/CSRFToken"
 import TitleBanner from "~/components/Organisms/TitleBanner"
+import { validateRateLimit } from "~/utils/api-validation.server"
+import { getSignupSubscribeRateLimits } from "~/utils/server/rate-limit-config.server"
+import { getClientIdentifier } from "~/utils/server/request.server"
 import { createCheckoutSession } from "~/utils/server/stripe.server"
 
-import banner from "~/images/vault.webp"
+import banner from "~/images/subscribe.webp"
 
 export const ROUTE_PATH = "/subscribe"
 
@@ -41,6 +44,30 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { requireCSRF } = await import("~/utils/server/csrf.server")
   await requireCSRF(request, formData)
 
+  const rateLimits = getSignupSubscribeRateLimits()
+  const clientId = getClientIdentifier(request)
+  try {
+    validateRateLimit(
+      `subscribe:${clientId}`,
+      rateLimits.subscribe.max,
+      rateLimits.subscribe.windowMs
+    )
+  } catch (res) {
+    if (res instanceof Response) {
+      const redirectPath =
+        (formData.get("redirect") as string) || DEFAULT_REDIRECT
+      const safeRedirect = redirectPath.startsWith("/")
+        ? redirectPath
+        : `/${redirectPath}`
+      return {
+        error:
+          "Too many checkout attempts. Please try again in a few minutes.",
+        redirect: safeRedirect,
+      }
+    }
+    throw res
+  }
+
   const redirectPath = (formData.get("redirect") as string) || DEFAULT_REDIRECT
   const safeRedirect = redirectPath.startsWith("/") ? redirectPath : `/${redirectPath}`
 
@@ -60,9 +87,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   } catch (err) {
     console.error("Stripe checkout session error:", err)
+    const message = err instanceof Error ? err.message : ""
+    const isMissingPriceId = message.includes("STRIPE_PRICE_ID") || message.includes("price ID")
     return {
-      error:
-        err instanceof Error ? err.message : "Unable to start checkout. Please try again.",
+      error: isMissingPriceId
+        ? "Checkout is not configured yet. Please set STRIPE_PRICE_ID in your .env (see .env.example)."
+        : message || "Unable to start checkout. Please try again.",
       redirect: safeRedirect,
     }
   }

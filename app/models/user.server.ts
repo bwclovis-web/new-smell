@@ -8,9 +8,17 @@ import {
   validatePasswordComplexity,
   verifyPassword,
 } from "~/utils/security/password-security.server"
-import { canSignupForFree } from "~/utils/server/user-limit.server"
+import {
+  FREE_USER_LIMIT,
+  canSignupForFree,
+} from "~/utils/server/user-limit.server"
 
 import { getUserByEmail, getUserByName } from "./user.query"
+
+/** Thrown when free signup limit is reached during atomic create (race condition). */
+export class FreeSignupLimitReachedError extends Error {
+  override name = "FreeSignupLimitReachedError"
+}
 
 export interface CreateUserOptions {
   /** Subscription status for the new user. Defaults to 'free'. */
@@ -57,15 +65,38 @@ export const createUser = async (
     isEarlyAdopter = await canSignupForFree()
   }
 
-  const user = await prisma.user.create({
+  const email = data.get("email") as string
+  const hashedPassword = await hashPassword(password)
+
+  if (
+    subscriptionStatus === SubscriptionStatus.free &&
+    isEarlyAdopter === true
+  ) {
+    const user = await prisma.$transaction(async (tx) => {
+      const count = await tx.user.count()
+      if (count >= FREE_USER_LIMIT) {
+        throw new FreeSignupLimitReachedError()
+      }
+      return tx.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+          subscriptionStatus,
+          isEarlyAdopter,
+        },
+      })
+    })
+    return user
+  }
+
+  return prisma.user.create({
     data: {
-      email: data.get("email") as string,
-      password: await hashPassword(password),
+      email,
+      password: hashedPassword,
       subscriptionStatus,
       isEarlyAdopter,
     },
   })
-  return user
 }
 
 export const getTraderById = async (id: string) => {

@@ -65,3 +65,43 @@ export function getRateLimitMessages(): RateLimitMessages {
     perPair: perPairMessage,
   }
 }
+
+/**
+ * Rate limits for signup and subscribe (abuse prevention).
+ * Environment variables (optional):
+ * - SIGNUP_RATE_LIMIT_MAX: max signup attempts per window (default: 5)
+ * - SIGNUP_RATE_LIMIT_WINDOW_MINUTES: window in minutes (default: 15)
+ * - SUBSCRIBE_RATE_LIMIT_MAX: max checkout attempts per window (default: 10)
+ * - SUBSCRIBE_RATE_LIMIT_WINDOW_MINUTES: window in minutes (default: 15)
+ */
+export interface SignupSubscribeRateLimits {
+  signup: RateLimitConfig
+  subscribe: RateLimitConfig
+}
+
+export function getSignupSubscribeRateLimits(): SignupSubscribeRateLimits {
+  const signupMax = parseInt(process.env.SIGNUP_RATE_LIMIT_MAX || "5", 10)
+  const signupWindowMin = parseInt(
+    process.env.SIGNUP_RATE_LIMIT_WINDOW_MINUTES || "15",
+    10
+  )
+  const subscribeMax = parseInt(
+    process.env.SUBSCRIBE_RATE_LIMIT_MAX || "10",
+    10
+  )
+  const subscribeWindowMin = parseInt(
+    process.env.SUBSCRIBE_RATE_LIMIT_WINDOW_MINUTES || "15",
+    10
+  )
+
+  return {
+    signup: {
+      max: signupMax,
+      windowMs: signupWindowMin * 60 * 1000,
+    },
+    subscribe: {
+      max: subscribeMax,
+      windowMs: subscribeWindowMin * 60 * 1000,
+    },
+  }
+}

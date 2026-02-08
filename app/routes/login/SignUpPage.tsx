@@ -9,10 +9,17 @@ import Input from "~/components/Atoms/Input"
 import { CSRFToken } from "~/components/Molecules/CSRFToken"
 import PasswordStrengthIndicator from "~/components/Organisms/PasswordStrengthIndicator"
 import { login } from "~/models/session.server"
-import { createUser, getUserByName } from "~/models/user.server"
+import {
+  createUser,
+  FreeSignupLimitReachedError,
+  getUserByName,
+} from "~/models/user.server"
+import { validateRateLimit } from "~/utils/api-validation.server"
+import { UserFormSchema } from "~/utils/formValidationSchemas"
+import { getSignupSubscribeRateLimits } from "~/utils/server/rate-limit-config.server"
+import { getClientIdentifier } from "~/utils/server/request.server"
 import { getCheckoutSession } from "~/utils/server/stripe.server"
 import { canSignupForFree } from "~/utils/server/user-limit.server"
-import { UserFormSchema } from "~/utils/formValidationSchemas"
 
 export const ROUTE_PATH = "/sign-up"
 
@@ -34,6 +41,25 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
   const formData = await request.formData()
   const { requireCSRF } = await import("~/utils/server/csrf.server")
   await requireCSRF(request, formData)
+
+  const rateLimits = getSignupSubscribeRateLimits()
+  const clientId = getClientIdentifier(request)
+  try {
+    validateRateLimit(
+      `signup:${clientId}`,
+      rateLimits.signup.max,
+      rateLimits.signup.windowMs
+    )
+  } catch (res) {
+    if (res instanceof Response) {
+      return {
+        error:
+          "Too many signup attempts. Please try again in a few minutes.",
+        submission: undefined,
+      }
+    }
+    throw res
+  }
 
   // Gate signup first: redirect to subscribe when free signup limit is reached
   // (Skip this only when coming from Stripe with a valid paid session.)
@@ -88,8 +114,15 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
     throw redirect("/subscribe?redirect=/sign-up")
   }
 
-  const user = await createUser(formData)
-  return await login({ context: {} as any, userId: user.id })
+  try {
+    const user = await createUser(formData)
+    return await login({ context: {} as any, userId: user.id })
+  } catch (err) {
+    if (err instanceof FreeSignupLimitReachedError) {
+      throw redirect("/subscribe?redirect=/sign-up")
+    }
+    throw err
+  }
 }
 
 const RegisterPage = () => {
