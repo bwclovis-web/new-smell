@@ -1,8 +1,9 @@
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import ReviewCard from "./ReviewCard"
+import { useSessionStore } from "~/stores/sessionStore"
 
 // Mock date-fns
 vi.mock("date-fns", () => ({
@@ -27,6 +28,23 @@ vi.mock("date-fns", () => ({
   }),
 }))
 
+// Mock react-i18next
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+      const translations: Record<string, string> = {
+        "common.edit": "Edit",
+        "common.delete": "Delete",
+        "common.approve": "Approve",
+        "common.reject": "Reject",
+        "singlePerfume.review.dangerModal.heading": "Delete Review",
+        "singlePerfume.review.dangerModal.description": "Are you sure you want to delete this review?",
+      }
+      return translations[key] || key
+    },
+  }),
+}))
+
 describe("ReviewCard", () => {
   const mockReview = {
     id: "review-1",
@@ -42,8 +60,25 @@ describe("ReviewCard", () => {
     },
   }
 
+  beforeEach(() => {
+    // Create the modal portal element
+    const portalElement = document.createElement("div")
+    portalElement.setAttribute("id", "modal-portal")
+    document.body.appendChild(portalElement)
+    
+    // Reset sessionStore state
+    useSessionStore.getState().closeModal()
+  })
+
   afterEach(() => {
     cleanup()
+    // Clean up modal portal
+    const portalElement = document.getElementById("modal-portal")
+    if (portalElement) {
+      document.body.removeChild(portalElement)
+    }
+    // Reset sessionStore state
+    useSessionStore.getState().closeModal()
   })
 
   describe("Rendering", () => {
@@ -217,9 +252,18 @@ describe("ReviewCard", () => {
       render(<ReviewCard review={mockReview} currentUserId="user-1" onDelete={onDelete} />)
 
       const deleteButton = screen.getByRole("button", { name: /delete/i })
-      // Use fireEvent for immediate execution instead of userEvent
-      deleteButton.click()
+      await user.click(deleteButton)
 
+      // Wait for modal to appear
+      await waitFor(() => {
+        expect(screen.getByText("Delete Review")).toBeInTheDocument()
+      })
+
+      // Click the Remove button in the DangerModal
+      const removeButton = screen.getByRole("button", { name: /remove/i })
+      await user.click(removeButton)
+
+      // Verify onDelete was called
       expect(onDelete).toHaveBeenCalledWith("review-1")
       expect(onDelete).toHaveBeenCalledTimes(1)
     })
@@ -497,7 +541,8 @@ describe("ReviewCard", () => {
       render(<ReviewCard review={mockReview} currentUserId="user-1" onDelete={onDelete} />)
 
       const deleteButton = screen.getByRole("button", { name: /delete/i })
-      expect(deleteButton).toHaveClass("hover:text-red-800")
+      // Button component with background="red" applies hover:bg-red-700
+      expect(deleteButton).toHaveClass("hover:bg-red-700")
     })
 
     it("uses prose styling for review content", () => {
