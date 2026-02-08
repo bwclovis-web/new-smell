@@ -40,6 +40,7 @@ model User {
   reviewedSubmissions   PendingSubmission[] @relation("ReviewedSubmissions")
   traderContactMessagesSent TraderContactMessage[] @relation("ContactMessagesSent")
   traderContactMessagesReceived TraderContactMessage[] @relation("ContactMessagesReceived")
+  ScentProfile              ScentProfile?
 }
 
 model PerfumeHouse {
@@ -312,6 +313,22 @@ model TraderContactMessage {
   @@index([senderId, createdAt])
   @@index([recipientId, createdAt])
   @@index([senderId, recipientId, createdAt])
+}
+
+model ScentProfile {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  noteWeights         Json     // { noteId: number }
+  avoidNoteIds        Json     // string[]
+  preferredPriceRange Json?    // { min?: number, max?: number }
+  seasonHint          String?  // "summer" | "winter" | "all" | null
+  browsingStyle       String?  // "explorer" | "focused" | "trader"
+  lastQuizAt          DateTime?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 // Migration state tracking for incremental syncs

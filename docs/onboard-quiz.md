@@ -80,8 +80,8 @@ ScentProfile  ScentProfile?
 
 ### Phase 1: Schema and Core Model
 
-- [ ] Add `ScentProfile` model to `prisma/schema.prisma`
-- [ ] Add `ScentProfile` relation to `User` model
+- [x] Add `ScentProfile` model to `prisma/schema.prisma`
+- [x] Add `ScentProfile` relation to `User` model
 - [ ] Run `npx prisma migrate dev --name add_scent_profile`
 - [ ] Create `app/models/scent-profile.server.ts` with:
   - [ ] `getOrCreateScentProfile(userId)` – returns existing or empty profile
