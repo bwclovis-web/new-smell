@@ -58,7 +58,7 @@ export function getTokensFromCookieHeader(cookieHeader: string): {
   accessToken?: string
   refreshToken?: string
 } {
-  const cookies = cookie.parse(cookieHeader || "")
+  const cookies = cookie.parse(cookieHeader || "") ?? {}
   let accessToken = cookies[ACCESS_TOKEN_COOKIE]
   if (!accessToken && cookies[LEGACY_TOKEN_COOKIE]) {
     accessToken = cookies[LEGACY_TOKEN_COOKIE]
