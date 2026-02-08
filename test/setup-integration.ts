@@ -2,8 +2,9 @@ import { vi } from "vitest"
 
 // Integration test specific setup
 export const integrationTestSetup = () => {
-  // Mock database connections
+  // Mock database connections (include SubscriptionStatus for stripe-webhook and other routes)
   vi.mock("@prisma/client", () => ({
+    SubscriptionStatus: { free: "free", paid: "paid", cancelled: "cancelled" } as const,
     PrismaClient: vi.fn().mockImplementation(() => ({
       user: {
         findMany: vi.fn(),
