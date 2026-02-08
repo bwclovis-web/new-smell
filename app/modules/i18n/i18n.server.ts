@@ -1,15 +1,15 @@
 import i18n from "i18next"
-import Backend from "i18next-fs-backend"
-import { dirname, resolve } from "path"
 import { initReactI18next } from "react-i18next"
-import { fileURLToPath } from "url"
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+// Import translations directly so they are bundled into the server code.
+// Using i18next-fs-backend with __dirname-relative paths does NOT work on
+// serverless platforms (Vercel) because the locale files live on the CDN,
+// not on the function's filesystem.
+import en from "../../../public/locales/en/translation.json"
+import es from "../../../public/locales/es/translation.json"
 
 if (!i18n.isInitialized) {
   i18n
-    .use(Backend)
     .use(initReactI18next)
     .init({
       fallbackLng: "en",
@@ -21,8 +21,9 @@ if (!i18n.isInitialized) {
       interpolation: {
         escapeValue: false, // React already does escaping
       },
-      backend: {
-        loadPath: resolve(__dirname, "../../../public/locales/{{lng}}/{{ns}}.json"),
+      resources: {
+        en: { translation: en },
+        es: { translation: es },
       },
       react: {
         useSuspense: false, // Disable Suspense for SSR to prevent hydration issues
