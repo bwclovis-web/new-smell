@@ -90,17 +90,21 @@ const ReviewCard = ({
         {canEdit && (
           <div className="flex items-center space-x-2">
             {isOwner && onEdit && (
-              <Button onClick={() => onEdit(review.id)} size="sm">
+              <Button onClick={() => onEdit(review.id)} size="sm" variant="icon" background={"gold"}>
                 Edit
+                
               </Button>
             )}
             {canDelete && onDelete && (
-              <button
+              <Button
                 onClick={() => onDelete(review.id)}
+                variant="icon" 
+                background={"red"}
+                size={"sm"}
                 className="text-xs text-red-600 hover:text-red-800 hover:underline"
               >
                 Delete
-              </button>
+              </Button>
             )}
             {showModerationActions && canModerate && onModerate && (
               <div className="flex space-x-1">

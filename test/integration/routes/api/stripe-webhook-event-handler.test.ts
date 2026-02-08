@@ -10,12 +10,6 @@
 import type Stripe from "stripe"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 
-// Use real @prisma/client so SubscriptionStatus enum is available when route uses it.
-vi.mock("@prisma/client", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@prisma/client")>()
-  return { ...actual }
-})
-
 import {
   handleStripeWebhookEvent,
   type StripeWebhookDeps,

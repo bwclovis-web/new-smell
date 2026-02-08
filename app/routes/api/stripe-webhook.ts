@@ -1,4 +1,3 @@
-import { SubscriptionStatus } from "@prisma/client"
 import type Stripe from "stripe"
 import { type ActionFunctionArgs } from "react-router"
 
@@ -6,13 +5,17 @@ import { prisma } from "~/db.server"
 import { getUserByEmail } from "~/models/user.query"
 import { verifyWebhookPayload } from "~/utils/server/stripe.server"
 
+/** Subscription status values used by the webhook (avoids @prisma/client in handler for testability). */
+const STATUS_PAID = "paid" as const
+const STATUS_CANCELLED = "cancelled" as const
+
 /** Deps for handleStripeWebhookEvent (allows testing with mocks). */
 export interface StripeWebhookDeps {
   getUserByEmail: (email: string) => Promise<{ id: string; email: string } | null>
   userUpdate: (args: {
     where: { id: string }
     data: {
-      subscriptionStatus: typeof SubscriptionStatus.paid
+      subscriptionStatus: typeof STATUS_PAID
       subscriptionId: string
       subscriptionStartDate: Date
     }
@@ -49,7 +52,7 @@ export async function handleStripeWebhookEvent(
           await userUpdate({
             where: { id: user.id },
             data: {
-              subscriptionStatus: SubscriptionStatus.paid,
+              subscriptionStatus: STATUS_PAID,
               subscriptionId,
               subscriptionStartDate: new Date(),
             },
@@ -63,12 +66,12 @@ export async function handleStripeWebhookEvent(
       const subscription = event.data.object as Stripe.Subscription
       const isActive =
         subscription.status === "active" || subscription.status === "past_due"
-      const status = isActive ? SubscriptionStatus.paid : SubscriptionStatus.cancelled
+      const status = isActive ? STATUS_PAID : STATUS_CANCELLED
       await userUpdateMany({
         where: { subscriptionId: subscription.id },
         data: {
           subscriptionStatus: status,
-          ...(status === SubscriptionStatus.cancelled && {
+          ...(status === STATUS_CANCELLED && {
             subscriptionStartDate: null,
           }),
         },
@@ -81,7 +84,7 @@ export async function handleStripeWebhookEvent(
       await userUpdateMany({
         where: { subscriptionId: subscription.id },
         data: {
-          subscriptionStatus: SubscriptionStatus.cancelled,
+          subscriptionStatus: STATUS_CANCELLED,
           subscriptionId: null,
           subscriptionStartDate: null,
         },
