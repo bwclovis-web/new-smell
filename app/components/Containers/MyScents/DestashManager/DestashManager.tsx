@@ -4,6 +4,7 @@ import {  MdAdd } from "react-icons/md"
 import { useFetcher } from "react-router"
 
 import { Button } from "~/components/Atoms/Button"
+import { useCSRF } from "~/hooks/useCSRF"
 import { useSessionStore } from "~/stores/sessionStore"
 import type { UserPerfumeI } from "~/types"
 
@@ -23,6 +24,7 @@ const DestashManager = ({
 }: DestashManagerProps) => {
   const { t } = useTranslation()
   const fetcher = useFetcher()
+  const { addToFormData } = useCSRF()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [isCreating, setIsCreating] = useState(false)
   const previousStateRef = useRef<string>(fetcher.state)
@@ -130,6 +132,7 @@ const DestashManager = ({
       formData.append("action", "decant")
       formData.append("userPerfumeId", userPerfumeId)
       formData.append("availableAmount", "0")
+      addToFormData(formData)
       fetcher.submit(formData, { method: "post", action: "/admin/my-scents" })
     }
   }
@@ -166,6 +169,7 @@ const DestashManager = ({
     formData.append("tradePreference", data.tradePreference)
     formData.append("tradeOnly", data.tradeOnly.toString())
 
+    addToFormData(formData)
     submittedRef.current = true
     fetcher.submit(formData, { method: "post", action: "/admin/my-scents" })
   }

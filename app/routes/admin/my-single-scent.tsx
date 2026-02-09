@@ -7,6 +7,7 @@ import { CommentsModal } from "~/components/Containers/MyScents"
 import { GeneralDetails, PerfumeComments } from "~/components/Containers/MyScents/MyScentListItem/bones"
 import DangerModal from "~/components/Organisms/DangerModal"
 import Modal from "~/components/Organisms/Modal"
+import { useCSRF } from "~/hooks/useCSRF"
 import { usePerfumeComments } from "~/hooks/usePerfumeComments"
 import { getSingleUserPerfumeById } from "~/models/perfume.server"
 import { getUserPerfumes } from "~/models/user.server"
@@ -132,6 +133,7 @@ const MySingleScent = () => {
             }
         }
     })
+    const { addToFormData } = useCSRF()
     const perfume = finalPerfume.perfume
 
     const handleRemovePerfume = (userPerfumeId: string) => {
@@ -141,6 +143,7 @@ const MySingleScent = () => {
         const formData = new FormData()
         formData.append("userPerfumeId", userPerfumeId)
         formData.append("action", "remove")
+        addToFormData(formData)
         
         // Submit the deletion request (will complete in background)
         fetcher.submit(formData, { method: "post", action: "/admin/my-scents" })

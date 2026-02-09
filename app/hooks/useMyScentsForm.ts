@@ -11,6 +11,7 @@ import React from "react"
 import { useCallback, useEffect, useState } from "react"
 import { useSubmit } from "react-router"
 
+import { useCSRF } from "~/hooks/useCSRF"
 import type { UserPerfumeI } from "~/types"
 
 // Helper functions to get initial state values
@@ -28,6 +29,7 @@ const getInitialPerfumeData = (initialPerfume?: UserPerfumeI) => ({
 // Custom hook to manage perfume form state
 export function useMyScentsForm(initialPerfume?: UserPerfumeI) {
   const submit = useSubmit()
+  const { addToFormData } = useCSRF()
 
   // Initialize state with helper functions
   const [selectedPerfume, setSelectedPerfume] = useState<UserPerfumeI | null>(getInitialPerfumeState(initialPerfume))
@@ -76,10 +78,11 @@ export function useMyScentsForm(initialPerfume?: UserPerfumeI) {
         return
       }
 
+      addToFormData(formData)
       submit(formData, { method: "post", action: "/admin/my-scents" })
       resetForm()
     },
-    [createFormData, resetForm, submit]
+    [createFormData, addToFormData, resetForm, submit]
   )
 
   // Update state when perfume changes
