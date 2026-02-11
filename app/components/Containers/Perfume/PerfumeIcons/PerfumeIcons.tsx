@@ -10,6 +10,7 @@ import DangerModal from "~/components/Organisms/DangerModal"
 import Modal from "~/components/Organisms/Modal"
 import { useToggleWishlist } from "~/lib/mutations/wishlist"
 import { useSessionStore } from "~/stores/sessionStore"
+import { useTranslation } from "react-i18next"
 
 interface Perfume {
   id: string
@@ -34,6 +35,7 @@ const PerfumeIcons = ({
   const { modalOpen, toggleModal, modalId } = useSessionStore()
   const [isPublic, setIsPublic] = useState(false)
   const [showWishlistForm, setShowWishlistForm] = useState(false)
+  const { t } = useTranslation()
   
   // Use TanStack Query mutation for wishlist
   const toggleWishlist = useToggleWishlist()
@@ -88,8 +90,8 @@ const PerfumeIcons = ({
     {modalOpen && modalId === "delete-perfume-item" && (
         <Modal innerType="dark" animateStart="top">
           <DangerModal
-          heading="Are you sure you want to delete this perfume?"
-          description="Once deleted, you will lose all history, notes and entries in the exchange."
+          heading={t("singlePerfume.dangerModal.heading")}
+          description={t("singlePerfume.dangerModal.description")}
           action={handleDelete} />
         </Modal>
       )}    
@@ -101,18 +103,18 @@ const PerfumeIcons = ({
           background="gold"
           size={"sm"}
           disabled={toggleWishlist.isPending}
-          aria-label={`${inWishlist ? "remove" : "add"} ${perfume.name} ${
+          aria-label={`${inWishlist ? t("common.remove") : t("common.add")} ${perfume.name} ${
             inWishlist ? "from" : "to"
           } wishlist`}
         >
           {inWishlist ? (
             <div className="flex items-center justify-between gap-2">
-              <span>In your wishlist</span>
+              <span>{t("singlePerfume.icons.inWishlist")}</span>
               <BsHeartFill size={20} />
             </div>
           ) : (
             <div className="flex items-center justify-between gap-2">
-              <span>Add to wishlist</span>
+              <span>{t("singlePerfume.icons.addButton")}</span>
               <BsHearts size={20} />
             </div>
           )}
@@ -124,8 +126,8 @@ const PerfumeIcons = ({
               id={`public-${perfume.id}`}
               checked={isPublic}
               onChange={() => setIsPublic(!isPublic)}
-              labelChecked="Make public (show on trader profile)"
-              labelUnchecked="Make private (hide from trader profile)"
+              labelChecked={t("wishlist.itemCard.public")}
+              labelUnchecked={t("wishlist.itemCard.private")}
             />
           </div>
           <div className="flex gap-2">
@@ -136,7 +138,7 @@ const PerfumeIcons = ({
               size={"sm"}
               disabled={toggleWishlist.isPending}
             >
-              {toggleWishlist.isPending ? "Adding..." : "Add to Wishlist"}
+              {toggleWishlist.isPending ? t("common.adding") : t("singlePerfume.icons.addButton")}
             </Button>
             <Button
               onClick={() => setShowWishlistForm(false)}
@@ -144,7 +146,7 @@ const PerfumeIcons = ({
               background="gold"
               size={"sm"}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
           </div>
         </div>
@@ -164,7 +166,7 @@ const PerfumeIcons = ({
               className="flex items-center justify-between gap-2"
               url={`/admin/perfume/${perfume.slug}/edit`}
             >
-              <span>Edit Perfume</span>
+              <span>{t("singlePerfume.icons.editButton")}</span>
               <GrEdit size={22} />
             </VooDooLink>
             <Button
@@ -178,7 +180,7 @@ const PerfumeIcons = ({
               background={"gold"}
               size={"sm"}
             >
-              <span>Delete Perfume</span>
+              <span>{t("singlePerfume.icons.deleteButton")}</span>
               <MdDeleteForever size={22} />
             </Button>
           </div>

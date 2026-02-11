@@ -53,7 +53,17 @@ describe("LanguageSwitcher", () => {
     it("renders all language options", () => {
       render(<LanguageSwitcher />)
       const options = screen.getAllByRole("option")
-      expect(options).toHaveLength(2)
+      expect(options).toHaveLength(4)
+    })
+
+    it("renders French option", () => {
+      render(<LanguageSwitcher />)
+      expect(screen.getByRole("option", { name: /français/i })).toBeInTheDocument()
+    })
+
+    it("renders Italian option", () => {
+      render(<LanguageSwitcher />)
+      expect(screen.getByRole("option", { name: /italiano/i })).toBeInTheDocument()
     })
   })
 
@@ -306,14 +316,14 @@ describe("LanguageSwitcher", () => {
 
   describe("Rendering States", () => {
     it("renders consistently regardless of current language", () => {
-      const languages = ["en", "es"]
+      const languages = ["en", "es", "fr", "it"]
 
       languages.forEach(lang => {
         mockI18n.language = lang
         const { unmount } = render(<LanguageSwitcher />)
 
         expect(screen.getByRole("combobox")).toBeInTheDocument()
-        expect(screen.getAllByRole("option")).toHaveLength(2)
+        expect(screen.getAllByRole("option")).toHaveLength(4)
 
         unmount()
       })
@@ -325,6 +335,8 @@ describe("LanguageSwitcher", () => {
       const options = screen.getAllByRole("option")
       expect(options[0]).toHaveTextContent("English")
       expect(options[1]).toHaveTextContent("Español")
+      expect(options[2]).toHaveTextContent("Français")
+      expect(options[3]).toHaveTextContent("Italiano")
     })
   })
 
@@ -351,6 +363,8 @@ describe("LanguageSwitcher", () => {
       // Should have clear option labels
       expect(screen.getByText("English")).toBeInTheDocument()
       expect(screen.getByText("Español")).toBeInTheDocument()
+      expect(screen.getByText("Français")).toBeInTheDocument()
+      expect(screen.getByText("Italiano")).toBeInTheDocument()
     })
   })
 
@@ -372,13 +386,14 @@ describe("LanguageSwitcher", () => {
 
       const options = screen.getAllByRole("option") as HTMLOptionElement[]
 
-      // Check English option
       expect(options[0].value).toBe("en")
       expect(options[0].textContent).toBe("English")
-
-      // Check Spanish option
       expect(options[1].value).toBe("es")
       expect(options[1].textContent).toBe("Español")
+      expect(options[2].value).toBe("fr")
+      expect(options[2].textContent).toBe("Français")
+      expect(options[3].value).toBe("it")
+      expect(options[3].textContent).toBe("Italiano")
     })
   })
 

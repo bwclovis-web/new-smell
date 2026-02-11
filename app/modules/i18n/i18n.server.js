@@ -12,7 +12,7 @@ if (!i18n.isInitialized) {
     .use(initReactI18next)
     .init({
       fallbackLng: "en",
-      supportedLngs: ["en", "es"],
+      supportedLngs: ["en", "es", "fr", "it"],
       load: "languageOnly",
       debug: false, // Disabled for faster startup - enable only when debugging i18n
       interpolation: {

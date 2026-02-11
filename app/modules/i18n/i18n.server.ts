@@ -7,13 +7,15 @@ import { initReactI18next } from "react-i18next"
 // not on the function's filesystem.
 import en from "../../../public/locales/en/translation.json"
 import es from "../../../public/locales/es/translation.json"
+import fr from "../../../public/locales/fr/translation.json"
+import it from "../../../public/locales/it/translation.json"
 
 if (!i18n.isInitialized) {
   i18n
     .use(initReactI18next)
     .init({
       fallbackLng: "en",
-      supportedLngs: ["en", "es"],
+      supportedLngs: ["en", "es", "fr", "it"],
       load: "languageOnly",
       debug: process.env.NODE_ENV === "development",
       defaultNS: "translation",
@@ -24,6 +26,8 @@ if (!i18n.isInitialized) {
       resources: {
         en: { translation: en },
         es: { translation: es },
+        fr: { translation: fr },
+        it: { translation: it },
       },
       react: {
         useSuspense: false, // Disable Suspense for SSR to prevent hydration issues

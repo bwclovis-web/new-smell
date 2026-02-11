@@ -17,6 +17,8 @@ import type { UserPerfumeI } from "~/types"
 import { sharedLoader } from "~/utils/sharedLoader"
 import TitleBanner from "~/components/Organisms/TitleBanner"
 import { ROUTE_PATH as MY_SCENTS } from "~/routes/admin/MyScents"
+import bottleBanner from "~/images/single-bottle.webp"
+import { validImageRegex } from "~/utils/styleUtils"
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
     if (!params.scentId) {
@@ -169,7 +171,11 @@ const MySingleScent = () => {
         </Modal>
       )}
       <TitleBanner
-        image={perfume.image ?? ""}
+        image={
+          perfume.image && !validImageRegex.test(perfume.image)
+            ? perfume.image
+            : bottleBanner
+        }
         heading={perfume.name ?? ""}
       />
     <div className="inner-container">

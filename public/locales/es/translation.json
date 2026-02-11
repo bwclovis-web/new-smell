@@ -1,4 +1,9 @@
 {
+  "404": {
+    "heading": "Pareces un poco perdido",
+    "subheading": "La página que buscas no existe.",
+    "homeLink": "Volver al inicio"
+  },
   "common": {
     "loading": "Cargando...",
     "loadingMore": "Cargando más...",
@@ -9,7 +14,12 @@
     "searchError": "Error de búsqueda: {{error}}",
     "noResultsFound": "No se encontraron resultados",
     "edit": "Editar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "remove": "Quitar",
+    "add": "Agregar"
   },
   "admin": {
     "navigation": {
@@ -63,7 +73,7 @@
       "five": "La puerta siempre está abierta. Entra desde la lluvia, cuelga tu abrigo y quédate un rato. En Shadow and Sillage, cada aroma tiene una historia, y cada historia merece ser encontrada."
     }
   },
-  "alerts":{
+  "alerts": {
     "heading": "Mis Alertas",
     "subheading": "Gestiona tus alertas y preferencias",
     "filters": {
@@ -202,10 +212,6 @@
       }
     }
   },
-  "dataQuality": {
-    "heading": "Panel de Calidad de Datos",
-    "subheading": "Monitorea la calidad de los datos en nuestra base de datos."
-  },
   "contactTrader": {
     "title": "Contactar Comerciante",
     "itemTitle": "Consultar Sobre Artículo",
@@ -233,6 +239,10 @@
     "submitLoading": "Enviando...",
     "submitSuccess": "Mensaje enviado exitosamente",
     "submitError": "Ocurrió un error. Por favor, inténtalo de nuevo."
+  },
+  "dataQuality": {
+    "heading": "Panel de Calidad de Datos",
+    "subheading": "Monitorea la calidad de los datos en nuestra base de datos."
   },
   "sortOptions": {
     "created-desc": "Más Nuevos Primero",
@@ -357,6 +367,8 @@
       "title": "Preguntas Frecuentes",
       "question1": "¿Cómo agrego un perfume o casa de perfumes faltante?",
       "answer1": "Si notas que falta un perfume o una casa de perfumes en nuestra base de datos, puedes enviarlo usando los botones a continuación. Tu envío será revisado por un administrador antes de ser agregado a la base de datos. Siempre estamos buscando expandir nuestra colección y apreciamos tu ayuda para hacer que Shadow and Sillage sea más completo.",
+      "submitPerfumeButton": "Enviar Perfume Faltante",
+      "submitHouseButton": "Enviar Casa de Perfumes Faltante",
       "question2": "¿Cómo funciona el sistema de intercambio?",
       "answer2": "Shadow and Sillage proporciona una plataforma para que los coleccionistas se conecten e intercambien. No manejamos transacciones o pagos directamente; esos se organizan entre tú y tu pareja de intercambio. Simplemente proporcionamos el espacio y las herramientas para que esas conexiones ocurran de manera segura y transparente.",
       "question3": "¿Mi información personal está segura?",
@@ -366,9 +378,7 @@
       "question5": "¿Puedo revisar perfumes sin una cuenta?",
       "answer5": "Puedes navegar y buscar en el sitio sin una cuenta, pero para calificar, revisar, listar decants o construir tu lista de deseos, necesitarás crear una cuenta. Es gratis y te da acceso a la experiencia completa de Shadow and Sillage.",
       "question6": "¿Qué pasa si encuentro un error en la base de datos?",
-      "answer6": "¡Apreciamos tu atención al detalle! Si encuentras un error, ya sea una falta de ortografía, información incorrecta o una entrada duplicada, por favor avísanos por correo electrónico. Lo revisaremos y haremos las correcciones necesarias.",
-      "submitPerfumeButton": "Enviar Perfume Faltante",
-      "submitHouseButton": "Enviar Casa de Perfumes Faltante"
+      "answer6": "¡Apreciamos tu atención al detalle! Si encuentras un error, ya sea una falta de ortografía, información incorrecta o una entrada duplicada, por favor avísanos por correo electrónico. Lo revisaremos y haremos las correcciones necesarias."
     },
     "modal": {
       "perfume": {
@@ -495,6 +505,9 @@
       "subheading": "Comparte tus pensamientos sobre {{perfumeName}}.",
       "addCommentPlaceholder": "Agrega un comentario...",
       "addCommentButton": "Agregar Comentario",
+      "deleteComment": "Eliminar comentario",
+      "makePublic": "Hacer público",
+      "makePrivate": "Hacer privado",
       "noComments": "Aún no hay comentarios. ¡Sé el primero en compartir tus pensamientos!"
     },
     "search": {
@@ -576,6 +589,14 @@
     "noPerfumes": "Actualmente no hay perfumes listados para esta casa.",
     "errorLoadingPerfumes": "Error al cargar perfumes.",
     "notFound": "Casa de perfumes no encontrada",
+    "perfumes": "Perfumes",
+    "summaryCard": {
+      "totalPerfumeCount": "Total de perfumes",
+      "backToHouses": "Volver a {{selectedLetter}}",
+      "ariaLabel": "Volver a casas que comienzan con {{selectedLetter}}",
+      "backToHousesLabel": "Volver a casas"
+    },
+    "perfumeBottleAltText": "Botella de perfume {{name}}",
     "deleteModal": {
       "heading": "¿Estás seguro de que deseas eliminar esta casa de perfumes?",
       "description": "Una vez eliminada, perderás todos los perfumes e historial asociados con esta casa."
@@ -592,6 +613,19 @@
       "mid": "Notas de Corazón",
       "end": "Notas de Fondo",
       "general": "Notas Generales"
+    },
+    "icons": {
+      "addButton": "Agregar a la lista de deseos",
+      "inWishlist": "En tu lista de deseos",
+      "cancelButton": "Cancelar",
+      "editButton": "Editar perfume",
+      "deleteButton": "Eliminar perfume",
+      "makePublic": "Hacer público (mostrar en perfil de comerciante)",
+      "makePrivate": "Hacer privado (ocultar del perfil de comerciante)"
+    },
+    "dangerModal": {
+      "heading": "¿Estás seguro de que deseas eliminar este perfume?",
+      "description": "Una vez eliminado, perderás todo el historial, notas y entradas en el intercambio."
     },
     "rating": {
       "RateThisPerfume": "Califica Este Perfume",
@@ -666,7 +700,11 @@
       "writeYourReview": "Escribe Tu Reseña",
       "editYourReview": "Edita Tu Reseña",
       "yourReview": "Tu Reseña",
-      "loadMoreReviews": "Cargar Más Reseñas"
+      "loadMoreReviews": "Cargar Más Reseñas",
+      "dangerModal": {
+        "heading": "¿Estás seguro de que deseas eliminar esta reseña?",
+        "description": "Una vez eliminada, no podrás recuperarla."
+      }
     }
   },
   "termsAndConditions": {
@@ -794,30 +832,6 @@
       }
     }
   },
-  "wishlist": {
-    "meta": {
-      "title": "Lista de Deseos - Shadow and Sillage",
-      "description": "Administra tu lista de deseos de perfumes."
-    },
-    "empty": {
-      "heading": "Tu lista de deseos está vacía.",
-      "subheading": "¡Comienza a agregar perfumes a tu lista de deseos!"
-    },
-    "heading": "Mi Lista de Deseos",
-    "subheading": "Administra tu lista de deseos de perfumes.",
-    "itemsInWishlist": "artículos en la Lista de Deseos",
-    "addButton": "Agregar a la Lista de Deseos",
-    "removeButton": "Eliminar de la Lista de Deseos",
-    "itemCard": {
-      "visibility": "Visibilidad",
-      "public": "Público",
-      "private": "Privado",
-      "available": "🎉 ¡DISPONIBLE EN EL INTERCAMBIO! 🎉",
-      "addedOn": "Agregado el",
-      "availableMessage": "Este artículo aparecerá en tu perfil de comerciante",
-      "unavailableMessage": "Este artículo es privado y no aparecerá en tu perfil de comerciante"
-    }
-  },
   "userAdmin": {
     "meta": {
       "title": "Administración de Usuarios - Shadow and Sillage",
@@ -841,9 +855,28 @@
       "deleted": "Eliminado"
     }
   },
-  "404": {
-    "heading": "Pareces un poco perdido",
-    "subheading": "La página que buscas no existe.",
-    "homeLink": "Volver al inicio"
+  "wishlist": {
+    "meta": {
+      "title": "Lista de Deseos - Shadow and Sillage",
+      "description": "Administra tu lista de deseos de perfumes."
+    },
+    "empty": {
+      "heading": "Tu lista de deseos está vacía.",
+      "subheading": "¡Comienza a agregar perfumes a tu lista de deseos!"
+    },
+    "heading": "Mi Lista de Deseos",
+    "subheading": "Administra tu lista de deseos de perfumes.",
+    "itemsInWishlist": "artículos en la Lista de Deseos",
+    "addButton": "Agregar a la Lista de Deseos",
+    "removeButton": "Eliminar de la Lista de Deseos",
+    "itemCard": {
+      "visibility": "Visibilidad",
+      "public": "Público",
+      "private": "Privado",
+      "available": "🎉 ¡DISPONIBLE EN EL INTERCAMBIO! 🎉",
+      "addedOn": "Agregado el",
+      "availableMessage": "Este artículo aparecerá en tu perfil de comerciante",
+      "unavailableMessage": "Este artículo es privado y no aparecerá en tu perfil de comerciante"
+    }
   }
 }

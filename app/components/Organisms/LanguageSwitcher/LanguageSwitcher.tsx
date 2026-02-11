@@ -16,6 +16,8 @@ const LanguageSwitcher = () => {
   const languageOptions = [
     { id: "en", label: "English", name: "en" },
     { id: "es", label: "Español", name: "es" },
+    { id: "fr", label: "Français", name: "fr" },
+    { id: "it", label: "Italiano", name: "it" },
   ]
 
   const handleLanguageChange = (evt: ChangeEvent<HTMLSelectElement>) => {
