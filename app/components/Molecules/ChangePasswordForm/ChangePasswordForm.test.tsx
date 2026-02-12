@@ -272,16 +272,16 @@ describe("ChangePasswordForm", () => {
     })
 
     it("disables submit button when passwords do not match", async () => {
-      const user = userEvent.setup()
       renderWithProviders(<ChangePasswordForm />)
 
       const currentPasswordInput = screen.getByLabelText(/current password/i)
       const newPasswordInput = screen.getByLabelText("New Password")
       const confirmPasswordInput = screen.getByLabelText(/confirm new password/i)
 
-      await user.type(currentPasswordInput, "OldPassword123!")
-      await user.type(newPasswordInput, "NewPassword123!")
-      await user.type(confirmPasswordInput, "DifferentPassword123!")
+      // Use fireEvent to avoid timeout from userEvent.type() with long strings
+      fireEvent.change(currentPasswordInput, { target: { value: "OldPassword123!" } })
+      fireEvent.change(newPasswordInput, { target: { value: "NewPassword123!" } })
+      fireEvent.change(confirmPasswordInput, { target: { value: "DifferentPassword123!" } })
 
       const submitButton = screen.getByRole("button", {
         name: /change password/i,
