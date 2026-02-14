@@ -2,6 +2,7 @@ import { type ActionFunctionArgs } from "react-router"
 
 import { requireUser } from "~/models/session.server"
 import { changePassword } from "~/models/user.server"
+import { ErrorHandler } from "~/utils/errorHandling"
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   try {
@@ -38,10 +39,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     return result
   } catch (error) {
-    const { ErrorHandler } = await import("~/utils/errorHandling")
     const appError = ErrorHandler.handle(error, {
       api: "change-password",
-      userId: user?.id,
     })
     return {
       success: false,

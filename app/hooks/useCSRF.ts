@@ -16,8 +16,8 @@ export function useCSRF() {
       const csrfCookie = cookies.find(cookie => cookie.trim().startsWith("_csrf="))
 
       if (csrfCookie) {
-        const token = csrfCookie.split("=")[1]
-        setCsrfToken(token)
+        const token = csrfCookie.split("=")[1]?.trim()
+        if (token) setCsrfToken(token)
       }
       setIsLoading(false)
     }

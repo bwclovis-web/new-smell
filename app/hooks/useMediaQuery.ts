@@ -42,10 +42,14 @@ export const useMediaQuery = (query: string): boolean => {
 
 /**
  * Hook to get responsive page size based on Tailwind breakpoints
- * - Mobile (< md): 4 items
- * - Tablet (md to < lg): 8 items  
- * - Desktop (lg+): 16 items
- * 
+ * - Mobile (< 768px): 6 items
+ * - Tablet (768px to < 1024px): 8 items
+ * - Desktop (1024px+): 16 items
+ *
+ * Note: On first render (and during SSR) both media queries are false for
+ * hydration safety, so the initial value is 6 until the client runs and
+ * matchMedia is evaluated.
+ *
  * @returns Page size based on current screen size
  */
 export const useResponsivePageSize = (): number => {

@@ -114,6 +114,7 @@ export interface PerfumeI {
   id: string
   name: string
   description?: string
+  image?: string
   perfumeHouse?: PerfumeHouseI
 }
 
@@ -130,6 +131,7 @@ export interface UserPerfumeI {
   tradePrice?: string
   tradePreference?: "cash" | "trade" | "both"
   tradeOnly?: boolean
+  createdAt?: Date | string
   comments?: {
     id: string
     userId: string

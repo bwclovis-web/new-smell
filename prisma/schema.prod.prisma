@@ -36,6 +36,7 @@ model User {
   reviewedSubmissions   PendingSubmission[] @relation("ReviewedSubmissions")
   traderContactMessagesSent TraderContactMessage[] @relation("ContactMessagesSent")
   traderContactMessagesReceived TraderContactMessage[] @relation("ContactMessagesReceived")
+  ScentProfile              ScentProfile?
 }
 
 model PerfumeHouse {
@@ -85,40 +86,6 @@ model Perfume {
   @@index([name], name: "idx_perfume_name")
 }
 
-model PerfumeNotes {
-  id             String   @id @default(cuid())
-  name           String   @unique
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @default(now()) @updatedAt
-  
-  // Legacy columns (preserved from remote database)
-  perfumeOpenId  String?
-  perfumeHeartId String?
-  perfumeCloseId String?
-  
-  // Junction table relation
-  perfumeNoteRelations PerfumeNoteRelation[]
-}
-
-// New junction table
-model PerfumeNoteRelation {
-  id         String         @id @default(cuid())
-  perfumeId  String
-  noteId     String
-  noteType   PerfumeNoteType
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @default(now()) @updatedAt
-  
-  perfume    Perfume        @relation(fields: [perfumeId], references: [id], onDelete: Cascade)
-  note       PerfumeNotes   @relation(fields: [noteId], references: [id], onDelete: Cascade)
-  
-  @@unique([perfumeId, noteId, noteType])
-  @@index([perfumeId])
-  @@index([noteId])
-  @@index([noteType])
-  @@index([noteId, noteType], name: "idx_note_relation_note_type")
-}
-
 model UserPerfume {
   id              String               @id @default(cuid())
   userId          String
@@ -139,20 +106,6 @@ model UserPerfume {
 
   @@index([userId, available], name: "idx_user_perfume_user_available")
   @@index([perfumeId, available], name: "idx_user_perfume_perfume_available")
-}
-
-model UserPerfumeComment {
-  id            String      @id @default(cuid())
-  userId        String
-  perfumeId     String
-  userPerfumeId String
-  comment       String
-  isPublic      Boolean     @default(false)
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  perfume       Perfume     @relation(fields: [perfumeId], references: [id])
-  user          User        @relation(fields: [userId], references: [id])
-  userPerfume   UserPerfume @relation(fields: [userPerfumeId], references: [id])
 }
 
 model UserPerfumeRating {
@@ -200,6 +153,54 @@ model UserPerfumeWishlist {
 
   @@index([userId, createdAt], name: "idx_wishlist_user_created")
   @@index([perfumeId], name: "idx_wishlist_perfume")
+}
+
+model UserPerfumeComment {
+  id            String      @id @default(cuid())
+  userId        String
+  perfumeId     String
+  userPerfumeId String
+  comment       String
+  isPublic      Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  perfume       Perfume     @relation(fields: [perfumeId], references: [id])
+  user          User        @relation(fields: [userId], references: [id])
+  userPerfume   UserPerfume @relation(fields: [userPerfumeId], references: [id])
+}
+
+model PerfumeNotes {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  
+  // Legacy columns (preserved from remote database)
+  perfumeOpenId  String?
+  perfumeHeartId String?
+  perfumeCloseId String?
+  
+  // Junction table relation
+  perfumeNoteRelations PerfumeNoteRelation[]
+}
+
+// New junction table
+model PerfumeNoteRelation {
+  id         String         @id @default(cuid())
+  perfumeId  String
+  noteId     String
+  noteType   PerfumeNoteType
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @default(now()) @updatedAt
+  
+  perfume    Perfume        @relation(fields: [perfumeId], references: [id], onDelete: Cascade)
+  note       PerfumeNotes   @relation(fields: [noteId], references: [id], onDelete: Cascade)
+  
+  @@unique([perfumeId, noteId, noteType])
+  @@index([perfumeId])
+  @@index([noteId])
+  @@index([noteType])
+  @@index([noteId, noteType], name: "idx_note_relation_note_type")
 }
 
 model WishlistNotification {
@@ -310,6 +311,22 @@ model TraderContactMessage {
   @@index([senderId, recipientId, createdAt])
 }
 
+model ScentProfile {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  noteWeights         Json     // { noteId: number }
+  avoidNoteIds        Json     // string[]
+  preferredPriceRange Json?    // { min?: number, max?: number }
+  seasonHint          String?  // comma-separated: "spring", "summer,fall", etc.
+  browsingStyle       String?  // "explorer" | "focused" | "trader"
+  lastQuizAt          DateTime?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
 // Migration state tracking for incremental syncs
 model MigrationState {
   id             String   @id @default(cuid())
@@ -318,6 +335,23 @@ model MigrationState {
   recordCount    Int      @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+}
+
+enum PendingSubmissionType {
+  perfume
+  perfume_house
+}
+
+enum PendingSubmissionStatus {
+  pending
+  approved
+  rejected
+}
+
+enum UserRole {
+  user
+  admin
+  editor
 }
 
 enum SubscriptionStatus {
@@ -352,35 +386,6 @@ enum TradePreference {
   both
 }
 
-enum UserRole {
-  user
-  admin
-  editor
-}
-
-enum AlertType {
-  wishlist_available
-  decant_interest
-  pending_submission_approval
-}
-
-enum PerfumeNoteType {
-  open
-  heart
-  base
-}
-
-enum PendingSubmissionType {
-  perfume
-  perfume_house
-}
-
-enum PendingSubmissionStatus {
-  pending
-  approved
-  rejected
-}
-
 enum SecurityAuditAction {
   LOGIN_SUCCESS
   LOGIN_FAILED
@@ -410,4 +415,16 @@ enum SecurityAuditSeverity {
   warning
   error
   critical
+}
+
+enum AlertType {
+  wishlist_available
+  decant_interest
+  pending_submission_approval
+}
+
+enum PerfumeNoteType {
+  open
+  heart
+  base
 }

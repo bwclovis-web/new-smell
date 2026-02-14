@@ -1,4 +1,5 @@
 import { prisma } from "~/db.server"
+import { updateScentProfileFromBehavior } from "~/models/scent-profile.server"
 
 export async function createPerfumeRating(data: {
   userId: string
@@ -21,6 +22,19 @@ export async function createPerfumeRating(data: {
     },
   })
 
+  if (rating.overall != null) {
+    try {
+      await updateScentProfileFromBehavior(data.userId, {
+        type: "rating",
+        perfumeId: data.perfumeId,
+        overall: rating.overall,
+      })
+    } catch (error) {
+      console.error("Error updating scent profile from behavior:", error)
+      // Don't fail the operation if scent profile update fails
+    }
+  }
+
   return rating
 }
 
@@ -38,6 +52,23 @@ export async function updatePerfumeRating(
     where: { id: ratingId },
     data: updates,
   })
+
+  // Only update scent profile when overall was part of this update.
+  // The ratings API sends one category per call (longevity, sillage, etc.);
+  // using updatedRating.overall would re-trigger on every category change
+  // and repeatedly increment note weights.
+  if ("overall" in updates && updates.overall != null) {
+    try {
+      await updateScentProfileFromBehavior(updatedRating.userId, {
+        type: "rating",
+        perfumeId: updatedRating.perfumeId,
+        overall: updates.overall,
+      })
+    } catch (error) {
+      console.error("Error updating scent profile from behavior:", error)
+      // Don't fail the operation if scent profile update fails
+    }
+  }
 
   return updatedRating
 }

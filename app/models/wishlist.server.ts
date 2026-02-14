@@ -1,4 +1,5 @@
 import { prisma } from "~/db.server"
+import { updateScentProfileFromBehavior } from "~/models/scent-profile.server"
 
 export const addToWishlist = async (
   userId: string,
@@ -24,6 +25,16 @@ export const addToWishlist = async (
       isPublic,
     },
   })
+
+  try {
+    await updateScentProfileFromBehavior(userId, {
+      type: "wishlist",
+      perfumeId,
+    })
+  } catch (error) {
+    console.error("Error updating scent profile from behavior:", error)
+    // Don't fail the operation if scent profile update fails
+  }
 
   return { success: true, data: wishlistItem }
 }
@@ -54,6 +65,8 @@ export const updateWishlistVisibility = async (
     },
   })
 
+  // Do not update scent profile here: visibility is a privacy toggle, not a
+  // new preference signal. Only addToWishlist should feed the scent profile.
   return { success: true, data: updated }
 }
 

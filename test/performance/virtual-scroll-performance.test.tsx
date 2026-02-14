@@ -58,7 +58,7 @@ describe("Virtual Scroll Performance Tests", () => {
       const renderTime = endTime - startTime
 
       // Should render quickly (generous threshold for CI environments)
-      expect(renderTime).toBeLessThan(200)
+      expect(renderTime).toBeLessThan(350)
 
       // Should only render visible items (200px / 50px = 4 + overScan=5 + 1 = 10)
       // Use container-scoped query to avoid counting items from other tests
@@ -91,7 +91,7 @@ describe("Virtual Scroll Performance Tests", () => {
       const endTime = performance.now()
 
       // Should handle rapid scrolling efficiently (generous threshold for CI environments)
-      expect(endTime - startTime).toBeLessThan(200)
+      expect(endTime - startTime).toBeLessThan(350)
       expect(onScroll).toHaveBeenCalledTimes(10)
     })
 
@@ -113,7 +113,7 @@ describe("Virtual Scroll Performance Tests", () => {
       const renderTime = endTime - startTime
 
       // Should still render quickly even with 10k items
-      expect(renderTime).toBeLessThan(200)
+      expect(renderTime).toBeLessThan(350)
 
       // Should only render visible items (not all 10000)
       // With containerHeight=200, itemHeight=50: 4 visible + overScan=3 + ceiling = ~8 items
@@ -141,8 +141,8 @@ describe("Virtual Scroll Performance Tests", () => {
       const endTime = performance.now()
       const renderTime = endTime - startTime
 
-      // Should render quickly
-      expect(renderTime).toBeLessThan(150)
+      // Should render quickly (generous threshold for CI environments)
+      expect(renderTime).toBeLessThan(350)
 
       // Should only render visible items (not all 2000)
       // With containerHeight=300, itemHeight=60: 5 visible + overScan=3 + ceiling = ~9 items

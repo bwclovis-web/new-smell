@@ -3,10 +3,11 @@ import { getZodConstraint, parseWithZod } from "@conform-to/zod"
 import { useRef } from "react"
 import { useTranslation } from "react-i18next"
 import type { ActionFunctionArgs } from "react-router"
-import { Form, useActionData, useLoaderData } from "react-router"
+import { Form, Link, useActionData, useLoaderData } from "react-router"
 
 import { Button } from "~/components/Atoms/Button/Button"
 import Input from "~/components/Atoms/Input/Input"
+import RecommendedForYou from "~/components/Containers/Recommendations/RecommendedForYou"
 import UserAlerts from "~/components/Containers/UserAlerts/UserAlerts"
 import { CSRFToken } from "~/components/Molecules/CSRFToken"
 import TitleBanner from "~/components/Organisms/TitleBanner/TitleBanner"
@@ -15,6 +16,7 @@ import {
   getUserAlertPreferences,
   getUserAlerts,
 } from "~/models/user-alerts.server"
+import { rulesRecommendationService } from "~/services/recommendations"
 import type { SafeUser } from "~/types"
 import {
   withActionErrorHandling,
@@ -58,11 +60,24 @@ export const loader = withLoaderErrorHandling(
       console.warn("UserAlert tables not available:", error)
     }
 
+    // Recommendations are supplementary - guard against ScentProfile/DB unavailability
+    let recommendedPerfumes: Awaited<
+      ReturnType<typeof rulesRecommendationService.getPersonalizedForUser>
+    > = []
+    try {
+      recommendedPerfumes =
+        await rulesRecommendationService.getPersonalizedForUser(user.id, 6)
+    } catch (error) {
+      // ScentProfile or related tables may not exist - page still loads without recommendations
+      console.warn("Recommendations not available:", error)
+    }
+
     return {
       user,
       alerts,
       preferences,
       unreadCount,
+      recommendedPerfumes: recommendedPerfumes ?? [],
     }
   },
   {
@@ -186,13 +201,25 @@ const ProfileForm = ({ user }: { user: SafeUser }) => {
       >
         {t("profile.updateProfile")}
       </Button>
+
+      <div className="mt-6 pt-6 border-t border-stone-600">
+        <p className="text-stone-400 text-sm mb-2">
+          {t("profile.scentPreferencesHint", "Personalize perfume recommendations")}
+        </p>
+        <Button asChild variant="secondary" size="md">
+          <Link to="/scent-quiz">
+            {t("profile.scentQuizLink", "Scent preferences quiz")}
+          </Link>
+        </Button>
+      </div>
     </Form>
   )
 }
 
 const ProfilePage = () => {
   const { t } = useTranslation()
-  const { user, alerts, preferences, unreadCount } = useLoaderData<typeof loader>()
+  const { user, alerts, preferences, unreadCount, recommendedPerfumes = [] } =
+    useLoaderData<typeof loader>()
   const actionData = useActionData<ActionData>()
 
   if (!user) {
@@ -241,6 +268,10 @@ const ProfilePage = () => {
             initialUnreadCount={unreadCount}
           />
         </div>
+      </section>
+
+      <section className="inner-container mt-12">
+        <RecommendedForYou perfumes={recommendedPerfumes} />
       </section>
     </>
   )

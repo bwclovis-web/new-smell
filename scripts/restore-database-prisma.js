@@ -28,7 +28,7 @@ const BACKUP_DIR = join(projectRoot, "backups")
 // Initialize Prisma client
 const prisma = new PrismaClient()
 
-// List available backups
+// List available backups (only those that have both manifest and _data.json)
 function listBackups() {
   if (!existsSync(BACKUP_DIR)) {
     console.log("❌ No backup directory found")
@@ -39,6 +39,11 @@ function listBackups() {
     .filter(file => file.endsWith("_manifest.json"))
     .map(file => {
       const manifestPath = join(BACKUP_DIR, file)
+      const dataPath = join(BACKUP_DIR, file.replace("_manifest.json", "_data.json"))
+      return { file, manifestPath, dataPath }
+    })
+    .filter(({ dataPath }) => existsSync(dataPath))
+    .map(({ file, manifestPath, dataPath }) => {
       const manifest = JSON.parse(readFileSync(manifestPath, "utf8"))
       const stats = statSync(manifestPath)
       return {
@@ -46,6 +51,7 @@ function listBackups() {
         manifest,
         created: stats.mtime,
         size: stats.size,
+        dataPath,
       }
     })
     .sort((a, b) => b.created - a.created)
@@ -190,10 +196,7 @@ async function restoreDatabase(backupName, options = {}) {
       await clearDatabase()
     }
 
-    // Find JSON backup file
-    const backupPrefix = selectedBackup.file.replace("_manifest.json", "")
-    const jsonBackupFile = join(BACKUP_DIR, `${backupPrefix}_data.json`)
-
+    const jsonBackupFile = selectedBackup.dataPath
     if (!existsSync(jsonBackupFile)) {
       console.log("❌ JSON backup file not found")
       return

@@ -16,6 +16,7 @@ export default [
     route("contact-us", "routes/contact-us.tsx"),
     route("subscribe", "routes/subscribe.tsx"),
     route("subscribe-success", "routes/subscribe-success.tsx"),
+    route("scent-quiz", "routes/onboarding/scent-quiz.tsx"),
     // Handle .well-known paths (e.g., Chrome DevTools requests)
     route(".well-known/*", "routes/.well-known.$.tsx"),
     // API ROUTES

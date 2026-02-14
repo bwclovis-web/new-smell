@@ -1,0 +1,15 @@
+---
+description: Never delete or drop user or application data
+alwaysApply: true
+---
+
+# Do Not Delete Any Data
+
+**Hard constraint:** Do not delete any data in this project.
+
+- Do not suggest or implement changes that delete rows, truncate tables, or drop columns that remove stored data.
+- Do not run or suggest migrations that drop data (e.g. dropping a column with data, truncating tables).
+- Do not clear or overwrite user content without explicit backup or safety (e.g. user preferences, profiles, reviews, collections).
+- Safe operations are fine: adding columns, new tables, regenerating code (e.g. `prisma generate`), and changing UI/logic that only affects how existing data is displayed or updated.
+
+When in doubt, prefer additive or backward-compatible changes over removing or dropping data.

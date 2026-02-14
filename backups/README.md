@@ -36,6 +36,17 @@ node scripts/backup-database-prisma.js
 node scripts/backup-database.js
 ```
 
+### Pull production to local
+
+Copy production data into your local database in one step (no manual backup/restore):
+
+```bash
+# Requires in .env: REMOTE_DATABASE_URL (production), LOCAL_DATABASE_URL (or DATABASE_URL)
+npm run db:pull:production
+```
+
+This **clears and replaces** the same tables in your local DB. Backup locally first if needed: `npm run db:backup`.
+
 ### Restoring from Backup
 
 ```bash

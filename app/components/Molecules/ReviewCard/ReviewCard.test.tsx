@@ -61,23 +61,15 @@ describe("ReviewCard", () => {
   }
 
   beforeEach(() => {
-    // Create the modal portal element
-    const portalElement = document.createElement("div")
-    portalElement.setAttribute("id", "modal-portal")
-    document.body.appendChild(portalElement)
-    
-    // Reset sessionStore state
+    const portal = document.createElement("div")
+    portal.setAttribute("id", "modal-portal")
+    document.body.appendChild(portal)
     useSessionStore.getState().closeModal()
   })
 
   afterEach(() => {
     cleanup()
-    // Clean up modal portal
-    const portalElement = document.getElementById("modal-portal")
-    if (portalElement) {
-      document.body.removeChild(portalElement)
-    }
-    // Reset sessionStore state
+    document.getElementById("modal-portal")?.remove()
     useSessionStore.getState().closeModal()
   })
 
@@ -247,23 +239,16 @@ describe("ReviewCard", () => {
     })
 
     it("calls onDelete with review id when delete is clicked", async () => {
-      const user = userEvent.setup()
       const onDelete = vi.fn()
       render(<ReviewCard review={mockReview} currentUserId="user-1" onDelete={onDelete} />)
 
       const deleteButton = screen.getByRole("button", { name: /delete/i })
-      await user.click(deleteButton)
+      deleteButton.click()
 
-      // Wait for modal to appear
-      await waitFor(() => {
-        expect(screen.getByText("Delete Review")).toBeInTheDocument()
-      })
+      // Modal opens; confirm delete via DangerModal "Remove" button
+      const removeButton = await screen.findByRole("button", { name: /remove/i })
+      removeButton.click()
 
-      // Click the Remove button in the DangerModal
-      const removeButton = screen.getByRole("button", { name: /remove/i })
-      await user.click(removeButton)
-
-      // Verify onDelete was called
       expect(onDelete).toHaveBeenCalledWith("review-1")
       expect(onDelete).toHaveBeenCalledTimes(1)
     })
