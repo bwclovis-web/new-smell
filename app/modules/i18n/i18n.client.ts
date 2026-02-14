@@ -10,7 +10,7 @@ if (!i18n.isInitialized) {
     .use(initReactI18next)
     .init({
       fallbackLng: "en",
-      supportedLngs: ["en", "es"],
+      supportedLngs: ["en", "es", "fr", "it"],
       debug: false,
       load: "languageOnly",
       defaultNS: "translation",

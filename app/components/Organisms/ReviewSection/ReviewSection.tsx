@@ -307,7 +307,6 @@ fetchLimit, perfumeId, t, updateReviewsState
   }
 
   const handleDeleteReview = async (reviewId: string, isUserReview = false) => {
-
     try {
       const formData = new FormData()
       formData.append("_action", "delete")

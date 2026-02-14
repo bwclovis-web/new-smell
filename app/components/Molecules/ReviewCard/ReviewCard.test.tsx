@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from "@testing-library/react"
+import { cleanup, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
@@ -28,6 +28,23 @@ vi.mock("date-fns", () => ({
   }),
 }))
 
+// Mock react-i18next
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+      const translations: Record<string, string> = {
+        "common.edit": "Edit",
+        "common.delete": "Delete",
+        "common.approve": "Approve",
+        "common.reject": "Reject",
+        "singlePerfume.review.dangerModal.heading": "Delete Review",
+        "singlePerfume.review.dangerModal.description": "Are you sure you want to delete this review?",
+      }
+      return translations[key] || key
+    },
+  }),
+}))
+
 describe("ReviewCard", () => {
   const mockReview = {
     id: "review-1",
@@ -53,6 +70,7 @@ describe("ReviewCard", () => {
   afterEach(() => {
     cleanup()
     document.getElementById("modal-portal")?.remove()
+    useSessionStore.getState().closeModal()
   })
 
   describe("Rendering", () => {
@@ -508,7 +526,7 @@ describe("ReviewCard", () => {
       render(<ReviewCard review={mockReview} currentUserId="user-1" onDelete={onDelete} />)
 
       const deleteButton = screen.getByRole("button", { name: /delete/i })
-      // Delete button uses Button with background="red" (bg-red-600, hover:bg-red-700)
+      // Button component with background="red" applies hover:bg-red-700
       expect(deleteButton).toHaveClass("hover:bg-red-700")
     })
 

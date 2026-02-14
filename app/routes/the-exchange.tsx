@@ -20,7 +20,7 @@ import banner from "../images/exchange.webp"
 export const ROUTE_PATH = "/the-exchange"
 
 const PAGE_SIZE = 16
-
+ 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url)
   const pageParam = parseInt(url.searchParams.get("pg") || "1", 10)

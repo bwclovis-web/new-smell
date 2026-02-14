@@ -1,4 +1,3 @@
-import { SubscriptionStatus } from "@prisma/client"
 import { getFormProps, useForm } from "@conform-to/react"
 import { getZodConstraint, parseWithZod } from "@conform-to/zod"
 import type { ChangeEvent } from "react"
@@ -101,7 +100,7 @@ export const action = async ({ request, context }: ActionFunctionArgs) => {
       sessionEmail === formEmail
     ) {
       const user = await createUser(formData, {
-        subscriptionStatus: SubscriptionStatus.paid,
+        subscriptionStatus: "paid",
         isEarlyAdopter: false,
       })
       return await login({ context: {} as any, userId: user.id })

@@ -14,6 +14,11 @@ import {
   generateCorrelationId,
   setCorrelationId,
 } from "~/utils/correlationId.server"
+import {
+  createCSRFCookie,
+  generateCSRFToken,
+  getCSRFTokenFromCookies,
+} from "~/utils/server/csrf.server"
 
 export const streamTimeout = 5_000
 
@@ -34,6 +39,17 @@ export default function handleRequest(
 
   // Add correlation ID to response headers so clients can reference it
   responseHeaders.set("X-Correlation-ID", correlationId)
+
+  // Ensure CSRF cookie exists (double-submit pattern).
+  // In dev the Express middleware handles this, but on Vercel the
+  // @vercel/react-router serverless handler bypasses Express entirely,
+  // so we set it here to cover all deployment targets.
+  if (!getCSRFTokenFromCookies(request)) {
+    responseHeaders.append(
+      "Set-Cookie",
+      createCSRFCookie(generateCSRFToken()),
+    )
+  }
 
   return new Promise((resolve, reject) => {
     const language = (loadContext as any).i18n?.language ?? "en"
