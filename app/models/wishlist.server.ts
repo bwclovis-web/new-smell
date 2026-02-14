@@ -1,4 +1,5 @@
 import { prisma } from "~/db.server"
+import { updateScentProfileFromBehavior } from "~/models/scent-profile.server"
 
 export const addToWishlist = async (
   userId: string,
@@ -23,6 +24,11 @@ export const addToWishlist = async (
       perfumeId,
       isPublic,
     },
+  })
+
+  await updateScentProfileFromBehavior(userId, {
+    type: "wishlist",
+    perfumeId,
   })
 
   return { success: true, data: wishlistItem }
@@ -53,6 +59,13 @@ export const updateWishlistVisibility = async (
       isPublic,
     },
   })
+
+  if (updated.count > 0) {
+    await updateScentProfileFromBehavior(userId, {
+      type: "wishlist",
+      perfumeId,
+    })
+  }
 
   return { success: true, data: updated }
 }

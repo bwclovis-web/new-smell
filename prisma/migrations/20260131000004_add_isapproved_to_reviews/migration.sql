@@ -30,9 +30,9 @@ BEGIN
     -- Check for duplicates
     SELECT COUNT(*) INTO duplicate_count
     FROM (
-        SELECT userId, perfumeId, COUNT(*) as cnt
+        SELECT "userId", "perfumeId", COUNT(*) as cnt
         FROM "UserPerfumeReview"
-        GROUP BY userId, perfumeId
+        GROUP BY "userId", "perfumeId"
         HAVING COUNT(*) > 1
     ) duplicates;
     

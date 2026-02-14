@@ -321,7 +321,7 @@ model ScentProfile {
   noteWeights         Json     // { noteId: number }
   avoidNoteIds        Json     // string[]
   preferredPriceRange Json?    // { min?: number, max?: number }
-  seasonHint          String?  // "summer" | "winter" | "all" | null
+  seasonHint          String?  // comma-separated: "spring", "summer,fall", etc.
   browsingStyle       String?  // "explorer" | "focused" | "trader"
   lastQuizAt          DateTime?
   createdAt           DateTime @default(now())

@@ -1,5 +1,6 @@
 import { SubscriptionStatus } from "@prisma/client"
 import { prisma } from "~/db.server"
+import { updateScentProfileFromBehavior } from "~/models/scent-profile.server"
 import { invalidateAllSessions } from "~/models/session.server"
 import { assertValid, validationError } from "~/utils/errorHandling.patterns"
 import {
@@ -428,6 +429,11 @@ export const addUserPerfume = async ({
       },
     })
 
+    await updateScentProfileFromBehavior(userId, {
+      type: "collection",
+      perfumeId,
+    })
+
     return { success: true, userPerfume }
   } catch (error) {
      
@@ -529,6 +535,11 @@ export const createDestashEntry = async ({
           },
         },
       },
+    })
+
+    await updateScentProfileFromBehavior(userId, {
+      type: "collection",
+      perfumeId,
     })
 
     return { success: true, userPerfume }

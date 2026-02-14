@@ -1,4 +1,5 @@
 import { prisma } from "~/db.server"
+import { updateScentProfileFromBehavior } from "~/models/scent-profile.server"
 
 export async function createPerfumeRating(data: {
   userId: string
@@ -21,6 +22,14 @@ export async function createPerfumeRating(data: {
     },
   })
 
+  if (rating.overall != null) {
+    await updateScentProfileFromBehavior(data.userId, {
+      type: "rating",
+      perfumeId: data.perfumeId,
+      overall: rating.overall,
+    })
+  }
+
   return rating
 }
 
@@ -38,6 +47,14 @@ export async function updatePerfumeRating(
     where: { id: ratingId },
     data: updates,
   })
+
+  if (updatedRating.overall != null) {
+    await updateScentProfileFromBehavior(updatedRating.userId, {
+      type: "rating",
+      perfumeId: updatedRating.perfumeId,
+      overall: updatedRating.overall,
+    })
+  }
 
   return updatedRating
 }

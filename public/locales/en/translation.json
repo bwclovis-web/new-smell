@@ -567,11 +567,16 @@
     "notFound": "User profile not found",
     "updateProfile": "Update Profile",
     "profileUpdatedSuccessfully": "Profile updated successfully!",
+    "scentPreferencesHint": "Personalize perfume recommendations",
+    "scentQuizLink": "Scent preferences quiz",
     "navigation": {
       "wishlist": "My Wishlist",
       "myScents": "My Scents",
       "changePassword": "Change Password"
     }
+  },
+  "recommendations": {
+    "recommendedForYou": "Recommended for you"
   },
   "singleHouse": {
     "meta": {
@@ -601,6 +606,7 @@
       "title": "Perfume Details - Shadow and Sillage",
       "description": "Discover the details of a specific perfume."
     },
+    "similarPerfumes": "Similar perfumes",
     "subheading": "By: ",
     "notes": {
       "opening": "Opening Notes",

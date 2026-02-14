@@ -58,7 +58,7 @@ model ScentProfile {
   noteWeights         Json     // { noteId: number }
   avoidNoteIds        Json     // string[]
   preferredPriceRange Json?    // { min?: number, max?: number }
-  seasonHint          String?  // "summer" | "winter" | "all" | null
+  seasonHint          String?  // comma-separated seasons: "spring", "summer,fall", etc.
   browsingStyle       String?  // "explorer" | "focused" | "trader"
   lastQuizAt          DateTime?
   createdAt           DateTime @default(now())
@@ -83,54 +83,54 @@ ScentProfile  ScentProfile?
 - [x] Add `ScentProfile` model to `prisma/schema.prisma`
 - [x] Add `ScentProfile` relation to `User` model
 - [ ] Run `npx prisma migrate dev --name add_scent_profile`
-- [ ] Create `app/models/scent-profile.server.ts` with:
-  - [ ] `getOrCreateScentProfile(userId)` – returns existing or empty profile
-  - [ ] `updateScentProfileFromQuiz(userId, quizData)` – persist quiz answers
-  - [ ] `updateScentProfileFromBehavior(userId, event)` – evolve from rating/wishlist/collection
+- [x] Create `app/models/scent-profile.server.ts` with:
+  - [x] `getOrCreateScentProfile(userId)` – returns existing or empty profile
+  - [x] `updateScentProfileFromQuiz(userId, quizData)` – persist quiz answers
+  - [x] `updateScentProfileFromBehavior(userId, event)` – evolve from rating/wishlist/collection
 
 ### Phase 2: Optional Onboarding Quiz
 
-- [ ] Create route `app/routes/onboarding/scent-quiz.tsx` (or `scent-quiz.tsx` under onboarding)
+- [x] Create route `app/routes/onboarding/scent-quiz.tsx` (or `scent-quiz.tsx` under onboarding)
 - [ ] Add quiz entry point in UI (e.g., banner on homepage, link in profile/settings)
-- [ ] Implement 5–7 quiz screens:
-  - [ ] Note preferences (pick 3–5 liked families: floral, woody, citrus, oriental, fresh, spicy, gourmand)
-  - [ ] Avoid notes (optional multi-select)
-  - [ ] Budget / price range (optional)
-  - [ ] Season preference (optional: summer, winter, all)
-  - [ ] Browsing style (optional: explorer, focused, trader)
-- [ ] Add "Skip quiz" option on first screen and allow access later from settings
-- [ ] Store quiz results via `updateScentProfileFromQuiz`
-- [ ] Add route to `app/routes.ts`
+- [x] Implement 5–7 quiz screens:
+  - [x] Note preferences (pick 3–5 liked families: floral, woody, citrus, oriental, fresh, spicy, gourmand)
+  - [x] Avoid notes (optional multi-select)
+  - [x] Budget / price range (optional)
+  - [x] Season preference (optional: summer, winter, all)
+  - [x] Browsing style (optional: explorer, focused, trader)
+- [x] Add "Skip quiz" option on first screen and allow access later from settings
+- [x] Store quiz results via `updateScentProfileFromQuiz`
+- [x] Add route to `app/routes.ts`
 
 ### Phase 3: Profile Evolution (Behavior-Based)
 
-- [ ] Hook into rating submit: when `UserPerfumeRating` created/updated:
-  - [ ] If overall >= 4: increment `noteWeights` for that perfume's notes (from `PerfumeNoteRelation`)
-  - [ ] If overall <= 2: add notes to `avoidNoteIds` (or decrement weights)
-- [ ] Hook into wishlist add: when `UserPerfumeWishlist` created:
-  - [ ] Increment `noteWeights` for that perfume's notes
-- [ ] Hook into collection add: when `UserPerfume` created:
-  - [ ] Increment `noteWeights` for that perfume's notes
-- [ ] Ensure `getOrCreateScentProfile` creates an empty profile for users with no quiz (so evolution can still populate it)
+- [x] Hook into rating submit: when `UserPerfumeRating` created/updated:
+  - [x] If overall >= 4: increment `noteWeights` for that perfume's notes (from `PerfumeNoteRelation`)
+  - [x] If overall <= 2: add notes to `avoidNoteIds` (or decrement weights)
+- [x] Hook into wishlist add: when `UserPerfumeWishlist` created/updated:
+  - [x] Increment `noteWeights` for that perfume's notes
+- [x] Hook into collection add: when `UserPerfume` created:
+  - [x] Increment `noteWeights` for that perfume's notes
+- [x] Ensure `getOrCreateScentProfile` creates an empty profile for users with no quiz (so evolution can still populate it)
 
 ### Phase 4: Recommendation Service
 
-- [ ] Create `app/services/recommendations/` (or `app/utils/recommendations.server.ts`)
-- [ ] Implement `getSimilarPerfumes(perfumeId, limit)`:
-  - [ ] Get note IDs for perfume from `PerfumeNoteRelation`
-  - [ ] Find other perfumes with most note overlap, exclude source perfume
-  - [ ] Order by overlap count, return top N
-- [ ] Implement `getPersonalizedForUser(userId, limit)`:
-  - [ ] Load `ScentProfile` (or create empty)
-  - [ ] If profile has `noteWeights`: find perfumes with notes in preferred set, weighted by overlap
-  - [ ] Exclude perfumes with notes in `avoidNoteIds`
+- [x] Create `app/services/recommendations/` (or `app/utils/recommendations.server.ts`)
+- [x] Implement `getSimilarPerfumes(perfumeId, limit)`:
+  - [x] Get note IDs for perfume from `PerfumeNoteRelation`
+  - [x] Find other perfumes with most note overlap, exclude source perfume
+  - [x] Order by overlap count, return top N
+- [x] Implement `getPersonalizedForUser(userId, limit)`:
+  - [x] Load `ScentProfile` (or create empty)
+  - [x] If profile has `noteWeights`: find perfumes with notes in preferred set, weighted by overlap
+  - [x] Exclude perfumes with notes in `avoidNoteIds`
   - [ ] Apply `preferredPriceRange` filter if set
-  - [ ] If no profile data: return popular/trending perfumes as fallback
+  - [x] If no profile data: return popular/trending perfumes as fallback
 
 ### Phase 5: UI Integration
 
-- [ ] Add "Similar perfumes" block to perfume detail page (`app/routes/perfume.tsx`)
-- [ ] Add "Recommended for you" section to homepage or dashboard (if applicable)
+- [x] Add "Similar perfumes" block to perfume detail page (`app/routes/perfume.tsx`)
+- [x] Add "Recommended for you" section to homepage or dashboard (if applicable)
 - [ ] Add link to retake or complete quiz in user profile/settings
 - [ ] Ensure recommendations gracefully handle users with no profile data (fallback)
 

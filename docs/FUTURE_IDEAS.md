@@ -52,10 +52,10 @@ A forward-looking list of enhancements and product ideas to improve customer sat
 ### Implementation checklist
 
 **Customer experience**
-- [ ] Personalized scent profiles (onboarding quiz + evolving taste model)
-- [ ] Smart recommendations (notes, seasons, community ratings)
+- [x] Personalized scent profiles (onboarding quiz + evolving taste model)
+- [x] Smart recommendations (notes, seasons, community ratings)
 - [ ] Compare perfumes side-by-side (notes, longevity, sillage, reviews)
-- [ ] “Because you liked…” suggestions with similarity score
+- [x] "Because you liked…" suggestions with similarity score
 - [ ] Advanced filters (notes, house, price, availability, trade/swap, season)
 - [ ] Saved searches and alerts for rare/limited releases
 

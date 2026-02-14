@@ -28,6 +28,7 @@
     "db:backup:pg": "node scripts/backup-database.js",
     "db:restore": "node scripts/restore-database-prisma.js",
     "db:restore:list": "node scripts/restore-database-prisma.js --list",
+    "db:pull:production": "node scripts/pull-production-to-local.js",
     "db:restore:pg": "node scripts/restore-database.js",
     "db:restore:pg:list": "node scripts/restore-database.js --list",
     "import:csv": "tsx scripts/import-csv.ts",
