@@ -1,5 +1,8 @@
 import { prisma } from "~/db.server"
-import { getOrCreateScentProfile } from "~/models/scent-profile.server"
+import {
+  getNoteIdsForPerfume,
+  getOrCreateScentProfile,
+} from "~/models/scent-profile.server"
 import type { RecommendationPerfume, RecommendationService } from "./types"
 
 const PERFUME_SELECT = {
@@ -41,14 +44,6 @@ function toRecommendationPerfume(p: PerfumeRow): RecommendationPerfume {
     image: p.image,
     perfumeHouse: p.perfumeHouse,
   }
-}
-
-async function getNoteIdsForPerfume(perfumeId: string): Promise<string[]> {
-  const relations = await prisma.perfumeNoteRelation.findMany({
-    where: { perfumeId },
-    select: { noteId: true },
-  })
-  return [...new Set(relations.map(r => r.noteId))]
 }
 
 /**

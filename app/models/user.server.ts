@@ -429,10 +429,15 @@ export const addUserPerfume = async ({
       },
     })
 
-    await updateScentProfileFromBehavior(userId, {
-      type: "collection",
-      perfumeId,
-    })
+    try {
+      await updateScentProfileFromBehavior(userId, {
+        type: "collection",
+        perfumeId,
+      })
+    } catch (error) {
+      console.error("Error updating scent profile from behavior:", error)
+      // Don't fail the operation if scent profile update fails
+    }
 
     return { success: true, userPerfume }
   } catch (error) {
@@ -537,10 +542,15 @@ export const createDestashEntry = async ({
       },
     })
 
-    await updateScentProfileFromBehavior(userId, {
-      type: "collection",
-      perfumeId,
-    })
+    try {
+      await updateScentProfileFromBehavior(userId, {
+        type: "collection",
+        perfumeId,
+      })
+    } catch (error) {
+      console.error("Error updating scent profile from behavior:", error)
+      // Don't fail the operation if scent profile update fails
+    }
 
     return { success: true, userPerfume }
   } catch (error) {

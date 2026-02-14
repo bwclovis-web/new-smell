@@ -49,14 +49,19 @@ export const loader = withLoaderErrorHandling(
     const perfume = assertExists(perfumeOrNull, "Perfume", { perfumeSlug })
     const user = session?.user ?? null
 
-    // Single batched call: ratings, reviews, and user-specific data (wishlist, rating, review)
+    // Critical payload must succeed; similar perfumes are non-blocking (new recommendation service)
     const [payload, similarPerfumes] = await Promise.all([
       getPerfumeDetailPayload(
         perfume.id,
         session?.userId ?? null,
         REVIEWS_PAGE_SIZE
       ),
-      rulesRecommendationService.getSimilarPerfumes(perfume.id, SIMILAR_PERFUMES_LIMIT),
+      rulesRecommendationService
+        .getSimilarPerfumes(perfume.id, SIMILAR_PERFUMES_LIMIT)
+        .catch((err) => {
+          console.warn("[perfume] getSimilarPerfumes failed, showing none:", err?.message ?? err)
+          return []
+        }),
     ])
 
     return {

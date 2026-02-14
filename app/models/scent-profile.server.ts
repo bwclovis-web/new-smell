@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client"
 import { prisma } from "~/db.server"
 
 /** Empty profile shape for new users (no quiz, no behavior yet). */
@@ -23,8 +24,8 @@ export type ScentProfileBehaviorEvent =
 /** Weight delta applied per note when user likes a perfume (rating ≥4, wishlist, collection). */
 const BEHAVIOR_WEIGHT_DELTA = 1
 
-/** Get note IDs for a perfume from PerfumeNoteRelation. */
-async function getNoteIdsForPerfume(perfumeId: string): Promise<string[]> {
+/** Get note IDs for a perfume from PerfumeNoteRelation. Shared by scent profile and recommendations. */
+export async function getNoteIdsForPerfume(perfumeId: string): Promise<string[]> {
   const relations = await prisma.perfumeNoteRelation.findMany({
     where: { perfumeId },
     select: { noteId: true },
@@ -35,6 +36,8 @@ async function getNoteIdsForPerfume(perfumeId: string): Promise<string[]> {
 /**
  * Returns the user's ScentProfile, or creates an empty one if none exists.
  * Use this so behavior-based evolution can run for users who skipped the quiz.
+ * Handles concurrent create: on unique-constraint (P2002), fetches the profile
+ * created by the other request instead of throwing.
  */
 export async function getOrCreateScentProfile(userId: string) {
   if (!prisma.scentProfile) {
@@ -47,17 +50,28 @@ export async function getOrCreateScentProfile(userId: string) {
   })
   if (existing) return existing
 
-  return prisma.scentProfile.create({
-    data: {
-      userId,
-      noteWeights: EMPTY_NOTE_WEIGHTS as object,
-      avoidNoteIds: EMPTY_AVOID_IDS as string[],
-      preferredPriceRange: null,
-      seasonHint: null,
-      browsingStyle: null,
-      lastQuizAt: null,
-    },
-  })
+  try {
+    return await prisma.scentProfile.create({
+      data: {
+        userId,
+        noteWeights: EMPTY_NOTE_WEIGHTS as object,
+        avoidNoteIds: EMPTY_AVOID_IDS as string[],
+        preferredPriceRange: Prisma.JsonNull,
+        seasonHint: null,
+        browsingStyle: null,
+        lastQuizAt: null,
+      },
+    })
+  } catch (err: unknown) {
+    const code = err && typeof err === "object" && "code" in err ? (err as { code: string }).code : undefined
+    if (code === "P2002") {
+      const created = await prisma.scentProfile.findUnique({
+        where: { userId },
+      })
+      if (created) return created
+    }
+    throw err
+  }
 }
 
 /**
@@ -101,7 +115,7 @@ export async function updateScentProfileFromQuiz(
           ? (quizData.preferredPriceRange as object)
           : (profile.preferredPriceRange as object),
       seasonHint:
-        quizData.seasonHints !== undefined
+        Array.isArray(quizData.seasonHints)
           ? quizData.seasonHints.length > 0
             ? quizData.seasonHints.join(",")
             : null
@@ -117,6 +131,9 @@ export async function updateScentProfileFromQuiz(
  * - rating (overall ≥4): increment noteWeights for the perfume's notes
  * - rating (overall ≤2): add the perfume's notes to avoidNoteIds
  * - wishlist / collection: increment noteWeights for the perfume's notes
+ *
+ * Uses a transaction with SELECT FOR UPDATE so concurrent updates do not
+ * overwrite each other (no lost updates on noteWeights/avoidNoteIds).
  */
 export async function updateScentProfileFromBehavior(
   userId: string,
@@ -125,32 +142,70 @@ export async function updateScentProfileFromBehavior(
   const noteIds = await getNoteIdsForPerfume(event.perfumeId)
   if (noteIds.length === 0) return getOrCreateScentProfile(userId)
 
-  const profile = await getOrCreateScentProfile(userId)
-  const weights = { ...(profile.noteWeights as Record<string, number>) }
-  let avoidIds = [...(profile.avoidNoteIds as string[])]
+  return prisma.$transaction(async (tx) => {
+    type LockedRow = {
+      id: string
+      userId: string
+      noteWeights: unknown
+      avoidNoteIds: unknown
+    }
+    let rows = await tx.$queryRaw<LockedRow[]>`
+      SELECT id, "userId", "noteWeights", "avoidNoteIds"
+      FROM "ScentProfile"
+      WHERE "userId" = ${userId}
+      FOR UPDATE
+    `
+    if (rows.length === 0) {
+      try {
+        await tx.scentProfile.create({
+          data: {
+            userId,
+            noteWeights: EMPTY_NOTE_WEIGHTS as object,
+            avoidNoteIds: EMPTY_AVOID_IDS as string[],
+            preferredPriceRange: Prisma.JsonNull,
+            seasonHint: null,
+            browsingStyle: null,
+            lastQuizAt: null,
+          },
+        })
+      } catch (err: unknown) {
+        const code = err && typeof err === "object" && "code" in err ? (err as { code: string }).code : undefined
+        if (code !== "P2002") throw err
+      }
+      rows = await tx.$queryRaw<LockedRow[]>`
+        SELECT id, "userId", "noteWeights", "avoidNoteIds"
+        FROM "ScentProfile"
+        WHERE "userId" = ${userId}
+        FOR UPDATE
+      `
+      if (rows.length === 0) throw new Error("ScentProfile get-or-create failed under transaction")
+    }
+    const row = rows[0]!
+    const weights = { ...((row.noteWeights as Record<string, number>) ?? {}) }
+    let avoidIds = [...((row.avoidNoteIds as string[]) ?? [])]
 
-  if (event.type === "rating") {
-    if (event.overall >= 4) {
+    if (event.type === "rating") {
+      if (event.overall >= 4) {
+        for (const noteId of noteIds) {
+          weights[noteId] = (weights[noteId] ?? 0) + BEHAVIOR_WEIGHT_DELTA
+        }
+      } else if (event.overall <= 2) {
+        for (const noteId of noteIds) {
+          if (!avoidIds.includes(noteId)) avoidIds.push(noteId)
+        }
+      }
+    } else {
       for (const noteId of noteIds) {
         weights[noteId] = (weights[noteId] ?? 0) + BEHAVIOR_WEIGHT_DELTA
       }
-    } else if (event.overall <= 2) {
-      for (const noteId of noteIds) {
-        if (!avoidIds.includes(noteId)) avoidIds.push(noteId)
-      }
     }
-  } else {
-    // wishlist or collection: treat as positive signal
-    for (const noteId of noteIds) {
-      weights[noteId] = (weights[noteId] ?? 0) + BEHAVIOR_WEIGHT_DELTA
-    }
-  }
 
-  return prisma.scentProfile.update({
-    where: { id: profile.id },
-    data: {
-      noteWeights: weights as object,
-      avoidNoteIds: avoidIds as string[],
-    },
+    return tx.scentProfile.update({
+      where: { id: row.id },
+      data: {
+        noteWeights: weights as object,
+        avoidNoteIds: avoidIds as string[],
+      },
+    })
   })
 }

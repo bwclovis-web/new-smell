@@ -49,6 +49,7 @@ const ReviewCard = ({
   const canDelete = isOwner || canModerate
   const { modalOpen, modalId, toggleModal } = useSessionStore()
   const removeButtonRef = useRef<HTMLButtonElement>(null)
+  const deleteModalId = `delete-review-item-${review.id}`
   const getDisplayName = () => {
     if (review.user.username) {
       return review.user.username
@@ -73,7 +74,7 @@ const ReviewCard = ({
 
   return (
     <>
-    {modalOpen && modalId && onDelete && modalId === "delete-review-item" && (
+    {modalOpen && modalId && onDelete && modalId === deleteModalId && (
       <Modal innerType="dark" animateStart="top">
         <DangerModal
           heading={t("singlePerfume.review.dangerModal.heading")}
@@ -121,7 +122,7 @@ const ReviewCard = ({
             )}
             {canDelete && onDelete && (
               <Button
-                onClick={() => toggleModal(removeButtonRef, "delete-review-item")}
+                onClick={() => toggleModal(removeButtonRef, deleteModalId)}
                 variant="icon"
                 background="red"
                 size="sm"

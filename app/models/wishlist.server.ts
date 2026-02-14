@@ -26,10 +26,15 @@ export const addToWishlist = async (
     },
   })
 
-  await updateScentProfileFromBehavior(userId, {
-    type: "wishlist",
-    perfumeId,
-  })
+  try {
+    await updateScentProfileFromBehavior(userId, {
+      type: "wishlist",
+      perfumeId,
+    })
+  } catch (error) {
+    console.error("Error updating scent profile from behavior:", error)
+    // Don't fail the operation if scent profile update fails
+  }
 
   return { success: true, data: wishlistItem }
 }
@@ -60,13 +65,8 @@ export const updateWishlistVisibility = async (
     },
   })
 
-  if (updated.count > 0) {
-    await updateScentProfileFromBehavior(userId, {
-      type: "wishlist",
-      perfumeId,
-    })
-  }
-
+  // Do not update scent profile here: visibility is a privacy toggle, not a
+  // new preference signal. Only addToWishlist should feed the scent profile.
   return { success: true, data: updated }
 }
 

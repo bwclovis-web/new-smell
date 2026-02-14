@@ -60,10 +60,17 @@ export const loader = withLoaderErrorHandling(
       console.warn("UserAlert tables not available:", error)
     }
 
-    const recommendedPerfumes = await rulesRecommendationService.getPersonalizedForUser(
-      user.id,
-      6
-    )
+    // Recommendations are supplementary - guard against ScentProfile/DB unavailability
+    let recommendedPerfumes: Awaited<
+      ReturnType<typeof rulesRecommendationService.getPersonalizedForUser>
+    > = []
+    try {
+      recommendedPerfumes =
+        await rulesRecommendationService.getPersonalizedForUser(user.id, 6)
+    } catch (error) {
+      // ScentProfile or related tables may not exist - page still loads without recommendations
+      console.warn("Recommendations not available:", error)
+    }
 
     return {
       user,
