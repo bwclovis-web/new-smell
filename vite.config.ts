@@ -115,14 +115,16 @@ export default defineConfig({
       ],
     },
     cors: true,
-    // Pre-transform frequently requested files for faster initial load
-    warmup: {
-      clientFiles: [
-        "./app/root.tsx",
-        "./app/routes/RootLayout.tsx",
-        "./app/routes/home.tsx",
-      ],
-    },
+    // Warmup disabled: pre-transform was causing React Refresh preamble to be
+    // applied twice to some modules (AlertItem, Performance loaders), leading
+    // to "RefreshRuntime has already been declared" errors.
+    // warmup: {
+    //   clientFiles: [
+    //     "./app/root.tsx",
+    //     "./app/routes/RootLayout.tsx",
+    //     "./app/routes/home.tsx",
+    //   ],
+    // },
   },
   css: {
     devSourcemap: isDev, // Only in development
@@ -202,6 +204,8 @@ export default defineConfig({
   optimizeDeps: {
     esbuildOptions: {
       target: "es2022",
+      jsx: "automatic",
+      jsxDev: isDev,
     },
     // Force re-bundling only when dependencies change (speeds up subsequent starts)
     force: false,

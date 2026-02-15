@@ -71,24 +71,15 @@ if (process.env.NODE_ENV !== "production") {
   const startTime = Date.now()
   
   viteDevServerPromise = import("vite").then(async vite => {
-    // Import the config file directly to preserve plugin virtual modules
-    // This ensures React Router's HMR runtime virtual module is properly registered
+    // Let Vite load the config file once to avoid duplicating plugin transforms.
     try {
       const configPath = path.join(process.cwd(), "vite.config.ts")
-      const configUrl = pathToFileURL(configPath).href
-      const configModule = await import(configUrl)
-      const userConfig = configModule.default || {}
-      
-      // Only override server settings for middleware mode
-      // Keep all plugins intact so virtual modules work correctly
       return vite.createServer({
-        ...userConfig,
         root: process.cwd(),
+        configFile: configPath,
         server: {
-          ...(userConfig.server || {}),
           middlewareMode: true,
-          // Preserve HMR settings from config
-          hmr: userConfig.server?.hmr || {
+          hmr: {
             port: 24680,
             overlay: false,
             protocol: "ws",
