@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "react-router"
 import { Form, Link, useActionData, useLoaderData } from "react-router"
 
-import { Button } from "~/components/Atoms/Button/Button"
+import { Button, VooDooLink } from "~/components/Atoms/Button/Button"
 import CheckBox from "~/components/Atoms/CheckBox/CheckBox"
 import { CSRFToken } from "~/components/Molecules/CSRFToken"
 import TitleBanner from "~/components/Organisms/TitleBanner/TitleBanner"
@@ -14,7 +14,7 @@ import { getAllTags } from "~/models/tags.server"
 import { sharedLoader } from "~/utils/sharedLoader"
 
 import banner from "~/images/scent.webp"
-
+import { useTranslation } from "react-i18next"
 export const ROUTE_PATH = "/scent-quiz"
 
 const STEPS = [
@@ -69,6 +69,11 @@ export const meta: MetaFunction = () => [
       "Tell us your scent preferences so we can recommend perfumes you'll love.",
   },
 ]
+
+/** Disable cache so note list always reflects current DB (e.g. after clean:notes). */
+export function headers() {
+  return { "Cache-Control": "no-store" }
+}
 
 const VALID_SEASONS = ["spring", "summer", "fall", "winter"] as const
 type SeasonId = (typeof VALID_SEASONS)[number]
@@ -184,6 +189,7 @@ export default function ScentQuizPage() {
   const [selectedSeasonIds, setSelectedSeasonIds] = useState<Set<string>>(
     () => new Set(initialSeasonIds ?? [])
   )
+  const {t} = useTranslation()
   const [browsingStyle, setBrowsingStyle] = useState<
     "explorer" | "focused" | "trader" | ""
   >(initialBrowsingStyle as "explorer" | "focused" | "trader" | "" || "")
@@ -238,181 +244,163 @@ export default function ScentQuizPage() {
   if (actionData?.success) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-12 text-center">
-        <TitleBanner image={banner} heading="You're all set!" />
-        <p className="mt-6 text-lg text-stone-300">
-          We'll use your preferences to recommend perfumes you'll love.
+        <TitleBanner image={banner} heading={t("quiz.success.heading", "You're all set!")} />
+        <p className="mt-6 text-lg text-noir-gold-500">
+            {t("quiz.success.subheading", "We'll use your preferences to recommend perfumes you'll love.")}
         </p>
-        <Button asChild variant="primary" className="mt-8">
-          <Link to="/">Go to home</Link>
+        <Button variant="primary" className="mt-8">
+          <Link to="/">{t("quiz.success.cta", "Go to home")}</Link>
         </Button>
       </div>
     )
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
+    <section>
       <TitleBanner
         image={banner}
         heading="Scent quiz"
         subheading="Help us personalize your experience (optional)"
       />
 
-      {step === "welcome" && (
-        <div className="mt-8 space-y-6">
-          <p className="text-stone-300">
-            Answer a few quick questions about the notes and styles you like.
-            You can skip this and we'll learn from your ratings and collection
-            instead.
-          </p>
-          <div className="flex flex-wrap gap-4">
-            <Button asChild variant="primary">
-              <Link to={stepUrl("note-preferences", stepParams)}>Start quiz</Link>
-            </Button>
-            <Button asChild variant="secondary">
-              <Link to="/">Skip for now</Link>
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {step === "note-preferences" && (
-        <div className="mt-8">
-          <p className="mb-4 text-stone-300">
-            Pick 3–{MAX_NOTE_SELECTIONS} note families you like (e.g. floral,
-            woody, citrus).
-          </p>
-          <div className="flex max-h-80 flex-wrap gap-3 overflow-y-auto rounded border border-stone-600 bg-stone-800/50 p-4">
-            {notes.map((note) => (
-              <CheckBox
-                key={note.id}
-                label={note.name}
-                checked={selectedNoteIds.has(note.id)}
-                onChange={() => toggleNote(note.id, false)}
-              />
-            ))}
-          </div>
-          <p className="mt-2 text-sm text-stone-400">
-            Selected: {selectedNoteIds.size} / {MAX_NOTE_SELECTIONS}
-          </p>
-          <div className="mt-6 flex gap-4">
-            <Button asChild variant="secondary">
-              <Link to={stepUrl("welcome", stepParams)}>Back</Link>
-            </Button>
-            {selectedNoteIds.size >= MIN_NOTE_SELECTIONS ? (
-              <Button asChild variant="primary">
-                <Link to={stepUrl("avoid-notes", stepParams)}>Next</Link>
-              </Button>
-            ) : (
-              <Button type="button" variant="primary" disabled>
-                Next
-              </Button>
-            )}
-          </div>
-        </div>
-      )}
-
-      {step === "avoid-notes" && (
-        <div className="mt-8">
-          <p className="mb-4 text-stone-300">
-            Any notes you'd rather avoid? (optional)
-          </p>
-          <div className="flex max-h-64 flex-wrap gap-3 overflow-y-auto rounded border border-stone-600 bg-stone-800/50 p-4">
-            {notes.map((note) => (
-              <CheckBox
-                key={note.id}
-                label={note.name}
-                checked={avoidNoteIds.has(note.id)}
-                onChange={() => toggleNote(note.id, true)}
-              />
-            ))}
-          </div>
-          <div className="mt-6 flex gap-4">
-            <Button asChild variant="secondary">
-              <Link to={stepUrl("note-preferences", stepParams)}>Back</Link>
-            </Button>
-            <Button asChild variant="primary">
-              <Link to={stepUrl("season", stepParams)}>Next</Link>
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {step === "season" && (
-        <div className="mt-8">
-          <p className="mb-4 text-stone-300">
-            When do you wear fragrance most? (optional, select all that apply)
-          </p>
-          <div className="space-y-2">
-            {SEASON_OPTIONS.map((opt) => (
-              <CheckBox
-                key={opt.value}
-                label={opt.label}
-                checked={selectedSeasonIds.has(opt.value)}
-                onChange={() => toggleSeason(opt.value)}
-              />
-            ))}
-          </div>
-          <div className="mt-6 flex gap-4">
-            <Button asChild variant="secondary">
-              <Link to={stepUrl("avoid-notes", stepParams)}>Back</Link>
-            </Button>
-            <Button asChild variant="primary">
-              <Link to={stepUrl("browsing-style", stepParams)}>Next</Link>
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {step === "browsing-style" && (
-        <Form method="post" className="mt-8">
-          <CSRFToken />
-          {Array.from(selectedNoteIds).map((id) => (
-            <input key={id} type="hidden" name="noteIds" value={id} />
-          ))}
-          {Array.from(avoidNoteIds).map((id) => (
-            <input key={id} type="hidden" name="avoidNoteIds" value={id} />
-          ))}
-          {Array.from(selectedSeasonIds).map((id) => (
-            <input key={id} type="hidden" name="season" value={id} />
-          ))}
-          <input type="hidden" name="browsingStyle" value={browsingStyle} />
-
-          <p className="mb-4 text-stone-300">
-            How do you like to browse? (optional)
-          </p>
-          <div className="space-y-2">
-            {BROWSING_OPTIONS.map((opt) => (
-              <label
-                key={opt.value}
-                className="flex cursor-pointer items-center gap-3 rounded border border-stone-600 bg-stone-800/50 px-4 py-2 hover:bg-stone-700/50"
-              >
-                <input
-                  type="radio"
-                  name="browsingStyle"
-                  value={opt.value}
-                  checked={browsingStyle === opt.value}
-                  onChange={() => setBrowsingStyle(opt.value)}
-                  className="h-4 w-4"
-                />
-                <span>{opt.label}</span>
-              </label>
-            ))}
-          </div>
-
-          {actionData?.error && (
-            <p className="mt-4 text-red-400" role="alert">
-              {actionData.error}
+      <div className="inner-container mx-auto pb-8">
+        {step === "welcome" && (
+          <div className="mt-8 space-y-6">
+            <p className="text-noir-gold-100 text-lg">
+              Answer a few quick questions about the notes and styles you like.
+              You can skip this and we'll learn from your ratings and collection
+              instead.
             </p>
-          )}
-
-          <div className="mt-6 flex gap-4">
-            <Button asChild variant="secondary">
-              <Link to={stepUrl("season", stepParams)}>Back</Link>
-            </Button>
-            <Button type="submit" variant="primary">Save preferences</Button>
+            <div className="flex flex-wrap gap-4">
+              <VooDooLink url={stepUrl("note-preferences", stepParams)} variant="primary">Start quiz</VooDooLink>
+              <VooDooLink url="/" variant="secondary">Skip for now</VooDooLink>
+            </div>
           </div>
-        </Form>
-      )}
-    </div>
+        )}
+  
+        {step === "note-preferences" && (
+          <div className="mt-8">
+            <p className="mb-4 text-noir-gold-500">
+              Pick 3–{MAX_NOTE_SELECTIONS} note families you like (e.g. floral,
+              woody, citrus).
+            </p>
+            <div className="flex max-h-80 flex-wrap gap-3 overflow-y-auto rounded border border-noir-gold bg-stone-800/50 p-4">
+              {notes.map((note) => (
+                <CheckBox
+                  key={note.id}
+                  label={note.name}
+                  checked={selectedNoteIds.has(note.id)}
+                  onChange={() => toggleNote(note.id, false)}
+                />
+              ))}
+            </div>
+            <p className="mt-2 text-sm text-noir-gold-100">
+              Selected: {selectedNoteIds.size} / {MAX_NOTE_SELECTIONS}
+            </p>
+            <div className="mt-6 flex gap-4">
+              <VooDooLink url={stepUrl("welcome", stepParams)} variant="secondary">Back</VooDooLink>
+                <VooDooLink 
+                  variant="primary" 
+                  url={stepUrl("avoid-notes", stepParams)}
+                  aria-disabled={selectedNoteIds.size < MIN_NOTE_SELECTIONS}
+                  >Next</VooDooLink>
+            </div>
+          </div>
+        )}
+  
+        {step === "avoid-notes" && (
+          <div className="mt-8">
+            <p className="mb-4 text-stone-300">
+              Any notes you'd rather avoid? (optional)
+            </p>
+            <div className="flex max-h-64 flex-wrap gap-3 overflow-y-auto rounded border border-stone-600 bg-stone-800/50 p-4">
+              {notes.map((note) => (
+                <CheckBox
+                  key={note.id}
+                  label={note.name}
+                  checked={avoidNoteIds.has(note.id)}
+                  onChange={() => toggleNote(note.id, true)}
+                />
+              ))}
+            </div>
+            <div className="mt-6 flex gap-4">
+              <VooDooLink url={stepUrl("note-preferences", stepParams)} variant="secondary">Back</VooDooLink>
+              <VooDooLink url={stepUrl("season", stepParams)} variant="primary">Next</VooDooLink>
+            </div>
+          </div>
+        )}
+  
+        {step === "season" && (
+          <div className="mt-8">
+            <p className="mb-4 text-stone-300">
+              When do you wear fragrance most? (optional, select all that apply)
+            </p>
+            <div className="space-y-2">
+              {SEASON_OPTIONS.map((opt) => (
+                <CheckBox
+                  key={opt.value}
+                  label={opt.label}
+                  checked={selectedSeasonIds.has(opt.value)}
+                  onChange={() => toggleSeason(opt.value)}
+                />
+              ))}
+            </div>
+            <div className="mt-6 flex gap-4">
+              <VooDooLink url={stepUrl("avoid-notes", stepParams)} variant="secondary">Back</VooDooLink>
+              <VooDooLink url={stepUrl("browsing-style", stepParams)} variant="primary">Next</VooDooLink>
+            </div>
+          </div>
+        )}
+  
+        {step === "browsing-style" && (
+          <Form method="post" className="mt-8">
+            <CSRFToken />
+            {Array.from(selectedNoteIds).map((id) => (
+              <input key={id} type="hidden" name="noteIds" value={id} />
+            ))}
+            {Array.from(avoidNoteIds).map((id) => (
+              <input key={id} type="hidden" name="avoidNoteIds" value={id} />
+            ))}
+            {Array.from(selectedSeasonIds).map((id) => (
+              <input key={id} type="hidden" name="season" value={id} />
+            ))}
+            <input type="hidden" name="browsingStyle" value={browsingStyle} />
+  
+            <p className="mb-4 text-stone-300">
+              How do you like to browse? (optional)
+            </p>
+            <div className="space-y-2">
+              {BROWSING_OPTIONS.map((opt) => (
+                <label
+                  key={opt.value}
+                  className="flex cursor-pointer items-center gap-3 rounded border border-stone-600 bg-stone-800/50 px-4 py-2 hover:bg-stone-700/50"
+                >
+                  <input
+                    type="radio"
+                    name="browsingStyle"
+                    value={opt.value}
+                    checked={browsingStyle === opt.value}
+                    onChange={() => setBrowsingStyle(opt.value)}
+                    className="h-4 w-4"
+                  />
+                  <span>{opt.label}</span>
+                </label>
+              ))}
+            </div>
+  
+            {actionData?.error && (
+              <p className="mt-4 text-red-400" role="alert">
+                {actionData.error}
+              </p>
+            )}
+  
+            <div className="mt-6 flex gap-4">
+              <VooDooLink url={stepUrl("season", stepParams)} variant="secondary">Back</VooDooLink>
+              <Button type="submit" variant="primary">Save preferences</Button>
+            </div>
+          </Form>
+        )}
+      </div>
+    </section>
   )
 }

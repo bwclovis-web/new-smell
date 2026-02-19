@@ -59,7 +59,16 @@ const VooDooLink = ({
   url,
   background,
   ...props
-}: LinkProps) => (
+}: LinkProps) => {
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if(props["aria-disabled"]){
+      event.preventDefault()
+      event.stopPropagation()
+      return
+    }
+  }
+
+  return(
   <NavLink
     to={url}
     viewTransition
@@ -69,5 +78,5 @@ const VooDooLink = ({
   >
     {children}
   </NavLink>
-)
+)}
 export { Button, VooDooLink }

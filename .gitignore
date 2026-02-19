@@ -68,6 +68,7 @@ vite.config.*.timestamp-*.mjs
 # CrewAI Python Environment
 /crews/
 crews/venv/
+.venv-ai/
 crews/.env.crews
 crews/__pycache__/
 crews/**/__pycache__/

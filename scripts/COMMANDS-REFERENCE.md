@@ -37,6 +37,10 @@
 3. ✅ Runs AI extraction (analysis only - generates recommendations)
 4. ✅ Generates combined markdown report
 
+**Safety gates (enforced):**
+- Requires explicit apply confirmation (`--confirm-apply`) via npm script
+- Requires a recent backup manifest in `backups/` (created by `npm run db:backup`)
+
 **Database Changes:** ✅ **YES** - JavaScript rule-based changes are applied
 
 **What gets modified:**
@@ -65,6 +69,10 @@
 4. ✅ **Automatically applies AI recommendations** to database
 5. ✅ **Re-runs duplicate detection** to merge any duplicates created by AI
 6. ✅ Generates combined markdown report
+
+**Safety gates (enforced):**
+- Requires explicit apply confirmation (`--confirm-apply`) via npm script
+- Requires a recent backup manifest in `backups/` (created by `npm run db:backup`)
 
 **Database Changes:** ✅ **YES** - All changes are applied (JS rules + AI recommendations + duplicate cleanup)
 
@@ -102,6 +110,7 @@
    ```bash
    npm run db:backup
    ```
+   - This creates a backup manifest required by the apply workflow safety check
 
 4. **Then apply (choose one):**
    
@@ -120,6 +129,16 @@
 ### 🤖 About AI Recommendations
 
 The AI extraction step **always** runs in analysis mode - it generates recommendations but doesn't automatically apply them to the database. This is by design for safety.
+
+### Known Bad Phrase Policy (now handled explicitly)
+
+Rule-based cleanup now explicitly classifies recurring bad phrases:
+- Delete as noise: `few`, `no name`, `two differences 1`, `limited time only`
+- Extract obvious note noun: `coffee in your hand` -> `coffee`
+- Extract conservative fallback for patisserie phrase variants: `...purrfect patisserie` -> `patisserie`
+- Strip slug/ID suffixes: e.g. `lemon-adamo-8du3rk` -> `lemon` (when the part after the first hyphen contains digits or looks like an id)
+
+Review these outcomes in dry-run reports before apply.
 
 **To apply AI recommendations:**
 

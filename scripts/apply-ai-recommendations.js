@@ -27,6 +27,11 @@ const projectRoot = join(__dirname, "..")
 process.env.DOTENV_CONFIG_QUIET = "true"
 dotenv.config({ path: join(projectRoot, ".env") })
 
+// Use same DB as dev app when running locally (app uses LOCAL_DATABASE_URL in development)
+if (process.env.NODE_ENV !== "production" && process.env.LOCAL_DATABASE_URL) {
+  process.env.DATABASE_URL = process.env.LOCAL_DATABASE_URL
+}
+
 const prisma = new PrismaClient()
 
 const isDryRun = process.argv.includes("--dry-run")

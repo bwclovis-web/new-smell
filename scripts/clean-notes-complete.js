@@ -11,7 +11,8 @@
  * 
  * Usage:
  *   node scripts/clean-notes-complete.js --dry-run  # Preview changes
- *   node scripts/clean-notes-complete.js            # Apply changes (after backup!)
+ *   node scripts/clean-notes-complete.js --confirm-apply            # Apply changes (after backup!)
+ *   node scripts/clean-notes-complete.js --confirm-apply --apply-ai --recheck-duplicates
  */
 
 import { execSync } from 'child_process'
@@ -23,6 +24,24 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const projectRoot = join(__dirname, '..')
 const reportsDir = join(projectRoot, 'reports')
+const backupsDir = join(projectRoot, 'backups')
+const BACKUP_MAX_AGE_MINUTES = 120
+
+/** Path to .venv-ai in project root (for AI step; use Python 3.10–3.12 to avoid numpy build issues). */
+const VENV_AI_DIR = join(projectRoot, '.venv-ai')
+
+/**
+ * Return the Python executable to use for clean-notes-ai.py.
+ * Uses .venv-ai if present (recommended: create with Python 3.11 or 3.12), otherwise "python".
+ */
+function getPythonForAI() {
+  const isWin = process.platform === 'win32'
+  const venvPython = join(VENV_AI_DIR, isWin ? 'Scripts' : 'bin', isWin ? 'python.exe' : 'python')
+  if (existsSync(venvPython)) {
+    return venvPython
+  }
+  return 'python'
+}
 
 function runCommand(command, description) {
   console.log(`\n${'='.repeat(60)}`)
@@ -41,7 +60,7 @@ function runCommand(command, description) {
   }
 }
 
-function findLatestReport(pattern) {
+function findLatestReport(pattern, minTime = 0) {
   try {
     // Convert glob pattern to regex
     const regexPattern = pattern.replace(/\*/g, '.*')
@@ -54,12 +73,57 @@ function findLatestReport(pattern) {
         path: join(reportsDir, f),
         time: statSync(join(reportsDir, f)).mtime.getTime()
       }))
+      .filter(f => f.time >= minTime)
       .sort((a, b) => b.time - a.time)
     
     return files.length > 0 ? files[0].path : null
   } catch (error) {
     console.warn(`⚠️  Could not find report with pattern ${pattern}: ${error.message}`)
     return null
+  }
+}
+
+function findLatestBackupManifest() {
+  try {
+    const files = readdirSync(backupsDir)
+      .filter(f => /^backup_.*_manifest\.json$/.test(f))
+      .map(f => ({
+        name: f,
+        path: join(backupsDir, f),
+        time: statSync(join(backupsDir, f)).mtime.getTime()
+      }))
+      .sort((a, b) => b.time - a.time)
+
+    return files.length > 0 ? files[0] : null
+  } catch (error) {
+    console.warn(`⚠️  Could not scan backups folder: ${error.message}`)
+    return null
+  }
+}
+
+function validateRecentBackup(maxAgeMinutes = BACKUP_MAX_AGE_MINUTES) {
+  const latestManifest = findLatestBackupManifest()
+  if (!latestManifest) {
+    return {
+      ok: false,
+      reason: `No backup manifest found in ${backupsDir}`
+    }
+  }
+
+  const now = Date.now()
+  const ageMinutes = (now - latestManifest.time) / (1000 * 60)
+  if (ageMinutes > maxAgeMinutes) {
+    return {
+      ok: false,
+      reason: `Latest backup is ${Math.round(ageMinutes)} minute(s) old (limit: ${maxAgeMinutes} minutes)`,
+      manifestPath: latestManifest.path
+    }
+  }
+
+  return {
+    ok: true,
+    manifestPath: latestManifest.path,
+    ageMinutes: Math.round(ageMinutes)
   }
 }
 
@@ -121,6 +185,21 @@ function extractAmbiguousNotes(reportPath) {
             reason: `Marked as ${type} but might have extractable notes - AI extraction recommended`
           })
         }
+      }
+    }
+  }
+  
+  // Extract "Notes to Confirm" — multi-word notes (e.g. hot leather, old makeup) sent to AI to confirm valid
+  const confirmSection = reportContent.match(/### Notes to Confirm \(AI Validation\)[\s\S]*?(?=###|##|$)/)
+  if (confirmSection) {
+    const confirmRows = [...confirmSection[0].matchAll(/\| "([^"]+)" \|\s*([^|]+)\s*\|\s*\d+\s*\|/g)]
+    for (const match of confirmRows) {
+      const phrase = match[1]
+      if (!ambiguousNotes.find(n => n.name === phrase)) {
+        ambiguousNotes.push({
+          name: phrase,
+          reason: 'Confirm valid scent note'
+        })
       }
     }
   }
@@ -203,7 +282,7 @@ function generateCombinedReport(jsReportPath, aiResultsPath) {
 
 This report combines:
 1. **Rule-Based Cleaning** (JavaScript script) - Handles duplicates, stopwords, simple patterns
-2. **AI-Powered Extraction** (CrewAI) - Handles complex phrases and ambiguous cases
+2. **AI-Powered Extraction** (LangGraph) - Handles complex phrases and ambiguous cases
 
 ---
 
@@ -351,6 +430,8 @@ async function main() {
   const isDryRun = process.argv.includes('--dry-run')
   const applyAI = process.argv.includes('--apply-ai')
   const recheckDuplicates = process.argv.includes('--recheck-duplicates')
+  const confirmApply = process.argv.includes('--confirm-apply')
+  const skipBackupCheck = process.argv.includes('--skip-backup-check')
   
   console.log('='.repeat(60))
   console.log('🧹 Complete Note Cleaning Workflow')
@@ -358,6 +439,27 @@ async function main() {
   
   if (isDryRun) {
     console.log('⚠️  DRY RUN MODE - No changes will be made\n')
+  } else {
+    if (!confirmApply) {
+      console.error('❌ Refusing to run non-dry-run without explicit confirmation.')
+      console.error('   Re-run with: --confirm-apply')
+      console.error('   Example: npm run clean:notes:complete:full')
+      process.exit(1)
+    }
+
+    if (!skipBackupCheck) {
+      const backupCheck = validateRecentBackup()
+      if (!backupCheck.ok) {
+        console.error('❌ Safety check failed: recent backup required before apply.')
+        console.error(`   Reason: ${backupCheck.reason}`)
+        console.error('   Run: npm run db:backup')
+        console.error('   Then re-run cleanup apply command.')
+        process.exit(1)
+      }
+      console.log(`✅ Backup safety check passed (${backupCheck.ageMinutes} min old): ${backupCheck.manifestPath}\n`)
+    } else {
+      console.warn('⚠️  Backup recency check was skipped (--skip-backup-check)\n')
+    }
   }
   
   if (applyAI && !isDryRun) {
@@ -368,35 +470,37 @@ async function main() {
     console.log('🔍 Duplicate detection will be re-run after AI application\n')
   }
   
-  // Step 1: Run JavaScript cleaning (dry-run or actual)
-  const jsCommand = isDryRun 
-    ? 'node scripts/clean-notes.js --dry-run'
-    : 'node scripts/clean-notes.js'
-  
-  console.log(`\n📋 Step 1/4: Running rule-based cleaning (JavaScript)...`)
-  const jsSuccess = runCommand(
-    jsCommand,
-    `Running JavaScript Rule-Based Cleaning${isDryRun ? ' (DRY RUN)' : ' (ACTUAL)'}`
+  // Step 1: Run JavaScript cleaning. When applying, we must run dry-run FIRST to get a
+  // fresh report (clean-notes.js only writes a report in dry-run). Then we use that
+  // report for ambiguous extraction and run the actual apply.
+  const runApply = !isDryRun && confirmApply
+  const jsDryRunSuccess = runCommand(
+    'node scripts/clean-notes.js --dry-run',
+    `Running JavaScript Rule-Based Cleaning (DRY RUN)${runApply ? ' - to produce report before apply' : ''}`
   )
-  
-  if (!jsSuccess) {
+  if (!jsDryRunSuccess) {
     console.error('❌ JavaScript dry-run failed. Stopping.')
     process.exit(1)
   }
-  
-  // Step 2: Find the latest JS report
-  // For dry-run, look for dry-run reports; for actual, look for any reports
-  const jsReportPattern = isDryRun 
-    ? 'clean-notes-dry-run-*.md'
-    : 'clean-notes-dry-run-*.md' // Even actual runs create dry-run reports first for comparison
-  const jsReportPath = findLatestReport(jsReportPattern)
-  
+
+  const jsReportPath = findLatestReport('clean-notes-dry-run-*.md')
   if (!jsReportPath) {
     console.error('❌ Could not find JavaScript dry-run report')
     process.exit(1)
   }
-  
   console.log(`✅ Found report: ${jsReportPath}`)
+
+  if (runApply) {
+    console.log(`\n📋 Step 1b: Applying rule-based cleaning (JavaScript)...`)
+    const jsApplySuccess = runCommand(
+      'node scripts/clean-notes.js',
+      'Running JavaScript Rule-Based Cleaning (ACTUAL)'
+    )
+    if (!jsApplySuccess) {
+      console.error('❌ JavaScript apply failed. Stopping.')
+      process.exit(1)
+    }
+  }
   
   // Step 3: Extract ambiguous notes
   console.log('\n📋 Step 2/4: Extracting ambiguous notes...')
@@ -422,9 +526,15 @@ async function main() {
   console.log(`✅ Saved to: ${ambiguousPath}`)
   
   // Step 4: Run AI extraction (always dry-run for AI, it only generates reports)
+  const pythonForAI = getPythonForAI()
+  if (pythonForAI !== 'python') {
+    console.log(`\n🐍 Using .venv-ai Python: ${pythonForAI}`)
+  }
   console.log('\n📋 Step 3/4: Running AI-powered extraction...')
+  const aiStepStartedAt = Date.now()
+  const pythonCmd = pythonForAI.includes(' ') ? `"${pythonForAI}"` : pythonForAI
   const aiSuccess = runCommand(
-    `python scripts/clean-notes-ai.py --input ${ambiguousPath} --dry-run`,
+    `${pythonCmd} scripts/clean-notes-ai.py --input ${ambiguousPath} --dry-run`,
     'Running AI-Powered Extraction (Analysis Only)'
   )
   
@@ -434,7 +544,9 @@ async function main() {
   
   // Step 5: Find AI results
   const aiResultsPattern = 'ai-note-extraction-*.json'
-  const aiResultsPath = findLatestReport(aiResultsPattern) || ''
+  const aiResultsPath = aiSuccess
+    ? (findLatestReport(aiResultsPattern, aiStepStartedAt) || '')
+    : ''
   
   // Step 6: Apply AI recommendations (if requested and not dry-run)
   let aiApplied = false

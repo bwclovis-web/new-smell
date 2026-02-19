@@ -20,6 +20,7 @@ import { join } from "path"
 import { dirname } from "path"
 import { fileURLToPath } from "url"
 import { normalizeName, normalizeForDuplicateDetection } from './note-utils.js'
+import { STOPWORDS, PLACEHOLDER_PHRASES, TRAILING_FRAGMENT_REGEX, KNOWN_BAD_PATTERNS } from './note-validation.js'
 import { writeFileSync, mkdirSync } from "fs"
 import { existsSync } from "fs"
 
@@ -30,6 +31,11 @@ const projectRoot = join(__dirname, "..")
 // Load environment variables
 process.env.DOTENV_CONFIG_QUIET = "true"
 dotenv.config({ path: join(projectRoot, ".env") })
+
+// Use same DB as dev app when running locally (app uses LOCAL_DATABASE_URL in development)
+if (process.env.NODE_ENV !== "production" && process.env.LOCAL_DATABASE_URL) {
+  process.env.DATABASE_URL = process.env.LOCAL_DATABASE_URL
+}
 
 const prisma = new PrismaClient()
 
@@ -63,13 +69,28 @@ function saveReport() {
   }
 }
 
-// Stopwords to remove (common English words that aren't perfume notes)
-// Also removes descriptive phrases/sentences like "fall part one", "none of us really changes over time"
-const STOPWORDS = [
-  "and", "of", "with", "the", "a", "an", "or", "but", "in", "on", "at", "to", 
-  "for", "from", "by", "as", "is", "was", "are", "were", "be", "been", "being", 
-  "have", "has", "had", "do", "does", "did", "will", "would", "should", "could", 
-  "may", "might", "must", "can"
+// Stopwords, placeholders, trailing-fragment regex: from note-validation.js (single source of truth for display + cleanup)
+// PROTECTED_MULTI_WORD_NOTES and TRAILING_GARBAGE_PHRASES stay here (cleanup-only)
+const PROTECTED_MULTI_WORD_NOTES = [
+  "white birch wood", "ancient white oak", "black tea", "green tea", "white tea",
+  "white musk", "black musk", "red musk", "white amber", "black amber",
+  "white woods", "black pepper", "white pepper", "pink pepper",
+  "crisp paper", "sweet red apple", "sugared ginger", "motor oil", "dirt", "coppery blood",
+  "salt water taffy", "madagascar vanilla beans", "blue cotton candy", "strawberry buttercream frosting",
+  "australian blue peppercorn", "italian white clove", "spanish tonka bean", "gâteau à la vanille", "egyptian marsh-mallow cream"
+]
+
+const TRAILING_GARBAGE_PHRASES = [
+  ' plus several others', ' add loads of', ' or any of', ' and loads of',
+  ' or any', ' and any of', ' with a hint of', ' and a touch of',
+  ' and more', ' or more', ' and then some', ' and others'
+].map(s => s.toLowerCase()).sort((a, b) => b.length - a.length)
+
+// Delete rules from note-validation.js + extract rules (cleanup-only)
+const KNOWN_BAD_PHRASE_RULES = [
+  ...KNOWN_BAD_PATTERNS.map((pattern) => ({ pattern, action: "delete", type: "known-bad-noise" })),
+  { pattern: /\bcoffee\s+in\s+your\s+hand\b/i, action: "extract", type: "known-bad-extract", extract: "coffee" },
+  { pattern: /\bpurrfect\s+patisserie\b/i, action: "extract", type: "known-bad-extract", extract: "patisserie" },
 ]
 
 // Valid characters: letters, numbers, spaces, hyphens, apostrophes
@@ -102,6 +123,91 @@ function cleanNoteName(name) {
  */
 function isStopword(name) {
   return STOPWORDS.includes(normalizeName(name))
+}
+
+function isProtectedMultiWordNote(name) {
+  return PROTECTED_MULTI_WORD_NOTES.includes(normalizeName(name))
+}
+
+function resolveExtractedNote(candidate, existingNotes) {
+  const cleanedCandidate = removeTrailingPunctuation(normalizeName(candidate).trim())
+  if (!cleanedCandidate || isStopword(cleanedCandidate)) {
+    return null
+  }
+
+  const foundNote = existingNotes.find(n =>
+    normalizeName(n.name) === normalizeName(cleanedCandidate)
+  )
+  if (foundNote) {
+    return foundNote.name
+  }
+
+  const wordCount = cleanedCandidate.split(/\s+/).filter(w => w.length > 0).length
+  if (wordCount >= 1 && wordCount <= 5 && cleanedCandidate.length >= 2 && cleanedCandidate.length <= 50) {
+    return cleanedCandidate
+  }
+
+  return null
+}
+
+function classifyKnownBadPhrase(name, existingNotes) {
+  const normalizedName = removeTrailingPunctuation(normalizeName(name).trim())
+  if (!normalizedName || isProtectedMultiWordNote(normalizedName)) {
+    return null
+  }
+
+  if (PLACEHOLDER_PHRASES.includes(normalizedName)) {
+    return { action: "delete", type: "known-bad-noise", extractedNote: null }
+  }
+
+  // Trailing garbage or trailing fragment: send to Crew AI instead of rule-based extract/delete
+  for (const suffix of TRAILING_GARBAGE_PHRASES) {
+    if (normalizedName.endsWith(suffix)) {
+      return { action: "delete", type: "descriptive-ai", extractedNote: null }
+    }
+  }
+  if (TRAILING_FRAGMENT_REGEX.test(normalizedName)) {
+    return { action: "delete", type: "descriptive-ai", extractedNote: null }
+  }
+
+  for (const rule of KNOWN_BAD_PHRASE_RULES) {
+    if (!rule.pattern.test(normalizedName)) continue
+    if (rule.action === "delete") {
+      return { action: "delete", type: rule.type, extractedNote: null }
+    }
+    if (rule.action === "extract" && rule.extract) {
+      const extracted = resolveExtractedNote(rule.extract, existingNotes)
+      if (extracted) {
+        return { action: "extract", type: rule.type, extractedNote: extracted }
+      }
+      return { action: "delete", type: "known-bad-noise", extractedNote: null }
+    }
+  }
+
+  return null
+}
+
+/**
+ * Detect note names that have a slug/ID suffix (e.g. "lemon-adamo-8du3rk").
+ * If the part after the first hyphen contains digits or looks like an id, extract the leading word as the note.
+ */
+function classifyNoteWithSlugId(name, existingNotes) {
+  const normalizedName = removeTrailingPunctuation(normalizeName(name).trim())
+  if (!normalizedName || normalizedName.indexOf('-') === -1) {
+    return null
+  }
+  const firstHyphen = normalizedName.indexOf('-')
+  const leadingPart = normalizedName.slice(0, firstHyphen).trim()
+  const suffix = normalizedName.slice(firstHyphen + 1).trim()
+  if (!leadingPart || !suffix) return null
+  // Suffix looks like an id only if it contains a digit (e.g. adamo-8du3rk); avoid stripping valid hyphenated notes like cherry-blossom, lily-of-the-valley
+  const suffixLooksLikeId = /\d/.test(suffix)
+  if (!suffixLooksLikeId) return null
+  const extracted = resolveExtractedNote(leadingPart, existingNotes)
+  if (extracted) {
+    return { action: "extract", type: "slug-id-suffix", extractedNote: extracted }
+  }
+  return null
 }
 
 /**
@@ -146,7 +252,9 @@ function splitBySlash(name, existingNotes) {
 }
 
 /**
- * Detect multiple distinct notes in a phrase
+ * Detect multiple distinct notes in a phrase.
+ * Conservative: only split when phrase has 5+ words (or 4+ and starts with article) to avoid false positives
+ * like "wild bergamot tea" or "white pepper flowers" being split.
  * Examples: "the fabulous vanilla bean orchid" → ["vanilla bean", "orchid"]
  * Returns array of extracted notes or null
  */
@@ -156,7 +264,8 @@ function detectMultipleDistinctNotes(name, existingNotes) {
   trimmed = removeTrailingPunctuation(trimmed)
   
   const words = trimmed.split(/\s+/).filter(w => w.length > 0)
-  if (words.length < 3) {
+  const startsWithArticle = /^(the|a|an)\s+/i.test(trimmed)
+  if (words.length < 5 && !(words.length >= 4 && startsWithArticle)) {
     return null
   }
   
@@ -192,49 +301,14 @@ function detectMultipleDistinctNotes(name, existingNotes) {
       firstPart = firstPart.replace(/^(the|a|an)\s+(fabulous|delicate|subtle|strong|soft|light|heavy|faint|intense|rich|deep|fresh|warm|cool|sweet|bitter|spicy|floral|woody|citrus)\s+/i, '')
       firstPart = firstPart.replace(/^(the|a|an|fabulous|delicate|subtle|strong|soft|light|heavy|faint|intense|rich|deep|fresh|warm|cool|sweet|bitter|spicy|floral|woody|citrus)\s+/i, '')
       
-      // Check if firstPart itself is a known note (e.g., "vanilla bean")
-      const foundFirstNote = existingNotes.find(n => 
+      // Only split when the first part exists as a note in DB (reduces false positives)
+      const foundFirstNote = existingNotes.find(n =>
         normalizeName(n.name) === normalizeName(firstPart)
       )
-      
       if (foundFirstNote) {
         const lastNote = foundNote ? foundNote.name : lastWords
-        // Make sure we're not returning the same note twice
         if (normalizeName(foundFirstNote.name) !== normalizeName(lastNote)) {
           return [foundFirstNote.name, lastNote]
-        }
-      } else {
-        // Try to extract note from first part
-        const extractedFirst = extractSingleNoteFromPhrase(firstPart, existingNotes)
-        if (extractedFirst) {
-          const lastNote = foundNote ? foundNote.name : lastWords
-          // Make sure we're not returning the same note twice
-          if (normalizeName(extractedFirst) !== normalizeName(lastNote)) {
-            return [extractedFirst, lastNote]
-          }
-        } else {
-          // If extraction failed, try the original beforeLast (might be a multi-word note)
-          const extractedOriginal = extractSingleNoteFromPhrase(beforeLast, existingNotes)
-          if (extractedOriginal) {
-            const lastNote = foundNote ? foundNote.name : lastWords
-            if (normalizeName(extractedOriginal) !== normalizeName(lastNote)) {
-              return [extractedOriginal, lastNote]
-            }
-          } else {
-            // Last resort: check if beforeLast (after removing articles) is a valid note name
-            // e.g., "vanilla bean" might not be in DB but is a valid note
-            const cleanedBeforeLast = beforeLast.replace(/^(the|a|an)\s+(fabulous|delicate|subtle|strong|soft|light|heavy|faint|intense|rich|deep|fresh|warm|cool|sweet|bitter|spicy|floral|woody|citrus)\s+/i, '')
-              .replace(/^(the|a|an|fabulous|delicate|subtle|strong|soft|light|heavy|faint|intense|rich|deep|fresh|warm|cool|sweet|bitter|spicy|floral|woody|citrus)\s+/i, '').trim()
-            if (cleanedBeforeLast.length >= 2 && cleanedBeforeLast.length <= 50 && !isStopword(cleanedBeforeLast)) {
-              const wordCount = cleanedBeforeLast.split(/\s+/).length
-              if (wordCount >= 1 && wordCount <= 5) {
-                const lastNote = foundNote ? foundNote.name : lastWords
-                if (normalizeName(cleanedBeforeLast) !== normalizeName(lastNote)) {
-                  return [cleanedBeforeLast, lastNote]
-                }
-              }
-            }
-          }
         }
       }
     }
@@ -611,13 +685,7 @@ function isDescriptivePhrase(name) {
   
   // Check if it's a valid multi-word note that should be kept as-is
   // Examples: "white birch wood", "ancient white oak", "crisp paper", "sweet red apple"
-  const validMultiWordNotes = [
-    'white birch wood', 'ancient white oak', 'black tea', 'green tea', 'white tea',
-    'white musk', 'black musk', 'red musk', 'white amber', 'black amber',
-    'white woods', 'black pepper', 'white pepper', 'pink pepper',
-    'crisp paper', 'sweet red apple'
-  ]
-  if (validMultiWordNotes.includes(trimmed)) {
+  if (isProtectedMultiWordNote(trimmed)) {
     return false // Don't treat as descriptive phrase
   }
   
@@ -715,12 +783,13 @@ async function validateCleanup(initialCounts) {
     const finalNoteCount = await prisma.perfumeNotes.count()
     const finalRelationCount = await prisma.perfumeNoteRelation.count()
     
-    // Check for orphaned relations
-    const orphanedRelations = await prisma.perfumeNoteRelation.findMany({
-      where: {
-        note: null
-      }
-    })
+    // Check for orphaned relations (relations whose noteId no longer exists)
+    const existingNoteIds = (await prisma.perfumeNotes.findMany({ select: { id: true } })).map(n => n.id)
+    const orphanedRelations = existingNoteIds.length > 0
+      ? await prisma.perfumeNoteRelation.findMany({
+          where: { noteId: { notIn: existingNoteIds } }
+        })
+      : await prisma.perfumeNoteRelation.findMany()
     
     if (orphanedRelations.length > 0) {
       console.error(`❌ Found ${orphanedRelations.length} orphaned relations!`)
@@ -1133,59 +1202,72 @@ async function cleanInvalidNotes(invalidNotes, isDryRun) {
       }
     }
   })
+  }
   
   console.log(`\n✅ Phase 2 complete: Cleaned ${cleanedCount} notes, deleted ${deletedCount} notes, updated ${relationsUpdatedCount} relations\n`)
   
   return { cleaned: cleanedCount, deleted: deletedCount, relationsUpdated: relationsUpdatedCount }
 }
 
+// Leading words that are stopwords but often start valid scent notes; never strip these.
+const PREFIX_STOPWORDS_NEVER_STRIP = ['hot', 'old', 'cold', 'grey', 'gray']
+// Optional: add more prefixes to send to AI for confirmation (e.g. 'warm', 'cool', 'sweet', 'fresh').
+const ADDITIONAL_CONFIRM_PREFIXES = []
+const CONFIRM_PREFIXES = [...PREFIX_STOPWORDS_NEVER_STRIP, ...ADDITIONAL_CONFIRM_PREFIXES]
+
 /**
  * Extract note from stopword-prefixed phrase
  * Examples: "and vanilla" → "vanilla", "of roses" → "roses", "base Bourbon Vetiver" → "Bourbon Vetiver"
+ * Does NOT strip "hot", "old", "cold", "grey", "gray" (valid: hot leather, old makeup, hot melted wax, grey iris).
  */
 function extractNoteFromStopwordPrefix(name, existingNotes) {
   const normalized = normalizeName(name)
   const trimmed = normalized.trim()
   const words = trimmed.split(/\s+/).filter(w => w.length > 0)
-  
+
+  // If first word is a "never strip" prefix, keep the full phrase as-is (don't extract)
+  if (words.length > 1 && PREFIX_STOPWORDS_NEVER_STRIP.includes(normalizeName(words[0]))) {
+    return null
+  }
+
   // Remove "base" prefix (e.g., "base Bourbon Vetiver" → "Bourbon Vetiver")
   if (words.length > 1 && normalizeName(words[0]) === 'base') {
     const candidate = words.slice(1).join(' ')
-    
+
     // Check if candidate matches an existing note
-    const foundNote = existingNotes.find(n => 
+    const foundNote = existingNotes.find(n =>
       normalizeName(n.name) === normalizeName(candidate)
     )
     if (foundNote) {
       return foundNote.name
     }
-    
+
     // Check if candidate is a valid note
     const wordCount = candidate.split(/\s+/).length
     if (wordCount >= 1 && wordCount <= 5 && candidate.length <= 50 && !isStopword(candidate)) {
       return candidate
     }
   }
-  
+
   // If first word is a stopword, try to extract the note from the rest
   if (words.length > 1 && isStopword(words[0])) {
     const candidate = words.slice(1).join(' ')
-    
+
     // Check if candidate matches an existing note
-    const foundNote = existingNotes.find(n => 
+    const foundNote = existingNotes.find(n =>
       normalizeName(n.name) === normalizeName(candidate)
     )
     if (foundNote) {
       return foundNote.name
     }
-    
+
     // Check if candidate is a valid note (1-5 words, reasonable length, not a stopword)
     const wordCount = candidate.split(/\s+/).length
     if (wordCount >= 1 && wordCount <= 5 && candidate.length <= 50 && !isStopword(candidate)) {
       return candidate
     }
   }
-  
+
   return null
 }
 
@@ -1225,6 +1307,7 @@ async function identifyStopwords() {
   
   const invalidNotes = []
   const extractablePhrases = []
+  const notesToConfirm = []
   
   for (const note of allNotes) {
     // Skip notes that are already valid and shouldn't be modified
@@ -1242,14 +1325,7 @@ async function identifyStopwords() {
     }
     
     // Valid multi-word notes that should be kept as-is
-    const validMultiWordNotes = [
-      'white birch wood', 'ancient white oak', 'black tea', 'green tea', 'white tea',
-      'white musk', 'black musk', 'red musk', 'white amber', 'black amber',
-      'white woods', 'black pepper', 'white pepper', 'pink pepper',
-      'crisp paper', 'sweet red apple', 'sugared ginger', 'motor oil', 'dirt', 'coppery blood'
-    ]
-    
-    if (validMultiWordNotes.includes(trimmed)) {
+    if (isProtectedMultiWordNote(trimmed)) {
       continue // Skip this note, it's already valid
     }
     
@@ -1281,7 +1357,38 @@ async function identifyStopwords() {
       extractablePhrases.push({ note, type: 'slash-separated', extractedNote: slashSplit })
       continue
     }
-    
+
+    // Explicit policy for recurring noisy/bad phrases.
+    // Prefer extraction when salvageable; otherwise mark as invalid.
+    const knownBadClassification = classifyKnownBadPhrase(note.name, allNotes)
+    if (knownBadClassification) {
+      if (knownBadClassification.action === "extract") {
+        extractablePhrases.push({
+          note,
+          type: knownBadClassification.type,
+          extractedNote: knownBadClassification.extractedNote
+        })
+      } else {
+        invalidNotes.push({
+          note,
+          type: knownBadClassification.type,
+          extractedNote: null
+        })
+      }
+      continue
+    }
+
+    // Note names with slug/ID suffix (e.g. "lemon-adamo-8du3rk") → extract leading word.
+    const slugIdClassification = classifyNoteWithSlugId(note.name, allNotes)
+    if (slugIdClassification && slugIdClassification.action === "extract") {
+      extractablePhrases.push({
+        note,
+        type: slugIdClassification.type,
+        extractedNote: slugIdClassification.extractedNote
+      })
+      continue
+    }
+
     // Check if it's a pure stopword (just the stopword itself)
     if (isStopword(note.name)) {
       invalidNotes.push({ note, type: 'stopword', extractedNote: null })
@@ -1299,6 +1406,11 @@ async function identifyStopwords() {
         } else {
           extractablePhrases.push({ note, type: 'stopword-prefix', extractedNote: extractedFromStopword })
         }
+      }
+      // Multi-word notes starting with hot/old/cold/grey/gray (and optional more): send to AI to confirm valid
+      else if (trimmed.split(/\s+/).filter(w => w.length > 0).length > 1 &&
+          CONFIRM_PREFIXES.includes(normalizeName(trimmed.split(/\s+/)[0]))) {
+        notesToConfirm.push({ note })
       }
       // Check if it's a descriptive phrase
       // NOTE: Descriptive phrases are now handled by AI script for better accuracy
@@ -1322,39 +1434,44 @@ async function identifyStopwords() {
           }
         }
       }
-      // Check for multiple distinct notes even if not a descriptive phrase
-      // (e.g., "the fabulous vanilla bean orchid" might not be caught by isDescriptivePhrase)
+      // Check for multiple distinct notes only when phrase is long or clearly descriptive
+      // (avoids splitting valid 3–4 word notes like "wild bergamot tea", "white pepper flowers")
       else {
-        const distinctNotes = detectMultipleDistinctNotes(note.name, allNotes)
-        if (distinctNotes && distinctNotes.length > 1) {
-          extractablePhrases.push({ note, type: 'multiple-distinct', extractedNote: distinctNotes })
+        const wordCount = trimmed.split(/\s+/).filter(w => w.length > 0).length
+        const startsWithArticle = /^(the|a|an)\s+/i.test(note.name)
+        if (wordCount >= 5 || (wordCount >= 4 && startsWithArticle)) {
+          const distinctNotes = detectMultipleDistinctNotes(note.name, allNotes)
+          if (distinctNotes && distinctNotes.length > 1) {
+            extractablePhrases.push({ note, type: 'multiple-distinct', extractedNote: distinctNotes })
+          }
         }
       }
     }
   }
   
-  return { invalidNotes, extractablePhrases }
+  return { invalidNotes, extractablePhrases, notesToConfirm }
 }
 
 /**
  * Phase 3: Extract notes from phrases and remove stopwords/descriptive phrases
  */
 async function removeStopwords(identificationResults, isDryRun) {
-  const { invalidNotes, extractablePhrases } = identificationResults
+  const { invalidNotes, extractablePhrases, notesToConfirm = [] } = identificationResults
   
   const totalInvalid = invalidNotes.length
   const totalExtractable = extractablePhrases.length
+  const totalToConfirm = notesToConfirm.length
   
-  if (totalInvalid === 0 && totalExtractable === 0) {
+  if (totalInvalid === 0 && totalExtractable === 0 && totalToConfirm === 0) {
     console.log("✅ No stopword or descriptive phrase notes found!\n")
     return { removed: 0, relationsRemoved: 0, relationsReassociated: 0 }
   }
   
-  const msg1 = `📊 Found ${totalInvalid} invalid note(s) and ${totalExtractable} extractable phrase(s):\n`
+  const msg1 = `📊 Found ${totalInvalid} invalid note(s), ${totalExtractable} extractable phrase(s)${totalToConfirm > 0 ? `, ${totalToConfirm} note(s) to confirm with AI` : ''}:\n`
   console.log(msg1)
   if (isDryRun) {
     addToReport("## Phase 3: Stopwords & Descriptive Phrases\n")
-    addToReport(`**Found ${totalInvalid} invalid note(s) and ${totalExtractable} extractable phrase(s):**\n\n`)
+    addToReport(`**Found ${totalInvalid} invalid note(s), ${totalExtractable} extractable phrase(s)${totalToConfirm > 0 ? `, ${totalToConfirm} note(s) to confirm with AI` : ''}:**\n\n`)
   }
   
   // Show extractable phrases
@@ -1367,7 +1484,7 @@ async function removeStopwords(identificationResults, isDryRun) {
     }
     for (const item of extractablePhrases) {
       const relationCount = item.note.perfumeNoteRelations.length
-      const typeLabel = item.type === 'stopword-prefix' ? 'stopword-prefix' : 'descriptive'
+      const typeLabel = item.type || 'descriptive'
       const extractedNotes = Array.isArray(item.extractedNote) ? item.extractedNote : [item.extractedNote]
       const extractedDisplay = extractedNotes.map(n => `"${n}"`).join(', ')
       const msg = `  🔧 "${item.note.name}" → ${extractedDisplay} (${relationCount} relations will be reassociated)`
@@ -1399,10 +1516,17 @@ async function removeStopwords(identificationResults, isDryRun) {
       }
     }
     console.log("")
-    const summaryMsg = `📋 Summary: ${totalInvalid} invalid notes will be removed, ${totalRelations} relations will be deleted`
+    const descriptiveAiCount = invalidNotes.filter(i => i.type === 'descriptive-ai').length
+    const removedByJs = totalInvalid - descriptiveAiCount
+    const summaryMsg = descriptiveAiCount > 0
+      ? `📋 Summary: ${totalInvalid} invalid notes (${removedByJs} will be removed by JS, ${descriptiveAiCount} sent to Crew AI)`
+      : `📋 Summary: ${totalInvalid} invalid notes will be removed, ${totalRelations} relations will be deleted`
     console.log(summaryMsg)
     if (isDryRun) {
-      addToReport(`**Summary:** ${totalInvalid} invalid notes will be removed, ${totalRelations} relations will be deleted\n\n`)
+      const summaryText = descriptiveAiCount > 0
+        ? `**Summary:** ${totalInvalid} invalid notes (${removedByJs} will be removed by JS, ${descriptiveAiCount} sent to Crew AI)\n\n`
+        : `**Summary:** ${totalInvalid} invalid notes will be removed, ${totalRelations} relations will be deleted\n\n`
+      addToReport(summaryText)
     }
   }
   
@@ -1413,6 +1537,27 @@ async function removeStopwords(identificationResults, isDryRun) {
     console.log(msg)
     if (isDryRun) {
       addToReport(`**Summary:** ${totalExtractable} phrases will be converted, ${totalExtractedRelations} relations will be reassociated\n\n`)
+    }
+  }
+  
+  // Notes to confirm with AI (e.g. hot leather, old makeup) — reported only; no JS change
+  if (totalToConfirm > 0) {
+    console.log("  Notes to confirm with AI (valid scent notes?):")
+    if (isDryRun) {
+      addToReport("### Notes to Confirm (AI Validation)\n\n")
+      addToReport("| Note Name | ID | Relations |\n")
+      addToReport("|-----------|----|-----------|\n")
+    }
+    for (const item of notesToConfirm) {
+      const relationCount = item.note.perfumeNoteRelations.length
+      console.log(`  🔍 "${item.note.name}" (${item.note.id}) - ${relationCount} relations`)
+      if (isDryRun) {
+        addToReport(`| "${item.note.name}" | ${item.note.id} | ${relationCount} |\n`)
+      }
+    }
+    console.log("")
+    if (isDryRun) {
+      addToReport(`**Summary:** ${totalToConfirm} note(s) will be sent to AI for confirmation (no change unless AI says invalid).\n\n`)
     }
   }
   console.log("")
@@ -1519,10 +1664,15 @@ async function removeStopwords(identificationResults, isDryRun) {
       }
     }
     
-    // Then, handle invalid notes (stopwords and non-extractable phrases)
+    // Then, handle invalid notes (stopwords and non-extractable phrases).
+    // Skip descriptive-ai: those are left for Crew AI and apply-ai-recommendations.js.
     for (const item of invalidNotes) {
       try {
         const { note, type } = item
+        if (type === "descriptive-ai") {
+          console.log(`\n⏭️  Skipping "${note.name}" (${note.id}) - sent to Crew AI (descriptive-ai)`)
+          continue
+        }
         console.log(`\n🗑️  Removing ${type} "${note.name}" (${note.id})`)
         
         const relationCount = note.perfumeNoteRelations.length
@@ -1744,4 +1894,3 @@ if (process.argv[1] && process.argv[1].endsWith("clean-notes.js")) {
   main()
 }
 
-export { cleanNotes }

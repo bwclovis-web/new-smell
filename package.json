@@ -23,6 +23,8 @@
     "clean:notes:complete": "node scripts/clean-notes-complete.js --dry-run",
     "clean:notes:complete:apply": "node scripts/clean-notes-complete.js --confirm-apply",
     "clean:notes:complete:full": "node scripts/clean-notes-complete.js --confirm-apply --apply-ai --recheck-duplicates",
+    "clean:notes:ai:setup": "node scripts/setup-venv-ai.js",
+    "clean:notes:ai:install": "pip install -r scripts/requirements-ai.txt",
     "clean:notes:apply-ai": "node scripts/apply-ai-recommendations.js",
     "db:backup": "node scripts/backup-database-prisma.js",
     "db:backup:pg": "node scripts/backup-database.js",

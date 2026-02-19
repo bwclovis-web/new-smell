@@ -1,6 +1,6 @@
 # Complete Note Cleaning Workflow
 
-This workflow combines rule-based cleaning (JavaScript) with AI-powered extraction (CrewAI) to comprehensively clean perfume notes.
+This workflow combines rule-based cleaning (JavaScript) with AI-powered extraction (LangGraph) to comprehensively clean perfume notes.
 
 ## Quick Start (One Command)
 
@@ -35,6 +35,10 @@ npm run db:backup
 npm run clean:notes:complete:apply
 ```
 
+The apply command now enforces:
+- explicit apply confirmation via script flags
+- a recent backup manifest check in `backups/`
+
 This will:
 1. ✅ Apply JavaScript rule-based cleaning (actual changes)
 2. ✅ Extract ambiguous notes automatically
@@ -47,7 +51,15 @@ This will:
 
 ## Setup
 
-1. **Install Python dependencies:**
+**Recommended:** Use the project venv so the AI step uses a consistent Python and deps:
+
+```bash
+npm run clean:notes:ai:setup
+```
+
+This creates `.venv-ai` and installs `scripts/requirements-ai.txt` (LangGraph, langchain-openai). The full workflow (`npm run clean:notes:complete:full`) will use this venv automatically when present. LangGraph works with Python 3.10+ (no numpy build issues).
+
+**Alternative:** Install into your current Python:
 
 ```bash
 pip install -r scripts/requirements-ai.txt
@@ -104,7 +116,7 @@ python scripts/clean-notes-ai.py --input reports/ambiguous-notes.json --dry-run
 ```
 
 This will:
-- Process each ambiguous note using CrewAI
+- Process each ambiguous note using LangGraph
 - Generate a markdown report: `reports/ai-note-extraction-{timestamp}.md`
 - Generate a JSON file: `reports/ai-note-extraction-{timestamp}.json`
 - **No changes are made to the database**
@@ -194,3 +206,4 @@ Use rule-based extraction for:
 - ✅ Slash-separated notes
 - ✅ Simple stopword removal
 - ✅ Obvious pattern matches
+- ✅ Known bad/noise phrases (e.g., `few`, `no name`, `limited time only`)

@@ -1,8 +1,12 @@
 import { prisma } from "~/db.server"
+import { isDisplayableScentNote } from "~/utils/note-validation.server"
 
+/** Returns only notes that pass display validation (so scent quiz etc. show confirmed scent notes only). */
 export const getAllTags = async () => {
-  const tags = await prisma.perfumeNotes.findMany()
-  return tags
+  const tags = await prisma.perfumeNotes.findMany({
+    orderBy: { name: "asc" },
+  })
+  return tags.filter((tag) => isDisplayableScentNote(tag.name))
 }
 
 export const getTagsByName = async (name: string) => {
@@ -37,8 +41,10 @@ export const getTagsByName = async (name: string) => {
     take: 5,
   })
 
-  // Combine and rank results
-  const allResults = [...exactMatches, ...containsMatches]
+  // Combine and rank results, then filter to displayable only
+  const allResults = [...exactMatches, ...containsMatches].filter((tag) =>
+    isDisplayableScentNote(tag.name)
+  )
 
   // Sort by relevance score
   const rankedResults = allResults
