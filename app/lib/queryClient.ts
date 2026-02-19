@@ -134,62 +134,27 @@ function createQueryClient(): QueryClient {
     },
   })
 
-  // Set up query cache listener for error monitoring
-  // This gives access to query metadata, unlike the onError callback
-  client.getQueryCache().subscribe(event => {
-    if (event.type === 'error') {
-      const { query, error } = event
-      
-      // Log errors with query context for debugging
-      console.error('Query error:', {
-        queryKey: query.queryKey,
-        error,
-        queryHash: query.queryHash,
-      })
-
-      // In production, send to error tracking service
-      // if (import.meta.env.PROD) {
-      //   Sentry.captureException(error, {
-      //     extra: {
-      //       queryKey: query.queryKey,
-      //       queryHash: query.queryHash,
-      //     },
-      //   })
-      // }
-    }
-
-    // Optional: Monitor slow queries
-    if (event.type === 'updated' && event.action.type === 'success') {
-      const duration = Date.now() - event.query.state.dataUpdatedAt
-      if (duration > 2000) { // Queries taking > 2 seconds
-        console.warn('Slow query detected:', {
+  // Dev-only: query/mutation cache listeners for debugging
+  if (import.meta.env.DEV) {
+    client.getQueryCache().subscribe(event => {
+      if (event.type === 'error') {
+        console.error('Query error:', {
           queryKey: event.query.queryKey,
-          duration: `${duration}ms`,
+          error: event.error,
+          queryHash: event.query.queryHash,
         })
       }
-    }
-  })
+    })
 
-  // Set up mutation cache listener
-  client.getMutationCache().subscribe(event => {
-    if (event.type === 'error') {
-      const { mutation, error } = event
-      
-      console.error('Mutation error:', {
-        mutationKey: mutation.options.mutationKey,
-        error,
-      })
-
-      // In production, send to error tracking service
-      // if (import.meta.env.PROD) {
-      //   Sentry.captureException(error, {
-      //     extra: {
-      //       mutationKey: mutation.options.mutationKey,
-      //     },
-      //   })
-      // }
-    }
-  })
+    client.getMutationCache().subscribe(event => {
+      if (event.type === 'error') {
+        console.error('Mutation error:', {
+          mutationKey: event.mutation.options.mutationKey,
+          error: event.error,
+        })
+      }
+    })
+  }
 
   return client
 }

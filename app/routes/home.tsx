@@ -62,11 +62,7 @@ export default function Home() {
 
       if (!container.current) return
 
-      gsap.fromTo(
-        ".hero-image",
-        { filter: "grayscale(100%) contrast(0.5) brightness(0.4)" },
-        { filter: "grayscale(100%) contrast(1) brightness-[0.9] sepia(0.5)", duration: 2 }
-      )
+
       gsap.from(".hero-title", {
         opacity: 0,
         y: 50,

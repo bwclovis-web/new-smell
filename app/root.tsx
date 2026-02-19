@@ -1,6 +1,6 @@
 import "./app.css"
 
-import type { ReactNode } from "react"
+import { lazy, type ReactNode, Suspense } from "react"
 import { I18nextProvider } from "react-i18next"
 import {
   isRouteErrorResponse,
@@ -13,14 +13,15 @@ import {
 
 import type { Route } from "./+types/root"
 import ImagePreloader from "./components/Atoms/ImagePreloader"
-import FourOFourPage from "./components/Containers/404Page/404Page"
-import ErrorBoundaryComponent from "./components/Containers/ErrorBoundary"
-import ServiceWorkerRegistration from "./components/Containers/ServiceWorkerRegistration"
-import { CSRFTokenProvider } from "./components/Molecules/CSRFToken"
 import { NonceProvider, useNonce } from "./hooks/use-nonce"
 import i18n from "./modules/i18n/i18n.client"
 import { QueryProvider } from "./providers/QueryProvider"
-import { AppError } from "./utils/errorHandling"
+
+const FourOFourPage = lazy(() => import("./components/Containers/404Page/404Page"))
+const ServiceWorkerRegistration = lazy(() => import("./components/Containers/ServiceWorkerRegistration"))
+const CSRFTokenProvider = lazy(() =>
+  import("./components/Molecules/CSRFToken").then(m => ({ default: m.CSRFTokenProvider }))
+)
 
 // Use self-hosted Limelight only (app/fonts.css). Do NOT add Google Fonts—they block render (~880ms).
 export const links: Route.LinksFunction = () => [
@@ -38,7 +39,6 @@ export const links: Route.LinksFunction = () => [
 export function Layout({ children }: { children: ReactNode }) {
   const nonce = useNonce()
 
-  // Critical images to preload
   const criticalImages = [
     "/images/home.webp",
     "/images/scent.webp",
@@ -46,11 +46,6 @@ export function Layout({ children }: { children: ReactNode }) {
     "/images/trading.webp",
     "/images/vault.webp",
     "/images/behind.webp",
-    "/images/trading.webp",
-    "/images/scent.webp",
-    "/images/perfume.webp",
-    "/images/trading.webp",
-    "/images/vault.webp",
   ]
 
   return (
@@ -87,7 +82,9 @@ export function Layout({ children }: { children: ReactNode }) {
         {children}
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <ServiceWorkerRegistration />
+        <Suspense fallback={null}>
+          <ServiceWorkerRegistration />
+        </Suspense>
         <div id="modal-portal" />
       </body>
     </html>
@@ -99,9 +96,11 @@ export default function App() {
     <NonceProvider value={undefined}>
       <I18nextProvider i18n={i18n}>
         <QueryProvider>
-          <CSRFTokenProvider>
-            <Outlet />
-          </CSRFTokenProvider>
+          <Suspense fallback={null}>
+            <CSRFTokenProvider>
+              <Outlet />
+            </CSRFTokenProvider>
+          </Suspense>
         </QueryProvider>
       </I18nextProvider>
     </NonceProvider>
@@ -109,95 +108,47 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  // Handle 404 errors with custom page
   if (isRouteErrorResponse(error) && error.status === 404) {
-    return <FourOFourPage />
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-noir-dark" />}>
+        <FourOFourPage />
+      </Suspense>
+    )
   }
 
-  // Use our centralized error handling for other errors
-  const appError =
+  const message =
     error instanceof Error
-      ? new AppError(
-          error.message,
-          "UNKNOWN" as any,
-          "MEDIUM" as any,
-          "ROUTE_ERROR",
-          undefined,
-          {
-            status: isRouteErrorResponse(error) ? error.status : undefined,
-            statusText: isRouteErrorResponse(error) ? error.statusText : undefined,
-            stack: error.stack,
-          }
-        )
-      : new AppError(
-          "An unexpected error occurred",
-          "UNKNOWN" as any,
-          "MEDIUM" as any,
-          "ROUTE_ERROR"
-        )
+      ? error.message
+      : "An unexpected error occurred"
+
+  const status = isRouteErrorResponse(error) ? error.status : undefined
 
   return (
-    <ErrorBoundaryComponent
-      level="page"
-      fallback={(error: any, errorId: string) => (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-          <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-6">
-            <div className="text-center mb-6">
-              <div className="text-4xl mb-4">⚠️</div>
-              <h1 className="text-xl font-bold text-gray-900 mb-2">
-                Something went wrong
-              </h1>
-              <p className="text-gray-600">{error.userMessage}</p>
-            </div>
-
-            <div className="space-y-3">
-              <button
-                onClick={() => window.location.reload()}
-                className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
-              >
-                Refresh Page
-              </button>
-              <button
-                onClick={() => window.history.back()}
-                className="w-full bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors"
-              >
-                Go Back
-              </button>
-            </div>
-
-            {import.meta.env.DEV && (
-              <details className="mt-4 text-left">
-                <summary className="text-sm text-gray-500 cursor-pointer">
-                  Developer Details
-                </summary>
-                <pre className="mt-2 text-xs text-gray-600 bg-gray-100 p-2 rounded overflow-x-auto">
-                  {JSON.stringify(error.toJSON(), null, 2)}
-                </pre>
-              </details>
-            )}
-
-            <p className="text-xs text-gray-500 mt-4 text-center">
-              Error ID: {errorId}
-            </p>
-          </div>
-        </div>
-      )}
-    >
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-6 text-center">
-          <div className="text-4xl mb-4">⚠️</div>
-          <h1 className="text-xl font-bold text-gray-900 mb-2">
-            Something went wrong
-          </h1>
-          <p className="text-gray-600">{appError.userMessage}</p>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="max-w-lg w-full bg-white rounded-lg shadow-lg p-6 text-center">
+        <div className="text-4xl mb-4">⚠️</div>
+        <h1 className="text-xl font-bold text-gray-900 mb-2">
+          Something went wrong
+        </h1>
+        {status && (
+          <p className="text-sm text-gray-500 mb-2">Status: {status}</p>
+        )}
+        <p className="text-gray-600 mb-6">{message}</p>
+        <div className="space-y-3">
           <button
             onClick={() => window.location.reload()}
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+            className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
           >
             Refresh Page
           </button>
+          <button
+            onClick={() => window.history.back()}
+            className="w-full bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors"
+          >
+            Go Back
+          </button>
         </div>
       </div>
-    </ErrorBoundaryComponent>
+    </div>
   )
 }
