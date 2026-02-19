@@ -25,7 +25,7 @@ export default function RecommendedForYou({ perfumes, limit = PERFUME_LIMIT }: R
         {t("recommendations.recommendedForYou", { defaultValue: "Recommended for you" })}
       </h2>
       <ul className="grid grid-cols-1 md:grid-cols-3 gap-4 p-2">
-        {list.map((similar) => (
+        {list.map((similar, index) => (
           <li key={similar.id}>
             <NavLink
               viewTransition
@@ -44,7 +44,7 @@ export default function RecommendedForYou({ perfumes, limit = PERFUME_LIMIT }: R
                   defaultValue: "Perfume Bottle {{name}}",
                   name: similar.name,
                 })}
-                priority={false}
+                priority={index < 3}
                 width={128}
                 height={128}
                 quality={75}

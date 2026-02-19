@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next"
 import { FaUser } from "react-icons/fa6"
 import { NavLink } from "react-router"
 
+import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
 import LanguageSwitcher from "~/components/Organisms/LanguageSwitcher/LanguageSwitcher"
 import { mainNavigation } from "~/data/navigation"
 import { ROUTE_PATH as ADMIN_PATH } from "~/routes/admin/profilePage"
@@ -72,7 +73,15 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
           to="/"
           className="px-2 block"
         >
-          <img src={logo} alt={logoText} className="w-40 h-25" suppressHydrationWarning />
+          <OptimizedImage
+            src={logo}
+            alt={logoText}
+            width={160}
+            height={25}
+            priority={true}
+            quality={90}
+            className="w-40 h-25"
+          />
         </NavLink>
         <ul className="flex gap-4 items-center tracking-wide max-w-max">
           <li>
