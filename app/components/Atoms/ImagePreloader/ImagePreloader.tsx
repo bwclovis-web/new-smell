@@ -26,8 +26,12 @@ const ImagePreloader = ({
         document.head.appendChild(link)
       })
       return () => {
-        images.forEach(src => {
-          document.querySelectorAll(`link[rel="preload"][as="image"][href="${src}"]`).forEach(el => el.remove())
+        const links = document.querySelectorAll('link[rel="preload"][as="image"]')
+        links.forEach(link => {
+          const href = (link as HTMLLinkElement).href || link.getAttribute("href")
+          if (href && images.some(src => href === src || href.endsWith(src))) {
+            link.remove()
+          }
         })
       }
     }
@@ -72,10 +76,10 @@ const ImagePreloader = ({
         document.head.appendChild(link)
       })
     }
-    const id =
-      typeof requestIdleCallback !== "undefined"
-        ? requestIdleCallback(runPreload, { timeout: 1500 })
-        : setTimeout(runPreload, 500)
+    const useIdle = typeof requestIdleCallback !== "undefined"
+    const id = useIdle
+      ? requestIdleCallback(runPreload, { timeout: 1500 })
+      : setTimeout(runPreload, 500)
 
     return () => {
       cancelled = true
@@ -83,13 +87,17 @@ const ImagePreloader = ({
         observerRef.current.disconnect()
         observerRef.current = null
       }
-      if (typeof requestIdleCallback !== "undefined") {
+      if (useIdle && typeof cancelIdleCallback !== "undefined") {
         cancelIdleCallback(id as number)
       } else {
         clearTimeout(id as ReturnType<typeof setTimeout>)
       }
-      images.forEach(src => {
-        document.querySelectorAll(`link[rel="preload"][as="image"][href="${src}"]`).forEach(el => el.remove())
+      const links = document.querySelectorAll('link[rel="preload"][as="image"]')
+      links.forEach(link => {
+        const href = (link as HTMLLinkElement).href || link.getAttribute("href")
+        if (href && (images.includes(href) || images.some(src => href.endsWith(src)))) {
+          link.remove()
+        }
       })
     }
   }, [images, priority, lazy])

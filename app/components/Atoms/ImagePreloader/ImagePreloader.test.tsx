@@ -6,6 +6,7 @@ import ImagePreloader from "./ImagePreloader"
 // Mock DOM APIs
 const mockIntersectionObserver = vi.fn()
 const mockRequestIdleCallback = vi.fn()
+const mockCancelIdleCallback = vi.fn()
 const mockImage = vi.fn()
 
 describe("ImagePreloader", () => {
@@ -48,11 +49,17 @@ describe("ImagePreloader", () => {
       value: mockIntersectionObserver,
     })
 
-    // Mock requestIdleCallback
+    // Mock requestIdleCallback and cancelIdleCallback (Node/test env may not define cancelIdleCallback)
+    mockRequestIdleCallback.mockImplementation((cb: () => void) => 1)
     Object.defineProperty(window, "requestIdleCallback", {
       writable: true,
       configurable: true,
       value: mockRequestIdleCallback,
+    })
+    Object.defineProperty(window, "cancelIdleCallback", {
+      writable: true,
+      configurable: true,
+      value: mockCancelIdleCallback,
     })
 
     // Mock Image constructor
@@ -124,7 +131,7 @@ describe("ImagePreloader", () => {
       const images = ["image1.jpg", "image2.jpg"]
       render(<ImagePreloader images={images} priority="low" lazy={false} />)
 
-      expect(mockRequestIdleCallback).toHaveBeenCalledWith(expect.any(Function))
+      expect(mockRequestIdleCallback).toHaveBeenCalledWith(expect.any(Function), { timeout: 1500 })
     })
 
     it("should fallback to setTimeout when requestIdleCallback is not available", () => {
@@ -146,8 +153,9 @@ describe("ImagePreloader", () => {
 
     it("should create preload links with low priority", () => {
       const images = ["image1.jpg"]
-      mockRequestIdleCallback.mockImplementation(fn => {
-        fn() // Execute immediately for testing
+      mockRequestIdleCallback.mockImplementation((cb: () => void) => {
+        cb() // Execute immediately for testing
+        return 1
       })
 
       render(<ImagePreloader images={images} priority="low" lazy={false} />)
