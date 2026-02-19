@@ -101,21 +101,25 @@ Target: CLS < 0.1.
 
 ---
 
-## Phase 6: Caching & Delivery
+## Phase 6: Caching & Delivery ✅ **Done 2026-02-18**
 
-- [ ] Confirm `vercel.json` cache headers apply to all static assets
-- [ ] Ensure `/build`, `/assets`, `/images` paths are correct for your deployment
-- [ ] Verify long cache headers (e.g. `max-age=31536000`) for hashed assets
-- [ ] Consider service worker / PWA caching if applicable
+- [x] Confirm `vercel.json` cache headers apply to all static assets
+- [x] Ensure `/build`, `/assets`, `/images` paths are correct for your deployment
+- [x] Verify long cache headers (e.g. `max-age=31536000`) for hashed assets
+- [x] Consider service worker / PWA caching if applicable
+
+**Phase 6 report:** [reports/performance-phase6-caching-delivery-2026-02-18.md](../reports/performance-phase6-caching-delivery-2026-02-18.md)
 
 ---
 
-## Phase 7: Fonts
+## Phase 7: Fonts ✅ **Done 2026-02-18**
 
-- [ ] Use `font-display: swap` for web fonts
-- [ ] Preload only critical font files
-- [ ] Subset fonts if possible
-- [ ] Prefer system fonts where acceptable
+- [x] Use `font-display: swap` for web fonts
+- [x] Preload only critical font files
+- [x] Subset fonts if possible
+- [x] Prefer system fonts where acceptable
+
+**Phase 7 report:** [reports/performance-phase7-fonts-2026-02-18.md](../reports/performance-phase7-fonts-2026-02-18.md)
 
 ---
 
