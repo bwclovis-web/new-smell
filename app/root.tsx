@@ -80,7 +80,8 @@ export function Layout({ children }: { children: ReactNode }) {
         {/* Always include Meta and Links first for CSS stability */}
         <Meta />
         <Links />
-        <ImagePreloader images={criticalImages} priority="high" />
+        {/* Defer link-card image preload until after LCP; hero preload is in home route links */}
+        <ImagePreloader images={criticalImages} priority="low" lazy={false} />
       </head>
       <body className="bg-noir-black">
         {children}

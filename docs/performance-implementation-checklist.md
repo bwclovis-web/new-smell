@@ -73,14 +73,16 @@ Target: LCP < 2.5 seconds.
 
 ---
 
-## Phase 4: JavaScript / Bundle
+## Phase 4: JavaScript / Bundle ✅ **Done 2026-02-18**
 
-- [ ] Review bundle analyzer output; identify chunks > 100KB
-- [ ] Add route-level code splitting for heavy routes (`React.lazy` + `Suspense`)
-- [ ] Lazy-load non-critical components (modals, admin panels, charts)
-- [ ] Defer third-party scripts (analytics, Stripe) until after LCP
-- [ ] Ensure Tree Shaking is effective for large libraries
-- [ ] Consider dynamic imports for i18n bundles if large
+- [x] Review bundle analyzer output; identify chunks > 100KB
+- [x] Add route-level code splitting for heavy routes (`React.lazy` + `Suspense`)
+- [x] Lazy-load non-critical components (modals, admin panels, charts)
+- [x] Defer third-party scripts (analytics, Stripe) until after LCP
+- [x] Ensure Tree Shaking is effective for large libraries
+- [x] Consider dynamic imports for i18n bundles if large
+
+**Phase 4 report:** [reports/performance-phase4-js-bundle-2026-02-18.md](../reports/performance-phase4-js-bundle-2026-02-18.md)
 
 ---
 
