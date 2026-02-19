@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next"
 
+import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
 import { VooDooLink } from "~/components/Atoms/Button/Button"
 import banner from "~/images/notFound404.webp"
 
@@ -7,10 +8,16 @@ const FourOFourPage = () => {
   const { t } = useTranslation()
   return (
     <div className="flex flex-col items-center justify-center h-screen relative bg-noir-dark">
-      <img
+      <OptimizedImage
         src={banner}
         alt="404 Not Found"
+        width={1200}
+        height={800}
+        priority={true}
+        quality={80}
         className="absolute top-0 left-0 w-full h-full object-cover opacity-60"
+        sizes="100vw"
+        placeholder="blur"
       />
       <section className="relative top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-noir-dark/10  p-4">
         <div className="bg-white/40 text-center rounded-md shadow-lg backdrop-blur-md p-10">

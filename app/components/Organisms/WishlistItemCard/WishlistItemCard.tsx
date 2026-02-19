@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { IoMdCloseCircle } from "react-icons/io"
 import { Form, NavLink } from "react-router"
 
+import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
 import { CSRFToken } from "~/components/Molecules/CSRFToken"
 import VooDooCheck from "~/components/Atoms/VooDooCheck/VooDooCheck"
 import { useToggleWishlist } from "~/lib/mutations/wishlist"
@@ -74,10 +75,15 @@ const WishlistItemCard = ({
           {t("wishlist.itemCard.available")}
         </div>
       )}
-      <img
+      <OptimizedImage
         src={item.perfume.image || "/placeholder-perfume.jpg"}
         alt={item.perfume.name}
+        width={400}
+        height={192}
+        priority={false}
+        quality={75}
         className="w-full h-48 object-cover"
+        sizes="(max-width: 640px) 100vw, 50vw"
       />
       <div>
         <h3 className="text-lg font-semibold mb-2 bg-noir-dark p-2">

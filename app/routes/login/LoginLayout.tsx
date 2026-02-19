@@ -2,6 +2,7 @@ import { useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { Outlet } from "react-router"
 
+import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
 import { VooDooLink } from "~/components/Atoms/Button"
 import banner from "~/images/password.webp"
 
@@ -14,11 +15,16 @@ const RootLayout = () => {
       className="flex flex-col gap-8 items-center justify-center min-h-screen px-4 bg-noir-gold-500/30"
       ref={container}
     >
-      <img
+      <OptimizedImage
         src={banner}
         alt=""
-        suppressHydrationWarning
-        className="hero-image absolute object-cover w-full h-full filter grayscale-[100%]  sepia-[0.2]"
+        width={1200}
+        height={800}
+        priority={true}
+        quality={85}
+        className="hero-image absolute object-cover w-full h-full filter grayscale-[100%] sepia-[0.2]"
+        sizes="100vw"
+        placeholder="blur"
       />
       <div className="absolute inset-0  md:mask-radial-from-45% mask-radial-to-64%"></div>
       <div className="relative w-full flex flex-col items-center justify-around gap-4 md:gap-8 mx-auto">

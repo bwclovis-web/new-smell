@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next"
 import { BsHeartFill } from "react-icons/bs"
 
+import { OptimizedImage } from "~/components/Atoms/OptimizedImage"
+
 interface WishlistItem {
   id: string
   perfumeId: string
@@ -51,12 +53,17 @@ const ItemsSearchingFor = ({ wishlistItems }: ItemsSearchingForProps) => {
           >
             <div className="flex items-center gap-0.5">
               {item.perfume.image && (
-                  <img
-                    src={item.perfume.image}
-                    alt={item.perfume.name}
-                    className="w-12 h-12 object-cover rounded"
-                  />
-                )}
+                <OptimizedImage
+                  src={item.perfume.image}
+                  alt={item.perfume.name}
+                  width={48}
+                  height={48}
+                  priority={false}
+                  quality={70}
+                  className="w-12 h-12 object-cover rounded"
+                  sizes="48px"
+                />
+              )}
             </div>
             <div className="flex-1">
               <h3 className="font-medium text-noir-gold">{item.perfume.name}</h3>

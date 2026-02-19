@@ -32,27 +32,29 @@ Implementation checklist for improving the production score (Lighthouse Performa
 
 ---
 
-## Phase 2: Image Optimization (Highest impact)
+## Phase 2: Image Optimization (Highest impact) ✅ **Done 2026-02-16**
 
 ### Use OptimizedImage everywhere
 
-- [ ] **HeroHeader** — Replace raw `<img>` with `OptimizedImage` (priority, width, height)
-- [ ] **LinkCard** — Use `OptimizedImage` with width/height
-- [ ] **WishlistItemCard** — Use `OptimizedImage`
-- [ ] **TitleBanner** — Use `OptimizedImage`
-- [ ] **PerfumeHousePerfumeList** — Use `OptimizedImage` for perfume thumbnails
-- [ ] **RecommendedForYou** — Use `OptimizedImage` for perfume cards
-- [ ] **404Page** — Use `OptimizedImage` if applicable
-- [ ] **ErrorDisplay** — Use `OptimizedImage` if applicable
-- [ ] Audit all `<img>` usage and replace with `OptimizedImage` where appropriate
+- [x] **HeroHeader** — Already used `OptimizedImage` (priority, width, height)
+- [x] **LinkCard** — Already used `OptimizedImage` with width/height
+- [x] **WishlistItemCard** — Replaced raw `<img>` with `OptimizedImage`
+- [x] **TitleBanner** — Replaced raw `<img>` with `OptimizedImage`
+- [x] **PerfumeHousePerfumeList** — Already used `OptimizedImage`; added `priority={index < 6}` for first 6
+- [x] **RecommendedForYou** — Already used `OptimizedImage`; added `priority={index < 3}` for first 3
+- [x] **404Page** — Replaced raw `<img>` with `OptimizedImage`
+- [x] **ErrorDisplay** — No images (emoji icons only); N/A
+- [x] Audit all `<img>` usage — Replaced remaining: LoginLayout, home, GlobalNavigation, ItemsSearchingFor
 
 ### Image best practices
 
-- [ ] Add `width` and `height` to all `OptimizedImage` instances to prevent CLS
-- [ ] Set `priority={true}` for above-the-fold images (hero, first 3–6 perfume cards)
-- [ ] Set `priority={false}` (or omit) for below-the-fold images
+- [x] Add `width` and `height` to all `OptimizedImage` instances to prevent CLS
+- [x] Set `priority={true}` for above-the-fold images (hero, home, login, 404, logo, first 3–6 perfume cards)
+- [x] Set `priority={false}` (or omit) for below-the-fold images
 - [ ] Enable WebP build if not already: `npm run build:webp`
-- [ ] Ensure `sizes` prop is set for responsive images where applicable
+- [x] Ensure `sizes` prop is set for responsive images where applicable
+
+**Phase 2 report:** [reports/performance-phase2-image-optimization-2026-02-16.md](../reports/performance-phase2-image-optimization-2026-02-16.md)
 
 ---
 

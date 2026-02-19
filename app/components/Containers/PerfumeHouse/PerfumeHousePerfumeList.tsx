@@ -49,7 +49,7 @@ const PerfumeHousePerfumeList = ({
         </div>
       ) : perfumes.length > 0 ? (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 p-2 pb-4 gap-4">
-          {perfumes.map((perfume: any) => (
+          {perfumes.map((perfume: any, index: number) => (
             <li key={perfume.id}>
               <NavLink
                 viewTransition
@@ -67,7 +67,7 @@ const PerfumeHousePerfumeList = ({
                       defaultValue: "Perfume Bottle {{name}}",
                       name: perfume.name,
                     })}
-                    priority={false}
+                    priority={index < 6}
                     width={192}
                     height={192}
                     quality={75}
