@@ -1,6 +1,6 @@
 import { type ChangeEvent, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { type MetaFunction, useLoaderData } from "react-router"
+import { type LinksFunction, type MetaFunction, useLoaderData } from "react-router"
 
 import Select from "~/components/Atoms/Select"
 import SearchBar from "~/components/Organisms/SearchBar"
@@ -8,6 +8,17 @@ import { getAllFeatures } from "~/models/feature.server"
 import { prisma } from "~/db.server"
 
 import banner from "../images/landing.webp"
+
+// LCP: Preload hero image in document head for faster Largest Contentful Paint
+export const links: LinksFunction = () => [
+  {
+    rel: "preload",
+    href: banner,
+    as: "image",
+    type: "image/webp",
+    fetchPriority: "high",
+  },
+]
 
 export const meta: MetaFunction = () => {
   const { t } = useTranslation()

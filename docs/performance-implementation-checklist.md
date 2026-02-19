@@ -58,16 +58,18 @@ Implementation checklist for improving the production score (Lighthouse Performa
 
 ---
 
-## Phase 3: LCP (Largest Contentful Paint)
+## Phase 3: LCP (Largest Contentful Paint) ✅ **Done 2026-02-18**
 
 Target: LCP < 2.5 seconds.
 
-- [ ] Preload hero / main LCP image in the document head
-- [ ] Add `fetchpriority="high"` to the main above-the-fold image
+- [x] Preload hero / main LCP image in the document head
+- [x] Add `fetchpriority="high"` to the main above-the-fold image
 - [ ] Ensure hero image is compressed and under ~200KB
 - [ ] Consider CDN or Vercel Image Optimization for large external image URLs
-- [ ] Minimize render-blocking resources above the fold
-- [ ] Inline or preload critical CSS if applicable
+- [x] Minimize render-blocking resources above the fold
+- [x] Inline or preload critical CSS if applicable
+
+**Phase 3 report:** [reports/performance-phase3-lcp-2026-02-18.md](../reports/performance-phase3-lcp-2026-02-18.md)
 
 ---
 
