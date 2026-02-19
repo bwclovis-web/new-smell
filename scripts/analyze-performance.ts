@@ -14,7 +14,7 @@
 
 import puppeteer from "puppeteer"
 
-import { PerformanceIssue, PerformanceMetrics, PerformanceReport } from "../app/utils/performanceAnalyzer"
+import type { PerformanceIssue, PerformanceMetrics, PerformanceReport } from "../app/utils/performanceAnalyzer"
 
 interface AnalysisOptions {
   url: string
@@ -290,10 +290,11 @@ async function main() {
   }
 }
 
-// Run if called directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main()
-}
+// Run when executed directly
+main().catch((err) => {
+  console.error(err)
+  process.exit(1)
+})
 
 export { analyzePerformance }
 

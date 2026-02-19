@@ -5,11 +5,13 @@
  * Analyzes the built bundle and provides optimization recommendations
  */
 
-const fs = require("fs")
-const path = require("path")
+import { existsSync, readdirSync, statSync } from "fs"
+import { join, dirname, extname } from "path"
+import { fileURLToPath } from "url"
 
-const DIST_DIR = path.join(__dirname, "../dist")
-const STATS_FILE = path.join(DIST_DIR, "stats.html")
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const BUILD_DIR = join(__dirname, "../build")
+const STATS_FILE = join(__dirname, "../dist/stats.html")
 
 // Bundle size limits (in KB)
 const LIMITS = {
@@ -23,8 +25,8 @@ const LIMITS = {
 function analyzeBundle() {
   console.log("📊 Analyzing bundle...")
 
-  if (!fs.existsSync(DIST_DIR)) {
-    console.error("❌ Dist directory not found. Run build first.")
+  if (!existsSync(BUILD_DIR)) {
+    console.error("❌ Build directory not found. Run build first.")
     process.exit(1)
   }
 
@@ -35,18 +37,18 @@ function analyzeBundle() {
 
   // Scan dist directory for assets
   function scanDirectory(dir, relativePath = "") {
-    const items = fs.readdirSync(dir)
+    const items = readdirSync(dir)
 
     for (const item of items) {
-      const fullPath = path.join(dir, item)
-      const relativeItemPath = path.join(relativePath, item)
-      const stat = fs.statSync(fullPath)
+      const fullPath = join(dir, item)
+      const relativeItemPath = join(relativePath, item)
+      const stat = statSync(fullPath)
 
       if (stat.isDirectory()) {
         scanDirectory(fullPath, relativeItemPath)
       } else {
         const size = stat.size
-        const ext = path.extname(item).toLowerCase()
+        const ext = extname(item).toLowerCase()
 
         const asset = {
           name: relativeItemPath,
@@ -72,7 +74,7 @@ function analyzeBundle() {
     }
   }
 
-  scanDirectory(DIST_DIR)
+  scanDirectory(BUILD_DIR)
 
   // Analyze JavaScript bundles
   const jsAnalysis = analyzeJavaScriptBundles(jsFiles)
@@ -209,7 +211,7 @@ function analyzeImages(imageFiles) {
 
   // Group by format
   imageFiles.forEach(file => {
-    const ext = path.extname(file.name).toLowerCase()
+    const ext = extname(file.name).toLowerCase()
     if (!analysis.byFormat[ext]) {
       analysis.byFormat[ext] = { count: 0, size: 0 }
     }
@@ -281,7 +283,7 @@ function generateReport(analysis) {
 
   console.log("\n✅ Analysis complete!")
 
-  if (fs.existsSync(STATS_FILE)) {
+  if (existsSync(STATS_FILE)) {
     console.log(`\n📊 Detailed visualization available at: ${STATS_FILE}`)
   }
 }
