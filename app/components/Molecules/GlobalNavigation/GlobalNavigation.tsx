@@ -135,7 +135,7 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
 }
 
 const GlobalNavigation = (props: GlobalNavigationProps) => (
-  <Suspense fallback={<div>Loading...</div>}>
+  <Suspense fallback={<div className="min-h-[56px] flex items-center justify-center" aria-hidden="true" />}>
     <GlobalNavigationContent {...props} />
   </Suspense>
 )

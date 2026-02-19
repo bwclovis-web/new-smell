@@ -42,7 +42,7 @@ const PerfumeHousePerfumeList = ({
       })}</h2>
 
       {loading && perfumes.length === 0 ? (
-        <div className="text-center py-6">
+        <div className="text-center py-6 min-h-[320px] flex items-center justify-center" aria-busy="true">
           {t("singleHouse.loadingPerfumes", {
             defaultValue: "Loading perfumes...",
           })}

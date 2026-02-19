@@ -19,7 +19,7 @@ const RootLayout = () => {
   const { user } = useLoaderData<typeof loader>()
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div className="min-h-svh flex items-center justify-center text-noir-gold/60">Loading...</div>}>
       <div
         className="flex flex-col gap-8 items-center relative min-h-svh bg-noir-black"
         suppressHydrationWarning

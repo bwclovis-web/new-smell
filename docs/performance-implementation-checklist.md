@@ -86,16 +86,18 @@ Target: LCP < 2.5 seconds.
 
 ---
 
-## Phase 5: CLS (Cumulative Layout Shift)
+## Phase 5: CLS (Cumulative Layout Shift) ✅ **Done 2026-02-18**
 
 Target: CLS < 0.1.
 
-- [ ] Add explicit `width` and `height` (or aspect-ratio) to all images
-- [ ] Reserve space for dynamic content (ads, user-generated content)
-- [ ] Avoid inserting content above existing content without reserving height
-- [ ] Use skeleton loaders or min-height for async content
-- [ ] Check navigation and modals for layout shifts
-- [ ] Verify font loading doesn’t cause FOIT/FOUT shifts
+- [x] Add explicit `width` and `height` (or aspect-ratio) to all images
+- [x] Reserve space for dynamic content (ads, user-generated content)
+- [x] Avoid inserting content above existing content without reserving height
+- [x] Use skeleton loaders or min-height for async content
+- [x] Check navigation and modals for layout shifts
+- [x] Verify font loading doesn’t cause FOIT/FOUT shifts
+
+**Phase 5 report:** [reports/performance-phase5-cls-2026-02-18.md](../reports/performance-phase5-cls-2026-02-18.md)
 
 ---
 

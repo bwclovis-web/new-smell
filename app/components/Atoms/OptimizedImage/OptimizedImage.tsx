@@ -273,8 +273,14 @@ function StandardImage({
   src,
   width,
 }: StandardImageProps) {
+  const aspectRatioStyle =
+    width && height ? { aspectRatio: `${width} / ${height}` } : undefined
+
   return (
-    <div className={`relative overflow-hidden bg-noir-dark/50 ${containerClassName}`.trim()}>
+    <div
+      className={`relative overflow-hidden bg-noir-dark/50 ${containerClassName}`.trim()}
+      style={aspectRatioStyle}
+    >
       {placeholder === "blur" && !isLoaded && (
         <div
           aria-hidden="true"
