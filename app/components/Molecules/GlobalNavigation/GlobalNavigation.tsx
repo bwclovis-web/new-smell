@@ -32,7 +32,11 @@ const GlobalNavigationContent = ({ user }: GlobalNavigationProps) => {
   const [isClientReady, setIsClientReady] = useState(false)
 
   useEffect(() => {
-    setIsClientReady(true)
+    const id =
+      typeof requestIdleCallback !== "undefined"
+        ? requestIdleCallback(() => setIsClientReady(true), { timeout: 500 })
+        : setTimeout(() => setIsClientReady(true), 0)
+    return () => (typeof requestIdleCallback !== "undefined" ? cancelIdleCallback(id as number) : clearTimeout(id as ReturnType<typeof setTimeout>))
   }, [])
   const logoText =
     ready && isClientReady ? t("navigation.logo") : " Shadow and Sillage"

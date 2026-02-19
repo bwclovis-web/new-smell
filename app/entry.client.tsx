@@ -18,8 +18,10 @@ if (typeof requestIdleCallback !== "undefined") {
   setTimeout(addManifestLink, 0)
 }
 
-// Yield before hydration to break long tasks and reduce main-thread blocking (Lighthouse)
+// Break up main-thread "Other" time: yield → rAF → yield → hydrate
 ;(async () => {
+  await yieldToMain()
+  await new Promise<void>(resolve => requestAnimationFrame(() => resolve()))
   await yieldToMain()
   startTransition(() => {
     hydrateRoot(

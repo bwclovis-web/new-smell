@@ -14,13 +14,9 @@ const ImagePreloader = ({
   const observerRef = useRef<IntersectionObserver | null>(null)
 
   useEffect(() => {
-    // Early return if images is empty or undefined
-    if (!images || images.length === 0) {
-      return
-    }
+    if (!images || images.length === 0) return
 
     if (priority === "high") {
-      // High priority: preload immediately
       images.forEach(src => {
         const link = document.createElement("link")
         link.rel = "preload"
@@ -29,8 +25,14 @@ const ImagePreloader = ({
         link.setAttribute("fetchpriority", "high")
         document.head.appendChild(link)
       })
-    } else if (lazy && "IntersectionObserver" in window) {
-      // Lazy loading with Intersection Observer
+      return () => {
+        images.forEach(src => {
+          document.querySelectorAll(`link[rel="preload"][as="image"][href="${src}"]`).forEach(el => el.remove())
+        })
+      }
+    }
+
+    if (lazy && "IntersectionObserver" in window) {
       const imageElements = images.map(src => {
         const img = new Image()
         img.src = src
@@ -38,7 +40,6 @@ const ImagePreloader = ({
         img.decoding = "async"
         return img
       })
-
       observerRef.current = new IntersectionObserver(
         entries => {
           entries.forEach(entry => {
@@ -49,58 +50,46 @@ const ImagePreloader = ({
             }
           })
         },
-        {
-          rootMargin: "50px 0px",
-          threshold: 0.1,
-        }
+        { rootMargin: "50px 0px", threshold: 0.1 }
       )
-
-      imageElements.forEach(img => {
-        if (observerRef.current) {
-          observerRef.current.observe(img)
-        }
-      })
-    } else {
-      // Low priority: preload when idle
-      if (
-        "requestIdleCallback" in window &&
-        typeof window.requestIdleCallback === "function"
-      ) {
-        window.requestIdleCallback(() => {
-          images.forEach(src => {
-            const link = document.createElement("link")
-            link.rel = "preload"
-            link.as = "image"
-            link.href = src
-            link.setAttribute("fetchpriority", "low")
-            document.head.appendChild(link)
-          })
-        })
-      } else {
-        // Fallback for browsers without requestIdleCallback
-        setTimeout(() => {
-          images.forEach(src => {
-            const link = document.createElement("link")
-            link.rel = "preload"
-            link.as = "image"
-            link.href = src
-            link.setAttribute("fetchpriority", "low")
-            document.head.appendChild(link)
-          })
-        }, 1000)
+      imageElements.forEach(img => observerRef.current?.observe(img))
+      return () => {
+        observerRef.current?.disconnect()
+        observerRef.current = null
       }
     }
 
-    // Cleanup function
+    // Low priority: defer entire effect to idle to reduce main-thread "Other" time
+    let cancelled = false
+    const runPreload = () => {
+      if (cancelled) return
+      images.forEach(src => {
+        const link = document.createElement("link")
+        link.rel = "preload"
+        link.as = "image"
+        link.href = src
+        link.setAttribute("fetchpriority", "low")
+        document.head.appendChild(link)
+      })
+    }
+    const id =
+      typeof requestIdleCallback !== "undefined"
+        ? requestIdleCallback(runPreload, { timeout: 1500 })
+        : setTimeout(runPreload, 500)
+
     return () => {
+      cancelled = true
       if (observerRef.current) {
         observerRef.current.disconnect()
+        observerRef.current = null
       }
-      const preloadLinks = document.querySelectorAll('link[rel="preload"][as="image"]')
-      preloadLinks.forEach(link => {
-        if (images.includes((link as HTMLLinkElement).href)) {
-          link.remove()
-        }
+      if (typeof requestIdleCallback !== "undefined") {
+        cancelIdleCallback(id as number)
+      } else {
+        clearTimeout(id as ReturnType<typeof setTimeout>)
+      }
+      images.forEach(src => {
+        document.querySelectorAll(`link[rel="preload"][as="image"][href="${src}"]`).forEach(el => el.remove())
       })
     }
   }, [images, priority, lazy])
