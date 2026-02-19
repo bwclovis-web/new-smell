@@ -2,6 +2,8 @@ import { startTransition, StrictMode } from "react"
 import { hydrateRoot } from "react-dom/client"
 import { HydratedRouter } from "react-router/dom"
 
+import { yieldToMain } from "~/utils/yieldToMain"
+
 // Add PWA manifest after load to keep it off the critical request chain
 const addManifestLink = () => {
   if (document.querySelector('link[rel="manifest"]')) return
@@ -16,11 +18,15 @@ if (typeof requestIdleCallback !== "undefined") {
   setTimeout(addManifestLink, 0)
 }
 
-startTransition(() => {
-  hydrateRoot(
-    document,
-    <StrictMode>
-      <HydratedRouter />
-    </StrictMode>
-  )
-})
+// Yield before hydration to break long tasks and reduce main-thread blocking (Lighthouse)
+;(async () => {
+  await yieldToMain()
+  startTransition(() => {
+    hydrateRoot(
+      document,
+      <StrictMode>
+        <HydratedRouter />
+      </StrictMode>
+    )
+  })
+})()
